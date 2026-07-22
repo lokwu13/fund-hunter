@@ -315,7 +315,9 @@ def fetch_anns_cninfo(pro, trade_date):
             for a in anns:
                 title = str(a.get('announcementTitle', '')).replace('<em>', '').replace('</em>', '').strip()
                 ts_ms = a.get('announcementTime', 0)
-                date_fmt = datetime.fromtimestamp(ts_ms / 1000).strftime('%Y-%m-%d') if ts_ms else ''
+                # 巨潮时间戳为北京时间零点；GitHub Actions 容器是 UTC，
+                # 直接 fromtimestamp 会早一天，故显式按 UTC+8 转换
+                date_fmt = (datetime.utcfromtimestamp(ts_ms / 1000) + timedelta(hours=8)).strftime('%Y-%m-%d') if ts_ms else ''
                 if not title or not date_fmt:
                     continue
                 key = (date_fmt, title)
