@@ -207,71 +207,154 @@ def fetch_my_etfs(pro, trade_date):
     return etf_data
 
 
-def fetch_announcements(pro, trade_date):
-    """Fetch recent announcements (近3个交易日) for each held/watched stock.
+# ── 公告抓取：雪球为主，巨潮兜底 ──
+# 雪球接口参考 https://stock.xueqiu.com/v5/stock/f10/cn/announcement.json
+# （需先 GET https://xueqiu.com/hq 拿 xq_a_token cookie，否则 401/400）。
+# 注意：本机实测（2026-07）该公告路径返回 404（token 有效，其它 f10 接口正常），
+# 疑似雪球已下线/迁移该接口；代码仍保留雪球为首选，若接口恢复即自动生效。
+# 雪球失败时自动降级到巨潮资讯 hisAnnouncement/query（POST，需先 topSearch 取 orgId）。
+# 两者都失败则该股票 items 置空，绝不让脚本崩溃。
+# 另外注意：GitHub Actions 为美国机房 IP，雪球/巨潮都可能拒绝海外 IP，
+# 失败时同样优雅降级为空 items。
 
-    TODO: pro.anns_d 需要 5000 积分权限，当前 token 实测无权限
-    （报错：抱歉，您没有接口(anns_d)访问权限）。
-    因此公告数据目前优雅降级为空数组，前端显示"暂无公告"占位。
-    若后续 token 升级积分，此处即可自动恢复公告抓取。
-    """
-    anns_map = {}
-    probe_done = False
-    probe_ok = False
-    for tc in STOCKS:
-        if not probe_done:
-            # 先用第一只股票探测接口权限，避免无权限时浪费 14 次调用
-            probe_done = True
+UA_BROWSER = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+              '(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36')
+
+
+def _xq_symbol(ts_code):
+    """600276.SH → SH600276"""
+    num, exch = ts_code.split('.')
+    return f"{exch}{num}"
+
+
+def fetch_anns_xueqiu(trade_date):
+    """雪球公告（首选）。返回 {ts_code: [item, ...]}；整体失败返回 None。"""
+    try:
+        import requests
+        session = requests.Session()
+        session.headers.update({'User-Agent': UA_BROWSER, 'Referer': 'https://xueqiu.com/'})
+        # 先拿 xq_a_token cookie
+        session.get('https://xueqiu.com/hq', timeout=15)
+        result = {}
+        probe_ok = False
+        for tc in STOCKS:
             try:
                 time.sleep(API_DELAY)
-                start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=7)).strftime('%Y%m%d')
-                df = pro.anns_d(ts_code=tc, start_date=start, end_date=trade_date)
+                url = (f"https://stock.xueqiu.com/v5/stock/f10/cn/announcement.json"
+                       f"?symbol={_xq_symbol(tc)}&page=1&size=10")
+                r = session.get(url, timeout=15)
+                if r.status_code != 200:
+                    if not probe_ok:
+                        print(f"  Warning: Xueqiu announcement API returned {r.status_code}; will fall back to cninfo.")
+                        return None
+                    continue
                 probe_ok = True
-                anns_map[tc] = df
+                data = r.json()
+                lst = (data.get('data') or {}).get('list') or []
+                items = []
+                for a in lst:
+                    title = str(a.get('title', '')).strip()
+                    decl = str(a.get('decl_date') or a.get('pub_date') or a.get('date') or '')[:10]
+                    link = str(a.get('url') or a.get('pdf_url') or '')
+                    if not title or not decl:
+                        continue
+                    item = {'type': '公告', 'date': decl, 'title': title, 'content': title}
+                    if link:
+                        item['url'] = link
+                    items.append(item)
+                result[tc] = items
             except Exception as e:
-                print(f"  Warning: anns_d unavailable ({e}); announcements degraded to empty.")
-                break
-        else:
-            try:
-                time.sleep(API_DELAY)
-                start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=7)).strftime('%Y%m%d')
-                df = pro.anns_d(ts_code=tc, start_date=start, end_date=trade_date)
-                anns_map[tc] = df
-            except Exception as e:
-                print(f"  Warning: Failed to fetch announcements for {tc}: {e}")
-    if not probe_ok:
+                print(f"  Warning: Xueqiu announcements failed for {tc}: {e}")
+        return result if probe_ok else None
+    except Exception as e:
+        print(f"  Warning: Xueqiu session init failed: {e}")
+        return None
+
+
+def fetch_anns_cninfo(pro, trade_date):
+    """巨潮资讯公告（兜底）。返回 {ts_code: [item, ...]}，单只失败即为空列表。"""
+    try:
+        import requests
+    except Exception:
+        print("  Warning: requests not installed; cninfo fallback unavailable.")
         return {}
-    return anns_map
+    session = requests.Session()
+    session.headers.update({
+        'User-Agent': UA_BROWSER,
+        'Referer': 'http://www.cninfo.com.cn/new/commonUrl?url=disclosure/list/notice',
+        'X-Requested-With': 'XMLHttpRequest',
+    })
+    start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=7)).strftime('%Y-%m-%d')
+    end = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
+    result = {}
+    for tc, info in STOCKS.items():
+        items = []
+        code = tc.split('.')[0]
+        column = 'sse' if tc.endswith('.SH') else 'szse'
+        try:
+            # 1) topSearch 取 orgId（hisAnnouncement 的 stock 参数需要 code,orgId 格式）
+            time.sleep(API_DELAY)
+            r = session.post('http://www.cninfo.com.cn/new/information/topSearch/query',
+                             data={'keyWord': code, 'maxNum': 10}, timeout=15)
+            org_id = ''
+            for it in r.json():
+                if it.get('code') == code:
+                    org_id = it.get('orgId', '')
+                    break
+            # 2) 查询公告
+            time.sleep(API_DELAY)
+            stock_param = f"{code},{org_id}" if org_id else code
+            r2 = session.post('http://www.cninfo.com.cn/new/hisAnnouncement/query', data={
+                'pageNum': 1, 'pageSize': 10, 'column': column, 'tabName': 'fulltext',
+                'plate': '', 'stock': stock_param, 'searchkey': '', 'secid': '',
+                'category': '', 'trade': '', 'seDate': f'{start}~{end}',
+                'sortName': '', 'sortType': '', 'isHLtitle': 'true',
+            }, timeout=15)
+            anns = (r2.json().get('announcements') or [])
+            seen = set()
+            for a in anns:
+                title = str(a.get('announcementTitle', '')).replace('<em>', '').replace('</em>', '').strip()
+                ts_ms = a.get('announcementTime', 0)
+                date_fmt = datetime.fromtimestamp(ts_ms / 1000).strftime('%Y-%m-%d') if ts_ms else ''
+                if not title or not date_fmt:
+                    continue
+                key = (date_fmt, title)
+                if key in seen:  # 同一公告多个 PDF 版本，去重
+                    continue
+                seen.add(key)
+                adj = str(a.get('adjunctUrl', ''))
+                item = {'type': '公告', 'date': date_fmt, 'title': title, 'content': title}
+                if adj:
+                    item['url'] = f"http://static.cninfo.com.cn/{adj}"
+                items.append(item)
+        except Exception as e:
+            print(f"  Warning: cninfo announcements failed for {tc}: {e}")
+        result[tc] = items
+    return result
+
+
+def fetch_announcements(pro, trade_date):
+    """近 3 个交易日公告：雪球为主，巨潮兜底，都失败则空（脚本不崩）。"""
+    anns = fetch_anns_xueqiu(trade_date)
+    if anns is not None:
+        print("  Announcements source: Xueqiu")
+        return anns
+    anns = fetch_anns_cninfo(pro, trade_date)
+    print("  Announcements source: cninfo (fallback)")
+    return anns
 
 
 def build_holdings_news(anns_map, trade_date):
     """为 14 只股票各生成一个 holdingsNews 条目（每次运行全量覆盖，不保留旧手工数据）。
 
     行业信息不进 items，由前端在条目头部直接展示 industry 字段。
-    公告为空则 items 为空数组。
+    公告为空则 items 为空数组。anns_map: {ts_code: [item, ...]}
     """
     entries = []
     cutoff = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=5)).strftime('%Y-%m-%d')
     for tc, info in STOCKS.items():
-        items = []
-        df = anns_map.get(tc)
-        if df is not None and len(df) > 0:
-            for _, row in df.iterrows():
-                ann_date = str(row.get('ann_date', ''))
-                # ann_date 可能是 YYYYMMDD 或 YYYY-MM-DD HH:MM:SS
-                norm = ann_date.replace('-', '')[:8]
-                date_fmt = f"{norm[:4]}-{norm[4:6]}-{norm[6:]}" if len(norm) == 8 else ann_date[:10]
-                if date_fmt < cutoff:
-                    continue
-                title = str(row.get('title', '')).strip()
-                if not title:
-                    continue
-                url = str(row.get('url', '')).strip()
-                item = {'type': '公告', 'date': date_fmt, 'title': title, 'content': title}
-                if url:
-                    item['url'] = url
-                items.append(item)
-            items.sort(key=lambda x: x['date'], reverse=True)
+        items = [it for it in (anns_map.get(tc) or []) if it.get('date', '') >= cutoff]
+        items.sort(key=lambda x: x['date'], reverse=True)
         entries.append({
             'stockCode': tc,
             'stockName': info['name'],
@@ -356,33 +439,106 @@ def fetch_north_south(pro, trade_date):
     return north, south
 
 
-def fetch_top_list_signals(pro, trade_date):
-    """Fetch limit-up/down stocks for keySignals."""
-    time.sleep(API_DELAY)
-    signals = []
-    try:
-        df = pro.top_list(trade_date=trade_date)
-        if len(df) == 0:
-            return signals
+# 中证行业指数系列（细分指数每日点评）
+# 实测（2026-07，当前 token）：000929/000930/000931/000936/000937 及其深市镜像
+# 399929/399930/399931/399936/399937 在 index_daily 均无数据（需更高积分），
+# 因此这 5 个板块按顺序回退到覆盖相同行业的其它指数：
+#   材料 → 000987.SH 全指材料；工业 → 399383.SZ 中证1000工业；
+#   可选 → 000989.SH 全指可选；电信 → 801770.SI 申万通信；公用 → 801160.SI 申万公用事业
+# 若 token 升级积分，原 0009xx 代码会自动优先生效。
+SECTOR_INDICES = [
+    {'codes': ['000928.SH'], 'name': '中证能源'},
+    {'codes': ['000929.SH', '000987.SH'], 'name': '中证材料'},
+    {'codes': ['000930.SH', '399383.SZ'], 'name': '中证工业'},
+    {'codes': ['000931.SH', '000989.SH'], 'name': '中证可选'},
+    {'codes': ['000932.SH'], 'name': '中证消费'},
+    {'codes': ['000933.SH'], 'name': '中证医药'},
+    {'codes': ['000934.SH'], 'name': '中证金融'},
+    {'codes': ['000935.SH'], 'name': '中证信息'},
+    {'codes': ['000936.SH', '801770.SI'], 'name': '中证电信'},
+    {'codes': ['000937.SH', '801160.SI'], 'name': '中证公用'},
+]
 
-        limit_up = df[df['pct_change'] >= 9.9].nlargest(5, 'pct_change')
-        limit_down = df[df['pct_change'] <= -9.9].nsmallest(3, 'pct_change')
+# 风格归类：用于总评"市场风格偏成长/偏防御"
+_GROWTH_SECTORS = {'中证信息', '中证电信', '中证工业', '中证可选'}
+_DEFENSIVE_SECTORS = {'中证医药', '中证消费', '中证公用', '中证能源'}
 
-        for _, row in limit_up.iterrows():
-            amt = round(float(row['amount']) / 10000, 2)
-            signals.append({
-                'type': 'info',
-                'text': f"{row['name']}({row['ts_code']}) 涨停 +{row['pct_change']}%，成交{amt}亿",
+
+def fetch_sector_commentary(pro, trade_date):
+    """拉取中证行业指数近约 6 个交易日行情，自动生成中文简评。
+
+    index_daily 批量 ts_code 实测返回空，逐只查询。
+    每条: {code, name, pctChg, close, comment, tone('up'/'down'/'flat')}
+    """
+    start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=12)).strftime('%Y%m%d')
+    entries = []
+    for sector in SECTOR_INDICES:
+        df = None
+        used_code = None
+        for tc in sector['codes']:
+            try:
+                time.sleep(API_DELAY)
+                d = pro.index_daily(ts_code=tc, start_date=start, end_date=trade_date)
+                if len(d) > 0:
+                    df = d
+                    used_code = tc
+                    break
+            except Exception as e:
+                print(f"  Warning: Failed to fetch sector index {tc}: {e}")
+        if df is None:
+            print(f"  Warning: No data for {sector['name']} ({'/'.join(sector['codes'])})")
+            continue
+        try:
+            df = df.sort_values('trade_date').reset_index(drop=True)
+            last = df.iloc[-1]
+            pct = round(float(last['pct_chg']), 2)
+            close = round(float(last['close']), 2)
+            # 连续同向天数（含当日）
+            signs = [1 if v > 0 else (-1 if v < 0 else 0) for v in df['pct_chg'].tolist()]
+            streak = 0
+            cur = signs[-1]
+            for s in reversed(signs):
+                if s == cur and cur != 0:
+                    streak += 1
+                else:
+                    break
+            entries.append({
+                'code': used_code,
+                'name': sector['name'],
+                'pctChg': pct,
+                'close': close,
+                '_streak': streak,
+                '_sign': cur,
             })
-        for _, row in limit_down.iterrows():
-            amt = round(float(row['amount']) / 10000, 2)
-            signals.append({
-                'type': 'caution',
-                'text': f"{row['name']}({row['ts_code']}) 跌停 {row['pct_change']}%，成交{amt}亿",
-            })
-    except Exception as e:
-        print(f"  Warning: Failed to fetch top list: {e}")
-    return signals
+        except Exception as e:
+            print(f"  Warning: Failed to parse sector index {used_code}: {e}")
+
+    if not entries:
+        return []
+
+    # 排名生成点评
+    ranked = sorted(entries, key=lambda e: e['pctChg'], reverse=True)
+    top2 = {e['code'] for e in ranked[:2]}
+    bottom2 = {e['code'] for e in ranked[-2:]}
+    for e in entries:
+        pct = e['pctChg']
+        if e['code'] in top2 and pct > 0:
+            comment = '领涨，资金关注度高'
+        elif e['code'] in bottom2 and pct < 0:
+            comment = '领跌，注意风险'
+        elif abs(pct) < 0.3:
+            comment = '窄幅震荡'
+        elif pct > 0:
+            comment = '跟涨，表现平稳'
+        else:
+            comment = '回调，观望为主'
+        if e['_streak'] >= 3:
+            comment += f"，{'连涨' if e['_sign'] > 0 else '连跌'}{e['_streak']}日"
+        e['comment'] = comment
+        e['tone'] = 'up' if pct > 0.3 else ('down' if pct < -0.3 else 'flat')
+        del e['_streak']
+        del e['_sign']
+    return entries
 
 
 def load_existing_data():
@@ -474,15 +630,16 @@ def main():
         data['southbound'] = south
         print(f"  Southbound: {south['today']}亿")
 
-    # ── 8. Top list signals ──
-    print("\n[8/8] Fetching top list...")
-    # 一次性清理：清空存量 keySignals（含旧的、提及非用户个股的"持仓表现"类手工文本），
-    # 之后每天只保留脚本自动 prepend 的市场涨跌停信号。
-    data['keySignals'] = []
-    signals = fetch_top_list_signals(pro, trade_date)
-    if signals:
-        data['keySignals'] = signals + data['keySignals']
-        print(f"  Added {len(signals)} auto signals")
+    # ── 8. Sector index commentary (细分指数每日点评) ──
+    print("\n[8/8] Fetching sector index commentary...")
+    # 涨跌停信号卡已废弃：不再生成 keySignals，并删除存量字段
+    data.pop('keySignals', None)
+    commentary = fetch_sector_commentary(pro, trade_date)
+    if commentary:
+        data['sectorCommentary'] = commentary
+        print(f"  Built {len(commentary)} sector commentaries")
+        for c in commentary[:3]:
+            print(f"    {c['name']}: {c['pctChg']:+.2f}% - {c['comment']}")
 
     # ── Metadata ──
     data['updateTime'] = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]} 收盘 (Tushare自动)"

@@ -159,7 +159,14 @@ export interface FundData {
   stocks: StockItem[];
   northbound: { today: number; week: number; medical: number };
   southbound: { today: number; week: number; month: number };
-  keySignals: Array<{ type: string; text: string }>;
+  sectorCommentary?: Array<{
+    code: string;
+    name: string;
+    pctChg: number;
+    close: number;
+    comment: string;
+    tone: 'up' | 'down' | 'flat';
+  }>;
   foreignSummary?: {
     totalBuys: number;
     totalSells: number;

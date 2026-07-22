@@ -286,40 +286,6 @@
     "week": 15.34,
     "month": 42.18
   },
-  "keySignals": [
-    {
-      "type": "info",
-      "text": "云创退(920305.BJ) 涨停 +30.0%，成交2844.52亿"
-    },
-    {
-      "type": "info",
-      "text": "星辉环材(300834.SZ) 涨停 +20.0126%，成交22187.13亿"
-    },
-    {
-      "type": "info",
-      "text": "创业黑马(300688.SZ) 涨停 +20.0096%，成交55330.03亿"
-    },
-    {
-      "type": "info",
-      "text": "惠城转债(123118.SZ) 涨停 +20.0%，成交342883.18亿"
-    },
-    {
-      "type": "info",
-      "text": "惠城转债(123118.SZ) 涨停 +20.0%，成交672814.08亿"
-    },
-    {
-      "type": "caution",
-      "text": "联瑞转债(118064.SH) 跌停 -17.9344%，成交199855.24亿"
-    },
-    {
-      "type": "caution",
-      "text": "联瑞转债(118064.SH) 跌停 -17.9344%，成交549873.38亿"
-    },
-    {
-      "type": "caution",
-      "text": "龙鑫智能(920117.BJ) 跌停 -12.6928%，成交19945.57亿"
-    }
-  ],
   "foreignSummary": {
     "totalBuys": 32,
     "totalSells": 22,
@@ -8205,7 +8171,29 @@
       "stockName": "恒瑞医药",
       "group": "hold",
       "industry": "化学制药",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-07-20",
+          "title": "恒瑞医药关于回购公司A股股份的进展公告",
+          "content": "恒瑞医药关于回购公司A股股份的进展公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-20/1225431473.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-07-18",
+          "title": "H股公告-翌日披露报表",
+          "content": "H股公告-翌日披露报表",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-18/1225429902.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-07-17",
+          "title": "恒瑞医药关于获得药物临床试验批准通知书的公告",
+          "content": "恒瑞医药关于获得药物临床试验批准通知书的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-17/1225427944.PDF"
+        }
+      ]
     },
     {
       "stockCode": "688016.SH",
@@ -8226,7 +8214,15 @@
       "stockName": "上海机场",
       "group": "hold",
       "industry": "机场",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-07-20",
+          "title": "上海机场关于收到控股股东提议提升2026年度中期现金分红比例的公告",
+          "content": "上海机场关于收到控股股东提议提升2026年度中期现金分红比例的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-20/1225431567.PDF"
+        }
+      ]
     },
     {
       "stockCode": "600309.SH",
@@ -8240,7 +8236,15 @@
       "stockName": "国电南瑞",
       "group": "watch",
       "industry": "电气设备",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-07-20",
+          "title": "国电南瑞关于董事长提议回购公司部分股份的提示性公告",
+          "content": "国电南瑞关于董事长提议回购公司部分股份的提示性公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-20/1225431549.PDF"
+        }
+      ]
     },
     {
       "stockCode": "002216.SZ",
@@ -8261,14 +8265,44 @@
       "stockName": "安琪酵母",
       "group": "watch",
       "industry": "食品",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-07-17",
+          "title": "安琪酵母股份有限公司关于控股股东非公开发行可交换公司债券拟办理担保及信托登记的公告",
+          "content": "安琪酵母股份有限公司关于控股股东非公开发行可交换公司债券拟办理担保及信托登记的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-17/1225427947.PDF"
+        }
+      ]
     },
     {
       "stockCode": "002568.SZ",
       "stockName": "百润股份",
       "group": "watch",
       "industry": "红黄酒",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-07-22",
+          "title": "关于部分董事、高级管理人员增持计划的进展公告",
+          "content": "关于部分董事、高级管理人员增持计划的进展公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-22/1225435056.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-07-17",
+          "title": "关于实际控制人增持公司股份触及5%整数倍的公告",
+          "content": "关于实际控制人增持公司股份触及5%整数倍的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-17/1225428150.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-07-17",
+          "title": "简式权益变动报告书",
+          "content": "简式权益变动报告书",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-17/1225428149.PDF"
+        }
+      ]
     },
     {
       "stockCode": "601888.SH",
@@ -8282,7 +8316,15 @@
       "stockName": "药明康德",
       "group": "watch",
       "industry": "化学制药",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-07-21",
+          "title": "H股公告",
+          "content": "H股公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-21/1225433114.PDF"
+        }
+      ]
     },
     {
       "stockCode": "300760.SZ",
@@ -8296,7 +8338,15 @@
       "stockName": "联影医疗",
       "group": "watch",
       "industry": "医疗保健",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-07-21",
+          "title": "联影医疗关于取得医疗器械注册证的自愿性信息披露公告",
+          "content": "联影医疗关于取得医疗器械注册证的自愿性信息披露公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-21/1225433936.PDF"
+        }
+      ]
     }
   ],
   "nationalTeamNews": {
@@ -8422,6 +8472,88 @@
       "close": 0.799,
       "changePct": 1.14,
       "preClose": 0.79
+    }
+  ],
+  "sectorCommentary": [
+    {
+      "code": "000928.SH",
+      "name": "中证能源",
+      "pctChg": 2.22,
+      "close": 3314.78,
+      "comment": "领涨，资金关注度高",
+      "tone": "up"
+    },
+    {
+      "code": "000987.SH",
+      "name": "中证材料",
+      "pctChg": 1.84,
+      "close": 4692.22,
+      "comment": "领涨，资金关注度高",
+      "tone": "up"
+    },
+    {
+      "code": "399383.SZ",
+      "name": "中证工业",
+      "pctChg": -0.43,
+      "close": 2653.29,
+      "comment": "回调，观望为主",
+      "tone": "down"
+    },
+    {
+      "code": "000989.SH",
+      "name": "中证可选",
+      "pctChg": -0.63,
+      "close": 4592.51,
+      "comment": "回调，观望为主",
+      "tone": "down"
+    },
+    {
+      "code": "000932.SH",
+      "name": "中证消费",
+      "pctChg": 0.65,
+      "close": 12700.36,
+      "comment": "跟涨，表现平稳",
+      "tone": "up"
+    },
+    {
+      "code": "000933.SH",
+      "name": "中证医药",
+      "pctChg": 0.39,
+      "close": 8063.45,
+      "comment": "跟涨，表现平稳，连涨3日",
+      "tone": "up"
+    },
+    {
+      "code": "000934.SH",
+      "name": "中证金融",
+      "pctChg": 0.78,
+      "close": 5666.99,
+      "comment": "跟涨，表现平稳",
+      "tone": "up"
+    },
+    {
+      "code": "000935.SH",
+      "name": "中证信息",
+      "pctChg": -1.6,
+      "close": 8408.73,
+      "comment": "领跌，注意风险",
+      "tone": "down"
+    },
+    {
+      "code": "801770.SI",
+      "name": "中证电信",
+      "pctChg": -4.44,
+      "close": 7522.72,
+      "comment": "领跌，注意风险",
+      "tone": "down"
+    },
+    {
+      "code": "801160.SI",
+      "name": "中证公用",
+      "pctChg": 1.41,
+      "close": 2530.95,
+      "comment": "跟涨，表现平稳",
+      "tone": "up"
     }
   ]
 }

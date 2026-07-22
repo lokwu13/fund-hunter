@@ -37,7 +37,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install tushare pandas
+          pip install tushare pandas requests
 
       - name: Fetch data from Tushare
         env:

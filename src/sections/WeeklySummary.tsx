@@ -2,8 +2,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { TrendingUp, TrendingDown, Activity, Zap, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from 'lucide-react';
 import { useFundData } from '@/hooks/useFundData';
+
+const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
+const DEFENSIVE_SECTORS = new Set(['中证医药', '中证消费', '中证公用', '中证能源']);
 
 export default function WeeklySummary() {
   const { data } = useFundData();
@@ -13,16 +16,28 @@ export default function WeeklySummary() {
   const holdStocks = myStocks.filter((s) => s.group === 'hold');
   const watchStocks = myStocks.filter((s) => s.group === 'watch');
   const myETFs = data.myETF || [];
+  const sectors = data.sectorCommentary || [];
 
   const pctClass = (v?: number) =>
     (v ?? 0) >= 0 ? 'text-red-500' : 'text-green-500';
   const fmtPct = (v?: number) => `${(v ?? 0) >= 0 ? '+' : ''}${(v ?? 0).toFixed(2)}%`;
 
-  const signalColors: Record<string, string> = {
-    danger: 'bg-red-50 border-red-200 text-red-700',
-    warning: 'bg-amber-50 border-amber-200 text-amber-700',
-    success: 'bg-emerald-50 border-emerald-200 text-emerald-700',
-    info: 'bg-blue-50 border-blue-200 text-blue-700',
+  // 细分指数总评：领涨/领跌 + 市场风格
+  let sectorSummary = '';
+  if (sectors.length > 0) {
+    const ranked = [...sectors].sort((a, b) => b.pctChg - a.pctChg);
+    const leader = ranked[0];
+    const laggard = ranked[ranked.length - 1];
+    let style = '均衡';
+    if (GROWTH_SECTORS.has(leader.name)) style = '偏成长';
+    else if (DEFENSIVE_SECTORS.has(leader.name)) style = '偏防御';
+    sectorSummary = `今日${leader.name}领涨 ${fmtPct(leader.pctChg)}，${laggard.name}领跌 ${fmtPct(laggard.pctChg)}，市场风格${style}`;
+  }
+
+  const sectorToneClass: Record<string, string> = {
+    up: 'bg-red-50 border-red-100',
+    down: 'bg-green-50 border-green-100',
+    flat: 'bg-slate-50 border-slate-200',
   };
 
   const fundSources = [
@@ -54,15 +69,29 @@ export default function WeeklySummary() {
         </div>
       </div>
 
-      {/* Key Signals */}
-      <div className="grid grid-cols-2 gap-3">
-        {data.keySignals.map((signal, i) => (
-          <div key={i} className={`${signalColors[signal.type]} border rounded-lg px-4 py-3 flex items-center gap-2`}>
-            <Zap className="w-4 h-4 flex-shrink-0" />
-            <span className="text-sm font-medium">{signal.text}</span>
+      {/* 细分指数点评 */}
+      {sectors.length > 0 && (
+        <div>
+          <h3 className="text-base font-bold text-slate-800 mb-2 flex items-center gap-2">
+            <Layers className="w-4 h-4 text-indigo-500" />
+            细分指数点评
+          </h3>
+          <p className="text-xs text-slate-500 mb-3 bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+            {sectorSummary}
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {sectors.map((s) => (
+              <div key={s.code} className={`border rounded-lg px-3 py-2 ${sectorToneClass[s.tone] || sectorToneClass.flat}`}>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-semibold text-slate-800">{s.name}</span>
+                  <span className={`text-sm font-bold ${pctClass(s.pctChg)}`}>{fmtPct(s.pctChg)}</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">{s.comment}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
       {/* 我的个股（持股 + 观察股） */}
       {(holdStocks.length > 0 || watchStocks.length > 0) && (
