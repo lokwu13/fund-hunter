@@ -5,6 +5,9 @@ on:
   # A-share market closes at 15:00, data is available after ~19:00
   schedule:
     - cron: '30 11 * * *'
+  # Also rebuild & deploy whenever code is pushed to main
+  push:
+    branches: [main]
   # Manual trigger via GitHub web interface
   workflow_dispatch:
 
