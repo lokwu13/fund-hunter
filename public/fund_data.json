@@ -5,28 +5,23 @@
   "indices": {
     "shIndex": {
       "name": "上证指数",
-      "value": 3864.37,
-      "change": 1.79
+      "value": 3867.03,
+      "change": 0.07
     },
     "szIndex": {
       "name": "深证成指",
-      "value": 14264.29,
-      "change": 4.81
+      "value": 14061.44,
+      "change": -1.42
     },
     "hs300": {
       "name": "沪深300",
-      "value": 4739.23,
-      "change": 3.06
-    },
-    "hsi": {
-      "name": "恒生指数",
-      "value": 25132.29,
-      "change": -0.04
+      "value": 4717.24,
+      "change": -0.46
     },
     "cyIndex": {
       "name": "创业板指",
-      "value": 3685.97,
-      "change": 7.05
+      "value": 3566.73,
+      "change": -3.23
     }
   },
   "sectors": [
@@ -141,106 +136,150 @@
   ],
   "stocks": [
     {
-      "code": "000333.SZ",
-      "name": "美的集团",
-      "close": 84.8,
-      "pctChg": 0.63,
-      "vol": 32.69,
-      "watchPrice": 85.0
+      "code": "000895.SZ",
+      "name": "双汇发展",
+      "industry": "食品",
+      "group": "watch",
+      "close": 25.0,
+      "pctChg": 0.85,
+      "vol": 18.55,
+      "watchPrice": 0
     },
     {
-      "code": "002475.SZ",
-      "name": "立讯精密",
-      "close": 59.16,
-      "pctChg": -2.09,
-      "vol": 106.22,
-      "watchPrice": 42.0
+      "code": "002216.SZ",
+      "name": "三全食品",
+      "industry": "食品",
+      "group": "watch",
+      "close": 12.82,
+      "pctChg": 0.87,
+      "vol": 9.29,
+      "watchPrice": 0
     },
     {
-      "code": "300750.SZ",
-      "name": "宁德时代",
-      "close": 372.26,
-      "pctChg": -2.6,
-      "vol": 31.19,
-      "watchPrice": 330.0
+      "code": "002568.SZ",
+      "name": "百润股份",
+      "industry": "红黄酒",
+      "group": "watch",
+      "close": 18.65,
+      "pctChg": 1.63,
+      "vol": 17.18,
+      "watchPrice": 0
     },
     {
       "code": "300760.SZ",
       "name": "迈瑞医疗",
+      "industry": "医疗保健",
+      "group": "watch",
       "close": 152.27,
       "pctChg": 0.01,
       "vol": 10.63,
-      "watchPrice": 280.0
+      "watchPrice": 0
     },
     {
       "code": "600009.SH",
       "name": "上海机场",
+      "industry": "机场",
+      "group": "hold",
       "close": 24.28,
       "pctChg": 2.79,
       "vol": 20.84,
-      "watchPrice": 25.0
-    },
-    {
-      "code": "600036.SH",
-      "name": "招商银行",
-      "close": 38.71,
-      "pctChg": 1.9,
-      "vol": 108.45,
-      "watchPrice": 40.0
+      "watchPrice": 0
     },
     {
       "code": "600276.SH",
       "name": "恒瑞医药",
+      "industry": "化学制药",
+      "group": "hold",
       "close": 55.39,
       "pctChg": 0.84,
       "vol": 85.98,
-      "watchPrice": 48.0
+      "watchPrice": 0
     },
     {
-      "code": "600519.SH",
-      "name": "贵州茅台",
-      "close": 1305.0,
-      "pctChg": -0.23,
-      "vol": 6.52,
-      "watchPrice": 1400.0
+      "code": "600298.SH",
+      "name": "安琪酵母",
+      "industry": "食品",
+      "group": "watch",
+      "close": 39.03,
+      "pctChg": -1.21,
+      "vol": 13.02,
+      "watchPrice": 0
+    },
+    {
+      "code": "600309.SH",
+      "name": "万华化学",
+      "industry": "化工原料",
+      "group": "watch",
+      "close": 74.0,
+      "pctChg": 3.14,
+      "vol": 54.36,
+      "watchPrice": 0
+    },
+    {
+      "code": "600406.SH",
+      "name": "国电南瑞",
+      "industry": "电气设备",
+      "group": "watch",
+      "close": 23.75,
+      "pctChg": -0.21,
+      "vol": 73.84,
+      "watchPrice": 0
     },
     {
       "code": "601888.SH",
       "name": "中国中免",
+      "industry": "旅游服务",
+      "group": "watch",
       "close": 55.7,
       "pctChg": 3.0,
       "vol": 54.5,
-      "watchPrice": 65.0
+      "watchPrice": 0
+    },
+    {
+      "code": "603259.SH",
+      "name": "药明康德",
+      "industry": "化学制药",
+      "group": "watch",
+      "close": 125.9,
+      "pctChg": -0.43,
+      "vol": 60.26,
+      "watchPrice": 0
     },
     {
       "code": "688016.SH",
       "name": "心脉医疗",
+      "industry": "医疗保健",
+      "group": "hold",
       "close": 91.84,
       "pctChg": -0.7,
       "vol": 1.64,
-      "watchPrice": 98.0
+      "watchPrice": 0
     },
     {
       "code": "688029.SH",
       "name": "南微医学",
+      "industry": "医疗保健",
+      "group": "hold",
       "close": 77.14,
       "pctChg": 1.5,
       "vol": 3.2,
-      "watchPrice": 65.0
+      "watchPrice": 0
     },
     {
-      "code": "688981.SH",
-      "name": "中芯国际",
-      "close": 155.59,
-      "pctChg": -2.76,
-      "vol": 79.97,
-      "watchPrice": 85.0
+      "code": "688271.SH",
+      "name": "联影医疗",
+      "industry": "医疗保健",
+      "group": "watch",
+      "close": 113.84,
+      "pctChg": -0.59,
+      "vol": 7.11,
+      "watchPrice": 0
     }
   ],
   "northbound": {
-    "today": 45.23,
-    "week": 128.56,
-    "medical": 35.42
+    "today": 37.5,
+    "week": 112.5,
+    "month": 375.0
   },
   "southbound": {
     "today": 8.67,
@@ -250,31 +289,35 @@
   "keySignals": [
     {
       "type": "info",
-      "text": "7月21日A股强势反弹，上证指数涨+1.79%报3864点，沪深300涨+3.06%，创业板指暴涨+7.05%，深证成指涨+4.81%。半导体、硬件设备等科技成长赛道全线爆发，科创综指大涨8.75%。"
+      "text": "云创退(920305.BJ) 涨停 +30.0%，成交2844.52亿"
     },
     {
       "type": "info",
-      "text": "全天A股放量成交至29702亿元，超3100只个股上涨，百余只个股涨停。资金集中回流芯片、光电子等硬科技赛道，市场做多情绪回暖，国家队入场迹象明显。"
+      "text": "星辉环材(300834.SZ) 涨停 +20.0126%，成交22187.13亿"
     },
     {
       "type": "info",
-      "text": "主力资金流向：中际旭创净流入29.33亿元居首，兆易创新、京东方A、长电科技、北方华创获大幅流入；德明利净流出15.69亿元居首，五粮液、贵州茅台、信维通信遭流出。"
+      "text": "创业黑马(300688.SZ) 涨停 +20.0096%，成交55330.03亿"
     },
     {
       "type": "info",
-      "text": "公募基金二季报披露完毕：中际旭创蝉联第一大重仓股（持有市值1662.53亿元），寒武纪、北方华创、兆易创新、源杰科技、中微公司、三环集团新晋前十大重仓股。腾讯控股成减持最多个股（-187.37亿元）。"
+      "text": "惠城转债(123118.SZ) 涨停 +20.0%，成交342883.18亿"
     },
     {
       "type": "info",
-      "text": "国家队入场：中国诚通近日累计买入近百亿元，中国国新宣布使用500亿+股票回购增持专项再贷款用于维护市场稳定，重点增持科技公司股票及ETF。7月1-21日共有313家公司实施回购，累计金额约169.22亿元。"
-    },
-    {
-      "type": "info",
-      "text": "持仓表现：中芯国际大涨+11.11%报160元，立讯精密涨+6.37%报60.42元，宁德时代涨+1.53%报382.2元。心脉医疗微跌-0.40%报92.49元，南微医学跌-2.96%报76元，上海机场跌-1.34%报23.62元。"
+      "text": "惠城转债(123118.SZ) 涨停 +20.0%，成交672814.08亿"
     },
     {
       "type": "caution",
-      "text": "部分个股调整：招商银行跌-2.36%，迈瑞医疗跌-1.46%，恒瑞医药跌-1.15%。港股整体微跌，腾讯跌-0.80%，美团跌-1.27%，小米跌-1.15%。"
+      "text": "联瑞转债(118064.SH) 跌停 -17.9344%，成交199855.24亿"
+    },
+    {
+      "type": "caution",
+      "text": "联瑞转债(118064.SH) 跌停 -17.9344%，成交549873.38亿"
+    },
+    {
+      "type": "caution",
+      "text": "龙鑫智能(920117.BJ) 跌停 -12.6928%，成交19945.57亿"
     }
   ],
   "foreignSummary": {
@@ -1778,146 +1821,146 @@
   ],
   "mainforce_inflow_top10": [
     {
-      "name": "中际旭创",
-      "code": "300308.SZ",
-      "concept": "光模块/通信设备",
+      "name": "紫金矿业",
+      "code": "601899.SH",
+      "concept": "铜",
+      "sector": "铜",
+      "amount": "+30.39亿"
+    },
+    {
+      "name": "中兴通讯",
+      "code": "000063.SZ",
+      "concept": "通信设备",
       "sector": "通信设备",
-      "amount": "+29.3亿"
+      "amount": "+25.41亿"
     },
     {
-      "name": "兆易创新",
-      "code": "603986.SH",
-      "concept": "存储芯片/半导体",
+      "name": "洛阳钼业",
+      "code": "603993.SH",
+      "concept": "小金属",
+      "sector": "小金属",
+      "amount": "+17.57亿"
+    },
+    {
+      "name": "中科曙光",
+      "code": "603019.SH",
+      "concept": "IT设备",
+      "sector": "IT设备",
+      "amount": "+12.7亿"
+    },
+    {
+      "name": "全志科技",
+      "code": "300458.SZ",
+      "concept": "半导体",
       "sector": "半导体",
-      "amount": "+21.5亿"
+      "amount": "+10.64亿"
     },
     {
-      "name": "京东方A",
-      "code": "000725.SZ",
-      "concept": "面板/元器件",
-      "sector": "元器件",
-      "amount": "+18.2亿"
-    },
-    {
-      "name": "长电科技",
-      "code": "600584.SH",
-      "concept": "半导体封测",
+      "name": "盛科通信",
+      "code": "688702.SH",
+      "concept": "半导体",
       "sector": "半导体",
-      "amount": "+16.8亿"
+      "amount": "+8.52亿"
     },
     {
-      "name": "北方华创",
-      "code": "002371.SZ",
-      "concept": "半导体设备",
+      "name": "隆基绿能",
+      "code": "601012.SH",
+      "concept": "电气设备",
+      "sector": "电气设备",
+      "amount": "+8.08亿"
+    },
+    {
+      "name": "西部矿业",
+      "code": "601168.SH",
+      "concept": "铜",
+      "sector": "铜",
+      "amount": "+6.91亿"
+    },
+    {
+      "name": "晶华新材",
+      "code": "603683.SH",
+      "concept": "化工原料",
+      "sector": "化工原料",
+      "amount": "+6.28亿"
+    },
+    {
+      "name": "澜起科技",
+      "code": "688008.SH",
+      "concept": "半导体",
       "sector": "半导体",
-      "amount": "+15.6亿"
-    },
-    {
-      "name": "中芯国际",
-      "code": "688981.SH",
-      "concept": "晶圆代工",
-      "sector": "半导体",
-      "amount": "+14.2亿"
-    },
-    {
-      "name": "寒武纪",
-      "code": "688256.SH",
-      "concept": "AI芯片",
-      "sector": "半导体",
-      "amount": "+12.8亿"
-    },
-    {
-      "name": "新易盛",
-      "code": "300502.SZ",
-      "concept": "光模块/通信设备",
-      "sector": "通信设备",
-      "amount": "+11.5亿"
-    },
-    {
-      "name": "立讯精密",
-      "code": "002475.SZ",
-      "concept": "消费电子",
-      "sector": "元器件",
-      "amount": "+10.3亿"
-    },
-    {
-      "name": "中微公司",
-      "code": "688012.SH",
-      "concept": "半导体设备",
-      "sector": "半导体",
-      "amount": "+9.7亿"
+      "amount": "+6.26亿"
     }
   ],
   "mainforce_outflow_top10": [
     {
-      "name": "德明利",
-      "code": "001309.SZ",
-      "concept": "存储模组",
+      "name": "中际旭创",
+      "code": "300308.SZ",
+      "concept": "通信设备",
+      "sector": "通信设备",
+      "amount": "-48.82亿"
+    },
+    {
+      "name": "新易盛",
+      "code": "300502.SZ",
+      "concept": "通信设备",
+      "sector": "通信设备",
+      "amount": "-38.0亿"
+    },
+    {
+      "name": "通富微电",
+      "code": "002156.SZ",
+      "concept": "半导体",
       "sector": "半导体",
-      "amount": "-15.7亿"
+      "amount": "-35.66亿"
     },
     {
-      "name": "五粮液",
-      "code": "000858.SZ",
-      "concept": "白酒",
-      "sector": "食品饮料",
-      "amount": "-12.4亿"
+      "name": "兆易创新",
+      "code": "603986.SH",
+      "concept": "半导体",
+      "sector": "半导体",
+      "amount": "-24.84亿"
     },
     {
-      "name": "贵州茅台",
-      "code": "600519.SH",
-      "concept": "白酒",
-      "sector": "食品饮料",
-      "amount": "-11.8亿"
+      "name": "京东方A",
+      "code": "000725.SZ",
+      "concept": "元器件",
+      "sector": "元器件",
+      "amount": "-23.77亿"
     },
     {
-      "name": "信维通信",
-      "code": "300136.SZ",
-      "concept": "射频器件",
-      "sector": "通信",
-      "amount": "-9.5亿"
+      "name": "紫光股份",
+      "code": "000938.SZ",
+      "concept": "IT设备",
+      "sector": "IT设备",
+      "amount": "-15.46亿"
     },
     {
       "name": "亨通光电",
       "code": "600487.SH",
-      "concept": "光纤光缆",
-      "sector": "通信",
-      "amount": "-8.3亿"
+      "concept": "通信设备",
+      "sector": "通信设备",
+      "amount": "-12.97亿"
     },
     {
-      "name": "东方财富",
-      "code": "300059.SZ",
-      "concept": "互联网金融",
-      "sector": "非银金融",
-      "amount": "-7.8亿"
+      "name": "北方华创",
+      "code": "002371.SZ",
+      "concept": "半导体",
+      "sector": "半导体",
+      "amount": "-12.86亿"
     },
     {
-      "name": "招商银行",
-      "code": "600036.SH",
-      "concept": "股份制银行",
-      "sector": "银行",
-      "amount": "-6.5亿"
+      "name": "江波龙",
+      "code": "301308.SZ",
+      "concept": "半导体",
+      "sector": "半导体",
+      "amount": "-12.74亿"
     },
     {
-      "name": "紫金矿业",
-      "code": "601899.SH",
-      "concept": "铜金矿业",
-      "sector": "有色金属",
-      "amount": "-5.9亿"
-    },
-    {
-      "name": "中国平安",
-      "code": "601318.SH",
-      "concept": "保险",
-      "sector": "非银金融",
-      "amount": "-5.2亿"
-    },
-    {
-      "name": "美的集团",
-      "code": "000333.SZ",
-      "concept": "白色家电",
-      "sector": "家电",
-      "amount": "-4.8亿"
+      "name": "中芯国际",
+      "code": "688981.SH",
+      "concept": "半导体",
+      "sector": "半导体",
+      "amount": "-11.84亿"
     }
   ],
   "privateFund_inflow": [
@@ -8158,52 +8201,102 @@
   ],
   "holdingsNews": [
     {
-      "stockCode": "000333.SZ",
-      "stockName": "美的集团",
-      "items": [
-        {
-          "type": "回购",
-          "date": "2026-07-21",
-          "title": "美的集团 - 回购",
-          "content": "7月回购4136万股，耗资32.94亿元，为阶段回购规模最高个股"
-        }
-      ]
+      "stockCode": "600276.SH",
+      "stockName": "恒瑞医药",
+      "group": "hold",
+      "industry": "化学制药",
+      "items": []
     },
     {
-      "stockCode": "-",
-      "stockName": "中国诚通/中国国新",
-      "items": [
-        {
-          "type": "国家队",
-          "date": "2026-07-21",
-          "title": "中国诚通/中国国新 - 国家队",
-          "content": "中国诚通累计买入近百亿元，中国国新500亿+增持科技股票及ETF"
-        }
-      ]
+      "stockCode": "688016.SH",
+      "stockName": "心脉医疗",
+      "group": "hold",
+      "industry": "医疗保健",
+      "items": []
     },
     {
-      "stockCode": "600905.SH",
-      "stockName": "三峡能源",
-      "items": [
-        {
-          "type": "增持",
-          "date": "2026-07-20",
-          "title": "三峡能源 - 增持",
-          "content": "控股股东三峡集团拟在12个月内增持15-30亿元"
-        }
-      ]
+      "stockCode": "688029.SH",
+      "stockName": "南微医学",
+      "group": "hold",
+      "industry": "医疗保健",
+      "items": []
     },
     {
-      "stockCode": "600031.SH",
-      "stockName": "三一重工",
-      "items": [
-        {
-          "type": "回购",
-          "date": "2026-07-20",
-          "title": "三一重工 - 回购",
-          "content": "董事长向文波提议4-8亿元股份回购"
-        }
-      ]
+      "stockCode": "600009.SH",
+      "stockName": "上海机场",
+      "group": "hold",
+      "industry": "机场",
+      "items": []
+    },
+    {
+      "stockCode": "600309.SH",
+      "stockName": "万华化学",
+      "group": "watch",
+      "industry": "化工原料",
+      "items": []
+    },
+    {
+      "stockCode": "600406.SH",
+      "stockName": "国电南瑞",
+      "group": "watch",
+      "industry": "电气设备",
+      "items": []
+    },
+    {
+      "stockCode": "002216.SZ",
+      "stockName": "三全食品",
+      "group": "watch",
+      "industry": "食品",
+      "items": []
+    },
+    {
+      "stockCode": "000895.SZ",
+      "stockName": "双汇发展",
+      "group": "watch",
+      "industry": "食品",
+      "items": []
+    },
+    {
+      "stockCode": "600298.SH",
+      "stockName": "安琪酵母",
+      "group": "watch",
+      "industry": "食品",
+      "items": []
+    },
+    {
+      "stockCode": "002568.SZ",
+      "stockName": "百润股份",
+      "group": "watch",
+      "industry": "红黄酒",
+      "items": []
+    },
+    {
+      "stockCode": "601888.SH",
+      "stockName": "中国中免",
+      "group": "watch",
+      "industry": "旅游服务",
+      "items": []
+    },
+    {
+      "stockCode": "603259.SH",
+      "stockName": "药明康德",
+      "group": "watch",
+      "industry": "化学制药",
+      "items": []
+    },
+    {
+      "stockCode": "300760.SZ",
+      "stockName": "迈瑞医疗",
+      "group": "watch",
+      "industry": "医疗保健",
+      "items": []
+    },
+    {
+      "stockCode": "688271.SH",
+      "stockName": "联影医疗",
+      "group": "watch",
+      "industry": "医疗保健",
+      "items": []
     }
   ],
   "nationalTeamNews": {
@@ -8293,5 +8386,42 @@
         ]
       }
     ]
-  }
+  },
+  "myETF": [
+    {
+      "ticker": "159883",
+      "name": "永赢中证全指医疗器械ETF",
+      "close": 0.43,
+      "changePct": -0.23,
+      "preClose": 0.431
+    },
+    {
+      "ticker": "159892",
+      "name": "华夏恒生生物科技ETF(QDII)",
+      "close": 0.734,
+      "changePct": 0.96,
+      "preClose": 0.727
+    },
+    {
+      "ticker": "159265",
+      "name": "鹏华国证港股通消费主题ETF",
+      "close": 0.821,
+      "changePct": -0.73,
+      "preClose": 0.827
+    },
+    {
+      "ticker": "159736",
+      "name": "天弘中证食品饮料ETF",
+      "close": 0.586,
+      "changePct": 0.34,
+      "preClose": 0.584
+    },
+    {
+      "ticker": "512800",
+      "name": "华宝中证银行ETF",
+      "close": 0.799,
+      "changePct": 1.14,
+      "preClose": 0.79
+    }
+  ]
 }

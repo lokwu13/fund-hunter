@@ -32,6 +32,21 @@ export interface StockItem {
   ratingChange: RatingChange | null;
   foreignHoldings: ForeignHolding[];
   weeklyFlow: WeeklyFlowItem[];
+  /** 用户个股扩展字段（由 update_data.py 每日生成） */
+  group?: 'hold' | 'watch';
+  industry?: string;
+  close?: number;
+  pctChg?: number;
+  vol?: number;
+  watchPrice?: number;
+}
+
+export interface MyETFItem {
+  ticker: string;
+  name: string;
+  close?: number;
+  changePct?: number;
+  preClose?: number;
 }
 
 export interface DivergenceItem {
@@ -293,14 +308,18 @@ export interface FundData {
     changePct?: number;
     preClose?: number;
   }>;
+  myETF?: MyETFItem[];
   holdingsNews?: Array<{
     stockCode: string;
     stockName: string;
+    group?: 'hold' | 'watch';
+    industry?: string;
     items: Array<{
       type: string;
       date: string;
       title: string;
       content: string;
+      url?: string;
     }>;
   }>;
   nationalTeamNews?: {
