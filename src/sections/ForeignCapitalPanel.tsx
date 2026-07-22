@@ -330,7 +330,7 @@ export default function ForeignCapitalPanel() {
               外资机构买入TOP10（A+H股）
             </CardTitle>
             <CardDescription className="text-xs">
-              港交所权益披露 + 沪深港通北向持仓 · 覆盖全市场
+              北向资金(陆股通) 2026Q2 持仓(6/30末, 7/8公布)
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
@@ -376,7 +376,7 @@ export default function ForeignCapitalPanel() {
               外资机构卖出TOP10（A+H股）
             </CardTitle>
             <CardDescription className="text-xs">
-              港交所权益披露 + 沪深港通北向持仓 · 覆盖全市场
+              北向资金(陆股通) 2026Q2 持仓(6/30末, 7/8公布)
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
@@ -425,7 +425,7 @@ export default function ForeignCapitalPanel() {
                 外资机构买入TOP10详细（A+H股全市场）
               </CardTitle>
               <CardDescription>
-                覆盖南向资金/北向资金/BlackRock/JPMorgan/Vanguard/State Street/Fidelity等
+                北向资金(陆股通) 2026Q2 持仓(6/30末, 7/8公布)
               </CardDescription>
             </div>
             <Badge className="bg-emerald-100 text-emerald-700 text-xs">每周更新</Badge>

@@ -107,7 +107,7 @@ export default function PublicFundPanel() {
                   <TrendingUp className="w-4 h-4" />
                   公募加仓TOP10（A+H全市场）
                 </CardTitle>
-                <CardDescription className="text-xs">主动权益基金重仓股净流入 · 2025Q2</CardDescription>
+                <CardDescription className="text-xs">主动权益基金重仓股净流入 · 2026Q2 二季报(7月21日披露完毕)</CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
                 <Table>
@@ -143,7 +143,7 @@ export default function PublicFundPanel() {
                   <TrendingDown className="w-4 h-4" />
                   公募减仓TOP10（A+H全市场）
                 </CardTitle>
-                <CardDescription className="text-xs">主动权益基金重仓股净流出 · 2025Q2</CardDescription>
+                <CardDescription className="text-xs">主动权益基金重仓股净流出 · 2026Q2 二季报(7月21日披露完毕)</CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
                 <Table>
@@ -182,7 +182,7 @@ export default function PublicFundPanel() {
                 <Activity className="w-5 h-5 text-red-600" />
                 机构持仓集中度最高TOP10
               </CardTitle>
-              <CardDescription>公募重仓持股占自由流通市值比重 · 2025Q2</CardDescription>
+              <CardDescription>公募重仓持股占自由流通市值比重 · 2026Q2 二季报(7月21日披露完毕)</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -306,6 +306,11 @@ export default function PublicFundPanel() {
           </div>
 
           {/* 私募净流入/流出TOP5 */}
+          <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+            <p className="text-xs text-amber-700">
+              私募持仓随上市公司中报披露，2026Q2 数据 8 月出炉，当前为公开报道口径，仅供参考
+            </p>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <Card>
               <CardHeader className="pb-2">

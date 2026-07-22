@@ -547,7 +547,7 @@ export default function NationalTeamPanel() {
             <TrendingUp className="w-5 h-5 text-red-600" />
             国家队近三个月增持最多TOP5
           </CardTitle>
-          <CardDescription>证金/汇金持仓变动 · 2025Q1</CardDescription>
+          <CardDescription>社保基金 2026Q1 一季报口径 · Q2 持仓随中报 8 月披露</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>

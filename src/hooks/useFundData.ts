@@ -316,6 +316,14 @@ export interface FundData {
     preClose?: number;
   }>;
   myETF?: MyETFItem[];
+  hotFundNavs?: Array<{
+    code: string;
+    name: string;
+    nav?: number;
+    accumNav?: number;
+    date?: string;
+    change?: number;
+  }>;
   holdingsNews?: Array<{
     stockCode: string;
     stockName: string;

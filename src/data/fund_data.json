@@ -287,13 +287,13 @@
     "month": 42.18
   },
   "foreignSummary": {
-    "totalBuys": 32,
-    "totalSells": 22,
-    "ratingUpgrades": 14,
-    "ratingDowngrades": 6,
-    "topInstitution": "贝莱德/BlackRock",
-    "topSector": "半导体/通信设备",
-    "recentHighlight": "北向资金7月累计净流入超450亿，半导体、通信设备、电子元件获大幅增持；白酒、券商遭减持。公募基金Q2大幅调仓增持AI算力链，减持消费互联网。"
+    "totalBuys": 0,
+    "totalSells": 0,
+    "ratingUpgrades": 0,
+    "ratingDowngrades": 0,
+    "topInstitution": "北向资金(陆股通)",
+    "topSector": "电子(第一大重仓,7825亿)",
+    "recentHighlight": "截至2026Q2末(6/30,7/8公布)北向资金持仓3.13万亿元创季度新高,电子取代电力设备成第一大重仓行业(7825亿);加仓宁德时代(+554亿)、中际旭创(市值翻倍至931亿)、北方华创、寒武纪(+137亿);减持贵州茅台(-25%)、食品饮料/有色/银行各减200亿+。(笔数统计暂无官方口径,置0)"
   },
   "combined_sell_top10": [
     {
@@ -1073,123 +1073,94 @@
     "buys": [
       {
         "rank": 1,
-        "name": "腾讯控股",
-        "code": "00700.HK",
-        "market": "港股",
-        "amount": "+48.5亿",
-        "institution": "BlackRock",
-        "date": "2026-06-27",
-        "concept": "互联网/游戏",
-        "sector": "互联网",
-        "holdingChange": "增持至6.2%"
-      },
-      {
-        "rank": 2,
         "name": "宁德时代",
         "code": "300750.SZ",
         "market": "A股",
-        "amount": "+32.8亿",
-        "institution": "摩根大通",
-        "date": "2026-06-25",
-        "concept": "动力电池",
+        "institution": "北向资金(陆股通)",
+        "amount": "+554亿",
+        "date": "2026-06-30",
+        "concept": "锂电池/新能源",
         "sector": "电力设备",
-        "holdingChange": "增持至2.8%"
+        "holdingChange": "持仓3514亿居首",
+        "note": "连续4个季度加仓超百亿"
+      },
+      {
+        "rank": 2,
+        "name": "中际旭创",
+        "code": "300308.SZ",
+        "market": "A股",
+        "institution": "北向资金(陆股通)",
+        "amount": "市值翻倍至931.29亿",
+        "date": "2026-06-30",
+        "concept": "光模块/AI算力",
+        "sector": "通信设备",
+        "holdingChange": "排名由第5升至第2",
+        "note": "市值环比翻倍"
       },
       {
         "rank": 3,
-        "name": "小米集团",
-        "code": "01810.HK",
-        "market": "港股",
-        "amount": "+28.6亿",
-        "institution": "Point72",
-        "date": "2026-06-26",
-        "concept": "智能手机/IoT",
-        "sector": "消费电子",
-        "holdingChange": "增持至2.8%"
+        "name": "北方华创",
+        "code": "002371.SZ",
+        "market": "A股",
+        "institution": "北向资金(陆股通)",
+        "amount": "市值环比+95%",
+        "date": "2026-06-30",
+        "concept": "半导体设备",
+        "sector": "电子",
+        "holdingChange": "持仓市值超800亿",
+        "note": "国产替代主线"
       },
       {
         "rank": 4,
-        "name": "美的集团",
-        "code": "000333.SZ",
+        "name": "寒武纪",
+        "code": "688256.SH",
         "market": "A股",
-        "amount": "+25.2亿",
-        "institution": "贝莱德",
-        "date": "2026-06-22",
-        "concept": "白色家电",
-        "sector": "家电",
-        "holdingChange": "增持至4.2%"
+        "institution": "北向资金(陆股通)",
+        "amount": "+137亿",
+        "date": "2026-06-30",
+        "concept": "AI芯片",
+        "sector": "电子",
+        "holdingChange": "持股数+105%",
+        "note": "持仓市值351亿"
       },
       {
         "rank": 5,
-        "name": "比亚迪股份",
-        "code": "01211.HK",
-        "market": "港股",
-        "amount": "+22.8亿",
-        "institution": "先锋领航",
-        "date": "2026-06-27",
-        "concept": "新能源车",
-        "sector": "汽车",
-        "holdingChange": "增持至4.8%"
+        "name": "中微公司",
+        "code": "688012.SH",
+        "market": "A股",
+        "institution": "北向资金(陆股通)",
+        "amount": "市值环比+200%",
+        "date": "2026-06-30",
+        "concept": "半导体设备",
+        "sector": "电子",
+        "holdingChange": "持仓市值590亿",
+        "note": "新进前十"
       },
       {
         "rank": 6,
-        "name": "迈瑞医疗",
-        "code": "300760.SZ",
+        "name": "新易盛",
+        "code": "300502.SZ",
         "market": "A股",
-        "amount": "+18.5亿",
-        "institution": "资本集团",
-        "date": "2026-06-28",
-        "concept": "医疗设备",
-        "sector": "医疗器械",
-        "holdingChange": "增持至3.1%"
+        "institution": "北向资金(陆股通)",
+        "amount": "新进前十",
+        "date": "2026-06-30",
+        "concept": "光模块/AI算力",
+        "sector": "通信设备",
+        "holdingChange": "新进前十",
+        "note": "光模块高景气"
       },
       {
         "rank": 7,
-        "name": "药明生物",
-        "code": "02269.HK",
-        "market": "港股",
-        "amount": "+15.6亿",
-        "institution": "资本集团",
-        "date": "2026-06-23",
-        "concept": "生物药CDMO",
-        "sector": "生物科技",
-        "holdingChange": "增持至5.2%"
-      },
-      {
-        "rank": 8,
-        "name": "中芯国际",
-        "code": "688981.SH",
+        "name": "澜起科技",
+        "code": "688008.SH",
         "market": "A股",
-        "amount": "+12.8亿",
-        "institution": "GIC",
-        "date": "2026-06-27",
-        "concept": "晶圆代工",
-        "sector": "半导体",
-        "holdingChange": "增持至2.1%"
-      },
-      {
-        "rank": 9,
-        "name": "美团-W",
-        "code": "03690.HK",
-        "market": "港股",
-        "amount": "+10.5亿",
-        "institution": "富达",
-        "date": "2026-06-24",
-        "concept": "本地生活",
-        "sector": "互联网",
-        "holdingChange": "增持至4.5%"
-      },
-      {
-        "rank": 10,
-        "name": "招商银行",
-        "code": "600036.SH",
-        "market": "A股",
-        "amount": "+9.2亿",
-        "institution": "Vanguard",
-        "date": "2026-06-24",
-        "concept": "股份制银行",
-        "sector": "银行",
-        "holdingChange": "增持至5.6%"
+        "institution": "北向资金(陆股通)",
+        "amount": "新进前十",
+        "date": "2026-06-30",
+        "concept": "内存接口芯片",
+        "sector": "电子",
+        "holdingChange": "新进前十",
+        "note": "DDR5渗透加速"
       }
     ],
     "sells": [
@@ -1198,120 +1169,91 @@
         "name": "贵州茅台",
         "code": "600519.SH",
         "market": "A股",
-        "amount": "-18.5亿",
-        "institution": "资本集团",
-        "date": "2026-06-24",
+        "institution": "北向资金(陆股通)",
+        "amount": "市值环比-25%",
+        "date": "2026-06-30",
         "concept": "白酒",
         "sector": "食品饮料",
-        "holdingChange": "减持至3.8%"
+        "holdingChange": "持仓市值环比下降超25%",
+        "note": "食品饮料板块市值减200亿+"
       },
       {
         "rank": 2,
-        "name": "阿里巴巴",
-        "code": "09988.HK",
-        "market": "港股",
-        "amount": "-15.8亿",
-        "institution": "软银",
-        "date": "2026-06-20",
-        "concept": "电商/云计算",
-        "sector": "互联网",
-        "holdingChange": "减持至11.2%"
-      },
-      {
-        "rank": 3,
-        "name": "中国中免",
-        "code": "601888.SH",
-        "market": "A股",
-        "amount": "-12.6亿",
-        "institution": "贝莱德",
-        "date": "2026-06-22",
-        "concept": "免税",
-        "sector": "旅游零售",
-        "holdingChange": "减持至2.1%"
-      },
-      {
-        "rank": 4,
-        "name": "药明康德",
-        "code": "603259.SH",
-        "market": "A股",
-        "amount": "-10.2亿",
-        "institution": "摩根大通",
-        "date": "2026-06-18",
-        "concept": "CXO",
-        "sector": "医药生物",
-        "holdingChange": "减持至1.5%"
-      },
-      {
-        "rank": 5,
-        "name": "快手-W",
-        "code": "01024.HK",
-        "market": "港股",
-        "amount": "-8.5亿",
-        "institution": "淡马锡",
-        "date": "2026-06-15",
-        "concept": "短视频",
-        "sector": "互联网",
-        "holdingChange": "减持至3.5%"
-      },
-      {
-        "rank": 6,
-        "name": "隆基绿能",
-        "code": "601012.SH",
-        "market": "A股",
-        "amount": "-7.8亿",
-        "institution": "高瓴资本",
-        "date": "2026-06-16",
-        "concept": "光伏",
-        "sector": "电力设备",
-        "holdingChange": "减持至2.8%"
-      },
-      {
-        "rank": 7,
-        "name": "中国平安",
-        "code": "601318.SH",
-        "market": "A股",
-        "amount": "-6.5亿",
-        "institution": "瑞银",
-        "date": "2026-06-19",
-        "concept": "保险",
-        "sector": "非银金融",
-        "holdingChange": "减持至1.8%"
-      },
-      {
-        "rank": 8,
         "name": "五粮液",
         "code": "000858.SZ",
         "market": "A股",
-        "amount": "-5.8亿",
-        "institution": "摩根士丹利",
-        "date": "2026-06-17",
+        "institution": "北向资金(陆股通)",
+        "amount": "板块市值减200亿+",
+        "date": "2026-06-30",
         "concept": "白酒",
         "sector": "食品饮料",
-        "holdingChange": "减持至1.2%"
+        "holdingChange": "随食品饮料板块整体减持",
+        "note": "板块性减持"
       },
       {
-        "rank": 9,
-        "name": "康希诺生物",
-        "code": "06185.HK",
-        "market": "港股",
-        "amount": "-4.2亿",
-        "institution": "富达",
-        "date": "2026-06-14",
-        "concept": "疫苗",
-        "sector": "生物科技",
-        "holdingChange": "减持至0.8%"
-      },
-      {
-        "rank": 10,
-        "name": "中信证券",
-        "code": "600030.SH",
+        "rank": 3,
+        "name": "银行板块",
+        "code": "-",
         "market": "A股",
-        "amount": "-3.5亿",
-        "institution": "高盛",
-        "date": "2026-06-21",
-        "concept": "券商",
+        "institution": "北向资金(陆股通)",
+        "amount": "板块整体减持",
+        "date": "2026-06-30",
+        "concept": "银行",
+        "sector": "银行",
+        "holdingChange": "持股比例环比-1.95bp",
+        "note": "板块市值减200亿+"
+      },
+      {
+        "rank": 4,
+        "name": "紫金矿业",
+        "code": "601899.SH",
+        "market": "A股",
+        "institution": "北向资金(陆股通)",
+        "amount": "退出前十",
+        "date": "2026-06-30",
+        "concept": "铜金/资源",
+        "sector": "有色金属",
+        "holdingChange": "退出持仓前十",
+        "note": "有色板块市值减200亿+"
+      },
+      {
+        "rank": 5,
+        "name": "中国平安",
+        "code": "601318.SH",
+        "market": "A股",
+        "institution": "北向资金(陆股通)",
+        "amount": "退出前十",
+        "date": "2026-06-30",
+        "concept": "保险",
         "sector": "非银金融",
-        "holdingChange": "减持至0.6%"
+        "holdingChange": "退出持仓前十",
+        "note": ""
+      },
+      {
+        "rank": 6,
+        "name": "汇川技术",
+        "code": "300124.SZ",
+        "market": "A股",
+        "institution": "北向资金(陆股通)",
+        "amount": "退出前十",
+        "date": "2026-06-30",
+        "concept": "工控/自动化",
+        "sector": "电气设备",
+        "holdingChange": "退出持仓前十",
+        "note": ""
+      },
+      {
+        "rank": 7,
+        "name": "思源电气",
+        "code": "002028.SZ",
+        "market": "A股",
+        "institution": "北向资金(陆股通)",
+        "amount": "遭减持",
+        "date": "2026-06-30",
+        "concept": "电力设备",
+        "sector": "电气设备",
+        "holdingChange": "遭减持",
+        "note": ""
       }
     ]
   },
@@ -7181,26 +7123,26 @@
     {
       "code": "000001.OF",
       "name": "华夏成长",
-      "nav": 1.512,
-      "accumNav": 4.085,
-      "date": "20260721",
-      "change": 0.018
+      "nav": 1.417,
+      "accumNav": 3.99,
+      "date": "20260722",
+      "change": -0.028
     },
     {
       "code": "005827.OF",
       "name": "易方达蓝筹精选",
-      "nav": 1.585,
-      "accumNav": 1.585,
-      "date": "20260721",
-      "change": 0.035
+      "nav": 1.5184,
+      "accumNav": 1.5184,
+      "date": "20260722",
+      "change": -0.016
     },
     {
       "code": "110011.OF",
       "name": "易方达中小盘",
-      "nav": 4.125,
-      "accumNav": 5.915,
-      "date": "20260721",
-      "change": 0.072
+      "nav": 4.1049,
+      "accumNav": 5.8949,
+      "date": "20260722",
+      "change": -0.023
     },
     {
       "code": "163406.OF",
@@ -7213,50 +7155,50 @@
     {
       "code": "260108.OF",
       "name": "景顺长城新兴成长",
-      "nav": 1.528,
-      "accumNav": 3.335,
-      "date": "20260721",
-      "change": 0.028
+      "nav": 1.537,
+      "accumNav": 3.344,
+      "date": "20260722",
+      "change": 0.006
     },
     {
       "code": "070002.OF",
       "name": "嘉实增长",
-      "nav": 22.45,
-      "accumNav": 23.141,
-      "date": "20260721",
-      "change": 0.125
+      "nav": 19.865,
+      "accumNav": 20.556,
+      "date": "20260722",
+      "change": -0.406
     },
     {
       "code": "519732.OF",
       "name": "交银定期支付双息平衡",
-      "nav": 10.125,
-      "accumNav": 10.125,
-      "date": "20260721",
-      "change": 0.048
+      "nav": 8.999,
+      "accumNav": 8.999,
+      "date": "20260722",
+      "change": -0.184
     },
     {
       "code": "001410.OF",
       "name": "信达澳银新能源产业",
-      "nav": 9.125,
-      "accumNav": 9.187,
-      "date": "20260721",
-      "change": 0.085
+      "nav": 6.785,
+      "accumNav": 6.847,
+      "date": "20260722",
+      "change": -0.099
     },
     {
       "code": "003494.OF",
       "name": "富国天惠成长",
-      "nav": 3.285,
-      "accumNav": 3.59,
-      "date": "20260721",
-      "change": 0.065
+      "nav": 2.9746,
+      "accumNav": 3.2796,
+      "date": "20260722",
+      "change": -0.035
     },
     {
       "code": "008764.OF",
       "name": "睿远成长价值",
-      "nav": 1.725,
-      "accumNav": 1.725,
+      "nav": 1.5159,
+      "accumNav": 1.5159,
       "date": "20260721",
-      "change": 0.042
+      "change": -0.005
     }
   ],
   "eciData": {

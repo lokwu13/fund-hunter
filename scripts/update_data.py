@@ -417,6 +417,47 @@ def fetch_mainforce_flow(pro, trade_date):
     return inflow, outflow
 
 
+def fetch_hot_fund_navs(pro, trade_date, existing):
+    """用 pro.fund_nav 逐只更新 hotFundNavs 的最新净值。
+
+    接口已实测有权限。每只取近 10 日净值，用最新一条更新
+    nav/accumNav/date；change 为最新单位净值相对前一净值日的绝对变动（小数）。
+    取不到数据的基金保留旧值（取到才覆盖）。
+    """
+    if not existing:
+        return existing
+    start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=10)).strftime('%Y%m%d')
+    updated = []
+    for item in existing:
+        code = item.get('code', '')
+        if not code:
+            updated.append(item)
+            continue
+        try:
+            time.sleep(API_DELAY)
+            df = pro.fund_nav(ts_code=code, start_date=start, end_date=trade_date)
+            if df is None or len(df) == 0:
+                updated.append(item)
+                continue
+            df = df.sort_values('nav_date').reset_index(drop=True)
+            last = df.iloc[-1]
+            new_item = dict(item)
+            if pd.notna(last.get('unit_nav')):
+                new_item['nav'] = round(float(last['unit_nav']), 4)
+            if pd.notna(last.get('accum_nav')):
+                new_item['accumNav'] = round(float(last['accum_nav']), 4)
+            new_item['date'] = str(last['nav_date'])
+            if len(df) >= 2:
+                prev = df.iloc[-2]
+                if pd.notna(last.get('unit_nav')) and pd.notna(prev.get('unit_nav')):
+                    new_item['change'] = round(float(last['unit_nav']) - float(prev['unit_nav']), 3)
+            updated.append(new_item)
+        except Exception as e:
+            print(f"  Warning: Failed to fetch fund nav {code}: {e}")
+            updated.append(item)
+    return updated
+
+
 def fetch_north_south(pro, trade_date):
     """Fetch northbound and southbound data."""
     time.sleep(API_DELAY)
@@ -571,7 +612,7 @@ def main():
     data = load_existing_data()
 
     # ── 1. Indices (batch) ──
-    print("\n[1/8] Fetching indices (batch)...")
+    print("\n[1/9] Fetching indices (batch)...")
     indices = fetch_indices_batch(pro, trade_date)
     if indices:
         data['indices'] = indices
@@ -579,7 +620,7 @@ def main():
             print(f"  {v['name']}: {v['value']} ({v['change']:+.2f}%)")
 
     # ── 2. Stocks (batch) ──
-    print("\n[2/8] Fetching stocks (batch)...")
+    print("\n[2/9] Fetching stocks (batch)...")
     stocks = fetch_stocks_batch(pro, trade_date)
     if stocks:
         data['stocks'] = stocks
@@ -588,7 +629,7 @@ def main():
             print(f"    {s['name']}: {s['close']} ({s['pctChg']:+.2f}%)")
 
     # ── 3. ETFs (batch) ──
-    print("\n[3/8] Fetching ETFs (batch)...")
+    print("\n[3/9] Fetching ETFs (batch)...")
     etfs = fetch_etfs_batch(pro, trade_date)
     if etfs:
         data['nationalETF'] = etfs
@@ -597,7 +638,7 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 4. My ETF account (fund_daily, batch) ──
-    print("\n[4/8] Fetching my ETF account (fund_daily, batch)...")
+    print("\n[4/9] Fetching my ETF account (fund_daily, batch)...")
     my_etfs = fetch_my_etfs(pro, trade_date)
     if my_etfs:
         data['myETF'] = my_etfs
@@ -606,14 +647,14 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 5. Announcements + holdingsNews (全量覆盖旧手工数据) ──
-    print("\n[5/8] Fetching announcements & building holdingsNews...")
+    print("\n[5/9] Fetching announcements & building holdingsNews...")
     anns_map = fetch_announcements(pro, trade_date)
     data['holdingsNews'] = build_holdings_news(anns_map, trade_date)
     total_anns = sum(len(e['items']) for e in data['holdingsNews'])
     print(f"  Built {len(data['holdingsNews'])} holdingsNews entries, {total_anns} announcements")
 
     # ── 6. Mainforce flow ──
-    print("\n[6/8] Fetching mainforce flow...")
+    print("\n[6/9] Fetching mainforce flow...")
     inflow, outflow = fetch_mainforce_flow(pro, trade_date)
     if inflow:
         data['mainforce_inflow_top10'] = inflow
@@ -622,8 +663,16 @@ def main():
         data['mainforce_outflow_top10'] = outflow
         print(f"  Outflow #1: {outflow[0]['name']} {outflow[0]['amount']}")
 
-    # ── 7. North/South bound ──
-    print("\n[7/8] Fetching north/south bound...")
+    # ── 7. Hot fund NAVs (fund_nav, 取到才覆盖) ──
+    print("\n[7/9] Fetching hot fund NAVs...")
+    hot_navs = fetch_hot_fund_navs(pro, trade_date, data.get('hotFundNavs', []))
+    if hot_navs:
+        data['hotFundNavs'] = hot_navs
+        dates = {h.get('date', '') for h in hot_navs}
+        print(f"  Updated {len(hot_navs)} fund NAVs, dates: {sorted(dates)}")
+
+    # ── 8. North/South bound ──
+    print("\n[8/9] Fetching north/south bound...")
     north, south = fetch_north_south(pro, trade_date)
     if north:
         data['northbound'] = north
@@ -632,8 +681,8 @@ def main():
         data['southbound'] = south
         print(f"  Southbound: {south['today']}亿")
 
-    # ── 8. Sector index commentary (细分指数每日点评) ──
-    print("\n[8/8] Fetching sector index commentary...")
+    # ── 9. Sector index commentary (细分指数每日点评) ──
+    print("\n[9/9] Fetching sector index commentary...")
     # 涨跌停信号卡已废弃：不再生成 keySignals，并删除存量字段
     data.pop('keySignals', None)
     commentary = fetch_sector_commentary(pro, trade_date)
