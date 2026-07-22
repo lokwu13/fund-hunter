@@ -458,6 +458,102 @@ def fetch_hot_fund_navs(pro, trade_date, existing):
     return updated
 
 
+# 宽基 ETF 份额监控池（跟踪国家队/汇金宽基申赎动向的经典名单，16 只）
+NATIONAL_ETF_WATCH = {
+    '159919.SZ': '嘉实300ETF',
+    '510300.SH': '华泰柏瑞300ETF',
+    '510310.SH': '易方达300ETF',
+    '510330.SH': '华夏300ETF',
+    '510050.SH': '华夏上证50ETF',
+    '588000.SH': '华夏科创50ETF',
+    '588080.SH': '易方达科创50ETF',
+    '510500.SH': '南方中证500ETF',
+    '512100.SH': '南方中证1000ETF',
+    '159915.SZ': '易方达创业板ETF',
+    '159949.SZ': '华安创业板50ETF',
+    '563360.SH': '华泰柏瑞A500ETF',
+    '159352.SZ': '南方A500ETF',
+    '159338.SZ': '国泰A500ETF',
+    '512050.SH': '华夏A500ETF',
+    '159361.SZ': '易方达A500ETF',
+}
+
+
+def fetch_national_etf_watch(pro, trade_date, existing):
+    """宽基 ETF 份额监控：最新份额 / 前一日对比 / 5日对比 / VWAP 估算净流入。
+
+    - 份额：pro.fund_share（已实测有权限），fd_share 单位为万份，统一换算亿份
+    - 成交均价：pro.fund_daily 的 VWAP = amount(千元)*10 / vol(手)（元）
+    - 当日净流入 = 当日份额变动(亿份) × 当日成交均价(元)，单位亿元
+    - 5日净流入 = 近 5 个交易日每日净流入之和
+    单只取不到数据时：优先保留旧数据条目，否则跳过，不报错。
+    """
+    start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=20)).strftime('%Y%m%d')
+    existing_map = {e.get('code'): e for e in (existing or {}).get('items', [])}
+    items = []
+    latest_dates = []
+    for tc, name in NATIONAL_ETF_WATCH.items():
+        try:
+            time.sleep(API_DELAY)
+            df_share = pro.fund_share(ts_code=tc, start_date=start, end_date=trade_date)
+            time.sleep(API_DELAY)
+            df_daily = pro.fund_daily(ts_code=tc, start_date=start, end_date=trade_date)
+            if df_share is None or len(df_share) < 2:
+                raise ValueError('fund_share empty')
+            shares = dict(zip(df_share['trade_date'], df_share['fd_share'] / 10000.0))  # 亿份
+            vwap = {}
+            if df_daily is not None and len(df_daily) > 0:
+                for _, r in df_daily.iterrows():
+                    if float(r['vol']) > 0:
+                        vwap[r['trade_date']] = float(r['amount']) * 10.0 / float(r['vol'])
+            days = sorted(shares.keys())
+            latest = days[-1]
+            latest_dates.append(latest)
+            # 每日份额变动 × 当日 VWAP = 当日净流入（亿元）
+            daily_flow = {}
+            daily_chg = {}
+            for i in range(1, len(days)):
+                d0, d1 = days[i - 1], days[i]
+                chg = shares[d1] - shares[d0]
+                daily_chg[d1] = chg
+                daily_flow[d1] = chg * vwap.get(d1, 0.0)
+            prev = days[-2]
+            last5 = days[-5:]  # 近 5 个交易日
+            share_chg = daily_chg.get(latest, 0.0)
+            net_flow = daily_flow.get(latest, 0.0)
+            share_chg_5d = sum(daily_chg.get(d, 0.0) for d in last5)
+            net_flow_5d = sum(daily_flow.get(d, 0.0) for d in last5)
+            items.append({
+                'name': name,
+                'code': tc,
+                'share': round(shares[latest], 2),
+                'prevShare': round(shares[prev], 2),
+                'shareChg': round(share_chg, 2),
+                'avgPrice': round(vwap.get(latest, 0.0), 3),
+                'netFlow': round(net_flow, 2),
+                'shareChg5d': round(share_chg_5d, 2),
+                'netFlow5d': round(net_flow_5d, 2),
+            })
+        except Exception as e:
+            print(f"  Warning: ETF watch failed for {tc}: {e}")
+            if tc in existing_map:
+                items.append(existing_map[tc])  # 保留旧数据
+    if not items:
+        return None
+    total = {
+        'shareChg': round(sum(i['shareChg'] for i in items), 2),
+        'netFlow': round(sum(i['netFlow'] for i in items), 2),
+        'shareChg5d': round(sum(i['shareChg5d'] for i in items), 2),
+        'netFlow5d': round(sum(i['netFlow5d'] for i in items), 2),
+    }
+    d = max(latest_dates) if latest_dates else trade_date
+    return {
+        'trade_date': f"{d[:4]}-{d[4:6]}-{d[6:]}",
+        'items': items,
+        'total': total,
+    }
+
+
 def fetch_north_south(pro, trade_date):
     """Fetch northbound and southbound data."""
     time.sleep(API_DELAY)
@@ -612,7 +708,7 @@ def main():
     data = load_existing_data()
 
     # ── 1. Indices (batch) ──
-    print("\n[1/9] Fetching indices (batch)...")
+    print("\n[1/10] Fetching indices (batch)...")
     indices = fetch_indices_batch(pro, trade_date)
     if indices:
         data['indices'] = indices
@@ -620,7 +716,7 @@ def main():
             print(f"  {v['name']}: {v['value']} ({v['change']:+.2f}%)")
 
     # ── 2. Stocks (batch) ──
-    print("\n[2/9] Fetching stocks (batch)...")
+    print("\n[2/10] Fetching stocks (batch)...")
     stocks = fetch_stocks_batch(pro, trade_date)
     if stocks:
         data['stocks'] = stocks
@@ -629,7 +725,7 @@ def main():
             print(f"    {s['name']}: {s['close']} ({s['pctChg']:+.2f}%)")
 
     # ── 3. ETFs (batch) ──
-    print("\n[3/9] Fetching ETFs (batch)...")
+    print("\n[3/10] Fetching ETFs (batch)...")
     etfs = fetch_etfs_batch(pro, trade_date)
     if etfs:
         data['nationalETF'] = etfs
@@ -638,7 +734,7 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 4. My ETF account (fund_daily, batch) ──
-    print("\n[4/9] Fetching my ETF account (fund_daily, batch)...")
+    print("\n[4/10] Fetching my ETF account (fund_daily, batch)...")
     my_etfs = fetch_my_etfs(pro, trade_date)
     if my_etfs:
         data['myETF'] = my_etfs
@@ -647,14 +743,14 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 5. Announcements + holdingsNews (全量覆盖旧手工数据) ──
-    print("\n[5/9] Fetching announcements & building holdingsNews...")
+    print("\n[5/10] Fetching announcements & building holdingsNews...")
     anns_map = fetch_announcements(pro, trade_date)
     data['holdingsNews'] = build_holdings_news(anns_map, trade_date)
     total_anns = sum(len(e['items']) for e in data['holdingsNews'])
     print(f"  Built {len(data['holdingsNews'])} holdingsNews entries, {total_anns} announcements")
 
     # ── 6. Mainforce flow ──
-    print("\n[6/9] Fetching mainforce flow...")
+    print("\n[6/10] Fetching mainforce flow...")
     inflow, outflow = fetch_mainforce_flow(pro, trade_date)
     if inflow:
         data['mainforce_inflow_top10'] = inflow
@@ -664,15 +760,24 @@ def main():
         print(f"  Outflow #1: {outflow[0]['name']} {outflow[0]['amount']}")
 
     # ── 7. Hot fund NAVs (fund_nav, 取到才覆盖) ──
-    print("\n[7/9] Fetching hot fund NAVs...")
+    print("\n[7/10] Fetching hot fund NAVs...")
     hot_navs = fetch_hot_fund_navs(pro, trade_date, data.get('hotFundNavs', []))
     if hot_navs:
         data['hotFundNavs'] = hot_navs
         dates = {h.get('date', '') for h in hot_navs}
         print(f"  Updated {len(hot_navs)} fund NAVs, dates: {sorted(dates)}")
 
-    # ── 8. North/South bound ──
-    print("\n[8/9] Fetching north/south bound...")
+    # ── 8. National ETF watch (宽基ETF份额监控) ──
+    print("\n[8/10] Fetching national ETF watch (fund_share)...")
+    etf_watch = fetch_national_etf_watch(pro, trade_date, data.get('nationalETFWatch'))
+    if etf_watch:
+        data['nationalETFWatch'] = etf_watch
+        t = etf_watch['total']
+        print(f"  {len(etf_watch['items'])} ETFs as of {etf_watch['trade_date']}, "
+              f"total netFlow {t['netFlow']:+.2f}亿, 5d {t['netFlow5d']:+.2f}亿")
+
+    # ── 9. North/South bound ──
+    print("\n[9/10] Fetching north/south bound...")
     north, south = fetch_north_south(pro, trade_date)
     if north:
         data['northbound'] = north
@@ -681,8 +786,8 @@ def main():
         data['southbound'] = south
         print(f"  Southbound: {south['today']}亿")
 
-    # ── 9. Sector index commentary (细分指数每日点评) ──
-    print("\n[9/9] Fetching sector index commentary...")
+    # ── 10. Sector index commentary (细分指数每日点评) ──
+    print("\n[10/10] Fetching sector index commentary...")
     # 涨跌停信号卡已废弃：不再生成 keySignals，并删除存量字段
     data.pop('keySignals', None)
     commentary = fetch_sector_commentary(pro, trade_date)

@@ -8497,5 +8497,192 @@
       "comment": "跟涨，表现平稳",
       "tone": "up"
     }
-  ]
+  ],
+  "nationalETFWatch": {
+    "trade_date": "2026-07-22",
+    "items": [
+      {
+        "name": "嘉实300ETF",
+        "code": "159919.SZ",
+        "share": 61.95,
+        "prevShare": 63.74,
+        "shareChg": -1.79,
+        "avgPrice": 4.997,
+        "netFlow": -8.95,
+        "shareChg5d": 5.8,
+        "netFlow5d": 27.86
+      },
+      {
+        "name": "华泰柏瑞300ETF",
+        "code": "510300.SH",
+        "share": 240.45,
+        "prevShare": 243.57,
+        "shareChg": -3.12,
+        "avgPrice": 4.79,
+        "netFlow": -14.96,
+        "shareChg5d": 56.49,
+        "netFlow5d": 262.79
+      },
+      {
+        "name": "易方达300ETF",
+        "code": "510310.SH",
+        "share": 111.63,
+        "prevShare": 111.44,
+        "shareChg": 0.19,
+        "avgPrice": 4.648,
+        "netFlow": 0.88,
+        "shareChg5d": 14.09,
+        "netFlow5d": 63.79
+      },
+      {
+        "name": "华夏300ETF",
+        "code": "510330.SH",
+        "share": 83.8,
+        "prevShare": 84.03,
+        "shareChg": -0.23,
+        "avgPrice": 4.993,
+        "netFlow": -1.12,
+        "shareChg5d": 6.15,
+        "netFlow5d": 29.85
+      },
+      {
+        "name": "华夏上证50ETF",
+        "code": "510050.SH",
+        "share": 74.75,
+        "prevShare": 74.76,
+        "shareChg": -0.01,
+        "avgPrice": 3.092,
+        "netFlow": -0.03,
+        "shareChg5d": 2.15,
+        "netFlow5d": 6.28
+      },
+      {
+        "name": "华夏科创50ETF",
+        "code": "588000.SH",
+        "share": 443.61,
+        "prevShare": 455.13,
+        "shareChg": -11.52,
+        "avgPrice": 1.989,
+        "netFlow": -22.91,
+        "shareChg5d": 105.03,
+        "netFlow5d": 190.19
+      },
+      {
+        "name": "易方达科创50ETF",
+        "code": "588080.SH",
+        "share": 225.38,
+        "prevShare": 226.13,
+        "shareChg": -0.75,
+        "avgPrice": 1.927,
+        "netFlow": -1.45,
+        "shareChg5d": 14.4,
+        "netFlow5d": 25.78
+      },
+      {
+        "name": "南方中证500ETF",
+        "code": "510500.SH",
+        "share": 57.87,
+        "prevShare": 61.41,
+        "shareChg": -3.54,
+        "avgPrice": 7.813,
+        "netFlow": -27.63,
+        "shareChg5d": 3.5,
+        "netFlow5d": 26.84
+      },
+      {
+        "name": "南方中证1000ETF",
+        "code": "512100.SH",
+        "share": 86.71,
+        "prevShare": 106.93,
+        "shareChg": -20.22,
+        "avgPrice": 2.923,
+        "netFlow": -59.11,
+        "shareChg5d": 11.26,
+        "netFlow5d": 35.06
+      },
+      {
+        "name": "易方达创业板ETF",
+        "code": "159915.SZ",
+        "share": 170.43,
+        "prevShare": 176.39,
+        "shareChg": -5.96,
+        "avgPrice": 3.658,
+        "netFlow": -21.8,
+        "shareChg5d": 45.74,
+        "netFlow5d": 160.37
+      },
+      {
+        "name": "华安创业板50ETF",
+        "code": "159949.SZ",
+        "share": 135.31,
+        "prevShare": 132.79,
+        "shareChg": 2.52,
+        "avgPrice": 1.736,
+        "netFlow": 4.37,
+        "shareChg5d": 20.53,
+        "netFlow5d": 34.58
+      },
+      {
+        "name": "华泰柏瑞A500ETF",
+        "code": "563360.SH",
+        "share": 271.7,
+        "prevShare": 269.6,
+        "shareChg": 2.1,
+        "avgPrice": 1.317,
+        "netFlow": 2.76,
+        "shareChg5d": 32.61,
+        "netFlow5d": 41.76
+      },
+      {
+        "name": "南方A500ETF",
+        "code": "159352.SZ",
+        "share": 246.03,
+        "prevShare": 243.48,
+        "shareChg": 2.55,
+        "avgPrice": 1.299,
+        "netFlow": 3.31,
+        "shareChg5d": 22.26,
+        "netFlow5d": 28.11
+      },
+      {
+        "name": "国泰A500ETF",
+        "code": "159338.SZ",
+        "share": 207.35,
+        "prevShare": 211.31,
+        "shareChg": -3.96,
+        "avgPrice": 1.248,
+        "netFlow": -4.94,
+        "shareChg5d": 11.13,
+        "netFlow5d": 13.22
+      },
+      {
+        "name": "华夏A500ETF",
+        "code": "512050.SH",
+        "share": 159.02,
+        "prevShare": 157.79,
+        "shareChg": 1.23,
+        "avgPrice": 1.242,
+        "netFlow": 1.53,
+        "shareChg5d": 15.18,
+        "netFlow5d": 18.34
+      },
+      {
+        "name": "易方达A500ETF",
+        "code": "159361.SZ",
+        "share": 208.16,
+        "prevShare": 210.74,
+        "shareChg": -2.58,
+        "avgPrice": 1.272,
+        "netFlow": -3.28,
+        "shareChg5d": 13.29,
+        "netFlow5d": 16.28
+      }
+    ],
+    "total": {
+      "shareChg": -45.09,
+      "netFlow": -153.33,
+      "shareChg5d": 379.61,
+      "netFlow5d": 981.1
+    }
+  }
 }

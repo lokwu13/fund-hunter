@@ -540,6 +540,79 @@ export default function NationalTeamPanel() {
         </CardContent>
       </Card>
 
+      {/* ====== 宽基ETF份额监控 ====== */}
+      {data.nationalETFWatch && data.nationalETFWatch.items.length > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-bold flex items-center gap-2">
+              <Activity className="w-5 h-5 text-red-600" />
+              宽基ETF份额监控（截至 {data.nationalETFWatch.trade_date}）
+            </CardTitle>
+            <CardDescription>
+              份额变动×成交均价估算，用于跟踪大资金（含国家队）宽基ETF申赎动向，仅供参考
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[760px]">
+                <TableHeader>
+                  <TableRow className="bg-red-50">
+                    <TableHead className="text-xs">名称</TableHead>
+                    <TableHead className="text-xs">代码</TableHead>
+                    <TableHead className="text-xs text-right">最新份额(亿)</TableHead>
+                    <TableHead className="text-xs text-right">前一日份额(亿)</TableHead>
+                    <TableHead className="text-xs text-right">份额变动(亿)</TableHead>
+                    <TableHead className="text-xs text-right">均价(元)</TableHead>
+                    <TableHead className="text-xs text-right">净流入(亿)</TableHead>
+                    <TableHead className="text-xs text-right">5日份额变动(亿)</TableHead>
+                    <TableHead className="text-xs text-right">5日净流入(亿)</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.nationalETFWatch.items.map((e) => (
+                    <TableRow key={e.code} className="hover:bg-slate-50">
+                      <TableCell className="text-xs font-semibold whitespace-nowrap">{e.name}</TableCell>
+                      <TableCell className="text-xs text-slate-400">{e.code.split('.')[0]}</TableCell>
+                      <TableCell className="text-xs text-right">{e.share.toFixed(2)}</TableCell>
+                      <TableCell className="text-xs text-right text-slate-500">{e.prevShare.toFixed(2)}</TableCell>
+                      <TableCell className={`text-xs text-right font-semibold ${e.shareChg >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {e.shareChg >= 0 ? '+' : ''}{e.shareChg.toFixed(2)}
+                      </TableCell>
+                      <TableCell className="text-xs text-right">{e.avgPrice.toFixed(3)}</TableCell>
+                      <TableCell className={`text-xs text-right font-bold ${e.netFlow >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {e.netFlow >= 0 ? '+' : ''}{e.netFlow.toFixed(2)}
+                      </TableCell>
+                      <TableCell className={`text-xs text-right font-semibold ${e.shareChg5d >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {e.shareChg5d >= 0 ? '+' : ''}{e.shareChg5d.toFixed(2)}
+                      </TableCell>
+                      <TableCell className={`text-xs text-right font-bold ${e.netFlow5d >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {e.netFlow5d >= 0 ? '+' : ''}{e.netFlow5d.toFixed(2)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  <TableRow className="bg-slate-100 font-bold">
+                    <TableCell className="text-xs" colSpan={4}>合计</TableCell>
+                    <TableCell className={`text-xs text-right font-bold ${data.nationalETFWatch.total.shareChg >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      {data.nationalETFWatch.total.shareChg >= 0 ? '+' : ''}{data.nationalETFWatch.total.shareChg.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="text-xs text-right">-</TableCell>
+                    <TableCell className={`text-xs text-right font-bold ${data.nationalETFWatch.total.netFlow >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      {data.nationalETFWatch.total.netFlow >= 0 ? '+' : ''}{data.nationalETFWatch.total.netFlow.toFixed(2)}
+                    </TableCell>
+                    <TableCell className={`text-xs text-right font-bold ${data.nationalETFWatch.total.shareChg5d >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      {data.nationalETFWatch.total.shareChg5d >= 0 ? '+' : ''}{data.nationalETFWatch.total.shareChg5d.toFixed(2)}
+                    </TableCell>
+                    <TableCell className={`text-xs text-right font-bold ${data.nationalETFWatch.total.netFlow5d >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      {data.nationalETFWatch.total.netFlow5d >= 0 ? '+' : ''}{data.nationalETFWatch.total.netFlow5d.toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* ====== TOP5 National Team Inflow ====== */}
       <Card>
         <CardHeader className="pb-2">

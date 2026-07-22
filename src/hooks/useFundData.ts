@@ -324,6 +324,26 @@ export interface FundData {
     date?: string;
     change?: number;
   }>;
+  nationalETFWatch?: {
+    trade_date: string;
+    items: Array<{
+      name: string;
+      code: string;
+      share: number;
+      prevShare: number;
+      shareChg: number;
+      avgPrice: number;
+      netFlow: number;
+      shareChg5d: number;
+      netFlow5d: number;
+    }>;
+    total: {
+      shareChg: number;
+      netFlow: number;
+      shareChg5d: number;
+      netFlow5d: number;
+    };
+  };
   holdingsNews?: Array<{
     stockCode: string;
     stockName: string;
