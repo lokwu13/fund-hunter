@@ -5,7 +5,7 @@ import {
   TrendingUp, TrendingDown, Minus, Zap,
   Activity, Waves, Target, Gauge, ArrowRight, Lightbulb,
   SortDesc, Filter, Star, AlertTriangle, CheckCircle2,
-  Crown, Trophy, TrendingDown as TrendDown
+  Crown, Trophy, TrendingDown as TrendDown, Radar, Flame
 } from 'lucide-react';
 import type { FundData } from '@/hooks/useFundData';
 import {
@@ -59,6 +59,13 @@ function getCorrLevel(corr: number) {
 }
 
 const MY_HOLDING_SECTORS = ['医药生物'];
+
+const SCAN_STATUS_COLORS: Record<string, string> = {
+  '吸筹中': 'bg-blue-500 text-white',
+  '启动确认': 'bg-emerald-500 text-white',
+  '高潮风险': 'bg-orange-500 text-white',
+  '无信号': 'bg-slate-200 text-slate-500',
+};
 
 export default function ECIPanel({ data }: ECIPanelProps) {
   const eciData = data.eciData;
@@ -123,6 +130,113 @@ export default function ECIPanel({ data }: ECIPanelProps) {
         </Badge>
       </div>
 
+      {/* 板块资金扫描榜 */}
+      {data.sectorScan && data.sectorScan.items && data.sectorScan.items.length > 0 && (
+        <Card className="border-indigo-200 shadow-sm">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Radar className="w-4 h-4 text-indigo-500" />
+                板块资金扫描榜
+              </CardTitle>
+              <Badge variant="outline" className="text-xs bg-indigo-50 text-indigo-700 border-indigo-200">
+                {data.sectorScan.trade_date}
+              </Badge>
+            </div>
+            {data.sectorScan.summary && (
+              <p className="text-[11px] text-indigo-800 bg-indigo-50 rounded-md px-2 py-1.5 mt-1 leading-relaxed">
+                {data.sectorScan.summary}
+              </p>
+            )}
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto max-h-80 overflow-y-auto">
+              <table className="w-full text-xs min-w-[560px]">
+                <thead className="sticky top-0 bg-white z-10">
+                  <tr className="text-slate-500 border-b border-slate-200">
+                    <th className="text-left py-1.5 font-medium">行业</th>
+                    <th className="text-right font-medium">连续天数</th>
+                    <th className="text-right font-medium">今日净流入</th>
+                    <th className="text-right font-medium">5日净流入</th>
+                    <th className="text-right font-medium">板块涨跌</th>
+                    <th className="text-right font-medium">状态</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.sectorScan.items.map((it: any) => (
+                    <tr key={it.sector} className="border-b border-slate-50 hover:bg-slate-50/60">
+                      <td className="py-1.5 font-medium text-slate-700">{it.sector}</td>
+                      <td className="text-right">
+                        {it.consecutiveDays > 0
+                          ? <span className="text-emerald-600 font-semibold">{it.consecutiveDays}天</span>
+                          : <span className="text-slate-300">-</span>}
+                      </td>
+                      <td className={`text-right font-semibold ${it.netInflow1d >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                        {it.netInflow1d >= 0 ? '+' : ''}{it.netInflow1d}亿
+                      </td>
+                      <td className={`text-right ${it.netInflow5d >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                        {it.netInflow5d >= 0 ? '+' : ''}{it.netInflow5d}亿
+                      </td>
+                      <td className={`text-right ${it.sectorPctChg >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                        {it.sectorPctChg >= 0 ? '+' : ''}{it.sectorPctChg}%
+                      </td>
+                      <td className="text-right">
+                        <Badge className={`text-[10px] border-0 ${SCAN_STATUS_COLORS[it.status] || SCAN_STATUS_COLORS['无信号']}`}>
+                          {it.status}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-[10px] text-slate-400 mt-1.5">主力净流入数据来自东方财富板块资金流；吸筹中=资金连续流入但价格未动，启动确认=资金流入+当日大涨，高潮风险=连续流入+5日涨幅过热</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* 主题概念领涨 */}
+      {data.conceptHot && data.conceptHot.items && data.conceptHot.items.length > 0 && (
+        <Card className="border-fuchsia-200 shadow-sm">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Flame className="w-4 h-4 text-fuchsia-500" />
+                主题概念领涨（5日主力净流入 Top{data.conceptHot.items.length}）
+              </CardTitle>
+              <Badge variant="outline" className="text-xs bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200">
+                {data.conceptHot.trade_date}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
+              {data.conceptHot.items.map((c: any) => (
+                <div key={c.concept} className="rounded-lg border border-slate-200 p-2.5 hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between gap-1 mb-1">
+                    <span className="text-xs font-bold text-slate-800 truncate">{c.concept}</span>
+                    <span className={`text-xs font-semibold shrink-0 ${c.pctChg >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                      {c.pctChg >= 0 ? '+' : ''}{c.pctChg}%
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-500 mb-1.5">5日主力 {c.netInflow5d >= 0 ? '+' : ''}{c.netInflow5d}亿</p>
+                  <div className="space-y-0.5">
+                    {(c.leaders || []).map((l: any, idx: number) => (
+                      <div key={l.code || idx} className="flex items-center justify-between text-[10px] gap-1">
+                        <span className="text-slate-600 truncate">{idx + 1}. {l.name}</span>
+                        <span className={`shrink-0 ${l.pctChg >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                          {l.pctChg >= 0 ? '+' : ''}{l.pctChg}%
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* 统计概览 */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <Card className="border-slate-200">
@@ -180,6 +294,9 @@ export default function ECIPanel({ data }: ECIPanelProps) {
           );
         })}
       </div>
+      {eciData.note && (
+        <p className="text-[10px] text-slate-400 -mt-4">{eciData.note}</p>
+      )}
 
       {/* 筛选排序 */}
       <div className="flex items-center gap-3 flex-wrap">

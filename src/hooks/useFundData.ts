@@ -281,6 +281,7 @@ export interface FundData {
   eciData?: {
     updateTime: string;
     period: string;
+    note?: string;
     sectors: Array<{
       sector: string;
       eci: number;
@@ -305,6 +306,29 @@ export interface FundData {
     indicators: Record<string, { name: string; weight: string; desc: string }>;
     totalIndustries?: number;
     divergentCount?: number;
+  };
+  sectorScan?: {
+    trade_date: string;
+    summary: string;
+    items: Array<{
+      sector: string;
+      netInflow1d: number;
+      netInflow5d: number;
+      consecutiveDays: number;
+      sectorPctChg: number;
+      pct5d?: number;
+      score: number;
+      status: string;
+    }>;
+  };
+  conceptHot?: {
+    trade_date: string;
+    items: Array<{
+      concept: string;
+      pctChg: number;
+      netInflow5d: number;
+      leaders: Array<{ name: string; code: string; pctChg: number }>;
+    }>;
   };
   nationalETF?: Array<{
     ticker: string;
