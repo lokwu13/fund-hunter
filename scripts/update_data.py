@@ -739,7 +739,7 @@ def _save_sector_history(hist):
 
 
 def _aggregate_industry_day(pro, date, ind_map):
-    """单日全市场 moneyflow + daily 按 industry 聚合 → {行业: {net(亿), ret(%)}}（等权）。"""
+    """单日全市场 moneyflow + daily 按 industry 聚合 → {行业: {net(亿), ret(%), amt(亿)}}（ret 等权）。"""
     time.sleep(API_DELAY)
     mf = pro.moneyflow(trade_date=date)
     time.sleep(API_DELAY)
@@ -749,14 +749,19 @@ def _aggregate_industry_day(pro, date, ind_map):
     mf = mf.copy()
     mf['industry'] = mf['ts_code'].map(ind_map)
     g = mf.dropna(subset=['industry']).groupby('industry')['net_mf_amount'].sum() / 1e4  # 万元→亿
-    sectors = {ind: {'net': round(float(v), 2), 'ret': 0.0} for ind, v in g.items()}
+    sectors = {ind: {'net': round(float(v), 2), 'ret': 0.0, 'amt': 0.0} for ind, v in g.items()}
     if dl is not None and len(dl) > 0:
         dl = dl.copy()
         dl['industry'] = dl['ts_code'].map(ind_map)
-        rg = dl.dropna(subset=['industry']).groupby('industry')['pct_chg'].mean()  # 等权涨跌幅
-        for ind, v in rg.items():
-            sectors.setdefault(ind, {'net': 0.0})
-            sectors[ind]['ret'] = round(float(v), 2)
+        valid = dl.dropna(subset=['industry'])
+        rg = valid.groupby('industry')['pct_chg'].mean()  # 等权涨跌幅
+        ag = valid.groupby('industry')['amount'].sum() / 1e5  # 成交额 千元→亿
+        for ind in set(rg.index) | set(ag.index):
+            sectors.setdefault(ind, {'net': 0.0, 'ret': 0.0, 'amt': 0.0})
+            if ind in rg.index:
+                sectors[ind]['ret'] = round(float(rg[ind]), 2)
+            if ind in ag.index:
+                sectors[ind]['amt'] = round(float(ag[ind]), 2)
     return sectors
 
 
@@ -774,7 +779,11 @@ def update_sector_history(pro, trade_date):
     dates = sorted(cal['cal_date'].tolist())[-SECTOR_BACKFILL_DAYS:]
     if trade_date not in dates:
         dates.append(trade_date)
-    todo = [d for d in dates if d not in hist['days']]
+    # 缺日期 或 存量日期缺 amt 字段（老缓存）都需要重抓
+    def _day_ok(day):
+        secs = day.get('sectors', {})
+        return bool(secs) and all('amt' in s for s in secs.values())
+    todo = [d for d in dates if d not in hist['days'] or not _day_ok(hist['days'][d])]
     if todo:
         print(f"  sector history backfill: {len(todo)} days to fetch ({todo[0]}~{todo[-1]})")
     for d in todo:
@@ -818,12 +827,12 @@ def _today_industry_stocks(pro, trade_date, ind_map, name_map):
 
 
 def _history_series(hist, industry):
-    """行业的逐日 (date, net, ret) 序列，按日期升序。"""
+    """行业的逐日 (date, net, ret, amt) 序列，按日期升序。"""
     rows = []
     for d in sorted(hist['days']):
         s = hist['days'][d].get('sectors', {}).get(industry)
         if s is not None:
-            rows.append((d, s.get('net', 0.0), s.get('ret', 0.0)))
+            rows.append((d, s.get('net', 0.0), s.get('ret', 0.0), s.get('amt', 0.0)))
     return rows
 
 
@@ -870,7 +879,7 @@ def build_sector_scan(hist, trade_date, today_map):
             continue
         latest = rows[-1][0]
         consec = 0
-        for _, net, _ in reversed(rows):
+        for _, net, _r, _a in reversed(rows):
             if net > 0:
                 consec += 1
             else:
@@ -1002,7 +1011,7 @@ def fetch_sector_watch(pro, trade_date, data):
     """板块资金观察台：行业资金历史沉淀 → 扫描榜（仅信号板块）+ 底部资金积聚监测。
 
     数据源全部为 Tushare（moneyflow + daily + stock_basic），每天增量积累历史。
-    任一环节失败保留旧数据，不崩脚本。
+    任一环节失败保留旧数据，不崩脚本。成功返回 (hist, ind_map, name_map, today_map) 供后续步骤复用。
     """
     try:
         hist, ind_map, name_map = update_sector_history(pro, trade_date)
@@ -1022,8 +1031,393 @@ def fetch_sector_watch(pro, trade_date, data):
             print(f"  bottomWatch: {len(bottom['items'])} triggered sectors")
             if bottom.get('summary'):
                 print(f"  {bottom['summary']}")
+        return hist, ind_map, name_map, today_map
     except Exception as e:
         print(f"  Warning: fetch_sector_watch failed: {e}")
+        return None
+
+
+# ── ECI 六维分每日自动真算 + 强势一级行业子板块精选 ──
+# Tushare 二级行业 → 申万一级行业映射（覆盖 sector_history 中全部 110 个二级行业，
+# 商贸零售类因 ECI 31 行业无此一级，归入 None 并打印警告，不参与一级聚合）
+SECTOR_TO_L1 = {
+    # 医药生物
+    '化学制药': '医药生物', '生物制药': '医药生物', '中成药': '医药生物',
+    '医疗保健': '医药生物', '医药商业': '医药生物',
+    # 电子 / 计算机 / 通信
+    '半导体': '电子', '元器件': '电子',
+    '软件服务': '计算机', 'IT设备': '计算机',
+    '通信设备': '通信', '电信运营': '通信',
+    # 电力设备
+    '电气设备': '电力设备', '电器仪表': '电力设备',
+    # 食品饮料
+    '白酒': '食品饮料', '红黄酒': '食品饮料', '啤酒': '食品饮料',
+    '食品': '食品饮料', '乳制品': '食品饮料', '软饮料': '食品饮料',
+    # 金融
+    '银行': '银行',
+    '证券': '非银金融', '保险': '非银金融', '多元金融': '非银金融',
+    # 汽车 / 机械设备 / 国防军工
+    '汽车整车': '汽车', '汽车配件': '汽车', '汽车服务': '汽车', '摩托车': '汽车',
+    '专用机械': '机械设备', '工程机械': '机械设备', '机床制造': '机械设备',
+    '机械基件': '机械设备', '农用机械': '机械设备', '化工机械': '机械设备',
+    '轻工机械': '机械设备', '纺织机械': '机械设备', '运输设备': '机械设备',
+    '航空': '国防军工', '船舶': '国防军工',
+    # 有色金属 / 钢铁 / 煤炭 / 石油石化 / 基础化工
+    '铜': '有色金属', '铝': '有色金属', '铅锌': '有色金属',
+    '小金属': '有色金属', '黄金': '有色金属',
+    '普钢': '钢铁', '特种钢': '钢铁', '钢加工': '钢铁',
+    '煤炭开采': '煤炭', '焦炭加工': '煤炭',
+    '石油开采': '石油石化', '石油加工': '石油石化', '石油贸易': '石油石化',
+    '化工原料': '基础化工', '化纤': '基础化工', '塑料': '基础化工',
+    '染料涂料': '基础化工', '橡胶': '基础化工', '农药化肥': '基础化工',
+    # 家用电器 / 轻工制造 / 纺织服装 / 美容护理
+    '家用电器': '家用电器',
+    '家居用品': '轻工制造', '造纸': '轻工制造',
+    '纺织': '纺织服装', '服饰': '纺织服装',
+    '日用化工': '美容护理',
+    # 房地产 / 建筑装饰 / 建筑材料
+    '全国地产': '房地产', '区域地产': '房地产', '房产服务': '房地产', '园区开发': '房地产',
+    '建筑工程': '建筑装饰', '装修装饰': '建筑装饰',
+    '水泥': '建筑材料', '玻璃': '建筑材料', '陶瓷': '建筑材料',
+    '其他建材': '建筑材料', '矿物制品': '建筑材料',
+    # 交通运输
+    '水运': '交通运输', '港口': '交通运输', '空运': '交通运输', '机场': '交通运输',
+    '铁路': '交通运输', '公路': '交通运输', '路桥': '交通运输',
+    '仓储物流': '交通运输', '公共交通': '交通运输',
+    # 传媒
+    '出版业': '传媒', '影视音像': '传媒', '广告包装': '传媒', '互联网': '传媒',
+    # 农林牧渔 / 公用事业 / 社会服务 / 环保 / 综合
+    '种植业': '农林牧渔', '林业': '农林牧渔', '渔业': '农林牧渔',
+    '饲料': '农林牧渔', '农业综合': '农林牧渔',
+    '火力发电': '公用事业', '水力发电': '公用事业', '新型电力': '公用事业',
+    '供气供热': '公用事业', '水务': '公用事业',
+    '旅游景点': '社会服务', '旅游服务': '社会服务', '酒店餐饮': '社会服务', '文教休闲': '社会服务',
+    '环境保护': '环保',
+    '综合类': '综合',
+    # ECI 31 行业无"商贸零售"，以下归入 None（打印警告，不参与一级聚合）
+    '商品城': None, '商贸代理': None, '百货': None, '超市连锁': None,
+    '批发业': None, '电器连锁': None, '其他商业': None,
+}
+
+_ECI_DIM_MAX = 15  # 六维各维度满分（ECI 总分折算百分制）
+
+
+def _l1_series(hist):
+    """二级历史按 SECTOR_TO_L1 归并 → {一级: [(date, net, ret, amt)]}（ret 按成交额加权）。"""
+    out = {}
+    warned = set()
+    for d in sorted(hist['days']):
+        acc = {}
+        for ind, s in hist['days'][d].get('sectors', {}).items():
+            if ind not in SECTOR_TO_L1 and ind not in warned:
+                warned.add(ind)
+                print(f"  Warning: unknown industry '{ind}' not in SECTOR_TO_L1, skipped")
+            l1 = SECTOR_TO_L1.get(ind)
+            if not l1:
+                continue
+            a = acc.setdefault(l1, {'net': 0.0, 'amt': 0.0, 'ret_amt': 0.0, 'ret_eq': 0.0, 'n': 0})
+            amt = s.get('amt', 0.0)
+            a['net'] += s.get('net', 0.0)
+            a['amt'] += amt
+            a['ret_amt'] += s.get('ret', 0.0) * amt
+            a['ret_eq'] += s.get('ret', 0.0)
+            a['n'] += 1
+        for l1, a in acc.items():
+            ret = a['ret_amt'] / a['amt'] if a['amt'] > 0 else (a['ret_eq'] / a['n'] if a['n'] else 0.0)
+            out.setdefault(l1, []).append((d, a['net'], ret, a['amt']))
+    return out
+
+
+def _cv(xs):
+    """变异系数 std/mean（量能波动度量）。"""
+    if len(xs) < 2:
+        return 0.0
+    m = sum(xs) / len(xs)
+    if m <= 0:
+        return 0.0
+    var = sum((x - m) ** 2 for x in xs) / len(xs)
+    return (var ** 0.5) / m
+
+
+def _pct_rank(values, v):
+    """v 在 values 中的分位（0-1，越高越大）。"""
+    if not values:
+        return 0.5
+    return sum(1 for x in values if x <= v) / len(values)
+
+
+def _pearson(xs, ys):
+    n = len(xs)
+    if n < 5:
+        return None
+    mx, my = sum(xs) / n, sum(ys) / n
+    cov = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+    vx = sum((x - mx) ** 2 for x in xs)
+    vy = sum((y - my) ** 2 for y in ys)
+    if vx <= 0 or vy <= 0:
+        return None
+    return cov / (vx ** 0.5 * vy ** 0.5)
+
+
+def _mean_pairwise_corr(member_rets):
+    """一级内部各二级行业 20 日日收益的两两 Pearson 相关均值；不足 2 个成员返回 None。"""
+    corrs = []
+    for i in range(len(member_rets)):
+        for j in range(i + 1, len(member_rets)):
+            c = _pearson(member_rets[i], member_rets[j])
+            if c is not None:
+                corrs.append(c)
+    return sum(corrs) / len(corrs) if corrs else None
+
+
+def _sign(x):
+    return 1 if x > 0 else (-1 if x < 0 else 0)
+
+
+def _rebuild_eci_from_history(hist, old):
+    """用 sector_history 真实数据按一级行业重算 ECI 31 行六维分（每维 0-15，总分折算百分制）。
+
+    - volConvergence 量能收敛：20日成交额变异系数 vs 60日（CV 下降=收敛），跨行业分位归一
+    - fundConcentration 资金集中度：20日累计净流入 / 20日累计成交额，跨行业分位归一
+    - trendSync 趋势同步：一级内部各二级 20 日日收益的符号一致率（绝对值映射）
+    - consistencyMomentum 一致性动量：近5日方向与近20日一致性 0.6 + 动量强度分位 0.4
+    - activity 活跃度：近5日成交额均值在 60 日中的分位（绝对值映射）
+    - policy 政策分：固定中性 7.5/15（无法自动化，页面注明）
+    currentCorr=一级内二级 20 日日收益两两相关均值；predictedCorr=其 5 日前移窗口的变化外推。
+    历史不足 40 天或无二级成员的一级行业：保留旧数据行。
+    """
+    try:
+        l1s = _l1_series(hist)
+        old_sectors = {s.get('sector'): s for s in (old or {}).get('sectors', [])}
+        # 原始指标
+        raw = {}
+        for l1, rows in l1s.items():
+            if len(rows) < 40:
+                continue
+            amts60 = [r[3] for r in rows[-60:]]
+            amts20 = amts60[-20:]
+            nets20 = [r[1] for r in rows[-20:]]
+            nets5 = nets20[-5:]
+            rets20 = [r[2] for r in rows[-20:]]
+            rets5 = rets20[-5:]
+            raw[l1] = {
+                'conv': _cv(amts60) - _cv(amts20),          # 量能收敛（越大越收敛）
+                'fund': (sum(nets20) / sum(amts20)) if sum(amts20) > 0 else 0.0,
+                'ret5': sum(rets5),
+                'align': (sum(1 for x in rets5 if _sign(x) == _sign(sum(rets20)) and x != 0) / 5),
+                'act': _pct_rank(amts60, sum(amts20[-5:]) / 5),
+                'dates': (rows[-20][0], rows[-1][0]),
+            }
+        if len(raw) < 20:
+            print(f"  Warning: eci history rebuild skipped, only {len(raw)} L1 sectors")
+            return None
+        conv_vals = [v['conv'] for v in raw.values()]
+        fund_vals = [v['fund'] for v in raw.values()]
+        ret5_vals = [abs(v['ret5']) for v in raw.values()]
+
+        # 一级内二级 20 日收益矩阵（trendSync / currentCorr 用）
+        def member_ret_matrix(l1, end_offset=0):
+            mats = []
+            for ind, m1 in SECTOR_TO_L1.items():
+                if m1 != l1:
+                    continue
+                rows = _history_series(hist, ind)
+                if len(rows) >= 20 + end_offset:
+                    seg = rows[-(20 + end_offset):len(rows) - end_offset or None]
+                    mats.append([r[2] for r in seg])
+            return mats
+
+        sectors = []
+        for l1, v in raw.items():
+            vol = round(_pct_rank(conv_vals, v['conv']) * _ECI_DIM_MAX, 1)
+            fund = round(_pct_rank(fund_vals, v['fund']) * _ECI_DIM_MAX, 1)
+            mats = member_ret_matrix(l1)
+            if mats:
+                sync_days = []
+                for k in range(20):
+                    signs = [_sign(m[k]) for m in mats if k < len(m)]
+                    signs = [s for s in signs if s != 0]
+                    if signs:
+                        up = signs.count(1)
+                        sync_days.append(max(up, len(signs) - up) / len(signs))
+                trend_sync = round((sum(sync_days) / len(sync_days)) * _ECI_DIM_MAX, 1) if sync_days else 7.5
+                cur = _mean_pairwise_corr(mats)
+            else:
+                trend_sync = 7.5
+                cur = None
+            strength = _pct_rank(ret5_vals, abs(v['ret5']))
+            mom = round((0.6 * v['align'] + 0.4 * strength) * _ECI_DIM_MAX, 1)
+            act = round(v['act'] * _ECI_DIM_MAX, 1)
+            policy = 7.5  # 政策维度：人工中性分（无法自动化）
+            eci = round((vol + fund + trend_sync + mom + act + policy) / (_ECI_DIM_MAX * 6) * 100, 1)
+            current_corr = round(min(0.95, max(0.05, cur if cur is not None else trend_sync / _ECI_DIM_MAX)), 2)
+            prev_corr = _mean_pairwise_corr(member_ret_matrix(l1, end_offset=5))
+            if prev_corr is not None and cur is not None:
+                predicted = cur + (cur - prev_corr)
+            else:
+                predicted = current_corr + (mom - _ECI_DIM_MAX / 2) * 0.01
+            predicted_corr = round(min(0.95, max(0.05, predicted)), 2)
+            trend = '↑上升' if mom >= 9 else ('↓下降' if mom <= 6 else '→震荡')
+            if eci >= 65:
+                a1 = '板块即将强联动，适合ETF或龙头一揽子买入'
+            elif eci >= 50:
+                a1 = '关注龙头个股，等待一致性确认'
+            else:
+                a1 = '必须精选个股，板块参考意义不大'
+            a2 = {'↑上升': '一致性在增强，可加仓', '→震荡': '一致性震荡，观望为主',
+                  '↓下降': '一致性在减弱，控制仓位'}[trend]
+            prev_s = old_sectors.get(l1, {})
+            sec = {
+                'sector': l1, 'eci': eci,
+                'volConvergence': vol, 'fundConcentration': fund, 'trendSync': trend_sync,
+                'consistencyMomentum': mom, 'activity': act, 'policy': policy,
+                'currentCorr': current_corr, 'predictedCorr': predicted_corr,
+                'trend': trend,
+                'stocks': prev_s.get('stocks', 0),
+                'advice': f'{a1} | {a2}',
+                'sampleStocks': prev_s.get('sampleStocks', []),
+            }
+            if prev_s.get('leaders'):
+                sec['leaders'] = prev_s['leaders']  # 手工龙头数据保留
+            sectors.append(sec)
+        # 无数据/历史不足的一级行业：保留旧数据行，不裁减 31 行展示
+        sectors.extend(s for name, s in old_sectors.items() if name not in raw)
+        old_order = [s.get('sector') for s in (old or {}).get('sectors', [])]
+        sectors.sort(key=lambda s: (old_order.index(s['sector']) if s['sector'] in old_order else 999))
+
+        indicators = dict((old or {}).get('indicators') or {})
+        for k in ['volConvergence', 'fundConcentration', 'trendSync',
+                  'consistencyMomentum', 'activity', 'policy']:
+            if k in indicators:
+                indicators[k] = {**indicators[k], 'weight': '15分'}
+        d0, d1 = next(iter(raw.values()))['dates']
+        def _fmt(dd):
+            return dd.replace('-', '.') if '-' in dd else f'{dd[:4]}.{dd[4:6]}.{dd[6:]}'
+        p0, p1 = _fmt(d0), _fmt(d1)
+        return {
+            'updateTime': f"{p1.replace('.', '-')} 收盘（Tushare自动）",
+            'period': f'{p0}~{p1} (20个交易日)',
+            'totalIndustries': len(sectors),
+            'divergentCount': sum(1 for s in sectors if s['eci'] < 50),
+            'sectors': sectors,
+            'indicators': indicators,
+            'note': '评分口径：量能收敛=20日vs60日成交额变异系数变化；资金集中度=20日净流入/成交额；'
+                    '趋势同步=二级行业日收益符号一致率；一致性动量=5日方向一致性×动量强度；'
+                    '活跃度=5日成交额60日分位（以上均为 Tushare 真实数据，二级行业按申万一级归并）；'
+                    '政策维度为人工中性评分（固定7.5/15）；ECI总分=六维加总折算百分制',
+        }
+    except Exception as e:
+        print(f"  Warning: eci history rebuild failed: {e}")
+        return None
+
+
+def build_eci_subsectors(hist, eci_data, today_map):
+    """强势一级行业（ECI前5 且 60日累计净流入>0 且 流入天数占比≥50%）的二级子板块精选。
+
+    子板块四维简版打分（0-15×4 折算百分制）：资金集中度/趋势同步(20日上涨天数占比)/
+    一致性动量/活跃度；选得分前 3 且 60日净流入>0（宁缺毋滥，可少于 3 个甚至为 0）；
+    每个入选子板块带今日主力净流入前 2 的龙头。
+    """
+    days = sorted(hist['days'])
+    if len(days) < 40:
+        return None
+    latest = days[-1]
+    # 一级 60 日聚合（母板块资金条件）
+    l1_60 = {}
+    for d in days[-60:]:
+        for ind, s in hist['days'][d].get('sectors', {}).items():
+            l1 = SECTOR_TO_L1.get(ind)
+            if not l1:
+                continue
+            a = l1_60.setdefault(l1, {'net': 0.0, 'pos': 0, 'n': 0})
+            a['net'] += s.get('net', 0.0)
+            a['pos'] += 1 if s.get('net', 0.0) > 0 else 0
+            a['n'] += 1
+    top5 = sorted((eci_data or {}).get('sectors', []), key=lambda x: -x.get('eci', 0))[:5]
+    items = []
+    for sec in top5:
+        parent = sec['sector']
+        a = l1_60.get(parent)
+        if not a or a['n'] == 0 or a['net'] <= 0 or a['pos'] / a['n'] < 0.5:
+            continue
+        subs = []
+        stat_list = []
+        for ind, l1 in SECTOR_TO_L1.items():
+            if l1 != parent:
+                continue
+            rows = _history_series(hist, ind)
+            if len(rows) < 40:
+                continue
+            nets20 = [r[1] for r in rows[-20:]]
+            rets20 = [r[2] for r in rows[-20:]]
+            rets5 = rets20[-5:]
+            amts60 = [r[3] for r in rows[-60:]]
+            net60 = sum(r[1] for r in rows[-60:])
+            pos60 = sum(1 for r in rows[-60:] if r[1] > 0) / len(rows[-60:])
+            amt20 = sum(r[3] for r in rows[-20:])
+            stat_list.append({
+                'name': ind, 'net60': net60, 'pos60': pos60,
+                'inflow20d': round(sum(nets20), 2),
+                'fund': (sum(nets20) / amt20) if amt20 > 0 else 0.0,
+                'up_ratio': sum(1 for x in rets20 if x > 0) / 20,
+                'align': sum(1 for x in rets5 if _sign(x) == _sign(sum(rets20)) and x != 0) / 5,
+                'ret5': abs(sum(rets5)),
+                'act': _pct_rank(amts60, sum(amts60[-5:]) / 5) if amts60 else 0.5,
+            })
+        if not stat_list:
+            continue
+        fund_vals = [s['fund'] for s in stat_list]
+        ret5_vals = [s['ret5'] for s in stat_list]
+        for s in stat_list:
+            fund = round(_pct_rank(fund_vals, s['fund']) * _ECI_DIM_MAX, 1)
+            tsync = round(s['up_ratio'] * _ECI_DIM_MAX, 1)
+            mom = round((0.6 * s['align'] + 0.4 * _pct_rank(ret5_vals, s['ret5'])) * _ECI_DIM_MAX, 1)
+            act = round(s['act'] * _ECI_DIM_MAX, 1)
+            s['eci'] = round((fund + tsync + mom + act) / (_ECI_DIM_MAX * 4) * 100, 1)
+        picked = [s for s in sorted(stat_list, key=lambda x: -x['eci']) if s['net60'] > 0][:3]
+        if not picked:
+            continue
+        subs = [{
+            'name': s['name'], 'eci': s['eci'], 'inflow20d': s['inflow20d'],
+            'positiveRatio': round(s['pos60'] * 100, 1),
+            'leaders': [{'name': t['name'], 'code': t['code'], 'pctChg': t['pct']}
+                        for t in (today_map.get(s['name']) or [])[:2]],
+        } for s in picked]
+        items.append({'parent': parent, 'parentEci': sec['eci'], 'subs': subs})
+    return {
+        'trade_date': f"{latest[:4]}-{latest[4:6]}-{latest[6:]}",
+        'items': items,
+    }
+
+
+def fetch_eci_daily(pro, trade_date, data, watch_ctx=None):
+    """ECI 每日自动真算（任务1）+ 强势一级行业子板块精选（任务2）。
+
+    数据全部来自 sector_history 沉淀；watch_ctx 为第 12 步返回的 (hist, ind_map, name_map, today_map)，
+    缺省时自行从缓存加载历史（today_map 为空则子板块龙头为空，不致命）。
+    """
+    try:
+        if watch_ctx:
+            hist, ind_map, name_map, today_map = watch_ctx
+        else:
+            hist = _load_sector_history()
+            today_map = {}
+        if len(hist['days']) < 40:
+            print(f"  eciDaily: history only {len(hist['days'])} days, keep old eciData")
+            return
+        eci = _rebuild_eci_from_history(hist, data.get('eciData'))
+        if eci:
+            data['eciData'] = eci
+            top = sorted(eci['sectors'], key=lambda x: -x['eci'])[:3]
+            print(f"  eciData rebuilt from history: {eci['totalIndustries']} sectors, "
+                  f"top3: {[(s['sector'], s['eci']) for s in top]}")
+        subs = build_eci_subsectors(hist, data.get('eciData'), today_map)
+        if subs is not None:
+            data['eciSubsectors'] = subs
+            n = sum(len(i['subs']) for i in subs['items'])
+            print(f"  eciSubsectors: {len(subs['items'])} parents, {n} subs picked")
+    except Exception as e:
+        print(f"  Warning: fetch_eci_daily failed: {e}")
 
 
 def fetch_north_south(pro, trade_date):
@@ -1180,7 +1574,7 @@ def main():
     data = load_existing_data()
 
     # ── 1. Indices (batch) ──
-    print("\n[1/12] Fetching indices (batch)...")
+    print("\n[1/13] Fetching indices (batch)...")
     indices = fetch_indices_batch(pro, trade_date)
     if indices:
         data['indices'] = indices
@@ -1188,7 +1582,7 @@ def main():
             print(f"  {v['name']}: {v['value']} ({v['change']:+.2f}%)")
 
     # ── 2. Stocks (batch) ──
-    print("\n[2/12] Fetching stocks (batch)...")
+    print("\n[2/13] Fetching stocks (batch)...")
     stocks = fetch_stocks_batch(pro, trade_date)
     if stocks:
         data['stocks'] = stocks
@@ -1197,7 +1591,7 @@ def main():
             print(f"    {s['name']}: {s['close']} ({s['pctChg']:+.2f}%)")
 
     # ── 3. ETFs (batch) ──
-    print("\n[3/12] Fetching ETFs (batch)...")
+    print("\n[3/13] Fetching ETFs (batch)...")
     etfs = fetch_etfs_batch(pro, trade_date)
     if etfs:
         data['nationalETF'] = etfs
@@ -1206,7 +1600,7 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 4. My ETF account (fund_daily, batch) ──
-    print("\n[4/12] Fetching my ETF account (fund_daily, batch)...")
+    print("\n[4/13] Fetching my ETF account (fund_daily, batch)...")
     my_etfs = fetch_my_etfs(pro, trade_date)
     if my_etfs:
         data['myETF'] = my_etfs
@@ -1215,14 +1609,14 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 5. Announcements + holdingsNews (全量覆盖旧手工数据) ──
-    print("\n[5/12] Fetching announcements & building holdingsNews...")
+    print("\n[5/13] Fetching announcements & building holdingsNews...")
     anns_map = fetch_announcements(pro, trade_date)
     data['holdingsNews'] = build_holdings_news(anns_map, trade_date)
     total_anns = sum(len(e['items']) for e in data['holdingsNews'])
     print(f"  Built {len(data['holdingsNews'])} holdingsNews entries, {total_anns} announcements")
 
     # ── 6. Mainforce flow ──
-    print("\n[6/12] Fetching mainforce flow...")
+    print("\n[6/13] Fetching mainforce flow...")
     inflow, outflow = fetch_mainforce_flow(pro, trade_date)
     if inflow:
         data['mainforce_inflow_top10'] = inflow
@@ -1232,7 +1626,7 @@ def main():
         print(f"  Outflow #1: {outflow[0]['name']} {outflow[0]['amount']}")
 
     # ── 7. Hot fund NAVs (fund_nav, 取到才覆盖) ──
-    print("\n[7/12] Fetching hot fund NAVs...")
+    print("\n[7/13] Fetching hot fund NAVs...")
     hot_navs = fetch_hot_fund_navs(pro, trade_date, data.get('hotFundNavs', []))
     if hot_navs:
         data['hotFundNavs'] = hot_navs
@@ -1240,7 +1634,7 @@ def main():
         print(f"  Updated {len(hot_navs)} fund NAVs, dates: {sorted(dates)}")
 
     # ── 8. National ETF watch (宽基ETF份额监控) ──
-    print("\n[8/12] Fetching national ETF watch (fund_share)...")
+    print("\n[8/13] Fetching national ETF watch (fund_share)...")
     etf_watch = fetch_national_etf_watch(pro, trade_date, data.get('nationalETFWatch'))
     if etf_watch:
         data['nationalETFWatch'] = etf_watch
@@ -1249,11 +1643,11 @@ def main():
               f"total netFlow {t['netFlow']:+.2f}亿, 5d {t['netFlow5d']:+.2f}亿")
 
     # ── 9. Bond yields + liquidity commentary (东方财富) ──
-    print("\n[9/12] Fetching bond yields & liquidity commentary (eastmoney)...")
+    print("\n[9/13] Fetching bond yields & liquidity commentary (eastmoney)...")
     fetch_bond_yields(trade_date, data)
 
     # ── 10. North/South bound ──
-    print("\n[10/12] Fetching north/south bound...")
+    print("\n[10/13] Fetching north/south bound...")
     north, south = fetch_north_south(pro, trade_date)
     if north:
         data['northbound'] = north
@@ -1263,7 +1657,7 @@ def main():
         print(f"  Southbound: {south['today']}亿")
 
     # ── 11. Sector index commentary (细分指数每日点评) ──
-    print("\n[11/12] Fetching sector index commentary...")
+    print("\n[11/13] Fetching sector index commentary...")
     # 涨跌停信号卡已废弃：不再生成 keySignals，并删除存量字段
     data.pop('keySignals', None)
     commentary = fetch_sector_commentary(pro, trade_date)
@@ -1274,9 +1668,13 @@ def main():
             print(f"    {c['name']}: {c['pctChg']:+.2f}% - {c['comment']}")
 
     # ── 12. Sector watch: 扫描榜(仅信号) + 底部资金积聚 (Tushare 历史沉淀) ──
-    print("\n[12/12] Building sector watch (scan + bottom accumulation)...")
-    fetch_sector_watch(pro, trade_date, data)
+    print("\n[12/13] Building sector watch (scan + bottom accumulation)...")
+    watch_ctx = fetch_sector_watch(pro, trade_date, data)
     data.pop('conceptHot', None)  # 主题概念领涨栏目已下线，清除存量字段
+
+    # ── 13. ECI 六维分每日真算 + 强势一级行业子板块精选 ──
+    print("\n[13/13] Rebuilding ECI from sector history + picking subsectors...")
+    fetch_eci_daily(pro, trade_date, data, watch_ctx)
 
     # ── Metadata ──
     data['updateTime'] = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]} 收盘 (Tushare自动)"

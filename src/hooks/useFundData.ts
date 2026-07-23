@@ -338,6 +338,20 @@ export interface FundData {
       leaders?: Array<{ name: string; code: string; pctChg: number; strength: string }>;
     }>;
   };
+  eciSubsectors?: {
+    trade_date: string;
+    items: Array<{
+      parent: string;
+      parentEci: number;
+      subs: Array<{
+        name: string;
+        eci: number;
+        inflow20d: number;
+        positiveRatio: number;
+        leaders: Array<{ name: string; code: string; pctChg: number }>;
+      }>;
+    }>;
+  };
   nationalETF?: Array<{
     ticker: string;
     name: string;

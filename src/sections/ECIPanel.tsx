@@ -555,12 +555,12 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                 {/* 六维得分条 */}
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-3">
                   {[
-                    { key: 'volConvergence', label: '波动收敛', val: s.volConvergence, max: 20, color: '#3b82f6' },
-                    { key: 'fundConcentration', label: '资金集中', val: s.fundConcentration, max: 20, color: '#8b5cf6' },
-                    { key: 'trendSync', label: '趋势同步', val: s.trendSync, max: 20, color: '#f59e0b' },
-                    { key: 'consistencyMomentum', label: '一致性动量', val: s.consistencyMomentum, max: 20, color: '#22c55e' },
-                    { key: 'activity', label: '成交活跃', val: s.activity, max: 10, color: '#ec4899' },
-                    { key: 'policy', label: '政策景气', val: s.policy, max: 10, color: '#06b6d4' },
+                    { key: 'volConvergence', label: '波动收敛', val: s.volConvergence, max: 15, color: '#3b82f6' },
+                    { key: 'fundConcentration', label: '资金集中', val: s.fundConcentration, max: 15, color: '#8b5cf6' },
+                    { key: 'trendSync', label: '趋势同步', val: s.trendSync, max: 15, color: '#f59e0b' },
+                    { key: 'consistencyMomentum', label: '一致性动量', val: s.consistencyMomentum, max: 15, color: '#22c55e' },
+                    { key: 'activity', label: '成交活跃', val: s.activity, max: 15, color: '#ec4899' },
+                    { key: 'policy', label: '政策景气', val: s.policy, max: 15, color: '#06b6d4' },
                   ].map(dim => (
                     <div key={dim.key}>
                       <div className="flex justify-between text-[10px] text-slate-500 mb-0.5">
@@ -601,6 +601,70 @@ export default function ECIPanel({ data }: ECIPanelProps) {
           );
         })}
       </div>
+
+      {/* 强势板块 · 子板块精选 */}
+      {data.eciSubsectors && (
+        <Card className="border-violet-200 shadow-sm">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Crown className="w-4 h-4 text-violet-500" />
+                强势板块 · 子板块精选
+              </CardTitle>
+              <Badge variant="outline" className="text-xs bg-violet-50 text-violet-700 border-violet-200">
+                {data.eciSubsectors.trade_date}
+              </Badge>
+            </div>
+            <p className="text-[10px] text-slate-400 mt-1">
+              母板块条件：ECI前5 + 60日净流入&gt;0 + 流入天数占比≥50%；子板块按资金/趋势/动量/活跃度四维简版评分，取前3且60日净流入&gt;0
+            </p>
+          </CardHeader>
+          <CardContent>
+            {data.eciSubsectors.items && data.eciSubsectors.items.length > 0 ? (
+              <div className="space-y-4">
+                {data.eciSubsectors.items.map((p: any) => (
+                  <div key={p.parent} className="rounded-lg border border-violet-100 bg-violet-50/40 p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-bold text-slate-800">{p.parent}</span>
+                      <Badge className="text-[10px] bg-violet-500 text-white border-0">ECI {p.parentEci}</Badge>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                      {p.subs.map((sub: any) => (
+                        <div key={sub.name} className="bg-white rounded-lg border border-slate-200 p-2.5">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-bold text-slate-700">{sub.name}</span>
+                            <span className="text-xs font-bold text-violet-600">{sub.eci}</span>
+                          </div>
+                          <div className="flex justify-between text-[10px] text-slate-500 mb-1">
+                            <span>20日净流入
+                              <span className={`ml-1 font-semibold ${sub.inflow20d >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                                {sub.inflow20d >= 0 ? '+' : ''}{sub.inflow20d}亿
+                              </span>
+                            </span>
+                            <span>上涨天数占比 {sub.positiveRatio}%</span>
+                          </div>
+                          <div className="flex flex-col gap-0.5 border-t border-slate-100 pt-1">
+                            {(sub.leaders || []).map((l: any) => (
+                              <span key={l.code} className="text-[10px] text-slate-600 whitespace-nowrap">
+                                {l.name}
+                                <span className={`ml-1 font-semibold ${l.pctChg >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                                  {l.pctChg >= 0 ? '+' : ''}{l.pctChg}%
+                                </span>
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-slate-400 py-3 text-center">当前无同时满足一致性与资金条件的子板块</p>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* 交易总策略 */}
       <Card className="border-cyan-200 bg-gradient-to-r from-cyan-50 to-blue-50">
