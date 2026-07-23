@@ -1,5 +1,5 @@
 {
-  "updateTime": "2026-07-22 收盘 (Tushare自动)",
+  "updateTime": "2026-07-23 收盘 (Tushare自动)",
   "week": "2026.07.15 - 07.22",
   "marketStatus": "正常交易",
   "indices": {
@@ -8165,13 +8165,6 @@
           "title": "H股公告-翌日披露报表",
           "content": "H股公告-翌日披露报表",
           "url": "http://static.cninfo.com.cn/finalpage/2026-07-18/1225429902.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-07-17",
-          "title": "恒瑞医药关于获得药物临床试验批准通知书的公告",
-          "content": "恒瑞医药关于获得药物临床试验批准通知书的公告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-07-17/1225427944.PDF"
         }
       ]
     },
@@ -8197,6 +8190,20 @@
       "items": [
         {
           "type": "公告",
+          "date": "2026-07-23",
+          "title": "上海机场发行股份购买资产并募集配套资金暨关联交易限售股上市公告",
+          "content": "上海机场发行股份购买资产并募集配套资金暨关联交易限售股上市公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-23/1225437597.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-07-23",
+          "title": "国泰海通证券股份有限公司关于上海国际机场股份有限公司发行股份购买资产并募集配套资金暨关联交易之限售股份解除限售上市流通的核查意见",
+          "content": "国泰海通证券股份有限公司关于上海国际机场股份有限公司发行股份购买资产并募集配套资金暨关联交易之限售股份解除限售上市流通的核查意见",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-23/1225437448.PDF"
+        },
+        {
+          "type": "公告",
           "date": "2026-07-20",
           "title": "上海机场关于收到控股股东提议提升2026年度中期现金分红比例的公告",
           "content": "上海机场关于收到控股股东提议提升2026年度中期现金分红比例的公告",
@@ -8209,7 +8216,15 @@
       "stockName": "万华化学",
       "group": "watch",
       "industry": "化工原料",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-07-23",
+          "title": "万华化学关于董事长提议实施2026年中期利润分配方案的提示性公告",
+          "content": "万华化学关于董事长提议实施2026年中期利润分配方案的提示性公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-23/1225437373.PDF"
+        }
+      ]
     },
     {
       "stockCode": "600406.SH",
@@ -8245,15 +8260,7 @@
       "stockName": "安琪酵母",
       "group": "watch",
       "industry": "食品",
-      "items": [
-        {
-          "type": "公告",
-          "date": "2026-07-17",
-          "title": "安琪酵母股份有限公司关于控股股东非公开发行可交换公司债券拟办理担保及信托登记的公告",
-          "content": "安琪酵母股份有限公司关于控股股东非公开发行可交换公司债券拟办理担保及信托登记的公告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-07-17/1225427947.PDF"
-        }
-      ]
+      "items": []
     },
     {
       "stockCode": "002568.SZ",
@@ -8267,20 +8274,6 @@
           "title": "关于部分董事、高级管理人员增持计划的进展公告",
           "content": "关于部分董事、高级管理人员增持计划的进展公告",
           "url": "http://static.cninfo.com.cn/finalpage/2026-07-22/1225435056.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-07-17",
-          "title": "关于实际控制人增持公司股份触及5%整数倍的公告",
-          "content": "关于实际控制人增持公司股份触及5%整数倍的公告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-07-17/1225428150.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-07-17",
-          "title": "简式权益变动报告书",
-          "content": "简式权益变动报告书",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-07-17/1225428149.PDF"
         }
       ]
     },
@@ -8537,18 +8530,18 @@
     }
   ],
   "nationalETFWatch": {
-    "trade_date": "2026-07-22",
+    "trade_date": "2026-07-23",
     "items": [
       {
         "name": "嘉实300ETF",
         "code": "159919.SZ",
-        "share": 61.95,
-        "prevShare": 63.74,
-        "shareChg": -1.79,
-        "avgPrice": 4.997,
-        "netFlow": -8.95,
-        "shareChg5d": 5.8,
-        "netFlow5d": 27.86
+        "share": 61.82,
+        "prevShare": 61.95,
+        "shareChg": -0.13,
+        "avgPrice": 0.0,
+        "netFlow": -0.0,
+        "shareChg5d": 6.13,
+        "netFlow5d": 30.1
       },
       {
         "name": "华泰柏瑞300ETF",
@@ -8641,24 +8634,24 @@
       {
         "name": "易方达创业板ETF",
         "code": "159915.SZ",
-        "share": 170.43,
-        "prevShare": 176.39,
-        "shareChg": -5.96,
-        "avgPrice": 3.658,
-        "netFlow": -21.8,
-        "shareChg5d": 45.74,
-        "netFlow5d": 160.37
+        "share": 166.26,
+        "prevShare": 170.43,
+        "shareChg": -4.17,
+        "avgPrice": 0.0,
+        "netFlow": -0.0,
+        "shareChg5d": 41.7,
+        "netFlow5d": 160.86
       },
       {
         "name": "华安创业板50ETF",
         "code": "159949.SZ",
-        "share": 135.31,
-        "prevShare": 132.79,
-        "shareChg": 2.52,
-        "avgPrice": 1.736,
-        "netFlow": 4.37,
-        "shareChg5d": 20.53,
-        "netFlow5d": 34.58
+        "share": 134.83,
+        "prevShare": 135.31,
+        "shareChg": -0.48,
+        "avgPrice": 0.0,
+        "netFlow": -0.0,
+        "shareChg5d": 19.22,
+        "netFlow5d": 33.1
       },
       {
         "name": "华泰柏瑞A500ETF",
@@ -8674,24 +8667,24 @@
       {
         "name": "南方A500ETF",
         "code": "159352.SZ",
-        "share": 246.03,
-        "prevShare": 243.48,
-        "shareChg": 2.55,
-        "avgPrice": 1.299,
-        "netFlow": 3.31,
-        "shareChg5d": 22.26,
-        "netFlow5d": 28.11
+        "share": 246.66,
+        "prevShare": 246.03,
+        "shareChg": 0.63,
+        "avgPrice": 0.0,
+        "netFlow": 0.0,
+        "shareChg5d": 22.74,
+        "netFlow5d": 27.91
       },
       {
         "name": "国泰A500ETF",
         "code": "159338.SZ",
-        "share": 207.35,
-        "prevShare": 211.31,
-        "shareChg": -3.96,
-        "avgPrice": 1.248,
-        "netFlow": -4.94,
-        "shareChg5d": 11.13,
-        "netFlow5d": 13.22
+        "share": 208.25,
+        "prevShare": 207.35,
+        "shareChg": 0.9,
+        "avgPrice": 0.0,
+        "netFlow": 0.0,
+        "shareChg5d": 12.93,
+        "netFlow5d": 14.34
       },
       {
         "name": "华夏A500ETF",
@@ -8707,20 +8700,20 @@
       {
         "name": "易方达A500ETF",
         "code": "159361.SZ",
-        "share": 208.16,
-        "prevShare": 210.74,
-        "shareChg": -2.58,
-        "avgPrice": 1.272,
-        "netFlow": -3.28,
-        "shareChg5d": 13.29,
-        "netFlow5d": 16.28
+        "share": 210.14,
+        "prevShare": 208.16,
+        "shareChg": 1.98,
+        "avgPrice": 0.0,
+        "netFlow": 0.0,
+        "shareChg5d": 14.73,
+        "netFlow5d": 15.59
       }
     ],
     "total": {
-      "shareChg": -45.09,
-      "netFlow": -153.33,
-      "shareChg5d": 379.61,
-      "netFlow5d": 981.1
+      "shareChg": -37.14,
+      "netFlow": -122.04,
+      "shareChg5d": 378.31,
+      "netFlow5d": 982.58
     }
   }
 }
