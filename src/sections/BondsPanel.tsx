@@ -428,9 +428,9 @@ export default function BondsPanel() {
             </div>
 
             {/* 点评 */}
-            <div className="bg-slate-50 p-2.5 rounded-lg">
+            <div className="border-l-4 border-sky-400 bg-sky-50 p-3 rounded-r-lg">
               <p className="text-xs text-slate-700 leading-relaxed">
-                <strong className="text-slate-800">点评：</strong>
+                <strong className="text-sky-700">资金面点评：</strong>
                 {bd.liquidityTools.comment}
               </p>
             </div>

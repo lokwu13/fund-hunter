@@ -11,6 +11,7 @@ import os
 import sys
 import json
 import time
+import requests
 import tushare as ts
 
 # Delay between API calls to avoid IP rate limits
@@ -554,6 +555,161 @@ def fetch_national_etf_watch(pro, trade_date, existing):
     }
 
 
+# 东方财富 中债国债收益率接口（已实测可用，主流口径，免费）
+BOND_YIELD_URL = 'https://datacenter-web.eastmoney.com/api/data/v1/get'
+BOND_YIELD_MAP = {  # 内部字段 → 东财列名
+    'y2': 'EMM00588704',   # 2年
+    'y5': 'EMM00166462',   # 5年
+    'y10': 'EMM00166466',  # 10年
+    'y30': 'EMM00166469',  # 30年
+}
+
+
+def _sub_months(dt, months):
+    """日期减 N 个自然月（月末日钳位）。"""
+    m = dt.month - months
+    y = dt.year
+    while m <= 0:
+        m += 12
+        y -= 1
+    days_in_month = [31, 29 if (y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)) else 28,
+                     31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    return datetime(y, m, min(dt.day, days_in_month[m - 1]))
+
+
+def _nearest_row(rows, target_dt):
+    """rows 已按 date 升序，取 date <= target 的最近一行。"""
+    best = None
+    for r in rows:
+        if datetime.strptime(r['date'], '%Y-%m-%d') <= target_dt:
+            best = r
+        else:
+            break
+    return best
+
+
+def fetch_bond_yields(trade_date, data):
+    """国债收益率 + 资金面点评自动更新（东方财富 datacenter 接口）。
+
+    - bondData.daily：新日期按 date 去重 append（历史手工值不覆盖），y*_chg 统一重算
+    - bondData.stats：latest（spread=y30-y2）、1m_change（单位 bp）、近一年 range 全部重算
+    - bondData.curveCompare：latest / 1M / 3M / 6M / 1Y，按 <=目标日 最近邻取值
+    - bondData.news：头部追加当日条目（当日已存在则跳过，cap 30 条）
+    - bondData.liquidityTools：updateTime 刷新 + comment 模板自动生成
+    TODO: DR001/DR007 暂无可靠免费接口（中国货币网质押式回购历史接口未找到，
+          ShiborHis 可用但口径不同），dr001/dr007/monthlyNet 暂保留手工值。
+    """
+    try:
+        resp = requests.get(BOND_YIELD_URL, params={
+            'reportName': 'RPTA_WEB_TREASURYYIELD',
+            'columns': 'ALL',
+            'pageSize': 30,
+            'pageNumber': 1,
+            'sortColumns': 'SOLAR_DATE',
+            'sortTypes': -1,
+            'source': 'WEB',
+            'client': 'WEB',
+        }, headers={'User-Agent': 'Mozilla/5.0'}, timeout=20)
+        rows_raw = (resp.json().get('result') or {}).get('data') or []
+        new_rows = {}
+        for r in rows_raw:
+            vals = {k: r.get(col) for k, col in BOND_YIELD_MAP.items()}
+            if any(v is None for v in vals.values()):
+                continue
+            d = str(r.get('SOLAR_DATE', ''))[:10]
+            if len(d) != 10:
+                continue
+            new_rows[d] = {'date': d, **{k: round(float(v), 4) for k, v in vals.items()}}
+        if not new_rows:
+            raise ValueError('eastmoney treasury yield empty')
+
+        bd = data.setdefault('bondData', {})
+        daily_map = {r['date']: dict(r) for r in bd.get('daily', [])}
+        added = 0
+        for d, row in new_rows.items():
+            if d not in daily_map:  # 历史手工值不覆盖
+                daily_map[d] = row
+                added += 1
+        daily = [daily_map[d] for d in sorted(daily_map)]
+        if not daily:
+            raise ValueError('bond daily empty')
+        # 统一重算 chg（当日 - 前一交易日，百分点，round 4）
+        for i, r in enumerate(daily):
+            for k in BOND_YIELD_MAP:
+                r[f'{k}_chg'] = 0 if i == 0 else round(r[k] - daily[i - 1][k], 4)
+        bd['daily'] = daily
+
+        latest = daily[-1]
+        latest_dt = datetime.strptime(latest['date'], '%Y-%m-%d')
+
+        # stats：latest / 1m_change(bp) / 近一年 range
+        r1m = _nearest_row(daily, _sub_months(latest_dt, 1)) or daily[0]
+        bd['stats'] = {
+            'latest': {'date': latest['date'],
+                       **{k: latest[k] for k in BOND_YIELD_MAP},
+                       'spread': round(latest['y30'] - latest['y2'], 3)},
+            '1m_change': {k: round((latest[k] - r1m[k]) * 100, 1) for k in BOND_YIELD_MAP},
+            'range': {k: {'min': round(min(r[k] for r in daily
+                                         if datetime.strptime(r['date'], '%Y-%m-%d')
+                                         >= latest_dt - timedelta(days=365)), 3),
+                          'max': round(max(r[k] for r in daily
+                                         if datetime.strptime(r['date'], '%Y-%m-%d')
+                                         >= latest_dt - timedelta(days=365)), 3)}
+                      for k in BOND_YIELD_MAP},
+        }
+
+        # curveCompare（<=目标日 最近邻）
+        cc = {'latest': {'date': latest['date'], **{k: latest[k] for k in BOND_YIELD_MAP}}}
+        for label, months in [('1M_ago', 1), ('3M_ago', 3), ('6M_ago', 6), ('1Y_ago', 12)]:
+            rr = _nearest_row(daily, _sub_months(latest_dt, months)) or daily[0]
+            cc[label] = {'date': rr['date'], **{k: rr[k] for k in BOND_YIELD_MAP}}
+        bd['curveCompare'] = cc
+
+        # news：当日条目 prepend（已存在则跳过）
+        news = bd.setdefault('news', [])
+        if not any(n.get('date') == latest['date'] for n in news):
+            c = latest['y10_chg']
+            if c < 0:
+                title = f"10年期国债收益率续降至{latest['y10']:.3f}%，债市持续走牛"
+            elif c > 0:
+                title = f"10年期国债收益率回升至{latest['y10']:.3f}%，债市出现调整"
+            else:
+                title = f"10年期国债收益率持平于{latest['y10']:.3f}%，债市横盘整理"
+            news.insert(0, {'date': latest['date'], 'title': title, 'source': '中债登'})
+            bd['news'] = news[:30]
+
+        # liquidityTools：updateTime 刷新 + comment 模板自动生成
+        lt = bd.get('liquidityTools')
+        if lt:
+            lt['updateTime'] = latest['date']
+            try:
+                dr007 = float(lt.get('dr007', 0))
+                policy = float(lt.get('policyRate', 1.40))
+                if dr007 <= policy - 0.05:
+                    s1 = f"DR007（{dr007:.2f}%）低于7天逆回购政策利率（{policy:.2f}%），资金面偏松"
+                elif dr007 >= policy + 0.05:
+                    s1 = f"DR007（{dr007:.2f}%）高于7天逆回购政策利率（{policy:.2f}%），资金面边际收敛"
+                else:
+                    s1 = f"DR007（{dr007:.2f}%）贴近7天逆回购政策利率（{policy:.2f}%），资金面整体均衡"
+                net = float(lt.get('monthlyNet', 0))
+                if net > 0:
+                    s2 = f"本月公开市场净投放{net:.0f}亿元，央行持续呵护流动性。"
+                elif net < 0:
+                    s2 = f"本月公开市场净回笼{abs(net):.0f}亿元，流动性投放力度偏中性。"
+                else:
+                    s2 = "本月公开市场投放与到期基本持平，流动性维持平稳。"
+                lt['comment'] = s1 + '；' + s2
+            except Exception as e:
+                print(f"  Warning: liquidity comment build failed: {e}")
+
+        print(f"  daily 末行 {latest['date']}: 2Y {latest['y2']}, 5Y {latest['y5']}, "
+              f"10Y {latest['y10']}, 30Y {latest['y30']} (新增 {added} 行)")
+        return True
+    except Exception as e:
+        print(f"  Warning: fetch_bond_yields failed: {e}")
+        return False
+
+
 def fetch_north_south(pro, trade_date):
     """Fetch northbound and southbound data."""
     time.sleep(API_DELAY)
@@ -708,7 +864,7 @@ def main():
     data = load_existing_data()
 
     # ── 1. Indices (batch) ──
-    print("\n[1/10] Fetching indices (batch)...")
+    print("\n[1/11] Fetching indices (batch)...")
     indices = fetch_indices_batch(pro, trade_date)
     if indices:
         data['indices'] = indices
@@ -716,7 +872,7 @@ def main():
             print(f"  {v['name']}: {v['value']} ({v['change']:+.2f}%)")
 
     # ── 2. Stocks (batch) ──
-    print("\n[2/10] Fetching stocks (batch)...")
+    print("\n[2/11] Fetching stocks (batch)...")
     stocks = fetch_stocks_batch(pro, trade_date)
     if stocks:
         data['stocks'] = stocks
@@ -725,7 +881,7 @@ def main():
             print(f"    {s['name']}: {s['close']} ({s['pctChg']:+.2f}%)")
 
     # ── 3. ETFs (batch) ──
-    print("\n[3/10] Fetching ETFs (batch)...")
+    print("\n[3/11] Fetching ETFs (batch)...")
     etfs = fetch_etfs_batch(pro, trade_date)
     if etfs:
         data['nationalETF'] = etfs
@@ -734,7 +890,7 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 4. My ETF account (fund_daily, batch) ──
-    print("\n[4/10] Fetching my ETF account (fund_daily, batch)...")
+    print("\n[4/11] Fetching my ETF account (fund_daily, batch)...")
     my_etfs = fetch_my_etfs(pro, trade_date)
     if my_etfs:
         data['myETF'] = my_etfs
@@ -743,14 +899,14 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 5. Announcements + holdingsNews (全量覆盖旧手工数据) ──
-    print("\n[5/10] Fetching announcements & building holdingsNews...")
+    print("\n[5/11] Fetching announcements & building holdingsNews...")
     anns_map = fetch_announcements(pro, trade_date)
     data['holdingsNews'] = build_holdings_news(anns_map, trade_date)
     total_anns = sum(len(e['items']) for e in data['holdingsNews'])
     print(f"  Built {len(data['holdingsNews'])} holdingsNews entries, {total_anns} announcements")
 
     # ── 6. Mainforce flow ──
-    print("\n[6/10] Fetching mainforce flow...")
+    print("\n[6/11] Fetching mainforce flow...")
     inflow, outflow = fetch_mainforce_flow(pro, trade_date)
     if inflow:
         data['mainforce_inflow_top10'] = inflow
@@ -760,7 +916,7 @@ def main():
         print(f"  Outflow #1: {outflow[0]['name']} {outflow[0]['amount']}")
 
     # ── 7. Hot fund NAVs (fund_nav, 取到才覆盖) ──
-    print("\n[7/10] Fetching hot fund NAVs...")
+    print("\n[7/11] Fetching hot fund NAVs...")
     hot_navs = fetch_hot_fund_navs(pro, trade_date, data.get('hotFundNavs', []))
     if hot_navs:
         data['hotFundNavs'] = hot_navs
@@ -768,7 +924,7 @@ def main():
         print(f"  Updated {len(hot_navs)} fund NAVs, dates: {sorted(dates)}")
 
     # ── 8. National ETF watch (宽基ETF份额监控) ──
-    print("\n[8/10] Fetching national ETF watch (fund_share)...")
+    print("\n[8/11] Fetching national ETF watch (fund_share)...")
     etf_watch = fetch_national_etf_watch(pro, trade_date, data.get('nationalETFWatch'))
     if etf_watch:
         data['nationalETFWatch'] = etf_watch
@@ -776,8 +932,12 @@ def main():
         print(f"  {len(etf_watch['items'])} ETFs as of {etf_watch['trade_date']}, "
               f"total netFlow {t['netFlow']:+.2f}亿, 5d {t['netFlow5d']:+.2f}亿")
 
-    # ── 9. North/South bound ──
-    print("\n[9/10] Fetching north/south bound...")
+    # ── 9. Bond yields + liquidity commentary (东方财富) ──
+    print("\n[9/11] Fetching bond yields & liquidity commentary (eastmoney)...")
+    fetch_bond_yields(trade_date, data)
+
+    # ── 10. North/South bound ──
+    print("\n[10/11] Fetching north/south bound...")
     north, south = fetch_north_south(pro, trade_date)
     if north:
         data['northbound'] = north
@@ -786,8 +946,8 @@ def main():
         data['southbound'] = south
         print(f"  Southbound: {south['today']}亿")
 
-    # ── 10. Sector index commentary (细分指数每日点评) ──
-    print("\n[10/10] Fetching sector index commentary...")
+    # ── 11. Sector index commentary (细分指数每日点评) ──
+    print("\n[11/11] Fetching sector index commentary...")
     # 涨跌停信号卡已废弃：不再生成 keySignals，并删除存量字段
     data.pop('keySignals', None)
     commentary = fetch_sector_commentary(pro, trade_date)
