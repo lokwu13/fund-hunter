@@ -862,7 +862,10 @@ def _build_sector_scan_tushare(pro, trade_date):
         ind_map = dict(zip(basic['ts_code'], basic['industry']))
         start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=20)).strftime('%Y%m%d')
         cal = pro.trade_cal(exchange='SSE', start_date=start, end_date=trade_date, is_open='1')
-        dates = cal['cal_date'].tolist()[-10:]
+        # trade_cal 返回顺序不保证升序，必须显式排序，否则会取到窗口最旧的一段
+        dates = sorted(cal['cal_date'].tolist())[-10:]
+        if not dates:
+            return None
         industry_days = {}
         for d in dates:
             time.sleep(API_DELAY)
