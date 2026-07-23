@@ -7177,26 +7177,26 @@
     {
       "code": "000001.OF",
       "name": "华夏成长",
-      "nav": 1.417,
-      "accumNav": 3.99,
-      "date": "20260722",
-      "change": -0.028
+      "nav": 1.369,
+      "accumNav": 3.942,
+      "date": "20260723",
+      "change": -0.048
     },
     {
       "code": "005827.OF",
       "name": "易方达蓝筹精选",
-      "nav": 1.5184,
-      "accumNav": 1.5184,
-      "date": "20260722",
-      "change": -0.016
+      "nav": 1.5128,
+      "accumNav": 1.5128,
+      "date": "20260723",
+      "change": -0.006
     },
     {
       "code": "110011.OF",
       "name": "易方达中小盘",
-      "nav": 4.1049,
-      "accumNav": 5.8949,
-      "date": "20260722",
-      "change": -0.023
+      "nav": 4.1063,
+      "accumNav": 5.8963,
+      "date": "20260723",
+      "change": 0.001
     },
     {
       "code": "163406.OF",
@@ -7209,50 +7209,50 @@
     {
       "code": "260108.OF",
       "name": "景顺长城新兴成长",
-      "nav": 1.537,
-      "accumNav": 3.344,
-      "date": "20260722",
-      "change": 0.006
+      "nav": 1.534,
+      "accumNav": 3.341,
+      "date": "20260723",
+      "change": -0.003
     },
     {
       "code": "070002.OF",
       "name": "嘉实增长",
-      "nav": 19.865,
-      "accumNav": 20.556,
-      "date": "20260722",
-      "change": -0.406
+      "nav": 19.9023,
+      "accumNav": 20.5933,
+      "date": "20260723",
+      "change": 0.037
     },
     {
       "code": "519732.OF",
       "name": "交银定期支付双息平衡",
-      "nav": 8.999,
-      "accumNav": 8.999,
-      "date": "20260722",
-      "change": -0.184
+      "nav": 8.764,
+      "accumNav": 8.764,
+      "date": "20260723",
+      "change": -0.235
     },
     {
       "code": "001410.OF",
       "name": "信达澳银新能源产业",
-      "nav": 6.785,
-      "accumNav": 6.847,
-      "date": "20260722",
-      "change": -0.099
+      "nav": 6.59,
+      "accumNav": 6.652,
+      "date": "20260723",
+      "change": -0.195
     },
     {
       "code": "003494.OF",
       "name": "富国天惠成长",
-      "nav": 2.9746,
-      "accumNav": 3.2796,
-      "date": "20260722",
-      "change": -0.035
+      "nav": 3.0172,
+      "accumNav": 3.3222,
+      "date": "20260723",
+      "change": 0.043
     },
     {
       "code": "008764.OF",
       "name": "睿远成长价值",
-      "nav": 1.5159,
-      "accumNav": 1.5159,
-      "date": "20260721",
-      "change": -0.005
+      "nav": 1.4737,
+      "accumNav": 1.4737,
+      "date": "20260722",
+      "change": -0.042
     }
   ],
   "eciData": {
@@ -8564,90 +8564,90 @@
       {
         "name": "华泰柏瑞300ETF",
         "code": "510300.SH",
-        "share": 240.45,
-        "prevShare": 243.57,
-        "shareChg": -3.12,
-        "avgPrice": 4.79,
-        "netFlow": -14.96,
-        "shareChg5d": 56.49,
-        "netFlow5d": 262.79
+        "share": 240.27,
+        "prevShare": 240.45,
+        "shareChg": -0.18,
+        "avgPrice": 4.776,
+        "netFlow": -0.86,
+        "shareChg5d": 43.25,
+        "netFlow5d": 199.62
       },
       {
         "name": "易方达300ETF",
         "code": "510310.SH",
-        "share": 111.63,
-        "prevShare": 111.44,
-        "shareChg": 0.19,
-        "avgPrice": 4.648,
-        "netFlow": 0.88,
-        "shareChg5d": 14.09,
-        "netFlow5d": 63.79
+        "share": 111.85,
+        "prevShare": 111.63,
+        "shareChg": 0.22,
+        "avgPrice": 4.638,
+        "netFlow": 1.0,
+        "shareChg5d": 12.15,
+        "netFlow5d": 54.79
       },
       {
         "name": "华夏300ETF",
         "code": "510330.SH",
-        "share": 83.8,
-        "prevShare": 84.03,
-        "shareChg": -0.23,
-        "avgPrice": 4.993,
-        "netFlow": -1.12,
-        "shareChg5d": 6.15,
-        "netFlow5d": 29.85
+        "share": 84.68,
+        "prevShare": 83.8,
+        "shareChg": 0.88,
+        "avgPrice": 4.982,
+        "netFlow": 4.39,
+        "shareChg5d": 5.79,
+        "netFlow5d": 28.06
       },
       {
         "name": "华夏上证50ETF",
         "code": "510050.SH",
-        "share": 74.75,
-        "prevShare": 74.76,
-        "shareChg": -0.01,
-        "avgPrice": 3.092,
-        "netFlow": -0.03,
-        "shareChg5d": 2.15,
-        "netFlow5d": 6.28
+        "share": 78.3,
+        "prevShare": 74.75,
+        "shareChg": 3.55,
+        "avgPrice": 3.084,
+        "netFlow": 10.94,
+        "shareChg5d": -3.2,
+        "netFlow5d": -9.72
       },
       {
         "name": "华夏科创50ETF",
         "code": "588000.SH",
-        "share": 443.61,
-        "prevShare": 455.13,
-        "shareChg": -11.52,
-        "avgPrice": 1.989,
-        "netFlow": -22.91,
-        "shareChg5d": 105.03,
-        "netFlow5d": 190.19
+        "share": 461.46,
+        "prevShare": 443.61,
+        "shareChg": 17.85,
+        "avgPrice": 1.907,
+        "netFlow": 34.04,
+        "shareChg5d": 114.99,
+        "netFlow5d": 208.56
       },
       {
         "name": "易方达科创50ETF",
         "code": "588080.SH",
-        "share": 225.38,
-        "prevShare": 226.13,
-        "shareChg": -0.75,
-        "avgPrice": 1.927,
-        "netFlow": -1.45,
-        "shareChg5d": 14.4,
-        "netFlow5d": 25.78
+        "share": 228.38,
+        "prevShare": 225.38,
+        "shareChg": 3.0,
+        "avgPrice": 1.85,
+        "netFlow": 5.55,
+        "shareChg5d": 15.51,
+        "netFlow5d": 27.69
       },
       {
         "name": "南方中证500ETF",
         "code": "510500.SH",
-        "share": 57.87,
-        "prevShare": 61.41,
-        "shareChg": -3.54,
-        "avgPrice": 7.813,
-        "netFlow": -27.63,
-        "shareChg5d": 3.5,
-        "netFlow5d": 26.84
+        "share": 57.34,
+        "prevShare": 57.87,
+        "shareChg": -0.53,
+        "avgPrice": 7.734,
+        "netFlow": -4.11,
+        "shareChg5d": 0.12,
+        "netFlow5d": -0.16
       },
       {
         "name": "南方中证1000ETF",
         "code": "512100.SH",
-        "share": 86.71,
-        "prevShare": 106.93,
-        "shareChg": -20.22,
-        "avgPrice": 2.923,
-        "netFlow": -59.11,
-        "shareChg5d": 11.26,
-        "netFlow5d": 35.06
+        "share": 86.25,
+        "prevShare": 86.71,
+        "shareChg": -0.46,
+        "avgPrice": 2.911,
+        "netFlow": -1.34,
+        "shareChg5d": -0.8,
+        "netFlow5d": -2.47
       },
       {
         "name": "易方达创业板ETF",
@@ -8674,13 +8674,13 @@
       {
         "name": "华泰柏瑞A500ETF",
         "code": "563360.SH",
-        "share": 271.7,
-        "prevShare": 269.6,
-        "shareChg": 2.1,
-        "avgPrice": 1.317,
-        "netFlow": 2.76,
-        "shareChg5d": 32.61,
-        "netFlow5d": 41.76
+        "share": 274.19,
+        "prevShare": 271.7,
+        "shareChg": 2.49,
+        "avgPrice": 1.309,
+        "netFlow": 3.26,
+        "shareChg5d": 32.67,
+        "netFlow5d": 41.8
       },
       {
         "name": "南方A500ETF",
@@ -8707,13 +8707,13 @@
       {
         "name": "华夏A500ETF",
         "code": "512050.SH",
-        "share": 159.02,
-        "prevShare": 157.79,
-        "shareChg": 1.23,
-        "avgPrice": 1.242,
-        "netFlow": 1.53,
-        "shareChg5d": 15.18,
-        "netFlow5d": 18.34
+        "share": 159.53,
+        "prevShare": 159.02,
+        "shareChg": 0.51,
+        "avgPrice": 1.234,
+        "netFlow": 0.63,
+        "shareChg5d": 14.16,
+        "netFlow5d": 17.06
       },
       {
         "name": "易方达A500ETF",
@@ -8728,10 +8728,10 @@
       }
     ],
     "total": {
-      "shareChg": -37.14,
-      "netFlow": -134.08,
-      "shareChg5d": 378.31,
-      "netFlow5d": 970.55
+      "shareChg": 26.06,
+      "netFlow": 41.46,
+      "shareChg5d": 352.09,
+      "netFlow5d": 835.1
     }
   },
   "sectorScan": {
