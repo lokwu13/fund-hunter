@@ -8717,153 +8717,63 @@
     }
   },
   "sectorScan": {
-    "trade_date": "2026-07-03",
-    "summary": "今日30个行业出现吸筹信号：摩托车连续7日净流入、中成药连续5日净流入、食品连续5日净流入。（Tushare兜底口径，缺板块涨幅）",
+    "trade_date": "2026-07-23",
+    "summary": "今日8个行业出现吸筹信号：火力发电连续4日净流入、铜连续3日净流入、水运连续3日净流入。（Tushare兜底口径，缺板块涨幅）",
     "items": [
       {
-        "sector": "摩托车",
-        "netInflow1d": 2.21,
-        "netInflow5d": 6.89,
-        "consecutiveDays": 7,
+        "sector": "火力发电",
+        "netInflow1d": 13.67,
+        "netInflow5d": 66.27,
+        "consecutiveDays": 4,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "吸筹中",
-        "score": 171.9
+        "score": 118.9
       },
       {
-        "sector": "中成药",
-        "netInflow1d": 8.99,
-        "netInflow5d": 48.97,
-        "consecutiveDays": 5,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 138.9
-      },
-      {
-        "sector": "食品",
-        "netInflow1d": 1.45,
-        "netInflow5d": 27.84,
-        "consecutiveDays": 5,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 137.1
-      },
-      {
-        "sector": "农业综合",
-        "netInflow1d": 6.69,
-        "netInflow5d": 25.37,
-        "consecutiveDays": 5,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 136.3
-      },
-      {
-        "sector": "乳制品",
-        "netInflow1d": 3.55,
-        "netInflow5d": 10.89,
-        "consecutiveDays": 5,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 134.1
-      },
-      {
-        "sector": "啤酒",
-        "netInflow1d": 1.6,
-        "netInflow5d": 4.34,
-        "consecutiveDays": 5,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 126.8
-      },
-      {
-        "sector": "电器连锁",
-        "netInflow1d": 0.11,
-        "netInflow5d": 0.78,
-        "consecutiveDays": 5,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 120.6
-      },
-      {
-        "sector": "汽车整车",
-        "netInflow1d": 8.61,
-        "netInflow5d": 34.54,
+        "sector": "铜",
+        "netInflow1d": 44.0,
+        "netInflow5d": 72.52,
         "consecutiveDays": 3,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "吸筹中",
-        "score": 98.2
+        "score": 99.3
       },
       {
-        "sector": "生物制药",
-        "netInflow1d": 5.05,
-        "netInflow5d": 34.08,
+        "sector": "水运",
+        "netInflow1d": 6.47,
+        "netInflow5d": 9.57,
         "consecutiveDays": 3,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "吸筹中",
-        "score": 97.8
+        "score": 93.0
       },
       {
-        "sector": "医疗保健",
-        "netInflow1d": 2.24,
-        "netInflow5d": 25.44,
+        "sector": "农药化肥",
+        "netInflow1d": 5.51,
+        "netInflow5d": 6.48,
         "consecutiveDays": 3,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "吸筹中",
-        "score": 96.7
+        "score": 91.9
       },
       {
-        "sector": "家用电器",
-        "netInflow1d": 9.59,
-        "netInflow5d": 20.88,
+        "sector": "商品城",
+        "netInflow1d": 2.22,
+        "netInflow5d": 5.13,
         "consecutiveDays": 3,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "吸筹中",
-        "score": 96.0
+        "score": 91.6
       },
       {
-        "sector": "仓储物流",
-        "netInflow1d": 1.86,
-        "netInflow5d": 6.17,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 90.5
-      },
-      {
-        "sector": "全国地产",
-        "netInflow1d": 3.54,
-        "netInflow5d": 5.89,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 90.1
-      },
-      {
-        "sector": "旅游景点",
-        "netInflow1d": 1.93,
-        "netInflow5d": 5.07,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 89.7
-      },
-      {
-        "sector": "服饰",
-        "netInflow1d": 2.28,
-        "netInflow5d": 5.03,
+        "sector": "化纤",
+        "netInflow1d": 0.92,
+        "netInflow5d": 3.04,
         "consecutiveDays": 3,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -8871,229 +8781,39 @@
         "score": 89.4
       },
       {
-        "sector": "工程机械",
-        "netInflow1d": 1.09,
-        "netInflow5d": 4.84,
+        "sector": "全国地产",
+        "netInflow1d": 2.66,
+        "netInflow5d": 0.31,
         "consecutiveDays": 3,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "吸筹中",
-        "score": 88.6
+        "score": 86.4
       },
       {
-        "sector": "饲料",
-        "netInflow1d": 1.57,
-        "netInflow5d": 4.58,
+        "sector": "空运",
+        "netInflow1d": 1.71,
+        "netInflow5d": -0.78,
         "consecutiveDays": 3,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "吸筹中",
-        "score": 88.3
+        "score": 82.8
       },
       {
-        "sector": "出版业",
-        "netInflow1d": 3.22,
-        "netInflow5d": 4.51,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 87.9
-      },
-      {
-        "sector": "其他商业",
-        "netInflow1d": 1.65,
-        "netInflow5d": 3.97,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 86.1
-      },
-      {
-        "sector": "机场",
-        "netInflow1d": 0.83,
-        "netInflow5d": 3.83,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 85.7
-      },
-      {
-        "sector": "房产服务",
-        "netInflow1d": 1.36,
-        "netInflow5d": 2.32,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 84.6
-      },
-      {
-        "sector": "百货",
-        "netInflow1d": 0.91,
-        "netInflow5d": 1.87,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 83.9
-      },
-      {
-        "sector": "红黄酒",
-        "netInflow1d": 0.15,
-        "netInflow5d": 1.85,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 83.1
-      },
-      {
-        "sector": "渔业",
-        "netInflow1d": 0.37,
-        "netInflow5d": 0.86,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 81.3
-      },
-      {
-        "sector": "水泥",
-        "netInflow1d": 0.47,
-        "netInflow5d": 0.84,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 80.9
-      },
-      {
-        "sector": "酒店餐饮",
-        "netInflow1d": 0.71,
-        "netInflow5d": 0.37,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 79.4
-      },
-      {
-        "sector": "批发业",
-        "netInflow1d": 0.01,
-        "netInflow5d": 0.33,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 79.1
-      },
-      {
-        "sector": "日用化工",
-        "netInflow1d": 0.36,
-        "netInflow5d": -0.17,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 78.3
-      },
-      {
-        "sector": "林业",
-        "netInflow1d": 0.16,
-        "netInflow5d": -0.82,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 77.6
-      },
-      {
-        "sector": "文教休闲",
-        "netInflow1d": 1.18,
-        "netInflow5d": -1.32,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "吸筹中",
-        "score": 76.9
-      },
-      {
-        "sector": "白酒",
-        "netInflow1d": 7.75,
-        "netInflow5d": 62.09,
-        "consecutiveDays": 2,
+        "sector": "银行",
+        "netInflow1d": 10.28,
+        "netInflow5d": 143.06,
+        "consecutiveDays": 1,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 79.3
+        "score": 59.6
       },
       {
-        "sector": "影视音像",
-        "netInflow1d": 9.27,
-        "netInflow5d": 10.47,
-        "consecutiveDays": 2,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 73.8
-      },
-      {
-        "sector": "旅游服务",
-        "netInflow1d": 0.9,
-        "netInflow5d": 6.97,
-        "consecutiveDays": 2,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 72.3
-      },
-      {
-        "sector": "广告包装",
-        "netInflow1d": 9.34,
-        "netInflow5d": 6.68,
-        "consecutiveDays": 2,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 71.6
-      },
-      {
-        "sector": "电信运营",
-        "netInflow1d": 0.46,
-        "netInflow5d": 6.21,
-        "consecutiveDays": 2,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 70.8
-      },
-      {
-        "sector": "商品城",
-        "netInflow1d": 1.65,
-        "netInflow5d": 2.86,
-        "consecutiveDays": 2,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 65.0
-      },
-      {
-        "sector": "软饮料",
-        "netInflow1d": 0.04,
-        "netInflow5d": 0.52,
-        "consecutiveDays": 2,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 59.8
-      },
-      {
-        "sector": "铜",
-        "netInflow1d": 7.22,
-        "netInflow5d": 35.78,
+        "sector": "水力发电",
+        "netInflow1d": 9.84,
+        "netInflow5d": 50.22,
         "consecutiveDays": 1,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9101,9 +8821,39 @@
         "score": 58.5
       },
       {
-        "sector": "医药商业",
-        "netInflow1d": 4.63,
-        "netInflow5d": 14.72,
+        "sector": "保险",
+        "netInflow1d": 11.34,
+        "netInflow5d": 40.77,
+        "consecutiveDays": 1,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 57.4
+      },
+      {
+        "sector": "白酒",
+        "netInflow1d": 1.13,
+        "netInflow5d": 36.54,
+        "consecutiveDays": 1,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 57.1
+      },
+      {
+        "sector": "电信运营",
+        "netInflow1d": 0.38,
+        "netInflow5d": 18.9,
+        "consecutiveDays": 1,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 56.0
+      },
+      {
+        "sector": "煤炭开采",
+        "netInflow1d": 6.82,
+        "netInflow5d": 15.5,
         "consecutiveDays": 1,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9111,49 +8861,89 @@
         "score": 55.2
       },
       {
-        "sector": "互联网",
-        "netInflow1d": 13.02,
-        "netInflow5d": -2.08,
+        "sector": "新型电力",
+        "netInflow1d": 5.87,
+        "netInflow5d": 9.73,
+        "consecutiveDays": 1,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 53.8
+      },
+      {
+        "sector": "铁路",
+        "netInflow1d": 1.08,
+        "netInflow5d": 9.59,
+        "consecutiveDays": 1,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 53.4
+      },
+      {
+        "sector": "区域地产",
+        "netInflow1d": 1.13,
+        "netInflow5d": -5.21,
         "consecutiveDays": 2,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 54.3
+        "score": 52.5
       },
       {
-        "sector": "路桥",
-        "netInflow1d": 0.59,
-        "netInflow5d": 4.95,
+        "sector": "石油加工",
+        "netInflow1d": 2.49,
+        "netInflow5d": 7.01,
         "consecutiveDays": 1,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 49.0
+        "score": 52.3
       },
       {
-        "sector": "黄金",
-        "netInflow1d": 1.87,
-        "netInflow5d": 2.0,
+        "sector": "港口",
+        "netInflow1d": 1.07,
+        "netInflow5d": 3.1,
         "consecutiveDays": 1,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 44.2
+        "score": 49.7
       },
       {
-        "sector": "汽车服务",
-        "netInflow1d": 0.62,
-        "netInflow5d": 1.06,
+        "sector": "机场",
+        "netInflow1d": 0.52,
+        "netInflow5d": 1.14,
         "consecutiveDays": 1,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 41.7
+        "score": 47.9
       },
       {
-        "sector": "银行",
-        "netInflow1d": -2.98,
-        "netInflow5d": 139.75,
+        "sector": "焦炭加工",
+        "netInflow1d": 1.67,
+        "netInflow5d": 0.19,
+        "consecutiveDays": 1,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 46.1
+      },
+      {
+        "sector": "旅游服务",
+        "netInflow1d": 3.85,
+        "netInflow5d": -0.38,
+        "consecutiveDays": 1,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 44.6
+      },
+      {
+        "sector": "半导体",
+        "netInflow1d": -197.41,
+        "netInflow5d": 155.31,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9161,39 +8951,49 @@
         "score": 40.0
       },
       {
-        "sector": "化学制药",
-        "netInflow1d": -19.96,
-        "netInflow5d": 71.92,
+        "sector": "电气设备",
+        "netInflow1d": -67.86,
+        "netInflow5d": 49.95,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 39.6
+        "score": 38.2
       },
       {
-        "sector": "水力发电",
-        "netInflow1d": -1.17,
-        "netInflow5d": 31.36,
+        "sector": "元器件",
+        "netInflow1d": -173.04,
+        "netInflow5d": 44.53,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 37.4
+        "score": 37.8
       },
       {
-        "sector": "IT设备",
-        "netInflow1d": 9.19,
-        "netInflow5d": -1.56,
-        "consecutiveDays": 1,
+        "sector": "小金属",
+        "netInflow1d": -14.36,
+        "netInflow5d": 30.62,
+        "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 35.8
+        "score": 36.7
       },
       {
-        "sector": "普钢",
-        "netInflow1d": -3.67,
-        "netInflow5d": 16.1,
+        "sector": "家用电器",
+        "netInflow1d": -7.4,
+        "netInflow5d": 28.03,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 36.3
+      },
+      {
+        "sector": "工程机械",
+        "netInflow1d": -2.5,
+        "netInflow5d": 17.61,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9201,9 +9001,9 @@
         "score": 35.6
       },
       {
-        "sector": "农用机械",
-        "netInflow1d": 0.02,
-        "netInflow5d": -1.58,
+        "sector": "石油开采",
+        "netInflow1d": 5.36,
+        "netInflow5d": -4.35,
         "consecutiveDays": 1,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9211,9 +9011,9 @@
         "score": 35.4
       },
       {
-        "sector": "煤炭开采",
-        "netInflow1d": -4.03,
-        "netInflow5d": 13.52,
+        "sector": "玻璃",
+        "netInflow1d": -15.51,
+        "netInflow5d": 13.48,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9221,19 +9021,9 @@
         "score": 34.9
       },
       {
-        "sector": "轻工机械",
-        "netInflow1d": 0.44,
-        "netInflow5d": -1.89,
-        "consecutiveDays": 1,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 34.7
-      },
-      {
-        "sector": "铝",
-        "netInflow1d": -11.83,
-        "netInflow5d": 12.53,
+        "sector": "黄金",
+        "netInflow1d": -0.56,
+        "netInflow5d": 11.21,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9241,9 +9031,19 @@
         "score": 34.5
       },
       {
-        "sector": "纺织",
-        "netInflow1d": 1.25,
-        "netInflow5d": -2.12,
+        "sector": "乳制品",
+        "netInflow1d": -0.99,
+        "netInflow5d": 9.93,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 34.1
+      },
+      {
+        "sector": "饲料",
+        "netInflow1d": 0.35,
+        "netInflow5d": -4.76,
         "consecutiveDays": 1,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9251,29 +9051,9 @@
         "score": 33.9
       },
       {
-        "sector": "证券",
-        "netInflow1d": -18.99,
-        "netInflow5d": 10.22,
-        "consecutiveDays": 0,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 33.4
-      },
-      {
-        "sector": "港口",
-        "netInflow1d": -0.69,
-        "netInflow5d": 9.32,
-        "consecutiveDays": 0,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 33.0
-      },
-      {
-        "sector": "石油开采",
-        "netInflow1d": -10.42,
-        "netInflow5d": 7.02,
+        "sector": "运输设备",
+        "netInflow1d": -2.6,
+        "netInflow5d": 8.43,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9281,19 +9061,9 @@
         "score": 32.7
       },
       {
-        "sector": "其他建材",
-        "netInflow1d": 0.48,
-        "netInflow5d": -3.41,
-        "consecutiveDays": 1,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 32.1
-      },
-      {
-        "sector": "石油加工",
-        "netInflow1d": -1.76,
-        "netInflow5d": 6.6,
+        "sector": "化工机械",
+        "netInflow1d": -0.75,
+        "netInflow5d": 4.68,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9301,9 +9071,19 @@
         "score": 31.2
       },
       {
-        "sector": "纺织机械",
-        "netInflow1d": 0.49,
-        "netInflow5d": -4.66,
+        "sector": "装修装饰",
+        "netInflow1d": -2.26,
+        "netInflow5d": 4.51,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 30.8
+      },
+      {
+        "sector": "种植业",
+        "netInflow1d": 0.38,
+        "netInflow5d": -6.18,
         "consecutiveDays": 1,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9311,49 +9091,69 @@
         "score": 30.6
       },
       {
-        "sector": "机械基件",
-        "netInflow1d": 2.26,
-        "netInflow5d": -7.01,
+        "sector": "啤酒",
+        "netInflow1d": -0.28,
+        "netInflow5d": 3.91,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 30.5
+      },
+      {
+        "sector": "专用机械",
+        "netInflow1d": -47.18,
+        "netInflow5d": 3.87,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 30.1
+      },
+      {
+        "sector": "摩托车",
+        "netInflow1d": -3.23,
+        "netInflow5d": 1.93,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 29.0
+      },
+      {
+        "sector": "其他建材",
+        "netInflow1d": -1.19,
+        "netInflow5d": 1.6,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 28.6
+      },
+      {
+        "sector": "路桥",
+        "netInflow1d": -1.07,
+        "netInflow5d": 1.19,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 28.3
+      },
+      {
+        "sector": "铝",
+        "netInflow1d": 5.42,
+        "netInflow5d": -10.72,
         "consecutiveDays": 1,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 29.2
+        "score": 27.7
       },
       {
-        "sector": "化工机械",
-        "netInflow1d": 0.79,
-        "netInflow5d": -7.52,
-        "consecutiveDays": 1,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 28.8
-      },
-      {
-        "sector": "园区开发",
-        "netInflow1d": 0.18,
-        "netInflow5d": -10.71,
-        "consecutiveDays": 1,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 28.4
-      },
-      {
-        "sector": "装修装饰",
-        "netInflow1d": 0.49,
-        "netInflow5d": -11.63,
-        "consecutiveDays": 1,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 28.1
-      },
-      {
-        "sector": "铁路",
-        "netInflow1d": -0.95,
-        "netInflow5d": 4.38,
+        "sector": "纺织机械",
+        "netInflow1d": -1.61,
+        "netInflow5d": 0.53,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9361,9 +9161,9 @@
         "score": 27.5
       },
       {
-        "sector": "保险",
-        "netInflow1d": -9.04,
-        "netInflow5d": 4.35,
+        "sector": "轻工机械",
+        "netInflow1d": -0.57,
+        "netInflow5d": 0.36,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9371,19 +9171,29 @@
         "score": 27.2
       },
       {
-        "sector": "水运",
-        "netInflow1d": -4.62,
-        "netInflow5d": 4.03,
+        "sector": "服饰",
+        "netInflow1d": -2.68,
+        "netInflow5d": 0.35,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 26.4
+        "score": 26.8
       },
       {
-        "sector": "焦炭加工",
-        "netInflow1d": -0.48,
-        "netInflow5d": 3.06,
+        "sector": "水泥",
+        "netInflow1d": -1.0,
+        "netInflow5d": -0.02,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 25.7
+      },
+      {
+        "sector": "酒店餐饮",
+        "netInflow1d": -0.29,
+        "netInflow5d": -0.16,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9391,19 +9201,39 @@
         "score": 25.3
       },
       {
-        "sector": "汽车配件",
-        "netInflow1d": 2.63,
-        "netInflow5d": -35.48,
-        "consecutiveDays": 1,
+        "sector": "电器连锁",
+        "netInflow1d": -0.23,
+        "netInflow5d": -0.34,
+        "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 24.0
+        "score": 25.0
       },
       {
-        "sector": "特种钢",
-        "netInflow1d": -0.07,
-        "netInflow5d": 1.85,
+        "sector": "房产服务",
+        "netInflow1d": -0.66,
+        "netInflow5d": -0.4,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 24.2
+      },
+      {
+        "sector": "汽车服务",
+        "netInflow1d": -0.6,
+        "netInflow5d": -0.46,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 23.9
+      },
+      {
+        "sector": "批发业",
+        "netInflow1d": -0.23,
+        "netInflow5d": -0.55,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9411,29 +9241,19 @@
         "score": 23.5
       },
       {
-        "sector": "软件服务",
-        "netInflow1d": 22.26,
-        "netInflow5d": -51.62,
-        "consecutiveDays": 1,
-        "sectorPctChg": 0.0,
-        "pct5d": 0.0,
-        "status": "无信号",
-        "score": 22.9
-      },
-      {
-        "sector": "超市连锁",
-        "netInflow1d": -0.27,
-        "netInflow5d": 1.67,
+        "sector": "公路",
+        "netInflow1d": -0.23,
+        "netInflow5d": -0.69,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 22.8
+        "score": 23.1
       },
       {
-        "sector": "空运",
-        "netInflow1d": -2.11,
-        "netInflow5d": 1.43,
+        "sector": "建筑工程",
+        "netInflow1d": -0.22,
+        "netInflow5d": -0.95,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9441,9 +9261,9 @@
         "score": 22.4
       },
       {
-        "sector": "种植业",
-        "netInflow1d": -0.8,
-        "netInflow5d": 1.13,
+        "sector": "林业",
+        "netInflow1d": -0.08,
+        "netInflow5d": -1.04,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9451,19 +9271,49 @@
         "score": 22.0
       },
       {
-        "sector": "半导体",
-        "netInflow1d": 36.51,
-        "netInflow5d": -450.31,
-        "consecutiveDays": 1,
+        "sector": "特种钢",
+        "netInflow1d": -0.76,
+        "netInflow5d": -1.11,
+        "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 20.4
+        "score": 21.7
       },
       {
-        "sector": "建筑工程",
-        "netInflow1d": -3.56,
-        "netInflow5d": 0.7,
+        "sector": "石油贸易",
+        "netInflow1d": -0.25,
+        "netInflow5d": -1.22,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 21.3
+      },
+      {
+        "sector": "渔业",
+        "netInflow1d": -0.14,
+        "netInflow5d": -1.28,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 20.9
+      },
+      {
+        "sector": "软饮料",
+        "netInflow1d": -1.79,
+        "netInflow5d": -1.55,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 20.6
+      },
+      {
+        "sector": "供气供热",
+        "netInflow1d": -2.66,
+        "netInflow5d": -1.57,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9471,9 +9321,39 @@
         "score": 20.2
       },
       {
+        "sector": "商贸代理",
+        "netInflow1d": -0.49,
+        "netInflow5d": -1.9,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 19.8
+      },
+      {
+        "sector": "出版业",
+        "netInflow1d": -2.57,
+        "netInflow5d": -1.96,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 19.4
+      },
+      {
         "sector": "公共交通",
-        "netInflow1d": -0.03,
-        "netInflow5d": 0.25,
+        "netInflow1d": -1.09,
+        "netInflow5d": -2.47,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 19.1
+      },
+      {
+        "sector": "汽车整车",
+        "netInflow1d": -5.45,
+        "netInflow5d": -2.67,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9481,9 +9361,19 @@
         "score": 18.7
       },
       {
-        "sector": "商贸代理",
-        "netInflow1d": -0.13,
-        "netInflow5d": -0.72,
+        "sector": "仓储物流",
+        "netInflow1d": -3.15,
+        "netInflow5d": -2.7,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 18.3
+      },
+      {
+        "sector": "农用机械",
+        "netInflow1d": -0.79,
+        "netInflow5d": -2.99,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9491,9 +9381,19 @@
         "score": 18.0
       },
       {
-        "sector": "水务",
-        "netInflow1d": -0.59,
-        "netInflow5d": -0.87,
+        "sector": "橡胶",
+        "netInflow1d": -0.34,
+        "netInflow5d": -3.11,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 17.6
+      },
+      {
+        "sector": "其他商业",
+        "netInflow1d": -1.43,
+        "netInflow5d": -3.18,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9501,9 +9401,19 @@
         "score": 17.2
       },
       {
-        "sector": "石油贸易",
-        "netInflow1d": -0.29,
-        "netInflow5d": -1.35,
+        "sector": "钢加工",
+        "netInflow1d": -1.44,
+        "netInflow5d": -3.78,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 16.9
+      },
+      {
+        "sector": "多元金融",
+        "netInflow1d": -4.89,
+        "netInflow5d": -3.91,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9511,9 +9421,9 @@
         "score": 16.5
       },
       {
-        "sector": "公路",
-        "netInflow1d": -0.05,
-        "netInflow5d": -1.42,
+        "sector": "水务",
+        "netInflow1d": -1.58,
+        "netInflow5d": -3.91,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9521,9 +9431,19 @@
         "score": 16.1
       },
       {
-        "sector": "多元金融",
-        "netInflow1d": -0.82,
-        "netInflow5d": -1.8,
+        "sector": "旅游景点",
+        "netInflow1d": -0.75,
+        "netInflow5d": -4.25,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 15.8
+      },
+      {
+        "sector": "陶瓷",
+        "netInflow1d": -4.99,
+        "netInflow5d": -4.36,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9531,9 +9451,29 @@
         "score": 15.0
       },
       {
-        "sector": "橡胶",
-        "netInflow1d": -0.1,
-        "netInflow5d": -2.34,
+        "sector": "红黄酒",
+        "netInflow1d": -0.51,
+        "netInflow5d": -4.48,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 14.7
+      },
+      {
+        "sector": "造纸",
+        "netInflow1d": -1.16,
+        "netInflow5d": -4.75,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 14.3
+      },
+      {
+        "sector": "矿物制品",
+        "netInflow1d": -11.0,
+        "netInflow5d": -4.91,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9541,9 +9481,9 @@
         "score": 13.6
       },
       {
-        "sector": "钢加工",
-        "netInflow1d": -0.97,
-        "netInflow5d": -3.04,
+        "sector": "染料涂料",
+        "netInflow1d": -3.66,
+        "netInflow5d": -4.92,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9551,9 +9491,9 @@
         "score": 13.2
       },
       {
-        "sector": "陶瓷",
-        "netInflow1d": -0.8,
-        "netInflow5d": -3.06,
+        "sector": "园区开发",
+        "netInflow1d": -1.68,
+        "netInflow5d": -4.93,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9561,19 +9501,19 @@
         "score": 12.8
       },
       {
-        "sector": "火力发电",
-        "netInflow1d": -11.45,
-        "netInflow5d": -3.17,
+        "sector": "医药商业",
+        "netInflow1d": -2.68,
+        "netInflow5d": -5.82,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 12.5
+        "score": 12.1
       },
       {
-        "sector": "家居用品",
-        "netInflow1d": -0.23,
-        "netInflow5d": -3.61,
+        "sector": "综合类",
+        "netInflow1d": -3.0,
+        "netInflow5d": -5.87,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9581,9 +9521,9 @@
         "score": 11.7
       },
       {
-        "sector": "运输设备",
-        "netInflow1d": -0.43,
-        "netInflow5d": -3.95,
+        "sector": "农业综合",
+        "netInflow1d": -1.24,
+        "netInflow5d": -6.15,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9591,9 +9531,9 @@
         "score": 11.4
       },
       {
-        "sector": "染料涂料",
-        "netInflow1d": -0.02,
-        "netInflow5d": -4.36,
+        "sector": "普钢",
+        "netInflow1d": -0.17,
+        "netInflow5d": -6.18,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9601,9 +9541,9 @@
         "score": 11.0
       },
       {
-        "sector": "综合类",
-        "netInflow1d": -2.0,
-        "netInflow5d": -5.62,
+        "sector": "超市连锁",
+        "netInflow1d": -0.58,
+        "netInflow5d": -6.68,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9611,9 +9551,9 @@
         "score": 10.3
       },
       {
-        "sector": "农药化肥",
-        "netInflow1d": -7.65,
-        "netInflow5d": -5.93,
+        "sector": "百货",
+        "netInflow1d": -1.09,
+        "netInflow5d": -7.45,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9621,9 +9561,9 @@
         "score": 9.9
       },
       {
-        "sector": "造纸",
-        "netInflow1d": -0.67,
-        "netInflow5d": -6.41,
+        "sector": "纺织",
+        "netInflow1d": -2.6,
+        "netInflow5d": -7.59,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9631,19 +9571,49 @@
         "score": 9.5
       },
       {
-        "sector": "区域地产",
-        "netInflow1d": -11.97,
-        "netInflow5d": -13.85,
+        "sector": "日用化工",
+        "netInflow1d": -1.37,
+        "netInflow5d": -7.74,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
         "status": "无信号",
-        "score": 7.7
+        "score": 9.2
       },
       {
-        "sector": "化纤",
-        "netInflow1d": -2.32,
-        "netInflow5d": -13.94,
+        "sector": "机械基件",
+        "netInflow1d": -28.52,
+        "netInflow5d": -9.56,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 8.8
+      },
+      {
+        "sector": "家居用品",
+        "netInflow1d": -3.23,
+        "netInflow5d": -10.36,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 8.4
+      },
+      {
+        "sector": "生物制药",
+        "netInflow1d": -9.59,
+        "netInflow5d": -10.44,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 8.1
+      },
+      {
+        "sector": "广告包装",
+        "netInflow1d": -9.38,
+        "netInflow5d": -11.09,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9651,9 +9621,9 @@
         "score": 7.3
       },
       {
-        "sector": "机床制造",
-        "netInflow1d": -0.9,
-        "netInflow5d": -14.12,
+        "sector": "证券",
+        "netInflow1d": -17.96,
+        "netInflow5d": -11.23,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9661,9 +9631,9 @@
         "score": 7.0
       },
       {
-        "sector": "新型电力",
-        "netInflow1d": -10.3,
-        "netInflow5d": -16.07,
+        "sector": "机床制造",
+        "netInflow1d": -4.9,
+        "netInflow5d": -11.59,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9671,9 +9641,9 @@
         "score": 6.6
       },
       {
-        "sector": "环境保护",
-        "netInflow1d": -3.75,
-        "netInflow5d": -16.47,
+        "sector": "食品",
+        "netInflow1d": -10.49,
+        "netInflow5d": -12.18,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9681,9 +9651,9 @@
         "score": 6.2
       },
       {
-        "sector": "航空",
-        "netInflow1d": -5.49,
-        "netInflow5d": -20.13,
+        "sector": "文教休闲",
+        "netInflow1d": -4.5,
+        "netInflow5d": -12.98,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9692,8 +9662,8 @@
       },
       {
         "sector": "铅锌",
-        "netInflow1d": -3.17,
-        "netInflow5d": -20.61,
+        "netInflow1d": -10.59,
+        "netInflow5d": -13.16,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9701,9 +9671,9 @@
         "score": 5.5
       },
       {
-        "sector": "供气供热",
-        "netInflow1d": -0.19,
-        "netInflow5d": -21.17,
+        "sector": "船舶",
+        "netInflow1d": -2.72,
+        "netInflow5d": -14.33,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9711,9 +9681,9 @@
         "score": 5.1
       },
       {
-        "sector": "玻璃",
-        "netInflow1d": -6.91,
-        "netInflow5d": -27.7,
+        "sector": "航空",
+        "netInflow1d": -10.17,
+        "netInflow5d": -15.68,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9721,9 +9691,9 @@
         "score": 4.8
       },
       {
-        "sector": "船舶",
-        "netInflow1d": -11.12,
-        "netInflow5d": -29.57,
+        "sector": "中成药",
+        "netInflow1d": -9.36,
+        "netInflow5d": -15.98,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9731,9 +9701,19 @@
         "score": 4.4
       },
       {
-        "sector": "塑料",
-        "netInflow1d": -11.94,
-        "netInflow5d": -43.78,
+        "sector": "电器仪表",
+        "netInflow1d": -18.63,
+        "netInflow5d": -18.11,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 4.0
+      },
+      {
+        "sector": "软件服务",
+        "netInflow1d": -50.46,
+        "netInflow5d": -22.52,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9741,9 +9721,9 @@
         "score": 3.7
       },
       {
-        "sector": "矿物制品",
-        "netInflow1d": -3.98,
-        "netInflow5d": -50.68,
+        "sector": "影视音像",
+        "netInflow1d": -11.18,
+        "netInflow5d": -23.75,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9751,9 +9731,19 @@
         "score": 3.3
       },
       {
-        "sector": "电器仪表",
-        "netInflow1d": -4.5,
-        "netInflow5d": -55.54,
+        "sector": "环境保护",
+        "netInflow1d": -14.1,
+        "netInflow5d": -30.87,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 2.9
+      },
+      {
+        "sector": "塑料",
+        "netInflow1d": -14.49,
+        "netInflow5d": -32.39,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9761,9 +9751,9 @@
         "score": 2.6
       },
       {
-        "sector": "小金属",
-        "netInflow1d": -6.23,
-        "netInflow5d": -103.81,
+        "sector": "化工原料",
+        "netInflow1d": -39.0,
+        "netInflow5d": -37.66,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9771,9 +9761,9 @@
         "score": 2.2
       },
       {
-        "sector": "专用机械",
-        "netInflow1d": -7.77,
-        "netInflow5d": -129.72,
+        "sector": "通信设备",
+        "netInflow1d": -149.39,
+        "netInflow5d": -43.26,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9781,9 +9771,9 @@
         "score": 1.8
       },
       {
-        "sector": "电气设备",
-        "netInflow1d": -16.49,
-        "netInflow5d": -184.94,
+        "sector": "汽车配件",
+        "netInflow1d": -37.21,
+        "netInflow5d": -45.08,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9791,9 +9781,9 @@
         "score": 1.5
       },
       {
-        "sector": "化工原料",
-        "netInflow1d": -31.97,
-        "netInflow5d": -191.13,
+        "sector": "医疗保健",
+        "netInflow1d": -15.21,
+        "netInflow5d": -52.06,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9801,9 +9791,9 @@
         "score": 1.1
       },
       {
-        "sector": "通信设备",
-        "netInflow1d": -41.22,
-        "netInflow5d": -236.81,
+        "sector": "化学制药",
+        "netInflow1d": -14.01,
+        "netInflow5d": -57.43,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9811,9 +9801,19 @@
         "score": 0.7
       },
       {
-        "sector": "元器件",
-        "netInflow1d": -58.23,
-        "netInflow5d": -532.66,
+        "sector": "IT设备",
+        "netInflow1d": -9.96,
+        "netInflow5d": -58.6,
+        "consecutiveDays": 0,
+        "sectorPctChg": 0.0,
+        "pct5d": 0.0,
+        "status": "无信号",
+        "score": 0.4
+      },
+      {
+        "sector": "互联网",
+        "netInflow1d": -42.44,
+        "netInflow5d": -74.42,
         "consecutiveDays": 0,
         "sectorPctChg": 0.0,
         "pct5d": 0.0,
@@ -9834,16 +9834,6 @@
             "name": "深中华A",
             "code": "000017",
             "pctChg": 10.08
-          },
-          {
-            "name": "盛达资源",
-            "code": "000603",
-            "pctChg": 10.01
-          },
-          {
-            "name": "国城矿业",
-            "code": "000688",
-            "pctChg": 10.01
           }
         ]
       },
@@ -9916,16 +9906,6 @@
             "name": "杰瑞股份",
             "code": "002353",
             "pctChg": 10.0
-          },
-          {
-            "name": "湖南裕能",
-            "code": "301358",
-            "pctChg": 8.96
-          },
-          {
-            "name": "天力锂能",
-            "code": "301152",
-            "pctChg": 8.05
           }
         ]
       },
