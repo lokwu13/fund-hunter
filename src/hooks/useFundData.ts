@@ -319,15 +319,23 @@ export interface FundData {
       pct5d?: number;
       score: number;
       status: string;
+      stocks?: Array<{ name: string; code: string; netInflow: number; pctChg: number }>;
     }>;
   };
-  conceptHot?: {
+  bottomWatch?: {
     trade_date: string;
+    window?: number;
+    days?: number;
+    note?: string;
+    summary?: string;
     items: Array<{
-      concept: string;
-      pctChg: number;
-      netInflow5d: number;
-      leaders: Array<{ name: string; code: string; pctChg: number }>;
+      sector: string;
+      inflow60d: number;
+      inflow5d: number;
+      positiveRatio: number;
+      pricePosition: number;
+      score?: number;
+      leaders?: Array<{ name: string; code: string; pctChg: number; strength: string }>;
     }>;
   };
   nationalETF?: Array<{

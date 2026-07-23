@@ -11,7 +11,6 @@ import os
 import sys
 import json
 import time
-import re
 import requests
 import tushare as ts
 
@@ -711,71 +710,121 @@ def fetch_bond_yields(trade_date, data):
         return False
 
 
-# ── 东财板块资金流（行业/概念）──
-EM_HEADERS = {'User-Agent': 'Mozilla/5.0', 'Referer': 'https://data.eastmoney.com/'}
-
-# ECI 31 个申万一级行业 → 东财行业板块代码（已逐一实测名称）
-# 注：东财无一级"银行"板块，BK0475 为"银行Ⅱ"（覆盖全部银行股，近似一级）；
-#     东财无"化工"板块，以"基础化工"(BK1206) 近似；"纺织服装"对应东财"纺织服饰"(BK0436)
-SECTOR_BOARD_MAP = {
-    '医药生物': 'BK1216', '电子': 'BK1201', '计算机': 'BK1207', '电力设备': 'BK1200',
-    '食品饮料': 'BK0438', '银行': 'BK0475', '非银金融': 'BK1203', '汽车': 'BK1211',
-    '机械设备': 'BK1205', '国防军工': 'BK1204', '通信': 'BK1215', '有色金属': 'BK0478',
-    '家用电器': 'BK0456', '房地产': 'BK1202', '建筑装饰': 'BK1209', '交通运输': 'BK1210',
-    '传媒': 'BK0486', '化工': 'BK1206', '建筑材料': 'BK1208', '农林牧渔': 'BK0433',
-    '公用事业': 'BK0427', '轻工制造': 'BK1212', '纺织服装': 'BK0436', '钢铁': 'BK0479',
-    '煤炭': 'BK0437', '石油石化': 'BK0464', '社会服务': 'BK1214', '环保': 'BK0728',
-    '美容护理': 'BK1035', '综合': 'BK1217', '基础化工': 'BK1206',
-}
-
-# 概念板块伪主题过滤（涨跌停/风格/指数类不算主题概念）
-CONCEPT_BLACKLIST = re.compile(
-    r'昨日|涨停|次新|ST|破净|预亏|预盈|送转|百元股|低价|高价|股通|MSCI|富时|标普|'
-    r'证金|社保|QFII|重仓|壳资源|含H股|含GDR|B股|主板|注册制|新股|债转股|同花顺|东财')
+# ── 行业资金历史沉淀 + 板块资金扫描榜 + 底部资金积聚监测（Tushare）──
+# 设计目标：监测"长时间大资金缓慢流入、在底部形成积聚、且有龙头率先脱离底部"的板块。
+# 历史数据每天增量积累在 scripts/cache/sector_history.json（不部署，随 workflow 提交回写延续）。
+SECTOR_HISTORY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache', 'sector_history.json')
+SECTOR_HISTORY_MAX_DAYS = 250   # 历史最长保留交易日数
+SECTOR_BACKFILL_DAYS = 60       # 首次运行回补交易日数（每天 2 次调用，约 3 分钟）
+BOTTOM_WINDOW = 60              # 底部积聚监测窗口（交易日）
+BOTTOM_MIN_DAYS = 40            # 历史不足该天数时降级为"数据积累中"
 
 
-def _em_get_json(url, params, retries=3):
-    """东财接口 GET，带重试与退避（该接口偶发主动断开连接）。"""
-    last = None
-    for i in range(retries):
+def _load_sector_history():
+    try:
+        with open(SECTOR_HISTORY_PATH, encoding='utf-8') as f:
+            h = json.load(f)
+        return h if isinstance(h.get('days'), dict) else {'days': {}}
+    except Exception:
+        return {'days': {}}
+
+
+def _save_sector_history(hist):
+    os.makedirs(os.path.dirname(SECTOR_HISTORY_PATH), exist_ok=True)
+    days = hist['days']
+    keep = sorted(days)[-SECTOR_HISTORY_MAX_DAYS:]
+    hist['days'] = {d: days[d] for d in keep}
+    with open(SECTOR_HISTORY_PATH, 'w', encoding='utf-8') as f:
+        json.dump(hist, f, ensure_ascii=False)
+
+
+def _aggregate_industry_day(pro, date, ind_map):
+    """单日全市场 moneyflow + daily 按 industry 聚合 → {行业: {net(亿), ret(%)}}（等权）。"""
+    time.sleep(API_DELAY)
+    mf = pro.moneyflow(trade_date=date)
+    time.sleep(API_DELAY)
+    dl = pro.daily(trade_date=date)
+    if mf is None or len(mf) == 0:
+        raise ValueError(f'moneyflow empty for {date}')
+    mf = mf.copy()
+    mf['industry'] = mf['ts_code'].map(ind_map)
+    g = mf.dropna(subset=['industry']).groupby('industry')['net_mf_amount'].sum() / 1e4  # 万元→亿
+    sectors = {ind: {'net': round(float(v), 2), 'ret': 0.0} for ind, v in g.items()}
+    if dl is not None and len(dl) > 0:
+        dl = dl.copy()
+        dl['industry'] = dl['ts_code'].map(ind_map)
+        rg = dl.dropna(subset=['industry']).groupby('industry')['pct_chg'].mean()  # 等权涨跌幅
+        for ind, v in rg.items():
+            sectors.setdefault(ind, {'net': 0.0})
+            sectors[ind]['ret'] = round(float(v), 2)
+    return sectors
+
+
+def update_sector_history(pro, trade_date):
+    """增量维护行业资金历史。首次/缺历史时回补最近 SECTOR_BACKFILL_DAYS 个交易日；
+    每日落盘一次，中断后下次可续传。返回 (hist, ind_map, name_map)。"""
+    basic = pro.stock_basic(exchange='', list_status='L', fields='ts_code,name,industry')
+    ind_map = dict(zip(basic['ts_code'], basic['industry']))
+    name_map = dict(zip(basic['ts_code'], basic['name']))
+    hist = _load_sector_history()
+    start = (datetime.strptime(trade_date, '%Y%m%d')
+             - timedelta(days=int(SECTOR_BACKFILL_DAYS * 1.6))).strftime('%Y%m%d')
+    cal = pro.trade_cal(exchange='SSE', start_date=start, end_date=trade_date, is_open='1')
+    # trade_cal 返回顺序不保证升序，必须显式排序（已实测踩坑）
+    dates = sorted(cal['cal_date'].tolist())[-SECTOR_BACKFILL_DAYS:]
+    if trade_date not in dates:
+        dates.append(trade_date)
+    todo = [d for d in dates if d not in hist['days']]
+    if todo:
+        print(f"  sector history backfill: {len(todo)} days to fetch ({todo[0]}~{todo[-1]})")
+    for d in todo:
         try:
-            r = requests.get(url, params=params, headers=EM_HEADERS, timeout=10)
-            return r.json()
+            hist['days'][d] = {'sectors': _aggregate_industry_day(pro, d, ind_map)}
+            _save_sector_history(hist)  # 每日落盘，中断可续
         except Exception as e:
-            last = e
-            time.sleep(1.5 + i * 1.5)
-    raise last
+            print(f"  Warning: industry aggregate failed for {d}: {e}")
+    _save_sector_history(hist)
+    print(f"  sector history: {len(hist['days'])} days accumulated")
+    return hist, ind_map, name_map
 
 
-def _em_board_daykline(code, lmt=25, retries=3):
-    """东财板块资金流日K → [{date, main, close, pct}]（main=主力净流入，单位元）。"""
-    j = _em_get_json('https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get', {
-        'lmt': lmt, 'klt': 101, 'secid': f'90.{code}',
-        'fields1': 'f1,f2,f3,f7',
-        'fields2': 'f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61,f62,f63',
-    }, retries=retries)
+def _today_industry_stocks(pro, trade_date, ind_map, name_map):
+    """当日全市场 moneyflow+daily → {行业: [{name, code, net(亿), pct}]}（按净流入降序）。"""
+    try:
+        time.sleep(API_DELAY)
+        mf = pro.moneyflow(trade_date=trade_date)
+        time.sleep(API_DELAY)
+        dl = pro.daily(trade_date=trade_date)
+        if mf is None or len(mf) == 0:
+            raise ValueError('moneyflow empty')
+        pct_map = {}
+        if dl is not None and len(dl) > 0:
+            pct_map = dict(zip(dl['ts_code'], dl['pct_chg']))
+        mf = mf.copy()
+        mf['industry'] = mf['ts_code'].map(ind_map)
+        mf = mf.dropna(subset=['industry']).sort_values('net_mf_amount', ascending=False)
+        out = {}
+        for _, r in mf.iterrows():
+            out.setdefault(r['industry'], []).append({
+                'name': name_map.get(r['ts_code'], r['ts_code']),
+                'code': r['ts_code'],
+                'net': round(float(r['net_mf_amount']) / 1e4, 2),
+                'pct': round(float(pct_map.get(r['ts_code'], 0.0)), 2),
+            })
+        return out
+    except Exception as e:
+        print(f"  Warning: today industry stocks failed: {e}")
+        return {}
+
+
+def _history_series(hist, industry):
+    """行业的逐日 (date, net, ret) 序列，按日期升序。"""
     rows = []
-    for line in ((j.get('data') or {}).get('klines') or []):
-        p = line.split(',')
-        if len(p) < 13:
-            continue
-        try:
-            rows.append({'date': p[0], 'main': float(p[1]),
-                         'close': float(p[11]), 'pct': float(p[12])})
-        except ValueError:
-            continue
+    for d in sorted(hist['days']):
+        s = hist['days'][d].get('sectors', {}).get(industry)
+        if s is not None:
+            rows.append((d, s.get('net', 0.0), s.get('ret', 0.0)))
     return rows
-
-
-def _consecutive_inflow_days(rows):
-    """从最新交易日往前数主力净流入为正的连续天数。"""
-    consec = 0
-    for r in reversed(rows):
-        if r['main'] > 0:
-            consec += 1
-        else:
-            break
-    return consec
 
 
 def _scan_rank_scores(items, n):
@@ -787,7 +836,7 @@ def _scan_rank_scores(items, n):
 
 
 def _scan_summary(items):
-    """扫描榜自动总评。"""
+    """扫描榜自动总评（items 已只含信号板块）。"""
     absorb = [i for i in items if i['status'] == '吸筹中']
     start = [i for i in items if i['status'] == '启动确认']
     risk = [i for i in items if i['status'] == '高潮风险']
@@ -799,330 +848,182 @@ def _scan_summary(items):
         parts.append(f"{len(start)}个板块启动确认（{'、'.join(i['sector'] for i in start[:3])}）")
     if risk:
         parts.append(f"{len(risk)}个板块存在高潮风险（{'、'.join(i['sector'] for i in risk[:3])}），谨慎追高")
-    if not parts:
-        longest = max(items, key=lambda x: x['consecutiveDays'])
-        if longest['consecutiveDays'] > 0:
-            parts.append(f"无明显吸筹信号，连续净流入最长为{longest['sector']}（{longest['consecutiveDays']}天）")
-        else:
-            parts.append("全行业主力资金以净流出为主，建议观望")
     return '今日' + '；'.join(parts) + '。'
 
 
-def _build_sector_scan_from_em(klines):
-    """由东财板块资金流日K构建扫描榜。"""
+def build_sector_scan(hist, trade_date, today_map):
+    """板块资金扫描榜（精简版）：只保留触发信号的板块，每个板块附 2 只吸筹个股。
+
+    信号规则（数据来自行业资金历史沉淀）：
+    - 吸筹中：连续净流入 ≥3 天 且 当日涨幅 <1%（资金进、价未动）
+    - 启动确认：连续净流入 ≥2 天 且 当日涨幅 ≥1.5%
+    - 高潮风险：连续净流入 ≥3 天 且 近5日涨幅 ≥8%（风险提示优先判定）
+    """
+    industries = set()
+    for day in hist['days'].values():
+        industries.update(day.get('sectors', {}).keys())
     items = []
-    latest_dates = []
-    for name, code in SECTOR_BOARD_MAP.items():
-        rows = klines.get(code)
-        if not rows:
+    latest = trade_date
+    for ind in sorted(industries):
+        rows = _history_series(hist, ind)
+        if len(rows) < 3:
             continue
-        last = rows[-1]
-        latest_dates.append(last['date'])
-        pct5 = ((rows[-1]['close'] / rows[-6]['close'] - 1) * 100
-                if len(rows) >= 6 and rows[-6]['close'] else 0.0)
+        latest = rows[-1][0]
+        consec = 0
+        for _, net, _ in reversed(rows):
+            if net > 0:
+                consec += 1
+            else:
+                break
+        ret1 = rows[-1][2]
+        acc = 1.0
+        for r in rows[-5:]:
+            acc *= (1 + r[2] / 100.0)
+        pct5 = (acc - 1) * 100
+        if consec >= 3 and pct5 >= 8:
+            status = '高潮风险'
+        elif consec >= 2 and ret1 >= 1.5:
+            status = '启动确认'
+        elif consec >= 3 and ret1 < 1:
+            status = '吸筹中'
+        else:
+            continue  # 无信号不展示
+        stocks = [{'name': s['name'], 'code': s['code'], 'netInflow': s['net'], 'pctChg': s['pct']}
+                  for s in (today_map.get(ind) or [])[:2]]
         items.append({
-            'sector': name,
-            'netInflow1d': round(last['main'] / 1e8, 2),
-            'netInflow5d': round(sum(r['main'] for r in rows[-5:]) / 1e8, 2),
-            'consecutiveDays': _consecutive_inflow_days(rows),
-            'sectorPctChg': round(last['pct'], 2),
+            'sector': ind,
+            'netInflow1d': round(rows[-1][1], 2),
+            'netInflow5d': round(sum(r[1] for r in rows[-5:]), 2),
+            'consecutiveDays': consec,
+            'sectorPctChg': round(ret1, 2),
             'pct5d': round(pct5, 2),
+            'status': status,
+            'stocks': stocks,
         })
+    d = f"{latest[:4]}-{latest[4:6]}-{latest[6:]}"
     if not items:
-        return None
+        return {'trade_date': d, 'summary': '今日无板块触发吸筹/启动/高潮信号，资金以观望为主。', 'items': []}
     rank_score = _scan_rank_scores(items, len(items))
     for it in items:
-        # 状态判定：高潮风险优先（风险提示优先于信号），其次启动确认、吸筹中
-        if it['consecutiveDays'] >= 3 and it['pct5d'] >= 8:
-            it['status'] = '高潮风险'
-        elif it['consecutiveDays'] >= 2 and it['sectorPctChg'] >= 1.5:
-            it['status'] = '启动确认'
-        elif it['consecutiveDays'] >= 3 and it['sectorPctChg'] < 1:
-            it['status'] = '吸筹中'
-        else:
-            it['status'] = '无信号'
         it['score'] = round(it['consecutiveDays'] * 20 + rank_score[id(it)]
                             - (20 if it['pct5d'] > 8 else 0), 1)
-    items.sort(key=lambda x: (x['status'] == '无信号', -x['score']))
-    return {
-        'trade_date': max(latest_dates),
-        'summary': _scan_summary(items),
-        'items': items,
-    }
+    items.sort(key=lambda x: -x['score'])
+    return {'trade_date': d, 'summary': _scan_summary(items), 'items': items}
 
 
-def _build_sector_scan_tushare(pro, trade_date):
-    """Tushare 兜底扫描榜：moneyflow 个股资金流 + stock_basic industry 聚合。
-
-    逐日拉近 10 个交易日聚合行业净流入与连续天数；无板块涨幅数据，
-    「启动确认」「高潮风险」无法判定，统一降级为吸筹/无信号。
-    """
-    try:
-        basic = pro.stock_basic(exchange='', list_status='L', fields='ts_code,industry')
-        ind_map = dict(zip(basic['ts_code'], basic['industry']))
-        start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=20)).strftime('%Y%m%d')
-        cal = pro.trade_cal(exchange='SSE', start_date=start, end_date=trade_date, is_open='1')
-        # trade_cal 返回顺序不保证升序，必须显式排序，否则会取到窗口最旧的一段
-        dates = sorted(cal['cal_date'].tolist())[-10:]
-        if not dates:
-            return None
-        industry_days = {}
-        for d in dates:
-            time.sleep(API_DELAY)
-            mf = pro.moneyflow(trade_date=d)
-            if mf is None or len(mf) == 0:
-                continue
-            mf = mf.copy()
-            mf['industry'] = mf['ts_code'].map(ind_map)
-            g = mf.dropna(subset=['industry']).groupby('industry')['net_mf_amount'].sum() / 1e4  # 万元→亿元
-            for ind, net in g.items():
-                industry_days.setdefault(ind, []).append((d, float(net)))
-        if not industry_days:
-            return None
-        items = []
-        for ind, series in industry_days.items():
-            series.sort()
-            consec = 0
-            for _, net in reversed(series):
-                if net > 0:
-                    consec += 1
-                else:
-                    break
-            items.append({
-                'sector': ind,
-                'netInflow1d': round(series[-1][1], 2),
-                'netInflow5d': round(sum(n for _, n in series[-5:]), 2),
-                'consecutiveDays': consec,
-                'sectorPctChg': 0.0,
-                'pct5d': 0.0,
-            })
-        rank_score = _scan_rank_scores(items, len(items))
-        for it in items:
-            it['status'] = '吸筹中' if it['consecutiveDays'] >= 3 else '无信号'
-            it['score'] = round(it['consecutiveDays'] * 20 + rank_score[id(it)], 1)
-        items.sort(key=lambda x: (x['status'] == '无信号', -x['score']))
-        absorb = [i for i in items if i['status'] == '吸筹中']
-        summary = (f"今日{len(absorb)}个行业出现吸筹信号："
-                   + '、'.join(f"{i['sector']}连续{i['consecutiveDays']}日净流入" for i in absorb[:3])
-                   + '。（Tushare兜底口径，缺板块涨幅）') if absorb else '今日无明显吸筹信号（Tushare兜底口径）。'
-        d = dates[-1]
-        return {'trade_date': f"{d[:4]}-{d[4:6]}-{d[6:]}", 'summary': summary, 'items': items}
-    except Exception as e:
-        print(f"  Warning: tushare sector scan fallback failed: {e}")
-        return None
-
-
-def _rebuild_eci_data(klines, old):
-    """以真实资金/行情数据重算 ECI 31 行业六维分（近似口径，详见 eciData.note）。
-
-    - fundConcentration：5日主力净流入在31行业中的排名分位（原口径为资金集中程度）
-    - volConvergence：板块指数20日收益率波动率排名分位（原口径为个股波动一致性，此为近似）
-    - trendSync：20日上涨天数占比映射（原口径为个股趋势一致性，此为近似）
-    - consistencyMomentum：近5日 vs 前15日主力净流入日均改善的排名分位
-    - activity：20日|涨跌幅|均值排名分位（fflow 无成交额字段，以振幅近似活跃度）
-    - policy：无法自动化，固定中性分 5/10
-    leaders / sampleStocks / stocks 等手工字段从旧数据保留。
-    """
-    import statistics
-    try:
-        stats = {}
-        period = None
-        for name, code in SECTOR_BOARD_MAP.items():
-            rows = klines.get(code)
-            if not rows:
-                continue
-            last20 = rows[-20:]
-            pcts = [r['pct'] for r in last20]
-            mains = [r['main'] for r in last20]
-            prev = mains[-20:-5] if len(mains) >= 20 else mains[:-5] or [0.0]
-            stats[name] = {
-                'vol_std': statistics.pstdev(pcts) if len(pcts) > 1 else 0.0,
-                'up_ratio': sum(1 for p in pcts if p > 0) / len(pcts),
-                'net5': sum(mains[-5:]),
-                'momentum': (sum(mains[-5:]) / max(1, min(5, len(mains)))) - (sum(prev) / max(1, len(prev))),
-                'activity': sum(abs(p) for p in pcts) / len(pcts),
-            }
-            if period is None and len(rows) >= 20:
-                period = (rows[-20]['date'], rows[-1]['date'])
-        if len(stats) < 20 or period is None:
-            print(f"  Warning: eci rebuild skipped, only {len(stats)} sectors")
-            return None
-
-        def pct_scores(key, max_score, lower_better=False):
-            order = sorted(stats.items(), key=lambda kv: kv[1][key], reverse=lower_better)
-            m = len(order)
-            return {name: round((m - 1 - i) / (m - 1) * max_score, 1) if m > 1 else round(max_score / 2, 1)
-                    for i, (name, _) in enumerate(order)}
-
-        fund_s = pct_scores('net5', 20)
-        vol_s = pct_scores('vol_std', 20, lower_better=True)
-        mom_s = pct_scores('momentum', 20)
-        act_s = pct_scores('activity', 10)
-
-        old_sectors = {s.get('sector'): s for s in (old or {}).get('sectors', [])}
-        sectors = []
-        for name, st in stats.items():
-            trend_sync = round(min(1.0, max(0.0, (st['up_ratio'] - 0.2) / 0.5)) * 20, 1)
-            fund = fund_s[name]
-            vol = vol_s[name]
-            mom = mom_s[name]
-            act = act_s[name]
-            policy = 5.0  # 政策维度：人工中性分（无法自动化）
-            eci = round(vol + fund + trend_sync + mom + act + policy, 1)
-            current_corr = round(min(0.95, max(0.05, (trend_sync + vol) / 40)), 2)
-            predicted_corr = round(min(0.95, max(0.05, current_corr + (mom - 10) * 0.015)), 2)
-            trend = '↑上升' if mom >= 12 else ('↓下降' if mom <= 8 else '→震荡')
-            if eci >= 65:
-                a1 = '板块即将强联动，适合ETF或龙头一揽子买入'
-            elif eci >= 50:
-                a1 = '关注龙头个股，等待一致性确认'
-            else:
-                a1 = '必须精选个股，板块参考意义不大'
-            a2 = {'↑上升': '一致性在增强，可加仓', '→震荡': '一致性震荡，观望为主',
-                  '↓下降': '一致性在减弱，控制仓位'}[trend]
-            prev_s = old_sectors.get(name, {})
-            sec = {
-                'sector': name, 'eci': eci,
-                'volConvergence': vol, 'fundConcentration': fund, 'trendSync': trend_sync,
-                'consistencyMomentum': mom, 'activity': act, 'policy': policy,
-                'currentCorr': current_corr, 'predictedCorr': predicted_corr,
-                'trend': trend,
-                'stocks': prev_s.get('stocks', 0),
-                'advice': f'{a1} | {a2}',
-                'sampleStocks': prev_s.get('sampleStocks', []),
-            }
-            if prev_s.get('leaders'):
-                sec['leaders'] = prev_s['leaders']  # 手工龙头数据保留
-            sectors.append(sec)
-        # 东财未取到的行业：保留旧数据行，不裁减 31 行展示
-        missing = [s for name, s in old_sectors.items() if name not in stats]
-        sectors.extend(missing)
-        # 保持原有行业顺序，新行业排最后
-        old_order = [s.get('sector') for s in (old or {}).get('sectors', [])]
-        sectors.sort(key=lambda s: (old_order.index(s['sector']) if s['sector'] in old_order else 999))
-
-        indicators = dict((old or {}).get('indicators') or {})
-        for k, w in [('volConvergence', '20%'), ('fundConcentration', '20%'), ('trendSync', '20%'),
-                     ('consistencyMomentum', '20%'), ('activity', '10%'), ('policy', '10%')]:
-            if k in indicators:
-                indicators[k] = {**indicators[k], 'weight': w}
-        d0, d1 = period
-        return {
-            'updateTime': f'{d1} 收盘（东财自动）',
-            'period': f"{d0.replace('-', '.')}~{d1.replace('-', '.')} (20个交易日)",
-            'totalIndustries': len(sectors),
-            'divergentCount': sum(1 for s in sectors if s['eci'] < 50),
-            'sectors': sectors,
-            'indicators': indicators,
-            'note': '评分口径：资金集中度/一致性动量取东财板块主力净流入排名分位，'
-                    '波动收敛/趋势同步/成交活跃度取板块指数近20日行情近似计算；'
-                    '政策维度为人工中性评分（固定5/10）',
-        }
-    except Exception as e:
-        print(f"  Warning: eci rebuild failed: {e}")
-        return None
-
-
-def fetch_sector_moneyflow(pro, trade_date, data):
-    """板块资金扫描榜 + ECI 六维评分自动化（东财优先，Tushare 兜底扫描榜）。"""
-    klines = {}
-    all_codes = sorted(set(SECTOR_BOARD_MAP.values()))
-    failed_codes = []
-    for code in all_codes:
+def _find_bottom_leaders(pro, trade_date, sector, today_map, max_check=5):
+    """率先脱离底部的龙头：今日行业主力净流入前 max_check 只，逐只拉近 60 日行情，
+    筛选收盘价站上 20/60 日均线 且 距 60 日高点 <15%（率先走强）。"""
+    leaders = []
+    start60 = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=100)).strftime('%Y%m%d')
+    for s in (today_map.get(sector) or [])[:max_check]:
         try:
-            rows = _em_board_daykline(code, lmt=25)
-            if len(rows) < 6:
-                raise ValueError(f'klines too few: {len(rows)}')
-            klines[code] = rows
-        except Exception as e:
-            print(f"  Warning: board daykline failed for {code}: {e}")
-            failed_codes.append(code)
-        time.sleep(1.0)
-    # 第二遍补拉失败板块（仅在部分成功时；全灭说明 IP 级限流，重试无意义，直接走兜底）
-    if len(klines) >= 5:
-        for code in failed_codes:
-            time.sleep(3)
-            try:
-                rows = _em_board_daykline(code, lmt=25, retries=2)
-                if len(rows) < 6:
-                    raise ValueError(f'klines too few: {len(rows)}')
-                klines[code] = rows
-                print(f"  Retry OK: {code}")
-            except Exception as e:
-                print(f"  Warning: board daykline retry failed for {code}: {e}")
-            time.sleep(1.0)
-
-    total_codes = len(all_codes)
-    if len(klines) >= 15:  # 过半即够用：扫描榜允许少量板块缺失，ECI 内部要求 ≥20 才重建
-        scan = _build_sector_scan_from_em(klines)
-        if scan:
-            data['sectorScan'] = scan
-            print(f"  sectorScan: {len(scan['items'])} sectors as of {scan['trade_date']}")
-            print(f"  summary: {scan['summary']}")
-        eci = _rebuild_eci_data(klines, data.get('eciData'))
-        if eci:
-            data['eciData'] = eci
-            print(f"  eciData rebuilt: {eci['totalIndustries']} sectors, divergent {eci['divergentCount']}")
-        return
-
-    # 东财大面积失败 → Tushare 兜底（仅扫描榜；eciData 保留旧数据）
-    print(f"  Eastmoney boards mostly failed ({len(klines)}/{total_codes}), fallback to tushare")
-    scan = _build_sector_scan_tushare(pro, trade_date)
-    if scan:
-        data['sectorScan'] = scan
-        print(f"  sectorScan (tushare fallback): {len(scan['items'])} industries")
-
-
-def fetch_concept_hot(trade_date, data):
-    """主题概念领涨：东财概念板块 5 日主力净流入 Top10 + 各概念领涨前 3 股。"""
-    try:
-        j = _em_get_json('https://push2.eastmoney.com/api/qt/clist/get', {
-            'fid': 'f164', 'po': 1, 'pz': 60, 'pn': 1, 'np': 1, 'fltt': 2, 'invt': 2,
-            'fs': 'm:90+t:3+f:!50',
-            'fields': 'f12,f14,f3,f62,f164,f128,f136,f140',
-        })
-        rows = ((j.get('data') or {}).get('diff') or [])
-        picked = []
-        for r in rows:
-            name = r.get('f14', '')
-            if not name or CONCEPT_BLACKLIST.search(name):
+            time.sleep(API_DELAY)
+            df = pro.daily(ts_code=s['code'], start_date=start60, end_date=trade_date)
+            if df is None or len(df) < 25:
                 continue
-            picked.append(r)
-            if len(picked) >= 10:
-                break
-        if len(picked) < 5:
-            raise ValueError(f'concept list too few: {len(picked)}')
-        items = []
-        for r in picked:
-            leaders = []
-            try:
-                time.sleep(1.0)
-                cj = _em_get_json('https://push2.eastmoney.com/api/qt/clist/get', {
-                    'fid': 'f3', 'po': 1, 'pz': 3, 'pn': 1, 'np': 1, 'fltt': 2, 'invt': 2,
-                    'fs': f"b:{r['f12']}", 'fields': 'f12,f14,f3',
-                })
-                for c in ((cj.get('data') or {}).get('diff') or []):
-                    leaders.append({'name': c.get('f14'), 'code': c.get('f12'),
-                                    'pctChg': round(float(c.get('f3') or 0), 2)})
-            except Exception as e:
-                print(f"  Warning: concept leaders failed for {r.get('f14')}: {e}")
-            if not leaders and r.get('f128'):
-                # 拿不到成分股时用板块自带领涨股兜底
-                leaders = [{'name': r['f128'], 'code': str(r.get('f140', '')),
-                            'pctChg': round(float(r.get('f136') or 0), 2)}]
-            items.append({
-                'concept': r['f14'],
-                'pctChg': round(float(r.get('f3') or 0), 2),
-                'netInflow5d': round(float(r.get('f164') or 0) / 1e8, 2),
-                'leaders': leaders,
-            })
-        data['conceptHot'] = {
-            'trade_date': f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}",
-            'items': items,
-        }
-        print(f"  conceptHot: {len(items)} concepts, top: {items[0]['concept']} ({items[0]['pctChg']:+.2f}%)")
+            df = df.sort_values('trade_date')
+            closes = df['close'].tolist()
+            close = closes[-1]
+            ma20 = sum(closes[-20:]) / 20
+            ma60 = sum(closes[-60:]) / min(60, len(closes))
+            high60 = df['high'].max()
+            dist = (high60 / close - 1) * 100 if close else 999
+            if close > ma20 and close > ma60 and dist <= 15:
+                leaders.append({'name': s['name'], 'code': s['code'], 'pctChg': s['pct'],
+                                'strength': f"站上20/60日线，距60日高点{dist:.0f}%"})
+        except Exception as e:
+            print(f"  Warning: bottom leader check failed for {s['code']}: {e}")
+    leaders.sort(key=lambda x: -x['pctChg'])
+    return leaders[:3]
+
+
+def build_bottom_watch(hist, pro, trade_date, today_map):
+    """底部资金积聚监测：长窗口 + 缓慢持续流入 + 价格底部 + 龙头先行。
+
+    触发条件：60 日累计净流入 >0 且 净流入天数占比 ≥55%（缓慢持续）
+              且 价格底部分位 <0.4（等权累计收益指数处于长期低位）
+              且 近 5 日仍净流入。
+    score = 持续性×40% + 累计流入排名分×40% + 底部深度×20%。
+    历史不足 BOTTOM_MIN_DAYS 天时不判定，输出 note"数据积累中"。
+    """
+    industries = set()
+    for day in hist['days'].values():
+        industries.update(day.get('sectors', {}).keys())
+    n_days = len(hist['days'])
+    latest = max(hist['days']) if hist['days'] else trade_date
+    d = f"{latest[:4]}-{latest[4:6]}-{latest[6:]}"
+    result = {'trade_date': d, 'window': BOTTOM_WINDOW, 'days': n_days, 'items': []}
+    if n_days < BOTTOM_MIN_DAYS:
+        result['note'] = f'数据积累中（已积累 {n_days} 个交易日，满 {BOTTOM_MIN_DAYS} 天后开始判定）'
+        return result
+    items = []
+    for ind in sorted(industries):
+        rows = _history_series(hist, ind)
+        if len(rows) < BOTTOM_MIN_DAYS:
+            continue
+        win = rows[-BOTTOM_WINDOW:]
+        nets = [r[1] for r in win]
+        inflow60 = sum(nets)
+        pos_ratio = sum(1 for x in nets if x > 0) / len(nets)
+        inflow5 = sum(nets[-5:])
+        # 价格位置：等权累计收益指数在全部已积累历史（最多 250 日）区间中的分位
+        idx = 1.0
+        curve = []
+        for r in rows:
+            idx *= (1 + r[2] / 100.0)
+            curve.append(idx)
+        lo, hi = min(curve), max(curve)
+        price_pos = (curve[-1] - lo) / (hi - lo) if hi > lo else 0.5
+        if inflow60 > 0 and pos_ratio >= 0.55 and price_pos < 0.4 and inflow5 > 0:
+            items.append({'sector': ind, 'inflow60d': round(inflow60, 2),
+                          'inflow5d': round(inflow5, 2),
+                          'positiveRatio': round(pos_ratio * 100, 1),
+                          'pricePosition': round(price_pos, 3)})
+    if not items:
+        return result
+    m = len(items)
+    by_inflow = sorted(items, key=lambda x: x['inflow60d'], reverse=True)
+    rank = {id(it): (m - 1 - i) / (m - 1) if m > 1 else 0.5 for i, it in enumerate(by_inflow)}
+    for it in items:
+        it['score'] = round(it['positiveRatio'] / 100 * 40 + rank[id(it)] * 40
+                            + (1 - it['pricePosition']) * 20, 1)
+    items.sort(key=lambda x: -x['score'])
+    for it in items:
+        it['leaders'] = _find_bottom_leaders(pro, trade_date, it['sector'], today_map)
+    names = '、'.join(i['sector'] for i in items[:4])
+    result['items'] = items
+    result['summary'] = (f"{len(items)} 个板块出现底部资金积聚信号：{names}——"
+                         f"长周期资金缓慢流入且价格处于长期低位，关注率先走强的龙头。")
+    return result
+
+
+def fetch_sector_watch(pro, trade_date, data):
+    """板块资金观察台：行业资金历史沉淀 → 扫描榜（仅信号板块）+ 底部资金积聚监测。
+
+    数据源全部为 Tushare（moneyflow + daily + stock_basic），每天增量积累历史。
+    任一环节失败保留旧数据，不崩脚本。
+    """
+    try:
+        hist, ind_map, name_map = update_sector_history(pro, trade_date)
+        if len(hist['days']) < 3:
+            raise ValueError('sector history empty')
+        today_map = _today_industry_stocks(pro, trade_date, ind_map, name_map)
+        scan = build_sector_scan(hist, trade_date, today_map)
+        data['sectorScan'] = scan
+        n_stocks = sum(len(i.get('stocks', [])) for i in scan['items'])
+        print(f"  sectorScan: {len(scan['items'])} signal sectors ({n_stocks} stocks attached)")
+        print(f"  summary: {scan['summary']}")
+        bottom = build_bottom_watch(hist, pro, trade_date, today_map)
+        data['bottomWatch'] = bottom
+        if bottom.get('note'):
+            print(f"  bottomWatch: {bottom['note']}")
+        else:
+            print(f"  bottomWatch: {len(bottom['items'])} triggered sectors")
+            if bottom.get('summary'):
+                print(f"  {bottom['summary']}")
     except Exception as e:
-        print(f"  Warning: fetch_concept_hot failed: {e}")
+        print(f"  Warning: fetch_sector_watch failed: {e}")
 
 
 def fetch_north_south(pro, trade_date):
@@ -1279,7 +1180,7 @@ def main():
     data = load_existing_data()
 
     # ── 1. Indices (batch) ──
-    print("\n[1/13] Fetching indices (batch)...")
+    print("\n[1/12] Fetching indices (batch)...")
     indices = fetch_indices_batch(pro, trade_date)
     if indices:
         data['indices'] = indices
@@ -1287,7 +1188,7 @@ def main():
             print(f"  {v['name']}: {v['value']} ({v['change']:+.2f}%)")
 
     # ── 2. Stocks (batch) ──
-    print("\n[2/13] Fetching stocks (batch)...")
+    print("\n[2/12] Fetching stocks (batch)...")
     stocks = fetch_stocks_batch(pro, trade_date)
     if stocks:
         data['stocks'] = stocks
@@ -1296,7 +1197,7 @@ def main():
             print(f"    {s['name']}: {s['close']} ({s['pctChg']:+.2f}%)")
 
     # ── 3. ETFs (batch) ──
-    print("\n[3/13] Fetching ETFs (batch)...")
+    print("\n[3/12] Fetching ETFs (batch)...")
     etfs = fetch_etfs_batch(pro, trade_date)
     if etfs:
         data['nationalETF'] = etfs
@@ -1305,7 +1206,7 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 4. My ETF account (fund_daily, batch) ──
-    print("\n[4/13] Fetching my ETF account (fund_daily, batch)...")
+    print("\n[4/12] Fetching my ETF account (fund_daily, batch)...")
     my_etfs = fetch_my_etfs(pro, trade_date)
     if my_etfs:
         data['myETF'] = my_etfs
@@ -1314,14 +1215,14 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 5. Announcements + holdingsNews (全量覆盖旧手工数据) ──
-    print("\n[5/13] Fetching announcements & building holdingsNews...")
+    print("\n[5/12] Fetching announcements & building holdingsNews...")
     anns_map = fetch_announcements(pro, trade_date)
     data['holdingsNews'] = build_holdings_news(anns_map, trade_date)
     total_anns = sum(len(e['items']) for e in data['holdingsNews'])
     print(f"  Built {len(data['holdingsNews'])} holdingsNews entries, {total_anns} announcements")
 
     # ── 6. Mainforce flow ──
-    print("\n[6/13] Fetching mainforce flow...")
+    print("\n[6/12] Fetching mainforce flow...")
     inflow, outflow = fetch_mainforce_flow(pro, trade_date)
     if inflow:
         data['mainforce_inflow_top10'] = inflow
@@ -1331,7 +1232,7 @@ def main():
         print(f"  Outflow #1: {outflow[0]['name']} {outflow[0]['amount']}")
 
     # ── 7. Hot fund NAVs (fund_nav, 取到才覆盖) ──
-    print("\n[7/13] Fetching hot fund NAVs...")
+    print("\n[7/12] Fetching hot fund NAVs...")
     hot_navs = fetch_hot_fund_navs(pro, trade_date, data.get('hotFundNavs', []))
     if hot_navs:
         data['hotFundNavs'] = hot_navs
@@ -1339,7 +1240,7 @@ def main():
         print(f"  Updated {len(hot_navs)} fund NAVs, dates: {sorted(dates)}")
 
     # ── 8. National ETF watch (宽基ETF份额监控) ──
-    print("\n[8/13] Fetching national ETF watch (fund_share)...")
+    print("\n[8/12] Fetching national ETF watch (fund_share)...")
     etf_watch = fetch_national_etf_watch(pro, trade_date, data.get('nationalETFWatch'))
     if etf_watch:
         data['nationalETFWatch'] = etf_watch
@@ -1348,11 +1249,11 @@ def main():
               f"total netFlow {t['netFlow']:+.2f}亿, 5d {t['netFlow5d']:+.2f}亿")
 
     # ── 9. Bond yields + liquidity commentary (东方财富) ──
-    print("\n[9/13] Fetching bond yields & liquidity commentary (eastmoney)...")
+    print("\n[9/12] Fetching bond yields & liquidity commentary (eastmoney)...")
     fetch_bond_yields(trade_date, data)
 
     # ── 10. North/South bound ──
-    print("\n[10/13] Fetching north/south bound...")
+    print("\n[10/12] Fetching north/south bound...")
     north, south = fetch_north_south(pro, trade_date)
     if north:
         data['northbound'] = north
@@ -1362,7 +1263,7 @@ def main():
         print(f"  Southbound: {south['today']}亿")
 
     # ── 11. Sector index commentary (细分指数每日点评) ──
-    print("\n[11/13] Fetching sector index commentary...")
+    print("\n[11/12] Fetching sector index commentary...")
     # 涨跌停信号卡已废弃：不再生成 keySignals，并删除存量字段
     data.pop('keySignals', None)
     commentary = fetch_sector_commentary(pro, trade_date)
@@ -1372,13 +1273,10 @@ def main():
         for c in commentary[:3]:
             print(f"    {c['name']}: {c['pctChg']:+.2f}% - {c['comment']}")
 
-    # ── 12. Sector moneyflow scan + ECI automation (东方财富) ──
-    print("\n[12/13] Fetching sector moneyflow scan & rebuilding ECI (eastmoney)...")
-    fetch_sector_moneyflow(pro, trade_date, data)
-
-    # ── 13. Concept hot themes (东方财富) ──
-    print("\n[13/13] Fetching hot concepts (eastmoney)...")
-    fetch_concept_hot(trade_date, data)
+    # ── 12. Sector watch: 扫描榜(仅信号) + 底部资金积聚 (Tushare 历史沉淀) ──
+    print("\n[12/12] Building sector watch (scan + bottom accumulation)...")
+    fetch_sector_watch(pro, trade_date, data)
+    data.pop('conceptHot', None)  # 主题概念领涨栏目已下线，清除存量字段
 
     # ── Metadata ──
     data['updateTime'] = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]} 收盘 (Tushare自动)"
