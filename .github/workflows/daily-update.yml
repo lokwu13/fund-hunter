@@ -1,14 +1,14 @@
 name: Daily Update Fund Data
 
 on:
-  # Schedule: Every day at 19:30 CST (11:30 UTC)
+  # Schedule: Every day at 19:30 CST (11:30 UTC) — the ONLY automatic data update
   # A-share market closes at 15:00, data is available after ~19:00
   schedule:
     - cron: '30 11 * * *'
-  # Also rebuild & deploy whenever code is pushed to main
+  # Code pushes only rebuild & deploy the site; they do NOT re-fetch data
   push:
     branches: [main]
-  # Manual trigger via GitHub web interface
+  # Manual trigger via GitHub web interface (fetches data + deploys)
   workflow_dispatch:
 
 permissions:
@@ -30,24 +30,29 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python
+        if: github.event_name != 'push'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
       - name: Install Python dependencies
+        if: github.event_name != 'push'
         run: |
           pip install tushare pandas requests
 
       - name: Fetch data from Tushare
+        if: github.event_name != 'push'
         env:
           TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
         run: python scripts/update_data.py
 
       - name: Copy updated data to public
+        if: github.event_name != 'push'
         run: cp src/data/fund_data.json public/fund_data.json
 
       - name: Commit updated data back to repo
+        if: github.event_name != 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
