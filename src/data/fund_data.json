@@ -282,9 +282,9 @@
     "month": 283.8
   },
   "southbound": {
-    "today": 0.0,
-    "week": 0.0,
-    "month": 0.0
+    "today": -0.0,
+    "week": -0.0,
+    "month": -0.0
   },
   "foreignSummary": {
     "totalBuys": 0,
@@ -8860,6 +8860,31 @@
   },
   "eciSubsectors": {
     "trade_date": "2026-07-24",
-    "items": []
+    "items": [
+      {
+        "parent": "银行",
+        "parentEci": 67.9,
+        "subs": [
+          {
+            "name": "银行",
+            "eci": 84.0,
+            "inflow20d": 351.94,
+            "positiveRatio": 60.0,
+            "leaders": [
+              {
+                "name": "招商银行",
+                "code": "600036.SH",
+                "pctChg": 0.75
+              },
+              {
+                "name": "农业银行",
+                "code": "601288.SH",
+                "pctChg": 1.06
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 }

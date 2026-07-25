@@ -1312,32 +1312,32 @@ def _rebuild_eci_from_history(hist, old):
 
 
 def build_eci_subsectors(hist, eci_data, today_map):
-    """强势一级行业（ECI前5 且 60日累计净流入>0 且 流入天数占比≥50%）的二级子板块精选。
+    """强势一级行业（ECI前10 且 30日累计净流入>0 且 30日流入天数占比≥50%）的二级子板块精选。
 
     子板块四维简版打分（0-15×4 折算百分制）：资金集中度/趋势同步(20日上涨天数占比)/
-    一致性动量/活跃度；选得分前 3 且 60日净流入>0（宁缺毋滥，可少于 3 个甚至为 0）；
+    一致性动量/活跃度；选得分前 3 且 30日净流入>0（宁缺毋滥，可少于 3 个甚至为 0）；
     每个入选子板块带今日主力净流入前 2 的龙头。
     """
     days = sorted(hist['days'])
     if len(days) < 40:
         return None
     latest = days[-1]
-    # 一级 60 日聚合（母板块资金条件）
-    l1_60 = {}
-    for d in days[-60:]:
+    # 一级 30 日聚合（母板块资金条件）
+    l1_30 = {}
+    for d in days[-30:]:
         for ind, s in hist['days'][d].get('sectors', {}).items():
             l1 = SECTOR_TO_L1.get(ind)
             if not l1:
                 continue
-            a = l1_60.setdefault(l1, {'net': 0.0, 'pos': 0, 'n': 0})
+            a = l1_30.setdefault(l1, {'net': 0.0, 'pos': 0, 'n': 0})
             a['net'] += s.get('net', 0.0)
             a['pos'] += 1 if s.get('net', 0.0) > 0 else 0
             a['n'] += 1
-    top5 = sorted((eci_data or {}).get('sectors', []), key=lambda x: -x.get('eci', 0))[:5]
+    top10 = sorted((eci_data or {}).get('sectors', []), key=lambda x: -x.get('eci', 0))[:10]
     items = []
-    for sec in top5:
+    for sec in top10:
         parent = sec['sector']
-        a = l1_60.get(parent)
+        a = l1_30.get(parent)
         if not a or a['n'] == 0 or a['net'] <= 0 or a['pos'] / a['n'] < 0.5:
             continue
         subs = []
@@ -1352,11 +1352,11 @@ def build_eci_subsectors(hist, eci_data, today_map):
             rets20 = [r[2] for r in rows[-20:]]
             rets5 = rets20[-5:]
             amts60 = [r[3] for r in rows[-60:]]
-            net60 = sum(r[1] for r in rows[-60:])
-            pos60 = sum(1 for r in rows[-60:] if r[1] > 0) / len(rows[-60:])
+            net30 = sum(r[1] for r in rows[-30:])
+            pos30 = sum(1 for r in rows[-30:] if r[1] > 0) / len(rows[-30:])
             amt20 = sum(r[3] for r in rows[-20:])
             stat_list.append({
-                'name': ind, 'net60': net60, 'pos60': pos60,
+                'name': ind, 'net30': net30, 'pos30': pos30,
                 'inflow20d': round(sum(nets20), 2),
                 'fund': (sum(nets20) / amt20) if amt20 > 0 else 0.0,
                 'up_ratio': sum(1 for x in rets20 if x > 0) / 20,
@@ -1374,12 +1374,12 @@ def build_eci_subsectors(hist, eci_data, today_map):
             mom = round((0.6 * s['align'] + 0.4 * _pct_rank(ret5_vals, s['ret5'])) * _ECI_DIM_MAX, 1)
             act = round(s['act'] * _ECI_DIM_MAX, 1)
             s['eci'] = round((fund + tsync + mom + act) / (_ECI_DIM_MAX * 4) * 100, 1)
-        picked = [s for s in sorted(stat_list, key=lambda x: -x['eci']) if s['net60'] > 0][:3]
+        picked = [s for s in sorted(stat_list, key=lambda x: -x['eci']) if s['net30'] > 0][:3]
         if not picked:
             continue
         subs = [{
             'name': s['name'], 'eci': s['eci'], 'inflow20d': s['inflow20d'],
-            'positiveRatio': round(s['pos60'] * 100, 1),
+            'positiveRatio': round(s['pos30'] * 100, 1),
             'leaders': [{'name': t['name'], 'code': t['code'], 'pctChg': t['pct']}
                         for t in (today_map.get(s['name']) or [])[:2]],
         } for s in picked]

@@ -616,7 +616,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
               </Badge>
             </div>
             <p className="text-[10px] text-slate-400 mt-1">
-              母板块条件：ECI前5 + 60日净流入&gt;0 + 流入天数占比≥50%；子板块按资金/趋势/动量/活跃度四维简版评分，取前3且60日净流入&gt;0
+              母板块条件：ECI前10 + 30日净流入&gt;0 + 30日流入天数占比≥50%；子板块按资金/趋势/动量/活跃度四维简版评分，取前3且30日净流入&gt;0
             </p>
           </CardHeader>
           <CardContent>
