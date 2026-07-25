@@ -1456,7 +1456,9 @@ def fetch_eci_daily(pro, trade_date, data, watch_ctx=None):
 MARGIN_HISTORY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache', 'margin_history.json')
 MARGIN_HISTORY_MAX_DAYS = 60    # 每只股票保留最近交易日数
 MARGIN_BACKFILL_CAL_DAYS = 90   # 首次回补日历日（覆盖约 60 个交易日）
-MARGIN_TRIGGER_PCT = 3.0        # 预警阈值：3日融资余额增量 ÷ 流通市值 ≥3%
+MARGIN_TRIGGER_PCT = 3.0        # 红灯阈值：3日融资余额增量 ÷ 流通市值 ≥3%
+MARGIN_WATCH_DAYS = 5           # 黄灯：连续增持交易日数
+MARGIN_WATCH_PCT = 0.5          # 黄灯：5日累计增量 ÷ 流通市值 ≥0.5%
 
 
 def _load_margin_history():
@@ -1517,10 +1519,11 @@ def _update_margin_stock(pro, code, hist, trade_date):
 
 
 def fetch_margin_watch(pro, trade_date, data):
-    """融资余额突变预警（任务2）：持仓+观察股 3 天融资余额增量 ÷ 流通市值 ≥3% 触发。
+    """融资余额突变预警：红灯=3 日融资余额增量 ÷ 流通市值 ≥3%；黄灯=连续 5 日增持且 5 日累计增量占流通市值 ≥0.5%。
 
-    口径：inc3d = rzye最新 − rzye前3个交易日（亿元）；incPct = inc3d / circ_mv × 100。
+    口径：inc3d/inc5d = rzye最新 − rzye前3/前5个交易日（亿元）；incPct = 增量 / circ_mv × 100。
     Tushare 融资融券口径，T+1 披露。单只失败保留旧条目。
+    level: "alert"(红) / "watch"(黄) / None，红灯优先级高于黄灯。
     """
     try:
         hist = _load_margin_history()
@@ -1530,7 +1533,7 @@ def fetch_margin_watch(pro, trade_date, data):
         for code, info in STOCKS.items():
             try:
                 dates = _update_margin_stock(pro, code, hist, trade_date)
-                if len(dates) < 4:
+                if len(dates) < 6:
                     raise ValueError(f'only {len(dates)} days cached')
                 days = hist['stocks'][code]['days']
                 d1, d0 = dates[-1], dates[-4]
@@ -1541,10 +1544,24 @@ def fetch_margin_watch(pro, trade_date, data):
                     raise ValueError('no circ_mv')
                 inc3d = round(days[d1]['rzye'] - days[d0]['rzye'], 2)
                 inc_pct = round(inc3d / circ * 100, 2)
+                # 黄灯：连续 N 个交易日增持（每天 rzye 较前一日增加）
+                consec = 0
+                for i in range(len(dates) - 1, 0, -1):
+                    if days[dates[i]]['rzye'] > days[dates[i - 1]]['rzye']:
+                        consec += 1
+                    else:
+                        break
+                inc5d = round(days[d1]['rzye'] - days[dates[-6]]['rzye'], 2)
+                inc5d_pct = round(inc5d / circ * 100, 2)
+                red = inc_pct >= MARGIN_TRIGGER_PCT
+                yellow = consec >= MARGIN_WATCH_DAYS and inc5d_pct >= MARGIN_WATCH_PCT
+                level = 'alert' if red else ('watch' if yellow else None)
                 items.append({
                     'code': code, 'name': info['name'], 'group': info['group'],
                     'rzye': round(days[d1]['rzye'], 2), 'inc3d': inc3d, 'incPct': inc_pct,
-                    'triggered': inc_pct >= MARGIN_TRIGGER_PCT,
+                    'inc5d': inc5d, 'inc5dPct': inc5d_pct,
+                    'consecutiveUpDays': consec,
+                    'triggered': red, 'level': level,
                 })
             except Exception as e:
                 print(f"  Warning: margin watch {code} failed: {e}")
@@ -1558,8 +1575,8 @@ def fetch_margin_watch(pro, trade_date, data):
             'threshold': MARGIN_TRIGGER_PCT,
             'items': items,
         }
-        trig = [i['name'] for i in items if i.get('triggered')]
-        print(f"  marginWatch: {len(items)} stocks as of {td}, triggered: {trig or '无'}")
+        trig = [(i['name'], i['level']) for i in items if i.get('level')]
+        print(f"  marginWatch: {len(items)} stocks as of {td}, signals: {trig or '无'}")
     except Exception as e:
         print(f"  Warning: fetch_margin_watch failed: {e}")
 
