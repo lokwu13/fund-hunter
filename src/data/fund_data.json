@@ -7542,7 +7542,7 @@
             "return": "-22.1%"
           }
         },
-        "change5d": 6.5
+        "change5d": 6.4
       },
       {
         "sector": "家用电器",
@@ -7729,7 +7729,7 @@
             "return": "-21.3%"
           }
         },
-        "change5d": -7.8
+        "change5d": -7.9
       },
       {
         "sector": "农林牧渔",
@@ -8959,7 +8959,11 @@
         "rzye": 16.81,
         "inc3d": 0.78,
         "incPct": 0.16,
-        "triggered": false
+        "inc5d": 0.75,
+        "inc5dPct": 0.15,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "600276.SH",
@@ -8968,7 +8972,11 @@
         "rzye": 57.06,
         "inc3d": 3.3,
         "incPct": 0.1,
-        "triggered": false
+        "inc5d": 2.93,
+        "inc5dPct": 0.09,
+        "consecutiveUpDays": 4,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "002216.SZ",
@@ -8977,7 +8985,11 @@
         "rzye": 1.45,
         "inc3d": 0.05,
         "incPct": 0.06,
-        "triggered": false
+        "inc5d": 0.05,
+        "inc5dPct": 0.06,
+        "consecutiveUpDays": 4,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "002568.SZ",
@@ -8986,7 +8998,11 @@
         "rzye": 2.62,
         "inc3d": 0.02,
         "incPct": 0.01,
-        "triggered": false
+        "inc5d": 0.01,
+        "inc5dPct": 0.01,
+        "consecutiveUpDays": 4,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "688271.SH",
@@ -8995,7 +9011,11 @@
         "rzye": 12.85,
         "inc3d": 0.09,
         "incPct": 0.01,
-        "triggered": false
+        "inc5d": -0.34,
+        "inc5dPct": -0.04,
+        "consecutiveUpDays": 1,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "600406.SH",
@@ -9004,7 +9024,11 @@
         "rzye": 28.55,
         "inc3d": -0.05,
         "incPct": -0.0,
-        "triggered": false
+        "inc5d": -1.0,
+        "inc5dPct": -0.05,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "000895.SZ",
@@ -9013,7 +9037,11 @@
         "rzye": 2.5,
         "inc3d": 0.01,
         "incPct": 0.0,
-        "triggered": false
+        "inc5d": -0.23,
+        "inc5dPct": -0.03,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "300760.SZ",
@@ -9022,7 +9050,11 @@
         "rzye": 58.99,
         "inc3d": -0.03,
         "incPct": -0.0,
-        "triggered": false
+        "inc5d": -0.32,
+        "inc5dPct": -0.02,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "600309.SH",
@@ -9031,7 +9063,11 @@
         "rzye": 30.96,
         "inc3d": -0.44,
         "incPct": -0.02,
-        "triggered": false
+        "inc5d": -0.41,
+        "inc5dPct": -0.02,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "688029.SH",
@@ -9040,7 +9076,11 @@
         "rzye": 4.54,
         "inc3d": -0.04,
         "incPct": -0.03,
-        "triggered": false
+        "inc5d": 0.02,
+        "inc5dPct": 0.01,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "601888.SH",
@@ -9049,7 +9089,11 @@
         "rzye": 36.49,
         "inc3d": -0.44,
         "incPct": -0.04,
-        "triggered": false
+        "inc5d": -0.62,
+        "inc5dPct": -0.06,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "603259.SH",
@@ -9058,7 +9102,11 @@
         "rzye": 53.1,
         "inc3d": -1.37,
         "incPct": -0.04,
-        "triggered": false
+        "inc5d": -5.39,
+        "inc5dPct": -0.17,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "688016.SH",
@@ -9067,7 +9115,11 @@
         "rzye": 4.82,
         "inc3d": -0.05,
         "incPct": -0.05,
-        "triggered": false
+        "inc5d": -0.19,
+        "inc5dPct": -0.17,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "600298.SH",
@@ -9076,7 +9128,11 @@
         "rzye": 4.8,
         "inc3d": -0.4,
         "incPct": -0.12,
-        "triggered": false
+        "inc5d": -0.02,
+        "inc5dPct": -0.01,
+        "consecutiveUpDays": 1,
+        "triggered": false,
+        "level": null
       }
     ]
   }
