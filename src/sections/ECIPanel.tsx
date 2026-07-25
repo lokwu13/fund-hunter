@@ -544,6 +544,12 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                     <div className="text-right">
                       <span className="text-2xl font-bold text-slate-800">{s.eci}</span>
                       <span className="text-xs text-slate-400 ml-1">ECI</span>
+                      {typeof s.change5d === 'number' && (
+                        <div className={`text-[10px] font-semibold ${s.change5d >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                          {s.change5d >= 0 ? `▲+${s.change5d.toFixed(1)}` : `▼${s.change5d.toFixed(1)}`}
+                          <span className="text-slate-400 font-normal"> 5日</span>
+                        </div>
+                      )}
                     </div>
                     <div className="flex flex-col items-center">
                       <TrendIcon className="w-5 h-5" style={{ color: trendColor }} />
@@ -602,21 +608,21 @@ export default function ECIPanel({ data }: ECIPanelProps) {
         })}
       </div>
 
-      {/* 强势板块 · 子板块精选 */}
+      {/* 强势板块追踪（达标精选 + 观察池） */}
       {data.eciSubsectors && (
         <Card className="border-violet-200 shadow-sm">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <Crown className="w-4 h-4 text-violet-500" />
-                强势板块 · 子板块精选
+                强势板块追踪
               </CardTitle>
               <Badge variant="outline" className="text-xs bg-violet-50 text-violet-700 border-violet-200">
                 {data.eciSubsectors.trade_date}
               </Badge>
             </div>
             <p className="text-[10px] text-slate-400 mt-1">
-              母板块条件：ECI前10 + 30日净流入&gt;0 + 30日流入天数占比≥50%；子板块按资金/趋势/动量/活跃度四维简版评分，取前3且30日净流入&gt;0
+              达标：ECI前10 + 30日净流入&gt;0 + 流入天数占比≥50%，子板块四维评分取前3且30日净流入&gt;0；观察池：接近达标（流入占比≥40% 或 ECI前5），金标准不放松
             </p>
           </CardHeader>
           <CardContent>
@@ -660,7 +666,32 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-400 py-3 text-center">当前无同时满足一致性与资金条件的子板块</p>
+              <p className="text-xs text-slate-400 py-2 text-center">本期无达标子板块</p>
+            )}
+
+            {/* 观察池 */}
+            {data.eciSubsectors.watchlist && data.eciSubsectors.watchlist.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                <p className="text-[11px] font-semibold text-slate-500 mb-1.5">观察池（接近达标，待确认）</p>
+                <div className="space-y-1">
+                  {data.eciSubsectors.watchlist.map((w: any) => (
+                    <div key={w.parent} className="flex items-center gap-2 flex-wrap bg-slate-50 border border-slate-200 rounded-md px-2.5 py-1.5">
+                      <span className="text-xs font-semibold text-slate-600">{w.parent}</span>
+                      <Badge variant="outline" className="text-[10px] h-4 px-1 border-slate-300 text-slate-500">ECI {w.eci}</Badge>
+                      <span className={`text-[10px] font-semibold ${w.inflow30d >= 0 ? 'text-red-400' : 'text-emerald-500'}`}>
+                        30日{w.inflow30d >= 0 ? '+' : ''}{w.inflow30d}亿
+                      </span>
+                      <span className="text-[10px] text-slate-500">流入占比 {w.posRatio}%</span>
+                      <span className="text-[10px] text-slate-400 ml-auto">{w.gap}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {(!data.eciSubsectors.items || data.eciSubsectors.items.length === 0) &&
+             (!data.eciSubsectors.watchlist || data.eciSubsectors.watchlist.length === 0) && (
+              <p className="text-xs text-slate-400 py-1 text-center">当前无同时满足一致性与资金条件的子板块</p>
             )}
           </CardContent>
         </Card>

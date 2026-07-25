@@ -18,6 +18,24 @@ export default function WeeklySummary() {
   const myETFs = data.myETF || [];
   const sectors = data.sectorCommentary || [];
 
+  // 融资余额突变预警：3日融资余额增量 ÷ 流通市值 ≥3%（Tushare 融资融券口径，T+1 披露）
+  const marginMap = new Map((data.marginWatch?.items || []).map((m) => [m.code, m]));
+  const hasMarginAlert = (data.marginWatch?.items || []).some((m) => m.triggered);
+  const marginBadge = (code?: string) => {
+    const mw = code ? marginMap.get(code) : undefined;
+    if (!mw?.triggered) return null;
+    return (
+      <div className="mt-1">
+        <Badge
+          className="text-[9px] h-4 px-1.5 bg-red-500 text-white border-0 animate-pulse"
+          title="3 日融资余额增量 ÷ 流通市值 ≥3%（Tushare 融资融券口径，T+1 披露）"
+        >
+          🔥融资3日{mw.inc3d >= 0 ? '+' : ''}{mw.inc3d}亿·占流通{mw.incPct}%
+        </Badge>
+      </div>
+    );
+  };
+
   const pctClass = (v?: number) =>
     (v ?? 0) >= 0 ? 'text-red-500' : 'text-green-500';
   const fmtPct = (v?: number) => `${(v ?? 0) >= 0 ? '+' : ''}${(v ?? 0).toFixed(2)}%`;
@@ -124,6 +142,7 @@ export default function WeeklySummary() {
                         <span className={`text-xs font-semibold ${pctClass(s.pctChg)}`}>{fmtPct(s.pctChg)}</span>
                       </div>
                     </div>
+                    {marginBadge(s.code)}
                   </div>
                 ))}
               </div>
@@ -153,10 +172,14 @@ export default function WeeklySummary() {
                         <span className={`text-xs font-semibold ${pctClass(s.pctChg)}`}>{fmtPct(s.pctChg)}</span>
                       </div>
                     </div>
+                    {marginBadge(s.code)}
                   </div>
                 ))}
               </div>
             </div>
+          )}
+          {hasMarginAlert && (
+            <p className="text-[10px] text-slate-400 mt-2">预警口径：3 日融资余额增量 ÷ 流通市值 ≥3%（Tushare 融资融券口径，T+1 披露）</p>
           )}
         </div>
       )}

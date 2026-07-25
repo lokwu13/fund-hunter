@@ -285,6 +285,7 @@ export interface FundData {
     sectors: Array<{
       sector: string;
       eci: number;
+      change5d?: number;
       volConvergence: number;
       fundConcentration: number;
       trendSync: number;
@@ -350,6 +351,26 @@ export interface FundData {
         positiveRatio: number;
         leaders: Array<{ name: string; code: string; pctChg: number }>;
       }>;
+    }>;
+    watchlist?: Array<{
+      parent: string;
+      eci: number;
+      inflow30d: number;
+      posRatio: number;
+      gap: string;
+    }>;
+  };
+  marginWatch?: {
+    trade_date: string;
+    threshold: number;
+    items: Array<{
+      code: string;
+      name: string;
+      group: string;
+      rzye: number;
+      inc3d: number;
+      incPct: number;
+      triggered: boolean;
     }>;
   };
   nationalETF?: Array<{

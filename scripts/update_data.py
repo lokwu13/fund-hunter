@@ -1312,11 +1312,14 @@ def _rebuild_eci_from_history(hist, old):
 
 
 def build_eci_subsectors(hist, eci_data, today_map):
-    """强势一级行业（ECI前10 且 30日累计净流入>0 且 30日流入天数占比≥50%）的二级子板块精选。
+    """强势一级行业子板块分级展示：达标精选 + 观察池。
 
+    达标（金标准，不放松）：母板块 ECI前10 且 30日累计净流入>0 且 30日流入天数占比≥50%；
     子板块四维简版打分（0-15×4 折算百分制）：资金集中度/趋势同步(20日上涨天数占比)/
     一致性动量/活跃度；选得分前 3 且 30日净流入>0（宁缺毋滥，可少于 3 个甚至为 0）；
     每个入选子板块带今日主力净流入前 2 的龙头。
+    观察池：ECI前10 中未达标但接近的——(30日净流入>0 且 流入天数占比≥40%) 或 ECI前5 之一；
+    每行带差距说明，灰蓝样式区别于达标。
     """
     days = sorted(hist['days'])
     if len(days) < 40:
@@ -1334,11 +1337,27 @@ def build_eci_subsectors(hist, eci_data, today_map):
             a['pos'] += 1 if s.get('net', 0.0) > 0 else 0
             a['n'] += 1
     top10 = sorted((eci_data or {}).get('sectors', []), key=lambda x: -x.get('eci', 0))[:10]
+    top5_names = {s['sector'] for s in top10[:5]}
     items = []
+    watchlist = []
     for sec in top10:
         parent = sec['sector']
         a = l1_30.get(parent)
-        if not a or a['n'] == 0 or a['net'] <= 0 or a['pos'] / a['n'] < 0.5:
+        net30 = a['net'] if a else 0.0
+        pos_ratio = (a['pos'] / a['n']) if a and a['n'] else 0.0
+        if not (a and a['n'] > 0 and net30 > 0 and pos_ratio >= 0.5):
+            # 观察池：未完全达标但接近（金标准不放松，仅分级展示）
+            if (net30 > 0 and pos_ratio >= 0.4) or (parent in top5_names):
+                if net30 <= 0:
+                    gap = f'30日净流出{abs(net30):.1f}亿，待资金回正'
+                elif pos_ratio < 0.4:
+                    gap = f'流入占比{pos_ratio * 100:.1f}%，不足40%'
+                else:
+                    gap = f'流入占比{pos_ratio * 100:.1f}%，未过半'
+                watchlist.append({'parent': parent, 'eci': sec['eci'],
+                                  'inflow30d': round(net30, 2),
+                                  'posRatio': round(pos_ratio * 100, 1),
+                                  'gap': gap})
             continue
         subs = []
         stat_list = []
@@ -1387,6 +1406,7 @@ def build_eci_subsectors(hist, eci_data, today_map):
     return {
         'trade_date': f"{latest[:4]}-{latest[4:6]}-{latest[6:]}",
         'items': items,
+        'watchlist': watchlist,
     }
 
 
@@ -1407,6 +1427,18 @@ def fetch_eci_daily(pro, trade_date, data, watch_ctx=None):
             return
         eci = _rebuild_eci_from_history(hist, data.get('eciData'))
         if eci:
+            # 5日变化标记：同一口径把历史窗口前移 5 个交易日重算一次做对比（无需额外存储）
+            days_all = sorted(hist['days'])
+            if len(days_all) >= 45:
+                cutoff = days_all[-6]
+                hist5 = {'days': {d: v for d, v in hist['days'].items() if d <= cutoff}}
+                prev = _rebuild_eci_from_history(hist5, data.get('eciData'))
+                if prev:
+                    prev_map = {s['sector']: s['eci'] for s in prev['sectors']}
+                    for s in eci['sectors']:
+                        p = prev_map.get(s['sector'])
+                        if p is not None:
+                            s['change5d'] = round(s['eci'] - p, 1)
             data['eciData'] = eci
             top = sorted(eci['sectors'], key=lambda x: -x['eci'])[:3]
             print(f"  eciData rebuilt from history: {eci['totalIndustries']} sectors, "
@@ -1415,9 +1447,121 @@ def fetch_eci_daily(pro, trade_date, data, watch_ctx=None):
         if subs is not None:
             data['eciSubsectors'] = subs
             n = sum(len(i['subs']) for i in subs['items'])
-            print(f"  eciSubsectors: {len(subs['items'])} parents, {n} subs picked")
+            print(f"  eciSubsectors: {len(subs['items'])} parents, {n} subs picked, "
+                  f"watchlist: {[w['parent'] for w in subs.get('watchlist', [])]}")
     except Exception as e:
         print(f"  Warning: fetch_eci_daily failed: {e}")
+
+
+MARGIN_HISTORY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache', 'margin_history.json')
+MARGIN_HISTORY_MAX_DAYS = 60    # 每只股票保留最近交易日数
+MARGIN_BACKFILL_CAL_DAYS = 90   # 首次回补日历日（覆盖约 60 个交易日）
+MARGIN_TRIGGER_PCT = 3.0        # 预警阈值：3日融资余额增量 ÷ 流通市值 ≥3%
+
+
+def _load_margin_history():
+    try:
+        with open(MARGIN_HISTORY_PATH, encoding='utf-8') as f:
+            h = json.load(f)
+        return h if isinstance(h.get('stocks'), dict) else {'stocks': {}}
+    except Exception:
+        return {'stocks': {}}
+
+
+def _save_margin_history(hist):
+    os.makedirs(os.path.dirname(MARGIN_HISTORY_PATH), exist_ok=True)
+    for entry in hist['stocks'].values():
+        days = entry.get('days', {})
+        keep = sorted(days)[-MARGIN_HISTORY_MAX_DAYS:]
+        entry['days'] = {d: days[d] for d in keep}
+    with open(MARGIN_HISTORY_PATH, 'w', encoding='utf-8') as f:
+        json.dump(hist, f, ensure_ascii=False)
+
+
+def _update_margin_stock(pro, code, hist, trade_date):
+    """增量更新单只股票的 rzye(亿)/circ_mv(亿) 日线缓存，返回 sorted 日期列表。
+
+    rzye：margin_detail 融资余额（元）→ 亿；circ_mv：daily_basic 流通市值（万元）→ 亿。
+    """
+    entry = hist['stocks'].setdefault(code, {'days': {}})
+    days = entry['days']
+    if days:
+        start = (datetime.strptime(max(days), '%Y%m%d') - timedelta(days=10)).strftime('%Y%m%d')
+    else:
+        start = (datetime.strptime(trade_date, '%Y%m%d')
+                 - timedelta(days=MARGIN_BACKFILL_CAL_DAYS)).strftime('%Y%m%d')
+    time.sleep(API_DELAY)
+    md = pro.margin_detail(ts_code=code, start_date=start, end_date=trade_date,
+                           fields='ts_code,trade_date,rzye')
+    time.sleep(API_DELAY)
+    db = pro.daily_basic(ts_code=code, start_date=start, end_date=trade_date,
+                         fields='ts_code,trade_date,circ_mv')
+    mv_map = {}
+    if db is not None and len(db) > 0:
+        for _, r in db.iterrows():
+            if pd.notna(r['circ_mv']):
+                mv_map[str(r['trade_date'])] = float(r['circ_mv']) / 1e4  # 万元→亿
+    if md is not None and len(md) > 0:
+        for _, r in md.iterrows():
+            if pd.isna(r['rzye']):
+                continue
+            d = str(r['trade_date'])
+            cur = days.setdefault(d, {})
+            cur['rzye'] = round(float(r['rzye']) / 1e8, 4)  # 元→亿
+    for d, mv in mv_map.items():
+        if d in days:
+            days[d]['circ_mv'] = round(mv, 2)
+    if not days:
+        raise ValueError(f'no margin data for {code}')
+    return sorted(days)
+
+
+def fetch_margin_watch(pro, trade_date, data):
+    """融资余额突变预警（任务2）：持仓+观察股 3 天融资余额增量 ÷ 流通市值 ≥3% 触发。
+
+    口径：inc3d = rzye最新 − rzye前3个交易日（亿元）；incPct = inc3d / circ_mv × 100。
+    Tushare 融资融券口径，T+1 披露。单只失败保留旧条目。
+    """
+    try:
+        hist = _load_margin_history()
+        old_items = {it['code']: it for it in (data.get('marginWatch') or {}).get('items', [])}
+        items = []
+        latest_dates = []
+        for code, info in STOCKS.items():
+            try:
+                dates = _update_margin_stock(pro, code, hist, trade_date)
+                if len(dates) < 4:
+                    raise ValueError(f'only {len(dates)} days cached')
+                days = hist['stocks'][code]['days']
+                d1, d0 = dates[-1], dates[-4]
+                latest_dates.append(d1)
+                circ = days[d1].get('circ_mv') or next(
+                    (days[d]['circ_mv'] for d in reversed(dates) if days[d].get('circ_mv')), None)
+                if not circ:
+                    raise ValueError('no circ_mv')
+                inc3d = round(days[d1]['rzye'] - days[d0]['rzye'], 2)
+                inc_pct = round(inc3d / circ * 100, 2)
+                items.append({
+                    'code': code, 'name': info['name'], 'group': info['group'],
+                    'rzye': round(days[d1]['rzye'], 2), 'inc3d': inc3d, 'incPct': inc_pct,
+                    'triggered': inc_pct >= MARGIN_TRIGGER_PCT,
+                })
+            except Exception as e:
+                print(f"  Warning: margin watch {code} failed: {e}")
+                if code in old_items:
+                    items.append(old_items[code])
+        _save_margin_history(hist)
+        items.sort(key=lambda x: -x.get('incPct', 0))
+        td = max(latest_dates) if latest_dates else trade_date
+        data['marginWatch'] = {
+            'trade_date': f"{td[:4]}-{td[4:6]}-{td[6:]}",
+            'threshold': MARGIN_TRIGGER_PCT,
+            'items': items,
+        }
+        trig = [i['name'] for i in items if i.get('triggered')]
+        print(f"  marginWatch: {len(items)} stocks as of {td}, triggered: {trig or '无'}")
+    except Exception as e:
+        print(f"  Warning: fetch_margin_watch failed: {e}")
 
 
 def fetch_north_south(pro, trade_date):
@@ -1574,7 +1718,7 @@ def main():
     data = load_existing_data()
 
     # ── 1. Indices (batch) ──
-    print("\n[1/13] Fetching indices (batch)...")
+    print("\n[1/14] Fetching indices (batch)...")
     indices = fetch_indices_batch(pro, trade_date)
     if indices:
         data['indices'] = indices
@@ -1582,7 +1726,7 @@ def main():
             print(f"  {v['name']}: {v['value']} ({v['change']:+.2f}%)")
 
     # ── 2. Stocks (batch) ──
-    print("\n[2/13] Fetching stocks (batch)...")
+    print("\n[2/14] Fetching stocks (batch)...")
     stocks = fetch_stocks_batch(pro, trade_date)
     if stocks:
         data['stocks'] = stocks
@@ -1591,7 +1735,7 @@ def main():
             print(f"    {s['name']}: {s['close']} ({s['pctChg']:+.2f}%)")
 
     # ── 3. ETFs (batch) ──
-    print("\n[3/13] Fetching ETFs (batch)...")
+    print("\n[3/14] Fetching ETFs (batch)...")
     etfs = fetch_etfs_batch(pro, trade_date)
     if etfs:
         data['nationalETF'] = etfs
@@ -1600,7 +1744,7 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 4. My ETF account (fund_daily, batch) ──
-    print("\n[4/13] Fetching my ETF account (fund_daily, batch)...")
+    print("\n[4/14] Fetching my ETF account (fund_daily, batch)...")
     my_etfs = fetch_my_etfs(pro, trade_date)
     if my_etfs:
         data['myETF'] = my_etfs
@@ -1609,14 +1753,14 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 5. Announcements + holdingsNews (全量覆盖旧手工数据) ──
-    print("\n[5/13] Fetching announcements & building holdingsNews...")
+    print("\n[5/14] Fetching announcements & building holdingsNews...")
     anns_map = fetch_announcements(pro, trade_date)
     data['holdingsNews'] = build_holdings_news(anns_map, trade_date)
     total_anns = sum(len(e['items']) for e in data['holdingsNews'])
     print(f"  Built {len(data['holdingsNews'])} holdingsNews entries, {total_anns} announcements")
 
     # ── 6. Mainforce flow ──
-    print("\n[6/13] Fetching mainforce flow...")
+    print("\n[6/14] Fetching mainforce flow...")
     inflow, outflow = fetch_mainforce_flow(pro, trade_date)
     if inflow:
         data['mainforce_inflow_top10'] = inflow
@@ -1626,7 +1770,7 @@ def main():
         print(f"  Outflow #1: {outflow[0]['name']} {outflow[0]['amount']}")
 
     # ── 7. Hot fund NAVs (fund_nav, 取到才覆盖) ──
-    print("\n[7/13] Fetching hot fund NAVs...")
+    print("\n[7/14] Fetching hot fund NAVs...")
     hot_navs = fetch_hot_fund_navs(pro, trade_date, data.get('hotFundNavs', []))
     if hot_navs:
         data['hotFundNavs'] = hot_navs
@@ -1634,7 +1778,7 @@ def main():
         print(f"  Updated {len(hot_navs)} fund NAVs, dates: {sorted(dates)}")
 
     # ── 8. National ETF watch (宽基ETF份额监控) ──
-    print("\n[8/13] Fetching national ETF watch (fund_share)...")
+    print("\n[8/14] Fetching national ETF watch (fund_share)...")
     etf_watch = fetch_national_etf_watch(pro, trade_date, data.get('nationalETFWatch'))
     if etf_watch:
         data['nationalETFWatch'] = etf_watch
@@ -1643,11 +1787,11 @@ def main():
               f"total netFlow {t['netFlow']:+.2f}亿, 5d {t['netFlow5d']:+.2f}亿")
 
     # ── 9. Bond yields + liquidity commentary (东方财富) ──
-    print("\n[9/13] Fetching bond yields & liquidity commentary (eastmoney)...")
+    print("\n[9/14] Fetching bond yields & liquidity commentary (eastmoney)...")
     fetch_bond_yields(trade_date, data)
 
     # ── 10. North/South bound ──
-    print("\n[10/13] Fetching north/south bound...")
+    print("\n[10/14] Fetching north/south bound...")
     north, south = fetch_north_south(pro, trade_date)
     if north:
         data['northbound'] = north
@@ -1657,7 +1801,7 @@ def main():
         print(f"  Southbound: {south['today']}亿")
 
     # ── 11. Sector index commentary (细分指数每日点评) ──
-    print("\n[11/13] Fetching sector index commentary...")
+    print("\n[11/14] Fetching sector index commentary...")
     # 涨跌停信号卡已废弃：不再生成 keySignals，并删除存量字段
     data.pop('keySignals', None)
     commentary = fetch_sector_commentary(pro, trade_date)
@@ -1668,13 +1812,17 @@ def main():
             print(f"    {c['name']}: {c['pctChg']:+.2f}% - {c['comment']}")
 
     # ── 12. Sector watch: 扫描榜(仅信号) + 底部资金积聚 (Tushare 历史沉淀) ──
-    print("\n[12/13] Building sector watch (scan + bottom accumulation)...")
+    print("\n[12/14] Building sector watch (scan + bottom accumulation)...")
     watch_ctx = fetch_sector_watch(pro, trade_date, data)
     data.pop('conceptHot', None)  # 主题概念领涨栏目已下线，清除存量字段
 
     # ── 13. ECI 六维分每日真算 + 强势一级行业子板块精选 ──
-    print("\n[13/13] Rebuilding ECI from sector history + picking subsectors...")
+    print("\n[13/14] Rebuilding ECI from sector history + picking subsectors...")
     fetch_eci_daily(pro, trade_date, data, watch_ctx)
+
+    # ── 14. 融资余额突变预警（持仓+观察股） ──
+    print("\n[14/14] Building margin watch (融资融券)...")
+    fetch_margin_watch(pro, trade_date, data)
 
     # ── Metadata ──
     data['updateTime'] = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]} 收盘 (Tushare自动)"
