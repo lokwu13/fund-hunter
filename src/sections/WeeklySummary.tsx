@@ -18,22 +18,38 @@ export default function WeeklySummary() {
   const myETFs = data.myETF || [];
   const sectors = data.sectorCommentary || [];
 
-  // 融资余额突变预警：3日融资余额增量 ÷ 流通市值 ≥3%（Tushare 融资融券口径，T+1 披露）
+  // 融资余额分级预警：红灯=3日增量÷流通市值≥3%（脉冲）；黄灯=连续5日增持且5日增量占比≥0.5%（Tushare 融资融券口径，T+1 披露）
   const marginMap = new Map((data.marginWatch?.items || []).map((m) => [m.code, m]));
-  const hasMarginAlert = (data.marginWatch?.items || []).some((m) => m.triggered);
+  const hasMarginAlert = (data.marginWatch?.items || []).some((m) => m.level || m.triggered);
   const marginBadge = (code?: string) => {
     const mw = code ? marginMap.get(code) : undefined;
-    if (!mw?.triggered) return null;
-    return (
-      <div className="mt-1">
-        <Badge
-          className="text-[9px] h-4 px-1.5 bg-red-500 text-white border-0 animate-pulse"
-          title="3 日融资余额增量 ÷ 流通市值 ≥3%（Tushare 融资融券口径，T+1 披露）"
-        >
-          🔥融资3日{mw.inc3d >= 0 ? '+' : ''}{mw.inc3d}亿·占流通{mw.incPct}%
-        </Badge>
-      </div>
-    );
+    if (!mw) return null;
+    const isAlert = mw.level ? mw.level === 'alert' : mw.triggered;
+    if (isAlert) {
+      return (
+        <div className="mt-1">
+          <Badge
+            className="text-[9px] h-4 px-1.5 bg-red-500 text-white border-0 animate-pulse"
+            title="红灯：3 日融资余额增量 ÷ 流通市值 ≥3%（Tushare 融资融券口径，T+1 披露）"
+          >
+            🔥融资3日{mw.inc3d >= 0 ? '+' : ''}{mw.inc3d}亿·占流通{mw.incPct}%
+          </Badge>
+        </div>
+      );
+    }
+    if (mw.level === 'watch') {
+      return (
+        <div className="mt-1">
+          <Badge
+            className="text-[9px] h-4 px-1.5 bg-amber-400 text-white border-0"
+            title={`黄灯·温和增持：连续${mw.consecutiveUpDays}个交易日增持，5日累计${(mw.inc5d ?? 0) >= 0 ? '+' : ''}${mw.inc5d ?? 0}亿（占流通市值${mw.inc5dPct}%）；连续5日增持且占比≥0.5%触发（Tushare 融资融券口径，T+1 披露）`}
+          >
+            ⚠融资增持{mw.consecutiveUpDays}日·{mw.inc5dPct}%
+          </Badge>
+        </div>
+      );
+    }
+    return null;
   };
 
   const pctClass = (v?: number) =>
@@ -179,7 +195,7 @@ export default function WeeklySummary() {
             </div>
           )}
           {hasMarginAlert && (
-            <p className="text-[10px] text-slate-400 mt-2">预警口径：3 日融资余额增量 ÷ 流通市值 ≥3%（Tushare 融资融券口径，T+1 披露）</p>
+            <p className="text-[10px] text-slate-400 mt-2">预警口径：红灯=3 日融资余额增量 ÷ 流通市值 ≥3%；黄灯=连续 5 日增持且 5 日增量占比 ≥0.5%（Tushare 融资融券口径，T+1 披露）</p>
           )}
         </div>
       )}
