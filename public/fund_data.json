@@ -8901,7 +8901,18 @@
             "eci": 84.0,
             "inflow20d": 351.94,
             "positiveRatio": 60.0,
-            "leaders": []
+            "leaders": [
+              {
+                "name": "招商银行",
+                "code": "600036.SH",
+                "pctChg": 0.75
+              },
+              {
+                "name": "农业银行",
+                "code": "601288.SH",
+                "pctChg": 1.06
+              }
+            ]
           }
         ]
       }
@@ -8938,35 +8949,34 @@
     ]
   },
   "marginWatch": {
-    "trade_date": "2026-07-23",
+    "trade_date": "2026-07-24",
     "threshold": 3.0,
     "items": [
       {
         "code": "600009.SH",
         "name": "上海机场",
         "group": "hold",
-        "rzye": 16.82,
-        "inc3d": 0.94,
-        "incPct": 0.19,
-        "triggered": false
+        "rzye": 16.81,
+        "inc3d": 0.78,
+        "incPct": 0.16,
+        "inc5d": 0.75,
+        "inc5dPct": 0.15,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "600276.SH",
         "name": "恒瑞医药",
         "group": "hold",
-        "rzye": 56.85,
-        "inc3d": 4.1,
-        "incPct": 0.12,
-        "triggered": false
-      },
-      {
-        "code": "688029.SH",
-        "name": "南微医学",
-        "group": "hold",
-        "rzye": 4.57,
-        "inc3d": 0.16,
-        "incPct": 0.11,
-        "triggered": false
+        "rzye": 57.06,
+        "inc3d": 3.3,
+        "incPct": 0.1,
+        "inc5d": 2.93,
+        "inc5dPct": 0.09,
+        "consecutiveUpDays": 4,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "002216.SZ",
@@ -8975,34 +8985,11 @@
         "rzye": 1.45,
         "inc3d": 0.05,
         "incPct": 0.06,
-        "triggered": false
-      },
-      {
-        "code": "688271.SH",
-        "name": "联影医疗",
-        "group": "watch",
-        "rzye": 12.82,
-        "inc3d": 0.24,
-        "incPct": 0.03,
-        "triggered": false
-      },
-      {
-        "code": "600406.SH",
-        "name": "国电南瑞",
-        "group": "watch",
-        "rzye": 29.2,
-        "inc3d": 0.41,
-        "incPct": 0.02,
-        "triggered": false
-      },
-      {
-        "code": "601888.SH",
-        "name": "中国中免",
-        "group": "watch",
-        "rzye": 36.83,
-        "inc3d": 0.24,
-        "incPct": 0.02,
-        "triggered": false
+        "inc5d": 0.05,
+        "inc5dPct": 0.06,
+        "consecutiveUpDays": 4,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "002568.SZ",
@@ -9011,7 +8998,37 @@
         "rzye": 2.62,
         "inc3d": 0.02,
         "incPct": 0.01,
-        "triggered": false
+        "inc5d": 0.01,
+        "inc5dPct": 0.01,
+        "consecutiveUpDays": 4,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "688271.SH",
+        "name": "联影医疗",
+        "group": "watch",
+        "rzye": 12.85,
+        "inc3d": 0.09,
+        "incPct": 0.01,
+        "inc5d": -0.34,
+        "inc5dPct": -0.04,
+        "consecutiveUpDays": 1,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600406.SH",
+        "name": "国电南瑞",
+        "group": "watch",
+        "rzye": 28.55,
+        "inc3d": -0.05,
+        "incPct": -0.0,
+        "inc5d": -1.0,
+        "inc5dPct": -0.05,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "000895.SZ",
@@ -9020,16 +9037,11 @@
         "rzye": 2.5,
         "inc3d": 0.01,
         "incPct": 0.0,
-        "triggered": false
-      },
-      {
-        "code": "603259.SH",
-        "name": "药明康德",
-        "group": "watch",
-        "rzye": 54.63,
-        "inc3d": -0.09,
-        "incPct": -0.0,
-        "triggered": false
+        "inc5d": -0.23,
+        "inc5dPct": -0.03,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "300760.SZ",
@@ -9038,34 +9050,89 @@
         "rzye": 58.99,
         "inc3d": -0.03,
         "incPct": -0.0,
-        "triggered": false
-      },
-      {
-        "code": "600298.SH",
-        "name": "安琪酵母",
-        "group": "watch",
-        "rzye": 4.74,
-        "inc3d": -0.04,
-        "incPct": -0.01,
-        "triggered": false
+        "inc5d": -0.32,
+        "inc5dPct": -0.02,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "600309.SH",
         "name": "万华化学",
         "group": "watch",
-        "rzye": 31.18,
-        "inc3d": -0.61,
+        "rzye": 30.96,
+        "inc3d": -0.44,
+        "incPct": -0.02,
+        "inc5d": -0.41,
+        "inc5dPct": -0.02,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "688029.SH",
+        "name": "南微医学",
+        "group": "hold",
+        "rzye": 4.54,
+        "inc3d": -0.04,
         "incPct": -0.03,
-        "triggered": false
+        "inc5d": 0.02,
+        "inc5dPct": 0.01,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "601888.SH",
+        "name": "中国中免",
+        "group": "watch",
+        "rzye": 36.49,
+        "inc3d": -0.44,
+        "incPct": -0.04,
+        "inc5d": -0.62,
+        "inc5dPct": -0.06,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "603259.SH",
+        "name": "药明康德",
+        "group": "watch",
+        "rzye": 53.1,
+        "inc3d": -1.37,
+        "incPct": -0.04,
+        "inc5d": -5.39,
+        "inc5dPct": -0.17,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
       },
       {
         "code": "688016.SH",
         "name": "心脉医疗",
         "group": "hold",
-        "rzye": 4.84,
-        "inc3d": -0.06,
+        "rzye": 4.82,
+        "inc3d": -0.05,
         "incPct": -0.05,
-        "triggered": false
+        "inc5d": -0.19,
+        "inc5dPct": -0.17,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600298.SH",
+        "name": "安琪酵母",
+        "group": "watch",
+        "rzye": 4.8,
+        "inc3d": -0.4,
+        "incPct": -0.12,
+        "inc5d": -0.02,
+        "inc5dPct": -0.01,
+        "consecutiveUpDays": 1,
+        "triggered": false,
+        "level": null
       }
     ]
   }
