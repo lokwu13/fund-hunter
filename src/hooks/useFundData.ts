@@ -370,7 +370,11 @@ export interface FundData {
       rzye: number;
       inc3d: number;
       incPct: number;
+      inc5d?: number;
+      inc5dPct?: number;
+      consecutiveUpDays?: number;
       triggered: boolean;
+      level?: 'alert' | 'watch' | null;
     }>;
   };
   nationalETF?: Array<{
