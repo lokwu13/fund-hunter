@@ -1,10 +1,11 @@
 name: Daily Update Fund Data
 
 on:
-  # Schedule: Every day at 19:30 CST (11:30 UTC) — the ONLY automatic data update
+  # Schedule: 19:30 Beijing time (11:30 UTC), Monday-Friday only — the ONLY automatic data update
   # A-share market closes at 15:00, data is available after ~19:00
+  # Note: GitHub scheduled runs may be delayed under load; weekend/holiday runs are skipped
   schedule:
-    - cron: '30 11 * * *'
+    - cron: '30 11 * * 1-5'
   # Code pushes only rebuild & deploy the site; they do NOT re-fetch data
   push:
     branches: [main]
