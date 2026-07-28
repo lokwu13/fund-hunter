@@ -1,11 +1,14 @@
 name: Daily Update Fund Data
 
 on:
-  # Schedule: 19:30 Beijing time (11:30 UTC), Monday-Friday only — the ONLY automatic data update
-  # A-share market closes at 15:00, data is available after ~19:00
-  # Note: GitHub scheduled runs may be delayed under load; weekend/holiday runs are skipped
+  # Schedule: Mon-Fri at 19:30 / 21:30 / 23:30 Beijing time (11:30 / 13:30 / 15:30 UTC)
+  # GitHub scheduled runs are often delayed for HOURS under load, so we fire 3 times
+  # per evening; a guard step skips the fetch if today's data is already in place,
+  # making the extra runs cheap no-ops.
   schedule:
     - cron: '30 11 * * 1-5'
+    - cron: '30 13 * * 1-5'
+    - cron: '30 15 * * 1-5'
   # Code pushes only rebuild & deploy the site; they do NOT re-fetch data
   push:
     branches: [main]
@@ -30,30 +33,43 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check if today's data is already updated (Beijing date)
+        if: github.event_name == 'schedule'
+        id: guard
+        run: |
+          TODAY=$(TZ=Asia/Shanghai date +'%Y-%m-%d')
+          if grep -q "$TODAY" public/fund_data.json; then
+            echo "Data for $TODAY already present, skipping fetch."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Data for $TODAY missing, will fetch."
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Setup Python
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && steps.guard.outputs.skip != 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
       - name: Install Python dependencies
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && steps.guard.outputs.skip != 'true'
         run: |
           pip install tushare pandas requests
 
       - name: Fetch data from Tushare
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && steps.guard.outputs.skip != 'true'
         env:
           TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
         run: python scripts/update_data.py
 
       - name: Copy updated data to public
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && steps.guard.outputs.skip != 'true'
         run: cp src/data/fund_data.json public/fund_data.json
 
       - name: Commit updated data back to repo
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && steps.guard.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
