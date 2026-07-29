@@ -1,14 +1,15 @@
 name: Daily Update Fund Data
 
 on:
-  # Schedule: Mon-Fri at 19:30 / 21:30 / 23:30 Beijing time (11:30 / 13:30 / 15:30 UTC)
+  # Schedule: Mon-Fri at 19:37 / 21:41 / 23:43 Beijing time (11:37 / 13:41 / 15:43 UTC)
   # GitHub scheduled runs are often delayed for HOURS under load, so we fire 3 times
   # per evening; a guard step skips the fetch if today's data is already in place,
-  # making the extra runs cheap no-ops.
+  # making the extra runs cheap no-ops. Off-peak minutes (:37/:41/:43) avoid the
+  # :00/:30 congestion window per GitHub's own recommendation.
   schedule:
-    - cron: '30 11 * * 1-5'
-    - cron: '30 13 * * 1-5'
-    - cron: '30 15 * * 1-5'
+    - cron: '37 11 * * 1-5'
+    - cron: '41 13 * * 1-5'
+    - cron: '43 15 * * 1-5'
   # Code pushes only rebuild & deploy the site; they do NOT re-fetch data
   push:
     branches: [main]
