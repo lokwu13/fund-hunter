@@ -1,27 +1,27 @@
 {
-  "updateTime": "2026-07-29 收盘 (Tushare自动)",
+  "updateTime": "2026-07-30 收盘 (Tushare自动)",
   "week": "2026.07.15 - 07.22",
   "marketStatus": "正常交易",
   "indices": {
     "shIndex": {
       "name": "上证指数",
-      "value": 3828.47,
-      "change": 0.4
+      "value": 3804.69,
+      "change": -0.62
     },
     "szIndex": {
       "name": "深证成指",
-      "value": 13658.44,
-      "change": 1.1
+      "value": 13285.8,
+      "change": -2.73
     },
     "hs300": {
       "name": "沪深300",
-      "value": 4600.26,
-      "change": 0.67
+      "value": 4549.72,
+      "change": -1.1
     },
     "cyIndex": {
       "name": "创业板指",
-      "value": 3378.7,
-      "change": 1.55
+      "value": 3244.62,
+      "change": -3.97
     }
   },
   "sectors": [
@@ -140,9 +140,9 @@
       "name": "双汇发展",
       "industry": "食品",
       "group": "watch",
-      "close": 26.07,
-      "pctChg": 1.44,
-      "vol": 14.38,
+      "close": 26.85,
+      "pctChg": 2.99,
+      "vol": 16.67,
       "watchPrice": 0
     },
     {
@@ -150,9 +150,9 @@
       "name": "三全食品",
       "industry": "食品",
       "group": "watch",
-      "close": 13.37,
-      "pctChg": 2.3,
-      "vol": 10.16,
+      "close": 13.41,
+      "pctChg": 0.3,
+      "vol": 10.68,
       "watchPrice": 0
     },
     {
@@ -160,9 +160,9 @@
       "name": "百润股份",
       "industry": "红黄酒",
       "group": "watch",
-      "close": 19.59,
-      "pctChg": 9.99,
-      "vol": 18.75,
+      "close": 19.77,
+      "pctChg": 0.92,
+      "vol": 29.7,
       "watchPrice": 0
     },
     {
@@ -170,9 +170,9 @@
       "name": "迈瑞医疗",
       "industry": "医疗保健",
       "group": "watch",
-      "close": 154.88,
-      "pctChg": 2.88,
-      "vol": 13.35,
+      "close": 161.62,
+      "pctChg": 4.35,
+      "vol": 17.77,
       "watchPrice": 0
     },
     {
@@ -180,9 +180,9 @@
       "name": "上海机场",
       "industry": "机场",
       "group": "hold",
-      "close": 24.37,
-      "pctChg": 1.37,
-      "vol": 14.45,
+      "close": 24.94,
+      "pctChg": 2.34,
+      "vol": 18.47,
       "watchPrice": 0
     },
     {
@@ -190,9 +190,9 @@
       "name": "恒瑞医药",
       "industry": "化学制药",
       "group": "hold",
-      "close": 53.89,
-      "pctChg": 1.13,
-      "vol": 68.47,
+      "close": 54.65,
+      "pctChg": 1.41,
+      "vol": 73.59,
       "watchPrice": 0
     },
     {
@@ -200,9 +200,9 @@
       "name": "安琪酵母",
       "industry": "食品",
       "group": "watch",
-      "close": 40.05,
-      "pctChg": 5.62,
-      "vol": 22.46,
+      "close": 41.19,
+      "pctChg": 2.85,
+      "vol": 29.25,
       "watchPrice": 0
     },
     {
@@ -210,9 +210,9 @@
       "name": "万华化学",
       "industry": "化工原料",
       "group": "watch",
-      "close": 74.49,
-      "pctChg": 0.39,
-      "vol": 40.53,
+      "close": 76.56,
+      "pctChg": 2.78,
+      "vol": 43.72,
       "watchPrice": 0
     },
     {
@@ -220,9 +220,9 @@
       "name": "国电南瑞",
       "industry": "电气设备",
       "group": "watch",
-      "close": 23.93,
-      "pctChg": 1.57,
-      "vol": 58.98,
+      "close": 24.32,
+      "pctChg": 1.63,
+      "vol": 75.92,
       "watchPrice": 0
     },
     {
@@ -230,9 +230,9 @@
       "name": "中国中免",
       "industry": "旅游服务",
       "group": "watch",
-      "close": 57.38,
-      "pctChg": 3.37,
-      "vol": 57.86,
+      "close": 58.08,
+      "pctChg": 1.22,
+      "vol": 59.96,
       "watchPrice": 0
     },
     {
@@ -240,9 +240,9 @@
       "name": "药明康德",
       "industry": "化学制药",
       "group": "watch",
-      "close": 126.5,
-      "pctChg": 2.83,
-      "vol": 54.78,
+      "close": 125.48,
+      "pctChg": -0.81,
+      "vol": 56.02,
       "watchPrice": 0
     },
     {
@@ -250,9 +250,9 @@
       "name": "心脉医疗",
       "industry": "医疗保健",
       "group": "hold",
-      "close": 93.82,
-      "pctChg": 3.47,
-      "vol": 2.08,
+      "close": 92.89,
+      "pctChg": -0.99,
+      "vol": 1.54,
       "watchPrice": 0
     },
     {
@@ -260,9 +260,9 @@
       "name": "南微医学",
       "industry": "医疗保健",
       "group": "hold",
-      "close": 72.91,
-      "pctChg": 3.62,
-      "vol": 2.08,
+      "close": 73.24,
+      "pctChg": 0.45,
+      "vol": 1.92,
       "watchPrice": 0
     },
     {
@@ -270,16 +270,16 @@
       "name": "联影医疗",
       "industry": "医疗保健",
       "group": "watch",
-      "close": 113.98,
-      "pctChg": 2.7,
-      "vol": 7.44,
+      "close": 116.5,
+      "pctChg": 2.21,
+      "vol": 7.85,
       "watchPrice": 0
     }
   ],
   "northbound": {
-    "today": 34.14,
-    "week": 102.42,
-    "month": 341.4
+    "today": 36.35,
+    "week": 109.05000000000001,
+    "month": 363.5
   },
   "southbound": {
     "today": -0.0,
@@ -1729,146 +1729,146 @@
   ],
   "mainforce_inflow_top10": [
     {
-      "name": "兆易创新",
-      "code": "603986.SH",
-      "concept": "半导体",
-      "sector": "半导体",
-      "amount": "+54.04亿"
-    },
-    {
-      "name": "中际旭创",
-      "code": "300308.SZ",
-      "concept": "通信设备",
-      "sector": "通信设备",
-      "amount": "+35.51亿"
-    },
-    {
-      "name": "C长鑫",
-      "code": "688825.SH",
-      "concept": "半导体",
-      "sector": "半导体",
-      "amount": "+35.16亿"
-    },
-    {
-      "name": "新易盛",
-      "code": "300502.SZ",
-      "concept": "通信设备",
-      "sector": "通信设备",
-      "amount": "+20.26亿"
+      "name": "东山精密",
+      "code": "002384.SZ",
+      "concept": "元器件",
+      "sector": "元器件",
+      "amount": "+41.68亿"
     },
     {
       "name": "宁德时代",
       "code": "300750.SZ",
       "concept": "电气设备",
       "sector": "电气设备",
-      "amount": "+16.24亿"
+      "amount": "+36.08亿"
+    },
+    {
+      "name": "新易盛",
+      "code": "300502.SZ",
+      "concept": "通信设备",
+      "sector": "通信设备",
+      "amount": "+20.17亿"
+    },
+    {
+      "name": "贵州茅台",
+      "code": "600519.SH",
+      "concept": "白酒",
+      "sector": "白酒",
+      "amount": "+15.86亿"
+    },
+    {
+      "name": "中国平安",
+      "code": "601318.SH",
+      "concept": "保险",
+      "sector": "保险",
+      "amount": "+15.25亿"
+    },
+    {
+      "name": "招商银行",
+      "code": "600036.SH",
+      "concept": "银行",
+      "sector": "银行",
+      "amount": "+14.97亿"
+    },
+    {
+      "name": "中际旭创",
+      "code": "300308.SZ",
+      "concept": "通信设备",
+      "sector": "通信设备",
+      "amount": "+12.85亿"
+    },
+    {
+      "name": "兆易创新",
+      "code": "603986.SH",
+      "concept": "半导体",
+      "sector": "半导体",
+      "amount": "+10.8亿"
+    },
+    {
+      "name": "北方华创",
+      "code": "002371.SZ",
+      "concept": "半导体",
+      "sector": "半导体",
+      "amount": "+9.76亿"
+    },
+    {
+      "name": "工商银行",
+      "code": "601398.SH",
+      "concept": "银行",
+      "sector": "银行",
+      "amount": "+9.73亿"
+    }
+  ],
+  "mainforce_outflow_top10": [
+    {
+      "name": "京东方A",
+      "code": "000725.SZ",
+      "concept": "元器件",
+      "sector": "元器件",
+      "amount": "-28.68亿"
+    },
+    {
+      "name": "永鼎股份",
+      "code": "600105.SH",
+      "concept": "通信设备",
+      "sector": "通信设备",
+      "amount": "-12.31亿"
     },
     {
       "name": "立讯精密",
       "code": "002475.SZ",
       "concept": "元器件",
       "sector": "元器件",
-      "amount": "+12.98亿"
+      "amount": "-10.21亿"
     },
     {
-      "name": "东方财富",
-      "code": "300059.SZ",
-      "concept": "证券",
-      "sector": "证券",
-      "amount": "+11.53亿"
-    },
-    {
-      "name": "京东方A",
-      "code": "000725.SZ",
-      "concept": "元器件",
-      "sector": "元器件",
-      "amount": "+10.57亿"
-    },
-    {
-      "name": "紫光股份",
-      "code": "000938.SZ",
-      "concept": "IT设备",
-      "sector": "IT设备",
-      "amount": "+10.37亿"
-    },
-    {
-      "name": "寒武纪",
-      "code": "688256.SH",
+      "name": "C长鑫",
+      "code": "688825.SH",
       "concept": "半导体",
       "sector": "半导体",
-      "amount": "+9.88亿"
-    }
-  ],
-  "mainforce_outflow_top10": [
-    {
-      "name": "风华高科",
-      "code": "000636.SZ",
-      "concept": "元器件",
-      "sector": "元器件",
-      "amount": "-23.52亿"
-    },
-    {
-      "name": "中科曙光",
-      "code": "603019.SH",
-      "concept": "IT设备",
-      "sector": "IT设备",
-      "amount": "-7.94亿"
+      "amount": "-10.1亿"
     },
     {
       "name": "华天科技",
       "code": "002185.SZ",
       "concept": "半导体",
       "sector": "半导体",
-      "amount": "-6.01亿"
+      "amount": "-9.94亿"
     },
     {
-      "name": "多氟多",
-      "code": "002407.SZ",
-      "concept": "化工原料",
-      "sector": "化工原料",
-      "amount": "-4.04亿"
+      "name": "工业富联",
+      "code": "601138.SH",
+      "concept": "通信设备",
+      "sector": "通信设备",
+      "amount": "-8.77亿"
     },
     {
-      "name": "中国巨石",
-      "code": "600176.SH",
-      "concept": "玻璃",
-      "sector": "玻璃",
-      "amount": "-3.96亿"
+      "name": "大唐发电",
+      "code": "601991.SH",
+      "concept": "火力发电",
+      "sector": "火力发电",
+      "amount": "-8.51亿"
     },
     {
-      "name": "牧原股份",
-      "code": "002714.SZ",
-      "concept": "农业综合",
-      "sector": "农业综合",
-      "amount": "-3.72亿"
+      "name": "TCL科技",
+      "code": "000100.SZ",
+      "concept": "元器件",
+      "sector": "元器件",
+      "amount": "-8.13亿"
     },
     {
-      "name": "国安股份",
-      "code": "000839.SZ",
-      "concept": "综合类",
-      "sector": "综合类",
-      "amount": "-3.51亿"
+      "name": "深科技",
+      "code": "000021.SZ",
+      "concept": "元器件",
+      "sector": "元器件",
+      "amount": "-7.82亿"
     },
     {
       "name": "华润新能源",
       "code": "001248.SZ",
       "concept": "新型电力",
       "sector": "新型电力",
-      "amount": "-3.43亿"
-    },
-    {
-      "name": "星网锐捷",
-      "code": "002396.SZ",
-      "concept": "通信设备",
-      "sector": "通信设备",
-      "amount": "-3.4亿"
-    },
-    {
-      "name": "中国长城",
-      "code": "000066.SZ",
-      "concept": "IT设备",
-      "sector": "IT设备",
-      "amount": "-3.39亿"
+      "amount": "-7.76亿"
     }
   ],
   "privateFund_inflow": [
@@ -5061,59 +5061,70 @@
         "y5_chg": -0.0173,
         "y10_chg": -0.0022,
         "y30_chg": 0.012
+      },
+      {
+        "date": "2026-07-30",
+        "y2": 1.2629,
+        "y5": 1.4234,
+        "y10": 1.7196,
+        "y30": 2.1851,
+        "y2_chg": -0.006,
+        "y5_chg": -0.0099,
+        "y10_chg": -0.0133,
+        "y30_chg": -0.0209
       }
     ],
     "curveCompare": {
       "latest": {
-        "date": "2026-07-29",
-        "y2": 1.2689,
-        "y5": 1.4333,
-        "y10": 1.7329,
-        "y30": 2.206
+        "date": "2026-07-30",
+        "y2": 1.2629,
+        "y5": 1.4234,
+        "y10": 1.7196,
+        "y30": 2.1851
       },
       "1M_ago": {
-        "date": "2026-06-29",
-        "y2": 1.236,
-        "y5": 1.415,
-        "y10": 1.717,
-        "y30": 2.209
+        "date": "2026-06-30",
+        "y2": 1.247,
+        "y5": 1.437,
+        "y10": 1.733,
+        "y30": 2.236
       },
       "3M_ago": {
-        "date": "2026-04-29",
-        "y2": 1.256,
-        "y5": 1.471,
-        "y10": 1.744,
-        "y30": 2.219
+        "date": "2026-04-30",
+        "y2": 1.255,
+        "y5": 1.479,
+        "y10": 1.747,
+        "y30": 2.218
       },
       "6M_ago": {
-        "date": "2026-01-29",
-        "y2": 1.391,
-        "y5": 1.578,
-        "y10": 1.817,
-        "y30": 2.28
+        "date": "2026-01-30",
+        "y2": 1.377,
+        "y5": 1.576,
+        "y10": 1.811,
+        "y30": 2.289
       },
       "1Y_ago": {
-        "date": "2025-07-29",
-        "y2": 1.444,
-        "y5": 1.611,
-        "y10": 1.747,
-        "y30": 1.998
+        "date": "2025-07-30",
+        "y2": 1.429,
+        "y5": 1.586,
+        "y10": 1.718,
+        "y30": 1.96
       }
     },
     "stats": {
       "latest": {
-        "date": "2026-07-29",
-        "y2": 1.2689,
-        "y5": 1.4333,
-        "y10": 1.7329,
-        "y30": 2.206,
-        "spread": 0.937
+        "date": "2026-07-30",
+        "y2": 1.2629,
+        "y5": 1.4234,
+        "y10": 1.7196,
+        "y30": 2.1851,
+        "spread": 0.922
       },
       "1m_change": {
-        "y2": 3.3,
-        "y5": 1.8,
-        "y10": 1.6,
-        "y30": -0.3
+        "y2": 1.6,
+        "y5": -1.4,
+        "y10": -1.3,
+        "y30": -5.1
       },
       "range": {
         "y2": {
@@ -6912,6 +6923,11 @@
     },
     "news": [
       {
+        "date": "2026-07-30",
+        "title": "10年期国债收益率续降至1.720%，债市持续走牛",
+        "source": "中债登"
+      },
+      {
         "date": "2026-07-29",
         "title": "10年期国债收益率续降至1.733%，债市持续走牛",
         "source": "中债登"
@@ -6953,7 +6969,7 @@
       }
     ],
     "liquidityTools": {
-      "updateTime": "2026-07-29",
+      "updateTime": "2026-07-30",
       "policyRate": "1.40",
       "dr001": "1.38",
       "dr007": "1.42",
@@ -7231,26 +7247,26 @@
     {
       "code": "000001.OF",
       "name": "华夏成长",
-      "nav": 1.304,
-      "accumNav": 3.877,
-      "date": "20260729",
-      "change": -0.004
+      "nav": 1.221,
+      "accumNav": 3.794,
+      "date": "20260730",
+      "change": -0.083
     },
     {
       "code": "005827.OF",
       "name": "易方达蓝筹精选",
-      "nav": 1.5057,
-      "accumNav": 1.5057,
-      "date": "20260729",
-      "change": 0.012
+      "nav": 1.4935,
+      "accumNav": 1.4935,
+      "date": "20260730",
+      "change": -0.012
     },
     {
       "code": "110011.OF",
       "name": "易方达中小盘",
-      "nav": 4.1772,
-      "accumNav": 5.9672,
-      "date": "20260729",
-      "change": 0.057
+      "nav": 4.2364,
+      "accumNav": 6.0264,
+      "date": "20260730",
+      "change": 0.059
     },
     {
       "code": "163406.OF",
@@ -7263,123 +7279,123 @@
     {
       "code": "260108.OF",
       "name": "景顺长城新兴成长",
-      "nav": 1.554,
-      "accumNav": 3.361,
-      "date": "20260729",
-      "change": 0.019
+      "nav": 1.576,
+      "accumNav": 3.383,
+      "date": "20260730",
+      "change": 0.022
     },
     {
       "code": "070002.OF",
       "name": "嘉实增长",
-      "nav": 19.9977,
-      "accumNav": 20.6887,
-      "date": "20260729",
-      "change": 0.258
+      "nav": 19.14,
+      "accumNav": 19.831,
+      "date": "20260730",
+      "change": -0.858
     },
     {
       "code": "519732.OF",
       "name": "交银定期支付双息平衡",
-      "nav": 8.327,
-      "accumNav": 8.327,
-      "date": "20260729",
-      "change": -0.041
+      "nav": 7.832,
+      "accumNav": 7.832,
+      "date": "20260730",
+      "change": -0.495
     },
     {
       "code": "001410.OF",
       "name": "信达澳银新能源产业",
-      "nav": 6.189,
-      "accumNav": 6.251,
-      "date": "20260729",
-      "change": -0.065
+      "nav": 5.768,
+      "accumNav": 5.83,
+      "date": "20260730",
+      "change": -0.421
     },
     {
       "code": "003494.OF",
       "name": "富国天惠成长",
-      "nav": 2.987,
-      "accumNav": 3.292,
-      "date": "20260729",
-      "change": 0.032
+      "nav": 2.9133,
+      "accumNav": 3.2183,
+      "date": "20260730",
+      "change": -0.074
     },
     {
       "code": "008764.OF",
       "name": "睿远成长价值",
-      "nav": 1.4687,
-      "accumNav": 1.4687,
-      "date": "20260728",
-      "change": 0.016
+      "nav": 1.4886,
+      "accumNav": 1.4886,
+      "date": "20260729",
+      "change": 0.02
     }
   ],
   "eciData": {
-    "updateTime": "2026-07-29 收盘（Tushare自动）",
-    "period": "2026.07.02~2026.07.29 (20个交易日)",
+    "updateTime": "2026-07-30 收盘（Tushare自动）",
+    "period": "2026.07.03~2026.07.30 (20个交易日)",
     "totalIndustries": 31,
-    "divergentCount": 14,
+    "divergentCount": 12,
     "sectors": [
       {
         "sector": "医药生物",
-        "eci": 57.7,
-        "volConvergence": 10.5,
-        "fundConcentration": 10.0,
-        "trendSync": 12.9,
-        "consistencyMomentum": 3.8,
+        "eci": 63.3,
+        "volConvergence": 11.0,
+        "fundConcentration": 9.5,
+        "trendSync": 13.2,
+        "consistencyMomentum": 8.6,
         "activity": 7.2,
         "policy": 7.5,
-        "currentCorr": 0.88,
-        "predictedCorr": 0.87,
-        "trend": "↓下降",
+        "currentCorr": 0.89,
+        "predictedCorr": 0.88,
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -15.3
+        "change5d": -11.8
       },
       {
         "sector": "电子",
-        "eci": 53.9,
+        "eci": 57.3,
         "volConvergence": 4.5,
-        "fundConcentration": 12.0,
+        "fundConcentration": 11.5,
         "trendSync": 13.9,
-        "consistencyMomentum": 9.8,
-        "activity": 0.8,
+        "consistencyMomentum": 13.2,
+        "activity": 1.0,
         "policy": 7.5,
         "currentCorr": 0.85,
-        "predictedCorr": 0.85,
+        "predictedCorr": 0.88,
         "trend": "↑上升",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": -11.5
+        "change5d": -4.5
       },
       {
         "sector": "计算机",
-        "eci": 42.6,
-        "volConvergence": 6.5,
-        "fundConcentration": 6.0,
+        "eci": 42.7,
+        "volConvergence": 5.5,
+        "fundConcentration": 6.5,
         "trendSync": 13.9,
-        "consistencyMomentum": 3.2,
+        "consistencyMomentum": 3.8,
         "activity": 1.2,
         "policy": 7.5,
-        "currentCorr": 0.95,
-        "predictedCorr": 0.94,
+        "currentCorr": 0.94,
+        "predictedCorr": 0.92,
         "trend": "↓下降",
         "stocks": 5,
         "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
-        "change5d": -16.4
+        "change5d": -16.5
       },
       {
         "sector": "电力设备",
-        "eci": 55.6,
-        "volConvergence": 11.5,
-        "fundConcentration": 5.5,
+        "eci": 54.0,
+        "volConvergence": 12.0,
+        "fundConcentration": 6.0,
         "trendSync": 15.0,
-        "consistencyMomentum": 9.0,
+        "consistencyMomentum": 6.6,
         "activity": 1.5,
         "policy": 7.5,
         "currentCorr": 0.94,
-        "predictedCorr": 0.92,
-        "trend": "↑上升",
+        "predictedCorr": 0.95,
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7398,33 +7414,33 @@
             "return": "-18.3%"
           }
         },
-        "change5d": 5.7
+        "change5d": 8.6
       },
       {
         "sector": "食品饮料",
-        "eci": 55.3,
+        "eci": 63.1,
         "volConvergence": 0.5,
         "fundConcentration": 13.5,
         "trendSync": 13.1,
-        "consistencyMomentum": 11.2,
-        "activity": 4.0,
+        "consistencyMomentum": 13.0,
+        "activity": 9.2,
         "policy": 7.5,
-        "currentCorr": 0.72,
-        "predictedCorr": 0.73,
+        "currentCorr": 0.71,
+        "predictedCorr": 0.7,
         "trend": "↑上升",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": -6.8
+        "change5d": 1.3
       },
       {
         "sector": "银行",
-        "eci": 67.8,
-        "volConvergence": 5.0,
+        "eci": 71.6,
+        "volConvergence": 2.5,
         "fundConcentration": 15.0,
         "trendSync": 15.0,
-        "consistencyMomentum": 9.0,
-        "activity": 9.5,
+        "consistencyMomentum": 12.4,
+        "activity": 12.0,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
@@ -7432,39 +7448,39 @@
         "stocks": 5,
         "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 0.2
+        "change5d": 1.9
       },
       {
         "sector": "非银金融",
-        "eci": 53.6,
+        "eci": 60.8,
         "volConvergence": 14.5,
-        "fundConcentration": 7.0,
+        "fundConcentration": 10.5,
         "trendSync": 13.0,
-        "consistencyMomentum": 4.0,
-        "activity": 2.2,
+        "consistencyMomentum": 6.4,
+        "activity": 2.8,
         "policy": 7.5,
-        "currentCorr": 0.57,
-        "predictedCorr": 0.34,
-        "trend": "↓下降",
+        "currentCorr": 0.56,
+        "predictedCorr": 0.31,
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -6.8
+        "change5d": -4.4
       },
       {
         "sector": "汽车",
-        "eci": 44.8,
-        "volConvergence": 2.5,
-        "fundConcentration": 10.5,
+        "eci": 42.3,
+        "volConvergence": 2.0,
+        "fundConcentration": 9.0,
         "trendSync": 12.6,
-        "consistencyMomentum": 6.4,
-        "activity": 0.8,
+        "consistencyMomentum": 6.0,
+        "activity": 1.0,
         "policy": 7.5,
-        "currentCorr": 0.8,
-        "predictedCorr": 0.85,
-        "trend": "→震荡",
+        "currentCorr": 0.78,
+        "predictedCorr": 0.81,
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7483,56 +7499,56 @@
             "return": "-68.5%"
           }
         },
-        "change5d": -1.6
+        "change5d": -3.4
       },
       {
         "sector": "机械设备",
-        "eci": 41.4,
-        "volConvergence": 1.0,
-        "fundConcentration": 8.0,
-        "trendSync": 13.6,
-        "consistencyMomentum": 6.4,
-        "activity": 0.8,
+        "eci": 44.8,
+        "volConvergence": 1.5,
+        "fundConcentration": 8.5,
+        "trendSync": 14.0,
+        "consistencyMomentum": 7.8,
+        "activity": 1.0,
         "policy": 7.5,
-        "currentCorr": 0.86,
+        "currentCorr": 0.87,
         "predictedCorr": 0.89,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -9.4
+        "change5d": -2.4
       },
       {
         "sector": "国防军工",
-        "eci": 39.3,
-        "volConvergence": 1.5,
+        "eci": 37.8,
+        "volConvergence": 1.0,
         "fundConcentration": 5.0,
         "trendSync": 13.9,
-        "consistencyMomentum": 7.0,
-        "activity": 0.5,
+        "consistencyMomentum": 5.8,
+        "activity": 0.8,
         "policy": 7.5,
         "currentCorr": 0.88,
-        "predictedCorr": 0.95,
-        "trend": "→震荡",
-        "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
-        "sampleStocks": [],
-        "change5d": -9.8
-      },
-      {
-        "sector": "通信",
-        "eci": 46.0,
-        "volConvergence": 3.5,
-        "fundConcentration": 11.5,
-        "trendSync": 14.2,
-        "consistencyMomentum": 4.2,
-        "activity": 0.5,
-        "policy": 7.5,
-        "currentCorr": 0.83,
-        "predictedCorr": 0.86,
+        "predictedCorr": 0.94,
         "trend": "↓下降",
         "stocks": 5,
         "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
+        "sampleStocks": [],
+        "change5d": -8.3
+      },
+      {
+        "sector": "通信",
+        "eci": 53.9,
+        "volConvergence": 3.5,
+        "fundConcentration": 12.0,
+        "trendSync": 14.2,
+        "consistencyMomentum": 10.8,
+        "activity": 0.5,
+        "policy": 7.5,
+        "currentCorr": 0.82,
+        "predictedCorr": 0.82,
+        "trend": "↑上升",
+        "stocks": 5,
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7551,22 +7567,22 @@
             "return": "-30.8%"
           }
         },
-        "change5d": -10.6
+        "change5d": 0.8
       },
       {
         "sector": "有色金属",
-        "eci": 47.7,
-        "volConvergence": 7.5,
-        "fundConcentration": 8.5,
-        "trendSync": 13.2,
-        "consistencyMomentum": 5.2,
-        "activity": 1.0,
+        "eci": 54.0,
+        "volConvergence": 10.0,
+        "fundConcentration": 7.5,
+        "trendSync": 13.3,
+        "consistencyMomentum": 9.8,
+        "activity": 0.5,
         "policy": 7.5,
-        "currentCorr": 0.81,
-        "predictedCorr": 0.86,
-        "trend": "↓下降",
+        "currentCorr": 0.82,
+        "predictedCorr": 0.88,
+        "trend": "↑上升",
         "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7585,39 +7601,39 @@
             "return": "-22.1%"
           }
         },
-        "change5d": 4.7
+        "change5d": 11.6
       },
       {
         "sector": "家用电器",
-        "eci": 51.2,
-        "volConvergence": 4.0,
+        "eci": 53.9,
+        "volConvergence": 5.0,
         "fundConcentration": 13.0,
         "trendSync": 15.0,
-        "consistencyMomentum": 5.6,
+        "consistencyMomentum": 7.0,
         "activity": 1.0,
         "policy": 7.5,
         "currentCorr": 0.95,
-        "predictedCorr": 0.93,
-        "trend": "↓下降",
+        "predictedCorr": 0.94,
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -8.1
+        "change5d": -3.3
       },
       {
         "sector": "房地产",
-        "eci": 42.8,
-        "volConvergence": 9.5,
-        "fundConcentration": 1.0,
-        "trendSync": 13.5,
-        "consistencyMomentum": 6.0,
+        "eci": 49.9,
+        "volConvergence": 10.5,
+        "fundConcentration": 3.0,
+        "trendSync": 13.7,
+        "consistencyMomentum": 9.2,
         "activity": 1.0,
         "policy": 7.5,
-        "currentCorr": 0.89,
-        "predictedCorr": 0.89,
-        "trend": "↓下降",
+        "currentCorr": 0.87,
+        "predictedCorr": 0.85,
+        "trend": "↑上升",
         "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7636,22 +7652,22 @@
             "return": "-19.5%"
           }
         },
-        "change5d": -8.0
+        "change5d": 5.9
       },
       {
         "sector": "建筑装饰",
-        "eci": 49.1,
-        "volConvergence": 13.0,
-        "fundConcentration": 1.5,
+        "eci": 49.7,
+        "volConvergence": 13.5,
+        "fundConcentration": 2.5,
         "trendSync": 14.2,
-        "consistencyMomentum": 7.2,
-        "activity": 0.8,
+        "consistencyMomentum": 6.0,
+        "activity": 1.0,
         "policy": 7.5,
         "currentCorr": 0.94,
         "predictedCorr": 0.95,
-        "trend": "→震荡",
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7670,33 +7686,33 @@
             "return": "-25.6%"
           }
         },
-        "change5d": -3.1
+        "change5d": -2.1
       },
       {
         "sector": "交通运输",
-        "eci": 59.8,
+        "eci": 61.6,
         "volConvergence": 8.5,
-        "fundConcentration": 14.0,
+        "fundConcentration": 14.5,
         "trendSync": 12.7,
-        "consistencyMomentum": 9.6,
-        "activity": 1.5,
+        "consistencyMomentum": 10.2,
+        "activity": 2.0,
         "policy": 7.5,
         "currentCorr": 0.62,
-        "predictedCorr": 0.72,
+        "predictedCorr": 0.65,
         "trend": "↑上升",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 5.7
+        "change5d": 6.0
       },
       {
         "sector": "传媒",
-        "eci": 44.6,
-        "volConvergence": 7.0,
-        "fundConcentration": 4.5,
-        "trendSync": 13.7,
-        "consistencyMomentum": 6.6,
-        "activity": 0.8,
+        "eci": 46.1,
+        "volConvergence": 7.5,
+        "fundConcentration": 4.0,
+        "trendSync": 13.9,
+        "consistencyMomentum": 7.6,
+        "activity": 1.0,
         "policy": 7.5,
         "currentCorr": 0.9,
         "predictedCorr": 0.93,
@@ -7704,7 +7720,7 @@
         "stocks": 5,
         "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -14.8
+        "change5d": -7.7
       },
       {
         "sector": "化工",
@@ -7742,18 +7758,18 @@
       },
       {
         "sector": "建筑材料",
-        "eci": 43.0,
-        "volConvergence": 5.5,
-        "fundConcentration": 6.5,
-        "trendSync": 13.1,
-        "consistencyMomentum": 5.6,
-        "activity": 0.5,
+        "eci": 45.9,
+        "volConvergence": 6.5,
+        "fundConcentration": 5.5,
+        "trendSync": 13.2,
+        "consistencyMomentum": 7.4,
+        "activity": 1.2,
         "policy": 7.5,
         "currentCorr": 0.77,
-        "predictedCorr": 0.88,
-        "trend": "↓下降",
+        "predictedCorr": 0.86,
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7772,22 +7788,22 @@
             "return": "-21.3%"
           }
         },
-        "change5d": -8.7
+        "change5d": -1.0
       },
       {
         "sector": "农林牧渔",
-        "eci": 49.9,
+        "eci": 51.7,
         "volConvergence": 8.0,
-        "fundConcentration": 9.5,
-        "trendSync": 13.9,
-        "consistencyMomentum": 4.0,
-        "activity": 2.0,
+        "fundConcentration": 11.0,
+        "trendSync": 13.6,
+        "consistencyMomentum": 3.2,
+        "activity": 3.2,
         "policy": 7.5,
         "currentCorr": 0.81,
-        "predictedCorr": 0.82,
+        "predictedCorr": 0.83,
         "trend": "↓下降",
         "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7806,39 +7822,39 @@
             "return": "-15.6%"
           }
         },
-        "change5d": -11.2
+        "change5d": -12.6
       },
       {
         "sector": "公用事业",
-        "eci": 56.1,
-        "volConvergence": 11.0,
-        "fundConcentration": 7.5,
-        "trendSync": 12.9,
-        "consistencyMomentum": 6.6,
+        "eci": 58.3,
+        "volConvergence": 11.5,
+        "fundConcentration": 7.0,
+        "trendSync": 13.1,
+        "consistencyMomentum": 8.4,
         "activity": 5.0,
         "policy": 7.5,
-        "currentCorr": 0.63,
-        "predictedCorr": 0.65,
+        "currentCorr": 0.66,
+        "predictedCorr": 0.75,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -5.0
+        "change5d": -9.0
       },
       {
         "sector": "轻工制造",
-        "eci": 42.1,
+        "eci": 41.8,
         "volConvergence": 9.0,
-        "fundConcentration": 0.5,
+        "fundConcentration": 1.0,
         "trendSync": 13.9,
-        "consistencyMomentum": 6.2,
-        "activity": 0.8,
+        "consistencyMomentum": 5.2,
+        "activity": 1.0,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
-        "trend": "→震荡",
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7857,16 +7873,16 @@
             "return": "-17.2%"
           }
         },
-        "change5d": -15.6
+        "change5d": -12.8
       },
       {
         "sector": "纺织服装",
-        "eci": 58.4,
-        "volConvergence": 10.0,
-        "fundConcentration": 9.0,
+        "eci": 59.1,
+        "volConvergence": 9.5,
+        "fundConcentration": 8.0,
         "trendSync": 15.0,
-        "consistencyMomentum": 7.6,
-        "activity": 3.5,
+        "consistencyMomentum": 8.2,
+        "activity": 5.0,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
@@ -7891,19 +7907,19 @@
             "return": "-13.5%"
           }
         },
-        "change5d": -7.4
+        "change5d": -4.2
       },
       {
         "sector": "钢铁",
-        "eci": 63.1,
-        "volConvergence": 13.5,
-        "fundConcentration": 11.0,
+        "eci": 61.2,
+        "volConvergence": 13.0,
+        "fundConcentration": 10.0,
         "trendSync": 13.8,
-        "consistencyMomentum": 10.2,
+        "consistencyMomentum": 10.0,
         "activity": 0.8,
         "policy": 7.5,
-        "currentCorr": 0.84,
-        "predictedCorr": 0.92,
+        "currentCorr": 0.82,
+        "predictedCorr": 0.85,
         "trend": "↑上升",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
@@ -7925,16 +7941,16 @@
             "return": "-12.8%"
           }
         },
-        "change5d": 3.0
+        "change5d": 1.6
       },
       {
         "sector": "煤炭",
-        "eci": 69.6,
-        "volConvergence": 15.0,
-        "fundConcentration": 14.5,
+        "eci": 67.1,
+        "volConvergence": 14.0,
+        "fundConcentration": 14.0,
         "trendSync": 14.2,
-        "consistencyMomentum": 6.2,
-        "activity": 5.2,
+        "consistencyMomentum": 7.2,
+        "activity": 3.5,
         "policy": 7.5,
         "currentCorr": 0.88,
         "predictedCorr": 0.87,
@@ -7959,19 +7975,19 @@
             "return": "-14.3%"
           }
         },
-        "change5d": -1.7
+        "change5d": -11.7
       },
       {
         "sector": "石油石化",
-        "eci": 58.6,
+        "eci": 59.9,
         "volConvergence": 3.0,
         "fundConcentration": 12.5,
         "trendSync": 12.8,
-        "consistencyMomentum": 6.4,
+        "consistencyMomentum": 7.6,
         "activity": 10.5,
         "policy": 7.5,
         "currentCorr": 0.74,
-        "predictedCorr": 0.76,
+        "predictedCorr": 0.73,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
@@ -7993,16 +8009,16 @@
             "return": "-11.6%"
           }
         },
-        "change5d": 1.3
+        "change5d": -6.3
       },
       {
         "sector": "社会服务",
-        "eci": 58.3,
-        "volConvergence": 12.0,
-        "fundConcentration": 2.5,
-        "trendSync": 13.9,
-        "consistencyMomentum": 12.8,
-        "activity": 3.8,
+        "eci": 57.0,
+        "volConvergence": 7.0,
+        "fundConcentration": 3.5,
+        "trendSync": 14.1,
+        "consistencyMomentum": 12.2,
+        "activity": 7.0,
         "policy": 7.5,
         "currentCorr": 0.89,
         "predictedCorr": 0.91,
@@ -8010,19 +8026,19 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 5.6
+        "change5d": 4.3
       },
       {
         "sector": "环保",
-        "eci": 50.7,
+        "eci": 50.0,
         "volConvergence": 12.5,
-        "fundConcentration": 3.0,
+        "fundConcentration": 2.0,
         "trendSync": 15.0,
-        "consistencyMomentum": 6.8,
+        "consistencyMomentum": 7.2,
         "activity": 0.8,
         "policy": 7.5,
         "currentCorr": 0.95,
-        "predictedCorr": 0.94,
+        "predictedCorr": 0.95,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
@@ -8044,16 +8060,16 @@
             "return": "-10.3%"
           }
         },
-        "change5d": -3.0
+        "change5d": -4.3
       },
       {
         "sector": "美容护理",
-        "eci": 62.8,
-        "volConvergence": 6.0,
-        "fundConcentration": 4.0,
+        "eci": 62.9,
+        "volConvergence": 4.0,
+        "fundConcentration": 4.5,
         "trendSync": 15.0,
-        "consistencyMomentum": 13.2,
-        "activity": 10.8,
+        "consistencyMomentum": 12.8,
+        "activity": 12.8,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
@@ -8078,22 +8094,22 @@
             "return": "-15.3%"
           }
         },
-        "change5d": 7.9
+        "change5d": 12.0
       },
       {
         "sector": "综合",
-        "eci": 52.8,
-        "volConvergence": 14.0,
-        "fundConcentration": 3.5,
+        "eci": 49.7,
+        "volConvergence": 15.0,
+        "fundConcentration": 0.5,
         "trendSync": 15.0,
-        "consistencyMomentum": 7.0,
+        "consistencyMomentum": 6.2,
         "activity": 0.5,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.94,
         "trend": "→震荡",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8112,19 +8128,19 @@
             "return": "-20.1%"
           }
         },
-        "change5d": -6.5
+        "change5d": -7.7
       },
       {
         "sector": "基础化工",
-        "eci": 37.4,
-        "volConvergence": 2.0,
-        "fundConcentration": 2.0,
+        "eci": 38.7,
+        "volConvergence": 6.0,
+        "fundConcentration": 1.5,
         "trendSync": 12.8,
-        "consistencyMomentum": 8.6,
+        "consistencyMomentum": 6.2,
         "activity": 0.8,
         "policy": 7.5,
-        "currentCorr": 0.84,
-        "predictedCorr": 0.9,
+        "currentCorr": 0.83,
+        "predictedCorr": 0.84,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
@@ -8146,7 +8162,7 @@
             "return": "-13.7%"
           }
         },
-        "change5d": -3.3
+        "change5d": 2.7
       }
     ],
     "indicators": {
@@ -8257,6 +8273,27 @@
       "items": [
         {
           "type": "公告",
+          "date": "2026-07-30",
+          "title": "恒瑞医药关于获得药品注册批准的公告",
+          "content": "恒瑞医药关于获得药品注册批准的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-30/1225446861.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-07-30",
+          "title": "恒瑞医药关于药品上市许可申请获受理的提示性公告",
+          "content": "恒瑞医药关于药品上市许可申请获受理的提示性公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-30/1225446618.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-07-30",
+          "title": "恒瑞医药关于获得药物临床试验批准通知书的公告",
+          "content": "恒瑞医药关于获得药物临床试验批准通知书的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-07-30/1225446578.PDF"
+        },
+        {
+          "type": "公告",
           "date": "2026-07-28",
           "title": "恒瑞医药关于获得药物临床试验批准通知书的公告",
           "content": "恒瑞医药关于获得药物临床试验批准通知书的公告",
@@ -8268,13 +8305,6 @@
           "title": "恒瑞医药关于获得美国FDA孤儿药资格认定的公告",
           "content": "恒瑞医药关于获得美国FDA孤儿药资格认定的公告",
           "url": "http://static.cninfo.com.cn/finalpage/2026-07-28/1225442608.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-07-24",
-          "title": "恒瑞医药关于获得药品注册批准的公告",
-          "content": "恒瑞医药关于获得药品注册批准的公告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-07-24/1225439253.PDF"
         }
       ]
     },
@@ -8368,48 +8398,6 @@
           "title": "关于为全资子公司提供担保额度的进展公告",
           "content": "关于为全资子公司提供担保额度的进展公告",
           "url": "http://static.cninfo.com.cn/finalpage/2026-07-29/1225444395.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-07-24",
-          "title": "上海市锦天城律师事务所关于上海百润投资控股集团股份有限公司2026年度向特定对象发行股票的法律意见书",
-          "content": "上海市锦天城律师事务所关于上海百润投资控股集团股份有限公司2026年度向特定对象发行股票的法律意见书",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-07-24/1225439922.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-07-24",
-          "title": "上海百润投资控股集团股份有限公司最近一年的财务报告及其审计报告以及最近一期的财务报告",
-          "content": "上海百润投资控股集团股份有限公司最近一年的财务报告及其审计报告以及最近一期的财务报告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-07-24/1225439921.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-07-24",
-          "title": "华创证券有限责任公司关于上海百润投资控股集团股份有限公司向特定对象发行股票之上市保荐书",
-          "content": "华创证券有限责任公司关于上海百润投资控股集团股份有限公司向特定对象发行股票之上市保荐书",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-07-24/1225439920.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-07-24",
-          "title": "华创证券有限责任公司关于上海百润投资控股集团股份有限公司向特定对象发行股票之发行保荐书",
-          "content": "华创证券有限责任公司关于上海百润投资控股集团股份有限公司向特定对象发行股票之发行保荐书",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-07-24/1225439919.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-07-24",
-          "title": "上海百润投资控股集团股份有限公司向特定对象发行股票募集说明书（申报稿）",
-          "content": "上海百润投资控股集团股份有限公司向特定对象发行股票募集说明书（申报稿）",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-07-24/1225439918.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-07-24",
-          "title": "关于2026年度向特定对象发行股票申请获得深圳证券交易所受理的公告",
-          "content": "关于2026年度向特定对象发行股票申请获得深圳证券交易所受理的公告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-07-24/1225439917.PDF"
         }
       ]
     },
@@ -8535,976 +8523,913 @@
       "ticker": "159883",
       "name": "永赢中证全指医疗器械ETF",
       "close": 0.434,
-      "changePct": 1.88,
-      "preClose": 0.426
+      "changePct": 0.0,
+      "preClose": 0.434
     },
     {
       "ticker": "159892",
       "name": "华夏恒生生物科技ETF(QDII)",
-      "close": 0.73,
-      "changePct": 1.53,
-      "preClose": 0.719
+      "close": 0.712,
+      "changePct": -2.47,
+      "preClose": 0.73
     },
     {
       "ticker": "159265",
       "name": "鹏华国证港股通消费主题ETF",
-      "close": 0.85,
-      "changePct": 3.66,
-      "preClose": 0.82
+      "close": 0.854,
+      "changePct": 0.47,
+      "preClose": 0.85
     },
     {
       "ticker": "159736",
       "name": "天弘中证食品饮料ETF",
-      "close": 0.601,
-      "changePct": 2.21,
-      "preClose": 0.588
+      "close": 0.611,
+      "changePct": 1.66,
+      "preClose": 0.601
     },
     {
       "ticker": "512800",
       "name": "华宝中证银行ETF",
-      "close": 0.819,
-      "changePct": 0.12,
-      "preClose": 0.818
+      "close": 0.84,
+      "changePct": 2.56,
+      "preClose": 0.819
     }
   ],
   "sectorCommentary": [
     {
       "code": "000928.SH",
       "name": "中证能源",
-      "pctChg": 0.72,
-      "close": 3307.16,
+      "pctChg": 0.39,
+      "close": 3320.22,
       "comment": "跟涨，表现平稳",
       "tone": "up"
     },
     {
       "code": "000987.SH",
       "name": "中证材料",
-      "pctChg": 1.49,
-      "close": 4708.09,
-      "comment": "跟涨，表现平稳",
-      "tone": "up"
+      "pctChg": -0.55,
+      "close": 4682.13,
+      "comment": "回调，观望为主",
+      "tone": "down"
     },
     {
       "code": "399383.SZ",
       "name": "中证工业",
-      "pctChg": 1.37,
-      "close": 2707.9,
-      "comment": "跟涨，表现平稳",
-      "tone": "up"
+      "pctChg": -0.37,
+      "close": 2697.92,
+      "comment": "回调，观望为主",
+      "tone": "down"
     },
     {
       "code": "000989.SH",
       "name": "中证可选",
-      "pctChg": 1.77,
-      "close": 4672.24,
-      "comment": "领涨，资金关注度高，连涨3日",
+      "pctChg": 0.6,
+      "close": 4700.46,
+      "comment": "跟涨，表现平稳，连涨4日",
       "tone": "up"
     },
     {
       "code": "000932.SH",
       "name": "中证消费",
-      "pctChg": 1.34,
-      "close": 12833.01,
-      "comment": "跟涨，表现平稳，连涨3日",
+      "pctChg": 2.44,
+      "close": 13146.31,
+      "comment": "领涨，资金关注度高，连涨4日",
       "tone": "up"
     },
     {
       "code": "000933.SH",
       "name": "中证医药",
-      "pctChg": 1.6,
-      "close": 7895.35,
-      "comment": "领涨，资金关注度高",
-      "tone": "up"
+      "pctChg": -0.12,
+      "close": 7885.63,
+      "comment": "窄幅震荡",
+      "tone": "flat"
     },
     {
       "code": "000934.SH",
       "name": "中证金融",
-      "pctChg": 0.69,
-      "close": 5725.57,
-      "comment": "跟涨，表现平稳",
+      "pctChg": 1.63,
+      "close": 5819.12,
+      "comment": "领涨，资金关注度高，连涨3日",
       "tone": "up"
     },
     {
       "code": "000935.SH",
       "name": "中证信息",
-      "pctChg": -0.93,
-      "close": 7659.51,
-      "comment": "领跌，注意风险",
+      "pctChg": -5.86,
+      "close": 7210.53,
+      "comment": "领跌，注意风险，连跌3日",
       "tone": "down"
     },
     {
       "code": "801770.SI",
       "name": "中证电信",
-      "pctChg": 1.4,
-      "close": 6745.39,
-      "comment": "跟涨，表现平稳",
-      "tone": "up"
+      "pctChg": -7.52,
+      "close": 6238.0,
+      "comment": "领跌，注意风险",
+      "tone": "down"
     },
     {
       "code": "801160.SI",
       "name": "中证公用",
-      "pctChg": 1.01,
-      "close": 2508.93,
-      "comment": "跟涨，表现平稳",
-      "tone": "up"
+      "pctChg": -0.33,
+      "close": 2500.6,
+      "comment": "回调，观望为主",
+      "tone": "down"
     }
   ],
   "nationalETFWatch": {
-    "trade_date": "2026-07-29",
+    "trade_date": "2026-07-30",
     "items": [
       {
         "name": "嘉实300ETF",
         "code": "159919.SZ",
-        "share": 63.35,
-        "prevShare": 62.9,
-        "shareChg": 0.45,
-        "avgPrice": 4.827,
-        "netFlow": 2.17,
-        "shareChg5d": 1.4,
-        "netFlow5d": 6.83
+        "share": 64.24,
+        "prevShare": 63.35,
+        "shareChg": 0.89,
+        "avgPrice": 4.799,
+        "netFlow": 4.28,
+        "shareChg5d": 2.42,
+        "netFlow5d": 11.73
       },
       {
         "name": "华泰柏瑞300ETF",
         "code": "510300.SH",
-        "share": 259.47,
-        "prevShare": 253.35,
-        "shareChg": 6.13,
-        "avgPrice": 4.63,
-        "netFlow": 28.38,
-        "shareChg5d": 19.03,
-        "netFlow5d": 88.76
+        "share": 264.84,
+        "prevShare": 259.47,
+        "shareChg": 5.36,
+        "avgPrice": 4.599,
+        "netFlow": 24.67,
+        "shareChg5d": 24.57,
+        "netFlow5d": 114.29
       },
       {
         "name": "易方达300ETF",
         "code": "510310.SH",
-        "share": 115.75,
-        "prevShare": 114.6,
-        "shareChg": 1.14,
-        "avgPrice": 4.5,
-        "netFlow": 5.14,
-        "shareChg5d": 4.11,
-        "netFlow5d": 18.7
+        "share": 116.58,
+        "prevShare": 115.75,
+        "shareChg": 0.84,
+        "avgPrice": 4.467,
+        "netFlow": 3.74,
+        "shareChg5d": 4.73,
+        "netFlow5d": 21.43
       },
       {
         "name": "华夏300ETF",
         "code": "510330.SH",
-        "share": 86.49,
-        "prevShare": 86.16,
-        "shareChg": 0.33,
-        "avgPrice": 4.822,
-        "netFlow": 1.61,
-        "shareChg5d": 2.69,
-        "netFlow5d": 13.25
+        "share": 87.12,
+        "prevShare": 86.49,
+        "shareChg": 0.63,
+        "avgPrice": 4.797,
+        "netFlow": 3.02,
+        "shareChg5d": 2.44,
+        "netFlow5d": 11.87
       },
       {
         "name": "华夏上证50ETF",
         "code": "510050.SH",
-        "share": 73.4,
-        "prevShare": 75.31,
-        "shareChg": -1.91,
-        "avgPrice": 3.013,
-        "netFlow": -5.75,
-        "shareChg5d": -1.35,
-        "netFlow5d": -3.96
+        "share": 71.45,
+        "prevShare": 73.4,
+        "shareChg": -1.95,
+        "avgPrice": 3.016,
+        "netFlow": -5.89,
+        "shareChg5d": -6.85,
+        "netFlow5d": -20.78
       },
       {
         "name": "华夏科创50ETF",
         "code": "588000.SH",
-        "share": 504.75,
-        "prevShare": 481.74,
-        "shareChg": 23.01,
-        "avgPrice": 1.745,
-        "netFlow": 40.15,
-        "shareChg5d": 61.14,
-        "netFlow5d": 111.11
+        "share": 539.01,
+        "prevShare": 504.75,
+        "shareChg": 34.26,
+        "avgPrice": 1.699,
+        "netFlow": 58.21,
+        "shareChg5d": 77.55,
+        "netFlow5d": 135.28
       },
       {
         "name": "易方达科创50ETF",
         "code": "588080.SH",
-        "share": 238.67,
-        "prevShare": 232.82,
-        "shareChg": 5.85,
-        "avgPrice": 1.69,
-        "netFlow": 9.89,
-        "shareChg5d": 13.29,
-        "netFlow5d": 23.3
+        "share": 247.67,
+        "prevShare": 238.67,
+        "shareChg": 9.0,
+        "avgPrice": 1.645,
+        "netFlow": 14.81,
+        "shareChg5d": 19.29,
+        "netFlow5d": 32.56
       },
       {
         "name": "南方中证500ETF",
         "code": "510500.SH",
-        "share": 62.35,
-        "prevShare": 56.54,
-        "shareChg": 5.81,
-        "avgPrice": 7.471,
-        "netFlow": 43.39,
-        "shareChg5d": 4.48,
-        "netFlow5d": 33.62
+        "share": 59.88,
+        "prevShare": 62.35,
+        "shareChg": -2.47,
+        "avgPrice": 7.364,
+        "netFlow": -18.17,
+        "shareChg5d": 2.54,
+        "netFlow5d": 19.56
       },
       {
         "name": "南方中证1000ETF",
         "code": "512100.SH",
-        "share": 110.55,
-        "prevShare": 90.51,
-        "shareChg": 20.04,
-        "avgPrice": 2.851,
-        "netFlow": 57.14,
-        "shareChg5d": 23.84,
-        "netFlow5d": 68.28
+        "share": 113.31,
+        "prevShare": 110.55,
+        "shareChg": 2.76,
+        "avgPrice": 2.823,
+        "netFlow": 7.79,
+        "shareChg5d": 27.06,
+        "netFlow5d": 77.41
       },
       {
         "name": "易方达创业板ETF",
         "code": "159915.SZ",
-        "share": 189.74,
-        "prevShare": 169.73,
-        "shareChg": 20.01,
-        "avgPrice": 3.357,
-        "netFlow": 67.17,
-        "shareChg5d": 19.31,
-        "netFlow5d": 64.07
+        "share": 200.48,
+        "prevShare": 189.74,
+        "shareChg": 10.74,
+        "avgPrice": 3.279,
+        "netFlow": 35.21,
+        "shareChg5d": 34.22,
+        "netFlow5d": 114.31
       },
       {
         "name": "华安创业板50ETF",
         "code": "159949.SZ",
-        "share": 154.43,
-        "prevShare": 140.57,
-        "shareChg": 13.86,
-        "avgPrice": 1.58,
-        "netFlow": 21.9,
-        "shareChg5d": 19.12,
-        "netFlow5d": 30.46
+        "share": 158.57,
+        "prevShare": 154.43,
+        "shareChg": 4.14,
+        "avgPrice": 1.541,
+        "netFlow": 6.38,
+        "shareChg5d": 23.74,
+        "netFlow5d": 37.67
       },
       {
         "name": "华泰柏瑞A500ETF",
         "code": "563360.SH",
-        "share": 297.8,
-        "prevShare": 288.62,
-        "shareChg": 9.18,
-        "avgPrice": 1.263,
-        "netFlow": 11.6,
-        "shareChg5d": 26.1,
-        "netFlow5d": 33.4
+        "share": 322.73,
+        "prevShare": 297.8,
+        "shareChg": 24.93,
+        "avgPrice": 1.255,
+        "netFlow": 31.29,
+        "shareChg5d": 48.54,
+        "netFlow5d": 61.43
       },
       {
         "name": "南方A500ETF",
         "code": "159352.SZ",
-        "share": 257.01,
-        "prevShare": 254.25,
-        "shareChg": 2.76,
-        "avgPrice": 1.244,
-        "netFlow": 3.43,
-        "shareChg5d": 10.98,
-        "netFlow5d": 13.87
+        "share": 258.63,
+        "prevShare": 257.01,
+        "shareChg": 1.62,
+        "avgPrice": 1.238,
+        "netFlow": 2.01,
+        "shareChg5d": 11.97,
+        "netFlow5d": 15.06
       },
       {
         "name": "国泰A500ETF",
         "code": "159338.SZ",
-        "share": 217.55,
-        "prevShare": 216.23,
-        "shareChg": 1.32,
-        "avgPrice": 1.197,
-        "netFlow": 1.58,
-        "shareChg5d": 10.2,
-        "netFlow5d": 12.43
+        "share": 219.02,
+        "prevShare": 217.55,
+        "shareChg": 1.47,
+        "avgPrice": 1.191,
+        "netFlow": 1.75,
+        "shareChg5d": 10.77,
+        "netFlow5d": 13.06
       },
       {
         "name": "华夏A500ETF",
         "code": "512050.SH",
-        "share": 165.83,
-        "prevShare": 163.58,
+        "share": 168.08,
+        "prevShare": 165.83,
         "shareChg": 2.25,
-        "avgPrice": 1.19,
-        "netFlow": 2.68,
-        "shareChg5d": 6.81,
-        "netFlow5d": 8.23
+        "avgPrice": 1.184,
+        "netFlow": 2.67,
+        "shareChg5d": 8.55,
+        "netFlow5d": 10.26
       },
       {
         "name": "易方达A500ETF",
         "code": "159361.SZ",
-        "share": 213.95,
-        "prevShare": 212.21,
-        "shareChg": 1.74,
-        "avgPrice": 1.219,
-        "netFlow": 2.12,
-        "shareChg5d": 5.79,
-        "netFlow5d": 7.19
+        "share": 215.63,
+        "prevShare": 213.95,
+        "shareChg": 1.68,
+        "avgPrice": 1.214,
+        "netFlow": 2.04,
+        "shareChg5d": 5.49,
+        "netFlow5d": 6.72
       }
     ],
     "total": {
-      "shareChg": 111.97,
-      "netFlow": 292.6,
-      "shareChg5d": 226.94,
-      "netFlow5d": 529.54
+      "shareChg": 96.15,
+      "netFlow": 173.81,
+      "shareChg5d": 297.03,
+      "netFlow5d": 661.86
     }
   },
   "sectorScan": {
-    "trade_date": "2026-07-29",
-    "summary": "今日2个板块出现吸筹信号：银行连续6日净流入、空运连续3日净流入；21个板块启动确认（工程机械、汽车整车、水运）；3个板块存在高潮风险（轻工机械、汽车服务、软饮料），谨慎追高。",
+    "trade_date": "2026-07-30",
+    "summary": "今日17个板块出现吸筹信号：家用电器连续4日净流入、工程机械连续4日净流入、水运连续4日净流入；5个板块启动确认（银行、白酒、汽车整车）；1个板块存在高潮风险（乳制品），谨慎追高。",
     "items": [
       {
         "sector": "银行",
-        "netInflow1d": 26.08,
-        "netInflow5d": 132.48,
-        "consecutiveDays": 6,
-        "sectorPctChg": 0.7,
-        "pct5d": 2.43,
-        "status": "吸筹中",
+        "netInflow1d": 119.75,
+        "netInflow5d": 229.15,
+        "consecutiveDays": 7,
+        "sectorPctChg": 2.43,
+        "pct5d": 4.31,
+        "status": "启动确认",
         "stocks": [
+          {
+            "name": "招商银行",
+            "code": "600036.SH",
+            "netInflow": 14.97,
+            "pctChg": 2.24
+          },
           {
             "name": "工商银行",
             "code": "601398.SH",
-            "netInflow": 4.36,
-            "pctChg": -0.25
-          },
-          {
-            "name": "交通银行",
-            "code": "601328.SH",
-            "netInflow": 2.43,
-            "pctChg": -0.28
+            "netInflow": 9.73,
+            "pctChg": 2.52
           }
         ],
-        "score": 160.0
+        "score": 180.0
+      },
+      {
+        "sector": "家用电器",
+        "netInflow1d": 13.9,
+        "netInflow5d": 45.84,
+        "consecutiveDays": 4,
+        "sectorPctChg": -0.6,
+        "pct5d": 2.1,
+        "status": "吸筹中",
+        "stocks": [
+          {
+            "name": "美的集团",
+            "code": "000333.SZ",
+            "netInflow": 8.14,
+            "pctChg": 2.23
+          },
+          {
+            "name": "格力电器",
+            "code": "000651.SZ",
+            "netInflow": 8.04,
+            "pctChg": 1.97
+          }
+        ],
+        "score": 118.2
+      },
+      {
+        "sector": "白酒",
+        "netInflow1d": 25.29,
+        "netInflow5d": 43.04,
+        "consecutiveDays": 4,
+        "sectorPctChg": 4.48,
+        "pct5d": 6.63,
+        "status": "启动确认",
+        "stocks": [
+          {
+            "name": "贵州茅台",
+            "code": "600519.SH",
+            "netInflow": 15.86,
+            "pctChg": 3.09
+          },
+          {
+            "name": "五粮液",
+            "code": "000858.SZ",
+            "netInflow": 6.75,
+            "pctChg": 4.51
+          }
+        ],
+        "score": 116.4
+      },
+      {
+        "sector": "汽车整车",
+        "netInflow1d": 10.82,
+        "netInflow5d": 26.49,
+        "consecutiveDays": 4,
+        "sectorPctChg": 2.72,
+        "pct5d": 7.24,
+        "status": "启动确认",
+        "stocks": [
+          {
+            "name": "比亚迪",
+            "code": "002594.SZ",
+            "netInflow": 5.14,
+            "pctChg": 1.42
+          },
+          {
+            "name": "长安汽车",
+            "code": "000625.SZ",
+            "netInflow": 2.1,
+            "pctChg": 4.12
+          }
+        ],
+        "score": 112.7
       },
       {
         "sector": "工程机械",
-        "netInflow1d": 19.46,
-        "netInflow5d": 31.09,
-        "consecutiveDays": 3,
-        "sectorPctChg": 1.84,
-        "pct5d": 5.03,
-        "status": "启动确认",
+        "netInflow1d": 6.17,
+        "netInflow5d": 24.24,
+        "consecutiveDays": 4,
+        "sectorPctChg": -1.03,
+        "pct5d": 0.84,
+        "status": "吸筹中",
         "stocks": [
           {
             "name": "三一重工",
             "code": "600031.SH",
-            "netInflow": 5.76,
-            "pctChg": 3.55
+            "netInflow": 3.53,
+            "pctChg": 2.11
           },
           {
             "name": "冰轮环境",
             "code": "000811.SZ",
-            "netInflow": 4.57,
-            "pctChg": -4.89
+            "netInflow": 1.89,
+            "pctChg": -10.01
           }
         ],
-        "score": 98.4
-      },
-      {
-        "sector": "汽车整车",
-        "netInflow1d": 11.81,
-        "netInflow5d": 28.12,
-        "consecutiveDays": 3,
-        "sectorPctChg": 3.21,
-        "pct5d": 7.08,
-        "status": "启动确认",
-        "stocks": [
-          {
-            "name": "长安汽车",
-            "code": "000625.SZ",
-            "netInflow": 1.96,
-            "pctChg": 2.87
-          },
-          {
-            "name": "比亚迪",
-            "code": "002594.SZ",
-            "netInflow": 1.83,
-            "pctChg": 1.61
-          }
-        ],
-        "score": 96.8
+        "score": 110.9
       },
       {
         "sector": "水运",
-        "netInflow1d": 9.91,
-        "netInflow5d": 15.74,
-        "consecutiveDays": 3,
-        "sectorPctChg": 1.74,
-        "pct5d": 2.49,
-        "status": "启动确认",
+        "netInflow1d": 5.46,
+        "netInflow5d": 17.13,
+        "consecutiveDays": 4,
+        "sectorPctChg": 0.61,
+        "pct5d": 1.57,
+        "status": "吸筹中",
         "stocks": [
           {
             "name": "中远海控",
             "code": "601919.SH",
-            "netInflow": 2.6,
-            "pctChg": 0.78
+            "netInflow": 2.47,
+            "pctChg": 0.96
           },
           {
-            "name": "招商南油",
-            "code": "601975.SH",
-            "netInflow": 1.41,
-            "pctChg": 1.98
+            "name": "中远海能",
+            "code": "600026.SH",
+            "netInflow": 1.46,
+            "pctChg": 4.53
           }
         ],
-        "score": 95.2
-      },
-      {
-        "sector": "农药化肥",
-        "netInflow1d": 10.66,
-        "netInflow5d": 11.41,
-        "consecutiveDays": 3,
-        "sectorPctChg": 2.2,
-        "pct5d": 5.42,
-        "status": "启动确认",
-        "stocks": [
-          {
-            "name": "湖北宜化",
-            "code": "000422.SZ",
-            "netInflow": 1.17,
-            "pctChg": 2.9
-          },
-          {
-            "name": "盐湖股份",
-            "code": "000792.SZ",
-            "netInflow": 1.15,
-            "pctChg": 2.33
-          }
-        ],
-        "score": 93.6
+        "score": 109.1
       },
       {
         "sector": "食品",
-        "netInflow1d": 9.85,
-        "netInflow5d": 10.98,
-        "consecutiveDays": 3,
-        "sectorPctChg": 3.24,
-        "pct5d": 5.35,
-        "status": "启动确认",
-        "stocks": [
-          {
-            "name": "金禾实业",
-            "code": "002597.SZ",
-            "netInflow": 1.32,
-            "pctChg": 10.01
-          },
-          {
-            "name": "万辰集团",
-            "code": "300972.SZ",
-            "netInflow": 1.0,
-            "pctChg": 2.96
-          }
-        ],
-        "score": 92.0
-      },
-      {
-        "sector": "仓储物流",
-        "netInflow1d": 5.68,
-        "netInflow5d": 10.73,
-        "consecutiveDays": 3,
-        "sectorPctChg": 1.64,
-        "pct5d": 4.24,
-        "status": "启动确认",
-        "stocks": [
-          {
-            "name": "物产中大",
-            "code": "600704.SH",
-            "netInflow": 0.67,
-            "pctChg": 1.64
-          },
-          {
-            "name": "顺丰控股",
-            "code": "002352.SZ",
-            "netInflow": 0.63,
-            "pctChg": 0.46
-          }
-        ],
-        "score": 90.4
-      },
-      {
-        "sector": "空运",
-        "netInflow1d": 2.66,
-        "netInflow5d": 8.28,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.76,
-        "pct5d": 2.54,
+        "netInflow1d": 4.15,
+        "netInflow5d": 13.99,
+        "consecutiveDays": 4,
+        "sectorPctChg": 0.14,
+        "pct5d": 4.23,
         "status": "吸筹中",
         "stocks": [
           {
-            "name": "海航控股",
-            "code": "600221.SH",
-            "netInflow": 1.6,
-            "pctChg": 0.75
+            "name": "万辰集团",
+            "code": "300972.SZ",
+            "netInflow": 1.69,
+            "pctChg": 3.64
           },
           {
-            "name": "南方航空",
-            "code": "600029.SH",
-            "netInflow": 0.45,
-            "pctChg": 0.78
+            "name": "海天味业",
+            "code": "603288.SH",
+            "netInflow": 1.48,
+            "pctChg": 2.71
           }
         ],
-        "score": 88.8
+        "score": 107.3
+      },
+      {
+        "sector": "铁路",
+        "netInflow1d": 6.11,
+        "netInflow5d": 13.57,
+        "consecutiveDays": 4,
+        "sectorPctChg": 0.54,
+        "pct5d": 2.41,
+        "status": "吸筹中",
+        "stocks": [
+          {
+            "name": "大秦铁路",
+            "code": "601006.SH",
+            "netInflow": 2.88,
+            "pctChg": 2.23
+          },
+          {
+            "name": "京沪高铁",
+            "code": "601816.SH",
+            "netInflow": 2.67,
+            "pctChg": 1.76
+          }
+        ],
+        "score": 105.5
+      },
+      {
+        "sector": "仓储物流",
+        "netInflow1d": 0.47,
+        "netInflow5d": 8.64,
+        "consecutiveDays": 4,
+        "sectorPctChg": -0.25,
+        "pct5d": 1.85,
+        "status": "吸筹中",
+        "stocks": [
+          {
+            "name": "嘉友国际",
+            "code": "603871.SH",
+            "netInflow": 0.47,
+            "pctChg": 1.3
+          },
+          {
+            "name": "中国外运",
+            "code": "601598.SH",
+            "netInflow": 0.39,
+            "pctChg": 3.28
+          }
+        ],
+        "score": 103.6
       },
       {
         "sector": "出版业",
-        "netInflow1d": 2.45,
-        "netInflow5d": 7.43,
-        "consecutiveDays": 3,
-        "sectorPctChg": 2.46,
-        "pct5d": 4.77,
-        "status": "启动确认",
+        "netInflow1d": 0.65,
+        "netInflow5d": 7.55,
+        "consecutiveDays": 4,
+        "sectorPctChg": 0.07,
+        "pct5d": 3.56,
+        "status": "吸筹中",
         "stocks": [
           {
-            "name": "中原传媒",
-            "code": "000719.SZ",
-            "netInflow": 0.35,
-            "pctChg": 2.07
+            "name": "南方传媒",
+            "code": "601900.SH",
+            "netInflow": 0.36,
+            "pctChg": 2.05
           },
           {
-            "name": "中国出版",
-            "code": "601949.SH",
-            "netInflow": 0.34,
-            "pctChg": 3.94
+            "name": "皖新传媒",
+            "code": "601801.SH",
+            "netInflow": 0.29,
+            "pctChg": 2.89
           }
         ],
-        "score": 87.2
+        "score": 100.0
       },
       {
-        "sector": "水泥",
-        "netInflow1d": 3.17,
-        "netInflow5d": 6.11,
-        "consecutiveDays": 3,
-        "sectorPctChg": 2.62,
-        "pct5d": 4.79,
-        "status": "启动确认",
+        "sector": "广告包装",
+        "netInflow1d": 0.99,
+        "netInflow5d": 5.6,
+        "consecutiveDays": 4,
+        "sectorPctChg": -0.86,
+        "pct5d": 2.37,
+        "status": "吸筹中",
         "stocks": [
           {
-            "name": "海螺水泥",
-            "code": "600585.SH",
-            "netInflow": 1.12,
-            "pctChg": 2.12
+            "name": "蓝色光标",
+            "code": "300058.SZ",
+            "netInflow": 3.07,
+            "pctChg": 1.53
           },
           {
-            "name": "华新建材",
-            "code": "600801.SH",
-            "netInflow": 0.7,
-            "pctChg": 6.1
+            "name": "分众传媒",
+            "code": "002027.SZ",
+            "netInflow": 1.95,
+            "pctChg": 2.74
           }
         ],
-        "score": 85.6
+        "score": 98.2
       },
       {
-        "sector": "百货",
-        "netInflow1d": 4.38,
-        "netInflow5d": 6.09,
-        "consecutiveDays": 3,
-        "sectorPctChg": 3.18,
-        "pct5d": 6.29,
-        "status": "启动确认",
+        "sector": "路桥",
+        "netInflow1d": 0.89,
+        "netInflow5d": 5.31,
+        "consecutiveDays": 4,
+        "sectorPctChg": 0.27,
+        "pct5d": 1.67,
+        "status": "吸筹中",
         "stocks": [
           {
-            "name": "供销大集",
-            "code": "000564.SZ",
-            "netInflow": 0.88,
-            "pctChg": 2.94
+            "name": "四川成渝",
+            "code": "601107.SH",
+            "netInflow": 0.5,
+            "pctChg": 4.7
           },
           {
-            "name": "友阿股份",
-            "code": "002277.SZ",
-            "netInflow": 0.56,
-            "pctChg": 7.89
+            "name": "招商公路",
+            "code": "001965.SZ",
+            "netInflow": 0.31,
+            "pctChg": 1.33
           }
         ],
-        "score": 84.0
+        "score": 96.4
       },
       {
-        "sector": "商品城",
-        "netInflow1d": 5.19,
-        "netInflow5d": 5.64,
+        "sector": "电信运营",
+        "netInflow1d": 10.57,
+        "netInflow5d": 26.63,
         "consecutiveDays": 3,
-        "sectorPctChg": 3.53,
-        "pct5d": 5.5,
-        "status": "启动确认",
+        "sectorPctChg": -0.79,
+        "pct5d": -1.81,
+        "status": "吸筹中",
         "stocks": [
           {
-            "name": "小商品城",
-            "code": "600415.SH",
-            "netInflow": 5.0,
-            "pctChg": 6.93
+            "name": "中国移动",
+            "code": "600941.SH",
+            "netInflow": 5.57,
+            "pctChg": 1.44
           },
           {
-            "name": "深赛格",
-            "code": "000058.SZ",
-            "netInflow": 0.14,
-            "pctChg": 3.35
+            "name": "中国电信",
+            "code": "601728.SH",
+            "netInflow": 5.1,
+            "pctChg": 4.01
           }
         ],
-        "score": 80.8
-      },
-      {
-        "sector": "啤酒",
-        "netInflow1d": 2.73,
-        "netInflow5d": 3.8,
-        "consecutiveDays": 3,
-        "sectorPctChg": 2.41,
-        "pct5d": 4.13,
-        "status": "启动确认",
-        "stocks": [
-          {
-            "name": "燕京啤酒",
-            "code": "000729.SZ",
-            "netInflow": 1.02,
-            "pctChg": 3.23
-          },
-          {
-            "name": "青岛啤酒",
-            "code": "600600.SH",
-            "netInflow": 1.01,
-            "pctChg": 2.06
-          }
-        ],
-        "score": 77.6
-      },
-      {
-        "sector": "商贸代理",
-        "netInflow1d": 1.53,
-        "netInflow5d": 3.45,
-        "consecutiveDays": 3,
-        "sectorPctChg": 1.78,
-        "pct5d": 6.83,
-        "status": "启动确认",
-        "stocks": [
-          {
-            "name": "苏美达",
-            "code": "600710.SH",
-            "netInflow": 0.62,
-            "pctChg": 5.52
-          },
-          {
-            "name": "江苏国泰",
-            "code": "002091.SZ",
-            "netInflow": 0.51,
-            "pctChg": 2.65
-          }
-        ],
-        "score": 76.0
-      },
-      {
-        "sector": "超市连锁",
-        "netInflow1d": 2.31,
-        "netInflow5d": 3.35,
-        "consecutiveDays": 3,
-        "sectorPctChg": 3.49,
-        "pct5d": 5.33,
-        "status": "启动确认",
-        "stocks": [
-          {
-            "name": "永辉超市",
-            "code": "601933.SH",
-            "netInflow": 1.34,
-            "pctChg": 2.59
-          },
-          {
-            "name": "百联股份",
-            "code": "600827.SH",
-            "netInflow": 0.4,
-            "pctChg": 2.9
-          }
-        ],
-        "score": 74.4
+        "score": 94.5
       },
       {
         "sector": "石油加工",
-        "netInflow1d": 2.11,
-        "netInflow5d": 3.06,
-        "consecutiveDays": 3,
-        "sectorPctChg": 2.38,
-        "pct5d": 2.34,
-        "status": "启动确认",
+        "netInflow1d": 3.19,
+        "netInflow5d": 4.46,
+        "consecutiveDays": 4,
+        "sectorPctChg": -0.6,
+        "pct5d": -1.37,
+        "status": "吸筹中",
         "stocks": [
           {
-            "name": "上海石化",
-            "code": "600688.SH",
-            "netInflow": 0.55,
-            "pctChg": 2.17
+            "name": "中国石化",
+            "code": "600028.SH",
+            "netInflow": 2.71,
+            "pctChg": 1.93
           },
           {
             "name": "恒力石化",
             "code": "600346.SH",
-            "netInflow": 0.53,
-            "pctChg": 1.9
+            "netInflow": 1.04,
+            "pctChg": 1.56
           }
         ],
-        "score": 72.8
+        "score": 94.5
       },
       {
-        "sector": "机场",
-        "netInflow1d": 1.66,
-        "netInflow5d": 2.08,
-        "consecutiveDays": 3,
-        "sectorPctChg": 1.72,
-        "pct5d": 1.81,
-        "status": "启动确认",
+        "sector": "水泥",
+        "netInflow1d": 0.79,
+        "netInflow5d": 4.24,
+        "consecutiveDays": 4,
+        "sectorPctChg": -0.4,
+        "pct5d": 1.05,
+        "status": "吸筹中",
         "stocks": [
           {
-            "name": "海南机场",
-            "code": "600515.SH",
-            "netInflow": 0.64,
-            "pctChg": 1.77
+            "name": "海螺水泥",
+            "code": "600585.SH",
+            "netInflow": 1.3,
+            "pctChg": 1.64
           },
           {
-            "name": "上海机场",
-            "code": "600009.SH",
-            "netInflow": 0.42,
-            "pctChg": 1.37
+            "name": "西藏天路",
+            "code": "600326.SH",
+            "netInflow": 0.46,
+            "pctChg": 5.43
           }
         ],
-        "score": 71.2
+        "score": 92.7
       },
       {
-        "sector": "其他商业",
-        "netInflow1d": 1.89,
-        "netInflow5d": 2.0,
-        "consecutiveDays": 3,
-        "sectorPctChg": 3.26,
-        "pct5d": 5.05,
-        "status": "启动确认",
+        "sector": "空运",
+        "netInflow1d": 2.26,
+        "netInflow5d": 3.06,
+        "consecutiveDays": 4,
+        "sectorPctChg": 0.74,
+        "pct5d": 1.65,
+        "status": "吸筹中",
         "stocks": [
           {
-            "name": "孩子王",
-            "code": "301078.SZ",
-            "netInflow": 0.76,
-            "pctChg": 4.8
+            "name": "春秋航空",
+            "code": "601021.SH",
+            "netInflow": 0.89,
+            "pctChg": 2.63
           },
           {
-            "name": "博士眼镜",
-            "code": "300622.SZ",
-            "netInflow": 0.39,
-            "pctChg": 8.55
+            "name": "中国国航",
+            "code": "601111.SH",
+            "netInflow": 0.57,
+            "pctChg": 0.82
           }
         ],
-        "score": 69.6
-      },
-      {
-        "sector": "批发业",
-        "netInflow1d": 0.15,
-        "netInflow5d": 0.69,
-        "consecutiveDays": 3,
-        "sectorPctChg": 1.54,
-        "pct5d": 3.46,
-        "status": "启动确认",
-        "stocks": [
-          {
-            "name": "浙农股份",
-            "code": "002758.SZ",
-            "netInflow": 0.06,
-            "pctChg": 1.16
-          },
-          {
-            "name": "物产环能",
-            "code": "603071.SH",
-            "netInflow": 0.05,
-            "pctChg": 1.01
-          }
-        ],
-        "score": 66.4
+        "score": 90.9
       },
       {
         "sector": "旅游服务",
-        "netInflow1d": 2.06,
-        "netInflow5d": 0.65,
-        "consecutiveDays": 3,
-        "sectorPctChg": 1.72,
-        "pct5d": 5.7,
-        "status": "启动确认",
+        "netInflow1d": 0.03,
+        "netInflow5d": 2.2,
+        "consecutiveDays": 4,
+        "sectorPctChg": 0.38,
+        "pct5d": 3.97,
+        "status": "吸筹中",
         "stocks": [
           {
-            "name": "中国中免",
-            "code": "601888.SH",
-            "netInflow": 1.77,
-            "pctChg": 3.37
+            "name": "岭南控股",
+            "code": "000524.SZ",
+            "netInflow": 0.15,
+            "pctChg": 0.11
           },
           {
-            "name": "珠免集团",
-            "code": "600185.SH",
-            "netInflow": 0.22,
-            "pctChg": 1.91
+            "name": "三特索道",
+            "code": "002159.SZ",
+            "netInflow": 0.04,
+            "pctChg": 1.48
           }
         ],
-        "score": 64.8
+        "score": 89.1
       },
       {
-        "sector": "公共交通",
-        "netInflow1d": 0.1,
-        "netInflow5d": 0.42,
-        "consecutiveDays": 3,
-        "sectorPctChg": 2.09,
-        "pct5d": 5.62,
-        "status": "启动确认",
+        "sector": "旅游景点",
+        "netInflow1d": 0.21,
+        "netInflow5d": 0.95,
+        "consecutiveDays": 4,
+        "sectorPctChg": 0.56,
+        "pct5d": 2.38,
+        "status": "吸筹中",
         "stocks": [
           {
-            "name": "富临运业",
-            "code": "002357.SZ",
-            "netInflow": 0.11,
-            "pctChg": 2.89
+            "name": "宋城演艺",
+            "code": "300144.SZ",
+            "netInflow": 0.59,
+            "pctChg": 1.63
           },
           {
-            "name": "申通地铁",
-            "code": "600834.SH",
-            "netInflow": 0.04,
-            "pctChg": 1.86
+            "name": "三峡旅游",
+            "code": "002627.SZ",
+            "netInflow": 0.14,
+            "pctChg": 3.1
           }
         ],
-        "score": 63.2
+        "score": 85.5
       },
       {
         "sector": "水力发电",
-        "netInflow1d": 5.41,
-        "netInflow5d": -5.5,
-        "consecutiveDays": 3,
-        "sectorPctChg": 2.12,
-        "pct5d": -2.92,
-        "status": "启动确认",
+        "netInflow1d": 3.93,
+        "netInflow5d": 0.62,
+        "consecutiveDays": 4,
+        "sectorPctChg": -0.63,
+        "pct5d": -2.98,
+        "status": "吸筹中",
         "stocks": [
           {
-            "name": "涪陵电力",
-            "code": "600452.SH",
-            "netInflow": 0.82,
-            "pctChg": 3.35
+            "name": "长江电力",
+            "code": "600900.SH",
+            "netInflow": 6.85,
+            "pctChg": 1.94
           },
           {
-            "name": "黔源电力",
-            "code": "002039.SZ",
-            "netInflow": 0.72,
-            "pctChg": 3.48
+            "name": "国投电力",
+            "code": "600886.SH",
+            "netInflow": 1.37,
+            "pctChg": 1.45
           }
         ],
-        "score": 60.0
+        "score": 83.6
       },
       {
-        "sector": "轻工机械",
-        "netInflow1d": 2.33,
-        "netInflow5d": 5.06,
-        "consecutiveDays": 3,
-        "sectorPctChg": 2.55,
-        "pct5d": 8.11,
-        "status": "高潮风险",
+        "sector": "饲料",
+        "netInflow1d": 0.8,
+        "netInflow5d": -0.74,
+        "consecutiveDays": 4,
+        "sectorPctChg": 0.76,
+        "pct5d": 1.9,
+        "status": "吸筹中",
         "stocks": [
           {
-            "name": "巨星科技",
-            "code": "002444.SZ",
-            "netInflow": 1.17,
-            "pctChg": 1.42
+            "name": "乖宝宠物",
+            "code": "301498.SZ",
+            "netInflow": 0.75,
+            "pctChg": 6.19
           },
           {
-            "name": "东方精工",
-            "code": "002611.SZ",
-            "netInflow": 1.09,
-            "pctChg": 5.35
+            "name": "天康生物",
+            "code": "002100.SZ",
+            "netInflow": 0.25,
+            "pctChg": 2.42
           }
         ],
-        "score": 59.2
-      },
-      {
-        "sector": "汽车服务",
-        "netInflow1d": 0.54,
-        "netInflow5d": 1.66,
-        "consecutiveDays": 3,
-        "sectorPctChg": 1.9,
-        "pct5d": 8.21,
-        "status": "高潮风险",
-        "stocks": [
-          {
-            "name": "中国汽研",
-            "code": "601965.SH",
-            "netInflow": 0.37,
-            "pctChg": 3.38
-          },
-          {
-            "name": "中汽股份",
-            "code": "301215.SZ",
-            "netInflow": 0.24,
-            "pctChg": 3.15
-          }
-        ],
-        "score": 48.0
+        "score": 80.0
       },
       {
         "sector": "乳制品",
-        "netInflow1d": 5.12,
-        "netInflow5d": 5.83,
-        "consecutiveDays": 2,
-        "sectorPctChg": 6.97,
-        "pct5d": 10.98,
-        "status": "启动确认",
+        "netInflow1d": 3.5,
+        "netInflow5d": 8.13,
+        "consecutiveDays": 3,
+        "sectorPctChg": -0.38,
+        "pct5d": 9.09,
+        "status": "高潮风险",
         "stocks": [
           {
             "name": "伊利股份",
             "code": "600887.SH",
-            "netInflow": 5.22,
-            "pctChg": 2.75
+            "netInflow": 5.59,
+            "pctChg": 1.39
           },
           {
-            "name": "妙可蓝多",
-            "code": "600882.SH",
-            "netInflow": 0.36,
-            "pctChg": 5.81
+            "name": "光明乳业",
+            "code": "600597.SH",
+            "netInflow": 0.26,
+            "pctChg": 1.43
           }
         ],
-        "score": 42.4
+        "score": 61.8
       },
       {
-        "sector": "软饮料",
-        "netInflow1d": 0.66,
-        "netInflow5d": 0.25,
-        "consecutiveDays": 3,
-        "sectorPctChg": 5.18,
-        "pct5d": 11.55,
-        "status": "高潮风险",
+        "sector": "电器连锁",
+        "netInflow1d": 0.45,
+        "netInflow5d": 0.97,
+        "consecutiveDays": 2,
+        "sectorPctChg": 1.84,
+        "pct5d": 5.68,
+        "status": "启动确认",
         "stocks": [
           {
-            "name": "承德露露",
-            "code": "000848.SZ",
-            "netInflow": 0.83,
-            "pctChg": 4.72
+            "name": "爱施德",
+            "code": "002416.SZ",
+            "netInflow": 0.53,
+            "pctChg": 4.51
           },
           {
-            "name": "维维股份",
-            "code": "600300.SH",
-            "netInflow": 0.2,
-            "pctChg": 1.93
+            "name": "ST易购",
+            "code": "002024.SZ",
+            "netInflow": -0.08,
+            "pctChg": -0.83
           }
         ],
-        "score": 41.6
+        "score": 47.3
+      },
+      {
+        "sector": "园区开发",
+        "netInflow1d": 1.92,
+        "netInflow5d": 0.28,
+        "consecutiveDays": 2,
+        "sectorPctChg": 1.56,
+        "pct5d": 4.92,
+        "status": "启动确认",
+        "stocks": [
+          {
+            "name": "陆家嘴",
+            "code": "600663.SH",
+            "netInflow": 0.67,
+            "pctChg": 9.96
+          },
+          {
+            "name": "张江高科",
+            "code": "600895.SH",
+            "netInflow": 0.61,
+            "pctChg": 3.6
+          }
+        ],
+        "score": 41.8
       }
     ]
   },
   "bottomWatch": {
-    "trade_date": "2026-07-29",
+    "trade_date": "2026-07-30",
     "window": 60,
-    "days": 65,
+    "days": 66,
     "items": [
       {
         "sector": "半导体",
-        "inflow60d": 1856.22,
-        "inflow5d": 209.29,
+        "inflow60d": 1851.0,
+        "inflow5d": 362.1,
         "positiveRatio": 55.0,
-        "pricePosition": 0.188,
-        "score": 58.2,
+        "pricePosition": 0.074,
+        "score": 80.5,
+        "leaders": []
+      },
+      {
+        "sector": "陶瓷",
+        "inflow60d": 74.37,
+        "inflow5d": 0.39,
+        "positiveRatio": 58.3,
+        "pricePosition": 0.358,
+        "score": 36.2,
         "leaders": []
       }
     ],
-    "summary": "1 个板块出现底部资金积聚信号：半导体——长周期资金缓慢流入且价格处于长期低位，关注率先走强的龙头。"
+    "summary": "2 个板块出现底部资金积聚信号：半导体、陶瓷——长周期资金缓慢流入且价格处于长期低位，关注率先走强的龙头。"
   },
   "eciSubsectors": {
-    "trade_date": "2026-07-29",
+    "trade_date": "2026-07-30",
     "items": [
       {
         "parent": "银行",
-        "parentEci": 67.8,
+        "parentEci": 71.6,
         "subs": [
           {
             "name": "银行",
-            "eci": 81.5,
-            "inflow20d": 499.08,
-            "positiveRatio": 66.7,
+            "eci": 85.7,
+            "inflow20d": 611.74,
+            "positiveRatio": 70.0,
             "leaders": [
+              {
+                "name": "招商银行",
+                "code": "600036.SH",
+                "pctChg": 2.24
+              },
               {
                 "name": "工商银行",
                 "code": "601398.SH",
-                "pctChg": -0.25
-              },
-              {
-                "name": "交通银行",
-                "code": "601328.SH",
-                "pctChg": -0.28
+                "pctChg": 2.52
               }
             ]
           }
@@ -9514,47 +9439,47 @@
     "watchlist": [
       {
         "parent": "煤炭",
-        "eci": 69.6,
-        "inflow30d": 0.1,
-        "posRatio": 45.0,
-        "gap": "流入占比45.0%，未过半"
+        "eci": 67.1,
+        "inflow30d": 13.14,
+        "posRatio": 46.7,
+        "gap": "流入占比46.7%，未过半"
       },
       {
-        "parent": "钢铁",
+        "parent": "医药生物",
+        "eci": 63.3,
+        "inflow30d": -200.17,
+        "posRatio": 44.7,
+        "gap": "30日净流出200.2亿，待资金回正"
+      },
+      {
+        "parent": "食品饮料",
         "eci": 63.1,
-        "inflow30d": -68.51,
-        "posRatio": 32.2,
-        "gap": "30日净流出68.5亿，待资金回正"
+        "inflow30d": 16.14,
+        "posRatio": 49.4,
+        "gap": "流入占比49.4%，未过半"
       },
       {
         "parent": "美容护理",
-        "eci": 62.8,
-        "inflow30d": -17.73,
+        "eci": 62.9,
+        "inflow30d": -16.1,
         "posRatio": 30.0,
-        "gap": "30日净流出17.7亿，待资金回正"
-      },
-      {
-        "parent": "交通运输",
-        "eci": 59.8,
-        "inflow30d": -61.69,
-        "posRatio": 48.5,
-        "gap": "30日净流出61.7亿，待资金回正"
+        "gap": "30日净流出16.1亿，待资金回正"
       }
     ]
   },
   "marginWatch": {
-    "trade_date": "2026-07-28",
+    "trade_date": "2026-07-29",
     "threshold": 3.0,
     "items": [
       {
-        "code": "600298.SH",
-        "name": "安琪酵母",
+        "code": "002216.SZ",
+        "name": "三全食品",
         "group": "watch",
-        "rzye": 4.84,
-        "inc3d": 0.1,
-        "incPct": 0.03,
-        "inc5d": -0.35,
-        "inc5dPct": -0.11,
+        "rzye": 1.44,
+        "inc3d": 0.01,
+        "incPct": 0.01,
+        "inc5d": -0.0,
+        "inc5dPct": -0.0,
         "consecutiveUpDays": 1,
         "triggered": false,
         "level": null
@@ -9563,63 +9488,11 @@
         "code": "688029.SH",
         "name": "南微医学",
         "group": "hold",
-        "rzye": 4.57,
+        "rzye": 4.54,
         "inc3d": -0.0,
         "incPct": -0.0,
-        "inc5d": -0.01,
-        "inc5dPct": -0.01,
-        "consecutiveUpDays": 1,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "600276.SH",
-        "name": "恒瑞医药",
-        "group": "hold",
-        "rzye": 56.56,
-        "inc3d": -0.3,
-        "incPct": -0.01,
-        "inc5d": 2.8,
-        "inc5dPct": 0.08,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "600009.SH",
-        "name": "上海机场",
-        "group": "hold",
-        "rzye": 16.71,
-        "inc3d": -0.11,
-        "incPct": -0.02,
-        "inc5d": 0.67,
-        "inc5dPct": 0.14,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "600406.SH",
-        "name": "国电南瑞",
-        "group": "watch",
-        "rzye": 28.83,
-        "inc3d": -0.37,
-        "incPct": -0.02,
-        "inc5d": 0.23,
-        "inc5dPct": 0.01,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "000895.SZ",
-        "name": "双汇发展",
-        "group": "watch",
-        "rzye": 2.34,
-        "inc3d": -0.16,
-        "incPct": -0.02,
-        "inc5d": -0.12,
-        "inc5dPct": -0.01,
+        "inc5d": 0.03,
+        "inc5dPct": 0.02,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -9628,37 +9501,50 @@
         "code": "600309.SH",
         "name": "万华化学",
         "group": "watch",
-        "rzye": 30.49,
-        "inc3d": -0.69,
-        "incPct": -0.03,
-        "inc5d": -0.9,
-        "inc5dPct": -0.04,
+        "rzye": 30.68,
+        "inc3d": -0.28,
+        "incPct": -0.01,
+        "inc5d": -0.38,
+        "inc5dPct": -0.02,
+        "consecutiveUpDays": 1,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600406.SH",
+        "name": "国电南瑞",
+        "group": "watch",
+        "rzye": 28.4,
+        "inc3d": -0.15,
+        "incPct": -0.01,
+        "inc5d": -0.1,
+        "inc5dPct": -0.01,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
       },
       {
-        "code": "688271.SH",
-        "name": "联影医疗",
+        "code": "000895.SZ",
+        "name": "双汇发展",
         "group": "watch",
-        "rzye": 12.46,
-        "inc3d": -0.36,
-        "incPct": -0.04,
-        "inc5d": -0.3,
+        "rzye": 2.3,
+        "inc3d": -0.08,
+        "incPct": -0.01,
+        "inc5d": -0.23,
         "inc5dPct": -0.03,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
       },
       {
-        "code": "002216.SZ",
-        "name": "三全食品",
-        "group": "watch",
-        "rzye": 1.42,
-        "inc3d": -0.04,
-        "incPct": -0.05,
-        "inc5d": 0.0,
-        "inc5dPct": 0.0,
+        "code": "600009.SH",
+        "name": "上海机场",
+        "group": "hold",
+        "rzye": 16.66,
+        "inc3d": -0.15,
+        "incPct": -0.02,
+        "inc5d": -0.14,
+        "inc5dPct": -0.02,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -9668,23 +9554,23 @@
         "name": "百润股份",
         "group": "watch",
         "rzye": 2.52,
-        "inc3d": -0.1,
-        "incPct": -0.07,
-        "inc5d": -0.08,
+        "inc3d": -0.04,
+        "incPct": -0.03,
+        "inc5d": -0.09,
         "inc5dPct": -0.06,
-        "consecutiveUpDays": 0,
+        "consecutiveUpDays": 1,
         "triggered": false,
         "level": null
       },
       {
-        "code": "601888.SH",
-        "name": "中国中免",
+        "code": "600298.SH",
+        "name": "安琪酵母",
         "group": "watch",
-        "rzye": 35.94,
-        "inc3d": -0.88,
-        "incPct": -0.08,
-        "inc5d": -0.99,
-        "inc5dPct": -0.09,
+        "rzye": 4.63,
+        "inc3d": -0.16,
+        "incPct": -0.05,
+        "inc5d": -0.47,
+        "inc5dPct": -0.14,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -9693,24 +9579,50 @@
         "code": "603259.SH",
         "name": "药明康德",
         "group": "watch",
-        "rzye": 51.81,
-        "inc3d": -2.82,
-        "incPct": -0.09,
-        "inc5d": -2.67,
+        "rzye": 51.24,
+        "inc3d": -1.86,
+        "incPct": -0.06,
+        "inc5d": -2.77,
         "inc5dPct": -0.09,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
       },
       {
-        "code": "300760.SZ",
-        "name": "迈瑞医疗",
+        "code": "688271.SH",
+        "name": "联影医疗",
         "group": "watch",
-        "rzye": 57.19,
-        "inc3d": -1.79,
-        "incPct": -0.1,
-        "inc5d": -1.81,
-        "inc5dPct": -0.1,
+        "rzye": 12.28,
+        "inc3d": -0.57,
+        "incPct": -0.06,
+        "inc5d": -0.58,
+        "inc5dPct": -0.06,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600276.SH",
+        "name": "恒瑞医药",
+        "group": "hold",
+        "rzye": 54.82,
+        "inc3d": -2.24,
+        "incPct": -0.07,
+        "inc5d": 0.74,
+        "inc5dPct": 0.02,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "601888.SH",
+        "name": "中国中免",
+        "group": "watch",
+        "rzye": 35.3,
+        "inc3d": -1.2,
+        "incPct": -0.11,
+        "inc5d": -1.73,
+        "inc5dPct": -0.15,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -9719,11 +9631,24 @@
         "code": "688016.SH",
         "name": "心脉医疗",
         "group": "hold",
-        "rzye": 4.71,
-        "inc3d": -0.12,
-        "incPct": -0.11,
-        "inc5d": -0.16,
-        "inc5dPct": -0.14,
+        "rzye": 4.64,
+        "inc3d": -0.17,
+        "incPct": -0.15,
+        "inc5d": -0.22,
+        "inc5dPct": -0.19,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "300760.SZ",
+        "name": "迈瑞医疗",
+        "group": "watch",
+        "rzye": 54.81,
+        "inc3d": -3.84,
+        "incPct": -0.2,
+        "inc5d": -4.26,
+        "inc5dPct": -0.23,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
