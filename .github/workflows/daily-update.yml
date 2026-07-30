@@ -82,8 +82,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/data/fund_data.json public/fund_data.json scripts/cache/sector_history.json scripts/cache/margin_history.json
-          git diff --cached --quiet || git commit -m "data: 自动更新资金数据 $(date +'%Y-%m-%d')"
-          git push || true
+          if git diff --cached --quiet; then
+            echo "No data changes to commit"
+          else
+            git commit -m "data: 自动更新资金数据 $(date +'%Y-%m-%d')"
+            # Another commit (e.g. a workflow push) may have landed on main while
+            # this run was fetching — rebase onto it instead of silently dropping
+            # the data commit (2026-07-30 incident).
+            git pull --rebase origin main || true
+            git push
+          fi
 
       - name: Setup Node.js
         if: steps.guard.outputs.skip != 'true'
