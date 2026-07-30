@@ -1,15 +1,22 @@
 name: Daily Update Fund Data
 
 on:
-  # Schedule: Mon-Fri at 19:37 / 21:41 / 23:43 Beijing time (11:37 / 13:41 / 15:43 UTC)
-  # GitHub scheduled runs are often delayed for HOURS under load, so we fire 3 times
-  # per evening; a guard step skips the fetch if today's data is already in place,
-  # making the extra runs cheap no-ops. Off-peak minutes (:37/:41/:43) avoid the
-  # :00/:30 congestion window per GitHub's own recommendation.
+  # Schedule: Mon-Fri, every ~30 min from 19:37 to 23:37 Beijing time.
+  # GitHub's scheduler not only delays runs for HOURS under load, it sometimes
+  # DROPS dispatches entirely (observed 2026-07-29/30, incl. off-peak minutes).
+  # So we cast a dense net of 9 fires per evening; a guard step checks whether
+  # today's data is already in place and skips ALL remaining steps, making every
+  # extra fire a ~30-second no-op (one checkout + one grep, zero Tushare calls).
   schedule:
-    - cron: '37 11 * * 1-5'
-    - cron: '41 13 * * 1-5'
-    - cron: '43 15 * * 1-5'
+    - cron: '37 11 * * 1-5'   # 19:37 Beijing
+    - cron: '7 12 * * 1-5'    # 20:07
+    - cron: '37 12 * * 1-5'   # 20:37
+    - cron: '7 13 * * 1-5'    # 21:07
+    - cron: '37 13 * * 1-5'   # 21:37
+    - cron: '7 14 * * 1-5'    # 22:07
+    - cron: '37 14 * * 1-5'   # 22:37
+    - cron: '7 15 * * 1-5'    # 23:07
+    - cron: '37 15 * * 1-5'   # 23:37
   # Code pushes only rebuild & deploy the site; they do NOT re-fetch data
   push:
     branches: [main]
@@ -79,25 +86,31 @@ jobs:
           git push || true
 
       - name: Setup Node.js
+        if: steps.guard.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
       - name: Install npm dependencies
+        if: steps.guard.outputs.skip != 'true'
         run: npm ci
 
       - name: Build project
+        if: steps.guard.outputs.skip != 'true'
         run: npm run build
 
       - name: Setup Pages
+        if: steps.guard.outputs.skip != 'true'
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
+        if: steps.guard.outputs.skip != 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 
       - name: Deploy to GitHub Pages
+        if: steps.guard.outputs.skip != 'true'
         id: deployment
         uses: actions/deploy-pages@v4
