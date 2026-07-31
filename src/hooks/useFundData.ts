@@ -377,6 +377,45 @@ export interface FundData {
       level?: 'alert' | 'watch' | null;
     }>;
   };
+  sectorFlows?: {
+    trade_date: string;
+    note?: string;
+    items: Array<{
+      name: string;
+      net5: number;
+      net10: number;
+      net20: number;
+      tag: string;
+    }>;
+  };
+  vcpWatch?: {
+    trade_date: string;
+    stats: { total: number; green: number; yellow: number };
+    conceptShort?: string[];
+    note?: string;
+    items: Array<{
+      code: string;
+      name: string;
+      kind: string;
+      vol20: number;
+      volPct: number;
+      amtRatio: number | null;
+      nHit: number;
+      nLeaders: number;
+      signal: string;
+      leaders: Array<{
+        code: string;
+        name: string;
+        mv: number;
+        vol20: number;
+        volPct: number;
+        ampRatio: number;
+        volRatio: number;
+        narrow: boolean;
+        shrink: boolean;
+      }>;
+    }>;
+  };
   nationalETF?: Array<{
     ticker: string;
     name: string;

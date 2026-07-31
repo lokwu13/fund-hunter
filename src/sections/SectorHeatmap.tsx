@@ -243,37 +243,69 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
       {detailed && (
         <Card>
           <CardContent className="p-3">
+            <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+              <p className="text-xs text-slate-500">三档净流入：二级行业主力净流入（近5/10/20日，亿元）+ 资金节奏</p>
+              {data.sectorFlows?.trade_date && (
+                <Badge variant="outline" className="text-xs bg-slate-50">{data.sectorFlows.trade_date}</Badge>
+              )}
+            </div>
             <Table>
               <TableHeader>
                 <TableRow className="bg-slate-50">
                   <TableHead className="text-xs">排名</TableHead>
                   <TableHead className="text-xs">行业板块</TableHead>
-                  <TableHead className="text-xs text-right">4周累计净流入</TableHead>
+                  <TableHead className="text-xs text-right">近5日</TableHead>
+                  <TableHead className="text-xs text-right">近10日</TableHead>
+                  <TableHead className="text-xs text-right">近20日</TableHead>
+                  <TableHead className="text-xs">资金节奏</TableHead>
                   <TableHead className="text-xs text-right">单周最大</TableHead>
                   <TableHead className="text-xs">异常标记</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sectors.map((sector, idx) => (
-                  <TableRow key={sector.name} className="hover:bg-slate-50">
-                    <TableCell className="text-xs font-bold">{idx + 1}</TableCell>
-                    <TableCell className="text-xs font-semibold">{sector.name}</TableCell>
-                    <TableCell className={`text-xs text-right font-bold ${(sector.mainFlow || 0) >= 0 ? 'text-orange-600' : 'text-sky-600'}`}>
-                      {(sector.mainFlow || 0) >= 0 ? '+' : ''}{sector.mainFlow}亿
+                {sectors.map((sector, idx) => {
+                  const flow = (data.sectorFlows?.items || []).find((f: any) => f.name === sector.name);
+                  const tagCls: Record<string, string> = {
+                    '加速流入': 'bg-red-100 text-red-600',
+                    '减速流入': 'bg-orange-100 text-orange-600',
+                    '拐点·转流入': 'bg-amber-100 text-amber-700',
+                    '拐点·转流出': 'bg-amber-100 text-amber-700',
+                    '持续流出': 'bg-emerald-100 text-emerald-700',
+                    '反复': 'bg-slate-100 text-slate-500',
+                  };
+                  const flowCell = (v?: number) => (
+                    <TableCell className={`text-xs text-right font-bold ${(v ?? 0) >= 0 ? 'text-orange-600' : 'text-sky-600'}`}>
+                      {v == null ? '—' : `${v >= 0 ? '+' : ''}${v}亿`}
                     </TableCell>
-                    <TableCell className="text-xs text-right">
-                      {(sector.maxWeeklyFlow || 0) >= 0 ? '+' : ''}{sector.maxWeeklyFlow}亿
-                    </TableCell>
-                    <TableCell>
-                      {sector.isAnomaly && (
-                        <Badge className="text-[10px] bg-amber-100 text-amber-700">
-                          <Zap className="w-3 h-3 mr-0.5" />
-                          单周突增
-                        </Badge>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                  );
+                  return (
+                    <TableRow key={sector.name} className="hover:bg-slate-50">
+                      <TableCell className="text-xs font-bold">{idx + 1}</TableCell>
+                      <TableCell className="text-xs font-semibold">{sector.name}</TableCell>
+                      {flowCell(flow?.net5)}
+                      {flowCell(flow?.net10)}
+                      {flowCell(flow?.net20)}
+                      <TableCell>
+                        {flow?.tag && (
+                          <Badge className={`text-[10px] border-0 ${tagCls[flow.tag] || 'bg-slate-100 text-slate-500'}`}>
+                            {flow.tag}
+                          </Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-xs text-right">
+                        {(sector.maxWeeklyFlow || 0) >= 0 ? '+' : ''}{sector.maxWeeklyFlow}亿
+                      </TableCell>
+                      <TableCell>
+                        {sector.isAnomaly && (
+                          <Badge className="text-[10px] bg-amber-100 text-amber-700">
+                            <Zap className="w-3 h-3 mr-0.5" />
+                            单周突增
+                          </Badge>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </CardContent>

@@ -15,7 +15,7 @@ import requests
 import tushare as ts
 
 # Delay between API calls to avoid IP rate limits
-API_DELAY = 1.5  # seconds
+API_DELAY = float(os.environ.get('API_DELAY', '1.5'))  # seconds（本地调试可用环境变量调低）
 import pandas as pd
 from datetime import datetime, timedelta
 
@@ -1707,6 +1707,207 @@ def fetch_sector_commentary(pro, trade_date):
     return entries
 
 
+def build_sector_flows(data):
+    """三档净流入（任务：sectorPeriod 扩展）：近5/10/20日主力净流入 + 资金节奏标签。
+
+    全部用 sector_history 缓存计算（Tushare 二级行业口径，与板块资金表的 data.sectors 同名），
+    不新增接口。
+    """
+    try:
+        hist = _load_sector_history()
+        days = sorted(hist['days'])
+        if len(days) < 20:
+            print(f"  sectorFlows: history only {len(days)} days, keep old")
+            return
+        agg = {}
+        for d in days[-20:]:
+            for ind, s in hist['days'][d]['sectors'].items():
+                agg.setdefault(ind, []).append(s.get('net', 0.0))
+        rows = []
+        for ind, nets in agg.items():
+            n5, n10, n20 = sum(nets[-5:]), sum(nets[-10:]), sum(nets[-20:])
+            p5, p10 = n5 / 5, (n10 - n5) / 5
+            if n5 < 0 and n10 < 0 and n20 < 0:
+                tag = '持续流出'
+            elif n5 > 0 and n10 <= 0:
+                tag = '拐点·转流入'
+            elif n5 < 0 and n10 >= 0:
+                tag = '拐点·转流出'
+            elif n5 > 0 and p5 > p10 * 1.2:
+                tag = '加速流入'
+            elif n5 > 0:
+                tag = '减速流入'
+            else:
+                tag = '反复'
+            rows.append({'name': ind, 'net5': round(n5, 1), 'net10': round(n10, 1),
+                         'net20': round(n20, 1), 'tag': tag})
+        rows.sort(key=lambda x: -x['net5'])
+        d1 = days[-1]
+        data['sectorFlows'] = {
+            'trade_date': f'{d1[:4]}-{d1[4:6]}-{d1[6:]}',
+            'items': rows,
+            'note': 'Tushare 二级行业主力净流入；节奏=近5日日均 vs 前5日日均（加速流入/减速流入/拐点/持续流出）',
+        }
+        print(f"  sectorFlows: {len(rows)} industries as of {d1}, "
+              f"top: {[(r['name'], r['net5'], r['tag']) for r in rows[:3]]}")
+    except Exception as e:
+        print(f"  Warning: build_sector_flows failed: {e}")
+
+
+def _vcp_append_rows(old_rows, new_rows, max_len=300):
+    """把新抓的日线行并入口径一致的缓存行（按日期去重追加，裁尾）。"""
+    seen = {r[0] for r in old_rows}
+    out = list(old_rows) + [r for r in new_rows if r[0] not in seen]
+    out.sort()
+    return out[-max_len:]
+
+
+def fetch_vcp_watch(pro, trade_date, data):
+    """VCP 板块-龙头共振监测（并入版，每晚增量控制成本）。
+
+    增量方案：龙头个股日线用 daily(trade_date) 全市场批量 1 次本地过滤追加；
+    指数日线增量 31 SW + 15 概念 ≈46 次；daily_basic 批量 1 次；
+    成分股名单/流通市值/龙头名单 每周五刷新。全部读写给 vcp_preview 同一缓存。
+    失败时保留旧 vcpWatch，不中断主流程。
+    """
+    try:
+        import vcp_preview as vcp
+        c = vcp.load_cache()
+        cold = not c.get('sw_list')
+        if cold:
+            # 冷启动（仅首次）：全量首抓，与样张脚本同路径
+            print('  vcpWatch cold start: full bootstrap (~250 calls)')
+            vcp.ensure_basics(pro, c)
+            vcp.ensure_sw_list(pro, c)
+            vcp.ensure_stock_basic(pro, c)
+            vcp.ensure_circ_mv(pro, c)
+            vcp.ensure_sw_members(pro, c)
+            vcp.ensure_concepts(pro, c)
+            vcp.ensure_leaders(c)
+            vcp.ensure_index_daily(pro, c)
+            vcp.ensure_stock_daily(pro, c)
+        else:
+            # 盘中/早间数据可能尚未发布：逐日回探到首个有数据的交易日，只重算不追加
+            eff = None
+            df_probe = None
+            for k in range(0, 8):
+                d = (datetime.strptime(trade_date, '%Y%m%d')
+                     - timedelta(days=k)).strftime('%Y%m%d')
+                df_probe = vcp.api(pro, 'daily_basic', trade_date=d,
+                                   fields='ts_code,trade_date,circ_mv')
+                if df_probe is not None and len(df_probe) > 0:
+                    eff = d
+                    break
+            if not eff:
+                raise RuntimeError('vcpWatch: no daily_basic data in last 8 days')
+            if eff != trade_date:
+                print(f'  vcpWatch: {trade_date} 数据未发布，回退有效日期 {eff}')
+            c['trade_date'] = eff
+            start = (datetime.strptime(eff, '%Y%m%d')
+                     - timedelta(days=10)).strftime('%Y%m%d')
+            # ── 每周五：成分/市值/龙头名单刷新 ──
+            if datetime.strptime(eff, '%Y%m%d').weekday() == 4:
+                print('  vcpWatch Friday refresh: members + circ_mv + leaders')
+                vcp.ensure_stock_basic(pro, c)
+                c.pop('circ_mv', None)
+                vcp.ensure_circ_mv(pro, c)
+                for s in c['sw_list']:
+                    df = vcp.api(pro, 'index_member', index_code=s['code'])
+                    c['sw_members'][s['code']] = [
+                        r['con_code'] for _, r in df.iterrows()
+                        if str(r.get('out_date')) in ('None', 'nan', 'NaT', '')]
+                for con in c.get('concepts', []):
+                    df = vcp.api(pro, 'ths_member', ts_code=con['code'])
+                    c['ths_members'][con['code']] = [r['con_code'] for _, r in df.iterrows()]
+                c.pop('leaders', None)
+                vcp.ensure_leaders(c)
+                vcp.save_cache(c)
+            else:
+                # 平日：daily_basic 批量更新市值快照（不重排龙头）；df_probe 为 None 说明当日数据未发布，跳过
+                df = df_probe
+                if df is not None and len(df) > 0:
+                    for _, r in df.iterrows():
+                        if r['circ_mv'] == r['circ_mv']:
+                            c['circ_mv'][r['ts_code']] = float(r['circ_mv']) / 1e4
+            # ── 龙头个股日线：单日全市场批量 1 次，本地过滤追加 ──
+            df = None if eff != trade_date else vcp.api(pro, 'daily', trade_date=eff)
+            if df is not None and len(df) > 0:
+                want = set(c['stock_daily'])
+                appended = 0
+                for _, r in df.iterrows():
+                    code = r['ts_code']
+                    if code not in want:
+                        continue
+                    row = [str(r['trade_date']), float(r['close']), float(r['high']),
+                           float(r['low']), float(r['vol'])]
+                    c['stock_daily'][code] = _vcp_append_rows(c['stock_daily'][code], [row])
+                    appended += 1
+                print(f'  vcpWatch stock_daily appended: {appended}/{len(want)}')
+            # ── 指数日线增量（31 SW + 15 概念）──
+            for s in c['sw_list']:
+                code = s['code']
+                df = vcp.api(pro, 'index_daily', ts_code=code,
+                             start_date=start, end_date=eff)
+                if df is not None and len(df) > 0:
+                    rows = [[str(r['trade_date']), float(r['close']), float(r.get('amount') or 0)]
+                            for _, r in df.iterrows()]
+                    c['index_daily'][code] = _vcp_append_rows(
+                        c['index_daily'].get(code, []), rows, max_len=290)
+            for con in c.get('concepts', []):
+                code = con['code']
+                try:
+                    df = vcp.api(pro, 'ths_daily', ts_code=code,
+                                 start_date=start, end_date=eff)
+                    if df is not None and len(df) > 0:
+                        rows = [[str(r['trade_date']), float(r['close']),
+                                 float(r['amount']) if 'amount' in df.columns
+                                 and r.get('amount') == r.get('amount') else 0]
+                                for _, r in df.iterrows()]
+                        c['index_daily'][code] = _vcp_append_rows(
+                            c['index_daily'].get(code, []), rows, max_len=290)
+                except Exception as e:
+                    print(f'  vcpWatch ths_daily {con["name"]} failed: {str(e)[:60]}')
+            # 周五新入名单的龙头补一年历史
+            need = sorted({x for v in c['leaders'].values() for x in v}
+                          - set(c['stock_daily']))
+            back_start = (datetime.strptime(eff, '%Y%m%d')
+                          - timedelta(days=vcp.BACK_CAL_DAYS)).strftime('%Y%m%d')
+            for code in need:
+                try:
+                    df = vcp.api(pro, 'daily', ts_code=code, start_date=back_start, end_date=eff)
+                    rows = [[str(r['trade_date']), float(r['close']), float(r['high']),
+                             float(r['low']), float(r['vol'])] for _, r in df.iterrows()]
+                    rows.sort()
+                    c['stock_daily'][code] = rows
+                except Exception as e:
+                    print(f'  vcpWatch leader backfill {code} failed: {str(e)[:60]}')
+            if need:
+                print(f'  vcpWatch new leaders backfilled: {len(need)}')
+        vcp.save_cache(c)
+
+        res = vcp.compute_results(c)
+        green = [r for r in res if r['signal'] == '🟢']
+        yellow = [r for r in res if r['signal'] == '🟡']
+        white = [r for r in res if r['signal'] == '⚪'][:5]
+        computed = {r['code'] for r in res}
+        concept_short = [x['name'] for x in c.get('concepts', [])
+                         if x['code'] not in computed
+                         and len(c['index_daily'].get(x['code'], [])) < 100]
+        td = c['trade_date']
+        data['vcpWatch'] = {
+            'trade_date': f'{td[:4]}-{td[4:6]}-{td[6:]}',
+            'stats': {'total': len(res), 'green': len(green), 'yellow': len(yellow)},
+            'items': green + yellow + white,
+            'conceptShort': concept_short,
+            'note': '20日滚动波动率年分位<25% 且 ≥3/5 龙头同时窄幅(振幅比<0.75)+缩量(量比<0.7) = 🟢强共振；'
+                    '2只 = 🟡观察；⚪为分位最低前5名对照。概念指数无成交额时收缩比显示—',
+        }
+        print(f"  vcpWatch: {len(res)} sectors, 🟢{len(green)} 🟡{len(yellow)}, "
+              f"展示 {len(green) + len(yellow) + len(white)} 行")
+    except Exception as e:
+        print(f"  Warning: fetch_vcp_watch failed (keep old vcpWatch): {e}")
+
+
 def load_existing_data():
     """Load existing fund_data.json to preserve manually maintained fields."""
     try:
@@ -1735,7 +1936,7 @@ def main():
     data = load_existing_data()
 
     # ── 1. Indices (batch) ──
-    print("\n[1/14] Fetching indices (batch)...")
+    print("\n[1/16] Fetching indices (batch)...")
     indices = fetch_indices_batch(pro, trade_date)
     if indices:
         data['indices'] = indices
@@ -1743,7 +1944,7 @@ def main():
             print(f"  {v['name']}: {v['value']} ({v['change']:+.2f}%)")
 
     # ── 2. Stocks (batch) ──
-    print("\n[2/14] Fetching stocks (batch)...")
+    print("\n[2/16] Fetching stocks (batch)...")
     stocks = fetch_stocks_batch(pro, trade_date)
     if stocks:
         data['stocks'] = stocks
@@ -1752,7 +1953,7 @@ def main():
             print(f"    {s['name']}: {s['close']} ({s['pctChg']:+.2f}%)")
 
     # ── 3. ETFs (batch) ──
-    print("\n[3/14] Fetching ETFs (batch)...")
+    print("\n[3/16] Fetching ETFs (batch)...")
     etfs = fetch_etfs_batch(pro, trade_date)
     if etfs:
         data['nationalETF'] = etfs
@@ -1761,7 +1962,7 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 4. My ETF account (fund_daily, batch) ──
-    print("\n[4/14] Fetching my ETF account (fund_daily, batch)...")
+    print("\n[4/16] Fetching my ETF account (fund_daily, batch)...")
     my_etfs = fetch_my_etfs(pro, trade_date)
     if my_etfs:
         data['myETF'] = my_etfs
@@ -1770,14 +1971,14 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 5. Announcements + holdingsNews (全量覆盖旧手工数据) ──
-    print("\n[5/14] Fetching announcements & building holdingsNews...")
+    print("\n[5/16] Fetching announcements & building holdingsNews...")
     anns_map = fetch_announcements(pro, trade_date)
     data['holdingsNews'] = build_holdings_news(anns_map, trade_date)
     total_anns = sum(len(e['items']) for e in data['holdingsNews'])
     print(f"  Built {len(data['holdingsNews'])} holdingsNews entries, {total_anns} announcements")
 
     # ── 6. Mainforce flow ──
-    print("\n[6/14] Fetching mainforce flow...")
+    print("\n[6/16] Fetching mainforce flow...")
     inflow, outflow = fetch_mainforce_flow(pro, trade_date)
     if inflow:
         data['mainforce_inflow_top10'] = inflow
@@ -1787,7 +1988,7 @@ def main():
         print(f"  Outflow #1: {outflow[0]['name']} {outflow[0]['amount']}")
 
     # ── 7. Hot fund NAVs (fund_nav, 取到才覆盖) ──
-    print("\n[7/14] Fetching hot fund NAVs...")
+    print("\n[7/16] Fetching hot fund NAVs...")
     hot_navs = fetch_hot_fund_navs(pro, trade_date, data.get('hotFundNavs', []))
     if hot_navs:
         data['hotFundNavs'] = hot_navs
@@ -1795,7 +1996,7 @@ def main():
         print(f"  Updated {len(hot_navs)} fund NAVs, dates: {sorted(dates)}")
 
     # ── 8. National ETF watch (宽基ETF份额监控) ──
-    print("\n[8/14] Fetching national ETF watch (fund_share)...")
+    print("\n[8/16] Fetching national ETF watch (fund_share)...")
     etf_watch = fetch_national_etf_watch(pro, trade_date, data.get('nationalETFWatch'))
     if etf_watch:
         data['nationalETFWatch'] = etf_watch
@@ -1804,11 +2005,11 @@ def main():
               f"total netFlow {t['netFlow']:+.2f}亿, 5d {t['netFlow5d']:+.2f}亿")
 
     # ── 9. Bond yields + liquidity commentary (东方财富) ──
-    print("\n[9/14] Fetching bond yields & liquidity commentary (eastmoney)...")
+    print("\n[9/16] Fetching bond yields & liquidity commentary (eastmoney)...")
     fetch_bond_yields(trade_date, data)
 
     # ── 10. North/South bound ──
-    print("\n[10/14] Fetching north/south bound...")
+    print("\n[10/16] Fetching north/south bound...")
     north, south = fetch_north_south(pro, trade_date)
     if north:
         data['northbound'] = north
@@ -1818,7 +2019,7 @@ def main():
         print(f"  Southbound: {south['today']}亿")
 
     # ── 11. Sector index commentary (细分指数每日点评) ──
-    print("\n[11/14] Fetching sector index commentary...")
+    print("\n[11/16] Fetching sector index commentary...")
     # 涨跌停信号卡已废弃：不再生成 keySignals，并删除存量字段
     data.pop('keySignals', None)
     commentary = fetch_sector_commentary(pro, trade_date)
@@ -1829,20 +2030,31 @@ def main():
             print(f"    {c['name']}: {c['pctChg']:+.2f}% - {c['comment']}")
 
     # ── 12. Sector watch: 扫描榜(仅信号) + 底部资金积聚 (Tushare 历史沉淀) ──
-    print("\n[12/14] Building sector watch (scan + bottom accumulation)...")
+    print("\n[12/16] Building sector watch (scan + bottom accumulation)...")
     watch_ctx = fetch_sector_watch(pro, trade_date, data)
     data.pop('conceptHot', None)  # 主题概念领涨栏目已下线，清除存量字段
 
     # ── 13. ECI 六维分每日真算 + 强势一级行业子板块精选 ──
-    print("\n[13/14] Rebuilding ECI from sector history + picking subsectors...")
+    print("\n[13/16] Rebuilding ECI from sector history + picking subsectors...")
     fetch_eci_daily(pro, trade_date, data, watch_ctx)
 
     # ── 14. 融资余额突变预警（持仓+观察股） ──
-    print("\n[14/14] Building margin watch (融资融券)...")
+    print("\n[14/16] Building margin watch (融资融券)...")
     fetch_margin_watch(pro, trade_date, data)
 
+    # ── 15. 三档净流入（近5/10/20日 + 资金节奏，sector_history 缓存计算） ──
+    print("\n[15/16] Building sector flows (3-tier net inflow)...")
+    build_sector_flows(data)
+
+    # ── 16. VCP 板块-龙头共振监测（增量维护 vcp_cache） ──
+    print("\n[16/16] Building VCP watch (板块-龙头共振)...")
+    fetch_vcp_watch(pro, trade_date, data)
+
     # ── Metadata ──
-    data['updateTime'] = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]} 收盘 (Tushare自动)"
+    # updateTime 以数据实际最新日期为准（盘中/早间运行时各板块数据仍是前一交易日）
+    actual_date = (data.get('sectorFlows') or {}).get('trade_date') or \
+        f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
+    data['updateTime'] = f"{actual_date} 收盘 (Tushare自动)"
     data['marketStatus'] = '正常交易'
 
     # ── Save ──

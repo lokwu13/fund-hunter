@@ -71,6 +71,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
   const eciData = data.eciData;
   const [sortBy, setSortBy] = useState<'eci' | 'trend'>('eci');
   const [filterLevel, setFilterLevel] = useState<'all' | 'high' | 'mid' | 'low'>('all');
+  const [openVcp, setOpenVcp] = useState<string | null>(null);
 
   if (!eciData || !eciData.sectors || eciData.sectors.length === 0) {
     return (
@@ -692,6 +693,113 @@ export default function ECIPanel({ data }: ECIPanelProps) {
             {(!data.eciSubsectors.items || data.eciSubsectors.items.length === 0) &&
              (!data.eciSubsectors.watchlist || data.eciSubsectors.watchlist.length === 0) && (
               <p className="text-xs text-slate-400 py-1 text-center">当前无同时满足一致性与资金条件的子板块</p>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* VCP 波动收缩监测 */}
+      {data.vcpWatch && (
+        <Card className="border-emerald-200 shadow-sm">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Waves className="w-4 h-4 text-emerald-500" />
+                VCP 波动收缩监测
+                <span className="text-[10px] font-normal text-slate-400">
+                  🟢{data.vcpWatch.stats?.green ?? 0} 🟡{data.vcpWatch.stats?.yellow ?? 0} · 共监测{data.vcpWatch.stats?.total ?? 0}个板块
+                </span>
+              </CardTitle>
+              <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
+                {data.vcpWatch.trade_date}
+              </Badge>
+            </div>
+            <p className="text-[10px] text-slate-400 mt-1">{data.vcpWatch.note}</p>
+          </CardHeader>
+          <CardContent>
+            {data.vcpWatch.items && data.vcpWatch.items.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs min-w-[720px]">
+                  <thead>
+                    <tr className="text-slate-500 border-b border-slate-200">
+                      <th className="text-left py-1.5 font-medium">板块</th>
+                      <th className="text-right font-medium">20日波动率</th>
+                      <th className="text-right font-medium">年分位</th>
+                      <th className="text-right font-medium">成交收缩比</th>
+                      <th className="text-right font-medium">窄幅+缩量龙头</th>
+                      <th className="text-center font-medium">信号</th>
+                      <th className="text-left font-medium pl-3">代表龙头</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.vcpWatch.items.map((r: any) => {
+                      const open = openVcp === r.code;
+                      const reps = (r.leaders || []).filter((l: any) => l.narrow && l.shrink);
+                      const repTxt = (reps.length ? reps : (r.leaders || [])).slice(0, 2).map((l: any) => l.name).join('、');
+                      return [
+                        <tr
+                          key={r.code}
+                          className={`border-b border-slate-50 cursor-pointer hover:bg-emerald-50/40 ${open ? 'bg-emerald-50/60' : ''}`}
+                          onClick={() => setOpenVcp(open ? null : r.code)}
+                        >
+                          <td className="py-1.5 font-medium text-slate-700">
+                            <span className={`text-[9px] rounded px-1 mr-1 ${r.kind === '概念' ? 'bg-violet-100 text-violet-600' : 'bg-cyan-100 text-cyan-700'}`}>{r.kind}</span>
+                            {r.name}
+                            {r.signal === '⚪' && <span className="text-[9px] text-slate-300 ml-1">对照</span>}
+                          </td>
+                          <td className="text-right">{r.vol20}%</td>
+                          <td className={`text-right font-semibold ${r.volPct < 25 ? 'text-emerald-600' : r.volPct < 50 ? 'text-amber-500' : 'text-slate-500'}`}>{r.volPct}%</td>
+                          <td className={`text-right ${r.amtRatio != null && r.amtRatio < 0.7 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>
+                            {r.amtRatio != null ? r.amtRatio : '—'}
+                          </td>
+                          <td className="text-right">{r.nHit}/{r.nLeaders}</td>
+                          <td className="text-center text-sm">{r.signal}</td>
+                          <td className="pl-3 text-slate-600">{repTxt}</td>
+                        </tr>,
+                        open && (
+                          <tr key={r.code + '-detail'} className="border-b border-slate-100">
+                            <td colSpan={7} className="bg-slate-50/60 px-3 py-2">
+                              <table className="w-full text-[11px]">
+                                <thead>
+                                  <tr className="text-slate-400">
+                                    <th className="text-left font-medium py-1">股票</th>
+                                    <th className="text-right font-medium">20日波动率</th>
+                                    <th className="text-right font-medium">年分位</th>
+                                    <th className="text-right font-medium">振幅比</th>
+                                    <th className="text-right font-medium">量比</th>
+                                    <th className="text-center font-medium">窄幅&lt;0.75</th>
+                                    <th className="text-center font-medium">缩量&lt;0.7</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {(r.leaders || []).map((l: any) => (
+                                    <tr key={l.code} className="border-t border-slate-100">
+                                      <td className="py-1 text-slate-700">{l.name}<span className="text-[9px] text-slate-400 ml-1">{l.code}</span></td>
+                                      <td className="text-right">{l.vol20}%</td>
+                                      <td className={`text-right ${l.volPct < 25 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>{l.volPct}%</td>
+                                      <td className={`text-right ${l.ampRatio < 0.75 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>{l.ampRatio}</td>
+                                      <td className={`text-right ${l.volRatio < 0.7 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>{l.volRatio}</td>
+                                      <td className="text-center">{l.narrow ? '✅' : <span className="text-slate-300">—</span>}</td>
+                                      <td className="text-center">{l.shrink ? '✅' : <span className="text-slate-300">—</span>}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        ),
+                      ];
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="text-xs text-slate-400 py-3 text-center">本期无共振信号且暂无对照数据</p>
+            )}
+            {data.vcpWatch.conceptShort && data.vcpWatch.conceptShort.length > 0 && (
+              <p className="text-[10px] text-amber-500 mt-2">
+                概念指数历史不足一年（无法计算年分位，暂不监测）：{data.vcpWatch.conceptShort.join('、')}
+              </p>
             )}
           </CardContent>
         </Card>
