@@ -277,9 +277,9 @@
     }
   ],
   "northbound": {
-    "today": 35.17,
-    "week": 105.51,
-    "month": 351.70000000000005
+    "today": 32.62,
+    "week": 97.85999999999999,
+    "month": 326.2
   },
   "southbound": {
     "today": -0.0,
@@ -5116,59 +5116,70 @@
         "y5_chg": 0.0005,
         "y10_chg": 0.0011,
         "y30_chg": 0.003
+      },
+      {
+        "date": "2026-08-06",
+        "y2": 1.2548,
+        "y5": 1.4122,
+        "y10": 1.7143,
+        "y30": 2.1886,
+        "y2_chg": 0.0001,
+        "y5_chg": -0.0001,
+        "y10_chg": 0.0006,
+        "y30_chg": 0.0015
       }
     ],
     "curveCompare": {
       "latest": {
-        "date": "2026-08-05",
-        "y2": 1.2547,
-        "y5": 1.4123,
-        "y10": 1.7137,
-        "y30": 2.1871
+        "date": "2026-08-06",
+        "y2": 1.2548,
+        "y5": 1.4122,
+        "y10": 1.7143,
+        "y30": 2.1886
       },
       "1M_ago": {
-        "date": "2026-07-04",
-        "y2": 1.245,
-        "y5": 1.446,
-        "y10": 1.742,
-        "y30": 2.262
+        "date": "2026-07-06",
+        "y2": 1.2485,
+        "y5": 1.4413,
+        "y10": 1.7379,
+        "y30": 2.255
       },
       "3M_ago": {
-        "date": "2026-04-30",
-        "y2": 1.255,
-        "y5": 1.479,
-        "y10": 1.747,
-        "y30": 2.218
+        "date": "2026-05-06",
+        "y2": 1.28,
+        "y5": 1.49,
+        "y10": 1.765,
+        "y30": 2.239
       },
       "6M_ago": {
-        "date": "2026-02-05",
-        "y2": 1.363,
-        "y5": 1.569,
-        "y10": 1.817,
-        "y30": 2.271
+        "date": "2026-02-06",
+        "y2": 1.36,
+        "y5": 1.555,
+        "y10": 1.81,
+        "y30": 2.251
       },
       "1Y_ago": {
-        "date": "2025-08-05",
-        "y2": 1.425,
-        "y5": 1.572,
-        "y10": 1.706,
+        "date": "2025-08-06",
+        "y2": 1.415,
+        "y5": 1.562,
+        "y10": 1.7,
         "y30": 1.958
       }
     },
     "stats": {
       "latest": {
-        "date": "2026-08-05",
-        "y2": 1.2547,
-        "y5": 1.4123,
-        "y10": 1.7137,
-        "y30": 2.1871,
-        "spread": 0.932
+        "date": "2026-08-06",
+        "y2": 1.2548,
+        "y5": 1.4122,
+        "y10": 1.7143,
+        "y30": 2.1886,
+        "spread": 0.934
       },
       "1m_change": {
-        "y2": 1.0,
-        "y5": -3.4,
-        "y10": -2.8,
-        "y30": -7.5
+        "y2": 0.6,
+        "y5": -2.9,
+        "y10": -2.4,
+        "y30": -6.6
       },
       "range": {
         "y2": {
@@ -6967,6 +6978,11 @@
     },
     "news": [
       {
+        "date": "2026-08-06",
+        "title": "10年期国债收益率回升至1.714%，债市出现调整",
+        "source": "中债登"
+      },
+      {
         "date": "2026-08-05",
         "title": "10年期国债收益率回升至1.714%，债市出现调整",
         "source": "中债登"
@@ -7033,7 +7049,7 @@
       }
     ],
     "liquidityTools": {
-      "updateTime": "2026-08-05",
+      "updateTime": "2026-08-06",
       "policyRate": "1.40",
       "dr001": "1.38",
       "dr007": "1.42",
@@ -7319,10 +7335,10 @@
     {
       "code": "005827.OF",
       "name": "易方达蓝筹精选",
-      "nav": 1.531,
-      "accumNav": 1.531,
-      "date": "20260805",
-      "change": 0.005
+      "nav": 1.5268,
+      "accumNav": 1.5268,
+      "date": "20260806",
+      "change": -0.004
     },
     {
       "code": "110011.OF",
@@ -7343,10 +7359,10 @@
     {
       "code": "260108.OF",
       "name": "景顺长城新兴成长",
-      "nav": 1.566,
-      "accumNav": 3.373,
-      "date": "20260805",
-      "change": 0.0
+      "nav": 1.553,
+      "accumNav": 3.36,
+      "date": "20260806",
+      "change": -0.013
     },
     {
       "code": "070002.OF",
@@ -7359,10 +7375,10 @@
     {
       "code": "519732.OF",
       "name": "交银定期支付双息平衡",
-      "nav": 8.554,
-      "accumNav": 8.554,
-      "date": "20260805",
-      "change": 0.268
+      "nav": 8.69,
+      "accumNav": 8.69,
+      "date": "20260806",
+      "change": 0.136
     },
     {
       "code": "001410.OF",
@@ -7375,68 +7391,68 @@
     {
       "code": "003494.OF",
       "name": "富国天惠成长",
-      "nav": 3.0015,
-      "accumNav": 3.3065,
-      "date": "20260805",
-      "change": 0.052
+      "nav": 3.003,
+      "accumNav": 3.308,
+      "date": "20260806",
+      "change": 0.002
     },
     {
       "code": "008764.OF",
       "name": "睿远成长价值",
-      "nav": 1.5588,
-      "accumNav": 1.5588,
-      "date": "20260804",
-      "change": 0.01
+      "nav": 1.5515,
+      "accumNav": 1.5515,
+      "date": "20260805",
+      "change": -0.007
     }
   ],
   "eciData": {
     "updateTime": "2026-08-06 收盘（Tushare自动）",
     "period": "2026.07.10~2026.08.06 (20个交易日)",
     "totalIndustries": 31,
-    "divergentCount": 1,
+    "divergentCount": 7,
     "sectors": [
       {
         "sector": "医药生物",
-        "eci": 2754.2,
-        "volConvergence": 850.5,
-        "fundConcentration": 550.5,
+        "eci": 57.8,
+        "volConvergence": 8.5,
+        "fundConcentration": 5.5,
         "trendSync": 12.8,
-        "consistencyMomentum": 207.0,
-        "activity": 850.5,
+        "consistencyMomentum": 9.2,
+        "activity": 8.5,
         "policy": 7.5,
         "currentCorr": 0.86,
         "predictedCorr": 0.83,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": -711.8
+        "change5d": -5.5
       },
       {
         "sector": "电子",
-        "eci": 1921.2,
-        "volConvergence": 300.0,
-        "fundConcentration": 700.5,
+        "eci": 45.4,
+        "volConvergence": 3.0,
+        "fundConcentration": 7.0,
         "trendSync": 14.6,
-        "consistencyMomentum": 582.0,
-        "activity": 124.5,
+        "consistencyMomentum": 7.6,
+        "activity": 1.2,
         "policy": 7.5,
         "currentCorr": 0.92,
         "predictedCorr": 0.95,
-        "trend": "↑上升",
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -667.2
+        "change5d": -11.9
       },
       {
         "sector": "计算机",
-        "eci": 3184.1,
-        "volConvergence": 250.5,
-        "fundConcentration": 949.5,
+        "eci": 65.3,
+        "volConvergence": 2.5,
+        "fundConcentration": 9.5,
         "trendSync": 13.9,
-        "consistencyMomentum": 568.8,
-        "activity": 1075.5,
+        "consistencyMomentum": 14.6,
+        "activity": 10.8,
         "policy": 7.5,
         "currentCorr": 0.94,
         "predictedCorr": 0.95,
@@ -7444,22 +7460,22 @@
         "stocks": 5,
         "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 1662.7
+        "change5d": 22.6
       },
       {
         "sector": "电力设备",
-        "eci": 3187.9,
-        "volConvergence": 1399.5,
-        "fundConcentration": 750.0,
+        "eci": 64.1,
+        "volConvergence": 14.0,
+        "fundConcentration": 7.5,
         "trendSync": 14.6,
-        "consistencyMomentum": 447.0,
-        "activity": 250.5,
+        "consistencyMomentum": 11.6,
+        "activity": 2.5,
         "policy": 7.5,
         "currentCorr": 0.93,
         "predictedCorr": 0.92,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7478,73 +7494,73 @@
             "return": "-18.3%"
           }
         },
-        "change5d": 856.9
+        "change5d": 10.1
       },
       {
         "sector": "食品饮料",
-        "eci": 2985.4,
-        "volConvergence": 150.0,
-        "fundConcentration": 1300.5,
+        "eci": 58.3,
+        "volConvergence": 1.5,
+        "fundConcentration": 13.0,
         "trendSync": 13.0,
-        "consistencyMomentum": 65.4,
-        "activity": 1150.5,
+        "consistencyMomentum": 6.0,
+        "activity": 11.5,
         "policy": 7.5,
         "currentCorr": 0.65,
         "predictedCorr": 0.6,
-        "trend": "↑上升",
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
-        "change5d": -273.5
+        "change5d": -4.8
       },
       {
         "sector": "银行",
-        "eci": 3928.7,
-        "volConvergence": 499.5,
-        "fundConcentration": 1500.0,
+        "eci": 68.0,
+        "volConvergence": 5.0,
+        "fundConcentration": 15.0,
         "trendSync": 15.0,
-        "consistencyMomentum": 163.8,
-        "activity": 1350.0,
+        "consistencyMomentum": 5.2,
+        "activity": 13.5,
         "policy": 7.5,
         "currentCorr": 0.95,
-        "predictedCorr": 0.95,
-        "trend": "↑上升",
+        "predictedCorr": 0.93,
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
-        "change5d": 39.4
+        "change5d": -3.6
       },
       {
         "sector": "非银金融",
-        "eci": 2989.9,
-        "volConvergence": 1500.0,
-        "fundConcentration": 850.5,
+        "eci": 58.2,
+        "volConvergence": 15.0,
+        "fundConcentration": 8.5,
         "trendSync": 12.8,
-        "consistencyMomentum": 45.6,
-        "activity": 274.5,
+        "consistencyMomentum": 5.8,
+        "activity": 2.8,
         "policy": 7.5,
         "currentCorr": 0.53,
         "predictedCorr": 0.5,
-        "trend": "↑上升",
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
-        "change5d": -233.5
+        "change5d": -2.6
       },
       {
         "sector": "汽车",
-        "eci": 2844.3,
-        "volConvergence": 1050.0,
-        "fundConcentration": 1000.5,
+        "eci": 60.8,
+        "volConvergence": 10.5,
+        "fundConcentration": 10.0,
         "trendSync": 12.9,
-        "consistencyMomentum": 189.0,
-        "activity": 300.0,
+        "consistencyMomentum": 10.8,
+        "activity": 3.0,
         "policy": 7.5,
         "currentCorr": 0.6,
         "predictedCorr": 0.41,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7563,56 +7579,56 @@
             "return": "-68.5%"
           }
         },
-        "change5d": 1020.0
+        "change5d": 18.5
       },
       {
         "sector": "机械设备",
-        "eci": 2630.2,
-        "volConvergence": 700.5,
-        "fundConcentration": 900.0,
+        "eci": 49.9,
+        "volConvergence": 7.0,
+        "fundConcentration": 9.0,
         "trendSync": 14.0,
-        "consistencyMomentum": 520.2,
-        "activity": 225.0,
+        "consistencyMomentum": 5.2,
+        "activity": 2.2,
         "policy": 7.5,
         "currentCorr": 0.86,
         "predictedCorr": 0.85,
-        "trend": "↑上升",
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
-        "change5d": 1110.3
+        "change5d": 5.1
       },
       {
         "sector": "国防军工",
-        "eci": 1124.2,
-        "volConvergence": 49.5,
-        "fundConcentration": 450.0,
+        "eci": 35.6,
+        "volConvergence": 0.5,
+        "fundConcentration": 4.5,
         "trendSync": 14.6,
-        "consistencyMomentum": 340.2,
-        "activity": 150.0,
+        "consistencyMomentum": 3.4,
+        "activity": 1.5,
         "policy": 7.5,
         "currentCorr": 0.94,
         "predictedCorr": 0.95,
-        "trend": "↑上升",
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
-        "change5d": 299.8
+        "change5d": -2.2
       },
       {
         "sector": "通信",
-        "eci": 2550.8,
-        "volConvergence": 199.5,
-        "fundConcentration": 1099.5,
+        "eci": 49.4,
+        "volConvergence": 2.0,
+        "fundConcentration": 11.0,
         "trendSync": 14.2,
-        "consistencyMomentum": 600.0,
-        "activity": 375.0,
+        "consistencyMomentum": 6.0,
+        "activity": 3.8,
         "policy": 7.5,
         "currentCorr": 0.8,
         "predictedCorr": 0.78,
-        "trend": "↑上升",
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7631,16 +7647,16 @@
             "return": "-30.8%"
           }
         },
-        "change5d": 144.0
+        "change5d": -4.5
       },
       {
         "sector": "有色金属",
-        "eci": 3468.4,
-        "volConvergence": 1000.5,
-        "fundConcentration": 1150.5,
+        "eci": 67.8,
+        "volConvergence": 10.0,
+        "fundConcentration": 11.5,
         "trendSync": 13.6,
-        "consistencyMomentum": 549.0,
-        "activity": 400.5,
+        "consistencyMomentum": 14.4,
+        "activity": 4.0,
         "policy": 7.5,
         "currentCorr": 0.86,
         "predictedCorr": 0.89,
@@ -7665,16 +7681,16 @@
             "return": "-22.1%"
           }
         },
-        "change5d": 950.6
+        "change5d": 13.8
       },
       {
         "sector": "家用电器",
-        "eci": 3308.0,
-        "volConvergence": 1150.5,
-        "fundConcentration": 1350.0,
+        "eci": 67.7,
+        "volConvergence": 11.5,
+        "fundConcentration": 13.5,
         "trendSync": 15.0,
-        "consistencyMomentum": 229.2,
-        "activity": 225.0,
+        "consistencyMomentum": 11.2,
+        "activity": 2.2,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
@@ -7682,22 +7698,22 @@
         "stocks": 5,
         "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 789.3
+        "change5d": 13.8
       },
       {
         "sector": "房地产",
-        "eci": 1654.0,
-        "volConvergence": 600.0,
-        "fundConcentration": 400.5,
+        "eci": 48.2,
+        "volConvergence": 6.0,
+        "fundConcentration": 4.0,
         "trendSync": 14.1,
-        "consistencyMomentum": 267.0,
-        "activity": 199.5,
+        "consistencyMomentum": 9.8,
+        "activity": 2.0,
         "policy": 7.5,
         "currentCorr": 0.88,
         "predictedCorr": 0.88,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7716,22 +7732,22 @@
             "return": "-19.5%"
           }
         },
-        "change5d": -409.2
+        "change5d": -1.7
       },
       {
         "sector": "建筑装饰",
-        "eci": 2367.1,
-        "volConvergence": 949.5,
-        "fundConcentration": 349.5,
+        "eci": 57.4,
+        "volConvergence": 9.5,
+        "fundConcentration": 3.5,
         "trendSync": 14.2,
-        "consistencyMomentum": 409.2,
-        "activity": 400.5,
+        "consistencyMomentum": 13.0,
+        "activity": 4.0,
         "policy": 7.5,
         "currentCorr": 0.94,
         "predictedCorr": 0.93,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7750,41 +7766,41 @@
             "return": "-25.6%"
           }
         },
-        "change5d": 380.3
+        "change5d": 7.7
       },
       {
         "sector": "交通运输",
-        "eci": 3078.4,
-        "volConvergence": 799.5,
-        "fundConcentration": 1450.5,
+        "eci": 59.0,
+        "volConvergence": 8.0,
+        "fundConcentration": 14.5,
         "trendSync": 12.7,
-        "consistencyMomentum": 125.4,
-        "activity": 375.0,
+        "consistencyMomentum": 6.6,
+        "activity": 3.8,
         "policy": 7.5,
         "currentCorr": 0.57,
         "predictedCorr": 0.51,
-        "trend": "↑上升",
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -63.7
+        "change5d": -2.6
       },
       {
         "sector": "传媒",
-        "eci": 3004.1,
-        "volConvergence": 100.5,
-        "fundConcentration": 649.5,
+        "eci": 61.8,
+        "volConvergence": 1.0,
+        "fundConcentration": 6.5,
         "trendSync": 14.2,
-        "consistencyMomentum": 507.0,
-        "activity": 1425.0,
+        "consistencyMomentum": 12.2,
+        "activity": 14.2,
         "policy": 7.5,
         "currentCorr": 0.91,
         "predictedCorr": 0.91,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 1141.7
+        "change5d": 15.7
       },
       {
         "sector": "化工",
@@ -7822,18 +7838,18 @@
       },
       {
         "sector": "建筑材料",
-        "eci": 2778.4,
-        "volConvergence": 1099.5,
-        "fundConcentration": 499.5,
+        "eci": 51.0,
+        "volConvergence": 11.0,
+        "fundConcentration": 5.0,
         "trendSync": 13.6,
-        "consistencyMomentum": 480.0,
-        "activity": 400.5,
+        "consistencyMomentum": 4.8,
+        "activity": 4.0,
         "policy": 7.5,
         "currentCorr": 0.79,
         "predictedCorr": 0.81,
-        "trend": "↑上升",
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7852,22 +7868,22 @@
             "return": "-21.3%"
           }
         },
-        "change5d": 1055.7
+        "change5d": 5.1
       },
       {
         "sector": "农林牧渔",
-        "eci": 3215.1,
-        "volConvergence": 649.5,
-        "fundConcentration": 1050.0,
+        "eci": 63.6,
+        "volConvergence": 6.5,
+        "fundConcentration": 10.5,
         "trendSync": 13.9,
-        "consistencyMomentum": 247.2,
-        "activity": 925.5,
+        "consistencyMomentum": 9.6,
+        "activity": 9.2,
         "policy": 7.5,
         "currentCorr": 0.83,
         "predictedCorr": 0.85,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7886,39 +7902,39 @@
             "return": "-15.6%"
           }
         },
-        "change5d": 562.7
+        "change5d": 11.9
       },
       {
         "sector": "公用事业",
-        "eci": 2714.7,
-        "volConvergence": 1350.0,
-        "fundConcentration": 600.0,
+        "eci": 57.8,
+        "volConvergence": 13.5,
+        "fundConcentration": 6.0,
         "trendSync": 13.2,
-        "consistencyMomentum": 147.0,
-        "activity": 325.5,
+        "consistencyMomentum": 8.6,
+        "activity": 3.2,
         "policy": 7.5,
         "currentCorr": 0.64,
         "predictedCorr": 0.62,
-        "trend": "↑上升",
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -457.1
+        "change5d": -0.4
       },
       {
         "sector": "轻工制造",
-        "eci": 1490.4,
-        "volConvergence": 550.5,
-        "fundConcentration": 150.0,
+        "eci": 48.3,
+        "volConvergence": 5.5,
+        "fundConcentration": 1.5,
         "trendSync": 13.9,
-        "consistencyMomentum": 369.0,
-        "activity": 250.5,
+        "consistencyMomentum": 12.6,
+        "activity": 2.5,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7937,22 +7953,22 @@
             "return": "-17.2%"
           }
         },
-        "change5d": 61.3
+        "change5d": 6.5
       },
       {
         "sector": "纺织服装",
-        "eci": 2811.7,
-        "volConvergence": 750.0,
-        "fundConcentration": 799.5,
+        "eci": 62.8,
+        "volConvergence": 7.5,
+        "fundConcentration": 8.0,
         "trendSync": 15.0,
-        "consistencyMomentum": 309.0,
-        "activity": 649.5,
+        "consistencyMomentum": 12.0,
+        "activity": 6.5,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7971,22 +7987,22 @@
             "return": "-13.5%"
           }
         },
-        "change5d": -227.0
+        "change5d": 3.7
       },
       {
         "sector": "钢铁",
-        "eci": 2862.7,
-        "volConvergence": 900.0,
-        "fundConcentration": 1249.5,
+        "eci": 58.0,
+        "volConvergence": 9.0,
+        "fundConcentration": 12.5,
         "trendSync": 13.8,
-        "consistencyMomentum": 105.6,
-        "activity": 300.0,
+        "consistencyMomentum": 6.4,
+        "activity": 3.0,
         "policy": 7.5,
         "currentCorr": 0.82,
         "predictedCorr": 0.82,
-        "trend": "↑上升",
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8005,22 +8021,22 @@
             "return": "-12.8%"
           }
         },
-        "change5d": -120.3
+        "change5d": -3.2
       },
       {
         "sector": "煤炭",
-        "eci": 4229.0,
-        "volConvergence": 1450.5,
-        "fundConcentration": 1399.5,
+        "eci": 71.3,
+        "volConvergence": 14.5,
+        "fundConcentration": 14.0,
         "trendSync": 13.5,
-        "consistencyMomentum": 285.6,
-        "activity": 649.5,
+        "consistencyMomentum": 8.2,
+        "activity": 6.5,
         "policy": 7.5,
         "currentCorr": 0.83,
         "predictedCorr": 0.79,
-        "trend": "↑上升",
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性震荡，观望为主",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8039,22 +8055,22 @@
             "return": "-14.3%"
           }
         },
-        "change5d": 302.6
+        "change5d": 4.2
       },
       {
         "sector": "石油石化",
-        "eci": 2426.2,
-        "volConvergence": 400.5,
-        "fundConcentration": 1200.0,
+        "eci": 54.9,
+        "volConvergence": 4.0,
+        "fundConcentration": 12.0,
         "trendSync": 13.1,
-        "consistencyMomentum": 87.0,
-        "activity": 475.5,
+        "consistencyMomentum": 8.0,
+        "activity": 4.8,
         "policy": 7.5,
         "currentCorr": 0.73,
         "predictedCorr": 0.73,
-        "trend": "↑上升",
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8073,39 +8089,39 @@
             "return": "-11.6%"
           }
         },
-        "change5d": -735.4
+        "change5d": -5.0
       },
       {
         "sector": "社会服务",
-        "eci": 2387.3,
-        "volConvergence": 450.0,
-        "fundConcentration": 199.5,
+        "eci": 55.6,
+        "volConvergence": 4.5,
+        "fundConcentration": 2.0,
         "trendSync": 14.1,
-        "consistencyMomentum": 327.0,
-        "activity": 1150.5,
+        "consistencyMomentum": 10.4,
+        "activity": 11.5,
         "policy": 7.5,
         "currentCorr": 0.88,
         "predictedCorr": 0.87,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": -145.0
+        "change5d": -1.4
       },
       {
         "sector": "环保",
-        "eci": 2501.7,
-        "volConvergence": 1249.5,
-        "fundConcentration": 250.5,
+        "eci": 59.7,
+        "volConvergence": 12.5,
+        "fundConcentration": 2.5,
         "trendSync": 15.0,
-        "consistencyMomentum": 429.0,
-        "activity": 300.0,
+        "consistencyMomentum": 13.2,
+        "activity": 3.0,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8124,22 +8140,22 @@
             "return": "-10.3%"
           }
         },
-        "change5d": 577.4
+        "change5d": 9.7
       },
       {
         "sector": "美容护理",
-        "eci": 1943.3,
-        "volConvergence": 349.5,
-        "fundConcentration": 100.5,
+        "eci": 52.1,
+        "volConvergence": 3.5,
+        "fundConcentration": 1.0,
         "trendSync": 15.0,
-        "consistencyMomentum": 27.0,
-        "activity": 1249.5,
+        "consistencyMomentum": 7.4,
+        "activity": 12.5,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
-        "trend": "↑上升",
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8158,22 +8174,22 @@
             "return": "-15.3%"
           }
         },
-        "change5d": -1073.4
+        "change5d": -10.8
       },
       {
         "sector": "综合",
-        "eci": 2178.7,
-        "volConvergence": 1200.0,
-        "fundConcentration": 49.5,
+        "eci": 56.4,
+        "volConvergence": 12.0,
+        "fundConcentration": 0.5,
         "trendSync": 15.0,
-        "consistencyMomentum": 388.8,
-        "activity": 300.0,
+        "consistencyMomentum": 12.8,
+        "activity": 3.0,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8192,22 +8208,22 @@
             "return": "-20.1%"
           }
         },
-        "change5d": 84.4
+        "change5d": 6.7
       },
       {
         "sector": "基础化工",
-        "eci": 2544.2,
-        "volConvergence": 1300.5,
-        "fundConcentration": 300.0,
+        "eci": 58.0,
+        "volConvergence": 13.0,
+        "fundConcentration": 3.0,
         "trendSync": 13.1,
-        "consistencyMomentum": 469.2,
-        "activity": 199.5,
+        "consistencyMomentum": 13.6,
+        "activity": 2.0,
         "policy": 7.5,
         "currentCorr": 0.82,
         "predictedCorr": 0.81,
         "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8226,7 +8242,7 @@
             "return": "-13.7%"
           }
         },
-        "change5d": 1510.3
+        "change5d": 19.3
       }
     ],
     "indicators": {
@@ -9146,11 +9162,11 @@
     "items": [
       {
         "parent": "煤炭",
-        "parentEci": 4229.0,
+        "parentEci": 71.3,
         "subs": [
           {
             "name": "焦炭加工",
-            "eci": 4069.5,
+            "eci": 67.3,
             "inflow20d": 5.21,
             "positiveRatio": 46.7,
             "leaders": [
@@ -9168,7 +9184,7 @@
           },
           {
             "name": "煤炭开采",
-            "eci": 3354.0,
+            "eci": 54.8,
             "inflow20d": 48.37,
             "positiveRatio": 56.7,
             "leaders": [
@@ -9188,11 +9204,11 @@
       },
       {
         "parent": "银行",
-        "parentEci": 3928.7,
+        "parentEci": 68.0,
         "subs": [
           {
             "name": "银行",
-            "eci": 5773.5,
+            "eci": 81.0,
             "inflow20d": 482.91,
             "positiveRatio": 73.3,
             "leaders": [
@@ -9209,89 +9225,29 @@
             ]
           }
         ]
-      },
-      {
-        "parent": "交通运输",
-        "parentEci": 3078.4,
-        "subs": [
-          {
-            "name": "铁路",
-            "eci": 4550.8,
-            "inflow20d": 26.33,
-            "positiveRatio": 60.0,
-            "leaders": [
-              {
-                "name": "大秦铁路",
-                "code": "601006.SH",
-                "pctChg": 0.62
-              },
-              {
-                "name": "中铁特货",
-                "code": "001213.SZ",
-                "pctChg": 0.0
-              }
-            ]
-          },
-          {
-            "name": "路桥",
-            "eci": 4453.8,
-            "inflow20d": 11.64,
-            "positiveRatio": 66.7,
-            "leaders": [
-              {
-                "name": "山东高速",
-                "code": "600350.SH",
-                "pctChg": 0.28
-              },
-              {
-                "name": "福建高速",
-                "code": "600033.SH",
-                "pctChg": -0.28
-              }
-            ]
-          },
-          {
-            "name": "港口",
-            "eci": 4117.3,
-            "inflow20d": 19.65,
-            "positiveRatio": 63.3,
-            "leaders": [
-              {
-                "name": "上港集团",
-                "code": "600018.SH",
-                "pctChg": 0.58
-              },
-              {
-                "name": "招商港口",
-                "code": "001872.SZ",
-                "pctChg": 0.46
-              }
-            ]
-          }
-        ]
       }
     ],
     "watchlist": [
       {
         "parent": "有色金属",
-        "eci": 3468.4,
+        "eci": 67.8,
         "inflow30d": -533.23,
         "posRatio": 39.3,
         "gap": "30日净流出533.2亿，待资金回正"
       },
       {
         "parent": "家用电器",
-        "eci": 3308.0,
+        "eci": 67.7,
         "inflow30d": 41.38,
         "posRatio": 46.7,
         "gap": "流入占比46.7%，未过半"
       },
       {
-        "parent": "农林牧渔",
-        "eci": 3215.1,
-        "inflow30d": -22.45,
-        "posRatio": 46.0,
-        "gap": "30日净流出22.4亿，待资金回正"
+        "parent": "计算机",
+        "eci": 65.3,
+        "inflow30d": -326.66,
+        "posRatio": 40.0,
+        "gap": "30日净流出326.7亿，待资金回正"
       }
     ]
   },

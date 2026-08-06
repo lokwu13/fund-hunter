@@ -2003,8 +2003,8 @@ def _hv(closes, win):
     return round((var ** 0.5) * (252 ** 0.5) * 100, 1)
 
 
-def _pct_rank(values, v):
-    """v 在 values 中的百分位(0-100)。"""
+def _pct_rank100(values, v):
+    """v 在 values 中的百分位(0-100)。注意与 ECI 用的 _pct_rank(0-1) 区分，勿同名覆盖。"""
     vals = [x for x in values if x is not None]
     if not vals or v is None:
         return None
@@ -2331,12 +2331,12 @@ def fetch_nt_upgrade(pro, trade_date, data):
             # HV20 近一年分位
             hv20_series = [_hv(closes[:i + 1], 20) for i in range(20, len(closes))]
             hv20_1y = hv20_series[-250:] if len(hv20_series) > 250 else hv20_series
-            hv_pct = _pct_rank(hv20_1y, hv20)
+            hv_pct = _pct_rank100(hv20_1y, hv20)
             # PE TTM + 近2年分位
             bh = cache['idxBasic'].get(ic, {})
             bdays = sorted(bh.keys())
             pe = bh[bdays[-1]] if bdays else None
-            pe_pct = _pct_rank([bh[d] for d in bdays], pe)
+            pe_pct = _pct_rank100([bh[d] for d in bdays], pe)
             if hv20 is not None and hv60 is not None:
                 if hv20 > hv60 * 1.2:
                     status = '升温'
