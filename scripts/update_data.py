@@ -2269,54 +2269,8 @@ def fetch_nt_upgrade(pro, trade_date, data):
     except Exception as e:
         print(f"  Warning: etfRotation failed: {e}")
 
-    # ════════ 3. 国家队持仓估算 ════════
-    try:
-        with open(NT_RATIO_CONFIG, encoding='utf-8') as f:
-            cfg = json.load(f)
-        est_items = []
-        hist_total = {}
-        for tc, info in cfg['items'].items():
-            ratio = float(info['ratio'])
-            hist = cache['watch'].get(tc, {})
-            days = [d0 for d0 in sorted(hist.keys()) if d0 <= od]
-            if not days:
-                continue
-            share_now, close_now_ = hist[days[-1]]
-            if not close_now_:
-                close_now_ = close_now.get(tc, 0)
-            est_now = ratio * share_now * close_now_  # 亿元
-            rep = info.get('report_date', '').replace('-', '')
-            est_rep = None
-            if rep and rep in hist and hist[rep][1]:
-                est_rep = ratio * hist[rep][0] * hist[rep][1]
-            elif rep:
-                older = [d for d in days if d <= rep]
-                if older and hist[older[-1]][1]:
-                    est_rep = ratio * hist[older[-1]][0] * hist[older[-1]][1]
-            est_items.append({
-                'code': tc, 'name': info['name'], 'ratio': round(ratio * 100, 2),
-                'estMv': round(est_now, 1),
-                'estChgReport': round(est_now - est_rep, 1) if est_rep is not None else None,
-            })
-            for d in days[-120:]:
-                if hist[d][1]:
-                    hist_total[d] = hist_total.get(d, 0) + ratio * hist[d][0] * hist[d][1]
-        total_mv = round(sum(i['estMv'] for i in est_items), 1)
-        hdays = sorted(hist_total.keys())
-        history = [{'d': f"{d[4:6]}-{d[6:]}", 'mv': round(hist_total[d], 1)} for d in hdays]
-        chg5 = round(hist_total[hdays[-1]] - hist_total[hdays[-6]], 1) if len(hdays) >= 6 else None
-        data['nationalTeamEst'] = {
-            'trade_date': f"{od[:4]}-{od[4:6]}-{od[6:]}",
-            'asOf': cfg.get('as_of'),
-            'items': est_items,
-            'totalMv': total_mv,
-            'chg5d': chg5,
-            'history': history,
-            'note': '估算口径=2025年报汇金系占比×当日份额×当日收盘价，占比半年才披露一次，仅供参考',
-        }
-        print(f"  nationalTeamEst: total {total_mv}亿, 5d chg {chg5}")
-    except Exception as e:
-        print(f"  Warning: nationalTeamEst failed: {e}")
+    # ════════ 3. 国家队持仓估算（已下线，清除存量字段；占比配置保留供轮动v2复用） ════════
+    data.pop('nationalTeamEst', None)
 
     # ════════ 4. 宽基波动率（ETF VIX） ════════
     try:
@@ -2376,7 +2330,6 @@ def _build_nt_comment(data):
     sents = []
     rot = data.get('etfRotation') or {}
     radar = data.get('etfShareRadar') or {}
-    est = data.get('nationalTeamEst') or {}
     vol = data.get('indexVol') or {}
 
     # 1) 全市场 ETF 份额净增减
@@ -2399,14 +2352,6 @@ def _build_nt_comment(data):
         inflow = '、'.join(rot.get('inflowTop3') or []) or '无'
         outflow = '、'.join(rot.get('outflowTop3') or []) or '无'
         sents.append(f"近5日份额口径资金主要流入{inflow}类，流出{outflow}类。")
-
-    # 4) 汇金估算
-    if est.get('totalMv'):
-        chg = est.get('chg5d')
-        trend = ''
-        if chg is not None:
-            trend = f"，近5日{'增加' if chg >= 0 else '减少'}约{abs(chg):.0f}亿元"
-        sents.append(f"按2025年报占比估算，汇金系持有这13只宽基ETF市值约{est['totalMv']:.0f}亿元{trend}（估算口径）。")
 
     # 5) 波动率状态
     vitems = vol.get('items') or []

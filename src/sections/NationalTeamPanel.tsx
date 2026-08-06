@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
   Landmark, Shield, Activity, ChevronRight, TrendingUp, TrendingDown,
-  LandmarkIcon, Eye, Quote, Radar, ArrowLeftRight, Calculator, Gauge
+  LandmarkIcon, Eye, Quote, Radar, ArrowLeftRight, Gauge
 } from 'lucide-react';
 import { useFundData } from '@/hooks/useFundData';
 
@@ -736,67 +736,6 @@ export default function NationalTeamPanel() {
             <p className="text-[10px] text-slate-400 mt-3">
               条形为近5日净额（份额变化×收盘价，亿元），右侧小字为当日净额 · 全市场ETF当日合计 {data.etfRotation.totalToday >= 0 ? '+' : ''}{data.etfRotation.totalToday.toFixed(1)} 亿
             </p>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* ====== 国家队持仓估算 ====== */}
-      {data.nationalTeamEst && data.nationalTeamEst.items.length > 0 && (
-        <Card className="border-amber-200">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-bold flex items-center gap-2">
-                <Calculator className="w-5 h-5 text-amber-600" />
-                汇金系持仓估算（截至 {data.nationalTeamEst.trade_date}）
-              </CardTitle>
-              <Badge className="bg-amber-100 text-amber-700 text-xs">估算口径，仅供参考</Badge>
-            </div>
-            <CardDescription>{data.nationalTeamEst.note}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 gap-3 mb-3">
-              <div className="bg-amber-50 rounded-lg p-3">
-                <p className="text-[10px] text-amber-600 mb-0.5">估算总市值</p>
-                <p className="text-lg font-bold text-amber-800">{data.nationalTeamEst.totalMv.toFixed(0)}<span className="text-xs font-normal">亿</span></p>
-              </div>
-              <div className="bg-slate-50 rounded-lg p-3">
-                <p className="text-[10px] text-slate-500 mb-0.5">近5日变化</p>
-                <p className={`text-lg font-bold ${(data.nationalTeamEst.chg5d ?? 0) >= 0 ? 'text-red-600' : 'text-green-600'}`}>
-                  {data.nationalTeamEst.chg5d != null ? `${data.nationalTeamEst.chg5d >= 0 ? '+' : ''}${data.nationalTeamEst.chg5d.toFixed(0)}` : '--'}<span className="text-xs font-normal">亿</span>
-                </p>
-              </div>
-              <div className="bg-slate-50 rounded-lg p-3">
-                <p className="text-[10px] text-slate-500 mb-0.5">占比数据期</p>
-                <p className="text-lg font-bold text-slate-700">{data.nationalTeamEst.asOf || '--'}</p>
-              </div>
-            </div>
-            <div className="overflow-x-auto">
-              <Table className="min-w-[680px]">
-                <TableHeader>
-                  <TableRow className="bg-amber-50">
-                    <TableHead className="text-xs">ETF</TableHead>
-                    <TableHead className="text-xs text-right">汇金系占比</TableHead>
-                    <TableHead className="text-xs text-right">估算市值(亿)</TableHead>
-                    <TableHead className="text-xs text-right">较报告期变化(亿)</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data.nationalTeamEst.items.map((e) => (
-                    <TableRow key={e.code} className="hover:bg-slate-50">
-                      <TableCell className="text-xs font-semibold whitespace-nowrap">
-                        {e.name}
-                        <span className="text-slate-400 ml-1">{e.code.split('.')[0]}</span>
-                      </TableCell>
-                      <TableCell className="text-xs text-right">{e.ratio > 0 ? `${e.ratio.toFixed(1)}%` : '未进前十'}</TableCell>
-                      <TableCell className="text-xs text-right font-bold text-amber-800">{e.estMv > 0 ? e.estMv.toFixed(1) : '--'}</TableCell>
-                      <TableCell className={`text-xs text-right ${(e.estChgReport ?? 0) >= 0 ? 'text-red-600' : 'text-green-600'}`}>
-                        {e.estChgReport != null ? `${e.estChgReport >= 0 ? '+' : ''}${e.estChgReport.toFixed(1)}` : '--'}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
           </CardContent>
         </Card>
       )}

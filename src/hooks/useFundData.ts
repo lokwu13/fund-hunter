@@ -488,21 +488,6 @@ export interface FundData {
       count: number;
     }>;
   };
-  nationalTeamEst?: {
-    trade_date: string;
-    asOf?: string;
-    totalMv: number;
-    chg5d: number | null;
-    note?: string;
-    items: Array<{
-      code: string;
-      name: string;
-      ratio: number;
-      estMv: number;
-      estChgReport: number | null;
-    }>;
-    history: Array<{ d: string; mv: number }>;
-  };
   indexVol?: {
     trade_date: string;
     note?: string;
