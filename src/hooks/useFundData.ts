@@ -454,6 +454,72 @@ export interface FundData {
       netFlow5d: number;
     };
   };
+  etfShareRadar?: {
+    trade_date: string;
+    alertCount: number;
+    note?: string;
+    items: Array<{
+      code: string;
+      name: string;
+      share: number;
+      close: number;
+      chg1: number | null;
+      chg1Pct: number | null;
+      amt1: number | null;
+      chg5: number | null;
+      chg5Pct: number | null;
+      chg20: number | null;
+      chg20Pct: number | null;
+      alert: boolean;
+    }>;
+  };
+  etfRotation?: {
+    trade_date: string;
+    inflowTop3: string[];
+    outflowTop3: string[];
+    totalToday: number;
+    total5d: number;
+    moneyToday?: number | null;
+    note?: string;
+    items: Array<{
+      cat: string;
+      todayNet: number;
+      net5d: number;
+      count: number;
+    }>;
+  };
+  nationalTeamEst?: {
+    trade_date: string;
+    asOf?: string;
+    totalMv: number;
+    chg5d: number | null;
+    note?: string;
+    items: Array<{
+      code: string;
+      name: string;
+      ratio: number;
+      estMv: number;
+      estChgReport: number | null;
+    }>;
+    history: Array<{ d: string; mv: number }>;
+  };
+  indexVol?: {
+    trade_date: string;
+    note?: string;
+    items: Array<{
+      code: string;
+      name: string;
+      hv20: number | null;
+      hv60: number | null;
+      hv20Chg5: number | null;
+      hvPct1y: number | null;
+      peTtm: number | null;
+      pePct2y: number | null;
+      status: string;
+      low: boolean;
+    }>;
+  };
+  nationalTeamComment?: string;
   holdingsNews?: Array<{
     stockCode: string;
     stockName: string;

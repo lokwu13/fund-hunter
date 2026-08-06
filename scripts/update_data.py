@@ -1918,6 +1918,515 @@ def load_existing_data():
         return {}
 
 
+# ══════════════════════════════════════════════════════════════
+# 国家队栏目升级：ETF份额雷达 / 板块资金轮动(份额口径) / 汇金持仓估算 / 宽基波动率
+# ══════════════════════════════════════════════════════════════
+import re as _re
+
+ETF_SHARE_CACHE = 'scripts/cache/etf_share_history.json'
+NT_RATIO_CONFIG = 'scripts/config/national_team_ratio.json'
+
+# ETF 份额雷达监控池（汇金常买宽基，13 只；名称已用 fund_basic 核对）
+ETF_RADAR_WATCH = {
+    '510300.SH': '华泰柏瑞300ETF',
+    '510310.SH': '易方达300ETF',
+    '510330.SH': '华夏300ETF',
+    '159919.SZ': '嘉实300ETF',
+    '510500.SH': '南方500ETF',
+    '512500.SH': '华夏500ETF',
+    '512100.SH': '南方1000ETF',
+    '159845.SZ': '华夏1000ETF',
+    '510050.SH': '华夏50ETF',
+    '510180.SH': '华安180ETF',
+    '588000.SH': '华夏科创50ETF',
+    '588080.SH': '易方达科创50ETF',
+    '159915.SZ': '易方达创业板ETF',
+}
+
+# 宽基波动率（ETF VIX）标的指数
+VOL_INDICES = {
+    '000300.SH': '沪深300',
+    '000905.SH': '中证500',
+    '000852.SH': '中证1000',
+    '000016.SH': '上证50',
+    '399006.SZ': '创业板指',
+    '000688.SH': '科创50',
+}
+
+# 板块资金轮动分类（名称关键词，按优先级从上到下匹配）
+ETF_CATEGORY_RULES = [
+    ('货币',   r'货币|添益|日利|快线|保证金|理财金'),
+    ('债券',   r'债|国开|利率|信用'),
+    ('商品',   r'黄金|白银|豆粕|原油|能源化工|饲料'),
+    ('港股海外', r'恒生|港股|H股|中概|纳斯达克|标普|日经|德国|法国|亚太|全球|美国|沙特|QDII|海外|国际原油'),
+    ('红利',   r'红利|股息|低波|现金流'),
+    ('宽基',   r'沪深300|中证500|中证1000|中证2000|上证50|科创50|科创创业|创业板|A500|中证800|上证180|深证100|中证100|MSCI|综指|深证成|双创'),
+    ('科技',   r'半导体|芯片|科技|科创|人工智能|智能|通信|计算机|电子|5G|软件|云|大数据|信创|机器人|军工|互联网|游戏|传媒|VR|信息安全'),
+    ('医药',   r'医药|医疗|生物|创新药|中药|疫苗|健康'),
+    ('消费',   r'消费|食品|饮料|酒|家电|农业|养殖|旅游|畜牧'),
+    ('金融地产', r'银行|证券|保险|金融|地产|券商|非银'),
+    ('新能源', r'新能源|光伏|锂电|电池|储能|风电|碳中和|充电'),
+]
+
+
+def _etf_classify(name):
+    for cat, pat in ETF_CATEGORY_RULES:
+        if _re.search(pat, name or ''):
+            return cat
+    return '其他'
+
+
+def _etf_cache_load():
+    try:
+        with open(ETF_SHARE_CACHE, encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def _etf_cache_save(c):
+    try:
+        os.makedirs(os.path.dirname(ETF_SHARE_CACHE), exist_ok=True)
+        with open(ETF_SHARE_CACHE, 'w', encoding='utf-8') as f:
+            json.dump(c, f, ensure_ascii=False)
+    except Exception as e:
+        print(f"  Warning: etf share cache save failed: {e}")
+
+
+def _hv(closes, win):
+    """年化历史波动率(%)：对最近 win 个日收益率取标准差 ×√252。"""
+    if len(closes) < win + 1:
+        return None
+    rets = [closes[i] / closes[i - 1] - 1 for i in range(len(closes) - win, len(closes))]
+    m = sum(rets) / len(rets)
+    var = sum((r - m) ** 2 for r in rets) / (len(rets) - 1)
+    return round((var ** 0.5) * (252 ** 0.5) * 100, 1)
+
+
+def _pct_rank(values, v):
+    """v 在 values 中的百分位(0-100)。"""
+    vals = [x for x in values if x is not None]
+    if not vals or v is None:
+        return None
+    return round(sum(1 for x in vals if x <= v) / len(vals) * 100, 1)
+
+
+def fetch_nt_upgrade(pro, trade_date, data):
+    """国家队升级主流程：份额雷达 + 板块轮动 + 汇金估算 + 宽基波动率 + 自动短评。
+
+    每晚增量调用（≤10 次）：fund_share 批量 1 + fund_daily 批量 1 +
+    index_daily 按 trade_date 1 + index_dailybasic 6 + （名称表每周五 1）。
+    首次运行本地回补历史：radar 13×2 + 指数 6×2 ≈ 38 次。
+    全模块 try/except，单块失败不影响主流程。
+    """
+    cache = _etf_cache_load()
+    cache.setdefault('watch', {})      # {code: {date: [share亿份, close]}}  ~400 天
+    cache.setdefault('snapshots', {})  # {date: {code: share亿份}} 全市场，保留 12 天
+    cache.setdefault('names', {})      # {code: name}
+    cache.setdefault('idx', {})        # {idx_code: {date: close}}
+    cache.setdefault('idxBasic', {})   # {idx_code: {date: pe_ttm}}
+
+    # ── 有效日期回探（数据未发布时退到前一交易日）──
+    eff = None
+    df_share_all = None
+    d = trade_date
+    for _ in range(5):
+        try:
+            time.sleep(API_DELAY)
+            df_share_all = pro.fund_share(trade_date=d)
+            if df_share_all is not None and len(df_share_all) > 0:
+                eff = d
+                break
+        except Exception as e:
+            print(f"  Warning: fund_share batch {d} failed: {e}")
+        d = (datetime.strptime(d, '%Y%m%d') - timedelta(days=1)).strftime('%Y%m%d')
+    if eff is None or df_share_all is None:
+        print("  Warning: fund_share unavailable, skip national team upgrade")
+        return
+    if eff != trade_date:
+        print(f"  fund_share {trade_date} 未发布，回退有效日期 {eff}")
+
+    # 全市场 ETF 份额（亿份）
+    shares_now = {}
+    for _, r in df_share_all.iterrows():
+        try:
+            shares_now[r['ts_code']] = float(r['fd_share']) / 10000.0
+        except Exception:
+            continue
+    cache['snapshots'][eff] = {k: round(v, 4) for k, v in shares_now.items()}
+    cache['snapshots'] = dict(sorted(cache['snapshots'].items())[-12:])
+
+    # ── fund_daily 批量：收盘价 ──
+    close_now = {}
+    try:
+        time.sleep(API_DELAY)
+        df_fd = pro.fund_daily(trade_date=eff)
+        if df_fd is not None and len(df_fd) > 0:
+            close_now = dict(zip(df_fd['ts_code'], df_fd['close'].astype(float)))
+    except Exception as e:
+        print(f"  Warning: fund_daily batch failed: {e}")
+
+    # ── 雷达池历史维护（首次回补 400 天，之后每日 1 行）──
+    backfill_start = (datetime.strptime(eff, '%Y%m%d') - timedelta(days=600)).strftime('%Y%m%d')
+    for tc in ETF_RADAR_WATCH:
+        try:
+            hist = cache['watch'].setdefault(tc, {})
+            if eff in hist:
+                continue
+            if not hist:
+                # 首次回补：份额 + 收盘价各 1 次
+                time.sleep(API_DELAY)
+                dfs = pro.fund_share(ts_code=tc, start_date=backfill_start, end_date=eff)
+                time.sleep(API_DELAY)
+                dfd = pro.fund_daily(ts_code=tc, start_date=backfill_start, end_date=eff)
+                closes = dict(zip(dfd['trade_date'], dfd['close'].astype(float))) if dfd is not None and len(dfd) else {}
+                if dfs is not None and len(dfs):
+                    for _, r in dfs.iterrows():
+                        hist[r['trade_date']] = [round(float(r['fd_share']) / 10000.0, 4),
+                                                 round(float(closes.get(r['trade_date'], 0)), 4)]
+            else:
+                if tc in shares_now:
+                    hist[eff] = [round(shares_now[tc], 4), round(float(close_now.get(tc, 0)), 4)]
+            cache['watch'][tc] = dict(sorted(hist.items())[-400:])
+        except Exception as e:
+            print(f"  Warning: radar history {tc} failed: {e}")
+
+    # ── 输出日期 od：雷达池覆盖≥80%的最新日期（防 fund_share 部分发布导致数据残缺）──
+    _cnt = {}
+    for tc in ETF_RADAR_WATCH:
+        for d0 in cache['watch'].get(tc, {}):
+            _cnt[d0] = _cnt.get(d0, 0) + 1
+    _need = max(1, int(len(ETF_RADAR_WATCH) * 0.8))
+    _covered = [d0 for d0, n in _cnt.items() if n >= _need]
+    od = max(_covered) if _covered else eff
+    if od != eff:
+        print(f"  雷达池 {eff} 覆盖不足（部分发布），输出日期回退 {od}")
+
+    # ── 快照回补（首次运行补最近 8 个交易日，供板块轮动 1日/5日对比）──
+    try:
+        if len(cache['snapshots']) < 6:
+            cal = sorted(cache['watch'].get('510300.SH', {}).keys())
+            todo = [d0 for d0 in cal[-9:] if d0 not in cache['snapshots'] and d0 <= od]
+            for d0 in todo:
+                time.sleep(API_DELAY)
+                dfs = pro.fund_share(trade_date=d0)
+                if dfs is not None and len(dfs):
+                    cache['snapshots'][d0] = {
+                        r['ts_code']: round(float(r['fd_share']) / 10000.0, 4)
+                        for _, r in dfs.iterrows()
+                    }
+            cache['snapshots'] = dict(sorted(cache['snapshots'].items())[-12:])
+            print(f"  snapshots backfilled: {len(cache['snapshots'])} days")
+    except Exception as e:
+        print(f"  Warning: snapshot backfill failed: {e}")
+
+    # ── ETF 名称表（分类用；每周五或缺失时刷新，1 次调用）──
+    try:
+        wd = datetime.strptime(eff, '%Y%m%d').weekday()
+        need = (not cache['names']) or cache.get('namesUpdated', '') < cache.get('lastFriday', '') \
+            or len([c for c in shares_now if c not in cache['names']]) > 200
+        if wd == 4:
+            cache['lastFriday'] = eff
+        if wd == 4 or not cache['names'] or need:
+            time.sleep(API_DELAY)
+            fb = pro.fund_basic(market='E', status='L', fields='ts_code,name')
+            if fb is not None and len(fb):
+                cache['names'] = dict(zip(fb['ts_code'], fb['name']))
+                cache['namesUpdated'] = eff
+    except Exception as e:
+        print(f"  Warning: fund_basic names refresh failed: {e}")
+
+    # ── 指数日线（HV）：先按 trade_date 全量 1 次，缺失逐只回补 ──
+    for ic in VOL_INDICES:
+        try:
+            cache['idx'].setdefault(ic, {})
+        except Exception:
+            pass
+    try:
+        time.sleep(API_DELAY)
+        di = pro.index_daily(trade_date=eff)
+        if di is not None and len(di):
+            for ic in VOL_INDICES:
+                row = di[di['ts_code'] == ic]
+                if len(row):
+                    cache['idx'][ic][eff] = round(float(row.iloc[0]['close']), 4)
+    except Exception as e:
+        print(f"  Warning: index_daily batch failed: {e}")
+    for ic in VOL_INDICES:
+        try:
+            hist = cache['idx'][ic]
+            if len(hist) < 80:
+                start = (datetime.strptime(eff, '%Y%m%d') - timedelta(days=600)).strftime('%Y%m%d')
+            elif eff not in hist:
+                start = (datetime.strptime(max(hist), '%Y%m%d') + timedelta(days=1)).strftime('%Y%m%d')
+            else:
+                start = None
+            if start:
+                time.sleep(API_DELAY)
+                d1 = pro.index_daily(ts_code=ic, start_date=start, end_date=eff)
+                if d1 is not None and len(d1):
+                    for _, r in d1.iterrows():
+                        hist[r['trade_date']] = round(float(r['close']), 4)
+            cache['idx'][ic] = dict(sorted(hist.items())[-320:])
+        except Exception as e:
+            print(f"  Warning: index daily {ic} failed: {e}")
+
+    # ── 指数估值（PE TTM）：逐只增量，首次回补约 2.5 年 ──
+    for ic in VOL_INDICES:
+        try:
+            hist = cache['idxBasic'].setdefault(ic, {})
+            if eff in hist:
+                continue
+            start = (datetime.strptime(eff, '%Y%m%d') - timedelta(days=920)).strftime('%Y%m%d') if not hist \
+                else (datetime.strptime(max(hist), '%Y%m%d') + timedelta(days=1)).strftime('%Y%m%d')
+            time.sleep(API_DELAY)
+            db = pro.index_dailybasic(ts_code=ic, start_date=start, end_date=eff, fields='ts_code,trade_date,pe_ttm')
+            if db is not None and len(db):
+                for _, r in db.iterrows():
+                    if pd.notna(r['pe_ttm']):
+                        hist[r['trade_date']] = round(float(r['pe_ttm']), 2)
+            cache['idxBasic'][ic] = dict(sorted(hist.items())[-620:])
+        except Exception as e:
+            print(f"  Warning: index_dailybasic {ic} failed: {e}")
+
+    _etf_cache_save(cache)
+
+    # ════════ 1. ETF 份额雷达 ════════
+    try:
+        items = []
+        for tc, name in ETF_RADAR_WATCH.items():
+            hist = cache['watch'].get(tc, {})
+            days = [d0 for d0 in sorted(hist.keys()) if d0 <= od]
+            if len(days) < 2:
+                continue
+            share = hist[days[-1]][0]
+            close = hist[days[-1]][1] or close_now.get(tc, 0)
+
+            def _chg(n):
+                if len(days) > n and hist[days[-1 - n]][0] > 0:
+                    prev = hist[days[-1 - n]][0]
+                    return round(share - prev, 2), round((share - prev) / prev * 100, 2)
+                return None, None
+
+            c1, p1 = _chg(1)
+            c5, p5 = _chg(5)
+            c20, p20 = _chg(20)
+            amt1 = round(c1 * close, 2) if c1 is not None and close else None
+            alert = bool(p1 is not None and abs(p1) > 2 and amt1 is not None and abs(amt1) > 5)
+            items.append({
+                'code': tc, 'name': name, 'share': round(share, 2), 'close': round(close, 3),
+                'chg1': c1, 'chg1Pct': p1, 'amt1': amt1,
+                'chg5': c5, 'chg5Pct': p5, 'chg20': c20, 'chg20Pct': p20,
+                'alert': alert,
+            })
+        data['etfShareRadar'] = {
+            'trade_date': f"{od[:4]}-{od[4:6]}-{od[6:]}",
+            'items': items,
+            'alertCount': sum(1 for i in items if i['alert']),
+            'note': '份额变化×当日收盘价折算金额；单日份额变化|>2%|且折算|>5亿|标记疑似大资金动作',
+        }
+        print(f"  etfShareRadar: {len(items)} ETFs, alerts {data['etfShareRadar']['alertCount']}")
+    except Exception as e:
+        print(f"  Warning: etfShareRadar failed: {e}")
+
+    # ════════ 2. 板块资金轮动（份额口径） ════════
+    try:
+        snap_days = [d0 for d0 in sorted(cache['snapshots'].keys()) if d0 <= od]
+        cur_day = snap_days[-1] if snap_days else None
+        prev1 = snap_days[-2] if len(snap_days) >= 2 else None
+        prev5 = snap_days[-6] if len(snap_days) >= 6 else None
+        shares_cur = cache['snapshots'].get(cur_day, {}) if cur_day else {}
+        cats = {}
+        for tc, s1 in shares_cur.items():
+            cat = _etf_classify(cache['names'].get(tc, ''))
+            close = float(close_now.get(tc, 0) or 0)
+            if close <= 0:
+                continue
+            slot = cats.setdefault(cat, {'todayNet': 0.0, 'net5d': 0.0, 'count': 0})
+            slot['count'] += 1
+            if prev1 and tc in cache['snapshots'][prev1]:
+                slot['todayNet'] += (s1 - cache['snapshots'][prev1][tc]) * close
+            if prev5 and tc in cache['snapshots'][prev5]:
+                slot['net5d'] += (s1 - cache['snapshots'][prev5][tc]) * close
+        money = cats.pop('货币', None)  # 货币ETF份额巨大且属现金管理，不计入轮动
+        items = [{'cat': c, 'todayNet': round(v['todayNet'], 1),
+                  'net5d': round(v['net5d'], 1), 'count': v['count']}
+                 for c, v in cats.items()]
+        items.sort(key=lambda x: -x['net5d'])
+        inflow3 = [i['cat'] for i in items if i['net5d'] > 0][:3]
+        outflow3 = [i['cat'] for i in reversed(items) if i['net5d'] < 0][:3]
+        data['etfRotation'] = {
+            'trade_date': f"{od[:4]}-{od[4:6]}-{od[6:]}",
+            'items': items,
+            'inflowTop3': inflow3,
+            'outflowTop3': outflow3,
+            'totalToday': round(sum(i['todayNet'] for i in items), 1),
+            'total5d': round(sum(i['net5d'] for i in items), 1),
+            'moneyToday': round(money['todayNet'], 1) if money else None,
+            'note': '份额变化×当日收盘价估算（不含货币ETF），5日净额按分类汇总；新发/退市ETF会造成少量误差',
+        }
+        print(f"  etfRotation: {len(items)} categories, inflow {inflow3}, outflow {outflow3}")
+    except Exception as e:
+        print(f"  Warning: etfRotation failed: {e}")
+
+    # ════════ 3. 国家队持仓估算 ════════
+    try:
+        with open(NT_RATIO_CONFIG, encoding='utf-8') as f:
+            cfg = json.load(f)
+        est_items = []
+        hist_total = {}
+        for tc, info in cfg['items'].items():
+            ratio = float(info['ratio'])
+            hist = cache['watch'].get(tc, {})
+            days = [d0 for d0 in sorted(hist.keys()) if d0 <= od]
+            if not days:
+                continue
+            share_now, close_now_ = hist[days[-1]]
+            if not close_now_:
+                close_now_ = close_now.get(tc, 0)
+            est_now = ratio * share_now * close_now_  # 亿元
+            rep = info.get('report_date', '').replace('-', '')
+            est_rep = None
+            if rep and rep in hist and hist[rep][1]:
+                est_rep = ratio * hist[rep][0] * hist[rep][1]
+            elif rep:
+                older = [d for d in days if d <= rep]
+                if older and hist[older[-1]][1]:
+                    est_rep = ratio * hist[older[-1]][0] * hist[older[-1]][1]
+            est_items.append({
+                'code': tc, 'name': info['name'], 'ratio': round(ratio * 100, 2),
+                'estMv': round(est_now, 1),
+                'estChgReport': round(est_now - est_rep, 1) if est_rep is not None else None,
+            })
+            for d in days[-120:]:
+                if hist[d][1]:
+                    hist_total[d] = hist_total.get(d, 0) + ratio * hist[d][0] * hist[d][1]
+        total_mv = round(sum(i['estMv'] for i in est_items), 1)
+        hdays = sorted(hist_total.keys())
+        history = [{'d': f"{d[4:6]}-{d[6:]}", 'mv': round(hist_total[d], 1)} for d in hdays]
+        chg5 = round(hist_total[hdays[-1]] - hist_total[hdays[-6]], 1) if len(hdays) >= 6 else None
+        data['nationalTeamEst'] = {
+            'trade_date': f"{od[:4]}-{od[4:6]}-{od[6:]}",
+            'asOf': cfg.get('as_of'),
+            'items': est_items,
+            'totalMv': total_mv,
+            'chg5d': chg5,
+            'history': history,
+            'note': '估算口径=2025年报汇金系占比×当日份额×当日收盘价，占比半年才披露一次，仅供参考',
+        }
+        print(f"  nationalTeamEst: total {total_mv}亿, 5d chg {chg5}")
+    except Exception as e:
+        print(f"  Warning: nationalTeamEst failed: {e}")
+
+    # ════════ 4. 宽基波动率（ETF VIX） ════════
+    try:
+        vol_items = []
+        for ic, iname in VOL_INDICES.items():
+            hist = cache['idx'].get(ic, {})
+            days = sorted(hist.keys())
+            closes = [hist[d] for d in days]
+            hv20 = _hv(closes, 20)
+            hv60 = _hv(closes, 60)
+            hv20_prev = _hv(closes[:-5], 20) if len(closes) > 25 else None
+            # HV20 近一年分位
+            hv20_series = [_hv(closes[:i + 1], 20) for i in range(20, len(closes))]
+            hv20_1y = hv20_series[-250:] if len(hv20_series) > 250 else hv20_series
+            hv_pct = _pct_rank(hv20_1y, hv20)
+            # PE TTM + 近2年分位
+            bh = cache['idxBasic'].get(ic, {})
+            bdays = sorted(bh.keys())
+            pe = bh[bdays[-1]] if bdays else None
+            pe_pct = _pct_rank([bh[d] for d in bdays], pe)
+            if hv20 is not None and hv60 is not None:
+                if hv20 > hv60 * 1.2:
+                    status = '升温'
+                elif hv20 < hv60 * 0.85:
+                    status = '降温'
+                else:
+                    status = '平稳'
+            else:
+                status = '数据不足'
+            low = bool(hv_pct is not None and hv_pct < 25)
+            vol_items.append({
+                'code': ic, 'name': iname, 'hv20': hv20, 'hv60': hv60,
+                'hv20Chg5': round(hv20 - hv20_prev, 1) if hv20 is not None and hv20_prev is not None else None,
+                'hvPct1y': hv_pct, 'peTtm': pe, 'pePct2y': pe_pct,
+                'status': status, 'low': low,
+            })
+        data['indexVol'] = {
+            'trade_date': f"{eff[:4]}-{eff[4:6]}-{eff[6:]}",
+            'items': vol_items,
+            'note': 'HV20/HV60为年化历史波动率；HV20>HV60×1.2升温，<HV60×0.85降温；低位=HV20近一年分位<25%',
+        }
+        print(f"  indexVol: {len(vol_items)} indices, "
+              + ', '.join(f"{v['name']}{v['status']}" for v in vol_items[:3]))
+    except Exception as e:
+        print(f"  Warning: indexVol failed: {e}")
+
+    # ════════ 5. 自动短评 ════════
+    try:
+        data['nationalTeamComment'] = _build_nt_comment(data)
+        print(f"  nationalTeamComment: {data['nationalTeamComment'][:60]}...")
+    except Exception as e:
+        print(f"  Warning: nationalTeamComment failed: {e}")
+
+
+def _build_nt_comment(data):
+    """规则生成 3-5 句平实短评。"""
+    sents = []
+    rot = data.get('etfRotation') or {}
+    radar = data.get('etfShareRadar') or {}
+    est = data.get('nationalTeamEst') or {}
+    vol = data.get('indexVol') or {}
+
+    # 1) 全市场 ETF 份额净增减
+    if rot:
+        t = rot.get('totalToday', 0)
+        direction = '净申购' if t >= 0 else '净赎回'
+        sents.append(f"全市场ETF（不含货币）昨日{direction}约{abs(t):.0f}亿元（份额变化×收盘价口径）。")
+
+    # 2) 异动
+    alerts = [i for i in radar.get('items', []) if i.get('alert')]
+    if alerts:
+        a = alerts[0]
+        act = '进场' if (a.get('chg1') or 0) > 0 else '出场'
+        sents.append(f"{a['name']}单日份额{a['chg1']:+.2f}亿份（约{a['amt1']:+.1f}亿元），疑似大资金{act}。")
+    elif radar:
+        sents.append("13只宽基ETF份额未见明显异动，无大资金进出信号。")
+
+    # 3) 板块轮动主线
+    if rot.get('inflowTop3') or rot.get('outflowTop3'):
+        inflow = '、'.join(rot.get('inflowTop3') or []) or '无'
+        outflow = '、'.join(rot.get('outflowTop3') or []) or '无'
+        sents.append(f"近5日份额口径资金主要流入{inflow}类，流出{outflow}类。")
+
+    # 4) 汇金估算
+    if est.get('totalMv'):
+        chg = est.get('chg5d')
+        trend = ''
+        if chg is not None:
+            trend = f"，近5日{'增加' if chg >= 0 else '减少'}约{abs(chg):.0f}亿元"
+        sents.append(f"按2025年报占比估算，汇金系持有这13只宽基ETF市值约{est['totalMv']:.0f}亿元{trend}（估算口径）。")
+
+    # 5) 波动率状态
+    vitems = vol.get('items') or []
+    if vitems:
+        hs = next((v for v in vitems if v['code'] == '000300.SH'), vitems[0])
+        txt = f"沪深300波动率HV20为{hs['hv20']}%"
+        if hs.get('hvPct1y') is not None:
+            txt += f"（近一年{hs['hvPct1y']:.0f}%分位）"
+        warming = [v['name'] for v in vitems if v['status'] == '升温']
+        lows = [v['name'] for v in vitems if v.get('low')]
+        if warming:
+            txt += f"，{'、'.join(warming)}波动升温"
+        elif lows:
+            txt += f"，{'、'.join(lows)}波动处低位"
+        else:
+            txt += "，主要宽基波动平稳"
+        sents.append(txt + "。")
+    return ''.join(sents)
+
+
 def main():
     print("=" * 60)
     print("Fund Hunter - Daily Data Update (Batch Mode)")
@@ -1937,7 +2446,7 @@ def main():
     data = load_existing_data()
 
     # ── 1. Indices (batch) ──
-    print("\n[1/16] Fetching indices (batch)...")
+    print("\n[1/17] Fetching indices (batch)...")
     indices = fetch_indices_batch(pro, trade_date)
     if indices:
         data['indices'] = indices
@@ -1945,7 +2454,7 @@ def main():
             print(f"  {v['name']}: {v['value']} ({v['change']:+.2f}%)")
 
     # ── 2. Stocks (batch) ──
-    print("\n[2/16] Fetching stocks (batch)...")
+    print("\n[2/17] Fetching stocks (batch)...")
     stocks = fetch_stocks_batch(pro, trade_date)
     if stocks:
         data['stocks'] = stocks
@@ -1954,7 +2463,7 @@ def main():
             print(f"    {s['name']}: {s['close']} ({s['pctChg']:+.2f}%)")
 
     # ── 3. ETFs (batch) ──
-    print("\n[3/16] Fetching ETFs (batch)...")
+    print("\n[3/17] Fetching ETFs (batch)...")
     etfs = fetch_etfs_batch(pro, trade_date)
     if etfs:
         data['nationalETF'] = etfs
@@ -1963,7 +2472,7 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 4. My ETF account (fund_daily, batch) ──
-    print("\n[4/16] Fetching my ETF account (fund_daily, batch)...")
+    print("\n[4/17] Fetching my ETF account (fund_daily, batch)...")
     my_etfs = fetch_my_etfs(pro, trade_date)
     if my_etfs:
         data['myETF'] = my_etfs
@@ -1972,14 +2481,14 @@ def main():
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
 
     # ── 5. Announcements + holdingsNews (全量覆盖旧手工数据) ──
-    print("\n[5/16] Fetching announcements & building holdingsNews...")
+    print("\n[5/17] Fetching announcements & building holdingsNews...")
     anns_map = fetch_announcements(pro, trade_date)
     data['holdingsNews'] = build_holdings_news(anns_map, trade_date)
     total_anns = sum(len(e['items']) for e in data['holdingsNews'])
     print(f"  Built {len(data['holdingsNews'])} holdingsNews entries, {total_anns} announcements")
 
     # ── 6. Mainforce flow ──
-    print("\n[6/16] Fetching mainforce flow...")
+    print("\n[6/17] Fetching mainforce flow...")
     inflow, outflow = fetch_mainforce_flow(pro, trade_date)
     if inflow:
         data['mainforce_inflow_top10'] = inflow
@@ -1989,7 +2498,7 @@ def main():
         print(f"  Outflow #1: {outflow[0]['name']} {outflow[0]['amount']}")
 
     # ── 7. Hot fund NAVs (fund_nav, 取到才覆盖) ──
-    print("\n[7/16] Fetching hot fund NAVs...")
+    print("\n[7/17] Fetching hot fund NAVs...")
     hot_navs = fetch_hot_fund_navs(pro, trade_date, data.get('hotFundNavs', []))
     if hot_navs:
         data['hotFundNavs'] = hot_navs
@@ -1997,7 +2506,7 @@ def main():
         print(f"  Updated {len(hot_navs)} fund NAVs, dates: {sorted(dates)}")
 
     # ── 8. National ETF watch (宽基ETF份额监控) ──
-    print("\n[8/16] Fetching national ETF watch (fund_share)...")
+    print("\n[8/17] Fetching national ETF watch (fund_share)...")
     etf_watch = fetch_national_etf_watch(pro, trade_date, data.get('nationalETFWatch'))
     if etf_watch:
         data['nationalETFWatch'] = etf_watch
@@ -2006,11 +2515,11 @@ def main():
               f"total netFlow {t['netFlow']:+.2f}亿, 5d {t['netFlow5d']:+.2f}亿")
 
     # ── 9. Bond yields + liquidity commentary (东方财富) ──
-    print("\n[9/16] Fetching bond yields & liquidity commentary (eastmoney)...")
+    print("\n[9/17] Fetching bond yields & liquidity commentary (eastmoney)...")
     fetch_bond_yields(trade_date, data)
 
     # ── 10. North/South bound ──
-    print("\n[10/16] Fetching north/south bound...")
+    print("\n[10/17] Fetching north/south bound...")
     north, south = fetch_north_south(pro, trade_date)
     if north:
         data['northbound'] = north
@@ -2020,7 +2529,7 @@ def main():
         print(f"  Southbound: {south['today']}亿")
 
     # ── 11. Sector index commentary (细分指数每日点评) ──
-    print("\n[11/16] Fetching sector index commentary...")
+    print("\n[11/17] Fetching sector index commentary...")
     # 涨跌停信号卡已废弃：不再生成 keySignals，并删除存量字段
     data.pop('keySignals', None)
     commentary = fetch_sector_commentary(pro, trade_date)
@@ -2031,25 +2540,29 @@ def main():
             print(f"    {c['name']}: {c['pctChg']:+.2f}% - {c['comment']}")
 
     # ── 12. Sector watch: 扫描榜(仅信号) + 底部资金积聚 (Tushare 历史沉淀) ──
-    print("\n[12/16] Building sector watch (scan + bottom accumulation)...")
+    print("\n[12/17] Building sector watch (scan + bottom accumulation)...")
     watch_ctx = fetch_sector_watch(pro, trade_date, data)
     data.pop('conceptHot', None)  # 主题概念领涨栏目已下线，清除存量字段
 
     # ── 13. ECI 六维分每日真算 + 强势一级行业子板块精选 ──
-    print("\n[13/16] Rebuilding ECI from sector history + picking subsectors...")
+    print("\n[13/17] Rebuilding ECI from sector history + picking subsectors...")
     fetch_eci_daily(pro, trade_date, data, watch_ctx)
 
     # ── 14. 融资余额突变预警（持仓+观察股） ──
-    print("\n[14/16] Building margin watch (融资融券)...")
+    print("\n[14/17] Building margin watch (融资融券)...")
     fetch_margin_watch(pro, trade_date, data)
 
     # ── 15. 三档净流入（近5/10/20日 + 资金节奏，sector_history 缓存计算） ──
-    print("\n[15/16] Building sector flows (3-tier net inflow)...")
+    print("\n[15/17] Building sector flows (3-tier net inflow)...")
     build_sector_flows(data)
 
     # ── 16. VCP 板块-龙头共振监测（增量维护 vcp_cache） ──
-    print("\n[16/16] Building VCP watch (板块-龙头共振)...")
+    print("\n[16/17] Building VCP watch (板块-龙头共振)...")
     fetch_vcp_watch(pro, trade_date, data)
+
+    # ── 17. 国家队升级：份额雷达 + 板块轮动 + 汇金估算 + 宽基波动率 + 短评 ──
+    print("\n[17/17] Building national team upgrade (share radar / rotation / est / vol)...")
+    fetch_nt_upgrade(pro, trade_date, data)
 
     # ── Metadata ──
     # updateTime 以数据实际最新日期为准（盘中/早间运行时各板块数据仍是前一交易日）

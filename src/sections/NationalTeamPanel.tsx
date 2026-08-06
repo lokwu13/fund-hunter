@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
   Landmark, Shield, Activity, ChevronRight, TrendingUp, TrendingDown,
-  LandmarkIcon, Eye
+  LandmarkIcon, Eye, Quote, Radar, ArrowLeftRight, Calculator, Gauge
 } from 'lucide-react';
 import { useFundData } from '@/hooks/useFundData';
 
@@ -126,6 +126,26 @@ export default function NationalTeamPanel() {
 
   return (
     <div className="space-y-5">
+      {/* ====== 国家队每日短评（置顶） ====== */}
+      {data.nationalTeamComment && (
+        <Card className="bg-gradient-to-r from-red-50 via-white to-red-50 border-red-300 shadow-sm">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <div className="bg-red-100 rounded-full p-2 flex-shrink-0">
+                <Quote className="w-4 h-4 text-red-600" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-bold text-red-800 text-sm">国家队资金每日短评</h3>
+                  <Badge className="bg-red-100 text-red-700 text-[10px]">自动生成</Badge>
+                </div>
+                <p className="text-sm text-slate-700 leading-relaxed">{data.nationalTeamComment}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* ====== SUMMARY CARDS ====== */}
       <div className="grid grid-cols-3 gap-4">
         <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200">
@@ -606,6 +626,229 @@ export default function NationalTeamPanel() {
                       {data.nationalETFWatch.total.netFlow5d >= 0 ? '+' : ''}{data.nationalETFWatch.total.netFlow5d.toFixed(2)}
                     </TableCell>
                   </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ====== ETF 份额雷达（宽基监测） ====== */}
+      {data.etfShareRadar && data.etfShareRadar.items.length > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-bold flex items-center gap-2">
+                <Radar className="w-5 h-5 text-red-600" />
+                ETF份额雷达（截至 {data.etfShareRadar.trade_date}）
+              </CardTitle>
+              {data.etfShareRadar.alertCount > 0 && (
+                <Badge className="bg-red-600 text-white text-xs">{data.etfShareRadar.alertCount} 只异动</Badge>
+              )}
+            </div>
+            <CardDescription>{data.etfShareRadar.note}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[860px]">
+                <TableHeader>
+                  <TableRow className="bg-red-50">
+                    <TableHead className="text-xs">名称</TableHead>
+                    <TableHead className="text-xs text-right">份额(亿)</TableHead>
+                    <TableHead className="text-xs text-right">1日变化(亿份)</TableHead>
+                    <TableHead className="text-xs text-right">折算金额(亿)</TableHead>
+                    <TableHead className="text-xs text-right">5日变化(亿份)</TableHead>
+                    <TableHead className="text-xs text-right">20日变化(亿份)</TableHead>
+                    <TableHead className="text-xs text-center">信号</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.etfShareRadar.items.map((e) => (
+                    <TableRow key={e.code} className={e.alert ? 'bg-red-50/60' : 'hover:bg-slate-50'}>
+                      <TableCell className="text-xs font-semibold whitespace-nowrap">
+                        {e.name}
+                        <span className="text-slate-400 ml-1">{e.code.split('.')[0]}</span>
+                      </TableCell>
+                      <TableCell className="text-xs text-right">{e.share.toFixed(2)}</TableCell>
+                      <TableCell className={`text-xs text-right font-semibold ${(e.chg1 ?? 0) >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {e.chg1 != null ? `${e.chg1 >= 0 ? '+' : ''}${e.chg1.toFixed(2)}` : '--'}
+                        {e.chg1Pct != null && <span className="text-slate-400 font-normal"> ({e.chg1Pct >= 0 ? '+' : ''}{e.chg1Pct.toFixed(1)}%)</span>}
+                      </TableCell>
+                      <TableCell className={`text-xs text-right font-bold ${(e.amt1 ?? 0) >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {e.amt1 != null ? `${e.amt1 >= 0 ? '+' : ''}${e.amt1.toFixed(1)}` : '--'}
+                      </TableCell>
+                      <TableCell className={`text-xs text-right ${(e.chg5 ?? 0) >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {e.chg5 != null ? `${e.chg5 >= 0 ? '+' : ''}${e.chg5.toFixed(2)}` : '--'}
+                      </TableCell>
+                      <TableCell className={`text-xs text-right ${(e.chg20 ?? 0) >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {e.chg20 != null ? `${e.chg20 >= 0 ? '+' : ''}${e.chg20.toFixed(2)}` : '--'}
+                      </TableCell>
+                      <TableCell className="text-xs text-center">
+                        {e.alert
+                          ? <Badge className="bg-red-600 text-white text-[10px]">疑似大资金动作</Badge>
+                          : <span className="text-slate-300">—</span>}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ====== 板块资金轮动（份额口径） ====== */}
+      {data.etfRotation && data.etfRotation.items.length > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-bold flex items-center gap-2">
+              <ArrowLeftRight className="w-5 h-5 text-red-600" />
+              板块资金轮动 · 份额口径（截至 {data.etfRotation.trade_date}）
+            </CardTitle>
+            <CardDescription>{data.etfRotation.note}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-1.5">
+              {data.etfRotation.items.map((c) => {
+                const maxAbs = Math.max(...data.etfRotation!.items.map((x) => Math.abs(x.net5d)), 1);
+                const pct = Math.abs(c.net5d) / maxAbs * 100;
+                return (
+                  <div key={c.cat} className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-slate-700 w-16 flex-shrink-0">{c.cat}</span>
+                    <span className="text-[10px] text-slate-400 w-10 flex-shrink-0">{c.count}只</span>
+                    <div className="flex-1 h-4 bg-slate-50 rounded relative overflow-hidden">
+                      <div className="absolute inset-y-0 left-1/2 w-px bg-slate-200" />
+                      <div
+                        className={`absolute inset-y-0.5 rounded-sm ${c.net5d >= 0 ? 'bg-red-400 left-1/2' : 'bg-green-500 right-1/2'}`}
+                        style={{ width: `${pct / 2}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-bold w-16 text-right flex-shrink-0 ${c.net5d >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      {c.net5d >= 0 ? '+' : ''}{c.net5d.toFixed(1)}亿
+                    </span>
+                    <span className={`text-[10px] w-14 text-right flex-shrink-0 ${c.todayNet >= 0 ? 'text-red-400' : 'text-green-500'}`}>
+                      当日{c.todayNet >= 0 ? '+' : ''}{c.todayNet.toFixed(1)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-[10px] text-slate-400 mt-3">
+              条形为近5日净额（份额变化×收盘价，亿元），右侧小字为当日净额 · 全市场ETF当日合计 {data.etfRotation.totalToday >= 0 ? '+' : ''}{data.etfRotation.totalToday.toFixed(1)} 亿
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ====== 国家队持仓估算 ====== */}
+      {data.nationalTeamEst && data.nationalTeamEst.items.length > 0 && (
+        <Card className="border-amber-200">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-bold flex items-center gap-2">
+                <Calculator className="w-5 h-5 text-amber-600" />
+                汇金系持仓估算（截至 {data.nationalTeamEst.trade_date}）
+              </CardTitle>
+              <Badge className="bg-amber-100 text-amber-700 text-xs">估算口径，仅供参考</Badge>
+            </div>
+            <CardDescription>{data.nationalTeamEst.note}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-3 gap-3 mb-3">
+              <div className="bg-amber-50 rounded-lg p-3">
+                <p className="text-[10px] text-amber-600 mb-0.5">估算总市值</p>
+                <p className="text-lg font-bold text-amber-800">{data.nationalTeamEst.totalMv.toFixed(0)}<span className="text-xs font-normal">亿</span></p>
+              </div>
+              <div className="bg-slate-50 rounded-lg p-3">
+                <p className="text-[10px] text-slate-500 mb-0.5">近5日变化</p>
+                <p className={`text-lg font-bold ${(data.nationalTeamEst.chg5d ?? 0) >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                  {data.nationalTeamEst.chg5d != null ? `${data.nationalTeamEst.chg5d >= 0 ? '+' : ''}${data.nationalTeamEst.chg5d.toFixed(0)}` : '--'}<span className="text-xs font-normal">亿</span>
+                </p>
+              </div>
+              <div className="bg-slate-50 rounded-lg p-3">
+                <p className="text-[10px] text-slate-500 mb-0.5">占比数据期</p>
+                <p className="text-lg font-bold text-slate-700">{data.nationalTeamEst.asOf || '--'}</p>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[680px]">
+                <TableHeader>
+                  <TableRow className="bg-amber-50">
+                    <TableHead className="text-xs">ETF</TableHead>
+                    <TableHead className="text-xs text-right">汇金系占比</TableHead>
+                    <TableHead className="text-xs text-right">估算市值(亿)</TableHead>
+                    <TableHead className="text-xs text-right">较报告期变化(亿)</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.nationalTeamEst.items.map((e) => (
+                    <TableRow key={e.code} className="hover:bg-slate-50">
+                      <TableCell className="text-xs font-semibold whitespace-nowrap">
+                        {e.name}
+                        <span className="text-slate-400 ml-1">{e.code.split('.')[0]}</span>
+                      </TableCell>
+                      <TableCell className="text-xs text-right">{e.ratio > 0 ? `${e.ratio.toFixed(1)}%` : '未进前十'}</TableCell>
+                      <TableCell className="text-xs text-right font-bold text-amber-800">{e.estMv > 0 ? e.estMv.toFixed(1) : '--'}</TableCell>
+                      <TableCell className={`text-xs text-right ${(e.estChgReport ?? 0) >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {e.estChgReport != null ? `${e.estChgReport >= 0 ? '+' : ''}${e.estChgReport.toFixed(1)}` : '--'}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ====== 宽基波动率（ETF VIX） ====== */}
+      {data.indexVol && data.indexVol.items.length > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-bold flex items-center gap-2">
+              <Gauge className="w-5 h-5 text-red-600" />
+              宽基波动率（截至 {data.indexVol.trade_date}）
+            </CardTitle>
+            <CardDescription>{data.indexVol.note}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[720px]">
+                <TableHeader>
+                  <TableRow className="bg-red-50">
+                    <TableHead className="text-xs">指数</TableHead>
+                    <TableHead className="text-xs text-right">HV20(%)</TableHead>
+                    <TableHead className="text-xs text-right">HV60(%)</TableHead>
+                    <TableHead className="text-xs text-right">5日变化</TableHead>
+                    <TableHead className="text-xs text-right">年分位</TableHead>
+                    <TableHead className="text-xs text-right">PE TTM</TableHead>
+                    <TableHead className="text-xs text-right">PE 2年分位</TableHead>
+                    <TableHead className="text-xs text-center">状态</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.indexVol.items.map((v) => (
+                    <TableRow key={v.code} className="hover:bg-slate-50">
+                      <TableCell className="text-xs font-semibold">{v.name}</TableCell>
+                      <TableCell className="text-xs text-right font-semibold">{v.hv20 ?? '--'}</TableCell>
+                      <TableCell className="text-xs text-right text-slate-500">{v.hv60 ?? '--'}</TableCell>
+                      <TableCell className={`text-xs text-right ${(v.hv20Chg5 ?? 0) >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {v.hv20Chg5 != null ? `${v.hv20Chg5 >= 0 ? '+' : ''}${v.hv20Chg5.toFixed(1)}` : '--'}
+                      </TableCell>
+                      <TableCell className="text-xs text-right">{v.hvPct1y != null ? `${v.hvPct1y.toFixed(0)}%` : '--'}</TableCell>
+                      <TableCell className="text-xs text-right">{v.peTtm ?? '--'}</TableCell>
+                      <TableCell className="text-xs text-right">{v.pePct2y != null ? `${v.pePct2y.toFixed(0)}%` : '--'}</TableCell>
+                      <TableCell className="text-xs text-center">
+                        <Badge className={`text-[10px] ${
+                          v.status === '升温' ? 'bg-red-100 text-red-700' :
+                          v.status === '降温' ? 'bg-green-100 text-green-700' :
+                          'bg-slate-100 text-slate-600'
+                        }`}>
+                          {v.status}{v.low ? '·低位' : ''}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </div>
