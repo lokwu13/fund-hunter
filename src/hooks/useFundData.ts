@@ -461,6 +461,8 @@ export interface FundData {
     items: Array<{
       code: string;
       name: string;
+      group?: 'broad' | 'soe';
+      series?: string;
       share: number;
       close: number;
       chg1: number | null;
@@ -470,8 +472,47 @@ export interface FundData {
       chg5Pct: number | null;
       chg20: number | null;
       chg20Pct: number | null;
+      signal?: '强信号' | '关注' | null;
+      trend3?: '趋势性增持' | '趋势性减持' | null;
       alert: boolean;
     }>;
+  };
+  ntRotation?: {
+    trade_date: string;
+    note?: string;
+    groups: Array<{
+      key: 'broad' | 'soe';
+      name: string;
+      series: Array<{
+        name: string;
+        items: Array<{
+          code: string;
+          name: string;
+          share: number;
+          chg1: number | null;
+          chg1Pct: number | null;
+          amt1: number | null;
+          chg5Pct: number | null;
+          signal?: '强信号' | '关注' | null;
+          trend3?: '趋势性增持' | '趋势性减持' | null;
+          owner?: string;
+          ratio?: number;
+        }>;
+        total: {
+          share: number | null;
+          chg1: number | null;
+          chg1Pct: number | null;
+          amt1: number | null;
+          chg5Pct: number | null;
+        } | null;
+      }>;
+    }>;
+    resonance: {
+      hit: boolean;
+      count: number;
+      direction: '增持' | '减持' | null;
+      names: string[];
+    };
   };
   etfRotation?: {
     trade_date: string;

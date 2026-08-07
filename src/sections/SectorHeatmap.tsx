@@ -1,8 +1,8 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
-  TrendingUp, TrendingDown, Zap, Activity, TrendingDown as TrendingDownIcon, Info
+  TrendingUp, TrendingDown, Zap, Activity, TrendingDown as TrendingDownIcon, Info, ArrowLeftRight
 } from 'lucide-react';
 import { useFundData } from '@/hooks/useFundData';
 
@@ -238,6 +238,49 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
           <span>颜色深浅代表资金规模</span>
         </div>
       </div>
+
+      {/* ====== 板块资金轮动（份额口径，从国家队栏目迁入） ====== */}
+      {data.etfRotation && data.etfRotation.items.length > 0 && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-bold flex items-center gap-2">
+              <ArrowLeftRight className="w-5 h-5 text-orange-600" />
+              板块资金轮动 · 份额口径（截至 {data.etfRotation.trade_date}）
+            </CardTitle>
+            <CardDescription>{data.etfRotation.note}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-1.5">
+              {data.etfRotation.items.map((c) => {
+                const maxAbs = Math.max(...data.etfRotation!.items.map((x) => Math.abs(x.net5d)), 1);
+                const pct = Math.abs(c.net5d) / maxAbs * 100;
+                return (
+                  <div key={c.cat} className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-slate-700 w-16 flex-shrink-0">{c.cat}</span>
+                    <span className="text-[10px] text-slate-400 w-10 flex-shrink-0">{c.count}只</span>
+                    <div className="flex-1 h-4 bg-slate-50 rounded relative overflow-hidden">
+                      <div className="absolute inset-y-0 left-1/2 w-px bg-slate-200" />
+                      <div
+                        className={`absolute inset-y-0.5 rounded-sm ${c.net5d >= 0 ? 'bg-red-400 left-1/2' : 'bg-green-500 right-1/2'}`}
+                        style={{ width: `${pct / 2}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-bold w-16 text-right flex-shrink-0 ${c.net5d >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      {c.net5d >= 0 ? '+' : ''}{c.net5d.toFixed(1)}亿
+                    </span>
+                    <span className={`text-[10px] w-14 text-right flex-shrink-0 ${c.todayNet >= 0 ? 'text-red-400' : 'text-green-500'}`}>
+                      当日{c.todayNet >= 0 ? '+' : ''}{c.todayNet.toFixed(1)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-[10px] text-slate-400 mt-3">
+              条形为近5日净额（份额变化×收盘价，亿元），右侧小字为当日净额 · 全市场ETF当日合计 {data.etfRotation.totalToday >= 0 ? '+' : ''}{data.etfRotation.totalToday.toFixed(1)} 亿
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* ====== TABLE VIEW (板块页) ====== */}
       {detailed && (
