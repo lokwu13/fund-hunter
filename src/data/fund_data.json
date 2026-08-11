@@ -7383,10 +7383,10 @@
     {
       "code": "005827.OF",
       "name": "易方达蓝筹精选",
-      "nav": 1.5489,
-      "accumNav": 1.5489,
-      "date": "20260810",
-      "change": 0.002
+      "nav": 1.5462,
+      "accumNav": 1.5462,
+      "date": "20260811",
+      "change": -0.003
     },
     {
       "code": "110011.OF",
@@ -7415,10 +7415,10 @@
     {
       "code": "070002.OF",
       "name": "嘉实增长",
-      "nav": 20.4659,
-      "accumNav": 21.1569,
-      "date": "20260810",
-      "change": 0.001
+      "nav": 20.4844,
+      "accumNav": 21.1754,
+      "date": "20260811",
+      "change": 0.018
     },
     {
       "code": "519732.OF",
@@ -7439,10 +7439,10 @@
     {
       "code": "003494.OF",
       "name": "富国天惠成长",
-      "nav": 3.0438,
-      "accumNav": 3.3488,
-      "date": "20260810",
-      "change": 0.013
+      "nav": 3.0281,
+      "accumNav": 3.3331,
+      "date": "20260811",
+      "change": -0.016
     },
     {
       "code": "008764.OF",
@@ -8398,36 +8398,7 @@
       "stockName": "恒瑞医药",
       "group": "hold",
       "industry": "化学制药",
-      "items": [
-        {
-          "type": "公告",
-          "date": "2026-08-11",
-          "title": "H股公告-翌日披露报表",
-          "content": "H股公告-翌日披露报表",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-08-11/1225466251.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-08-07",
-          "title": "恒瑞医药关于获得药品注册批准的公告",
-          "content": "恒瑞医药关于获得药品注册批准的公告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-08-07/1225462416.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-08-07",
-          "title": "H股公告-翌日披露报表",
-          "content": "H股公告-翌日披露报表",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-08-07/1225461748.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-08-07",
-          "title": "H股公告-董事会会议通告",
-          "content": "H股公告-董事会会议通告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-08-07/1225461691.PDF"
-        }
-      ]
+      "items": []
     },
     {
       "stockCode": "688016.SH",
@@ -8491,15 +8462,7 @@
       "stockName": "安琪酵母",
       "group": "watch",
       "industry": "食品",
-      "items": [
-        {
-          "type": "公告",
-          "date": "2026-08-11",
-          "title": "安琪酵母股份有限公司第十届董事会第十七次会议决议公告",
-          "content": "安琪酵母股份有限公司第十届董事会第十七次会议决议公告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-08-11/1225465712.PDF"
-        }
-      ]
+      "items": []
     },
     {
       "stockCode": "002568.SZ",
@@ -8513,7 +8476,22 @@
       "stockName": "中国中免",
       "group": "watch",
       "industry": "旅游服务",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-08-11",
+          "title": "H股公告-董事会会议召开日期",
+          "content": "H股公告-董事会会议召开日期",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-11/1225465914.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-08-06",
+          "title": "H股公告-月报表",
+          "content": "H股公告-月报表",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-06/1225459010.PDF"
+        }
+      ]
     },
     {
       "stockCode": "603259.SH",
