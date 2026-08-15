@@ -277,14 +277,17 @@
     }
   ],
   "northbound": {
-    "today": 27.45,
-    "week": 82.35,
-    "month": 274.5
+    "today": 2744.7,
+    "week": 14902.3,
+    "month": 65601.3,
+    "updateTime": "2026-08-14",
+    "note": "北向成交总额（亿元）；官方2024-08起停披净买入，仅披露成交额"
   },
   "southbound": {
-    "today": -0.0,
-    "week": -0.0,
-    "month": -0.0
+    "today": 2.87,
+    "week": 69.78,
+    "month": 52.35,
+    "updateTime": "2026-08-14"
   },
   "foreignSummary": {
     "totalBuys": 0,
@@ -416,84 +419,74 @@
   ],
   "leverage_concentration_top10": [
     {
-      "name": "广联达",
-      "code": "002410.SZ",
-      "ratio": "18.52%",
-      "finBalance": "28.6亿",
-      "concept": "建筑软件",
-      "sector": "计算机"
+      "rank": 1,
+      "code": "600802.SH",
+      "name": "福建水泥",
+      "ratio": "19.50%",
+      "concept": "—"
     },
     {
-      "name": "东方财富",
-      "code": "300059.SZ",
-      "ratio": "16.83%",
-      "finBalance": "185.2亿",
-      "concept": "互联网金融",
-      "sector": "非银金融"
+      "rank": 2,
+      "code": "001335.SZ",
+      "name": "信凯科技",
+      "ratio": "17.69%",
+      "concept": "—"
     },
     {
-      "name": "融捷股份",
-      "code": "002192.SZ",
-      "ratio": "15.67%",
-      "finBalance": "22.4亿",
-      "concept": "锂矿",
-      "sector": "有色金属"
+      "rank": 3,
+      "code": "603668.SH",
+      "name": "天马科技",
+      "ratio": "16.61%",
+      "concept": "—"
     },
     {
-      "name": "江淮汽车",
-      "code": "600418.SH",
-      "ratio": "14.35%",
-      "finBalance": "52.8亿",
-      "concept": "新能源车",
-      "sector": "汽车"
+      "rank": 4,
+      "code": "600448.SH",
+      "name": "华纺股份",
+      "ratio": "15.54%",
+      "concept": "—"
     },
     {
-      "name": "天齐锂业",
-      "code": "002466.SZ",
-      "ratio": "13.92%",
-      "finBalance": "48.6亿",
-      "concept": "锂矿",
-      "sector": "有色金属"
+      "rank": 5,
+      "code": "688693.SH",
+      "name": "锴威特",
+      "ratio": "15.04%",
+      "concept": "—"
     },
     {
-      "name": "阳光电源",
-      "code": "300274.SZ",
-      "ratio": "12.58%",
-      "finBalance": "68.5亿",
-      "concept": "逆变器",
-      "sector": "电力设备"
+      "rank": 6,
+      "code": "301626.SZ",
+      "name": "苏州天脉",
+      "ratio": "14.95%",
+      "concept": "—"
     },
     {
-      "name": "华友钴业",
-      "code": "603799.SH",
-      "ratio": "11.76%",
-      "finBalance": "42.3亿",
-      "concept": "钴镍",
-      "sector": "有色金属"
+      "rank": 7,
+      "code": "301157.SZ",
+      "name": "华塑科技",
+      "ratio": "13.68%",
+      "concept": "—"
     },
     {
-      "name": "中际旭创",
-      "code": "300308.SZ",
-      "ratio": "10.85%",
-      "finBalance": "58.2亿",
-      "concept": "光模块",
-      "sector": "通信"
+      "rank": 8,
+      "code": "603063.SH",
+      "name": "禾望电气",
+      "ratio": "13.58%",
+      "concept": "—"
     },
     {
-      "name": "隆基绿能",
-      "code": "601012.SH",
-      "ratio": "9.62%",
-      "finBalance": "72.5亿",
-      "concept": "光伏",
-      "sector": "电力设备"
+      "rank": 9,
+      "code": "688813.SH",
+      "name": "泰金新能",
+      "ratio": "13.33%",
+      "concept": "—"
     },
     {
-      "name": "通威股份",
-      "code": "600438.SH",
-      "ratio": "8.94%",
-      "finBalance": "45.8亿",
-      "concept": "硅料",
-      "sector": "电力设备"
+      "rank": 10,
+      "code": "688576.SH",
+      "name": "西山科技",
+      "ratio": "13.25%",
+      "concept": "—"
     }
   ],
   "medicalSectorFunds": {
@@ -835,74 +828,84 @@
   },
   "southbound_concentration_top10": [
     {
-      "name": "山东墨龙",
-      "code": "00568.HK",
-      "ratio": "68.52%",
-      "concept": "石油机械",
-      "sector": "机械设备"
-    },
-    {
-      "name": "保利物业",
-      "code": "06049.HK",
-      "ratio": "58.36%",
-      "concept": "物业管理",
-      "sector": "房地产服务"
-    },
-    {
-      "name": "弘业期货",
-      "code": "03678.HK",
-      "ratio": "54.18%",
-      "concept": "期货经纪",
-      "sector": "非银金融"
-    },
-    {
-      "name": "鼎丰集团",
-      "code": "06878.HK",
-      "ratio": "52.45%",
-      "concept": "汽车电商",
-      "sector": "汽车服务"
-    },
-    {
-      "name": "中州证券",
-      "code": "01375.HK",
-      "ratio": "51.23%",
-      "concept": "券商",
-      "sector": "非银金融"
-    },
-    {
-      "name": "马可数字科技",
-      "code": "01942.HK",
-      "ratio": "48.92%",
-      "concept": "数字科技",
-      "sector": "TMT"
-    },
-    {
-      "name": "中国电信",
-      "code": "00728.HK",
-      "ratio": "46.85%",
-      "concept": "电信运营商",
-      "sector": "通信"
-    },
-    {
-      "name": "新华文轩",
-      "code": "00811.HK",
-      "ratio": "45.63%",
-      "concept": "出版传媒",
-      "sector": "传媒"
-    },
-    {
-      "name": "绿色动力环保",
+      "name": "綠色動力環保",
       "code": "01330.HK",
-      "ratio": "44.27%",
-      "concept": "环保",
-      "sector": "公用事业"
+      "ratio": "72.97%",
+      "vol": 295133020,
+      "concept": "—",
+      "sector": "—"
     },
     {
-      "name": "东方证券",
+      "name": "大眾公用",
+      "code": "01635.HK",
+      "ratio": "71.29%",
+      "vol": 380501000,
+      "concept": "—",
+      "sector": "—"
+    },
+    {
+      "name": "中國電信",
+      "code": "00728.HK",
+      "ratio": "70.16%",
+      "vol": 9737737076,
+      "concept": "—",
+      "sector": "—"
+    },
+    {
+      "name": "龍蟠科技",
+      "code": "02465.HK",
+      "ratio": "70.01%",
+      "vol": 94519470,
+      "concept": "—",
+      "sector": "—"
+    },
+    {
+      "name": "中國神華",
+      "code": "01088.HK",
+      "ratio": "69.43%",
+      "vol": 2345607104,
+      "concept": "—",
+      "sector": "—"
+    },
+    {
+      "name": "凱盛新能",
+      "code": "01108.HK",
+      "ratio": "68.38%",
+      "vol": 170980000,
+      "concept": "—",
+      "sector": "—"
+    },
+    {
+      "name": "天津創業環保股份",
+      "code": "01065.HK",
+      "ratio": "68.33%",
+      "vol": 232358100,
+      "concept": "—",
+      "sector": "—"
+    },
+    {
+      "name": "廣汽集團",
+      "code": "02238.HK",
+      "ratio": "63.94%",
+      "vol": 1799025345,
+      "concept": "—",
+      "sector": "—"
+    },
+    {
+      "name": "弘業期貨",
+      "code": "03678.HK",
+      "ratio": "63.61%",
+      "vol": 158848000,
+      "concept": "—",
+      "sector": "—"
+    },
+    {
+      "name": "東方證券",
       "code": "03958.HK",
-      "ratio": "43.18%",
-      "concept": "券商",
-      "sector": "非银金融"
+      "ratio": "61.13%",
+      "vol": 627969429,
+      "concept": "—",
+      "sector": "—"
     }
   ],
   "foreign_concentration_top10": [
@@ -1367,16 +1370,16 @@
       "note": "交易日实时"
     },
     "northbound": {
-      "source": "Tushare hsgt",
+      "source": "Tushare moneyflow_hsgt",
       "freq": "日更",
-      "lastUpdate": "2026-07-05",
-      "note": "沪深港通每日盘后更新"
+      "lastUpdate": "2026-08-14",
+      "note": "北向成交总额口径（亿元）；官方2024-08起停披净买入，仅披露成交额"
     },
     "southbound": {
-      "source": "Tushare hsgt",
+      "source": "Tushare ggt_daily",
       "freq": "日更",
-      "lastUpdate": "2026-07-05",
-      "note": "沪深港通每日盘后更新"
+      "lastUpdate": "2026-08-14",
+      "note": "南向净买入（亿港元），官方仍披露，日更"
     },
     "sectors": {
       "source": "东方财富/AKShare",
@@ -1392,15 +1395,15 @@
     },
     "combined_sell_top10": {
       "source": "Wind/ manually compiled",
-      "freq": "周更",
+      "freq": "周更（已暂停）",
       "lastUpdate": "2026-06-20",
-      "note": "国家队+公募+外资合并统计，每周五更新"
+      "note": "国家队+公募+外资合并统计；含北向净买入成分，该口径2024-08起官方停披，榜单停在2026-06-20"
     },
     "leverage_concentration_top10": {
-      "source": "东方财富两融数据",
+      "source": "Tushare margin_detail + daily_basic",
       "freq": "日更",
-      "lastUpdate": "2026-06-23",
-      "note": "融资余额占比，每日收盘后更新"
+      "lastUpdate": "2026-08-13",
+      "note": "融资余额占流通市值比，T+1口径每日更新"
     },
     "medicalSectorFunds": {
       "source": "基金季报/港交所披露",
@@ -1409,22 +1412,22 @@
       "note": "公募季报季更，外资/国家队周更"
     },
     "southbound_concentration_top10": {
-      "source": "港交所CCASS",
+      "source": "Tushare hk_hold（港交所CCASS港股通持股）",
       "freq": "日更",
-      "lastUpdate": "2026-07-04",
-      "note": "港股通持股占比，交易日盘后更新"
+      "lastUpdate": "2026-08-14",
+      "note": "港股通持股占港股总股本比例，交易日盘后更新；名称为港交所登记繁体原名"
     },
     "foreign_concentration_top10": {
       "source": "港交所CCASS",
-      "freq": "日更",
+      "freq": "手工季更",
       "lastUpdate": "2026-07-04",
-      "note": "国际中介持股占比，交易日盘后更新"
+      "note": "国际中介持股占比，无免费批量接口，手工季更"
     },
     "top10_foreign": {
-      "source": "Tushare hsgt_top10",
-      "freq": "日更",
-      "lastUpdate": "2026-07-05",
-      "note": "北向资金净流入TOP10，每日盘后更新"
+      "source": "手工整理（原Tushare hsgt_top10）",
+      "freq": "季更",
+      "lastUpdate": "2026-07-08",
+      "note": "北向个股净买入官方2024-08起停披；本榜单为2026Q2北向持仓口径手工整理"
     },
     "foreignInstitution_top10": {
       "source": "港交所权益披露",
@@ -1434,9 +1437,33 @@
     },
     "divergence_top10": {
       "source": "港交所CCASS+南向数据",
-      "freq": "周更",
+      "freq": "周更（已暂停）",
       "lastUpdate": "2026-06-27",
-      "note": "南向vs外资分歧，每周汇总"
+      "note": "南向vs外资分歧；外资侧依赖CCASS手工数据，榜单停在2026-06-27，前端面板当前为静态示例"
+    },
+    "top10_publicfund": {
+      "source": "公募基金2026年二季报（Wind/天相口径）",
+      "freq": "季更",
+      "lastUpdate": "2026-07-21",
+      "note": "主动股混基金增持市值前十；中际旭创+923.75亿、新易盛+687.68亿、寒武纪+516.63亿居前三（天相口径），不同供应商口径数值略有差异"
+    },
+    "publicFund_outflow_top10": {
+      "source": "公募基金2026年二季报（Wind/天相口径）",
+      "freq": "季更",
+      "lastUpdate": "2026-07-21",
+      "note": "减持市值前十；腾讯控股-187.37亿居首（Wind口径），天相主动股混口径减持前三为宁德时代-175.72亿、贵州茅台-146.45亿、紫金矿业-118.36亿"
+    },
+    "foreignSummary": {
+      "source": "沪深股通季度持股数据（东财Choice/财联社）",
+      "freq": "季更",
+      "lastUpdate": "2026-07-08",
+      "note": "2026Q2末(6/30)北向持仓3.13万亿元、3958只，7/8公布；官方仅季度披露持仓，无日度净买入"
+    },
+    "marginTrading": {
+      "source": "Tushare margin（沪深北交易所两融汇总）",
+      "freq": "日更",
+      "lastUpdate": "2026-08-13",
+      "note": "T+1口径：交易日当晚更新前一交易日数据"
     }
   },
   "top5_national": [
@@ -7049,31 +7076,6 @@
         "source": "中债登"
       },
       {
-        "date": "2026-08-13",
-        "title": "10年期国债收益率续降至1.703%，债市持续走牛",
-        "source": "中债登"
-      },
-      {
-        "date": "2026-08-12",
-        "title": "10年期国债收益率续降至1.714%，债市持续走牛",
-        "source": "中债登"
-      },
-      {
-        "date": "2026-08-11",
-        "title": "10年期国债收益率回升至1.716%，债市出现调整",
-        "source": "中债登"
-      },
-      {
-        "date": "2026-08-10",
-        "title": "10年期国债收益率续降至1.707%，债市持续走牛",
-        "source": "中债登"
-      },
-      {
-        "date": "2026-08-07",
-        "title": "10年期国债收益率续降至1.711%，债市持续走牛",
-        "source": "中债登"
-      },
-      {
         "date": "2026-08-06",
         "title": "10年期国债收益率回升至1.714%，债市出现调整",
         "source": "中债登"
@@ -7211,212 +7213,254 @@
       "comment": "DR007（1.42%）贴近7天逆回购政策利率（1.40%），资金面整体均衡；本月公开市场净投放2000亿元，央行持续呵护流动性。"
     },
     "marginTrading": {
-      "updateTime": "2026-07-21",
-      "trend": "下降",
-      "totalBalance": 26750.0,
-      "finBalance": 26550.0,
-      "secBalance": 200.0,
+      "updateTime": "2026-08-13",
+      "trend": "上升",
+      "totalBalance": 26757.0,
+      "finBalance": 26497.41,
+      "secBalance": 259.78,
       "daily": [
         {
-          "date": "06-01",
-          "total": 29750,
-          "fin": 29452.5,
-          "sec": 297.5
-        },
-        {
-          "date": "06-02",
-          "total": 29715,
-          "fin": 29417.85,
-          "sec": 297.15
-        },
-        {
-          "date": "06-03",
-          "total": 29695,
-          "fin": 29398.05,
-          "sec": 296.95
-        },
-        {
-          "date": "06-04",
-          "total": 29690,
-          "fin": 29393.1,
-          "sec": 296.9
-        },
-        {
-          "date": "06-05",
-          "total": 29700,
-          "fin": 29403.0,
-          "sec": 297.0
-        },
-        {
-          "date": "06-08",
-          "total": 29680,
-          "fin": 29383.2,
-          "sec": 296.8
-        },
-        {
-          "date": "06-09",
-          "total": 29675,
-          "fin": 29378.25,
-          "sec": 296.75
-        },
-        {
-          "date": "06-10",
-          "total": 29685,
-          "fin": 29388.15,
-          "sec": 296.85
-        },
-        {
-          "date": "06-11",
-          "total": 29635,
-          "fin": 29338.65,
-          "sec": 296.35
-        },
-        {
-          "date": "06-12",
-          "total": 29600,
-          "fin": 29304.0,
-          "sec": 296.0
-        },
-        {
-          "date": "06-15",
-          "total": 29610,
-          "fin": 29313.9,
-          "sec": 296.1
-        },
-        {
-          "date": "06-16",
-          "total": 29560,
-          "fin": 29264.4,
-          "sec": 295.6
-        },
-        {
-          "date": "06-17",
-          "total": 29525,
-          "fin": 29229.75,
-          "sec": 295.25
-        },
-        {
           "date": "06-18",
-          "total": 29505,
-          "fin": 29209.95,
-          "sec": 295.05
-        },
-        {
-          "date": "06-19",
-          "total": 29500,
-          "fin": 29205.0,
-          "sec": 295.0
+          "total": 29655,
+          "fin": 29438.31,
+          "sec": 216.81
         },
         {
           "date": "06-22",
-          "total": 29465,
-          "fin": 29170.35,
-          "sec": 294.65
+          "total": 29950,
+          "fin": 29728.56,
+          "sec": 221.75
         },
         {
           "date": "06-23",
-          "total": 29445,
-          "fin": 29150.55,
-          "sec": 294.45
+          "total": 30010,
+          "fin": 29789.93,
+          "sec": 219.78
         },
         {
           "date": "06-24",
-          "total": 29440,
-          "fin": 29145.6,
-          "sec": 294.4
+          "total": 30151,
+          "fin": 29926.76,
+          "sec": 224.73
         },
         {
           "date": "06-25",
-          "total": 29450,
-          "fin": 29155.5,
-          "sec": 294.5
+          "total": 30330,
+          "fin": 30101.97,
+          "sec": 227.95
         },
         {
           "date": "06-26",
-          "total": 29400,
-          "fin": 29106.0,
-          "sec": 294.0
+          "total": 30120,
+          "fin": 29895.4,
+          "sec": 224.21
         },
         {
           "date": "06-29",
-          "total": 29395,
-          "fin": 29101.05,
-          "sec": 293.95
+          "total": 30037,
+          "fin": 29809.05,
+          "sec": 227.76
         },
         {
           "date": "06-30",
-          "total": 29405,
-          "fin": 29110.95,
-          "sec": 294.05
+          "total": 30204,
+          "fin": 29970.93,
+          "sec": 233.03
         },
         {
           "date": "07-01",
-          "total": 29355,
-          "fin": 29061.45,
-          "sec": 293.55
+          "total": 30305,
+          "fin": 30069.91,
+          "sec": 234.84
         },
         {
           "date": "07-02",
-          "total": 29320,
-          "fin": 29026.8,
-          "sec": 293.2
+          "total": 30229,
+          "fin": 30004.58,
+          "sec": 224.38
         },
         {
           "date": "07-03",
-          "total": 29300,
-          "fin": 29007.0,
-          "sec": 293.0
+          "total": 30033,
+          "fin": 29807.24,
+          "sec": 226.13
         },
         {
           "date": "07-06",
-          "total": 29250,
-          "fin": 28957.5,
-          "sec": 292.5
+          "total": 29926,
+          "fin": 29701.53,
+          "sec": 224.61
         },
         {
           "date": "07-07",
-          "total": 29215,
-          "fin": 28922.85,
-          "sec": 292.15
+          "total": 29790,
+          "fin": 29570.36,
+          "sec": 219.76
         },
         {
           "date": "07-08",
-          "total": 29195,
-          "fin": 28903.05,
-          "sec": 291.95
+          "total": 29597,
+          "fin": 29381.15,
+          "sec": 215.43
         },
         {
           "date": "07-09",
-          "total": 29190,
-          "fin": 28898.1,
-          "sec": 291.9
+          "total": 29562,
+          "fin": 29341.64,
+          "sec": 220.32
         },
         {
           "date": "07-10",
-          "total": 29200,
-          "fin": 28908.0,
-          "sec": 292.0
+          "total": 29448,
+          "fin": 29228.04,
+          "sec": 219.69
         },
         {
           "date": "07-13",
-          "total": 29180,
-          "fin": 28888.2,
-          "sec": 291.8
+          "total": 29102,
+          "fin": 28891.33,
+          "sec": 210.62
         },
         {
           "date": "07-14",
-          "total": 29175,
-          "fin": 28883.25,
-          "sec": 291.75
+          "total": 28994,
+          "fin": 28781.18,
+          "sec": 213.21
         },
         {
           "date": "07-15",
-          "total": 29185,
-          "fin": 28893.15,
-          "sec": 291.85
+          "total": 28875,
+          "fin": 28663.54,
+          "sec": 211.42
+        },
+        {
+          "date": "07-16",
+          "total": 28582,
+          "fin": 28377.01,
+          "sec": 204.55
+        },
+        {
+          "date": "07-17",
+          "total": 27770,
+          "fin": 27575.68,
+          "sec": 194.19
+        },
+        {
+          "date": "07-20",
+          "total": 27176,
+          "fin": 26977.76,
+          "sec": 198.02
+        },
+        {
+          "date": "07-21",
+          "total": 27183,
+          "fin": 26978.8,
+          "sec": 204.03
+        },
+        {
+          "date": "07-22",
+          "total": 27198,
+          "fin": 26986.26,
+          "sec": 211.49
+        },
+        {
+          "date": "07-23",
+          "total": 27103,
+          "fin": 26888.61,
+          "sec": 214.51
+        },
+        {
+          "date": "07-24",
+          "total": 26879,
+          "fin": 26666.03,
+          "sec": 213.33
+        },
+        {
+          "date": "07-27",
+          "total": 26986,
+          "fin": 26766.8,
+          "sec": 218.91
+        },
+        {
+          "date": "07-28",
+          "total": 26691,
+          "fin": 26469.03,
+          "sec": 222.07
+        },
+        {
+          "date": "07-29",
+          "total": 26435,
+          "fin": 26213.13,
+          "sec": 221.55
+        },
+        {
+          "date": "07-30",
+          "total": 26065,
+          "fin": 25845.22,
+          "sec": 220.06
+        },
+        {
+          "date": "07-31",
+          "total": 26113,
+          "fin": 25891.17,
+          "sec": 222.1
+        },
+        {
+          "date": "08-03",
+          "total": 26025,
+          "fin": 25803.56,
+          "sec": 221.7
+        },
+        {
+          "date": "08-04",
+          "total": 26152,
+          "fin": 25923.14,
+          "sec": 229.07
+        },
+        {
+          "date": "08-05",
+          "total": 26285,
+          "fin": 26045.37,
+          "sec": 239.29
+        },
+        {
+          "date": "08-06",
+          "total": 26399,
+          "fin": 26155.66,
+          "sec": 242.93
+        },
+        {
+          "date": "08-07",
+          "total": 26475,
+          "fin": 26225.44,
+          "sec": 249.97
+        },
+        {
+          "date": "08-10",
+          "total": 26622,
+          "fin": 26366.16,
+          "sec": 255.4
+        },
+        {
+          "date": "08-11",
+          "total": 26633,
+          "fin": 26379.2,
+          "sec": 254.09
+        },
+        {
+          "date": "08-12",
+          "total": 26732,
+          "fin": 26473.83,
+          "sec": 257.9
+        },
+        {
+          "date": "08-13",
+          "total": 26757,
+          "fin": 26497.41,
+          "sec": 259.78
         }
       ],
-      "comment": "截至7月21日两融余额26750亿，较前日减少约400亿，连续5日下降。融资余额26550亿，融券余额200亿。杠杆资金持续离场，市场风险偏好下降。"
+      "comment": "截至8月13日两融余额26757亿，较前日增加约25亿，连续8日上升。融资余额26497亿，融券余额260亿。杠杆资金持续回流，市场风险偏好回升。"
     }
   },
   "hotFundNavs": [
@@ -7594,10 +7638,10 @@
       },
       {
         "sector": "食品饮料",
-        "eci": 58.0,
+        "eci": 57.9,
         "volConvergence": 2.5,
         "fundConcentration": 10.0,
-        "trendSync": 12.3,
+        "trendSync": 12.2,
         "consistencyMomentum": 8.4,
         "activity": 11.5,
         "policy": 7.5,
@@ -7607,7 +7651,7 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": 6.2
+        "change5d": 6.1
       },
       {
         "sector": "银行",
@@ -7641,7 +7685,7 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -6.7
+        "change5d": -6.8
       },
       {
         "sector": "汽车",
@@ -7964,7 +8008,7 @@
             "return": "-21.3%"
           }
         },
-        "change5d": 2.8
+        "change5d": 2.9
       },
       {
         "sector": "农林牧渔",
@@ -9208,7 +9252,7 @@
       },
       {
         "parent": "食品饮料",
-        "eci": 58.0,
+        "eci": 57.9,
         "inflow30d": 26.75,
         "posRatio": 47.8,
         "gap": "流入占比47.8%，未过半"
@@ -9487,7 +9531,7 @@
         "name": "公路",
         "net5": -0.2,
         "net10": -0.4,
-        "net20": -1.0,
+        "net20": -0.9,
         "tag": "持续流出"
       },
       {
@@ -9542,7 +9586,7 @@
       {
         "name": "橡胶",
         "net5": -0.8,
-        "net10": 1.3,
+        "net10": 1.4,
         "net20": -0.3,
         "tag": "拐点·转流出"
       },
@@ -9613,7 +9657,7 @@
         "name": "其他商业",
         "net5": -2.4,
         "net10": -5.3,
-        "net20": -5.1,
+        "net20": -5.0,
         "tag": "持续流出"
       },
       {
@@ -9626,7 +9670,7 @@
       {
         "name": "商品城",
         "net5": -2.8,
-        "net10": -7.6,
+        "net10": -7.5,
         "net20": 3.5,
         "tag": "反复"
       },
@@ -9718,7 +9762,7 @@
         "name": "饲料",
         "net5": -4.8,
         "net10": -11.0,
-        "net20": -16.0,
+        "net20": -16.1,
         "tag": "持续流出"
       },
       {
@@ -9751,7 +9795,7 @@
       },
       {
         "name": "种植业",
-        "net5": -5.8,
+        "net5": -5.9,
         "net10": -6.7,
         "net20": -6.1,
         "tag": "持续流出"
@@ -9970,7 +10014,7 @@
         "name": "工程机械",
         "net5": -27.8,
         "net10": -53.4,
-        "net20": 1.2,
+        "net20": 1.1,
         "tag": "反复"
       },
       {
@@ -10103,7 +10147,7 @@
         "name": "证券",
         "net5": -56.2,
         "net10": -134.3,
-        "net20": -156.5,
+        "net20": -156.4,
         "tag": "持续流出"
       },
       {
@@ -10194,7 +10238,7 @@
         "vol20": 17.0,
         "volPct": 29.5,
         "amtRatio": 0.61,
-        "nHit": 4,
+        "nHit": 2,
         "nLeaders": 5,
         "signal": "⚪",
         "leaders": [
@@ -10202,10 +10246,10 @@
             "code": "601628.SH",
             "name": "中国人寿",
             "mv": 7671.0,
-            "vol20": 29.4,
-            "volPct": 57.4,
-            "ampRatio": 0.61,
-            "volRatio": 0.71,
+            "vol20": 37.5,
+            "volPct": 87.3,
+            "ampRatio": 0.74,
+            "volRatio": 0.95,
             "narrow": true,
             "shrink": false
           },
@@ -10213,21 +10257,21 @@
             "code": "601318.SH",
             "name": "中国平安",
             "mv": 5517.0,
-            "vol20": 27.9,
-            "volPct": 69.3,
-            "ampRatio": 0.62,
-            "volRatio": 0.64,
-            "narrow": true,
-            "shrink": true
+            "vol20": 30.4,
+            "volPct": 75.4,
+            "ampRatio": 0.77,
+            "volRatio": 0.79,
+            "narrow": false,
+            "shrink": false
           },
           {
             "code": "600030.SH",
             "name": "中信证券",
             "mv": 3325.0,
-            "vol20": 17.4,
-            "volPct": 26.6,
-            "ampRatio": 0.51,
-            "volRatio": 0.55,
+            "vol20": 21.3,
+            "volPct": 48.4,
+            "ampRatio": 0.62,
+            "volRatio": 0.62,
             "narrow": true,
             "shrink": true
           },
@@ -10235,10 +10279,10 @@
             "code": "300059.SZ",
             "name": "东方财富",
             "mv": 2600.0,
-            "vol20": 24.5,
-            "volPct": 27.9,
-            "ampRatio": 0.46,
-            "volRatio": 0.57,
+            "vol20": 28.9,
+            "volPct": 43.9,
+            "ampRatio": 0.62,
+            "volRatio": 0.65,
             "narrow": true,
             "shrink": true
           },
@@ -10246,12 +10290,12 @@
             "code": "601319.SH",
             "name": "中国人保",
             "mv": 2435.0,
-            "vol20": 25.8,
-            "volPct": 35.2,
-            "ampRatio": 0.55,
-            "volRatio": 0.62,
+            "vol20": 31.0,
+            "volPct": 68.4,
+            "ampRatio": 0.66,
+            "volRatio": 0.84,
             "narrow": true,
-            "shrink": true
+            "shrink": false
           }
         ]
       },
@@ -10270,10 +10314,10 @@
             "code": "600150.SH",
             "name": "中国船舶",
             "mv": 2515.0,
-            "vol20": 24.6,
-            "volPct": 24.6,
-            "ampRatio": 0.57,
-            "volRatio": 0.75,
+            "vol20": 41.6,
+            "volPct": 77.9,
+            "ampRatio": 0.6,
+            "volRatio": 0.73,
             "narrow": true,
             "shrink": false
           },
@@ -10281,21 +10325,21 @@
             "code": "600760.SH",
             "name": "中航沈飞",
             "mv": 1257.0,
-            "vol20": 28.4,
-            "volPct": 30.7,
-            "ampRatio": 0.94,
-            "volRatio": 1.24,
-            "narrow": false,
+            "vol20": 27.3,
+            "volPct": 26.2,
+            "ampRatio": 0.73,
+            "volRatio": 0.83,
+            "narrow": true,
             "shrink": false
           },
           {
             "code": "601698.SH",
             "name": "中国卫通",
             "mv": 1119.0,
-            "vol20": 38.3,
-            "volPct": 29.1,
-            "ampRatio": 0.6,
-            "volRatio": 0.62,
+            "vol20": 51.7,
+            "volPct": 52.5,
+            "ampRatio": 0.52,
+            "volRatio": 0.58,
             "narrow": true,
             "shrink": true
           },
@@ -10303,10 +10347,10 @@
             "code": "600893.SH",
             "name": "航发动力",
             "mv": 983.0,
-            "vol20": 33.1,
-            "volPct": 33.6,
-            "ampRatio": 0.7,
-            "volRatio": 0.91,
+            "vol20": 45.1,
+            "volPct": 53.3,
+            "ampRatio": 0.69,
+            "volRatio": 1.02,
             "narrow": true,
             "shrink": false
           },
@@ -10338,10 +10382,10 @@
             "code": "600019.SH",
             "name": "宝钢股份",
             "mv": 1231.0,
-            "vol20": 24.0,
-            "volPct": 67.2,
-            "ampRatio": 0.81,
-            "volRatio": 0.93,
+            "vol20": 26.0,
+            "volPct": 75.8,
+            "ampRatio": 0.96,
+            "volRatio": 1.08,
             "narrow": false,
             "shrink": false
           },
@@ -10349,34 +10393,34 @@
             "code": "600010.SH",
             "name": "包钢股份",
             "mv": 702.0,
-            "vol20": 22.4,
-            "volPct": 4.5,
-            "ampRatio": 0.73,
-            "volRatio": 0.67,
+            "vol20": 37.8,
+            "volPct": 34.4,
+            "ampRatio": 0.71,
+            "volRatio": 0.78,
             "narrow": true,
-            "shrink": true
+            "shrink": false
           },
           {
             "code": "000708.SZ",
             "name": "中信特钢",
             "mv": 696.0,
-            "vol20": 24.9,
-            "volPct": 30.3,
-            "ampRatio": 0.72,
-            "volRatio": 0.75,
-            "narrow": true,
+            "vol20": 29.6,
+            "volPct": 66.8,
+            "ampRatio": 0.76,
+            "volRatio": 0.94,
+            "narrow": false,
             "shrink": false
           },
           {
             "code": "001203.SZ",
             "name": "大中矿业",
             "mv": 363.0,
-            "vol20": 44.7,
-            "volPct": 20.5,
-            "ampRatio": 0.75,
-            "volRatio": 0.76,
+            "vol20": 47.9,
+            "volPct": 22.5,
+            "ampRatio": 0.72,
+            "volRatio": 0.58,
             "narrow": true,
-            "shrink": false
+            "shrink": true
           },
           {
             "code": "000629.SZ",
@@ -10398,7 +10442,7 @@
         "vol20": 16.1,
         "volPct": 46.3,
         "amtRatio": 0.88,
-        "nHit": 3,
+        "nHit": 2,
         "nLeaders": 5,
         "signal": "⚪",
         "leaders": [
@@ -10406,10 +10450,10 @@
             "code": "601668.SH",
             "name": "中国建筑",
             "mv": 1818.0,
-            "vol20": 19.2,
-            "volPct": 83.6,
-            "ampRatio": 0.89,
-            "volRatio": 0.74,
+            "vol20": 30.0,
+            "volPct": 100.0,
+            "ampRatio": 1.06,
+            "volRatio": 1.04,
             "narrow": false,
             "shrink": false
           },
@@ -10417,21 +10461,21 @@
             "code": "601390.SH",
             "name": "中国中铁",
             "mv": 886.0,
-            "vol20": 20.2,
-            "volPct": 49.2,
-            "ampRatio": 0.71,
-            "volRatio": 0.67,
-            "narrow": true,
-            "shrink": true
+            "vol20": 24.6,
+            "volPct": 63.5,
+            "ampRatio": 0.78,
+            "volRatio": 0.83,
+            "narrow": false,
+            "shrink": false
           },
           {
             "code": "601868.SH",
             "name": "中国能建",
             "mv": 824.0,
-            "vol20": 20.8,
-            "volPct": 45.1,
-            "ampRatio": 0.59,
-            "volRatio": 0.56,
+            "vol20": 23.9,
+            "volPct": 53.3,
+            "ampRatio": 0.58,
+            "volRatio": 0.66,
             "narrow": true,
             "shrink": true
           },
@@ -10439,12 +10483,12 @@
             "code": "600039.SH",
             "name": "四川路桥",
             "mv": 726.0,
-            "vol20": 40.2,
-            "volPct": 86.5,
-            "ampRatio": 0.9,
-            "volRatio": 0.68,
+            "vol20": 41.3,
+            "volPct": 91.0,
+            "ampRatio": 0.88,
+            "volRatio": 0.75,
             "narrow": false,
-            "shrink": true
+            "shrink": false
           },
           {
             "code": "601186.SH",
@@ -10466,7 +10510,7 @@
         "vol20": 20.7,
         "volPct": 51.2,
         "amtRatio": 0.87,
-        "nHit": 2,
+        "nHit": 0,
         "nLeaders": 5,
         "signal": "⚪",
         "leaders": [
@@ -10474,32 +10518,32 @@
             "code": "601888.SH",
             "name": "中国中免",
             "mv": 1056.0,
-            "vol20": 30.2,
-            "volPct": 38.9,
-            "ampRatio": 0.52,
-            "volRatio": 0.62,
-            "narrow": true,
-            "shrink": true
+            "vol20": 42.3,
+            "volPct": 62.3,
+            "ampRatio": 0.78,
+            "volRatio": 0.78,
+            "narrow": false,
+            "shrink": false
           },
           {
             "code": "600415.SH",
             "name": "小商品城",
             "mv": 639.0,
-            "vol20": 50.9,
-            "volPct": 84.8,
-            "ampRatio": 0.74,
-            "volRatio": 0.89,
-            "narrow": true,
+            "vol20": 59.5,
+            "volPct": 100.0,
+            "ampRatio": 1.12,
+            "volRatio": 0.86,
+            "narrow": false,
             "shrink": false
           },
           {
             "code": "601061.SH",
             "name": "中信金属",
             "mv": 574.0,
-            "vol20": 59.8,
-            "volPct": 85.2,
-            "ampRatio": 0.92,
-            "volRatio": 1.2,
+            "vol20": 64.7,
+            "volPct": 94.3,
+            "ampRatio": 0.98,
+            "volRatio": 1.03,
             "narrow": false,
             "shrink": false
           },
@@ -10507,22 +10551,22 @@
             "code": "300972.SZ",
             "name": "万辰集团",
             "mv": 357.0,
-            "vol20": 42.5,
-            "volPct": 33.6,
-            "ampRatio": 0.74,
-            "volRatio": 0.67,
-            "narrow": true,
-            "shrink": true
+            "vol20": 55.6,
+            "volPct": 77.5,
+            "ampRatio": 1.12,
+            "volRatio": 1.03,
+            "narrow": false,
+            "shrink": false
           },
           {
             "code": "601933.SH",
             "name": "永辉超市",
             "mv": 285.0,
-            "vol20": 29.0,
-            "volPct": 20.5,
-            "ampRatio": 0.62,
-            "volRatio": 0.84,
-            "narrow": true,
+            "vol20": 39.7,
+            "volPct": 68.0,
+            "ampRatio": 1.03,
+            "volRatio": 0.96,
+            "narrow": false,
             "shrink": false
           }
         ]
@@ -10553,16 +10597,16 @@
         "series": "沪深300系列",
         "share": 235.01,
         "close": 4.726,
-        "chg1": -1.77,
-        "chg1Pct": -0.75,
-        "amt1": -8.37,
-        "chg5": -16.27,
-        "chg5Pct": -6.48,
-        "chg20": 38.0,
-        "chg20Pct": 19.29,
-        "signal": null,
+        "chg1": -24.36,
+        "chg1Pct": -9.39,
+        "amt1": -115.13,
+        "chg5": -29.83,
+        "chg5Pct": -11.26,
+        "chg20": 62.87,
+        "chg20Pct": 36.52,
+        "signal": "强信号",
         "trend3": "趋势性减持",
-        "alert": false
+        "alert": true
       },
       {
         "code": "510310.SH",
@@ -10571,16 +10615,16 @@
         "series": "沪深300系列",
         "share": 113.74,
         "close": 4.588,
-        "chg1": -0.02,
-        "chg1Pct": -0.02,
-        "amt1": -0.09,
-        "chg5": -1.85,
-        "chg5Pct": -1.6,
-        "chg20": 14.04,
-        "chg20Pct": 14.08,
-        "signal": null,
+        "chg1": -2.34,
+        "chg1Pct": -2.02,
+        "amt1": -10.74,
+        "chg5": -2.84,
+        "chg5Pct": -2.44,
+        "chg20": 21.96,
+        "chg20Pct": 23.93,
+        "signal": "关注",
         "trend3": "趋势性减持",
-        "alert": false
+        "alert": true
       },
       {
         "code": "510330.SH",
@@ -10589,13 +10633,13 @@
         "series": "沪深300系列",
         "share": 85.83,
         "close": 4.926,
-        "chg1": -0.17,
-        "chg1Pct": -0.2,
-        "amt1": -0.84,
-        "chg5": -1.44,
-        "chg5Pct": -1.65,
-        "chg20": 6.93,
-        "chg20Pct": 8.78,
+        "chg1": -1.36,
+        "chg1Pct": -1.56,
+        "amt1": -6.7,
+        "chg5": -1.3,
+        "chg5Pct": -1.49,
+        "chg20": 10.32,
+        "chg20Pct": 13.67,
         "signal": null,
         "trend3": "趋势性减持",
         "alert": false
@@ -10607,16 +10651,16 @@
         "series": "沪深300系列",
         "share": 62.35,
         "close": 4.935,
-        "chg1": -0.5,
-        "chg1Pct": -0.79,
-        "amt1": -2.47,
-        "chg5": -2.53,
-        "chg5Pct": -3.9,
-        "chg20": 5.52,
-        "chg20Pct": 9.71,
-        "signal": null,
-        "trend3": null,
-        "alert": false
+        "chg1": -2.53,
+        "chg1Pct": -3.9,
+        "amt1": -12.49,
+        "chg5": -3.74,
+        "chg5Pct": -5.65,
+        "chg20": 8.55,
+        "chg20Pct": 15.89,
+        "signal": "强信号",
+        "trend3": "趋势性减持",
+        "alert": true
       },
       {
         "code": "510050.SH",
@@ -10625,15 +10669,15 @@
         "series": "上证50",
         "share": 70.82,
         "close": 3.021,
-        "chg1": 1.15,
-        "chg1Pct": 1.65,
-        "amt1": 3.47,
-        "chg5": 1.87,
-        "chg5Pct": 2.72,
-        "chg20": -10.68,
-        "chg20Pct": -13.11,
+        "chg1": -0.66,
+        "chg1Pct": -0.92,
+        "amt1": -1.99,
+        "chg5": -0.63,
+        "chg5Pct": -0.88,
+        "chg20": 4.95,
+        "chg20Pct": 7.51,
         "signal": null,
-        "trend3": null,
+        "trend3": "趋势性减持",
         "alert": false
       },
       {
@@ -10643,16 +10687,16 @@
         "series": "中证500系列",
         "share": 50.92,
         "close": 7.998,
-        "chg1": -0.61,
-        "chg1Pct": -1.19,
-        "amt1": -4.88,
-        "chg5": -4.8,
-        "chg5Pct": -8.62,
-        "chg20": -6.3,
-        "chg20Pct": -11.01,
-        "signal": null,
+        "chg1": -10.13,
+        "chg1Pct": -16.59,
+        "amt1": -81.02,
+        "chg5": -8.96,
+        "chg5Pct": -14.96,
+        "chg20": 4.12,
+        "chg20Pct": 8.79,
+        "signal": "强信号",
         "trend3": "趋势性减持",
-        "alert": false
+        "alert": true
       },
       {
         "code": "512500.SH",
@@ -10661,16 +10705,16 @@
         "series": "中证500系列",
         "share": 18.54,
         "close": 4.525,
-        "chg1": -0.13,
-        "chg1Pct": -0.69,
-        "amt1": -0.59,
-        "chg5": -0.42,
-        "chg5Pct": -2.24,
-        "chg20": 0.27,
-        "chg20Pct": 1.49,
-        "signal": null,
+        "chg1": -1.22,
+        "chg1Pct": -6.19,
+        "amt1": -5.52,
+        "chg5": -1.03,
+        "chg5Pct": -5.27,
+        "chg20": 1.89,
+        "chg20Pct": 11.34,
+        "signal": "强信号",
         "trend3": null,
-        "alert": false
+        "alert": true
       },
       {
         "code": "512100.SH",
@@ -10679,15 +10723,15 @@
         "series": "中证1000系列",
         "share": 66.65,
         "close": 3.145,
-        "chg1": -2.22,
-        "chg1Pct": -3.22,
-        "amt1": -6.98,
-        "chg5": -22.92,
-        "chg5Pct": -25.59,
-        "chg20": -20.4,
-        "chg20Pct": -23.43,
+        "chg1": -52.08,
+        "chg1Pct": -43.86,
+        "amt1": -163.79,
+        "chg5": -46.66,
+        "chg5Pct": -41.18,
+        "chg20": 7.6,
+        "chg20Pct": 12.87,
         "signal": "强信号",
-        "trend3": "趋势性减持",
+        "trend3": null,
         "alert": true
       },
       {
@@ -10697,13 +10741,13 @@
         "series": "中证1000系列",
         "share": 24.0,
         "close": 3.235,
-        "chg1": -2.94,
-        "chg1Pct": -10.91,
-        "amt1": -9.51,
-        "chg5": -20.25,
-        "chg5Pct": -45.76,
-        "chg20": -14.9,
-        "chg20Pct": -38.3,
+        "chg1": -20.25,
+        "chg1Pct": -45.76,
+        "amt1": -65.51,
+        "chg5": -28.08,
+        "chg5Pct": -53.91,
+        "chg20": 2.12,
+        "chg20Pct": 9.69,
         "signal": "强信号",
         "trend3": "趋势性减持",
         "alert": true
@@ -10715,16 +10759,16 @@
         "series": "科创50系列",
         "share": 488.61,
         "close": 1.814,
-        "chg1": 5.28,
-        "chg1Pct": 1.09,
-        "amt1": 9.58,
-        "chg5": -3.9,
-        "chg5Pct": -0.79,
-        "chg20": 142.14,
-        "chg20Pct": 41.03,
-        "signal": null,
-        "trend3": null,
-        "alert": false
+        "chg1": -19.08,
+        "chg1Pct": -3.76,
+        "amt1": -34.61,
+        "chg5": -50.4,
+        "chg5Pct": -9.35,
+        "chg20": 176.19,
+        "chg20Pct": 56.4,
+        "signal": "强信号",
+        "trend3": "趋势性减持",
+        "alert": true
       },
       {
         "code": "588080.SH",
@@ -10733,16 +10777,16 @@
         "series": "科创50系列",
         "share": 237.23,
         "close": 1.758,
-        "chg1": 1.38,
-        "chg1Pct": 0.59,
-        "amt1": 2.43,
-        "chg5": 0.18,
-        "chg5Pct": 0.08,
-        "chg20": 24.36,
-        "chg20Pct": 11.44,
-        "signal": null,
-        "trend3": null,
-        "alert": false
+        "chg1": -5.37,
+        "chg1Pct": -2.21,
+        "amt1": -9.44,
+        "chg5": -10.44,
+        "chg5Pct": -4.22,
+        "chg20": 35.85,
+        "chg20Pct": 17.8,
+        "signal": "关注",
+        "trend3": "趋势性减持",
+        "alert": true
       },
       {
         "code": "510180.SH",
@@ -10751,13 +10795,13 @@
         "series": "上证180",
         "share": 44.2,
         "close": 3.993,
-        "chg1": 0.02,
-        "chg1Pct": 0.05,
-        "amt1": 0.08,
-        "chg5": 0.02,
-        "chg5Pct": 0.03,
-        "chg20": -0.15,
-        "chg20Pct": -0.34,
+        "chg1": -0.07,
+        "chg1Pct": -0.16,
+        "amt1": -0.28,
+        "chg5": -0.02,
+        "chg5Pct": -0.06,
+        "chg20": -0.09,
+        "chg20Pct": -0.21,
         "signal": null,
         "trend3": null,
         "alert": false
@@ -10769,16 +10813,16 @@
         "series": "创业板",
         "share": 176.6,
         "close": 3.645,
-        "chg1": -3.21,
-        "chg1Pct": -1.79,
-        "amt1": -11.7,
-        "chg5": -11.08,
-        "chg5Pct": -5.9,
-        "chg20": 46.36,
-        "chg20Pct": 35.59,
-        "signal": null,
+        "chg1": -11.08,
+        "chg1Pct": -5.9,
+        "amt1": -40.39,
+        "chg5": -27.37,
+        "chg5Pct": -13.42,
+        "chg20": 58.59,
+        "chg20Pct": 49.65,
+        "signal": "强信号",
         "trend3": "趋势性减持",
-        "alert": false
+        "alert": true
       },
       {
         "code": "560170.SH",
@@ -10787,13 +10831,13 @@
         "series": "国新系",
         "share": 3.73,
         "close": 1.274,
-        "chg1": 0.02,
-        "chg1Pct": 0.54,
-        "amt1": 0.03,
-        "chg5": -0.06,
-        "chg5Pct": -1.59,
-        "chg20": 1.23,
-        "chg20Pct": 49.3,
+        "chg1": -0.16,
+        "chg1Pct": -4.12,
+        "amt1": -0.2,
+        "chg5": -0.04,
+        "chg5Pct": -1.06,
+        "chg20": 1.31,
+        "chg20Pct": 54.24,
         "signal": null,
         "trend3": null,
         "alert": false
@@ -10805,13 +10849,13 @@
         "series": "国新系",
         "share": 24.43,
         "close": 0.963,
-        "chg1": -0.07,
-        "chg1Pct": -0.29,
-        "amt1": -0.07,
-        "chg5": -0.07,
-        "chg5Pct": -0.29,
-        "chg20": -0.29,
-        "chg20Pct": -1.17,
+        "chg1": -0.1,
+        "chg1Pct": -0.41,
+        "amt1": -0.1,
+        "chg5": -0.32,
+        "chg5Pct": -1.29,
+        "chg20": 1.13,
+        "chg20Pct": 4.85,
         "signal": null,
         "trend3": null,
         "alert": false
@@ -10823,16 +10867,16 @@
         "series": "国新系",
         "share": 33.83,
         "close": 0.958,
-        "chg1": -0.06,
-        "chg1Pct": -0.18,
-        "amt1": -0.06,
-        "chg5": -0.89,
-        "chg5Pct": -2.56,
-        "chg20": -3.1,
-        "chg20Pct": -8.39,
-        "signal": null,
+        "chg1": -1.55,
+        "chg1Pct": -4.38,
+        "amt1": -1.48,
+        "chg5": -2.93,
+        "chg5Pct": -7.97,
+        "chg20": -2.28,
+        "chg20Pct": -6.31,
+        "signal": "强信号",
         "trend3": "趋势性减持",
-        "alert": false
+        "alert": true
       },
       {
         "code": "159335.SZ",
@@ -10841,13 +10885,13 @@
         "series": "诚通系",
         "share": 0.63,
         "close": 1.543,
-        "chg1": 0.0,
-        "chg1Pct": 0.0,
-        "amt1": 0.0,
-        "chg5": -0.01,
-        "chg5Pct": -2.16,
-        "chg20": 0.04,
-        "chg20Pct": 7.09,
+        "chg1": -0.01,
+        "chg1Pct": -2.16,
+        "amt1": -0.02,
+        "chg5": 0.01,
+        "chg5Pct": 1.6,
+        "chg20": 0.05,
+        "chg20Pct": 7.81,
         "signal": null,
         "trend3": null,
         "alert": false
@@ -10859,15 +10903,15 @@
         "series": "诚通系",
         "share": 3.15,
         "close": 1.188,
-        "chg1": -0.04,
-        "chg1Pct": -1.25,
-        "amt1": -0.05,
-        "chg5": -0.39,
-        "chg5Pct": -11.02,
-        "chg20": -1.4,
-        "chg20Pct": -30.78,
+        "chg1": -0.39,
+        "chg1Pct": -11.02,
+        "amt1": -0.46,
+        "chg5": -1.79,
+        "chg5Pct": -36.24,
+        "chg20": -0.94,
+        "chg20Pct": -22.99,
         "signal": null,
-        "trend3": null,
+        "trend3": "趋势性减持",
         "alert": false
       },
       {
@@ -10877,104 +10921,104 @@
         "series": "诚通系",
         "share": 1.86,
         "close": 1.274,
-        "chg1": -0.02,
-        "chg1Pct": -1.06,
-        "amt1": -0.03,
+        "chg1": -0.04,
+        "chg1Pct": -2.1,
+        "amt1": -0.05,
         "chg5": -0.04,
         "chg5Pct": -2.1,
-        "chg20": -0.06,
-        "chg20Pct": -3.12,
+        "chg20": -0.07,
+        "chg20Pct": -3.62,
         "signal": null,
         "trend3": null,
         "alert": false
       }
     ],
-    "alertCount": 2,
+    "alertCount": 11,
     "note": "份额变化×当日收盘价折算金额；单日|>2%|且|>5亿|=关注，|>3%|且|>1亿|或|>20亿|=强信号"
   },
   "etfRotation": {
     "trade_date": "2026-08-14",
     "items": [
       {
-        "cat": "科技",
-        "todayNet": 241.2,
-        "net5d": 290.7,
-        "count": 294
-      },
-      {
-        "cat": "债券",
-        "todayNet": 25.0,
-        "net5d": 81.7,
-        "count": 52
-      },
-      {
         "cat": "商品",
-        "todayNet": -13.9,
-        "net5d": 3.8,
+        "todayNet": 6.5,
+        "net5d": 76.1,
         "count": 15
       },
       {
+        "cat": "债券",
+        "todayNet": 4.6,
+        "net5d": 72.1,
+        "count": 52
+      },
+      {
         "cat": "金融地产",
-        "todayNet": 13.3,
-        "net5d": -4.9,
+        "todayNet": -7.3,
+        "net5d": 7.7,
         "count": 46
       },
       {
         "cat": "消费",
-        "todayNet": -0.6,
-        "net5d": -6.7,
+        "todayNet": -0.5,
+        "net5d": -3.7,
         "count": 73
       },
       {
         "cat": "新能源",
-        "todayNet": -4.5,
-        "net5d": -13.2,
+        "todayNet": -8.1,
+        "net5d": -12.1,
         "count": 64
       },
       {
-        "cat": "红利",
-        "todayNet": -1.0,
-        "net5d": -21.6,
-        "count": 86
-      },
-      {
-        "cat": "其他",
-        "todayNet": -2.1,
-        "net5d": -40.4,
-        "count": 444
-      },
-      {
         "cat": "医药",
-        "todayNet": -2.7,
-        "net5d": -53.4,
+        "todayNet": -29.3,
+        "net5d": -67.3,
         "count": 50
       },
       {
+        "cat": "科技",
+        "todayNet": 36.0,
+        "net5d": -70.2,
+        "count": 294
+      },
+      {
+        "cat": "其他",
+        "todayNet": -22.2,
+        "net5d": -90.6,
+        "count": 444
+      },
+      {
         "cat": "港股海外",
-        "todayNet": -12.3,
-        "net5d": -69.9,
+        "todayNet": -31.1,
+        "net5d": -91.7,
         "count": 251
       },
       {
+        "cat": "红利",
+        "todayNet": -13.7,
+        "net5d": -102.0,
+        "count": 86
+      },
+      {
         "cat": "宽基",
-        "todayNet": -79.8,
-        "net5d": -489.7,
+        "todayNet": -210.5,
+        "net5d": -942.3,
         "count": 313
       }
     ],
     "inflowTop3": [
-      "科技",
+      "商品",
       "债券",
-      "商品"
+      "金融地产"
     ],
     "outflowTop3": [
       "宽基",
-      "港股海外",
-      "医药"
+      "红利",
+      "港股海外"
     ],
-    "totalToday": 162.6,
-    "total5d": -323.6,
-    "moneyToday": 25.8,
+    "totalToday": -275.6,
+    "total5d": -1224.0,
+    "moneyToday": 0.2,
     "note": "份额变化×当日收盘价估算（不含货币ETF），5日净额按分类汇总；新发/退市ETF会造成少量误差"
   },
   "indexVol": {
@@ -10983,10 +11027,10 @@
       {
         "code": "000300.SH",
         "name": "沪深300",
-        "hv20": 20.7,
-        "hv60": 24.1,
-        "hv20Chg5": -6.5,
-        "hvPct1y": 80.8,
+        "hv20": 26.9,
+        "hv60": 24.2,
+        "hv20Chg5": -1.6,
+        "hvPct1y": 90.8,
         "peTtm": 14.36,
         "pePct2y": 86.7,
         "status": "平稳",
@@ -10995,58 +11039,58 @@
       {
         "code": "000905.SH",
         "name": "中证500",
-        "hv20": 34.7,
-        "hv60": 34.0,
-        "hv20Chg5": -9.7,
-        "hvPct1y": 91.6,
+        "hv20": 44.5,
+        "hv60": 34.5,
+        "hv20Chg5": 1.5,
+        "hvPct1y": 99.6,
         "peTtm": 36.72,
         "pePct2y": 85.4,
-        "status": "平稳",
+        "status": "升温",
         "low": false
       },
       {
         "code": "000852.SH",
         "name": "中证1000",
-        "hv20": 34.6,
-        "hv60": 34.1,
-        "hv20Chg5": -11.7,
-        "hvPct1y": 92.0,
+        "hv20": 47.2,
+        "hv60": 35.1,
+        "hv20Chg5": 3.7,
+        "hvPct1y": 100.0,
         "peTtm": null,
         "pePct2y": null,
-        "status": "平稳",
+        "status": "升温",
         "low": false
       },
       {
         "code": "000016.SH",
         "name": "上证50",
-        "hv20": 17.5,
-        "hv60": 21.3,
-        "hv20Chg5": -4.8,
-        "hvPct1y": 76.0,
+        "hv20": 21.7,
+        "hv60": 21.2,
+        "hv20Chg5": -1.9,
+        "hvPct1y": 88.0,
         "peTtm": 11.49,
         "pePct2y": 72.0,
-        "status": "降温",
+        "status": "平稳",
         "low": false
       },
       {
         "code": "399006.SZ",
         "name": "创业板指",
-        "hv20": 51.3,
-        "hv60": 48.2,
-        "hv20Chg5": -9.3,
-        "hvPct1y": 92.4,
+        "hv20": 61.6,
+        "hv60": 48.6,
+        "hv20Chg5": 1.4,
+        "hvPct1y": 98.8,
         "peTtm": 44.4,
         "pePct2y": 88.9,
-        "status": "平稳",
+        "status": "升温",
         "low": false
       },
       {
         "code": "000688.SH",
         "name": "科创50",
-        "hv20": 62.4,
-        "hv60": 60.5,
-        "hv20Chg5": -7.9,
-        "hvPct1y": 90.8,
+        "hv20": 69.6,
+        "hv60": 61.6,
+        "hv20Chg5": -3.3,
+        "hvPct1y": 94.8,
         "peTtm": null,
         "pePct2y": null,
         "status": "平稳",
@@ -11055,10 +11099,10 @@
       {
         "code": "000510.SH",
         "name": "中证A500",
-        "hv20": 24.9,
-        "hv60": 27.5,
-        "hv20Chg5": -7.6,
-        "hvPct1y": 81.6,
+        "hv20": 32.2,
+        "hv60": 27.7,
+        "hv20Chg5": -0.9,
+        "hvPct1y": 94.0,
         "peTtm": null,
         "pePct2y": null,
         "status": "平稳",
@@ -11067,31 +11111,31 @@
       {
         "code": "000001.SH",
         "name": "上证综指",
-        "hv20": 14.1,
-        "hv60": 17.3,
-        "hv20Chg5": -6.9,
-        "hvPct1y": 62.8,
+        "hv20": 20.8,
+        "hv60": 17.8,
+        "hv20Chg5": -0.3,
+        "hvPct1y": 90.8,
         "peTtm": 16.71,
         "pePct2y": 78.7,
-        "status": "降温",
+        "status": "平稳",
         "low": false
       },
       {
         "code": "399001.SZ",
         "name": "深证成指",
-        "hv20": 34.8,
-        "hv60": 34.9,
-        "hv20Chg5": -8.8,
-        "hvPct1y": 88.8,
+        "hv20": 43.7,
+        "hv60": 35.2,
+        "hv20Chg5": 0.7,
+        "hvPct1y": 99.2,
         "peTtm": 33.85,
         "pePct2y": 88.3,
-        "status": "平稳",
+        "status": "升温",
         "low": false
       }
     ],
     "note": "HV20/HV60为年化历史波动率；HV20>HV60×1.2升温，<HV60×0.85降温；低位=HV20近一年分位<25%"
   },
-  "nationalTeamComment": "全市场ETF（不含货币）昨日净申购约163亿元（份额变化×收盘价口径）。南方1000ETF单日份额-2.22亿份（约-7.0亿元），疑似大资金出场。近5日份额口径资金主要流入科技、债券、商品类，流出宽基、港股海外、医药类。宽基组中中证1000系列异动最集中（2只触发信号），但未达共振标准。央企主题组未见单日异动，但港股通央企红利ETF(景顺)趋势性减持。沪深300波动率HV20为20.7%（近一年81%分位），主要宽基波动平稳。",
+  "nationalTeamComment": "全市场ETF（不含货币）昨日净赎回约276亿元（份额变化×收盘价口径）。华泰柏瑞300ETF单日份额-24.36亿份（约-115.1亿元），疑似大资金出场。近5日份额口径资金主要流入商品、债券、金融地产类，流出宽基、红利、港股海外类。10只核心宽基ETF（华泰柏瑞300ETF、易方达300ETF、嘉实300ETF、南方500ETF等）同日同向减持，呈共振形态，疑似国家队统一动作/托市信号。央企主题组当日有动作：港股通央企红利ETF(景顺)（强信号）；国新/诚通多为发行人关联方，单边异动多为自身调仓。沪深300波动率HV20为26.9%（近一年91%分位），中证500、中证1000、创业板指、深证成指波动升温。",
   "ntRotation": {
     "trade_date": "2026-08-14",
     "groups": [
@@ -11106,32 +11150,32 @@
                 "code": "510300.SH",
                 "name": "华泰柏瑞300ETF",
                 "share": 235.01,
-                "chg1": -1.77,
-                "chg1Pct": -0.75,
-                "amt1": -8.37,
-                "chg5Pct": -6.48,
-                "signal": null,
+                "chg1": -24.36,
+                "chg1Pct": -9.39,
+                "amt1": -115.13,
+                "chg5Pct": -11.26,
+                "signal": "强信号",
                 "trend3": "趋势性减持"
               },
               {
                 "code": "510310.SH",
                 "name": "易方达300ETF",
                 "share": 113.74,
-                "chg1": -0.02,
-                "chg1Pct": -0.02,
-                "amt1": -0.09,
-                "chg5Pct": -1.6,
-                "signal": null,
+                "chg1": -2.34,
+                "chg1Pct": -2.02,
+                "amt1": -10.74,
+                "chg5Pct": -2.44,
+                "signal": "关注",
                 "trend3": "趋势性减持"
               },
               {
                 "code": "510330.SH",
                 "name": "华夏300ETF",
                 "share": 85.83,
-                "chg1": -0.17,
-                "chg1Pct": -0.2,
-                "amt1": -0.84,
-                "chg5Pct": -1.65,
+                "chg1": -1.36,
+                "chg1Pct": -1.56,
+                "amt1": -6.7,
+                "chg5Pct": -1.49,
                 "signal": null,
                 "trend3": "趋势性减持"
               },
@@ -11139,20 +11183,20 @@
                 "code": "159919.SZ",
                 "name": "嘉实300ETF",
                 "share": 62.35,
-                "chg1": -0.5,
-                "chg1Pct": -0.79,
-                "amt1": -2.47,
-                "chg5Pct": -3.9,
-                "signal": null,
-                "trend3": null
+                "chg1": -2.53,
+                "chg1Pct": -3.9,
+                "amt1": -12.49,
+                "chg5Pct": -5.65,
+                "signal": "强信号",
+                "trend3": "趋势性减持"
               }
             ],
             "total": {
               "share": 496.93,
-              "chg1": -2.46,
-              "chg1Pct": -0.49,
-              "amt1": -11.77,
-              "chg5Pct": -4.21
+              "chg1": -30.59,
+              "chg1Pct": -5.66,
+              "amt1": -145.06,
+              "chg5Pct": -6.85
             }
           },
           {
@@ -11162,12 +11206,12 @@
                 "code": "510050.SH",
                 "name": "华夏50ETF",
                 "share": 70.82,
-                "chg1": 1.15,
-                "chg1Pct": 1.65,
-                "amt1": 3.47,
-                "chg5Pct": 2.72,
+                "chg1": -0.66,
+                "chg1Pct": -0.92,
+                "amt1": -1.99,
+                "chg5Pct": -0.88,
                 "signal": null,
-                "trend3": null
+                "trend3": "趋势性减持"
               }
             ],
             "total": null
@@ -11179,31 +11223,31 @@
                 "code": "510500.SH",
                 "name": "南方500ETF",
                 "share": 50.92,
-                "chg1": -0.61,
-                "chg1Pct": -1.19,
-                "amt1": -4.88,
-                "chg5Pct": -8.62,
-                "signal": null,
+                "chg1": -10.13,
+                "chg1Pct": -16.59,
+                "amt1": -81.02,
+                "chg5Pct": -14.96,
+                "signal": "强信号",
                 "trend3": "趋势性减持"
               },
               {
                 "code": "512500.SH",
                 "name": "华夏500ETF",
                 "share": 18.54,
-                "chg1": -0.13,
-                "chg1Pct": -0.69,
-                "amt1": -0.59,
-                "chg5Pct": -2.24,
-                "signal": null,
+                "chg1": -1.22,
+                "chg1Pct": -6.19,
+                "amt1": -5.52,
+                "chg5Pct": -5.27,
+                "signal": "强信号",
                 "trend3": null
               }
             ],
             "total": {
               "share": 69.46,
-              "chg1": -0.74,
-              "chg1Pct": -1.06,
-              "amt1": -5.47,
-              "chg5Pct": -6.92
+              "chg1": -11.35,
+              "chg1Pct": -13.81,
+              "amt1": -86.54,
+              "chg5Pct": -12.37
             }
           },
           {
@@ -11213,31 +11257,31 @@
                 "code": "512100.SH",
                 "name": "南方1000ETF",
                 "share": 66.65,
-                "chg1": -2.22,
-                "chg1Pct": -3.22,
-                "amt1": -6.98,
-                "chg5Pct": -25.59,
+                "chg1": -52.08,
+                "chg1Pct": -43.86,
+                "amt1": -163.79,
+                "chg5Pct": -41.18,
                 "signal": "强信号",
-                "trend3": "趋势性减持"
+                "trend3": null
               },
               {
                 "code": "159845.SZ",
                 "name": "华夏1000ETF",
                 "share": 24.0,
-                "chg1": -2.94,
-                "chg1Pct": -10.91,
-                "amt1": -9.51,
-                "chg5Pct": -45.76,
+                "chg1": -20.25,
+                "chg1Pct": -45.76,
+                "amt1": -65.51,
+                "chg5Pct": -53.91,
                 "signal": "强信号",
                 "trend3": "趋势性减持"
               }
             ],
             "total": {
               "share": 90.65,
-              "chg1": -5.16,
-              "chg1Pct": -5.26,
-              "amt1": -16.49,
-              "chg5Pct": -30.93
+              "chg1": -72.33,
+              "chg1Pct": -44.36,
+              "amt1": -229.3,
+              "chg5Pct": -44.55
             }
           },
           {
@@ -11247,31 +11291,31 @@
                 "code": "588000.SH",
                 "name": "华夏科创50ETF",
                 "share": 488.61,
-                "chg1": 5.28,
-                "chg1Pct": 1.09,
-                "amt1": 9.58,
-                "chg5Pct": -0.79,
-                "signal": null,
-                "trend3": null
+                "chg1": -19.08,
+                "chg1Pct": -3.76,
+                "amt1": -34.61,
+                "chg5Pct": -9.35,
+                "signal": "强信号",
+                "trend3": "趋势性减持"
               },
               {
                 "code": "588080.SH",
                 "name": "易方达科创50ETF",
                 "share": 237.23,
-                "chg1": 1.38,
-                "chg1Pct": 0.59,
-                "amt1": 2.43,
-                "chg5Pct": 0.08,
-                "signal": null,
-                "trend3": null
+                "chg1": -5.37,
+                "chg1Pct": -2.21,
+                "amt1": -9.44,
+                "chg5Pct": -4.22,
+                "signal": "关注",
+                "trend3": "趋势性减持"
               }
             ],
             "total": {
               "share": 725.84,
-              "chg1": 6.66,
-              "chg1Pct": 0.93,
-              "amt1": 12.01,
-              "chg5Pct": -0.51
+              "chg1": -24.45,
+              "chg1Pct": -3.25,
+              "amt1": -44.05,
+              "chg5Pct": -7.67
             }
           },
           {
@@ -11281,10 +11325,10 @@
                 "code": "510180.SH",
                 "name": "华安180ETF",
                 "share": 44.2,
-                "chg1": 0.02,
-                "chg1Pct": 0.05,
-                "amt1": 0.08,
-                "chg5Pct": 0.03,
+                "chg1": -0.07,
+                "chg1Pct": -0.16,
+                "amt1": -0.28,
+                "chg5Pct": -0.06,
                 "signal": null,
                 "trend3": null
               }
@@ -11298,11 +11342,11 @@
                 "code": "159915.SZ",
                 "name": "易方达创业板ETF",
                 "share": 176.6,
-                "chg1": -3.21,
-                "chg1Pct": -1.79,
-                "amt1": -11.7,
-                "chg5Pct": -5.9,
-                "signal": null,
+                "chg1": -11.08,
+                "chg1Pct": -5.9,
+                "amt1": -40.39,
+                "chg5Pct": -13.42,
+                "signal": "强信号",
                 "trend3": "趋势性减持"
               }
             ],
@@ -11321,10 +11365,10 @@
                 "code": "560170.SH",
                 "name": "央企科技ETF",
                 "share": 3.73,
-                "chg1": 0.02,
-                "chg1Pct": 0.54,
-                "amt1": 0.03,
-                "chg5Pct": -1.59,
+                "chg1": -0.16,
+                "chg1Pct": -4.12,
+                "amt1": -0.2,
+                "chg5Pct": -1.06,
                 "signal": null,
                 "trend3": null,
                 "owner": "国新投资",
@@ -11334,10 +11378,10 @@
                 "code": "520660.SH",
                 "name": "港股通央企红利ETF(南方)",
                 "share": 24.43,
-                "chg1": -0.07,
-                "chg1Pct": -0.29,
-                "amt1": -0.07,
-                "chg5Pct": -0.29,
+                "chg1": -0.1,
+                "chg1Pct": -0.41,
+                "amt1": -0.1,
+                "chg5Pct": -1.29,
                 "signal": null,
                 "trend3": null,
                 "owner": "国新投资",
@@ -11347,11 +11391,11 @@
                 "code": "520990.SH",
                 "name": "港股通央企红利ETF(景顺)",
                 "share": 33.83,
-                "chg1": -0.06,
-                "chg1Pct": -0.18,
-                "amt1": -0.06,
-                "chg5Pct": -2.56,
-                "signal": null,
+                "chg1": -1.55,
+                "chg1Pct": -4.38,
+                "amt1": -1.48,
+                "chg5Pct": -7.97,
+                "signal": "强信号",
                 "trend3": "趋势性减持",
                 "owner": "国新投资",
                 "ratio": 0.038
@@ -11359,10 +11403,10 @@
             ],
             "total": {
               "share": 61.99,
-              "chg1": -0.11,
-              "chg1Pct": -0.18,
-              "amt1": -0.1,
-              "chg5Pct": -1.61
+              "chg1": -1.81,
+              "chg1Pct": -2.8,
+              "amt1": -1.78,
+              "chg5Pct": -4.92
             }
           },
           {
@@ -11372,10 +11416,10 @@
                 "code": "159335.SZ",
                 "name": "央企科创ETF",
                 "share": 0.63,
-                "chg1": 0.0,
-                "chg1Pct": 0.0,
-                "amt1": 0.0,
-                "chg5Pct": -2.16,
+                "chg1": -0.01,
+                "chg1Pct": -2.16,
+                "amt1": -0.02,
+                "chg5Pct": 1.6,
                 "signal": null,
                 "trend3": null,
                 "owner": "中国诚通",
@@ -11385,12 +11429,12 @@
                 "code": "159336.SZ",
                 "name": "央企红利ETF",
                 "share": 3.15,
-                "chg1": -0.04,
-                "chg1Pct": -1.25,
-                "amt1": -0.05,
-                "chg5Pct": -11.02,
+                "chg1": -0.39,
+                "chg1Pct": -11.02,
+                "amt1": -0.46,
+                "chg5Pct": -36.24,
                 "signal": null,
-                "trend3": null,
+                "trend3": "趋势性减持",
                 "owner": "中国诚通",
                 "ratio": 0.4387
               },
@@ -11398,9 +11442,9 @@
                 "code": "560810.SH",
                 "name": "央企ESG ETF",
                 "share": 1.86,
-                "chg1": -0.02,
-                "chg1Pct": -1.06,
-                "amt1": -0.03,
+                "chg1": -0.04,
+                "chg1Pct": -2.1,
+                "amt1": -0.05,
                 "chg5Pct": -2.1,
                 "signal": null,
                 "trend3": null,
@@ -11410,20 +11454,31 @@
             ],
             "total": {
               "share": 5.64,
-              "chg1": -0.06,
-              "chg1Pct": -1.05,
-              "amt1": -0.08,
-              "chg5Pct": -7.09
+              "chg1": -0.44,
+              "chg1Pct": -7.09,
+              "amt1": -0.53,
+              "chg5Pct": -20.75
             }
           }
         ]
       }
     ],
     "resonance": {
-      "hit": false,
-      "count": 2,
-      "direction": null,
-      "names": []
+      "hit": true,
+      "count": 10,
+      "direction": "减持",
+      "names": [
+        "华泰柏瑞300ETF",
+        "易方达300ETF",
+        "嘉实300ETF",
+        "南方500ETF",
+        "华夏500ETF",
+        "南方1000ETF",
+        "华夏1000ETF",
+        "华夏科创50ETF",
+        "易方达科创50ETF",
+        "易方达创业板ETF"
+      ]
     },
     "note": "信号口径：单日份额|>2%|且金额|>5亿|=关注，|>3%|且|>1亿|或|>20亿|=强信号；≥3只核心宽基同向异动=共振·疑似国家队；连续3日同向=趋势性增/减仓"
   }

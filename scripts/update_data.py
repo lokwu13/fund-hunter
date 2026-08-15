@@ -1583,27 +1583,189 @@ def fetch_margin_watch(pro, trade_date, data):
 
 
 def fetch_north_south(pro, trade_date):
-    """Fetch northbound and southbound data."""
-    time.sleep(API_DELAY)
+    """北向成交额 + 南向净买入（真实历史累计口径）。
+
+    口径说明（2026-08 实测）：
+    - moneyflow_hsgt 的 north_money 自 2024-08 官方停披净买入后实为【北向成交总额】（百万），
+      hgt+sgt 与之吻合；因此北向只展示成交额，不再冒充"净买入"。
+    - ggt_daily 的 buy_amount-sell_amount 为南向真实净买入（亿，港元），该口径官方仍披露。
+    week/month 均为近 5/20 个交易日真实累计，不做倍数估算。
+    """
     north, south = {}, {}
+    start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=45)).strftime('%Y%m%d')
     try:
-        df_hsgt = pro.moneyflow_hsgt(trade_date=trade_date)
-        if len(df_hsgt) > 0:
-            row = df_hsgt.iloc[0]
-            north_money = round(float(row.get('north_money', 0)) / 10000, 2)
-            north = {'today': north_money, 'week': north_money * 3, 'month': north_money * 10}
+        time.sleep(API_DELAY)
+        df_hsgt = pro.moneyflow_hsgt(start_date=start, end_date=trade_date)
+        if df_hsgt is not None and len(df_hsgt) > 0:
+            df_hsgt = df_hsgt.sort_values('trade_date')
+            vals = [float(v) / 100 for v in df_hsgt['north_money']]  # 百万→亿
+            d_last = str(df_hsgt['trade_date'].iloc[-1])
+            north = {
+                'today': round(vals[-1], 1),
+                'week': round(sum(vals[-5:]), 1),
+                'month': round(sum(vals[-20:]), 1),
+                'updateTime': f'{d_last[:4]}-{d_last[4:6]}-{d_last[6:]}',
+                'note': '北向成交总额（亿元）；官方2024-08起停披净买入，仅披露成交额',
+            }
     except Exception as e:
         print(f"  Warning: Failed to fetch northbound: {e}")
 
     try:
-        df_ggt = pro.ggt_daily(trade_date=trade_date)
-        if len(df_ggt) > 0:
-            row = df_ggt.iloc[0]
-            south_money = round((float(row.get('buy_amount', 0)) - float(row.get('sell_amount', 0))) / 10000, 2)
-            south = {'today': south_money, 'week': south_money * 3, 'month': south_money * 10}
+        time.sleep(API_DELAY)
+        df_ggt = pro.ggt_daily(start_date=start, end_date=trade_date)
+        if df_ggt is not None and len(df_ggt) > 0:
+            df_ggt = df_ggt.sort_values('trade_date')
+            nets = [float(r['buy_amount']) - float(r['sell_amount']) for _, r in df_ggt.iterrows()]
+            d_last = str(df_ggt['trade_date'].iloc[-1])
+            south = {
+                'today': round(nets[-1], 2),
+                'week': round(sum(nets[-5:]), 2),
+                'month': round(sum(nets[-20:]), 2),
+                'updateTime': f'{d_last[:4]}-{d_last[4:6]}-{d_last[6:]}',
+            }
     except Exception as e:
         print(f"  Warning: Failed to fetch southbound: {e}")
     return north, south
+
+
+def fetch_margin_summary(pro, trade_date, data):
+    """全市场两融余额自动日更（Tushare margin，沪深北三所合计）。
+
+    T+1 口径：交易日当晚披露前一交易日数据，updateTime 如实标注数据日期。
+    daily 滚动保留最近 40 个交易日；totalBalance/finBalance/secBalance/trend/comment 自动重算。
+    """
+    try:
+        start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=120)).strftime('%Y%m%d')
+        time.sleep(API_DELAY)
+        df = pro.margin(start_date=start, end_date=trade_date)
+        if df is None or not len(df):
+            raise ValueError('margin empty')
+        agg = df.groupby('trade_date')[['rzye', 'rqye', 'rzrqye']].sum().sort_index()
+        days = list(agg.index[-40:])
+        if len(days) < 2:
+            raise ValueError('margin history too short')
+        daily = [{
+            'date': f'{td[4:6]}-{td[6:]}',
+            'total': round(float(agg.loc[td, 'rzrqye']) / 1e8),
+            'fin': round(float(agg.loc[td, 'rzye']) / 1e8, 2),
+            'sec': round(float(agg.loc[td, 'rqye']) / 1e8, 2),
+        } for td in days]
+        latest, prev = daily[-1], daily[-2]
+        td_last = days[-1]
+        update_time = f'{td_last[:4]}-{td_last[4:6]}-{td_last[6:]}'
+        chg = latest['total'] - prev['total']
+        # 连续升/降天数
+        streak, direction = 0, 0
+        for i in range(len(daily) - 1, 0, -1):
+            diff = daily[i]['total'] - daily[i - 1]['total']
+            if diff == 0:
+                break
+            sign = 1 if diff > 0 else -1
+            if direction == 0:
+                direction = sign
+            if sign != direction:
+                break
+            streak += 1
+        d5 = latest['total'] - daily[-6]['total'] if len(daily) >= 6 else chg
+        trend = '上升' if d5 > 0 else ('下降' if d5 < 0 else '持平')
+        md = f"{int(td_last[4:6])}月{int(td_last[6:])}日"
+        c = f"截至{md}两融余额{latest['total']:.0f}亿，较前日{'增加' if chg >= 0 else '减少'}约{abs(chg):.0f}亿"
+        if streak >= 2:
+            c += f"，连续{streak}日{'上升' if direction > 0 else '下降'}"
+        c += f"。融资余额{latest['fin']:.0f}亿，融券余额{latest['sec']:.0f}亿。"
+        if d5 > 0:
+            c += "杠杆资金持续回流，市场风险偏好回升。"
+        elif d5 < 0:
+            c += "杠杆资金持续离场，市场风险偏好下降。"
+        else:
+            c += "杠杆资金总体观望，市场风险偏好平稳。"
+        mt = data.setdefault('bondData', {}).setdefault('marginTrading', {})
+        mt.update({
+            'updateTime': update_time,
+            'totalBalance': float(latest['total']),
+            'finBalance': latest['fin'],
+            'secBalance': latest['sec'],
+            'trend': trend,
+            'daily': daily,
+            'comment': c,
+        })
+        ds = data.setdefault('dataSources', {}).setdefault('marginTrading', {})
+        ds.update({'source': 'Tushare margin（沪深北交易所两融汇总）', 'freq': '日更',
+                   'lastUpdate': update_time, 'note': 'T+1口径：交易日当晚更新前一交易日数据'})
+        print(f"  marginTrading: {update_time} 余额{latest['total']:.0f}亿 近5日{d5:+.0f}亿")
+    except Exception as e:
+        print(f"  Warning: fetch_margin_summary failed: {e}")
+
+
+def fetch_southbound_concentration(pro, trade_date, data):
+    """南向持股集中度 TOP10（Tushare hk_hold 批量，交易日盘后更新）。"""
+    try:
+        d = trade_date
+        df = None
+        for _ in range(5):
+            time.sleep(API_DELAY)
+            df = pro.hk_hold(trade_date=d)
+            if df is not None and len(df):
+                break
+            d = (datetime.strptime(d, '%Y%m%d') - timedelta(days=1)).strftime('%Y%m%d')
+        if df is None or not len(df):
+            raise ValueError('hk_hold empty')
+        top = df.sort_values('ratio', ascending=False).head(10)
+        items = [{
+            'name': r['name'], 'code': r['ts_code'],
+            'ratio': f"{float(r['ratio']):.2f}%",
+            'vol': int(r['vol']), 'concept': '—', 'sector': '—',
+        } for _, r in top.iterrows()]
+        data['southbound_concentration_top10'] = items
+        ds = data.setdefault('dataSources', {}).setdefault('southbound_concentration_top10', {})
+        ds.update({'source': 'Tushare hk_hold（港交所CCASS港股通持股）', 'freq': '日更',
+                   'lastUpdate': f'{d[:4]}-{d[4:6]}-{d[6:]}',
+                   'note': '港股通持股占港股总股本比例，交易日盘后更新；名称为港交所登记繁体原名'})
+        print(f"  southbound_concentration_top10: as of {d}, top {items[0]['name']} {items[0]['ratio']}")
+    except Exception as e:
+        print(f"  Warning: fetch_southbound_concentration failed: {e}")
+
+
+def fetch_leverage_concentration(pro, trade_date, data):
+    """杠杆资金控盘集中度 TOP10（margin_detail 融资余额 / daily_basic 流通市值，T+1）。"""
+    try:
+        d = trade_date
+        md = None
+        for _ in range(5):
+            time.sleep(API_DELAY)
+            md = pro.margin_detail(trade_date=d)
+            if md is not None and len(md):
+                break
+            d = (datetime.strptime(d, '%Y%m%d') - timedelta(days=1)).strftime('%Y%m%d')
+        if md is None or not len(md):
+            raise ValueError('margin_detail empty')
+        time.sleep(API_DELAY)
+        db = pro.daily_basic(trade_date=d, fields='ts_code,circ_mv')
+        if db is None or not len(db):
+            raise ValueError('daily_basic empty')
+        mv = dict(zip(db['ts_code'], db['circ_mv'].astype(float)))  # 万元
+        # 个股名称：data['stocks'] 仅覆盖自选观察名单（list），改用 stock_basic 全市场映射
+        time.sleep(API_DELAY)
+        sb = pro.stock_basic(exchange='', list_status='L', fields='ts_code,name')
+        names = dict(zip(sb['ts_code'], sb['name'])) if sb is not None and len(sb) else {}
+        rows = []
+        for _, r in md.iterrows():
+            cap = mv.get(r['ts_code'])
+            if not cap or cap <= 0:
+                continue
+            ratio = float(r['rzye']) / 1e4 / cap * 100  # 元→万元 / 万元
+            rows.append({'code': r['ts_code'], 'name': names.get(r['ts_code'], r['ts_code'].split('.')[0]),
+                         'ratio': f"{ratio:.2f}%", 'concept': '—'})
+        rows.sort(key=lambda x: -float(x['ratio'].rstrip('%')))
+        items = [{'rank': i + 1, **row} for i, row in enumerate(rows[:10])]
+        data['leverage_concentration_top10'] = items
+        ds = data.setdefault('dataSources', {}).setdefault('leverage_concentration_top10', {})
+        ds.update({'source': 'Tushare margin_detail + daily_basic', 'freq': '日更',
+                   'lastUpdate': f'{d[:4]}-{d[4:6]}-{d[6:]}',
+                   'note': '融资余额占流通市值比，T+1口径每日更新'})
+        print(f"  leverage_concentration_top10: as of {d}, top {items[0]['name']} {items[0]['ratio']}")
+    except Exception as e:
+        print(f"  Warning: fetch_leverage_concentration failed: {e}")
 
 
 # 中证行业指数系列（细分指数每日点评）
@@ -2453,7 +2615,11 @@ def _build_nt_comment(data):
     if alerts:
         a = alerts[0]
         act = '进场' if (a.get('chg1') or 0) > 0 else '出场'
-        sents.append(f"{a['name']}单日份额{a['chg1']:+.2f}亿份（约{a['amt1']:+.1f}亿元），疑似大资金{act}。")
+        sent = f"{a['name']}单日份额{a['chg1']:+.2f}亿份（约{a['amt1']:+.1f}亿元），疑似大资金{act}"
+        ntr_res = (data.get('ntRotation') or {}).get('resonance') or {}
+        if not ntr_res.get('hit'):
+            sent += "；单边异动、未见跨公司共振，更可能是汇金自身调仓而非托市信号"
+        sents.append(sent + "。")
     elif radar:
         sents.append("19只重点监控ETF份额未见明显异动，无大资金进出信号。")
 
@@ -2469,7 +2635,7 @@ def _build_nt_comment(data):
         res = ntr.get('resonance') or {}
         if res.get('hit'):
             sents.append(f"{res['count']}只核心宽基ETF（{'、'.join(res.get('names', [])[:4])}等）"
-                         f"同日同向{res['direction']}，呈共振形态，疑似国家队出手。")
+                         f"同日同向{res['direction']}，呈共振形态，疑似国家队统一动作/托市信号。")
         else:
             # 找异动最集中的系列
             hot = []
@@ -2497,7 +2663,7 @@ def _build_nt_comment(data):
                     elif r.get('trend3'):
                         soe_trend.append(f"{r['name']}{r['trend3']}")
         if soe_sig:
-            sents.append(f"央企主题组当日有动作：{'、'.join(soe_sig[:3])}。")
+            sents.append(f"央企主题组当日有动作：{'、'.join(soe_sig[:3])}；国新/诚通多为发行人关联方，单边异动多为自身调仓。")
         elif soe_trend:
             sents.append(f"央企主题组未见单日异动，但{'、'.join(soe_trend[:2])}。")
         else:
@@ -2622,6 +2788,11 @@ def main():
     if south:
         data['southbound'] = south
         print(f"  Southbound: {south['today']}亿")
+
+    # ── 10b. 两融汇总 / 南向持股集中度 / 杠杆控盘集中度（Tushare 日更）──
+    fetch_margin_summary(pro, trade_date, data)
+    fetch_southbound_concentration(pro, trade_date, data)
+    fetch_leverage_concentration(pro, trade_date, data)
 
     # ── 11. Sector index commentary (细分指数每日点评) ──
     print("\n[11/17] Fetching sector index commentary...")

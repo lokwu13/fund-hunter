@@ -77,7 +77,7 @@ export default function WeeklySummary() {
   const fundSources = [
     { name: '国家队', status: '稳健', trend: '持平', color: 'red' },
     { name: '公募基金', status: '加仓医药', trend: '回暖', color: 'blue' },
-    { name: '北向资金', status: data.northbound.week > 0 ? '净流入' : '净流出', trend: data.northbound.week > 0 ? '流入' : '流出', color: 'violet' },
+    { name: '北向资金', status: '成交额口径', trend: '官方停披净买入', color: 'violet' },
     { name: '南下资金', status: data.southbound.week > 0 ? '净流入' : '净流出', trend: data.southbound.week > 0 ? '流入' : '放缓', color: 'teal' },
     { name: '融资融券', status: '增加', trend: '活跃', color: 'orange' },
   ];

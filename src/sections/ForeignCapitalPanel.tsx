@@ -37,13 +37,13 @@ export default function ForeignCapitalPanel() {
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-2">
               <ArrowUpRight className="w-5 h-5 text-violet-600" />
-              <h3 className="font-bold text-violet-800">北向资金 (本周)</h3>
+              <h3 className="font-bold text-violet-800">北向成交 (本周)</h3>
             </div>
-            <p className="text-2xl font-bold text-violet-900">{nb.week > 0 ? '+' : ''}{nb.week}亿</p>
-            <p className="text-sm text-violet-600">{nb.week > 0 ? '净流入' : '净流出'}</p>
+            <p className="text-2xl font-bold text-violet-900">{nb.week}亿</p>
+            <p className="text-sm text-violet-600">近5日成交总额</p>
             <div className="mt-3 p-2 bg-white/60 rounded-lg">
               <p className="text-xs text-violet-700">
-                医疗板块: {nb.medical > 0 ? '+' : ''}{nb.medical}亿
+                官方2024-08起停披净买入，现为成交总额口径{nb.updateTime ? ` · 截至 ${nb.updateTime}` : ''}
               </p>
             </div>
           </CardContent>
@@ -55,7 +55,7 @@ export default function ForeignCapitalPanel() {
               <h3 className="font-bold text-teal-800">南下资金 (本周)</h3>
             </div>
             <p className="text-2xl font-bold text-teal-900">{sb.week > 0 ? '+' : ''}{sb.week}亿港元</p>
-            <p className="text-sm text-teal-600">{sb.week > 0 ? '净流入' : '净流出'}</p>
+            <p className="text-sm text-teal-600">近5日{sb.week > 0 ? '净买入' : '净卖出'}{sb.updateTime ? ` · 截至 ${sb.updateTime}` : ''}</p>
             <div className="mt-3 flex gap-2">
               <Badge className={sb.week < 0 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}>
                 本周: {sb.week > 0 ? '+' : ''}{sb.week}亿
@@ -215,10 +215,10 @@ export default function ForeignCapitalPanel() {
                       <span className="text-sm font-bold text-teal-600">{item.ratio}</span>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{item.concept}</Badge>
+                      <Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{item.concept || '—'}</Badge>
                     </TableCell>
                     <TableCell>
-                      <span className="text-xs bg-slate-100 px-2 py-0.5 rounded">{item.sector}</span>
+                      <span className="text-xs bg-slate-100 px-2 py-0.5 rounded">{item.sector || '—'}</span>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -263,10 +263,10 @@ export default function ForeignCapitalPanel() {
                       <span className="text-sm font-bold text-indigo-600">{item.ratio}</span>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{item.concept}</Badge>
+                      <Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{item.concept || '—'}</Badge>
                     </TableCell>
                     <TableCell>
-                      <span className="text-xs bg-slate-100 px-2 py-0.5 rounded">{item.sector}</span>
+                      <span className="text-xs bg-slate-100 px-2 py-0.5 rounded">{item.sector || '—'}</span>
                     </TableCell>
                   </TableRow>
                 ))}

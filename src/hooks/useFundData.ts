@@ -157,8 +157,8 @@ export interface FundData {
     isAnomaly?: boolean;
   }>;
   stocks: StockItem[];
-  northbound: { today: number; week: number; medical: number };
-  southbound: { today: number; week: number; month: number };
+  northbound: { today: number; week: number; month?: number; medical?: number; updateTime?: string; note?: string };
+  southbound: { today: number; week: number; month: number; updateTime?: string };
   sectorCommentary?: Array<{
     code: string;
     name: string;
@@ -209,7 +209,7 @@ export interface FundData {
       common_features: string;
     };
   };
-  leverage_concentration_top10?: Array<{name: string; code: string; ratio: string; finBalance: string; concept: string; sector: string}>;
+  leverage_concentration_top10?: Array<{rank?: number; name: string; code: string; ratio: string; finBalance?: string; concept?: string; sector?: string}>;
   southbound_concentration_top10?: Array<{name: string; code: string; ratio: string; concept: string; sector: string}>;
   foreign_concentration_top10?: Array<{name: string; code: string; ratio: string; institution: string; concept: string; sector: string}>;
   top10_publicfund?: Array<{rank: number; name: string; code: string; amount: string; concept: string; sector: string; note: string}>;
