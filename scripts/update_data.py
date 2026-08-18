@@ -719,6 +719,12 @@ SECTOR_HISTORY_MAX_DAYS = 250   # 历史最长保留交易日数
 SECTOR_BACKFILL_DAYS = 60       # 首次运行回补交易日数（每天 2 次调用，约 3 分钟）
 BOTTOM_WINDOW = 60              # 底部积聚监测窗口（交易日）
 BOTTOM_MIN_DAYS = 40            # 历史不足该天数时降级为"数据积累中"
+BOTTOM_TIERS = (30, 60)         # 双档监测窗口（30日=较新积聚，60日=长期扎实吸筹）
+BOTTOM_POS_RATIO = 0.5          # 窗口内净流入天数过半
+BOTTOM_PRICE_POS = 0.4          # 价格底部分位上限（沿用原判据：等权累计收益指数长期分位）
+BOTTOM_SCALE_PCT = 0.005        # 窗口累计净流入 ≥ 窗口累计成交额的 0.5%（"有一定规模"下限）
+BOTTOM_TIER_MIN_ROWS = {30: 25, 60: 50}  # 行业历史不足则该档不判定（不为用不满窗口的板块造假数）
+BOTTOM_LEADER_SECTORS = 4       # 只为评分前 4 的板块抓龙头，控制每晚 API 增量
 
 
 def _load_sector_history():
@@ -949,13 +955,16 @@ def _find_bottom_leaders(pro, trade_date, sector, today_map, max_check=5):
 
 
 def build_bottom_watch(hist, pro, trade_date, today_map):
-    """底部资金积聚监测：长窗口 + 缓慢持续流入 + 价格底部 + 龙头先行。
+    """底部资金积聚监测（30日/60日双档）：长窗口 + 缓慢持续流入 + 价格底部 + 龙头先行。
 
-    触发条件：60 日累计净流入 >0 且 净流入天数占比 ≥55%（缓慢持续）
-              且 价格底部分位 <0.4（等权累计收益指数处于长期低位）
-              且 近 5 日仍净流入。
-    score = 持续性×40% + 累计流入排名分×40% + 底部深度×20%。
-    历史不足 BOTTOM_MIN_DAYS 天时不判定，输出 note"数据积累中"。
+    每档独立判定（同一口径，仅窗口长度不同）：
+    - 窗口累计净流入 >0 且 ≥ 窗口累计成交额的 0.5%（有一定规模）
+    - 净流入天数占比 ≥50%（缓慢持续）
+    - 价格底部分位 <0.4（等权累计收益指数处于长期低位，未大幅上涨）
+    - 近 5 日仍净流入（积聚仍在进行）
+    60日档命中且30日档也命中 = 🔥双档共振（最扎实，排最前）。
+    score = 持续性×40% + 累计流入排名分×40% + 底部深度×20%（双档 +30 优先分）。
+    行业历史不足该档最低天数时该档不判定；全量历史不足 BOTTOM_MIN_DAYS 时输出 note"数据积累中"。
     """
     industries = set()
     for day in hist['days'].values():
@@ -963,20 +972,23 @@ def build_bottom_watch(hist, pro, trade_date, today_map):
     n_days = len(hist['days'])
     latest = max(hist['days']) if hist['days'] else trade_date
     d = f"{latest[:4]}-{latest[4:6]}-{latest[6:]}"
-    result = {'trade_date': d, 'window': BOTTOM_WINDOW, 'days': n_days, 'items': []}
+    result = {'trade_date': d, 'days': n_days, 'windows': list(BOTTOM_TIERS),
+              'thresholds': {'posRatio': int(BOTTOM_POS_RATIO * 100),
+                             'pricePos': int(BOTTOM_PRICE_POS * 100),
+                             'scalePct': BOTTOM_SCALE_PCT * 100,
+                             'inflow5d': '仍为正'},
+              'counts': {'both': 0, 'd30': 0, 'd60': 0}, 'items': []}
     if n_days < BOTTOM_MIN_DAYS:
         result['note'] = f'数据积累中（已积累 {n_days} 个交易日，满 {BOTTOM_MIN_DAYS} 天后开始判定）'
         return result
+    if n_days < BOTTOM_TIER_MIN_ROWS[60]:
+        result['note'] = f'60日档数据积累中（已积累 {n_days} 个交易日，随每日增量补足），当前仅判定30日档'
     items = []
     for ind in sorted(industries):
         rows = _history_series(hist, ind)
-        if len(rows) < BOTTOM_MIN_DAYS:
+        if len(rows) < BOTTOM_TIER_MIN_ROWS[30]:
             continue
-        win = rows[-BOTTOM_WINDOW:]
-        nets = [r[1] for r in win]
-        inflow60 = sum(nets)
-        pos_ratio = sum(1 for x in nets if x > 0) / len(nets)
-        inflow5 = sum(nets[-5:])
+        inflow5 = sum(r[1] for r in rows[-5:])
         # 价格位置：等权累计收益指数在全部已积累历史（最多 250 日）区间中的分位
         idx = 1.0
         curve = []
@@ -985,26 +997,65 @@ def build_bottom_watch(hist, pro, trade_date, today_map):
             curve.append(idx)
         lo, hi = min(curve), max(curve)
         price_pos = (curve[-1] - lo) / (hi - lo) if hi > lo else 0.5
-        if inflow60 > 0 and pos_ratio >= 0.55 and price_pos < 0.4 and inflow5 > 0:
-            items.append({'sector': ind, 'inflow60d': round(inflow60, 2),
-                          'inflow5d': round(inflow5, 2),
-                          'positiveRatio': round(pos_ratio * 100, 1),
-                          'pricePosition': round(price_pos, 3)})
+        hit = {}
+        stat = {}
+        for w in BOTTOM_TIERS:
+            if len(rows) < BOTTOM_TIER_MIN_ROWS[w]:
+                hit[w] = False
+                continue
+            win = rows[-w:]
+            nets = [r[1] for r in win]
+            inflow = sum(nets)
+            amt = sum(r[3] for r in win)
+            pos_ratio = sum(1 for x in nets if x > 0) / len(nets)
+            stat[w] = (round(inflow, 2), round(pos_ratio * 100, 1))
+            hit[w] = (inflow > 0 and inflow >= amt * BOTTOM_SCALE_PCT
+                      and pos_ratio >= BOTTOM_POS_RATIO
+                      and price_pos < BOTTOM_PRICE_POS and inflow5 > 0)
+        if not (hit.get(30) or hit.get(60)):
+            continue
+        in30, pr30 = stat.get(30, (0.0, 0.0))
+        in60, pr60 = stat.get(60, (0.0, 0.0))
+        items.append({'sector': ind, 'hit30': bool(hit.get(30)), 'hit60': bool(hit.get(60)),
+                      'both': bool(hit.get(30) and hit.get(60)),
+                      'inflow30d': in30, 'inflow60d': in60,
+                      'positiveRatio30': pr30, 'positiveRatio60': pr60,
+                      'inflow5d': round(inflow5, 2),
+                      'pricePosition': round(price_pos, 3)})
     if not items:
         return result
     m = len(items)
-    by_inflow = sorted(items, key=lambda x: x['inflow60d'], reverse=True)
+    # 排名分按主档口径：命中60日档用60日累计，否则用30日累计
+    key_inflow = lambda x: x['inflow60d'] if x['hit60'] else x['inflow30d']
+    key_ratio = lambda x: x['positiveRatio60'] if x['hit60'] else x['positiveRatio30']
+    by_inflow = sorted(items, key=key_inflow, reverse=True)
     rank = {id(it): (m - 1 - i) / (m - 1) if m > 1 else 0.5 for i, it in enumerate(by_inflow)}
     for it in items:
-        it['score'] = round(it['positiveRatio'] / 100 * 40 + rank[id(it)] * 40
-                            + (1 - it['pricePosition']) * 20, 1)
-    items.sort(key=lambda x: -x['score'])
-    for it in items:
+        it['score'] = round(key_ratio(it) / 100 * 40 + rank[id(it)] * 40
+                            + (1 - it['pricePosition']) * 20
+                            + (30 if it['both'] else 0), 1)
+    items.sort(key=lambda x: (-x['both'], -x['score']))
+    items = items[:8]
+    counts = {'both': sum(1 for i in items if i['both']),
+              'd30': sum(1 for i in items if i['hit30'] and not i['hit60']),
+              'd60': sum(1 for i in items if i['hit60'] and not i['hit30'])}
+    result['counts'] = counts
+    for it in items[:BOTTOM_LEADER_SECTORS]:
         it['leaders'] = _find_bottom_leaders(pro, trade_date, it['sector'], today_map)
-    names = '、'.join(i['sector'] for i in items[:4])
+    parts = []
+    both = [i['sector'] for i in items if i['both']]
+    only30 = [i['sector'] for i in items if i['hit30'] and not i['hit60']]
+    only60 = [i['sector'] for i in items if i['hit60'] and not i['hit30']]
+    if both:
+        parts.append(f"🔥双档共振（30日+60日持续积聚）：{'、'.join(both[:4])}")
+    if only30:
+        parts.append(f"30日档（较新积聚）：{'、'.join(only30[:4])}")
+    if only60:
+        parts.append(f"60日档（长期吸筹）：{'、'.join(only60[:4])}")
     result['items'] = items
-    result['summary'] = (f"{len(items)} 个板块出现底部资金积聚信号：{names}——"
-                         f"长周期资金缓慢流入且价格处于长期低位，关注率先走强的龙头。")
+    result['summary'] = (f"{len(items)} 个板块出现底部资金积聚信号——"
+                         + '；'.join(parts)
+                         + "。长周期资金缓慢流入且价格处于长期低位，关注率先走强的龙头。")
     return result
 
 
@@ -1026,10 +1077,14 @@ def fetch_sector_watch(pro, trade_date, data):
         print(f"  summary: {scan['summary']}")
         bottom = build_bottom_watch(hist, pro, trade_date, today_map)
         data['bottomWatch'] = bottom
-        if bottom.get('note'):
+        if bottom.get('note') and not bottom['items']:
             print(f"  bottomWatch: {bottom['note']}")
         else:
-            print(f"  bottomWatch: {len(bottom['items'])} triggered sectors")
+            c = bottom.get('counts', {})
+            print(f"  bottomWatch: {len(bottom['items'])} triggered sectors "
+                  f"(🔥双档{c.get('both', 0)} / 30日档{c.get('d30', 0)} / 60日档{c.get('d60', 0)})")
+            if bottom.get('note'):
+                print(f"  note: {bottom['note']}")
             if bottom.get('summary'):
                 print(f"  {bottom['summary']}")
         return hist, ind_map, name_map, today_map

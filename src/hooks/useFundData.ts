@@ -326,14 +326,23 @@ export interface FundData {
   bottomWatch?: {
     trade_date: string;
     window?: number;
+    windows?: number[];
     days?: number;
     note?: string;
     summary?: string;
+    thresholds?: { posRatio: number; pricePos: number; scalePct: number; inflow5d: string };
+    counts?: { both: number; d30: number; d60: number };
     items: Array<{
       sector: string;
+      hit30?: boolean;
+      hit60?: boolean;
+      both?: boolean;
+      inflow30d?: number;
       inflow60d: number;
+      positiveRatio30?: number;
+      positiveRatio60?: number;
+      positiveRatio?: number;
       inflow5d: number;
-      positiveRatio: number;
       pricePosition: number;
       score?: number;
       leaders?: Array<{ name: string; code: string; pctChg: number; strength: string }>;

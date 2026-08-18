@@ -204,94 +204,116 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                 </tbody>
               </table>
             </div>
-            <p className="text-[10px] text-slate-400 mt-1.5">主力净流入=特大单+大单买入-卖出（Tushare 口径）；底部积聚=60 日持续净流入且行业价格处于长期低位；吸筹中=资金连续流入但价格未动，启动确认=资金流入+当日大涨，高潮风险=连续流入+5日涨幅过热</p>
+            <p className="text-[10px] text-slate-400 mt-1.5">主力净流入=特大单+大单买入-卖出（Tushare 口径）；底部积聚分 30 日/60 日双档：持续净流入且行业价格处于长期低位，双档同时命中为🔥共振；吸筹中=资金连续流入但价格未动，启动确认=资金流入+当日大涨，高潮风险=连续流入+5日涨幅过热</p>
           </CardContent>
         </Card>
       )}
 
-      {/* 底部资金积聚监测 */}
-      {data.bottomWatch && (
+      {/* 底部资金积聚监测（30日/60日双档） */}
+      {data.bottomWatch && (() => {
+        const bw = data.bottomWatch;
+        const groups = [
+          { key: 'both', label: '🔥 双档共振 · 30日+60日持续积聚（最扎实）', items: bw.items.filter(i => i.both), cls: 'text-orange-700' },
+          { key: 'd30', label: '30日档 · 较新积聚（早期信号）', items: bw.items.filter(i => i.hit30 && !i.hit60), cls: 'text-teal-700' },
+          { key: 'd60', label: '60日档 · 长期缓慢吸筹', items: bw.items.filter(i => i.hit60 && !i.hit30), cls: 'text-indigo-700' },
+        ].filter(g => g.items.length > 0);
+        const flowCell = (v?: number, ratio?: number) => (
+          v === undefined ? <span className="text-slate-300">—</span> : (
+            <>
+              <span className={`font-semibold ${v >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                {v >= 0 ? '+' : ''}{v}亿
+              </span>
+              {ratio !== undefined && <span className="text-slate-400 ml-1">{ratio}%天数</span>}
+            </>
+          )
+        );
+        return (
         <Card className="border-teal-200 shadow-sm">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <Sprout className="w-4 h-4 text-teal-600" />
-                底部资金积聚监测（{data.bottomWatch.window || 60}日窗口）
+                底部资金积聚监测（30日 / 60日双档）
               </CardTitle>
               <Badge variant="outline" className="text-xs bg-teal-50 text-teal-700 border-teal-200">
-                {data.bottomWatch.trade_date}
+                {bw.trade_date}
               </Badge>
             </div>
-            {data.bottomWatch.summary && (
+            {bw.summary && (
               <p className="text-[11px] text-teal-800 bg-teal-50 rounded-md px-2 py-1.5 mt-1 leading-relaxed">
-                {data.bottomWatch.summary}
+                {bw.summary}
               </p>
             )}
-            {data.bottomWatch.note && (
+            {bw.note && (
               <p className="text-[11px] text-slate-500 bg-slate-50 rounded-md px-2 py-1.5 mt-1">
-                {data.bottomWatch.note}
+                {bw.note}
               </p>
             )}
           </CardHeader>
           <CardContent>
-            {data.bottomWatch.items && data.bottomWatch.items.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs min-w-[640px]">
-                  <thead>
-                    <tr className="text-slate-500 border-b border-slate-200">
-                      <th className="text-left py-1.5 font-medium">板块</th>
-                      <th className="text-right font-medium">60日净流入</th>
-                      <th className="text-right font-medium">流入天数占比</th>
-                      <th className="text-right font-medium">价格底部分位</th>
-                      <th className="text-right font-medium">近5日净流入</th>
-                      <th className="text-left font-medium pl-3">率先走强龙头</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.bottomWatch.items.map((it: any) => (
-                      <tr key={it.sector} className="border-b border-slate-50 hover:bg-slate-50/60 align-top">
-                        <td className="py-1.5 font-medium text-slate-700">{it.sector}</td>
-                        <td className={`text-right font-semibold ${it.inflow60d >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
-                          {it.inflow60d >= 0 ? '+' : ''}{it.inflow60d}亿
-                        </td>
-                        <td className="text-right text-slate-600">{it.positiveRatio}%</td>
-                        <td className="text-right">
-                          <span className={it.pricePosition < 0.4 ? 'text-teal-600 font-semibold' : 'text-slate-500'}>
-                            {(it.pricePosition * 100).toFixed(0)}%
-                          </span>
-                        </td>
-                        <td className={`text-right ${it.inflow5d >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
-                          {it.inflow5d >= 0 ? '+' : ''}{it.inflow5d}亿
-                        </td>
-                        <td className="pl-3">
-                          <div className="flex flex-col gap-1">
-                            {(it.leaders || []).map((l: any) => (
-                              <div key={l.code} className="text-[10px]">
-                                <span className="text-slate-700 font-medium">{l.name}</span>
-                                <span className={`ml-1 font-semibold ${l.pctChg >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
-                                  {l.pctChg >= 0 ? '+' : ''}{l.pctChg}%
-                                </span>
-                                <span className="ml-1 text-slate-400">{l.strength}</span>
+            {groups.length > 0 ? (
+              <div className="overflow-x-auto space-y-3">
+                {groups.map(g => (
+                  <div key={g.key}>
+                    <p className={`text-[11px] font-bold mb-1 ${g.cls}`}>{g.label}（{g.items.length}）</p>
+                    <table className="w-full text-xs min-w-[640px]">
+                      <thead>
+                        <tr className="text-slate-500 border-b border-slate-200">
+                          <th className="text-left py-1 font-medium">板块</th>
+                          <th className="text-right font-medium">30日净流入</th>
+                          <th className="text-right font-medium">60日净流入</th>
+                          <th className="text-right font-medium">价格底部分位</th>
+                          <th className="text-right font-medium">近5日净流入</th>
+                          <th className="text-left font-medium pl-3">率先走强龙头</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {g.items.map((it: any) => (
+                          <tr key={it.sector} className="border-b border-slate-50 hover:bg-slate-50/60 align-top">
+                            <td className="py-1.5 font-medium text-slate-700">{it.sector}</td>
+                            <td className="text-right">{flowCell(it.inflow30d, it.positiveRatio30)}</td>
+                            <td className="text-right">{flowCell(it.inflow60d, it.positiveRatio60)}</td>
+                            <td className="text-right">
+                              <span className={it.pricePosition < 0.4 ? 'text-teal-600 font-semibold' : 'text-slate-500'}>
+                                {(it.pricePosition * 100).toFixed(0)}%
+                              </span>
+                            </td>
+                            <td className={`text-right ${it.inflow5d >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                              {it.inflow5d >= 0 ? '+' : ''}{it.inflow5d}亿
+                            </td>
+                            <td className="pl-3">
+                              <div className="flex flex-col gap-1">
+                                {(it.leaders || []).map((l: any) => (
+                                  <div key={l.code} className="text-[10px]">
+                                    <span className="text-slate-700 font-medium">{l.name}</span>
+                                    <span className={`ml-1 font-semibold ${l.pctChg >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                                      {l.pctChg >= 0 ? '+' : ''}{l.pctChg}%
+                                    </span>
+                                    <span className="ml-1 text-slate-400">{l.strength}</span>
+                                  </div>
+                                ))}
+                                {(!it.leaders || it.leaders.length === 0) && (
+                                  <span className="text-[10px] text-slate-300">暂无个股确认走强</span>
+                                )}
                               </div>
-                            ))}
-                            {(!it.leaders || it.leaders.length === 0) && (
-                              <span className="text-[10px] text-slate-300">暂无个股确认走强</span>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ))}
               </div>
             ) : (
-              !data.bottomWatch.note && (
+              !bw.note && (
                 <p className="text-xs text-slate-400 py-3 text-center">当前无符合条件的板块，监测持续进行中</p>
               )
             )}
+            <p className="text-[10px] text-slate-400 mt-2">判定口径（两档相同，仅窗口不同）：窗口累计净流入&gt;0且≥窗口成交额0.5%；净流入天数占比≥50%；价格底部分位&lt;40%（等权累计收益指数长期分位）；近5日仍净流入。双档共振=30日与60日同时命中。</p>
           </CardContent>
         </Card>
-      )}
+        );
+      })()}
 
       {/* 统计概览 */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
