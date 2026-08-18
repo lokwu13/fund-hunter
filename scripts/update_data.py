@@ -1076,6 +1076,7 @@ def fetch_sector_watch(pro, trade_date, data):
         print(f"  sectorScan: {len(scan['items'])} signal sectors ({n_stocks} stocks attached)")
         print(f"  summary: {scan['summary']}")
         bottom = build_bottom_watch(hist, pro, trade_date, today_map)
+        update_bottom_freshness(bottom, hist)
         data['bottomWatch'] = bottom
         if bottom.get('note') and not bottom['items']:
             print(f"  bottomWatch: {bottom['note']}")
@@ -2126,6 +2127,316 @@ def fetch_vcp_watch(pro, trade_date, data):
         print(f"  Warning: fetch_vcp_watch failed (keep old vcpWatch): {e}")
 
 
+# ══════════════════════════════════════════════════════════════════
+# A. 个股级 VCP 精扫（中证A500∪上证50∪沪深300 成分池，日线+周线双级别）
+# B. bottomWatch 积聚新鲜度（首触日+连续命中天数持久化）
+# C. 资金+预期双确认（bottomWatch × ECI 前10 展示层联动）
+# ══════════════════════════════════════════════════════════════════
+
+VCP_MEMBERS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                'cache', 'index_members.json')
+VCP_FRESHNESS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  'cache', 'bottomwatch_first_seen.json')
+VCP_POOL_INDICES = ['000510.SH', '000016.SH', '000300.SH']  # 中证A500∪上证50∪沪深300
+VCP_DAILY_WIN, VCP_DAILY_K = 60, 2      # 日线级：近60交易日窗口，摆动高点±2日确认
+VCP_WEEK_WIN, VCP_WEEK_K = 40, 1        # 周线级：近40周窗口，摆动高点±1周确认
+VCP_MIN_CONTRACTIONS = 2                # 最少收缩次数（递减即达标）
+VCP_DECAY_TOL = 1.25                    # 收缩递减容差（后次 ≤ 前次×1.25 且末次<首次）
+VCP_SHOW_DIST = 8.0                     # 只展示距枢轴 <8%（容忍 3% 以内已突破）
+VCP_SECTOR_LEADERS = 3                  # 每个命中板块取池内龙头数
+
+
+def _load_json_cache(path, default):
+    try:
+        with open(path, encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return default
+
+
+def _save_json_cache(path, obj):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = path + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump(obj, f, ensure_ascii=False)
+    os.replace(tmp, path)
+
+
+def ensure_index_members(pro, trade_date):
+    """A500∪上证50∪沪深300 成分股池：index_weight 取最新月度权重，每周五刷新。"""
+    c = _load_json_cache(VCP_MEMBERS_PATH, {})
+    friday = datetime.strptime(trade_date, '%Y%m%d').weekday() == 4
+    if c.get('members') and not friday:
+        return c
+    members = {}
+    # 注意：index_weight 按月发布、trade_date 为月末日，查询区间必须覆盖月末日，
+    # 否则返回空（2026-08-18 实测：~0727 无行，~0731 有行）。取 70 日宽窗内最新快照。
+    wide_start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=70)).strftime('%Y%m%d')
+    for idx in VCP_POOL_INDICES:
+        try:
+            time.sleep(API_DELAY)
+            df = pro.index_weight(index_code=idx, start_date=wide_start, end_date=trade_date)
+            if df is not None and len(df):
+                snap = df['trade_date'].max()
+                cur = df[df['trade_date'] == snap]
+                members[idx] = sorted(set(cur['con_code'].tolist()))
+                print(f'  index members {idx}: {len(members[idx])} (snapshot {snap})')
+        except Exception as e:
+            print(f'  Warning: index_weight {idx} failed: {str(e)[:60]}')
+    if members:
+        c = {'updated': trade_date, 'members': members}
+        _save_json_cache(VCP_MEMBERS_PATH, c)
+    return c
+
+
+def _vcp_swing_highs(bars, k):
+    """bars: 升序 [(date, high, low, close, vol)]；返回摆动高点下标（前后 k 根内最高）。"""
+    idx = []
+    for i in range(k, len(bars) - k):
+        h = bars[i][1]
+        if h >= max(b[1] for b in bars[i - k:i + k + 1]):
+            idx.append(i)
+    return idx
+
+
+def _vcp_level(bars, win, k):
+    """单级别 VCP 判定：收缩序列递减 + 量能递减 + 右侧缩量 + 枢轴/距买点。
+
+    返回 dict 或 None（历史不足/摆动点不足）。
+    """
+    bars = bars[-win:]
+    if len(bars) < 12:
+        return None
+    sh = _vcp_swing_highs(bars, k)
+    if len(sh) < VCP_MIN_CONTRACTIONS + 1:
+        return None
+    sh = sh[-(VCP_MIN_CONTRACTIONS + 3):]   # 最多取最近 5 个摆动高点 → 4 段收缩
+    depths, seg_vols = [], []
+    for a, b in zip(sh, sh[1:]):
+        hi = bars[a][1]
+        lo = min(x[2] for x in bars[a:b + 1])
+        if hi <= 0:
+            return None
+        depths.append((hi - lo) / hi * 100)
+        seg_vols.append(sum(x[4] for x in bars[a:b + 1]) / (b - a + 1))
+    if len(depths) < VCP_MIN_CONTRACTIONS:
+        return None
+    dec = (all(depths[i + 1] <= depths[i] * VCP_DECAY_TOL for i in range(len(depths) - 1))
+           and depths[-1] < depths[0])
+    vol_ratio = seg_vols[-1] / seg_vols[0] if seg_vols[0] > 0 else 1.0
+    vol_trend = '递减' if vol_ratio <= 0.9 else ('放大' if vol_ratio >= 1.15 else '持平')
+    avg_all = sum(x[4] for x in bars) / len(bars)
+    right = sum(x[4] for x in bars[-3:]) / 3
+    right_shrink = right < avg_all if avg_all > 0 else False
+    pivot = bars[sh[-1]][1]
+    close = bars[-1][3]
+    dist = (pivot / close - 1) * 100 if close > 0 else 999
+    formed = dec and vol_trend == '递减'
+    return {'contractions': [round(x, 1) for x in depths],
+            'count': len(depths), 'decreasing': bool(dec),
+            'volTrend': vol_trend, 'rightShrink': bool(right_shrink),
+            'pivot': round(pivot, 2), 'distPct': round(dist, 1),
+            'formed': bool(formed)}
+
+
+def _resample_weekly(rows):
+    """日线 rows [date, close, high, low, vol] → 周线 bars [(week, high, low, close, vol)]。"""
+    weeks = {}
+    order = []
+    for r in rows:
+        d = datetime.strptime(r[0], '%Y%m%d')
+        key = f'{d.isocalendar()[0]}W{d.isocalendar()[1]:02d}'
+        if key not in weeks:
+            weeks[key] = [key, r[2], r[3], r[1], r[4]]  # high, low, close(首), vol
+            order.append(key)
+        w = weeks[key]
+        w[1] = max(w[1], r[2])
+        w[2] = min(w[2], r[3])
+        w[3] = r[1]          # close 取周内最后一日
+        w[4] += r[4]
+    return [weeks[k] for k in order]
+
+
+def fetch_vcp_stocks(pro, trade_date, data, today_map):
+    """个股级 VCP 精扫：A500∪SZ50∪HS300 成分池 ∩（持仓观察股 ∪ 积聚板块龙头 ∪ vcpWatch信号板块龙头）。
+
+    个股日线历史复用 vcp_cache.stock_daily（300 交易日，含周线重采样所需长度）；
+    缺历史的票一次性回补 420 日历日后并入缓存，次日起随 vcpWatch 批量日更零成本。
+    成分池 index_weight 仅周五刷新（3 次调用）。失败保留旧 vcpStocks。
+    """
+    try:
+        import vcp_preview as vcp
+        c = vcp.load_cache()
+        stock_daily = c.get('stock_daily') or {}
+        info = c.get('stock_info') or {}
+        mc = ensure_index_members(pro, trade_date)
+        pool = set()
+        for v in (mc.get('members') or {}).values():
+            pool.update(v)
+        if not pool:
+            raise ValueError('index members pool empty')
+
+        # ── 精扫对象 ──
+        targets = {}   # code → {'sector': ..., 'star': bool}
+        for code, s in STOCKS.items():           # 用户 14 只持仓/观察股（星标，点名纳入，不受池限制）
+            targets[code] = {'sector': s['industry'], 'star': True, 'inPool': code in pool}
+        bw = data.get('bottomWatch') or {}
+        for it in bw.get('items', []):
+            sector = it['sector']
+            cand = [s for s in (today_map.get(sector) or []) if s['code'] in pool]
+            for s in cand[:VCP_SECTOR_LEADERS]:
+                targets.setdefault(s['code'], {'sector': sector, 'star': False, 'inPool': True})
+        vw = data.get('vcpWatch') or {}
+        for r in vw.get('items', []):
+            if r.get('signal') == '⚪':
+                continue
+            for l in r.get('leaders', []):
+                if l['code'] in pool:
+                    targets.setdefault(l['code'], {'sector': r['name'], 'star': False, 'inPool': True})
+        print(f'  vcpStocks targets: {len(targets)} (pool {len(pool)})')
+
+        # ── 历史补缺（一次性，并入 vcp 缓存随日更维护）──
+        eff = None
+        for rows in stock_daily.values():
+            if rows:
+                eff = rows[-1][0]
+                break
+        eff = eff or trade_date
+        stale_cut = (datetime.strptime(eff, '%Y%m%d') - timedelta(days=7)).strftime('%Y%m%d')
+        need = [code for code in targets
+                if not stock_daily.get(code) or stock_daily[code][-1][0] < stale_cut]
+        if need:
+            back_start = (datetime.strptime(eff, '%Y%m%d')
+                          - timedelta(days=vcp.BACK_CAL_DAYS)).strftime('%Y%m%d')
+            for code in need:
+                try:
+                    time.sleep(API_DELAY)
+                    df = pro.daily(ts_code=code, start_date=back_start, end_date=eff)
+                    if df is None or not len(df):
+                        continue
+                    rows = [[str(r['trade_date']), float(r['close']), float(r['high']),
+                             float(r['low']), float(r['vol'])] for _, r in df.iterrows()]
+                    rows.sort()
+                    c.setdefault('stock_daily', {})[code] = rows[-300:]
+                    stock_daily = c['stock_daily']
+                except Exception as e:
+                    print(f'  Warning: vcpStocks backfill {code} failed: {str(e)[:60]}')
+            vcp.save_cache(c)
+            print(f'  vcpStocks backfilled: {len(need)}')
+
+        # ── 双级别判定 ──
+        items = []
+        for code, meta in targets.items():
+            rows = stock_daily.get(code) or []
+            if len(rows) < 60:
+                continue
+            bars = [(r[0], r[2], r[3], r[1], r[4]) for r in rows]  # (date, high, low, close, vol)
+            d_lv = _vcp_level(bars, VCP_DAILY_WIN, VCP_DAILY_K)
+            w_lv = _vcp_level(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K)
+            d_ok = bool(d_lv and d_lv['formed'])
+            w_ok = bool(w_lv and w_lv['formed'])
+            if not (d_ok or w_ok):
+                continue
+            main_lv = d_lv if d_ok else w_lv
+            if not (-3 <= main_lv['distPct'] <= VCP_SHOW_DIST):
+                continue   # 只展示成型或临近成型（距枢轴 <8%）
+            close = rows[-1][1]
+            tag = ('日线✅+周线✅' if d_ok and w_ok else
+                   ('日线✅' if d_ok else '周线✅'))
+            items.append({'code': code,
+                          'name': info.get(code, {}).get('name', code),
+                          'sector': meta['sector'], 'star': meta['star'],
+                          'close': round(close, 2), 'tag': tag,
+                          'daily': d_lv, 'weekly': w_lv})
+        items.sort(key=lambda x: (0 if '日线✅+周线✅' in x['tag'] else 1,
+                                  (x['daily'] or x['weekly'])['distPct']))
+        eff_d = f'{eff[:4]}-{eff[4:6]}-{eff[6:]}'
+        data['vcpStocks'] = {
+            'trade_date': eff_d, 'poolSize': len(pool), 'scanned': len(targets),
+            'items': items[:15],
+            'note': '池=中证A500∪上证50∪沪深300成分（周五刷新）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
+                    '成型=≥2次收缩幅度递减(容差25%)且量能递减；枢轴=最近收缩高点；只展示距枢轴<8%的成型/临近成型个股',
+        }
+        print(f"  vcpStocks: scanned {len(targets)}, formed {len(items)} "
+              f"({[i['name'] + ':' + i['tag'] for i in items[:5]]})")
+    except Exception as e:
+        print(f"  Warning: fetch_vcp_stocks failed (keep old vcpStocks): {e}")
+
+
+def update_bottom_freshness(bottom, hist):
+    """B. 积聚新鲜度：bottomWatch 命中板块的首触日+连续命中交易日数（轻量持久化）。
+
+    scripts/cache/bottomwatch_first_seen.json 纳入 workflow 回写；未命中板块记录保留但 streak 归零。
+    """
+    try:
+        days = sorted(hist['days'])
+        if not days:
+            return
+        today, prev = days[-1], (days[-2] if len(days) > 1 else days[-1])
+        rec = _load_json_cache(VCP_FRESHNESS_PATH, {})
+        hit_sectors = [it['sector'] for it in bottom.get('items', [])]
+        for s, r in rec.items():
+            if s not in hit_sectors:
+                r['streak'] = 0
+        for s in hit_sectors:
+            r = rec.setdefault(s, {'first': today, 'streak': 0, 'last': ''})
+            if r.get('last') == prev or r.get('last') == today:
+                r['streak'] = int(r.get('streak', 0)) + (0 if r['last'] == today else 1)
+            else:
+                r['streak'] = 1
+                r['first'] = today
+            r['last'] = today
+        _save_json_cache(VCP_FRESHNESS_PATH, rec)
+        fmt = lambda dd: f'{dd[4:6]}-{dd[6:]}'
+        fresh = []
+        for it in bottom.get('items', []):
+            r = rec.get(it['sector'])
+            if not r:
+                continue
+            it['firstSeen'] = fmt(r['first'])
+            it['streakDays'] = r['streak']
+            fresh.append({'sector': it['sector'], 'firstSeen': fmt(r['first']),
+                          'streakDays': r['streak'],
+                          'stage': ('新进入积聚' if r['streak'] <= 5 else
+                                    ('积聚已久' if r['streak'] > 15 else '积聚跟踪中'))})
+        bottom['freshness'] = fresh
+        if fresh:
+            print('  bottomWatch freshness: '
+                  + '、'.join(f"{f['sector']}{f['streakDays']}天({f['stage']})" for f in fresh))
+    except Exception as e:
+        print(f"  Warning: bottom freshness failed: {e}")
+
+
+def apply_dual_confirm(data):
+    """C. 资金+预期双确认：bottomWatch 任一档命中 且 ECI 总分前10 → 双向打标 + 短评一句。"""
+    try:
+        bw = data.get('bottomWatch') or {}
+        eci = data.get('eciData') or {}
+        hit_l1 = set()
+        for it in bw.get('items', []):
+            l1 = SECTOR_TO_L1.get(it['sector'])
+            if l1:
+                hit_l1.add(l1)
+        if not hit_l1 or not eci.get('sectors'):
+            return
+        top10 = sorted(eci['sectors'], key=lambda s: -s.get('eci', 0))[:10]
+        top10_names = {s['sector'] for s in top10}
+        dual = sorted(hit_l1 & top10_names)
+        for s in eci['sectors']:
+            if s['sector'] in hit_l1:
+                s['fundAccum'] = True
+        for it in bw.get('items', []):
+            if SECTOR_TO_L1.get(it['sector']) in top10_names:
+                it['dualConfirm'] = True
+        if dual:
+            note = '双确认：' + '、'.join(f'{n}（资金积聚+预期一致前10）' for n in dual) + '。'
+            bw['dualConfirmNote'] = note
+            bw['summary'] = (bw.get('summary') or '') + note
+            print(f'  双确认: {"、".join(dual)}')
+    except Exception as e:
+        print(f'  Warning: dual confirm failed: {e}')
+
+
 def load_existing_data():
     """Load existing fund_data.json to preserve manually maintained fields."""
     try:
@@ -2868,6 +3179,7 @@ def main():
     # ── 13. ECI 六维分每日真算 + 强势一级行业子板块精选 ──
     print("\n[13/17] Rebuilding ECI from sector history + picking subsectors...")
     fetch_eci_daily(pro, trade_date, data, watch_ctx)
+    apply_dual_confirm(data)   # C. 资金积聚×ECI前10 双确认（纯展示层联动）
 
     # ── 14. 融资余额突变预警（持仓+观察股） ──
     print("\n[14/17] Building margin watch (融资融券)...")
@@ -2880,6 +3192,11 @@ def main():
     # ── 16. VCP 板块-龙头共振监测（增量维护 vcp_cache） ──
     print("\n[16/17] Building VCP watch (板块-龙头共振)...")
     fetch_vcp_watch(pro, trade_date, data)
+
+    # ── 16b. 个股级 VCP 精扫（A500∪SZ50∪HS300 池，日线+周线双级别）──
+    print("\n[16b/17] Building stock-level VCP scan (vcpStocks)...")
+    _today_map = watch_ctx[3] if watch_ctx else {}
+    fetch_vcp_stocks(pro, trade_date, data, _today_map)
 
     # ── 17. 国家队升级：份额雷达 + 板块轮动 + 汇金估算 + 宽基波动率 + 短评 ──
     print("\n[17/17] Building national team upgrade (share radar / rotation / est / vol)...")

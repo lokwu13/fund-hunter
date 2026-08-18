@@ -249,6 +249,22 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                 {bw.note}
               </p>
             )}
+            {bw.freshness && bw.freshness.length > 0 && (
+              <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                积聚新鲜度：
+                {bw.freshness.map((f: any, i: number) => (
+                  <span key={f.sector}>
+                    {i > 0 && '；'}
+                    <span className="text-slate-700 font-medium">{f.sector}</span>
+                    <span className="text-slate-400"> 首触{f.firstSeen}·连续{f.streakDays}天</span>
+                    <span className={f.stage === '新进入积聚' ? 'text-teal-600' : f.stage === '积聚已久' ? 'text-amber-600' : 'text-slate-500'}>
+                      （{f.stage}）
+                    </span>
+                  </span>
+                ))}
+                <span className="text-slate-300"> · ≤5天为早期可跟踪，&gt;15天临近启动或陷阱</span>
+              </p>
+            )}
           </CardHeader>
           <CardContent>
             {groups.length > 0 ? (
@@ -270,7 +286,15 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                       <tbody>
                         {g.items.map((it: any) => (
                           <tr key={it.sector} className="border-b border-slate-50 hover:bg-slate-50/60 align-top">
-                            <td className="py-1.5 font-medium text-slate-700">{it.sector}</td>
+                            <td className="py-1.5 font-medium text-slate-700">
+                              {it.sector}
+                              {it.dualConfirm && (
+                                <span className="ml-1 text-[9px] bg-amber-100 text-amber-700 rounded px-1 font-bold">双确认</span>
+                              )}
+                              {it.streakDays !== undefined && (
+                                <span className="ml-1 text-[9px] text-slate-400">连续{it.streakDays}天</span>
+                              )}
+                            </td>
                             <td className="text-right">{flowCell(it.inflow30d, it.positiveRatio30)}</td>
                             <td className="text-right">{flowCell(it.inflow60d, it.positiveRatio60)}</td>
                             <td className="text-right">
@@ -556,6 +580,9 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                         <Star className="w-2.5 h-2.5 mr-0.5" />持仓
                       </Badge>
                     )}
+                    {s.fundAccum && (
+                      <Badge className="text-[10px] bg-teal-600 text-white border-0">资金积聚中</Badge>
+                    )}
                     {isDivergent && (
                       <Badge className="text-[10px] bg-red-500 text-white border-0">分化</Badge>
                     )}
@@ -827,7 +854,85 @@ export default function ECIPanel({ data }: ECIPanelProps) {
         </Card>
       )}
 
-      {/* 交易总策略 */}
+      {/* 个股级 VCP 精扫（A500∪上证50∪沪深300 池） */}
+      {data.vcpStocks && (
+        <Card className="border-violet-200 shadow-sm">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Waves className="w-4 h-4 text-violet-500" />
+                个股 VCP 精扫
+                <span className="text-[10px] font-normal text-slate-400">
+                  池{data.vcpStocks.poolSize ?? '—'}只 · 精扫{data.vcpStocks.scanned ?? 0}只
+                </span>
+              </CardTitle>
+              <Badge variant="outline" className="text-xs bg-violet-50 text-violet-700 border-violet-200">
+                {data.vcpStocks.trade_date}
+              </Badge>
+            </div>
+            <p className="text-[10px] text-slate-400 mt-1">{data.vcpStocks.note}</p>
+          </CardHeader>
+          <CardContent>
+            {data.vcpStocks.items && data.vcpStocks.items.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs min-w-[760px]">
+                  <thead>
+                    <tr className="text-slate-500 border-b border-slate-200">
+                      <th className="text-left py-1.5 font-medium">股票</th>
+                      <th className="text-left font-medium">板块归属</th>
+                      <th className="text-left font-medium">日线收缩序列</th>
+                      <th className="text-left font-medium">周线收缩序列</th>
+                      <th className="text-right font-medium">枢轴价</th>
+                      <th className="text-right font-medium">现价距枢轴</th>
+                      <th className="text-center font-medium">量能</th>
+                      <th className="text-center font-medium">级别</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.vcpStocks.items.map((it: any) => {
+                      const lv = it.daily?.formed ? it.daily : it.weekly;
+                      return (
+                        <tr key={it.code} className="border-b border-slate-50 hover:bg-violet-50/40 align-top">
+                          <td className="py-1.5 font-medium text-slate-700">
+                            {it.star && <Star className="w-3 h-3 text-pink-500 inline mr-0.5 -mt-0.5" />}
+                            {it.name}
+                            <span className="text-[9px] text-slate-400 ml-1">{it.code}</span>
+                          </td>
+                          <td className="text-slate-500">{it.sector}</td>
+                          <td className="font-mono text-[11px]">
+                            {it.daily ? (
+                              <span className={it.daily.decreasing ? 'text-violet-700 font-semibold' : 'text-slate-400'}>
+                                {it.daily.contractions.join('%→')}%
+                              </span>
+                            ) : <span className="text-slate-300">—</span>}
+                          </td>
+                          <td className="font-mono text-[11px]">
+                            {it.weekly ? (
+                              <span className={it.weekly.decreasing ? 'text-violet-700 font-semibold' : 'text-slate-400'}>
+                                {it.weekly.contractions.join('%→')}%
+                              </span>
+                            ) : <span className="text-slate-300">—</span>}
+                          </td>
+                          <td className="text-right font-semibold text-slate-700">{lv?.pivot}</td>
+                          <td className={`text-right font-bold ${(lv?.distPct ?? 99) <= 3 ? 'text-red-500' : (lv?.distPct ?? 99) <= 8 ? 'text-amber-600' : 'text-slate-500'}`}>
+                            {lv?.distPct}%
+                          </td>
+                          <td className="text-center text-slate-500">{lv?.volTrend}</td>
+                          <td className="text-center">
+                            <span className={`text-[10px] font-bold ${it.tag.includes('+') ? 'text-red-500' : 'text-violet-600'}`}>{it.tag}</span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p className="text-xs text-slate-400 py-3 text-center">本期精扫无成型或临近成型（距枢轴&lt;8%）个股</p>
+            )}
+          </CardContent>
+        </Card>
+      )}
       <Card className="border-cyan-200 bg-gradient-to-r from-cyan-50 to-blue-50">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-bold flex items-center gap-2 text-cyan-800">

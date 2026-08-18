@@ -298,6 +298,7 @@ export interface FundData {
       stocks: number;
       advice: string;
       sampleStocks?: string[];
+      fundAccum?: boolean;
       leaders?: {
         mvLeader: { name: string; code: string; mv: string };
         gainLeader: { name: string; code: string; return: string };
@@ -332,6 +333,8 @@ export interface FundData {
     summary?: string;
     thresholds?: { posRatio: number; pricePos: number; scalePct: number; inflow5d: string };
     counts?: { both: number; d30: number; d60: number };
+    freshness?: Array<{ sector: string; firstSeen: string; streakDays: number; stage: string }>;
+    dualConfirmNote?: string;
     items: Array<{
       sector: string;
       hit30?: boolean;
@@ -345,7 +348,32 @@ export interface FundData {
       inflow5d: number;
       pricePosition: number;
       score?: number;
+      firstSeen?: string;
+      streakDays?: number;
+      dualConfirm?: boolean;
       leaders?: Array<{ name: string; code: string; pctChg: number; strength: string }>;
+    }>;
+  };
+  vcpStocks?: {
+    trade_date: string;
+    poolSize?: number;
+    scanned?: number;
+    note?: string;
+    items: Array<{
+      code: string;
+      name: string;
+      sector: string;
+      star?: boolean;
+      close: number;
+      tag: string;
+      daily?: {
+        contractions: number[]; count: number; decreasing: boolean;
+        volTrend: string; rightShrink: boolean; pivot: number; distPct: number; formed: boolean;
+      } | null;
+      weekly?: {
+        contractions: number[]; count: number; decreasing: boolean;
+        volTrend: string; rightShrink: boolean; pivot: number; distPct: number; formed: boolean;
+      } | null;
     }>;
   };
   eciSubsectors?: {
