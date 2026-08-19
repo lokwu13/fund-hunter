@@ -4,6 +4,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import {
   TrendingUp, TrendingDown, Zap, Activity, TrendingDown as TrendingDownIcon, Info, ArrowLeftRight
 } from 'lucide-react';
+import {
+  ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, ReferenceLine, LabelList, Cell
+} from 'recharts';
 import { useFundData } from '@/hooks/useFundData';
 
 interface SectorHeatmapProps {
@@ -311,6 +315,99 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
           </CardContent>
         </Card>
       )}
+
+      {/* ====== 板块页专属：行业景气四象限（ECI 口径·日更） ====== */}
+      {detailed && data.eciQuadrant && data.eciQuadrant.items.length > 0 && (() => {
+        const q = data.eciQuadrant!;
+        const actMap = new Map((data.actionableSectors?.items || []).map(a => [a.sector, a.priority]));
+        const quadColor: Record<string, string> = {
+          '景气高位·持续改善': '#10b981',
+          '景气低位·边际修复': '#0ea5e9',
+          '景气低位·仍在筑底': '#94a3b8',
+          '景气高位·边际走弱': '#f59e0b',
+        };
+        const QuadTooltip = ({ active, payload }: any) => {
+          if (!active || !payload?.length) return null;
+          const p = payload[0].payload;
+          const pr = actMap.get(p.sector);
+          return (
+            <div className="bg-white border border-slate-200 rounded-lg shadow-md px-3 py-2 text-xs">
+              <p className="font-bold text-slate-800">{p.sector}</p>
+              <p className="text-slate-500 mt-0.5">ECI {p.eci} · {q.yMode === 'monthly' ? '月变化' : '5日变化'} {p.chg >= 0 ? '+' : ''}{p.chg}</p>
+              <p style={{ color: quadColor[p.quadrant] }} className="font-semibold mt-0.5">{p.quadrant}</p>
+              <p className="text-slate-400 mt-0.5">
+                {pr ? (pr === 1 ? '✅ 能投名单·双确认' : '✅ 能投名单') : '不在能投/积聚名单'}
+              </p>
+            </div>
+          );
+        };
+        const corner = 'absolute text-[10px] font-semibold pointer-events-none px-1.5 py-0.5 rounded bg-white/80 border';
+        return (
+          <Card className="shadow-sm border-cyan-200">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <CardTitle className="text-sm font-bold flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-cyan-600" />
+                  行业景气四象限（ECI 预期一致性口径·日更）
+                </CardTitle>
+                <div className="flex items-center gap-2">
+                  {q.yMode === '5d' && (
+                    <Badge className="text-[10px] bg-amber-100 text-amber-700 border-0">
+                      Y 轴暂为近 5 日变化，月度口径数据积累中
+                    </Badge>
+                  )}
+                  <Badge variant="outline" className="text-xs bg-cyan-50 text-cyan-700 border-cyan-200">
+                    {q.trade_date}
+                  </Badge>
+                </div>
+              </div>
+              <CardDescription className="text-[10px]">
+                以 ECI 预期一致性指数近似行业景气度，较券商产业景气指数（月更）更及时 · X=ECI 当前值，Y=较上月变化（同口径重算）· 中线=31 行业中位数
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="relative">
+                <span className={`${corner} left-14 top-2 text-sky-600 border-sky-200`}>景气低位·边际修复</span>
+                <span className={`${corner} right-2 top-2 text-emerald-600 border-emerald-200`}>景气高位·持续改善</span>
+                <span className={`${corner} left-14 bottom-10 text-slate-500 border-slate-200`}>景气低位·仍在筑底</span>
+                <span className={`${corner} right-2 bottom-10 text-amber-600 border-amber-200`}>景气高位·边际走弱</span>
+                <ResponsiveContainer width="100%" height={430}>
+                  <ScatterChart margin={{ top: 24, right: 20, bottom: 24, left: 10 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                    <XAxis
+                      type="number" dataKey="eci" domain={['dataMin - 3', 'dataMax + 3']}
+                      tick={{ fontSize: 10, fill: '#94a3b8' }}
+                      label={{ value: 'ECI 景气指数（当前值）', position: 'insideBottom', offset: -14, fontSize: 10, fill: '#64748b' }}
+                    />
+                    <YAxis
+                      type="number" dataKey="chg" domain={['dataMin - 2', 'dataMax + 2']}
+                      tick={{ fontSize: 10, fill: '#94a3b8' }}
+                      label={{ value: q.yMode === 'monthly' ? '较上月变化' : '近5日变化(暂)', angle: -90, position: 'insideLeft', offset: 2, fontSize: 10, fill: '#64748b' }}
+                    />
+                    <ReferenceLine x={q.xMedian} stroke="#64748b" strokeDasharray="6 4" />
+                    <ReferenceLine y={q.yMedian} stroke="#64748b" strokeDasharray="6 4" />
+                    <Tooltip content={<QuadTooltip />} />
+                    <Scatter data={q.items} isAnimationActive={false}>
+                      {q.items.map((it) => (
+                        <Cell key={it.sector} fill={quadColor[it.quadrant]} fillOpacity={actMap.has(it.sector) ? 1 : 0.75} />
+                      ))}
+                      <LabelList dataKey="sector" position="top" style={{ fontSize: 9, fill: '#475569' }} />
+                    </Scatter>
+                  </ScatterChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="flex items-center gap-3 mt-2 flex-wrap">
+                {Object.entries(quadColor).map(([k, c]) => (
+                  <span key={k} className="flex items-center gap-1 text-[10px] text-slate-500">
+                    <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ background: c }} />{k}
+                  </span>
+                ))}
+                <span className="text-[10px] text-slate-400 ml-auto">实心点=在能投名单 · 悬停看详情</span>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* ====== 板块页专属：能投板块（详细版） ====== */}
       {detailed && data.actionableSectors && (

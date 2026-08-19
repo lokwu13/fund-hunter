@@ -1497,6 +1497,18 @@ def fetch_eci_daily(pro, trade_date, data, watch_ctx=None):
                         if p is not None:
                             s['change5d'] = round(s['eci'] - p, 1)
             data['eciData'] = eci
+            # 月度变化标记：同一口径把历史窗口前移 21 个交易日重算一次做对比
+            # （sector_history 即 ECI 历史沉淀，无需另建缓存；不足 62 天时前端暂用 change5d 并标注）
+            if len(days_all) >= 62:
+                cutoff = days_all[-22]
+                hist21 = {'days': {d: v for d, v in hist['days'].items() if d <= cutoff}}
+                prev = _rebuild_eci_from_history(hist21, data.get('eciData'))
+                if prev:
+                    prev_map = {s['sector']: s['eci'] for s in prev['sectors']}
+                    for s in eci['sectors']:
+                        p = prev_map.get(s['sector'])
+                        if p is not None:
+                            s['change1m'] = round(s['eci'] - p, 1)
             top = sorted(eci['sectors'], key=lambda x: -x['eci'])[:3]
             print(f"  eciData rebuilt from history: {eci['totalIndustries']} sectors, "
                   f"top3: {[(s['sector'], s['eci']) for s in top]}")
@@ -2619,6 +2631,44 @@ def apply_dual_confirm(data):
         print(f'  Warning: dual confirm failed: {e}')
 
 
+def build_eci_quadrant(data):
+    """行业景气四象限数据块（参照券商产业景气四象限图，用最贴近的 ECI 口径日更）。
+
+    X=31 行业 ECI 总分当前值；Y=ECI 较上月变化（同口径：sector_history 窗口前移 21 交易日重算，
+    历史不足时暂用 change5d 并标注 yMode='5d'）；中线=31 行业当前中位数（与原图一致，非 0 轴）。
+    """
+    try:
+        eci = data.get('eciData') or {}
+        secs = eci.get('sectors') or []
+        if not secs:
+            return
+        y_mode = 'monthly' if any(s.get('change1m') is not None for s in secs) else '5d'
+        items = []
+        for s in secs:
+            chg = (s.get('change1m') if y_mode == 'monthly' else s.get('change5d'))
+            items.append({'sector': s['sector'], 'eci': float(s['eci']),
+                          'chg': float(chg if chg is not None else 0.0)})
+        xs = sorted(i['eci'] for i in items)
+        ys = sorted(i['chg'] for i in items)
+        xm, ym = xs[len(xs) // 2], ys[len(ys) // 2]
+        for i in items:
+            hi, up = i['eci'] >= xm, i['chg'] >= ym
+            i['quadrant'] = ('景气高位·持续改善' if hi and up else
+                             '景气高位·边际走弱' if hi else
+                             '景气低位·边际修复' if up else '景气低位·仍在筑底')
+        data['eciQuadrant'] = {
+            'trade_date': eci.get('period') or '',
+            'yMode': y_mode,
+            'xMedian': xm, 'yMedian': ym,
+            'items': items,
+            'note': '以 ECI 预期一致性指数近似行业景气度（日更），较券商产业景气指数（月更）更及时；'
+                    'X/Y 中线=31 行业当前中位数',
+        }
+        print(f"  eciQuadrant: {len(items)} sectors, yMode={y_mode}, median=({xm}, {ym})")
+    except Exception as e:
+        print(f'  Warning: build_eci_quadrant failed: {e}')
+
+
 def build_actionable_sectors(data):
     """D. 能投板块短名单（同一块数据三处展示，不重复计算）。
 
@@ -3470,6 +3520,7 @@ def main():
     print("\n[15/17] Building sector flows (3-tier net inflow)...")
     build_sector_flows(data)
     build_actionable_sectors(data)   # D. 能投板块短名单（bottomWatch×ECI×资金节奏×扫描榜）
+    build_eci_quadrant(data)         # 行业景气四象限（X=ECI 当前值，Y=较上月同口径变化）
 
     # ── 16. VCP 板块-龙头共振监测（增量维护 vcp_cache） ──
     print("\n[16/17] Building VCP watch (板块-龙头共振)...")

@@ -288,6 +288,7 @@ export interface FundData {
       sector: string;
       eci: number;
       change5d?: number;
+      change1m?: number;
       volConvergence: number;
       fundConcentration: number;
       trendSync: number;
@@ -324,6 +325,19 @@ export interface FundData {
       score: number;
       status: string;
       stocks?: Array<{ name: string; code: string; netInflow: number; pctChg: number }>;
+    }>;
+  };
+  eciQuadrant?: {
+    trade_date: string;
+    yMode: 'monthly' | '5d';
+    xMedian: number;
+    yMedian: number;
+    note?: string;
+    items: Array<{
+      sector: string;
+      eci: number;
+      chg: number;
+      quadrant: string;
     }>;
   };
   bottomWatch?: {

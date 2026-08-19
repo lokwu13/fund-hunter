@@ -7600,7 +7600,8 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -4.8
+        "change5d": -4.8,
+        "change1m": -12.9
       },
       {
         "sector": "电子",
@@ -7617,7 +7618,8 @@
         "stocks": 5,
         "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 11.1
+        "change5d": 11.1,
+        "change1m": -1.4
       },
       {
         "sector": "计算机",
@@ -7634,7 +7636,8 @@
         "stocks": 5,
         "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -3.9
+        "change5d": -3.9,
+        "change1m": -11.7
       },
       {
         "sector": "电力设备",
@@ -7668,7 +7671,8 @@
             "return": "-18.3%"
           }
         },
-        "change5d": -5.5
+        "change5d": -5.5,
+        "change1m": 14.0
       },
       {
         "sector": "食品饮料",
@@ -7685,7 +7689,8 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 1.4
+        "change5d": 1.4,
+        "change1m": -1.8
       },
       {
         "sector": "银行",
@@ -7702,7 +7707,8 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
-        "change5d": -5.8
+        "change5d": -5.8,
+        "change1m": -20.8
       },
       {
         "sector": "非银金融",
@@ -7719,7 +7725,8 @@
         "stocks": 5,
         "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -2.9
+        "change5d": -2.9,
+        "change1m": -13.7
       },
       {
         "sector": "汽车",
@@ -7753,7 +7760,8 @@
             "return": "-68.5%"
           }
         },
-        "change5d": -5.6
+        "change5d": -5.6,
+        "change1m": 10.0
       },
       {
         "sector": "机械设备",
@@ -7770,7 +7778,8 @@
         "stocks": 5,
         "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 1.0
+        "change5d": 1.0,
+        "change1m": 15.4
       },
       {
         "sector": "国防军工",
@@ -7787,7 +7796,8 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 5.9
+        "change5d": 5.9,
+        "change1m": 4.3
       },
       {
         "sector": "通信",
@@ -7822,6 +7832,7 @@
           }
         },
         "change5d": -0.2,
+        "change1m": -1.1,
         "fundAccum": true
       },
       {
@@ -7856,7 +7867,8 @@
             "return": "-22.1%"
           }
         },
-        "change5d": -9.8
+        "change5d": -9.8,
+        "change1m": 17.1
       },
       {
         "sector": "家用电器",
@@ -7873,7 +7885,8 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
-        "change5d": -4.6
+        "change5d": -4.6,
+        "change1m": 7.0
       },
       {
         "sector": "房地产",
@@ -7907,7 +7920,8 @@
             "return": "-19.5%"
           }
         },
-        "change5d": -4.4
+        "change5d": -4.4,
+        "change1m": 3.6
       },
       {
         "sector": "建筑装饰",
@@ -7941,7 +7955,8 @@
             "return": "-25.6%"
           }
         },
-        "change5d": 0.4
+        "change5d": 0.4,
+        "change1m": 1.1
       },
       {
         "sector": "交通运输",
@@ -7958,7 +7973,8 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": 1.2
+        "change5d": 1.2,
+        "change1m": 5.0
       },
       {
         "sector": "传媒",
@@ -7975,7 +7991,8 @@
         "stocks": 5,
         "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -3.4
+        "change5d": -3.4,
+        "change1m": -7.2
       },
       {
         "sector": "化工",
@@ -8009,7 +8026,8 @@
             "return": "-13.7%"
           }
         },
-        "change5d": 0.0
+        "change5d": 0.0,
+        "change1m": 0.0
       },
       {
         "sector": "建筑材料",
@@ -8043,7 +8061,8 @@
             "return": "-21.3%"
           }
         },
-        "change5d": 0.7
+        "change5d": 0.7,
+        "change1m": 2.3
       },
       {
         "sector": "农林牧渔",
@@ -8077,7 +8096,8 @@
             "return": "-15.6%"
           }
         },
-        "change5d": 6.0
+        "change5d": 6.0,
+        "change1m": 4.0
       },
       {
         "sector": "公用事业",
@@ -8094,7 +8114,8 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": 0.1
+        "change5d": 0.1,
+        "change1m": -3.0
       },
       {
         "sector": "轻工制造",
@@ -8128,7 +8149,8 @@
             "return": "-17.2%"
           }
         },
-        "change5d": 0.7
+        "change5d": 0.7,
+        "change1m": -10.1
       },
       {
         "sector": "纺织服装",
@@ -8162,7 +8184,8 @@
             "return": "-13.5%"
           }
         },
-        "change5d": -14.0
+        "change5d": -14.0,
+        "change1m": -7.2
       },
       {
         "sector": "钢铁",
@@ -8196,7 +8219,8 @@
             "return": "-12.8%"
           }
         },
-        "change5d": 6.0
+        "change5d": 6.0,
+        "change1m": 3.0
       },
       {
         "sector": "煤炭",
@@ -8230,7 +8254,8 @@
             "return": "-14.3%"
           }
         },
-        "change5d": -13.1
+        "change5d": -13.1,
+        "change1m": -13.0
       },
       {
         "sector": "石油石化",
@@ -8264,7 +8289,8 @@
             "return": "-11.6%"
           }
         },
-        "change5d": -7.3
+        "change5d": -7.3,
+        "change1m": -10.8
       },
       {
         "sector": "社会服务",
@@ -8281,7 +8307,8 @@
         "stocks": 5,
         "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
-        "change5d": -5.2
+        "change5d": -5.2,
+        "change1m": -7.2
       },
       {
         "sector": "环保",
@@ -8315,7 +8342,8 @@
             "return": "-10.3%"
           }
         },
-        "change5d": -0.6
+        "change5d": -0.6,
+        "change1m": 2.0
       },
       {
         "sector": "美容护理",
@@ -8349,7 +8377,8 @@
             "return": "-15.3%"
           }
         },
-        "change5d": -3.5
+        "change5d": -3.5,
+        "change1m": 4.7
       },
       {
         "sector": "综合",
@@ -8383,7 +8412,8 @@
             "return": "-20.1%"
           }
         },
-        "change5d": -1.8
+        "change5d": -1.8,
+        "change1m": -3.1
       },
       {
         "sector": "基础化工",
@@ -8417,7 +8447,8 @@
             "return": "-13.7%"
           }
         },
-        "change5d": -0.3
+        "change5d": -0.3,
+        "change1m": 19.5
       }
     ],
     "indicators": {
@@ -11924,5 +11955,200 @@
     ],
     "vetoed": [],
     "note": "入选=双确认/双档共振/60日档/30日档；否决=资金节奏拐点·转流出或持续流出、扫描榜高潮风险；仅基于底部积聚命中板块，无命中则空名单"
+  },
+  "eciQuadrant": {
+    "trade_date": "2026.07.22~2026.08.18 (20个交易日)",
+    "yMode": "monthly",
+    "xMedian": 54.4,
+    "yMedian": 0.0,
+    "items": [
+      {
+        "sector": "医药生物",
+        "eci": 61.1,
+        "chg": -12.9,
+        "quadrant": "景气高位·边际走弱"
+      },
+      {
+        "sector": "电子",
+        "eci": 66.0,
+        "chg": -1.4,
+        "quadrant": "景气高位·边际走弱"
+      },
+      {
+        "sector": "计算机",
+        "eci": 46.3,
+        "chg": -11.7,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "电力设备",
+        "eci": 61.3,
+        "chg": 14.0,
+        "quadrant": "景气高位·持续改善"
+      },
+      {
+        "sector": "食品饮料",
+        "eci": 56.4,
+        "chg": -1.8,
+        "quadrant": "景气高位·边际走弱"
+      },
+      {
+        "sector": "银行",
+        "eci": 51.2,
+        "chg": -20.8,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "非银金融",
+        "eci": 48.0,
+        "chg": -13.7,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "汽车",
+        "eci": 54.4,
+        "chg": 10.0,
+        "quadrant": "景气高位·持续改善"
+      },
+      {
+        "sector": "机械设备",
+        "eci": 66.6,
+        "chg": 15.4,
+        "quadrant": "景气高位·持续改善"
+      },
+      {
+        "sector": "国防军工",
+        "eci": 60.9,
+        "chg": 4.3,
+        "quadrant": "景气高位·持续改善"
+      },
+      {
+        "sector": "通信",
+        "eci": 56.7,
+        "chg": -1.1,
+        "quadrant": "景气高位·边际走弱"
+      },
+      {
+        "sector": "有色金属",
+        "eci": 56.3,
+        "chg": 17.1,
+        "quadrant": "景气高位·持续改善"
+      },
+      {
+        "sector": "家用电器",
+        "eci": 60.7,
+        "chg": 7.0,
+        "quadrant": "景气高位·持续改善"
+      },
+      {
+        "sector": "房地产",
+        "eci": 49.3,
+        "chg": 3.6,
+        "quadrant": "景气低位·边际修复"
+      },
+      {
+        "sector": "建筑装饰",
+        "eci": 49.4,
+        "chg": 1.1,
+        "quadrant": "景气低位·边际修复"
+      },
+      {
+        "sector": "交通运输",
+        "eci": 54.4,
+        "chg": 5.0,
+        "quadrant": "景气高位·持续改善"
+      },
+      {
+        "sector": "传媒",
+        "eci": 48.8,
+        "chg": -7.2,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "化工",
+        "eci": 42.5,
+        "chg": 0.0,
+        "quadrant": "景气低位·边际修复"
+      },
+      {
+        "sector": "建筑材料",
+        "eci": 55.4,
+        "chg": 2.3,
+        "quadrant": "景气高位·持续改善"
+      },
+      {
+        "sector": "农林牧渔",
+        "eci": 66.0,
+        "chg": 4.0,
+        "quadrant": "景气高位·持续改善"
+      },
+      {
+        "sector": "公用事业",
+        "eci": 52.8,
+        "chg": -3.0,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "轻工制造",
+        "eci": 43.6,
+        "chg": -10.1,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "纺织服装",
+        "eci": 48.2,
+        "chg": -7.2,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "钢铁",
+        "eci": 53.6,
+        "chg": 3.0,
+        "quadrant": "景气低位·边际修复"
+      },
+      {
+        "sector": "煤炭",
+        "eci": 62.6,
+        "chg": -13.0,
+        "quadrant": "景气高位·边际走弱"
+      },
+      {
+        "sector": "石油石化",
+        "eci": 49.0,
+        "chg": -10.8,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "社会服务",
+        "eci": 43.0,
+        "chg": -7.2,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "环保",
+        "eci": 54.4,
+        "chg": 2.0,
+        "quadrant": "景气高位·持续改善"
+      },
+      {
+        "sector": "美容护理",
+        "eci": 56.7,
+        "chg": 4.7,
+        "quadrant": "景气高位·持续改善"
+      },
+      {
+        "sector": "综合",
+        "eci": 54.0,
+        "chg": -3.1,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "基础化工",
+        "eci": 60.9,
+        "chg": 19.5,
+        "quadrant": "景气高位·持续改善"
+      }
+    ],
+    "note": "以 ECI 预期一致性指数近似行业景气度（日更），较券商产业景气指数（月更）更及时；X/Y 中线=31 行业当前中位数"
   }
 }
