@@ -895,7 +895,9 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                 <Waves className="w-4 h-4 text-violet-500" />
                 个股 VCP 精扫
                 <span className="text-[10px] font-normal text-slate-400">
-                  池{data.vcpStocks.poolSize ?? '—'}只 · 精扫{data.vcpStocks.scanned ?? 0}只
+                  {data.vcpStocks.poolRaw
+                    ? `池${data.vcpStocks.poolRaw}→${data.vcpStocks.poolSize ?? '—'}只(≥250亿) · 精扫${data.vcpStocks.scanned ?? 0}只`
+                    : `池${data.vcpStocks.poolSize ?? '—'}只 · 精扫${data.vcpStocks.scanned ?? 0}只`}
                 </span>
               </CardTitle>
               <Badge variant="outline" className="text-xs bg-violet-50 text-violet-700 border-violet-200">
@@ -939,7 +941,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                               <div>
                                 <span
                                   className="text-[10px] font-bold text-white bg-violet-500 rounded px-1.5 py-0.5"
-                                  title={`平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}`}
+                                  title={`平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·分段振幅${(it.platform.segAmps || []).join('→')}%`}
                                 >平台型</span>
                                 <p className="text-[9px] text-violet-400 mt-0.5">平台{it.platform.days}天·振幅{it.platform.amplitude}%</p>
                               </div>

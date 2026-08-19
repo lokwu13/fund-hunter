@@ -11668,7 +11668,9 @@
   },
   "vcpStocks": {
     "trade_date": "2026-08-18",
-    "poolSize": 563,
+    "poolSize": 570,
+    "poolRaw": 1522,
+    "mvDate": "20260818",
     "scanned": 19,
     "items": [
       {
@@ -11685,6 +11687,11 @@
           "amplitude": 7.8,
           "riseFromLow": 12.3,
           "volRatio": 0.79,
+          "segAmps": [
+            7.0,
+            5.6,
+            4.5
+          ],
           "pivot": 76.57,
           "distPct": 4.5,
           "formed": true
@@ -11722,56 +11729,6 @@
         }
       },
       {
-        "code": "688029.SH",
-        "name": "南微医学",
-        "sector": "医疗保健",
-        "star": true,
-        "close": 73.16,
-        "tag": "—",
-        "pattern": "平台型",
-        "platform": {
-          "type": "平台型",
-          "days": 19,
-          "amplitude": 10.1,
-          "riseFromLow": 14.0,
-          "volRatio": 0.97,
-          "pivot": 76.96,
-          "distPct": 5.2,
-          "formed": true
-        },
-        "distMain": 5.2,
-        "daily": {
-          "contractions": [
-            6.6,
-            13.1,
-            6.7,
-            6.9
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "放大",
-          "rightShrink": false,
-          "pivot": 76.4,
-          "distPct": 4.4,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            16.1,
-            17.2,
-            12.3,
-            13.1
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "放大",
-          "rightShrink": false,
-          "pivot": 76.4,
-          "distPct": 4.4,
-          "formed": false
-        }
-      },
-      {
         "code": "688016.SH",
         "name": "心脉医疗",
         "sector": "医疗保健",
@@ -11785,6 +11742,11 @@
           "amplitude": 10.5,
           "riseFromLow": 12.4,
           "volRatio": 0.87,
+          "segAmps": [
+            8.6,
+            7.3,
+            7.7
+          ],
           "pivot": 97.43,
           "distPct": 5.7,
           "formed": true
@@ -11822,56 +11784,6 @@
         }
       },
       {
-        "code": "600406.SH",
-        "name": "国电南瑞",
-        "sector": "电气设备",
-        "star": true,
-        "close": 23.54,
-        "tag": "—",
-        "pattern": "平台型",
-        "platform": {
-          "type": "平台型",
-          "days": 12,
-          "amplitude": 9.4,
-          "riseFromLow": 10.9,
-          "volRatio": 0.92,
-          "pivot": 25.34,
-          "distPct": 7.6,
-          "formed": true
-        },
-        "distMain": 7.6,
-        "daily": {
-          "contractions": [
-            5.7,
-            4.7,
-            8.8,
-            4.6
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "持平",
-          "rightShrink": true,
-          "pivot": 25.34,
-          "distPct": 7.6,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            5.9,
-            20.8,
-            11.3,
-            8.5
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 25.34,
-          "distPct": 7.6,
-          "formed": false
-        }
-      },
-      {
         "code": "000895.SZ",
         "name": "双汇发展",
         "sector": "食品",
@@ -11885,6 +11797,11 @@
           "amplitude": 12.9,
           "riseFromLow": 13.0,
           "volRatio": 0.94,
+          "segAmps": [
+            7.0,
+            6.7,
+            5.5
+          ],
           "pivot": 26.87,
           "distPct": 7.6,
           "formed": true
@@ -11931,10 +11848,15 @@
         "pattern": "平台型",
         "platform": {
           "type": "平台型",
-          "days": 17,
+          "days": 12,
           "amplitude": 11.3,
-          "riseFromLow": 14.4,
-          "volRatio": 0.93,
+          "riseFromLow": 12.0,
+          "volRatio": 0.79,
+          "segAmps": [
+            7.0,
+            5.2,
+            4.5
+          ],
           "pivot": 162.0,
           "distPct": 7.6,
           "formed": true
@@ -11970,9 +11892,50 @@
           "distPct": 7.6,
           "formed": false
         }
+      },
+      {
+        "code": "002568.SZ",
+        "name": "百润股份",
+        "sector": "红黄酒",
+        "star": true,
+        "close": 18.84,
+        "tag": "日线✅",
+        "pattern": "收缩型",
+        "platform": null,
+        "distMain": 6.6,
+        "daily": {
+          "contractions": [
+            31.4,
+            10.1,
+            9.1,
+            9.1
+          ],
+          "count": 4,
+          "decreasing": true,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 20.08,
+          "distPct": 6.6,
+          "formed": true
+        },
+        "weekly": {
+          "contractions": [
+            15.4,
+            20.1,
+            31.4,
+            12.5
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "持平",
+          "rightShrink": false,
+          "pivot": 20.73,
+          "distPct": 10.0,
+          "formed": false
+        }
       }
     ],
-    "note": "池=中证A500∪上证50∪沪深300成分（周五刷新）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；收缩型=≥2次收缩幅度递减(容差25%)且量能递减；平台型=V/W底抬升≥10%后10~50日窄幅(振幅≤14%)缩量平台，平台上沿为枢轴；只展示距枢轴<8%的成型/临近成型个股，平台型优先"
+    "note": "池=中证A500∪上证50∪沪深300∪中证1000成分（周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；收缩型=≥2次收缩幅度递减(容差25%)且量能递减；平台型=V/W底抬升≥10%且未跌回前低后，10~50日窄幅(振幅≤14%)缩量且分段振幅规律收缩的平台，平台上沿为枢轴；只展示距枢轴<8%的成型/临近成型个股，平台型优先"
   },
   "actionableSectors": {
     "trade_date": "2026-08-18",

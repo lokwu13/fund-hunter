@@ -146,6 +146,75 @@ export default function NationalTeamPanel() {
         </Card>
       )}
 
+      {/* ====== 国家队主体全景（披露口径说明卡） ====== */}
+      <Card className="border-slate-200 shadow-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold flex items-center gap-2">
+            <Shield className="w-4 h-4 text-red-600" />
+            国家队主体全景 · 五路资金与披露口径
+          </CardTitle>
+          <CardDescription className="text-[10px]">
+            本栏目日度监测以 ETF 份额口径为主（汇金/国新/诚通）；证金、社保、外管局平台仅在季报十大股东中披露，按季度跟踪，无法日度监测
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {[
+            {
+              name: '中央汇金（2 账户）', daily: true,
+              channel: '宽基 ETF（沪深300/上证50/中证500/中证1000 等）+ 国有大行等原始持股',
+              disclosure: 'ETF 份额日度可监测 → 本页「份额雷达」「ETF 轮动」；个股持仓季报口径',
+              note: '2024 年起托市主力，ETF 规模超万亿',
+            },
+            {
+              name: '国新投资 / 中国诚通', daily: true,
+              channel: '央企主题 ETF（央企科技/央企红利/港股通央企红利等）',
+              disclosure: 'ETF 份额日度可监测 → 本页雷达「国新系 / 诚通系」分组',
+              note: '多为发行人关联方，单边异动常为自身调仓，解读需谨慎',
+            },
+            {
+              name: '证金公司（16 账户）', daily: false,
+              channel: '中国证券金融直接账户 + 15 个中证金融资管计划，以个股为主',
+              disclosure: '仅季报十大股东披露，无法日度监测',
+              note: '2015 年救市主体；2025Q1 国家队合计持股约 4.3 万亿（占全 A 自由流通市值 9.4%）',
+            },
+            {
+              name: '证金系 5 只救市基金（已清盘）', daily: false, defunct: true,
+              channel: '华夏新经济 001683 / 嘉实新机遇 001620 / 南方消费活力 001772 / 易方达瑞惠 001769 / 招商丰庆A 001773',
+              disclosure: '2015 年证金出资 2000 亿设立（各 400 亿）；2018Q3 已赎回 99%+ 并股债清仓，其后全部清盘，不再纳入跟踪',
+              note: '历史主体，仅作背景参考',
+            },
+            {
+              name: '社保基金（组合 10x/11x 等编号）', daily: false,
+              channel: '通过社保基金组合委托公募管理，持有 A 股个股',
+              disclosure: '仅季报十大股东披露，无法日度监测；露面时会在减持/增持榜单 holder 字段标注「社保 XX 组合」',
+              note: '长线配置型资金，偏价值与高股息',
+            },
+          ].map((s) => (
+            <div key={s.name} className={`flex items-start gap-2.5 rounded-lg border px-3 py-2 ${
+              s.defunct ? 'border-slate-100 bg-slate-50/60' :
+              s.daily ? 'border-red-100 bg-red-50/40' : 'border-amber-100 bg-amber-50/40'
+            }`}>
+              <Badge className={`text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 ${
+                s.defunct ? 'bg-slate-300 text-white' :
+                s.daily ? 'bg-red-500 text-white' : 'bg-amber-400 text-white'
+              }`}>
+                {s.defunct ? '已清盘' : s.daily ? '日度监测' : '季报口径'}
+              </Badge>
+              <div className="min-w-0 flex-1">
+                <p className={`text-xs font-bold ${s.defunct ? 'text-slate-400' : 'text-slate-800'}`}>{s.name}</p>
+                <p className="text-[11px] text-slate-500 leading-snug mt-0.5">{s.channel}</p>
+                <p className="text-[11px] text-slate-500 leading-snug">{s.disclosure}</p>
+                <p className="text-[10px] text-slate-400 leading-snug">{s.note}</p>
+              </div>
+            </div>
+          ))}
+          <p className="text-[10px] text-slate-400 pt-1">
+            另有外管局旗下 3 个投资平台（梧桐树/凤山/坤藤），规模较小、增减持幅度不大，同为季报口径。
+            口径来源：华泰睿思《25Q1 长线资金持仓透视》（2025-06，国家队四来源划分、4.3 万亿规模与清盘结论）；5 只救市基金清盘进程见中证网/中国证券报 2018-10 报道。
+          </p>
+        </CardContent>
+      </Card>
+
       {/* ====== SUMMARY CARDS ====== */}
       <div className="grid grid-cols-3 gap-4">
         <Card className="bg-gradient-to-br from-red-50 to-red-100 border-red-200">

@@ -2174,7 +2174,8 @@ VCP_MEMBERS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 'cache', 'index_members.json')
 VCP_FRESHNESS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                   'cache', 'bottomwatch_first_seen.json')
-VCP_POOL_INDICES = ['000510.SH', '000016.SH', '000300.SH']  # 中证A500∪上证50∪沪深300
+VCP_POOL_INDICES = ['000510.SH', '000016.SH', '000300.SH', '000852.SH']  # 中证A500∪上证50∪沪深300∪中证1000
+VCP_MIN_MV = 2_500_000                    # 全池总市值下限 250 亿（daily_basic total_mv，万元）
 VCP_DAILY_WIN, VCP_DAILY_K = 60, 2      # 日线级：近60交易日窗口，摆动高点±2日确认
 VCP_WEEK_WIN, VCP_WEEK_K = 40, 1        # 周线级：近40周窗口，摆动高点±1周确认
 VCP_MIN_CONTRACTIONS = 2                # 最少收缩次数（递减即达标）
@@ -2200,10 +2201,13 @@ def _save_json_cache(path, obj):
 
 
 def ensure_index_members(pro, trade_date):
-    """A500∪上证50∪沪深300 成分股池：index_weight 取最新月度权重，每周五刷新。"""
+    """A500∪上证50∪沪深300∪中证1000 成分股池：index_weight 取最新月度权重，每周五刷新。
+
+    刷新时一并取 daily_basic 总市值快照（1 次调用），供全池 ≥250 亿市值过滤。
+    """
     c = _load_json_cache(VCP_MEMBERS_PATH, {})
     friday = datetime.strptime(trade_date, '%Y%m%d').weekday() == 4
-    if c.get('members') and not friday:
+    if c.get('members') and c.get('mv') and not friday:
         return c
     members = {}
     # 注意：index_weight 按月发布、trade_date 为月末日，查询区间必须覆盖月末日，
@@ -2220,8 +2224,30 @@ def ensure_index_members(pro, trade_date):
                 print(f'  index members {idx}: {len(members[idx])} (snapshot {snap})')
         except Exception as e:
             print(f'  Warning: index_weight {idx} failed: {str(e)[:60]}')
+    mv = {}
+    mv_date = None
     if members:
-        c = {'updated': trade_date, 'members': members}
+        # 总市值快照：从 trade_date 往前最多找 5 个自然日（应对非交易日周五刷新）
+        for back in range(0, 6):
+            td = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=back)).strftime('%Y%m%d')
+            try:
+                time.sleep(API_DELAY)
+                df = pro.daily_basic(trade_date=td, fields='ts_code,total_mv')
+                if df is not None and len(df):
+                    all_codes = set()
+                    for v in members.values():
+                        all_codes.update(v)
+                    sub = df[df['ts_code'].isin(all_codes)]
+                    mv = {r['ts_code']: float(r['total_mv']) for _, r in sub.iterrows()
+                          if r['total_mv'] == r['total_mv']}
+                    mv_date = td
+                    print(f'  pool market-cap snapshot: {len(mv)}/{len(all_codes)} codes ({td})')
+                    break
+            except Exception as e:
+                print(f'  Warning: daily_basic {td} failed: {str(e)[:60]}')
+                break
+    if members:
+        c = {'updated': trade_date, 'members': members, 'mv': mv, 'mvDate': mv_date}
         _save_json_cache(VCP_MEMBERS_PATH, c)
     return c
 
@@ -2277,13 +2303,14 @@ def _vcp_level(bars, win, k):
 
 
 def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10):
-    """平台型 VCP（杯柄/建筑平台，用户指定高胜率形态）。
+    """平台型 VCP（杯柄/建筑平台，用户指定高胜率形态；2026-08-19 收紧为四要件缺一不可）。
 
-    ① 前置抬升：平台起点收盘价相对其前 60 日最低价涨幅 ≥10%（V/W 底已抬升）；
+    ① 底部确认在前且已脱离底部：平台起点收盘价相对其前 60 日最低价涨幅 ≥10%（V/W 底已抬升），
+       且平台最低价高于前低（低点抬升，未跌回底部）；
     ② 平台期 10~50 个交易日窄幅横盘：窗口内 (最高-最低)/最低 ≤14%；
-    ③ 量能递减/低迷：平台日均量 < 平台前 20 日（拉升段）日均量；
-    ④ 平台上沿=枢轴价，现价距上沿 distPct。
-    取满足条件的最长平台（从 50 日往下试）。
+    ③ 缩量：平台日均量 < 平台前 20 日（拉升段）日均量；
+    ④ 规律收缩：平台三等分段振幅递减（后段 ≤ 前段×1.25 且末段 < 首段）。
+    平台上沿=枢轴价，现价距上沿 distPct。取满足条件的最长平台（从 50 日往下试）。
     """
     if len(bars) < min_days + 70:
         return None
@@ -2306,20 +2333,34 @@ def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10):
         prior_low = min(b[2] for b in prior)
         if prior_low <= 0:
             continue
+        # ① 底部在前 + 脱离底部 + 低点抬升（平台未跌回前低）
         rise = plat[0][3] / prior_low - 1       # 平台起点相对前低的抬升幅度
-        if rise < min_rise:
+        if rise < min_rise or lo <= prior_low:
             continue
+        # ③ 缩量
         rally = bars[-(n + 20):-n]              # 拉升段
         plat_vol = sum(b[4] for b in plat) / n
         rally_vol = sum(b[4] for b in rally) / len(rally) if rally else 0
         vol_quiet = rally_vol > 0 and plat_vol <= rally_vol
         if not vol_quiet:
             continue
+        # ④ 规律收缩：三等分段振幅递减（容差同收缩型：后段≤前段×1.25 且末段<首段）
+        seg = n // 3
+        seg_amps = []
+        for i in range(3):
+            part = plat[i * seg:(i + 1) * seg] if i < 2 else plat[i * seg:]
+            seg_amps.append((max(b[1] for b in part) - min(b[2] for b in part))
+                            / min(b[2] for b in part))
+        reg_shrink = (seg_amps[2] < seg_amps[0]
+                      and all(seg_amps[i + 1] <= seg_amps[i] * 1.25 for i in range(2)))
+        if not reg_shrink:
+            continue
         pivot = hi
         dist = (pivot / close - 1) * 100
         best = {'type': '平台型', 'days': n, 'amplitude': round(amp * 100, 1),
                 'riseFromLow': round(rise * 100, 1),
                 'volRatio': round(plat_vol / rally_vol, 2) if rally_vol > 0 else None,
+                'segAmps': [round(a * 100, 1) for a in seg_amps],
                 'pivot': round(pivot, 2), 'distPct': round(dist, 1), 'formed': True}
         break   # 已取最长平台
     return best
@@ -2348,7 +2389,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
 
     个股日线历史复用 vcp_cache.stock_daily（300 交易日，含周线重采样所需长度）；
     缺历史的票一次性回补 420 日历日后并入缓存，次日起随 vcpWatch 批量日更零成本。
-    成分池 index_weight 仅周五刷新（3 次调用）。失败保留旧 vcpStocks。
+    成分池 index_weight 仅周五刷新（4 次调用）+ daily_basic 市值快照（1 次）。失败保留旧 vcpStocks。
     """
     try:
         import vcp_preview as vcp
@@ -2356,11 +2397,20 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         stock_daily = c.get('stock_daily') or {}
         info = c.get('stock_info') or {}
         mc = ensure_index_members(pro, trade_date)
-        pool = set()
+        pool_raw = set()
         for v in (mc.get('members') or {}).values():
-            pool.update(v)
-        if not pool:
+            pool_raw.update(v)
+        if not pool_raw:
             raise ValueError('index members pool empty')
+        # 全池总市值 ≥250 亿过滤（daily_basic total_mv，万元；快照随周五成分刷新更新）
+        mv = mc.get('mv') or {}
+        if mv:
+            pool = {c2 for c2 in pool_raw if mv.get(c2, 0) >= VCP_MIN_MV}
+            print(f'  vcpStocks pool: {len(pool_raw)} raw → {len(pool)} after ≥250亿 mv filter '
+                  f'(mv snapshot {mc.get("mvDate")})')
+        else:
+            pool = pool_raw
+            print(f'  vcpStocks pool: {len(pool)} (no mv snapshot, filter skipped)')
 
         # ── 精扫对象 ──
         targets = {}   # code → {'sector': ..., 'star': bool}
@@ -2448,10 +2498,11 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                                   x['distMain']))
         eff_d = f'{eff[:4]}-{eff[4:6]}-{eff[6:]}'
         data['vcpStocks'] = {
-            'trade_date': eff_d, 'poolSize': len(pool), 'scanned': len(targets),
+            'trade_date': eff_d, 'poolSize': len(pool), 'poolRaw': len(pool_raw),
+            'mvDate': mc.get('mvDate'), 'scanned': len(targets),
             'items': items[:15],
-            'note': '池=中证A500∪上证50∪沪深300成分（周五刷新）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
-                    '收缩型=≥2次收缩幅度递减(容差25%)且量能递减；平台型=V/W底抬升≥10%后10~50日窄幅(振幅≤14%)缩量平台，平台上沿为枢轴；'
+            'note': '池=中证A500∪上证50∪沪深300∪中证1000成分（周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
+                    '收缩型=≥2次收缩幅度递减(容差25%)且量能递减；平台型=V/W底抬升≥10%且未跌回前低后，10~50日窄幅(振幅≤14%)缩量且分段振幅规律收缩的平台，平台上沿为枢轴；'
                     '只展示距枢轴<8%的成型/临近成型个股，平台型优先',
         }
         print(f"  vcpStocks: scanned {len(targets)}, formed {len(items)} "

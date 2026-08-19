@@ -359,6 +359,8 @@ export interface FundData {
   vcpStocks?: {
     trade_date: string;
     poolSize?: number;
+    poolRaw?: number;
+    mvDate?: string | null;
     scanned?: number;
     note?: string;
     items: Array<{
@@ -372,7 +374,7 @@ export interface FundData {
       distMain?: number;
       platform?: {
         days: number; amplitude: number; riseFromLow: number;
-        volRatio: number; pivot: number; distPct: number; formed: boolean;
+        volRatio: number; segAmps?: number[]; pivot: number; distPct: number; formed: boolean;
       } | null;
       daily?: {
         contractions: number[]; count: number; decreasing: boolean;
