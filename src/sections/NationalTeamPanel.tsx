@@ -128,7 +128,7 @@ export default function NationalTeamPanel() {
     <div className="space-y-5">
       {/* ====== 国家队每日短评（置顶） ====== */}
       {data.nationalTeamComment && (
-        <Card className="bg-gradient-to-r from-red-50 via-white to-red-50 border-red-300 shadow-sm">
+        <Card id="nt-comment" className="bg-gradient-to-r from-red-50 via-white to-red-50 border-red-300 shadow-sm">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
               <div className="bg-red-100 rounded-full p-2 flex-shrink-0">

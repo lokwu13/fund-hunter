@@ -440,7 +440,7 @@ export default function BondsPanel() {
 
       {/* ====== 7. 融资融券 ====== */}
       {bd.marginTrading && (
-        <Card>
+        <Card id="bond-margin">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base flex items-center gap-2">
@@ -448,6 +448,14 @@ export default function BondsPanel() {
                 全市场融资融券
               </CardTitle>
               <div className="flex items-center gap-2">
+                {bd.marginTrading.temp && (
+                  <Badge className={`text-[10px] h-5 ${
+                    bd.marginTrading.temp.includes('暖') ? 'bg-red-100 text-red-700' :
+                    bd.marginTrading.temp.includes('冷') ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'
+                  }`}>
+                    水温{bd.marginTrading.temp}·{bd.marginTrading.verdict === '支持' ? '支持做多' : bd.marginTrading.verdict === '不支持' ? '不支持做多' : '做多谨慎'}
+                  </Badge>
+                )}
                 <Badge className={`text-[10px] h-5 ${
                   bd.marginTrading.trend === '下降' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'
                 }`}>

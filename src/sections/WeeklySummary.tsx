@@ -2,13 +2,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { TrendingUp, TrendingDown, Activity, Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart, ChevronRight, Crosshair } from 'lucide-react';
 import { useFundData } from '@/hooks/useFundData';
 
 const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
 const DEFENSIVE_SECTORS = new Set(['中证医药', '中证消费', '中证公用', '中证能源']);
 
-export default function WeeklySummary() {
+interface WeeklySummaryProps {
+  onNavigate?: (tab: string, anchor?: string) => void;
+}
+
+export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
   const { data } = useFundData();
   const indices = data.indices;
 
@@ -82,6 +86,17 @@ export default function WeeklySummary() {
     { name: '融资融券', status: '增加', trend: '活跃', color: 'orange' },
   ];
 
+  // ====== 每日评语速览：聚合四大栏目结论 ======
+  const mt = data.bondData?.marginTrading;
+  const mtComment = mt?.comment || '';
+  const mtTail = mtComment.includes('水温')
+    ? mtComment.slice(mtComment.lastIndexOf('水温'))
+    : '';
+  const ntText = (data.nationalTeamComment || '').split('。').filter(Boolean)[0];
+  const dualNote = data.bottomWatch?.dualConfirmNote || '';
+  const act = data.actionableSectors;
+  const hasDigest = mtTail || ntText || sectors.length > 0 || dualNote;
+
   return (
     <div className="space-y-4">
       {/* Week Header */}
@@ -102,6 +117,84 @@ export default function WeeklySummary() {
           ))}
         </div>
       </div>
+
+      {/* ====== 每日评语速览（聚合四大栏目结论，点击跳来源） ====== */}
+      {hasDigest && (
+        <Card className="border-emerald-300 bg-gradient-to-r from-emerald-50/60 via-white to-teal-50/60 shadow-sm">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-2.5">
+              <Crosshair className="w-4 h-4 text-emerald-600" />
+              <h3 className="text-sm font-bold text-slate-800">每日评语速览</h3>
+              <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">点击跳转来源栏目</Badge>
+            </div>
+            <div className="space-y-1.5">
+              {mtTail && (
+                <button
+                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-emerald-50 transition-colors"
+                  onClick={() => onNavigate?.('bonds', 'bond-margin')}
+                >
+                  <Badge className={`text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 ${
+                    mt?.temp?.includes('暖') ? 'bg-red-500 text-white' :
+                    mt?.temp?.includes('冷') ? 'bg-blue-500 text-white' : 'bg-amber-400 text-white'
+                  }`}>债券水温{mt?.temp ? ` ${mt.temp}` : ''}</Badge>
+                  <span className="text-xs text-slate-600 leading-snug flex-1">{mtTail}</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
+                </button>
+              )}
+              {ntText && (
+                <button
+                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-red-50 transition-colors"
+                  onClick={() => onNavigate?.('national', 'nt-comment')}
+                >
+                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-red-600 text-white">国家队</Badge>
+                  <span className="text-xs text-slate-600 leading-snug flex-1">{ntText}。</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
+                </button>
+              )}
+              {sectors.length > 0 && (
+                <button
+                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-indigo-50 transition-colors"
+                  onClick={() => onNavigate?.('sectors', 'sector-commentary')}
+                >
+                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-indigo-500 text-white">板块短评</Badge>
+                  <span className="text-xs text-slate-600 leading-snug flex-1">
+                    {sectors.slice(0, 3).map(s => `${s.name}：${s.comment}`).join('；')}
+                    {sectors.length > 3 ? ` 等${sectors.length}条` : ''}
+                  </span>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
+                </button>
+              )}
+              {dualNote && (
+                <button
+                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-teal-50 transition-colors"
+                  onClick={() => onNavigate?.('tools', 'bottom-watch')}
+                >
+                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-teal-500 text-white">双确认</Badge>
+                  <span className="text-xs text-slate-600 leading-snug flex-1">{dualNote}</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
+                </button>
+              )}
+              {act && (
+                <button
+                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-orange-50 transition-colors"
+                  onClick={() => onNavigate?.('tools', 'bottom-watch')}
+                >
+                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-orange-500 text-white">能投板块</Badge>
+                  {act.items.length > 0 ? (
+                    <span className="text-xs text-slate-600 leading-snug flex-1">
+                      {act.items.slice(0, 5).map(it => `${it.sector}（${it.reasons[0] || ''}）`).join('；')}
+                      {act.items.length > 5 ? ` 等${act.items.length}个` : ''}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-slate-400 leading-snug flex-1">今日无能投板块（名单为空或全部被否决）</span>
+                  )}
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
+                </button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* 细分指数点评 */}
       {sectors.length > 0 && (

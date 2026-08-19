@@ -1735,6 +1735,41 @@ def fetch_margin_summary(pro, trade_date, data):
             c += "杠杆资金持续离场，市场风险偏好下降。"
         else:
             c += "杠杆资金总体观望，市场风险偏好平稳。"
+
+        # ── 水温 + 做多结论（A. 结论先行，依据随后）──
+        bd = data.get('bondData') or {}
+        lt = bd.get('liquidityTools') or {}
+        dr007 = float(lt.get('dr007') or 0)
+        policy = float(lt.get('policyRate') or 0)
+        net = float(lt.get('monthlyNet') or 0)
+        y10_1m = ((bd.get('stats') or {}).get('1m_change') or {}).get('y10')  # bp
+        loose = bool((dr007 and policy and dr007 <= policy - 0.05)
+                     or net > 0 or (y10_1m is not None and y10_1m < 0))
+        tight = bool((dr007 and policy and dr007 >= policy + 0.05 and net < 0)
+                     or (y10_1m is not None and y10_1m > 20))
+        if streak >= 5 and direction > 0 and loose and not tight:
+            temp, verdict = '🟢暖', '支持'
+        elif (streak >= 5 and direction < 0) or tight:
+            temp, verdict = '🔴冷', '不支持'
+        else:
+            temp, verdict = '🟡平', '中性（谨慎）'
+        basis = []
+        if streak >= 2:
+            basis.append(f"两融连续{streak}日{'上升' if direction > 0 else '下降'}")
+        basis.append(f"较前日{'增加' if chg >= 0 else '减少'}约{abs(chg):.0f}亿")
+        if dr007 and policy:
+            basis.append(f"DR007 {dr007:.2f}%{'低于' if dr007 < policy else '高于'}政策利率{policy:.2f}%")
+        if net:
+            basis.append(f"本月公开市场净{'投放' if net > 0 else '回笼'}{abs(net):.0f}亿")
+        if y10_1m is not None:
+            basis.append(f"10Y收益率近1月{y10_1m:+.0f}bp")
+        conclusion = {
+            '支持': '支持股票市场做多',
+            '不支持': '不支持股票市场做多',
+            '中性（谨慎）': '中性，股票市场做多需谨慎',
+        }[verdict]
+        c += (f"水温{temp}（{'；'.join(basis)}）。"
+              f"结论：当前杠杆资金环境{conclusion}。")
         mt = data.setdefault('bondData', {}).setdefault('marginTrading', {})
         mt.update({
             'updateTime': update_time,
@@ -1742,6 +1777,8 @@ def fetch_margin_summary(pro, trade_date, data):
             'finBalance': latest['fin'],
             'secBalance': latest['sec'],
             'trend': trend,
+            'temp': temp,
+            'verdict': verdict,
             'daily': daily,
             'comment': c,
         })
@@ -2239,6 +2276,55 @@ def _vcp_level(bars, win, k):
             'formed': bool(formed)}
 
 
+def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10):
+    """平台型 VCP（杯柄/建筑平台，用户指定高胜率形态）。
+
+    ① 前置抬升：平台起点收盘价相对其前 60 日最低价涨幅 ≥10%（V/W 底已抬升）；
+    ② 平台期 10~50 个交易日窄幅横盘：窗口内 (最高-最低)/最低 ≤14%；
+    ③ 量能递减/低迷：平台日均量 < 平台前 20 日（拉升段）日均量；
+    ④ 平台上沿=枢轴价，现价距上沿 distPct。
+    取满足条件的最长平台（从 50 日往下试）。
+    """
+    if len(bars) < min_days + 70:
+        return None
+    close = bars[-1][3]
+    if close <= 0:
+        return None
+    best = None
+    for n in range(max_days, min_days - 1, -1):
+        plat = bars[-n:]
+        hi = max(b[1] for b in plat)
+        lo = min(b[2] for b in plat)
+        if lo <= 0:
+            continue
+        amp = (hi - lo) / lo
+        if amp > max_amp:
+            continue
+        prior = bars[-(n + 60):-n]
+        if not prior:
+            continue
+        prior_low = min(b[2] for b in prior)
+        if prior_low <= 0:
+            continue
+        rise = plat[0][3] / prior_low - 1       # 平台起点相对前低的抬升幅度
+        if rise < min_rise:
+            continue
+        rally = bars[-(n + 20):-n]              # 拉升段
+        plat_vol = sum(b[4] for b in plat) / n
+        rally_vol = sum(b[4] for b in rally) / len(rally) if rally else 0
+        vol_quiet = rally_vol > 0 and plat_vol <= rally_vol
+        if not vol_quiet:
+            continue
+        pivot = hi
+        dist = (pivot / close - 1) * 100
+        best = {'type': '平台型', 'days': n, 'amplitude': round(amp * 100, 1),
+                'riseFromLow': round(rise * 100, 1),
+                'volRatio': round(plat_vol / rally_vol, 2) if rally_vol > 0 else None,
+                'pivot': round(pivot, 2), 'distPct': round(dist, 1), 'formed': True}
+        break   # 已取最长平台
+    return best
+
+
 def _resample_weekly(rows):
     """日线 rows [date, close, high, low, vol] → 周线 bars [(week, high, low, close, vol)]。"""
     weeks = {}
@@ -2324,38 +2410,49 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             vcp.save_cache(c)
             print(f'  vcpStocks backfilled: {len(need)}')
 
-        # ── 双级别判定 ──
+        # ── 双级别判定 + 平台型（杯柄）判定 ──
         items = []
         for code, meta in targets.items():
             rows = stock_daily.get(code) or []
             if len(rows) < 60:
                 continue
             bars = [(r[0], r[2], r[3], r[1], r[4]) for r in rows]  # (date, high, low, close, vol)
+            pf = _vcp_platform(bars)
             d_lv = _vcp_level(bars, VCP_DAILY_WIN, VCP_DAILY_K)
             w_lv = _vcp_level(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K)
+            p_ok = bool(pf and pf['formed'])
             d_ok = bool(d_lv and d_lv['formed'])
             w_ok = bool(w_lv and w_lv['formed'])
-            if not (d_ok or w_ok):
+            if not (p_ok or d_ok or w_ok):
                 continue
-            main_lv = d_lv if d_ok else w_lv
-            if not (-3 <= main_lv['distPct'] <= VCP_SHOW_DIST):
+            if p_ok:    # 平台型优先（用户：V/W底抬升后窄幅缩量平台胜率更高）
+                main_lv, pattern = pf, '平台型'
+                lo_bound = -5
+            else:
+                main_lv, pattern = (d_lv if d_ok else w_lv), '收缩型'
+                lo_bound = -3
+            if not (lo_bound <= main_lv['distPct'] <= VCP_SHOW_DIST):
                 continue   # 只展示成型或临近成型（距枢轴 <8%）
             close = rows[-1][1]
             tag = ('日线✅+周线✅' if d_ok and w_ok else
-                   ('日线✅' if d_ok else '周线✅'))
+                   ('日线✅' if d_ok else ('周线✅' if w_ok else '—')))
             items.append({'code': code,
                           'name': info.get(code, {}).get('name', code),
                           'sector': meta['sector'], 'star': meta['star'],
                           'close': round(close, 2), 'tag': tag,
+                          'pattern': pattern, 'platform': pf,
+                          'distMain': main_lv['distPct'],
                           'daily': d_lv, 'weekly': w_lv})
-        items.sort(key=lambda x: (0 if '日线✅+周线✅' in x['tag'] else 1,
-                                  (x['daily'] or x['weekly'])['distPct']))
+        items.sort(key=lambda x: (0 if x['pattern'] == '平台型'
+                                  else (1 if '日线✅+周线✅' in x['tag'] else 2),
+                                  x['distMain']))
         eff_d = f'{eff[:4]}-{eff[4:6]}-{eff[6:]}'
         data['vcpStocks'] = {
             'trade_date': eff_d, 'poolSize': len(pool), 'scanned': len(targets),
             'items': items[:15],
             'note': '池=中证A500∪上证50∪沪深300成分（周五刷新）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
-                    '成型=≥2次收缩幅度递减(容差25%)且量能递减；枢轴=最近收缩高点；只展示距枢轴<8%的成型/临近成型个股',
+                    '收缩型=≥2次收缩幅度递减(容差25%)且量能递减；平台型=V/W底抬升≥10%后10~50日窄幅(振幅≤14%)缩量平台，平台上沿为枢轴；'
+                    '只展示距枢轴<8%的成型/临近成型个股，平台型优先',
         }
         print(f"  vcpStocks: scanned {len(targets)}, formed {len(items)} "
               f"({[i['name'] + ':' + i['tag'] for i in items[:5]]})")
@@ -2437,6 +2534,68 @@ def apply_dual_confirm(data):
         print(f'  Warning: dual confirm failed: {e}')
 
 
+def build_actionable_sectors(data):
+    """D. 能投板块短名单（同一块数据三处展示，不重复计算）。
+
+    入选：双确认（bottomWatch任一档∩ECI前10）最优先；其次🔥双档共振、60日档、30日档；
+    否决：资金节奏"拐点·转流出/持续流出" 或 扫描榜"高潮风险"。无入选则如实空名单。
+    """
+    try:
+        bw = data.get('bottomWatch') or {}
+        eci = data.get('eciData') or {}
+        flows = {r['name']: r for r in (data.get('sectorFlows') or {}).get('items', [])}
+        scan_veto = {i['sector'] for i in (data.get('sectorScan') or {}).get('items', [])
+                     if i.get('status') == '高潮风险'}
+        eci_sorted = sorted(eci.get('sectors', []), key=lambda s: -s.get('eci', 0))
+        top10 = [s['sector'] for s in eci_sorted[:10]]
+        fresh_map = {f['sector']: f for f in bw.get('freshness', [])}
+        out, vetoed = [], []
+        for it in bw.get('items', []):
+            l1 = SECTOR_TO_L1.get(it['sector'])
+            if not l1:
+                continue
+            reasons = []
+            if it.get('dualConfirm'):
+                rank = top10.index(l1) + 1 if l1 in top10 else None
+                reasons.append(f"双确认（资金积聚+ECI预期前10{('第' + str(rank) + '名') if rank else ''}）")
+            if it.get('both'):
+                reasons.append('🔥30日+60日双档共振')
+            elif it.get('hit60'):
+                reasons.append('60日档长期吸筹')
+            elif it.get('hit30'):
+                reasons.append('30日档较新积聚')
+            f = fresh_map.get(it['sector'])
+            if f:
+                reasons.append(f"积聚{f['streakDays']}天（{f['stage']}）")
+            fr = flows.get(it['sector'])
+            if fr:
+                reasons.append(f"资金节奏：{fr['tag']}（近5日{fr['net5']:+.1f}亿）")
+            veto = None
+            if fr and fr['tag'] in ('拐点·转流出', '持续流出'):
+                veto = f"资金节奏{fr['tag']}"
+            if it['sector'] in scan_veto:
+                veto = '扫描榜高潮风险'
+            entry = {'sector': l1, 'subSector': it['sector'], 'reasons': reasons,
+                     'priority': 1 if it.get('dualConfirm') else (2 if it.get('both') else 3),
+                     'pricePosition': it.get('pricePosition'),
+                     'firstSeen': it.get('firstSeen'), 'streakDays': it.get('streakDays')}
+            (vetoed if veto else out).append({**entry, **({'veto': veto} if veto else {})})
+        out.sort(key=lambda x: (x['priority'], x.get('pricePosition') or 9))
+        td = bw.get('trade_date', '')
+        data['actionableSectors'] = {
+            'trade_date': td,
+            'items': out[:8],
+            'vetoed': [{'sector': v['sector'], 'subSector': v['subSector'], 'veto': v['veto']}
+                       for v in vetoed[:5]],
+            'note': '入选=双确认/双档共振/60日档/30日档；否决=资金节奏拐点·转流出或持续流出、扫描榜高潮风险；'
+                    '仅基于底部积聚命中板块，无命中则空名单',
+        }
+        print(f"  actionableSectors: {len(out)} 入选, {len(vetoed)} 否决"
+              f"({[o['sector'] for o in out[:5]]})")
+    except Exception as e:
+        print(f"  Warning: actionableSectors failed: {e}")
+
+
 def load_existing_data():
     """Load existing fund_data.json to preserve manually maintained fields."""
     try:
@@ -2476,6 +2635,19 @@ ETF_RADAR_WATCH = {
     '159335.SZ': {'name': '央企科创ETF',      'group': 'soe', 'series': '诚通系'},
     '159336.SZ': {'name': '央企红利ETF',      'group': 'soe', 'series': '诚通系'},
     '560810.SH': {'name': '央企ESG ETF',      'group': 'soe', 'series': '诚通系'},
+}
+
+# 国家队短评（B）：系列 → 利多/利空影响的指数/主题
+SERIES_IMPACT = {
+    '沪深300系列': '沪深300/大盘蓝筹',
+    '上证50': '上证50/超大盘蓝筹',
+    '中证500系列': '中证500/中盘股',
+    '中证1000系列': '中证1000/小盘股',
+    '科创50系列': '科创50/硬科技',
+    '上证180': '上证180/大盘价值',
+    '创业板': '创业板/成长股',
+    '国新系': '央企科技/央企红利主题',
+    '诚通系': '央企科创/央企红利主题',
 }
 
 # 宽基波动率（ETF VIX）标的指数
@@ -3017,6 +3189,28 @@ def _build_nt_comment(data):
                 sents.append(f"宽基组中{hot[0][1]}异动最集中（{hot[0][0]}只触发信号），但未达共振标准。")
             else:
                 sents.append("宽基组各系列份额平稳，未见国家队典型操作痕迹。")
+        # ── 利多/利空点名：按系列合计份额金额映射到宽基指数/主题（B）──
+        flow_sents = []
+        calm_series = []
+        for g in ntr.get('groups', []):
+            for s in g.get('series', []):
+                t = s.get('total') or {}
+                amt = t.get('amt1')
+                target = SERIES_IMPACT.get(s['name'])
+                if not target:
+                    continue
+                if amt is not None and abs(amt) >= 5:
+                    d_ = '净流入' if amt > 0 else '净流出'
+                    impact = '利多' if amt > 0 else '利空'
+                    flow_sents.append((abs(amt), f"{s['name']}合计{d_}{abs(amt):.1f}亿 → 短期{impact}{target}"))
+                elif amt is not None and abs(amt) < 1 and not any(
+                        r.get('signal') for r in s.get('items', [])):
+                    calm_series.append(f"{target}（份额稳定 → 中性，不受汇金调仓影响）")
+        flow_sents.sort(reverse=True)
+        for _, txt in flow_sents[:3]:
+            sents.append(txt + "。")
+        if not flow_sents and calm_series:
+            sents.append(f"{calm_series[0]}。")
         soe_sig = []
         soe_trend = []
         for g in ntr.get('groups', []):
@@ -3027,7 +3221,9 @@ def _build_nt_comment(data):
                     if r.get('signal'):
                         soe_sig.append(f"{r['name']}（{r['signal']}）")
                     elif r.get('trend3'):
-                        soe_trend.append(f"{r['name']}{r['trend3']}")
+                        impact = '利多' if '增持' in r['trend3'] else '利空'
+                        theme = SERIES_IMPACT.get(s['name'], '央企主题')
+                        soe_trend.append(f"{r['name']}{r['trend3']} → {impact}{theme}")
         if soe_sig:
             sents.append(f"央企主题组当日有动作：{'、'.join(soe_sig[:3])}；国新/诚通多为发行人关联方，单边异动多为自身调仓。")
         elif soe_trend:
@@ -3188,6 +3384,7 @@ def main():
     # ── 15. 三档净流入（近5/10/20日 + 资金节奏，sector_history 缓存计算） ──
     print("\n[15/17] Building sector flows (3-tier net inflow)...")
     build_sector_flows(data)
+    build_actionable_sectors(data)   # D. 能投板块短名单（bottomWatch×ECI×资金节奏×扫描榜）
 
     # ── 16. VCP 板块-龙头共振监测（增量维护 vcp_cache） ──
     print("\n[16/17] Building VCP watch (板块-龙头共振)...")

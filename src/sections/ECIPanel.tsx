@@ -131,6 +131,38 @@ export default function ECIPanel({ data }: ECIPanelProps) {
         </Badge>
       </div>
 
+      {/* 今日能投板块（数据依据：bottomWatch × ECI × 资金节奏 × 扫描榜） */}
+      {data.actionableSectors && (
+        <Card id="actionable-eci" className="border-emerald-300 shadow-sm">
+          <CardContent className="p-3">
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+              <span className="text-xs font-bold text-emerald-700">🎯 今日能投板块</span>
+              <span className="text-[10px] text-slate-400">{data.actionableSectors.trade_date} · 优先级：双确认 &gt; 🔥双档 &gt; 60日档 &gt; 30日档；资金节奏转流出/持续流出与扫描榜高潮风险一票否决</span>
+            </div>
+            {data.actionableSectors.items.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5">
+                {data.actionableSectors.items.map((it) => (
+                  <Badge key={it.sector} className={`text-[11px] border-0 ${
+                    it.priority === 1 ? 'bg-red-500 text-white' :
+                    it.priority === 2 ? 'bg-orange-400 text-white' :
+                    it.priority === 3 ? 'bg-indigo-400 text-white' : 'bg-teal-400 text-white'
+                  }`} title={it.reasons.join('；')}>
+                    {it.priority === 1 && '✅'}{it.sector}
+                  </Badge>
+                ))}
+              </div>
+            ) : (
+              <p className="text-[11px] text-slate-400">今日无能投板块（名单为空或全部被否决）</p>
+            )}
+            {data.actionableSectors.vetoed.length > 0 && (
+              <p className="text-[10px] text-slate-400 mt-1.5">
+                否决：{data.actionableSectors.vetoed.map(v => `${v.sector}（${v.veto}）`).join('；')}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       {/* 板块资金扫描榜 */}
       {data.sectorScan && data.sectorScan.items && data.sectorScan.items.length > 0 && (
         <Card className="border-indigo-200 shadow-sm">
@@ -228,7 +260,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
           )
         );
         return (
-        <Card className="border-teal-200 shadow-sm">
+        <Card id="bottom-watch" className="border-teal-200 shadow-sm">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <CardTitle className="text-sm font-bold flex items-center gap-2">
@@ -880,6 +912,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                     <tr className="text-slate-500 border-b border-slate-200">
                       <th className="text-left py-1.5 font-medium">股票</th>
                       <th className="text-left font-medium">板块归属</th>
+                      <th className="text-center font-medium">形态</th>
                       <th className="text-left font-medium">日线收缩序列</th>
                       <th className="text-left font-medium">周线收缩序列</th>
                       <th className="text-right font-medium">枢轴价</th>
@@ -890,7 +923,9 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                   </thead>
                   <tbody>
                     {data.vcpStocks.items.map((it: any) => {
-                      const lv = it.daily?.formed ? it.daily : it.weekly;
+                      const isPlatform = it.pattern === '平台型' && it.platform;
+                      const lv = isPlatform ? null : (it.daily?.formed ? it.daily : it.weekly);
+                      const pv = isPlatform ? it.platform : lv;
                       return (
                         <tr key={it.code} className="border-b border-slate-50 hover:bg-violet-50/40 align-top">
                           <td className="py-1.5 font-medium text-slate-700">
@@ -899,6 +934,19 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                             <span className="text-[9px] text-slate-400 ml-1">{it.code}</span>
                           </td>
                           <td className="text-slate-500">{it.sector}</td>
+                          <td className="text-center">
+                            {isPlatform ? (
+                              <div>
+                                <span
+                                  className="text-[10px] font-bold text-white bg-violet-500 rounded px-1.5 py-0.5"
+                                  title={`平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}`}
+                                >平台型</span>
+                                <p className="text-[9px] text-violet-400 mt-0.5">平台{it.platform.days}天·振幅{it.platform.amplitude}%</p>
+                              </div>
+                            ) : (
+                              <span className="text-[10px] text-violet-600">收缩型</span>
+                            )}
+                          </td>
                           <td className="font-mono text-[11px]">
                             {it.daily ? (
                               <span className={it.daily.decreasing ? 'text-violet-700 font-semibold' : 'text-slate-400'}>
@@ -913,11 +961,11 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                               </span>
                             ) : <span className="text-slate-300">—</span>}
                           </td>
-                          <td className="text-right font-semibold text-slate-700">{lv?.pivot}</td>
-                          <td className={`text-right font-bold ${(lv?.distPct ?? 99) <= 3 ? 'text-red-500' : (lv?.distPct ?? 99) <= 8 ? 'text-amber-600' : 'text-slate-500'}`}>
-                            {lv?.distPct}%
+                          <td className="text-right font-semibold text-slate-700">{pv?.pivot}</td>
+                          <td className={`text-right font-bold ${(pv?.distPct ?? 99) <= 3 ? 'text-red-500' : (pv?.distPct ?? 99) <= 8 ? 'text-amber-600' : 'text-slate-500'}`}>
+                            {pv?.distPct}%
                           </td>
-                          <td className="text-center text-slate-500">{lv?.volTrend}</td>
+                          <td className="text-center text-slate-500">{isPlatform ? `量比${it.platform.volRatio}` : lv?.volTrend}</td>
                           <td className="text-center">
                             <span className={`text-[10px] font-bold ${it.tag.includes('+') ? 'text-red-500' : 'text-violet-600'}`}>{it.tag}</span>
                           </td>

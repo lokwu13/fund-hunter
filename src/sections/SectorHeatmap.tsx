@@ -282,6 +282,97 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
         </Card>
       )}
 
+      {/* ====== 板块页专属：细分指数短评（速览跳转锚点） ====== */}
+      {detailed && data.sectorCommentary && data.sectorCommentary.length > 0 && (
+        <Card id="sector-commentary" className="shadow-sm border-indigo-200">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-bold flex items-center gap-2">
+              <Activity className="w-4 h-4 text-indigo-500" />
+              细分指数每日短评
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-2">
+              {data.sectorCommentary.map((s) => (
+                <div key={s.code} className={`border rounded-lg px-3 py-2 ${
+                  s.tone === 'up' ? 'bg-red-50 border-red-100' :
+                  s.tone === 'down' ? 'bg-green-50 border-green-100' : 'bg-slate-50 border-slate-200'
+                }`}>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-slate-800">{s.name}</span>
+                    <span className={`text-xs font-bold ${s.pctChg >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                      {s.pctChg >= 0 ? '+' : ''}{s.pctChg.toFixed(2)}%
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">{s.comment}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ====== 板块页专属：能投板块（详细版） ====== */}
+      {detailed && data.actionableSectors && (
+        <Card id="actionable-detail" className="shadow-sm border-emerald-300">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-emerald-600" />
+                今日能投板块（多信号交叉验证）
+              </CardTitle>
+              <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
+                {data.actionableSectors.trade_date}
+              </Badge>
+            </div>
+            {data.actionableSectors.note && (
+              <CardDescription className="text-[10px]">{data.actionableSectors.note}</CardDescription>
+            )}
+          </CardHeader>
+          <CardContent>
+            {data.actionableSectors.items.length > 0 ? (
+              <div className="space-y-2">
+                {data.actionableSectors.items.map((it) => (
+                  <div key={it.sector} className="rounded-lg border border-emerald-100 bg-emerald-50/40 px-3 py-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-bold text-slate-800">{it.sector}</span>
+                      <Badge className={`text-[10px] border-0 ${
+                        it.priority === 1 ? 'bg-red-500 text-white' :
+                        it.priority === 2 ? 'bg-orange-400 text-white' :
+                        it.priority === 3 ? 'bg-indigo-400 text-white' : 'bg-teal-400 text-white'
+                      }`}>
+                        {it.priority === 1 ? '✅双确认' : it.priority === 2 ? '🔥双档' : it.priority === 3 ? '60日档' : '30日档'}
+                      </Badge>
+                      {it.pricePosition != null && (
+                        <span className="text-[10px] text-slate-400">价格位置{it.pricePosition}%</span>
+                      )}
+                      {it.firstSeen && (
+                        <span className="text-[10px] text-slate-400">首触{it.firstSeen}·连续{it.streakDays}天</span>
+                      )}
+                    </div>
+                    <ul className="mt-1 space-y-0.5">
+                      {it.reasons.map((r, i) => (
+                        <li key={i} className="text-[11px] text-slate-600 leading-snug">· {r}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-slate-400 py-2 text-center">今日无能投板块（底部积聚名单为空或全部被否决）</p>
+            )}
+            {data.actionableSectors.vetoed.length > 0 && (
+              <p className="text-[10px] text-slate-400 mt-3">
+                已否决：
+                {data.actionableSectors.vetoed.map((v, i) => (
+                  <span key={v.sector}>{i > 0 && '；'}<span className="text-slate-500 font-medium">{v.sector}</span>（{v.veto}）</span>
+                ))}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       {/* ====== TABLE VIEW (板块页) ====== */}
       {detailed && (
         <Card>

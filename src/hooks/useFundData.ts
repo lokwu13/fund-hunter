@@ -270,6 +270,8 @@ export interface FundData {
       secBalance: number;
       comment: string;
       trend: string;
+      temp?: string;
+      verdict?: string;
       daily: Array<{
         date: string;
         total: number;
@@ -366,6 +368,12 @@ export interface FundData {
       star?: boolean;
       close: number;
       tag: string;
+      pattern?: '平台型' | '收缩型';
+      distMain?: number;
+      platform?: {
+        days: number; amplitude: number; riseFromLow: number;
+        volRatio: number; pivot: number; distPct: number; formed: boolean;
+      } | null;
       daily?: {
         contractions: number[]; count: number; decreasing: boolean;
         volTrend: string; rightShrink: boolean; pivot: number; distPct: number; formed: boolean;
@@ -583,6 +591,24 @@ export interface FundData {
     }>;
   };
   nationalTeamComment?: string;
+  actionableSectors?: {
+    trade_date: string;
+    note?: string;
+    items: Array<{
+      sector: string;
+      subSector?: string;
+      reasons: string[];
+      priority: number;
+      pricePosition?: number;
+      firstSeen?: string;
+      streakDays?: number;
+    }>;
+    vetoed: Array<{
+      sector: string;
+      subSector?: string;
+      veto: string;
+    }>;
+  };
   holdingsNews?: Array<{
     stockCode: string;
     stockName: string;

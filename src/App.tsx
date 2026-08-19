@@ -106,7 +106,10 @@ function App() {
           </TabsList>
 
           <TabsContent value="dashboard" className="space-y-6">
-            <WeeklySummary />
+            <WeeklySummary onNavigate={(tab, anchor) => {
+              setActiveTab(tab);
+              if (anchor) setTimeout(() => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+            }} />
             <SectorHeatmap />
           </TabsContent>
 
