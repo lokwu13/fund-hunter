@@ -11668,121 +11668,11 @@
   },
   "vcpStocks": {
     "trade_date": "2026-08-18",
-    "poolSize": 570,
-    "poolRaw": 1522,
+    "poolSize": 717,
+    "poolRaw": 1800,
     "mvDate": "20260818",
     "scanned": 19,
     "items": [
-      {
-        "code": "600309.SH",
-        "name": "万华化学",
-        "sector": "化工原料",
-        "star": true,
-        "close": 73.27,
-        "tag": "日线✅",
-        "pattern": "平台型",
-        "platform": {
-          "type": "平台型",
-          "days": 14,
-          "amplitude": 7.8,
-          "riseFromLow": 12.3,
-          "volRatio": 0.79,
-          "segAmps": [
-            7.0,
-            5.6,
-            4.5
-          ],
-          "pivot": 76.57,
-          "distPct": 4.5,
-          "formed": true
-        },
-        "distMain": 4.5,
-        "daily": {
-          "contractions": [
-            14.1,
-            10.7,
-            4.7,
-            5.1
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 75.81,
-          "distPct": 3.5,
-          "formed": true
-        },
-        "weekly": {
-          "contractions": [
-            10.8,
-            27.5,
-            14.1,
-            10.7
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "放大",
-          "rightShrink": true,
-          "pivot": 76.57,
-          "distPct": 4.5,
-          "formed": false
-        }
-      },
-      {
-        "code": "688016.SH",
-        "name": "心脉医疗",
-        "sector": "医疗保健",
-        "star": true,
-        "close": 92.16,
-        "tag": "—",
-        "pattern": "平台型",
-        "platform": {
-          "type": "平台型",
-          "days": 33,
-          "amplitude": 10.5,
-          "riseFromLow": 12.4,
-          "volRatio": 0.87,
-          "segAmps": [
-            8.6,
-            7.3,
-            7.7
-          ],
-          "pivot": 97.43,
-          "distPct": 5.7,
-          "formed": true
-        },
-        "distMain": 5.7,
-        "daily": {
-          "contractions": [
-            6.4,
-            7.8,
-            3.0,
-            5.0
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "持平",
-          "rightShrink": true,
-          "pivot": 97.43,
-          "distPct": 5.7,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            6.5,
-            9.4,
-            20.8,
-            7.9
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 97.43,
-          "distPct": 5.7,
-          "formed": false
-        }
-      },
       {
         "code": "000895.SZ",
         "name": "双汇发展",
@@ -11790,9 +11680,9 @@
         "star": true,
         "close": 24.98,
         "tag": "—",
-        "pattern": "平台型",
+        "pattern": "杯柄型",
         "platform": {
-          "type": "平台型",
+          "type": "杯柄型",
           "days": 20,
           "amplitude": 12.9,
           "riseFromLow": 13.0,
@@ -11807,6 +11697,8 @@
           "formed": true
         },
         "distMain": 7.6,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "杯柄型·距枢轴7.6%｜水温中性·谨慎关注｜板块不配合⚠️",
         "daily": {
           "contractions": [
             4.7,
@@ -11845,9 +11737,9 @@
         "star": true,
         "close": 150.55,
         "tag": "—",
-        "pattern": "平台型",
+        "pattern": "杯柄型",
         "platform": {
-          "type": "平台型",
+          "type": "杯柄型",
           "days": 12,
           "amplitude": 11.3,
           "riseFromLow": 12.0,
@@ -11862,6 +11754,8 @@
           "formed": true
         },
         "distMain": 7.6,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "杯柄型·距枢轴7.6%｜水温中性·谨慎关注｜板块不配合⚠️",
         "daily": {
           "contractions": [
             14.2,
@@ -11894,48 +11788,121 @@
         }
       },
       {
-        "code": "002568.SZ",
-        "name": "百润股份",
-        "sector": "红黄酒",
+        "code": "600309.SH",
+        "name": "万华化学",
+        "sector": "化工原料",
         "star": true,
-        "close": 18.84,
+        "close": 73.27,
         "tag": "日线✅",
-        "pattern": "收缩型",
-        "platform": null,
-        "distMain": 6.6,
+        "pattern": "底部平台型",
+        "platform": {
+          "type": "底部平台型",
+          "days": 19,
+          "amplitude": 12.4,
+          "riseFromLow": 6.4,
+          "volRatio": 0.87,
+          "segAmps": [
+            9.7,
+            5.8,
+            4.5
+          ],
+          "pivot": 76.57,
+          "distPct": 4.5,
+          "formed": true
+        },
+        "distMain": 4.5,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "底部平台型·距枢轴4.5%｜水温中性·谨慎关注｜板块不配合⚠️",
         "daily": {
           "contractions": [
-            31.4,
-            10.1,
-            9.1,
-            9.1
+            14.1,
+            10.7,
+            4.7,
+            5.1
           ],
           "count": 4,
           "decreasing": true,
           "volTrend": "递减",
           "rightShrink": true,
-          "pivot": 20.08,
-          "distPct": 6.6,
+          "pivot": 75.81,
+          "distPct": 3.5,
           "formed": true
         },
         "weekly": {
           "contractions": [
-            15.4,
-            20.1,
-            31.4,
-            12.5
+            10.8,
+            27.5,
+            14.1,
+            10.7
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "放大",
+          "rightShrink": true,
+          "pivot": 76.57,
+          "distPct": 4.5,
+          "formed": false
+        }
+      },
+      {
+        "code": "688016.SH",
+        "name": "心脉医疗",
+        "sector": "医疗保健",
+        "star": true,
+        "close": 92.16,
+        "tag": "—",
+        "pattern": "底部平台型",
+        "platform": {
+          "type": "底部平台型",
+          "days": 36,
+          "amplitude": 12.4,
+          "riseFromLow": 6.4,
+          "volRatio": 0.86,
+          "segAmps": [
+            9.9,
+            8.5,
+            7.7
+          ],
+          "pivot": 97.43,
+          "distPct": 5.7,
+          "formed": true
+        },
+        "distMain": 5.7,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "底部平台型·距枢轴5.7%｜水温中性·谨慎关注｜板块不配合⚠️",
+        "daily": {
+          "contractions": [
+            6.4,
+            7.8,
+            3.0,
+            5.0
           ],
           "count": 4,
           "decreasing": false,
           "volTrend": "持平",
-          "rightShrink": false,
-          "pivot": 20.73,
-          "distPct": 10.0,
+          "rightShrink": true,
+          "pivot": 97.43,
+          "distPct": 5.7,
+          "formed": false
+        },
+        "weekly": {
+          "contractions": [
+            6.5,
+            9.4,
+            20.8,
+            7.9
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 97.43,
+          "distPct": 5.7,
           "formed": false
         }
       }
     ],
-    "note": "池=中证A500∪上证50∪沪深300∪中证1000成分（周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；收缩型=≥2次收缩幅度递减(容差25%)且量能递减；平台型=V/W底抬升≥10%且未跌回前低后，10~50日窄幅(振幅≤14%)缩量且分段振幅规律收缩的平台，平台上沿为枢轴；只展示距枢轴<8%的成型/临近成型个股，平台型优先"
+    "note": "池=上证50∪中证500∪沪深300∪中证1000成分（周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；形态两类：杯柄型=底部抬升≥10%后做柄（平台上沿=枢轴）；底部平台型=底部区域规律窄幅缩量平台；共同要件=10~50日窄幅(振幅≤14%)+缩量+分段振幅规律收缩；收缩型已降级不单独展示；只展示距枢轴<8%的成型/临近成型个股，杯柄型优先；建议=水温×板块合适度，仅供关注优先级参考"
   },
   "actionableSectors": {
     "trade_date": "2026-08-18",

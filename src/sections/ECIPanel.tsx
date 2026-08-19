@@ -921,11 +921,12 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                       <th className="text-right font-medium">现价距枢轴</th>
                       <th className="text-center font-medium">量能</th>
                       <th className="text-center font-medium">级别</th>
+                      <th className="text-left font-medium">综合建议</th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.vcpStocks.items.map((it: any) => {
-                      const isPlatform = it.pattern === '平台型' && it.platform;
+                      const isPlatform = !!it.platform;
                       const lv = isPlatform ? null : (it.daily?.formed ? it.daily : it.weekly);
                       const pv = isPlatform ? it.platform : lv;
                       return (
@@ -940,13 +941,15 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                             {isPlatform ? (
                               <div>
                                 <span
-                                  className="text-[10px] font-bold text-white bg-violet-500 rounded px-1.5 py-0.5"
+                                  className={`text-[10px] font-bold text-white rounded px-1.5 py-0.5 ${
+                                    it.pattern === '杯柄型' ? 'bg-violet-500' : 'bg-teal-500'
+                                  }`}
                                   title={`平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·分段振幅${(it.platform.segAmps || []).join('→')}%`}
-                                >平台型</span>
+                                >{it.pattern}</span>
                                 <p className="text-[9px] text-violet-400 mt-0.5">平台{it.platform.days}天·振幅{it.platform.amplitude}%</p>
                               </div>
                             ) : (
-                              <span className="text-[10px] text-violet-600">收缩型</span>
+                              <span className="text-[10px] text-violet-600">{it.pattern || '—'}</span>
                             )}
                           </td>
                           <td className="font-mono text-[11px]">
@@ -970,6 +973,16 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                           <td className="text-center text-slate-500">{isPlatform ? `量比${it.platform.volRatio}` : lv?.volTrend}</td>
                           <td className="text-center">
                             <span className={`text-[10px] font-bold ${it.tag.includes('+') ? 'text-red-500' : 'text-violet-600'}`}>{it.tag}</span>
+                          </td>
+                          <td className="text-left text-[10px] text-slate-500 leading-snug min-w-[180px]">
+                            {it.advice && (
+                              <>
+                                <span className={it.sectorFit?.includes('✅') ? 'text-emerald-600 font-semibold' : it.sectorFit?.includes('⚠️') ? 'text-amber-600 font-semibold' : ''}>
+                                  {it.advice}
+                                </span>
+                                <p className="text-[9px] text-slate-300">关注优先级参考，非操作建议</p>
+                              </>
+                            )}
                           </td>
                         </tr>
                       );

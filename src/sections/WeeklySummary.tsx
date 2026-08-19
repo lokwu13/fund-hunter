@@ -196,6 +196,46 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
         </Card>
       )}
 
+      {/* ====== VCP 形态精扫（总览精简版，点击去工具栏看明细） ====== */}
+      {data.vcpStocks && data.vcpStocks.items && data.vcpStocks.items.length > 0 && (
+        <Card
+          className="border-violet-300 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => onNavigate?.('tools')}
+        >
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+              <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-violet-500" />
+                VCP 形态精扫 · 杯柄/底部平台
+              </h3>
+              <Badge variant="outline" className="text-[10px] bg-violet-50 text-violet-700 border-violet-200">
+                {data.vcpStocks.trade_date} · 池{data.vcpStocks.poolSize}只 · 点击看明细
+              </Badge>
+            </div>
+            <div className="space-y-1">
+              {data.vcpStocks.items.slice(0, 6).map((it) => (
+                <div key={it.code} className="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-violet-50/60">
+                  <span className="text-xs font-semibold text-slate-800 flex-shrink-0">
+                    {it.star && <span className="text-pink-500 mr-0.5">★</span>}
+                    {it.name}
+                  </span>
+                  <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${
+                    it.pattern === '杯柄型' ? 'bg-violet-500 text-white' : 'bg-teal-500 text-white'
+                  }`}>{it.pattern}</Badge>
+                  <span className={`text-xs font-bold flex-shrink-0 ${
+                    (it.distMain ?? 99) <= 3 ? 'text-red-500' : 'text-amber-600'
+                  }`}>距枢轴{it.distMain}%</span>
+                  <span className="text-[11px] text-slate-500 truncate flex-1">{it.advice}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] text-slate-400 mt-2">
+              建议=水温×板块合适度，仅关注优先级参考，不构成操作建议 · 收缩型已降级不单独展示
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* 细分指数点评 */}
       {sectors.length > 0 && (
         <div>
