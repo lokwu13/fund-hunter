@@ -7603,10 +7603,10 @@
     {
       "code": "070002.OF",
       "name": "嘉实增长",
-      "nav": 20.4716,
-      "accumNav": 21.1626,
-      "date": "20260819",
-      "change": -0.913
+      "nav": 20.8787,
+      "accumNav": 21.5697,
+      "date": "20260820",
+      "change": 0.407
     },
     {
       "code": "519732.OF",
@@ -7619,10 +7619,10 @@
     {
       "code": "001410.OF",
       "name": "信达澳银新能源产业",
-      "nav": 6.582,
-      "accumNav": 6.644,
-      "date": "20260819",
-      "change": -0.576
+      "nav": 6.655,
+      "accumNav": 6.717,
+      "date": "20260820",
+      "change": 0.073
     },
     {
       "code": "003494.OF",
@@ -7649,10 +7649,10 @@
     "sectors": [
       {
         "sector": "医药生物",
-        "eci": 63.9,
+        "eci": 64.0,
         "volConvergence": 7.5,
         "fundConcentration": 9.5,
-        "trendSync": 13.3,
+        "trendSync": 13.4,
         "consistencyMomentum": 7.2,
         "activity": 12.5,
         "policy": 7.5,
@@ -7662,8 +7662,8 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -9.2,
-        "change1m": -9.1
+        "change5d": -9.1,
+        "change1m": -9.0
       },
       {
         "sector": "电子",
@@ -7751,8 +7751,8 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": -0.6,
-        "change1m": -2.6
+        "change5d": -0.7,
+        "change1m": -2.5
       },
       {
         "sector": "银行",
@@ -9336,90 +9336,90 @@
       {
         "name": "华泰柏瑞300ETF",
         "code": "510300.SH",
-        "share": 238.59,
-        "prevShare": 226.94,
-        "shareChg": 11.65,
+        "share": 237.43,
+        "prevShare": 238.59,
+        "shareChg": -1.15,
         "avgPrice": 4.663,
-        "netFlow": 54.31,
-        "shareChg5d": -3.1,
-        "netFlow5d": -15.94
+        "netFlow": -5.37,
+        "shareChg5d": 0.65,
+        "netFlow5d": 2.03
       },
       {
         "name": "易方达300ETF",
         "code": "510310.SH",
-        "share": 114.33,
-        "prevShare": 112.28,
-        "shareChg": 2.05,
-        "avgPrice": 4.533,
-        "netFlow": 9.3,
-        "shareChg5d": -0.03,
-        "netFlow5d": -0.33
+        "share": 115.22,
+        "prevShare": 114.33,
+        "shareChg": 0.89,
+        "avgPrice": 4.52,
+        "netFlow": 4.03,
+        "shareChg5d": 1.47,
+        "netFlow5d": 6.49
       },
       {
         "name": "华夏300ETF",
         "code": "510330.SH",
         "share": 85.02,
-        "prevShare": 83.8,
-        "shareChg": 1.22,
-        "avgPrice": 4.864,
-        "netFlow": 5.91,
-        "shareChg5d": -1.57,
-        "netFlow5d": -7.91
+        "prevShare": 85.02,
+        "shareChg": 0.0,
+        "avgPrice": 4.863,
+        "netFlow": 0.0,
+        "shareChg5d": -0.98,
+        "netFlow5d": -5.01
       },
       {
         "name": "华夏上证50ETF",
         "code": "510050.SH",
-        "share": 69.41,
-        "prevShare": 67.04,
-        "shareChg": 2.37,
-        "avgPrice": 3.0,
-        "netFlow": 7.1,
-        "shareChg5d": -0.64,
-        "netFlow5d": -2.05
+        "share": 72.92,
+        "prevShare": 69.41,
+        "shareChg": 3.52,
+        "avgPrice": 2.994,
+        "netFlow": 10.54,
+        "shareChg5d": 3.26,
+        "netFlow5d": 9.64
       },
       {
         "name": "华夏科创50ETF",
         "code": "588000.SH",
-        "share": 496.05,
-        "prevShare": 471.39,
-        "shareChg": 24.66,
-        "avgPrice": 1.792,
-        "netFlow": 44.18,
-        "shareChg5d": 8.82,
-        "netFlow5d": 14.55
+        "share": 498.69,
+        "prevShare": 496.05,
+        "shareChg": 2.64,
+        "avgPrice": 1.757,
+        "netFlow": 4.64,
+        "shareChg5d": 15.36,
+        "netFlow5d": 26.44
       },
       {
         "name": "易方达科创50ETF",
         "code": "588080.SH",
-        "share": 242.87,
-        "prevShare": 233.99,
-        "shareChg": 8.88,
-        "avgPrice": 1.737,
-        "netFlow": 15.42,
-        "shareChg5d": 6.06,
-        "netFlow5d": 10.29
+        "share": 245.72,
+        "prevShare": 242.87,
+        "shareChg": 2.85,
+        "avgPrice": 1.705,
+        "netFlow": 4.86,
+        "shareChg5d": 9.87,
+        "netFlow5d": 16.88
       },
       {
         "name": "南方中证500ETF",
         "code": "510500.SH",
-        "share": 51.65,
-        "prevShare": 49.49,
-        "shareChg": 2.16,
-        "avgPrice": 7.883,
-        "netFlow": 17.03,
-        "shareChg5d": -1.17,
-        "netFlow5d": -9.97
+        "share": 50.7,
+        "prevShare": 51.65,
+        "shareChg": -0.95,
+        "avgPrice": 7.877,
+        "netFlow": -7.47,
+        "shareChg5d": -0.84,
+        "netFlow5d": -7.05
       },
       {
         "name": "南方中证1000ETF",
         "code": "512100.SH",
-        "share": 73.41,
-        "prevShare": 62.77,
-        "shareChg": 10.64,
+        "share": 67.87,
+        "prevShare": 73.41,
+        "shareChg": -5.54,
         "avgPrice": 3.08,
-        "netFlow": 32.77,
-        "shareChg5d": 1.42,
-        "netFlow5d": 3.48
+        "netFlow": -17.06,
+        "shareChg5d": -1.0,
+        "netFlow5d": -3.7
       },
       {
         "name": "易方达创业板ETF",
@@ -9446,13 +9446,13 @@
       {
         "name": "华泰柏瑞A500ETF",
         "code": "563360.SH",
-        "share": 322.1,
-        "prevShare": 315.95,
-        "shareChg": 6.15,
-        "avgPrice": 1.294,
-        "netFlow": 7.96,
-        "shareChg5d": -7.98,
-        "netFlow5d": -10.7
+        "share": 322.76,
+        "prevShare": 322.1,
+        "shareChg": 0.66,
+        "avgPrice": 1.287,
+        "netFlow": 0.85,
+        "shareChg5d": -4.8,
+        "netFlow5d": -6.52
       },
       {
         "name": "南方A500ETF",
@@ -9479,13 +9479,13 @@
       {
         "name": "华夏A500ETF",
         "code": "512050.SH",
-        "share": 168.02,
-        "prevShare": 164.24,
-        "shareChg": 3.78,
-        "avgPrice": 1.222,
-        "netFlow": 4.62,
-        "shareChg5d": -3.39,
-        "netFlow5d": -4.32
+        "share": 167.12,
+        "prevShare": 168.02,
+        "shareChg": -0.9,
+        "avgPrice": 1.214,
+        "netFlow": -1.09,
+        "shareChg5d": -4.38,
+        "netFlow5d": -5.52
       },
       {
         "name": "易方达A500ETF",
@@ -9500,10 +9500,10 @@
       }
     ],
     "total": {
-      "shareChg": 105.63,
-      "netFlow": 272.37,
-      "shareChg5d": -11.95,
-      "netFlow5d": -30.09
+      "shareChg": 34.09,
+      "netFlow": 67.7,
+      "shareChg5d": 8.24,
+      "netFlow5d": 26.49
     }
   },
   "sectorScan": {
@@ -9757,18 +9757,18 @@
     ],
     "watchlist": [
       {
+        "parent": "医药生物",
+        "eci": 64.0,
+        "inflow30d": -419.63,
+        "posRatio": 40.7,
+        "gap": "30日净流出419.6亿，待资金回正"
+      },
+      {
         "parent": "农林牧渔",
         "eci": 64.0,
         "inflow30d": -27.37,
         "posRatio": 50.0,
         "gap": "30日净流出27.4亿，待资金回正"
-      },
-      {
-        "parent": "医药生物",
-        "eci": 63.9,
-        "inflow30d": -419.63,
-        "posRatio": 40.7,
-        "gap": "30日净流出419.6亿，待资金回正"
       },
       {
         "parent": "美容护理",
@@ -10082,7 +10082,7 @@
       {
         "name": "饲料",
         "net5": 2.9,
-        "net10": 1.0,
+        "net10": 1.1,
         "net20": -6.6,
         "tag": "加速流入"
       },
@@ -10235,7 +10235,7 @@
       },
       {
         "name": "其他商业",
-        "net5": -2.4,
+        "net5": -2.3,
         "net10": -5.1,
         "net20": -4.1,
         "tag": "持续流出"
@@ -10255,17 +10255,17 @@
         "tag": "持续流出"
       },
       {
+        "name": "公共交通",
+        "net5": -2.8,
+        "net10": -6.9,
+        "net20": -8.1,
+        "tag": "持续流出"
+      },
+      {
         "name": "其他建材",
         "net5": -2.8,
         "net10": -8.4,
         "net20": -10.3,
-        "tag": "持续流出"
-      },
-      {
-        "name": "公共交通",
-        "net5": -2.9,
-        "net10": -6.9,
-        "net20": -8.1,
         "tag": "持续流出"
       },
       {
@@ -10286,7 +10286,7 @@
         "name": "红黄酒",
         "net5": -3.0,
         "net10": -4.1,
-        "net20": -4.5,
+        "net20": -4.6,
         "tag": "持续流出"
       },
       {
@@ -10426,7 +10426,7 @@
         "name": "纺织机械",
         "net5": -7.7,
         "net10": -9.7,
-        "net20": -9.3,
+        "net20": -9.4,
         "tag": "持续流出"
       },
       {
@@ -10544,14 +10544,14 @@
       {
         "name": "化纤",
         "net5": -16.6,
-        "net10": -37.9,
+        "net10": -37.8,
         "net20": -28.3,
         "tag": "持续流出"
       },
       {
         "name": "矿物制品",
         "net5": -16.9,
-        "net10": -27.4,
+        "net10": -27.5,
         "net20": -40.7,
         "tag": "持续流出"
       },
@@ -10607,7 +10607,7 @@
       {
         "name": "建筑工程",
         "net5": -27.9,
-        "net10": -70.0,
+        "net10": -70.1,
         "net20": -123.9,
         "tag": "持续流出"
       },
@@ -10761,7 +10761,7 @@
       {
         "name": "通信设备",
         "net5": -185.5,
-        "net10": -251.7,
+        "net10": -251.6,
         "net20": -63.7,
         "tag": "持续流出"
       },
@@ -11229,58 +11229,58 @@
     "note": "20日滚动波动率年分位<25% 且 ≥3/5 龙头同时窄幅(振幅比<0.75)+缩量(量比<0.7) = 🟢强共振；2只 = 🟡观察；⚪为分位最低前5名对照。概念指数无成交额时收缩比显示—"
   },
   "etfShareRadar": {
-    "trade_date": "2026-08-14",
+    "trade_date": "2026-08-20",
     "items": [
       {
         "code": "510300.SH",
         "name": "华泰柏瑞300ETF",
         "group": "broad",
         "series": "沪深300系列",
-        "share": 235.01,
-        "close": 4.726,
-        "chg1": -24.36,
-        "chg1Pct": -9.39,
-        "amt1": -115.13,
-        "chg5": -29.83,
-        "chg5Pct": -11.26,
-        "chg20": 62.87,
-        "chg20Pct": 36.52,
-        "signal": "强信号",
-        "trend3": "趋势性减持",
-        "alert": true
+        "share": 237.43,
+        "close": 4.653,
+        "chg1": 2.42,
+        "chg1Pct": 1.03,
+        "amt1": 11.26,
+        "chg5": -27.23,
+        "chg5Pct": -10.29,
+        "chg20": 65.86,
+        "chg20Pct": 38.39,
+        "signal": null,
+        "trend3": null,
+        "alert": false
       },
       {
         "code": "510310.SH",
         "name": "易方达300ETF",
         "group": "broad",
         "series": "沪深300系列",
-        "share": 113.74,
-        "close": 4.588,
-        "chg1": -2.34,
-        "chg1Pct": -2.02,
-        "amt1": -10.74,
-        "chg5": -2.84,
-        "chg5Pct": -2.44,
-        "chg20": 21.96,
-        "chg20Pct": 23.93,
-        "signal": "关注",
-        "trend3": "趋势性减持",
-        "alert": true
+        "share": 115.22,
+        "close": 4.52,
+        "chg1": 1.48,
+        "chg1Pct": 1.31,
+        "amt1": 6.69,
+        "chg5": -1.4,
+        "chg5Pct": -1.2,
+        "chg20": 23.45,
+        "chg20Pct": 25.56,
+        "signal": null,
+        "trend3": null,
+        "alert": false
       },
       {
         "code": "510330.SH",
         "name": "华夏300ETF",
         "group": "broad",
         "series": "沪深300系列",
-        "share": 85.83,
-        "close": 4.926,
-        "chg1": -1.36,
-        "chg1Pct": -1.56,
-        "amt1": -6.7,
-        "chg5": -1.3,
-        "chg5Pct": -1.49,
-        "chg20": 10.32,
-        "chg20Pct": 13.67,
+        "share": 85.02,
+        "close": 4.85,
+        "chg1": -0.81,
+        "chg1Pct": -0.94,
+        "amt1": -3.93,
+        "chg5": -2.12,
+        "chg5Pct": -2.44,
+        "chg20": 9.23,
+        "chg20Pct": 12.18,
         "signal": null,
         "trend3": "趋势性减持",
         "alert": false
@@ -11290,17 +11290,17 @@
         "name": "嘉实300ETF",
         "group": "broad",
         "series": "沪深300系列",
-        "share": 62.35,
-        "close": 4.935,
-        "chg1": -2.53,
-        "chg1Pct": -3.9,
-        "amt1": -12.49,
-        "chg5": -3.74,
-        "chg5Pct": -5.65,
-        "chg20": 8.55,
-        "chg20Pct": 15.89,
-        "signal": "强信号",
-        "trend3": "趋势性减持",
+        "share": 62.66,
+        "close": 4.857,
+        "chg1": 1.33,
+        "chg1Pct": 2.17,
+        "amt1": 6.46,
+        "chg5": -2.52,
+        "chg5Pct": -3.87,
+        "chg20": 6.97,
+        "chg20Pct": 12.51,
+        "signal": "关注",
+        "trend3": null,
         "alert": true
       },
       {
@@ -11308,89 +11308,89 @@
         "name": "华夏50ETF",
         "group": "broad",
         "series": "上证50",
-        "share": 70.82,
-        "close": 3.021,
-        "chg1": -0.66,
-        "chg1Pct": -0.92,
-        "amt1": -1.99,
-        "chg5": -0.63,
-        "chg5Pct": -0.88,
-        "chg20": 4.95,
-        "chg20Pct": 7.51,
-        "signal": null,
-        "trend3": "趋势性减持",
-        "alert": false
+        "share": 72.92,
+        "close": 2.988,
+        "chg1": 2.11,
+        "chg1Pct": 2.97,
+        "amt1": 6.3,
+        "chg5": 0.78,
+        "chg5Pct": 1.09,
+        "chg20": 8.84,
+        "chg20Pct": 13.79,
+        "signal": "关注",
+        "trend3": null,
+        "alert": true
       },
       {
         "code": "510500.SH",
         "name": "南方500ETF",
         "group": "broad",
         "series": "中证500系列",
-        "share": 50.92,
-        "close": 7.998,
-        "chg1": -10.13,
-        "chg1Pct": -16.59,
-        "amt1": -81.02,
-        "chg5": -8.96,
-        "chg5Pct": -14.96,
-        "chg20": 4.12,
-        "chg20Pct": 8.79,
-        "signal": "强信号",
+        "share": 50.7,
+        "close": 7.863,
+        "chg1": -0.22,
+        "chg1Pct": -0.44,
+        "amt1": -1.73,
+        "chg5": -11.18,
+        "chg5Pct": -18.07,
+        "chg20": 5.33,
+        "chg20Pct": 11.75,
+        "signal": null,
         "trend3": "趋势性减持",
-        "alert": true
+        "alert": false
       },
       {
         "code": "512500.SH",
         "name": "华夏500ETF",
         "group": "broad",
         "series": "中证500系列",
-        "share": 18.54,
-        "close": 4.525,
-        "chg1": -1.22,
-        "chg1Pct": -6.19,
-        "amt1": -5.52,
-        "chg5": -1.03,
-        "chg5Pct": -5.27,
-        "chg20": 1.89,
-        "chg20Pct": 11.34,
-        "signal": "强信号",
-        "trend3": null,
-        "alert": true
+        "share": 18.36,
+        "close": 4.448,
+        "chg1": -0.18,
+        "chg1Pct": -0.95,
+        "amt1": -0.8,
+        "chg5": -1.41,
+        "chg5Pct": -7.12,
+        "chg20": 1.87,
+        "chg20Pct": 11.35,
+        "signal": null,
+        "trend3": "趋势性减持",
+        "alert": false
       },
       {
         "code": "512100.SH",
         "name": "南方1000ETF",
         "group": "broad",
         "series": "中证1000系列",
-        "share": 66.65,
-        "close": 3.145,
-        "chg1": -52.08,
-        "chg1Pct": -43.86,
-        "amt1": -163.79,
-        "chg5": -46.66,
-        "chg5Pct": -41.18,
-        "chg20": 7.6,
-        "chg20Pct": 12.87,
-        "signal": "强信号",
+        "share": 67.87,
+        "close": 3.074,
+        "chg1": 1.22,
+        "chg1Pct": 1.83,
+        "amt1": 3.75,
+        "chg5": -46.14,
+        "chg5Pct": -40.47,
+        "chg20": 15.28,
+        "chg20Pct": 29.05,
+        "signal": null,
         "trend3": null,
-        "alert": true
+        "alert": false
       },
       {
         "code": "159845.SZ",
         "name": "华夏1000ETF",
         "group": "broad",
         "series": "中证1000系列",
-        "share": 24.0,
-        "close": 3.235,
-        "chg1": -20.25,
-        "chg1Pct": -45.76,
-        "amt1": -65.51,
-        "chg5": -28.08,
-        "chg5Pct": -53.91,
-        "chg20": 2.12,
-        "chg20Pct": 9.69,
+        "share": 23.94,
+        "close": 3.16,
+        "chg1": 3.12,
+        "chg1Pct": 14.98,
+        "amt1": 9.86,
+        "chg5": -30.45,
+        "chg5Pct": -55.98,
+        "chg20": -8.36,
+        "chg20Pct": -25.88,
         "signal": "强信号",
-        "trend3": "趋势性减持",
+        "trend3": null,
         "alert": true
       },
       {
@@ -11398,17 +11398,17 @@
         "name": "华夏科创50ETF",
         "group": "broad",
         "series": "科创50系列",
-        "share": 488.61,
-        "close": 1.814,
-        "chg1": -19.08,
-        "chg1Pct": -3.76,
-        "amt1": -34.61,
-        "chg5": -50.4,
-        "chg5Pct": -9.35,
-        "chg20": 176.19,
-        "chg20Pct": 56.4,
-        "signal": "强信号",
-        "trend3": "趋势性减持",
+        "share": 498.69,
+        "close": 1.744,
+        "chg1": 10.08,
+        "chg1Pct": 2.06,
+        "amt1": 17.58,
+        "chg5": -15.66,
+        "chg5Pct": -3.04,
+        "chg20": 181.35,
+        "chg20Pct": 57.15,
+        "signal": "关注",
+        "trend3": null,
         "alert": true
       },
       {
@@ -11416,17 +11416,17 @@
         "name": "易方达科创50ETF",
         "group": "broad",
         "series": "科创50系列",
-        "share": 237.23,
-        "close": 1.758,
-        "chg1": -5.37,
-        "chg1Pct": -2.21,
-        "amt1": -9.44,
-        "chg5": -10.44,
-        "chg5Pct": -4.22,
-        "chg20": 35.85,
-        "chg20Pct": 17.8,
-        "signal": "关注",
-        "trend3": "趋势性减持",
+        "share": 245.72,
+        "close": 1.692,
+        "chg1": 8.49,
+        "chg1Pct": 3.58,
+        "amt1": 14.37,
+        "chg5": 3.21,
+        "chg5Pct": 1.32,
+        "chg20": 41.76,
+        "chg20Pct": 20.47,
+        "signal": "强信号",
+        "trend3": null,
         "alert": true
       },
       {
@@ -11434,17 +11434,17 @@
         "name": "华安180ETF",
         "group": "broad",
         "series": "上证180",
-        "share": 44.2,
-        "close": 3.993,
-        "chg1": -0.07,
-        "chg1Pct": -0.16,
-        "amt1": -0.28,
-        "chg5": -0.02,
-        "chg5Pct": -0.06,
-        "chg20": -0.09,
-        "chg20Pct": -0.21,
+        "share": 44.19,
+        "close": 3.947,
+        "chg1": -0.01,
+        "chg1Pct": -0.02,
+        "amt1": -0.04,
+        "chg5": -0.05,
+        "chg5Pct": -0.12,
+        "chg20": -0.07,
+        "chg20Pct": -0.16,
         "signal": null,
-        "trend3": null,
+        "trend3": "趋势性减持",
         "alert": false
       },
       {
@@ -11452,17 +11452,17 @@
         "name": "易方达创业板ETF",
         "group": "broad",
         "series": "创业板",
-        "share": 176.6,
-        "close": 3.645,
-        "chg1": -11.08,
-        "chg1Pct": -5.9,
-        "amt1": -40.39,
-        "chg5": -27.37,
-        "chg5Pct": -13.42,
-        "chg20": 58.59,
-        "chg20Pct": 49.65,
+        "share": 184.1,
+        "close": 3.512,
+        "chg1": 12.19,
+        "chg1Pct": 7.09,
+        "amt1": 42.81,
+        "chg5": -5.68,
+        "chg5Pct": -2.99,
+        "chg20": 59.54,
+        "chg20Pct": 47.8,
         "signal": "强信号",
-        "trend3": "趋势性减持",
+        "trend3": null,
         "alert": true
       },
       {
@@ -11470,15 +11470,15 @@
         "name": "央企科技ETF",
         "group": "soe",
         "series": "国新系",
-        "share": 3.73,
-        "close": 1.274,
-        "chg1": -0.16,
-        "chg1Pct": -4.12,
-        "amt1": -0.2,
-        "chg5": -0.04,
-        "chg5Pct": -1.06,
-        "chg20": 1.31,
-        "chg20Pct": 54.24,
+        "share": 3.75,
+        "close": 1.223,
+        "chg1": 0.03,
+        "chg1Pct": 0.81,
+        "amt1": 0.04,
+        "chg5": -0.08,
+        "chg5Pct": -2.09,
+        "chg20": 1.27,
+        "chg20Pct": 51.11,
         "signal": null,
         "trend3": null,
         "alert": false
@@ -11488,36 +11488,36 @@
         "name": "港股通央企红利ETF(南方)",
         "group": "soe",
         "series": "国新系",
-        "share": 24.43,
-        "close": 0.963,
-        "chg1": -0.1,
-        "chg1Pct": -0.41,
-        "amt1": -0.1,
-        "chg5": -0.32,
-        "chg5Pct": -1.29,
-        "chg20": 1.13,
-        "chg20Pct": 4.85,
-        "signal": null,
-        "trend3": null,
-        "alert": false
+        "share": 23.0,
+        "close": 0.987,
+        "chg1": -1.43,
+        "chg1Pct": -5.85,
+        "amt1": -1.41,
+        "chg5": -1.75,
+        "chg5Pct": -7.07,
+        "chg20": -1.41,
+        "chg20Pct": -5.78,
+        "signal": "强信号",
+        "trend3": "趋势性减持",
+        "alert": true
       },
       {
         "code": "520990.SH",
         "name": "港股通央企红利ETF(景顺)",
         "group": "soe",
         "series": "国新系",
-        "share": 33.83,
-        "close": 0.958,
-        "chg1": -1.55,
-        "chg1Pct": -4.38,
-        "amt1": -1.48,
-        "chg5": -2.93,
-        "chg5Pct": -7.97,
-        "chg20": -2.28,
-        "chg20Pct": -6.31,
-        "signal": "强信号",
+        "share": 33.17,
+        "close": 0.984,
+        "chg1": -0.66,
+        "chg1Pct": -1.95,
+        "amt1": -0.65,
+        "chg5": -3.58,
+        "chg5Pct": -9.74,
+        "chg20": -3.07,
+        "chg20Pct": -8.47,
+        "signal": null,
         "trend3": "趋势性减持",
-        "alert": true
+        "alert": false
       },
       {
         "code": "159335.SZ",
@@ -11525,14 +11525,14 @@
         "group": "soe",
         "series": "诚通系",
         "share": 0.63,
-        "close": 1.543,
-        "chg1": -0.01,
-        "chg1Pct": -2.16,
-        "amt1": -0.02,
-        "chg5": 0.01,
-        "chg5Pct": 1.6,
-        "chg20": 0.05,
-        "chg20Pct": 7.81,
+        "close": 1.487,
+        "chg1": -0.0,
+        "chg1Pct": -0.32,
+        "amt1": -0.0,
+        "chg5": -0.02,
+        "chg5Pct": -2.78,
+        "chg20": 0.03,
+        "chg20Pct": 5.72,
         "signal": null,
         "trend3": null,
         "alert": false
@@ -11542,15 +11542,15 @@
         "name": "央企红利ETF",
         "group": "soe",
         "series": "诚通系",
-        "share": 3.15,
-        "close": 1.188,
-        "chg1": -0.39,
-        "chg1Pct": -11.02,
-        "amt1": -0.46,
-        "chg5": -1.79,
-        "chg5Pct": -36.24,
-        "chg20": -0.94,
-        "chg20Pct": -22.99,
+        "share": 3.09,
+        "close": 1.211,
+        "chg1": -0.01,
+        "chg1Pct": -0.32,
+        "amt1": -0.01,
+        "chg5": -1.23,
+        "chg5Pct": -28.48,
+        "chg20": -1.46,
+        "chg20Pct": -32.09,
         "signal": null,
         "trend3": "趋势性减持",
         "alert": false
@@ -11560,106 +11560,106 @@
         "name": "央企ESG ETF",
         "group": "soe",
         "series": "诚通系",
-        "share": 1.86,
-        "close": 1.274,
-        "chg1": -0.04,
-        "chg1Pct": -2.1,
-        "amt1": -0.05,
-        "chg5": -0.04,
-        "chg5Pct": -2.1,
-        "chg20": -0.07,
-        "chg20Pct": -3.62,
+        "share": 1.81,
+        "close": 1.264,
+        "chg1": -0.05,
+        "chg1Pct": -2.69,
+        "amt1": -0.06,
+        "chg5": -0.09,
+        "chg5Pct": -4.73,
+        "chg20": -0.12,
+        "chg20Pct": -6.21,
         "signal": null,
         "trend3": null,
         "alert": false
       }
     ],
-    "alertCount": 11,
+    "alertCount": 7,
     "note": "份额变化×当日收盘价折算金额；单日|>2%|且|>5亿|=关注，|>3%|且|>1亿|或|>20亿|=强信号"
   },
   "etfRotation": {
-    "trade_date": "2026-08-14",
+    "trade_date": "2026-08-20",
     "items": [
       {
-        "cat": "商品",
-        "todayNet": 7.1,
-        "net5d": 79.8,
-        "count": 15
+        "cat": "科技",
+        "todayNet": 41.1,
+        "net5d": 53.6,
+        "count": 297
       },
       {
         "cat": "债券",
-        "todayNet": 4.6,
-        "net5d": 72.2,
+        "todayNet": 9.8,
+        "net5d": 40.5,
         "count": 52
       },
       {
-        "cat": "金融地产",
-        "todayNet": -7.1,
-        "net5d": 7.0,
-        "count": 46
+        "cat": "商品",
+        "todayNet": -1.2,
+        "net5d": 10.3,
+        "count": 15
       },
       {
         "cat": "消费",
-        "todayNet": -0.4,
-        "net5d": -3.6,
+        "todayNet": -1.9,
+        "net5d": -0.8,
         "count": 73
       },
       {
-        "cat": "新能源",
-        "todayNet": -7.8,
-        "net5d": -11.7,
-        "count": 64
-      },
-      {
-        "cat": "医药",
-        "todayNet": -30.0,
-        "net5d": -68.8,
-        "count": 50
+        "cat": "金融地产",
+        "todayNet": -0.7,
+        "net5d": -5.2,
+        "count": 46
       },
       {
         "cat": "其他",
-        "todayNet": -22.2,
-        "net5d": -90.4,
-        "count": 444
+        "todayNet": 4.8,
+        "net5d": -17.7,
+        "count": 446
       },
       {
-        "cat": "港股海外",
-        "todayNet": -32.2,
-        "net5d": -95.5,
-        "count": 251
+        "cat": "新能源",
+        "todayNet": -2.0,
+        "net5d": -18.6,
+        "count": 64
       },
       {
         "cat": "红利",
-        "todayNet": -13.9,
-        "net5d": -103.8,
+        "todayNet": 0.3,
+        "net5d": -20.8,
         "count": 86
       },
       {
-        "cat": "科技",
-        "todayNet": 35.9,
-        "net5d": -207.9,
-        "count": 294
+        "cat": "医药",
+        "todayNet": -3.7,
+        "net5d": -32.7,
+        "count": 50
+      },
+      {
+        "cat": "港股海外",
+        "todayNet": -11.0,
+        "net5d": -54.6,
+        "count": 252
       },
       {
         "cat": "宽基",
-        "todayNet": -204.4,
-        "net5d": -921.9,
+        "todayNet": 131.7,
+        "net5d": -219.8,
         "count": 313
       }
     ],
     "inflowTop3": [
-      "商品",
+      "科技",
       "债券",
-      "金融地产"
+      "商品"
     ],
     "outflowTop3": [
       "宽基",
-      "科技",
-      "红利"
+      "港股海外",
+      "医药"
     ],
-    "totalToday": -270.4,
-    "total5d": -1344.6,
-    "moneyToday": 0.2,
+    "totalToday": 167.2,
+    "total5d": -265.8,
+    "moneyToday": -1.5,
     "note": "份额变化×当日收盘价估算（不含货币ETF），5日净额按分类汇总；新发/退市ETF会造成少量误差"
   },
   "indexVol": {
@@ -11776,9 +11776,9 @@
     ],
     "note": "HV20/HV60为年化历史波动率；HV20>HV60×1.2升温，<HV60×0.85降温；低位=HV20近一年分位<25%"
   },
-  "nationalTeamComment": "全市场ETF（不含货币）昨日净赎回约270亿元（份额变化×收盘价口径）。华泰柏瑞300ETF单日份额-24.36亿份（约-115.1亿元），疑似大资金出场。近5日份额口径资金主要流入商品、债券、金融地产类，流出宽基、科技、红利类。10只核心宽基ETF（华泰柏瑞300ETF、易方达300ETF、嘉实300ETF、南方500ETF等）同日同向减持，呈共振形态，疑似国家队统一动作/托市信号。中证1000系列合计净流出229.3亿 → 短期利空中证1000/小盘股。沪深300系列合计净流出145.1亿 → 短期利空沪深300/大盘蓝筹。中证500系列合计净流出86.5亿 → 短期利空中证500/中盘股。央企主题组当日有动作：港股通央企红利ETF(景顺)（强信号）；国新/诚通多为发行人关联方，单边异动多为自身调仓。沪深300波动率HV20为26.9%（近一年90%分位），中证500、中证1000、创业板指、深证成指波动升温。",
+  "nationalTeamComment": "全市场ETF（不含货币）昨日净申购约167亿元（份额变化×收盘价口径）。嘉实300ETF单日份额+1.33亿份（约+6.5亿元），疑似大资金进场。近5日份额口径资金主要流入科技、债券、商品类，流出宽基、港股海外、医药类。6只核心宽基ETF（嘉实300ETF、华夏50ETF、华夏1000ETF、华夏科创50ETF等）同日同向增持，呈共振形态，疑似国家队统一动作/托市信号。科创50系列合计净流入31.9亿 → 短期利多科创50/硬科技。沪深300系列合计净流入20.5亿 → 短期利多沪深300/大盘蓝筹。中证1000系列合计净流入13.6亿 → 短期利多中证1000/小盘股。央企主题组当日有动作：港股通央企红利ETF(南方)（强信号）；国新/诚通多为发行人关联方，单边异动多为自身调仓。沪深300波动率HV20为26.9%（近一年90%分位），中证500、中证1000、创业板指、深证成指波动升温。",
   "ntRotation": {
-    "trade_date": "2026-08-14",
+    "trade_date": "2026-08-20",
     "groups": [
       {
         "key": "broad",
@@ -11790,54 +11790,54 @@
               {
                 "code": "510300.SH",
                 "name": "华泰柏瑞300ETF",
-                "share": 235.01,
-                "chg1": -24.36,
-                "chg1Pct": -9.39,
-                "amt1": -115.13,
-                "chg5Pct": -11.26,
-                "signal": "强信号",
-                "trend3": "趋势性减持"
+                "share": 237.43,
+                "chg1": 2.42,
+                "chg1Pct": 1.03,
+                "amt1": 11.26,
+                "chg5Pct": -10.29,
+                "signal": null,
+                "trend3": null
               },
               {
                 "code": "510310.SH",
                 "name": "易方达300ETF",
-                "share": 113.74,
-                "chg1": -2.34,
-                "chg1Pct": -2.02,
-                "amt1": -10.74,
-                "chg5Pct": -2.44,
-                "signal": "关注",
-                "trend3": "趋势性减持"
+                "share": 115.22,
+                "chg1": 1.48,
+                "chg1Pct": 1.31,
+                "amt1": 6.69,
+                "chg5Pct": -1.2,
+                "signal": null,
+                "trend3": null
               },
               {
                 "code": "510330.SH",
                 "name": "华夏300ETF",
-                "share": 85.83,
-                "chg1": -1.36,
-                "chg1Pct": -1.56,
-                "amt1": -6.7,
-                "chg5Pct": -1.49,
+                "share": 85.02,
+                "chg1": -0.81,
+                "chg1Pct": -0.94,
+                "amt1": -3.93,
+                "chg5Pct": -2.44,
                 "signal": null,
                 "trend3": "趋势性减持"
               },
               {
                 "code": "159919.SZ",
                 "name": "嘉实300ETF",
-                "share": 62.35,
-                "chg1": -2.53,
-                "chg1Pct": -3.9,
-                "amt1": -12.49,
-                "chg5Pct": -5.65,
-                "signal": "强信号",
-                "trend3": "趋势性减持"
+                "share": 62.66,
+                "chg1": 1.33,
+                "chg1Pct": 2.17,
+                "amt1": 6.46,
+                "chg5Pct": -3.87,
+                "signal": "关注",
+                "trend3": null
               }
             ],
             "total": {
-              "share": 496.93,
-              "chg1": -30.59,
-              "chg1Pct": -5.66,
-              "amt1": -145.06,
-              "chg5Pct": -6.85
+              "share": 500.33,
+              "chg1": 4.42,
+              "chg1Pct": 0.9,
+              "amt1": 20.48,
+              "chg5Pct": -6.06
             }
           },
           {
@@ -11846,13 +11846,13 @@
               {
                 "code": "510050.SH",
                 "name": "华夏50ETF",
-                "share": 70.82,
-                "chg1": -0.66,
-                "chg1Pct": -0.92,
-                "amt1": -1.99,
-                "chg5Pct": -0.88,
-                "signal": null,
-                "trend3": "趋势性减持"
+                "share": 72.92,
+                "chg1": 2.11,
+                "chg1Pct": 2.97,
+                "amt1": 6.3,
+                "chg5Pct": 1.09,
+                "signal": "关注",
+                "trend3": null
               }
             ],
             "total": null
@@ -11863,32 +11863,32 @@
               {
                 "code": "510500.SH",
                 "name": "南方500ETF",
-                "share": 50.92,
-                "chg1": -10.13,
-                "chg1Pct": -16.59,
-                "amt1": -81.02,
-                "chg5Pct": -14.96,
-                "signal": "强信号",
+                "share": 50.7,
+                "chg1": -0.22,
+                "chg1Pct": -0.44,
+                "amt1": -1.73,
+                "chg5Pct": -18.07,
+                "signal": null,
                 "trend3": "趋势性减持"
               },
               {
                 "code": "512500.SH",
                 "name": "华夏500ETF",
-                "share": 18.54,
-                "chg1": -1.22,
-                "chg1Pct": -6.19,
-                "amt1": -5.52,
-                "chg5Pct": -5.27,
-                "signal": "强信号",
-                "trend3": null
+                "share": 18.36,
+                "chg1": -0.18,
+                "chg1Pct": -0.95,
+                "amt1": -0.8,
+                "chg5Pct": -7.12,
+                "signal": null,
+                "trend3": "趋势性减持"
               }
             ],
             "total": {
-              "share": 69.46,
-              "chg1": -11.35,
-              "chg1Pct": -13.81,
-              "amt1": -86.54,
-              "chg5Pct": -12.37
+              "share": 69.06,
+              "chg1": -0.4,
+              "chg1Pct": -0.58,
+              "amt1": -2.53,
+              "chg5Pct": -15.16
             }
           },
           {
@@ -11897,32 +11897,32 @@
               {
                 "code": "512100.SH",
                 "name": "南方1000ETF",
-                "share": 66.65,
-                "chg1": -52.08,
-                "chg1Pct": -43.86,
-                "amt1": -163.79,
-                "chg5Pct": -41.18,
-                "signal": "强信号",
+                "share": 67.87,
+                "chg1": 1.22,
+                "chg1Pct": 1.83,
+                "amt1": 3.75,
+                "chg5Pct": -40.47,
+                "signal": null,
                 "trend3": null
               },
               {
                 "code": "159845.SZ",
                 "name": "华夏1000ETF",
-                "share": 24.0,
-                "chg1": -20.25,
-                "chg1Pct": -45.76,
-                "amt1": -65.51,
-                "chg5Pct": -53.91,
+                "share": 23.94,
+                "chg1": 3.12,
+                "chg1Pct": 14.98,
+                "amt1": 9.86,
+                "chg5Pct": -55.98,
                 "signal": "强信号",
-                "trend3": "趋势性减持"
+                "trend3": null
               }
             ],
             "total": {
-              "share": 90.65,
-              "chg1": -72.33,
-              "chg1Pct": -44.36,
-              "amt1": -229.3,
-              "chg5Pct": -44.55
+              "share": 91.81,
+              "chg1": 4.34,
+              "chg1Pct": 5.26,
+              "amt1": 13.61,
+              "chg5Pct": -44.51
             }
           },
           {
@@ -11931,32 +11931,32 @@
               {
                 "code": "588000.SH",
                 "name": "华夏科创50ETF",
-                "share": 488.61,
-                "chg1": -19.08,
-                "chg1Pct": -3.76,
-                "amt1": -34.61,
-                "chg5Pct": -9.35,
-                "signal": "强信号",
-                "trend3": "趋势性减持"
+                "share": 498.69,
+                "chg1": 10.08,
+                "chg1Pct": 2.06,
+                "amt1": 17.58,
+                "chg5Pct": -3.04,
+                "signal": "关注",
+                "trend3": null
               },
               {
                 "code": "588080.SH",
                 "name": "易方达科创50ETF",
-                "share": 237.23,
-                "chg1": -5.37,
-                "chg1Pct": -2.21,
-                "amt1": -9.44,
-                "chg5Pct": -4.22,
-                "signal": "关注",
-                "trend3": "趋势性减持"
+                "share": 245.72,
+                "chg1": 8.49,
+                "chg1Pct": 3.58,
+                "amt1": 14.37,
+                "chg5Pct": 1.32,
+                "signal": "强信号",
+                "trend3": null
               }
             ],
             "total": {
-              "share": 725.84,
-              "chg1": -24.45,
-              "chg1Pct": -3.25,
-              "amt1": -44.05,
-              "chg5Pct": -7.67
+              "share": 744.41,
+              "chg1": 18.57,
+              "chg1Pct": 2.56,
+              "amt1": 31.95,
+              "chg5Pct": -1.6
             }
           },
           {
@@ -11965,13 +11965,13 @@
               {
                 "code": "510180.SH",
                 "name": "华安180ETF",
-                "share": 44.2,
-                "chg1": -0.07,
-                "chg1Pct": -0.16,
-                "amt1": -0.28,
-                "chg5Pct": -0.06,
+                "share": 44.19,
+                "chg1": -0.01,
+                "chg1Pct": -0.02,
+                "amt1": -0.04,
+                "chg5Pct": -0.12,
                 "signal": null,
-                "trend3": null
+                "trend3": "趋势性减持"
               }
             ],
             "total": null
@@ -11982,13 +11982,13 @@
               {
                 "code": "159915.SZ",
                 "name": "易方达创业板ETF",
-                "share": 176.6,
-                "chg1": -11.08,
-                "chg1Pct": -5.9,
-                "amt1": -40.39,
-                "chg5Pct": -13.42,
+                "share": 184.1,
+                "chg1": 12.19,
+                "chg1Pct": 7.09,
+                "amt1": 42.81,
+                "chg5Pct": -2.99,
                 "signal": "强信号",
-                "trend3": "趋势性减持"
+                "trend3": null
               }
             ],
             "total": null
@@ -12005,11 +12005,11 @@
               {
                 "code": "560170.SH",
                 "name": "央企科技ETF",
-                "share": 3.73,
-                "chg1": -0.16,
-                "chg1Pct": -4.12,
-                "amt1": -0.2,
-                "chg5Pct": -1.06,
+                "share": 3.75,
+                "chg1": 0.03,
+                "chg1Pct": 0.81,
+                "amt1": 0.04,
+                "chg5Pct": -2.09,
                 "signal": null,
                 "trend3": null,
                 "owner": "国新投资",
@@ -12018,36 +12018,36 @@
               {
                 "code": "520660.SH",
                 "name": "港股通央企红利ETF(南方)",
-                "share": 24.43,
-                "chg1": -0.1,
-                "chg1Pct": -0.41,
-                "amt1": -0.1,
-                "chg5Pct": -1.29,
-                "signal": null,
-                "trend3": null,
+                "share": 23.0,
+                "chg1": -1.43,
+                "chg1Pct": -5.85,
+                "amt1": -1.41,
+                "chg5Pct": -7.07,
+                "signal": "强信号",
+                "trend3": "趋势性减持",
                 "owner": "国新投资",
                 "ratio": 0.0628
               },
               {
                 "code": "520990.SH",
                 "name": "港股通央企红利ETF(景顺)",
-                "share": 33.83,
-                "chg1": -1.55,
-                "chg1Pct": -4.38,
-                "amt1": -1.48,
-                "chg5Pct": -7.97,
-                "signal": "强信号",
+                "share": 33.17,
+                "chg1": -0.66,
+                "chg1Pct": -1.95,
+                "amt1": -0.65,
+                "chg5Pct": -9.74,
+                "signal": null,
                 "trend3": "趋势性减持",
                 "owner": "国新投资",
                 "ratio": 0.038
               }
             ],
             "total": {
-              "share": 61.99,
-              "chg1": -1.81,
-              "chg1Pct": -2.8,
-              "amt1": -1.78,
-              "chg5Pct": -4.92
+              "share": 59.92,
+              "chg1": -2.06,
+              "chg1Pct": -3.27,
+              "amt1": -2.02,
+              "chg5Pct": -8.24
             }
           },
           {
@@ -12057,10 +12057,10 @@
                 "code": "159335.SZ",
                 "name": "央企科创ETF",
                 "share": 0.63,
-                "chg1": -0.01,
-                "chg1Pct": -2.16,
-                "amt1": -0.02,
-                "chg5Pct": 1.6,
+                "chg1": -0.0,
+                "chg1Pct": -0.32,
+                "amt1": -0.0,
+                "chg5Pct": -2.78,
                 "signal": null,
                 "trend3": null,
                 "owner": "中国诚通",
@@ -12069,11 +12069,11 @@
               {
                 "code": "159336.SZ",
                 "name": "央企红利ETF",
-                "share": 3.15,
-                "chg1": -0.39,
-                "chg1Pct": -11.02,
-                "amt1": -0.46,
-                "chg5Pct": -36.24,
+                "share": 3.09,
+                "chg1": -0.01,
+                "chg1Pct": -0.32,
+                "amt1": -0.01,
+                "chg5Pct": -28.48,
                 "signal": null,
                 "trend3": "趋势性减持",
                 "owner": "中国诚通",
@@ -12082,11 +12082,11 @@
               {
                 "code": "560810.SH",
                 "name": "央企ESG ETF",
-                "share": 1.86,
-                "chg1": -0.04,
-                "chg1Pct": -2.1,
-                "amt1": -0.05,
-                "chg5Pct": -2.1,
+                "share": 1.81,
+                "chg1": -0.05,
+                "chg1Pct": -2.69,
+                "amt1": -0.06,
+                "chg5Pct": -4.73,
                 "signal": null,
                 "trend3": null,
                 "owner": "中国诚通",
@@ -12094,11 +12094,11 @@
               }
             ],
             "total": {
-              "share": 5.64,
-              "chg1": -0.44,
-              "chg1Pct": -7.09,
-              "amt1": -0.53,
-              "chg5Pct": -20.75
+              "share": 5.53,
+              "chg1": -0.06,
+              "chg1Pct": -1.1,
+              "amt1": -0.07,
+              "chg5Pct": -17.78
             }
           }
         ]
@@ -12106,15 +12106,11 @@
     ],
     "resonance": {
       "hit": true,
-      "count": 10,
-      "direction": "减持",
+      "count": 6,
+      "direction": "增持",
       "names": [
-        "华泰柏瑞300ETF",
-        "易方达300ETF",
         "嘉实300ETF",
-        "南方500ETF",
-        "华夏500ETF",
-        "南方1000ETF",
+        "华夏50ETF",
         "华夏1000ETF",
         "华夏科创50ETF",
         "易方达科创50ETF",
@@ -12503,8 +12499,8 @@
     "items": [
       {
         "sector": "医药生物",
-        "eci": 63.9,
-        "chg": -9.1,
+        "eci": 64.0,
+        "chg": -9.0,
         "quadrant": "景气高位·边际走弱"
       },
       {
@@ -12528,7 +12524,7 @@
       {
         "sector": "食品饮料",
         "eci": 59.6,
-        "chg": -2.6,
+        "chg": -2.5,
         "quadrant": "景气高位·边际走弱"
       },
       {
