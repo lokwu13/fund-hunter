@@ -50,6 +50,9 @@ STOCKS = {
     '603259.SH': {'name': '药明康德', 'industry': '化学制药', 'group': 'watch', 'watchPrice': 0},
     '300760.SZ': {'name': '迈瑞医疗', 'industry': '医疗保健', 'group': 'watch', 'watchPrice': 0},
     '688271.SH': {'name': '联影医疗', 'industry': '医疗保健', 'group': 'watch', 'watchPrice': 0},
+    '603816.SH': {'name': '顾家家居', 'industry': '家居用品', 'group': 'watch', 'watchPrice': 0},
+    '600521.SH': {'name': '华海药业', 'industry': '化学制药', 'group': 'watch', 'watchPrice': 0},
+    '000708.SZ': {'name': '中信特钢', 'industry': '特种钢',   'group': 'watch', 'watchPrice': 0},
 }
 
 # 用户 ETF 账户（行情走 fund_daily，与 nationalETF 的 daily 不同）
@@ -58,8 +61,8 @@ MY_ETFS = {
     '159892.SZ': {'name': '华夏恒生生物科技ETF(QDII)', 'ticker': '159892'},
     '159265.SZ': {'name': '鹏华国证港股通消费主题ETF', 'ticker': '159265'},
     '159736.SZ': {'name': '天弘中证食品饮料ETF',       'ticker': '159736'},
-    '512800.SH': {'name': '华宝中证银行ETF',           'ticker': '512800'},
     '518880.SH': {'name': '华安易富黄金ETF',           'ticker': '518880'},
+    '562510.SH': {'name': '华夏中证旅游主题ETF',       'ticker': '562510'},
 }
 
 # ETFs
