@@ -3543,7 +3543,31 @@ def main():
     actual_date = (data.get('sectorFlows') or {}).get('trade_date') or \
         f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
     data['updateTime'] = f"{actual_date} 收盘 (Tushare自动)"
-    data['marketStatus'] = '正常交易'
+
+    # 本周资金监测标签：最新数据日所在交易周的周一~周五（动态计算，修复静态残留）
+    _dt = datetime.strptime(actual_date, '%Y-%m-%d')
+    _mon = _dt - timedelta(days=_dt.weekday())
+    _fri = _mon + timedelta(days=4)
+    data['week'] = f"{_mon:%Y.%m.%d} - {_fri:%m.%d}"
+
+    # sectorPeriod（近4周主力累计）：最新数据日往前 20 个交易日的窗口（同为静态残留修复）
+    try:
+        _cal_start = (_dt - timedelta(days=45)).strftime('%Y%m%d')
+        _cal = pro.trade_cal(exchange='SSE', start_date=_cal_start,
+                             end_date=actual_date.replace('-', ''), is_open='1')
+        _open_days = sorted(_cal['cal_date'].tolist())[-20:]
+        if len(_open_days) >= 2:
+            _p0 = f"{_open_days[0][:4]}.{_open_days[0][4:6]}.{_open_days[0][6:]}"
+            _p1 = f"{_open_days[-1][:4]}.{_open_days[-1][4:6]}.{_open_days[-1][6:]}"
+            data['sectorPeriod'] = f"{_p0}~{_p1} (近4周主力累计)"
+    except Exception as e:
+        print(f"  Warning: sectorPeriod compute failed, keep existing: {e}")
+
+    # 大盘状态：最新数据日=今天 → 正常交易；否则明示数据截至日期（周末/节假日）
+    if actual_date == datetime.now().strftime('%Y-%m-%d'):
+        data['marketStatus'] = '正常交易'
+    else:
+        data['marketStatus'] = f"数据至 {actual_date[5:7]}月{actual_date[8:10]}日 收盘"
 
     # ── Save ──
     print(f"\n[Saving] {OUTPUT_PATH}")

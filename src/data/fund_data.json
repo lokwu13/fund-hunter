@@ -1,27 +1,27 @@
 {
-  "updateTime": "2026-08-19 收盘 (Tushare自动)",
-  "week": "2026.07.15 - 07.22",
+  "updateTime": "2026-08-20 收盘 (Tushare自动)",
+  "week": "2026.08.17 - 08.21",
   "marketStatus": "正常交易",
   "indices": {
     "shIndex": {
       "name": "上证指数",
-      "value": 3990.3,
-      "change": 0.19
+      "value": 3903.72,
+      "change": 0.24
     },
     "szIndex": {
       "name": "深证成指",
-      "value": 14622.5,
-      "change": -0.56
+      "value": 13972.78,
+      "change": 0.59
     },
     "hs300": {
       "name": "沪深300",
-      "value": 4725.81,
-      "change": -0.32
+      "value": 4592.75,
+      "change": 0.09
     },
     "cyIndex": {
       "name": "创业板指",
-      "value": 3705.56,
-      "change": -0.92
+      "value": 3495.59,
+      "change": 0.64
     }
   },
   "sectors": [
@@ -140,9 +140,9 @@
       "name": "万华化学",
       "industry": "化工原料",
       "group": "watch",
-      "close": 73.89,
-      "pctChg": 0.85,
-      "vol": 30.65,
+      "close": 75.16,
+      "pctChg": 1.72,
+      "vol": 37.72,
       "watchPrice": 0
     },
     {
@@ -150,9 +150,9 @@
       "name": "联影医疗",
       "industry": "医疗保健",
       "group": "watch",
-      "close": 108.65,
-      "pctChg": -0.48,
-      "vol": 5.53,
+      "close": 109.99,
+      "pctChg": 1.23,
+      "vol": 7.28,
       "watchPrice": 0
     },
     {
@@ -160,9 +160,9 @@
       "name": "南微医学",
       "industry": "医疗保健",
       "group": "hold",
-      "close": 72.55,
-      "pctChg": -0.83,
-      "vol": 1.98,
+      "close": 75.62,
+      "pctChg": 4.23,
+      "vol": 3.8,
       "watchPrice": 0
     },
     {
@@ -170,9 +170,9 @@
       "name": "心脉医疗",
       "industry": "医疗保健",
       "group": "hold",
-      "close": 90.78,
-      "pctChg": -1.5,
-      "vol": 1.47,
+      "close": 93.52,
+      "pctChg": 3.02,
+      "vol": 2.65,
       "watchPrice": 0
     },
     {
@@ -180,9 +180,9 @@
       "name": "顾家家居",
       "industry": "家居用品",
       "group": "watch",
-      "close": 24.4,
-      "pctChg": 2.22,
-      "vol": 9.03,
+      "close": 24.77,
+      "pctChg": 1.52,
+      "vol": 6.38,
       "watchPrice": 0
     },
     {
@@ -190,9 +190,9 @@
       "name": "药明康德",
       "industry": "化学制药",
       "group": "watch",
-      "close": 164.0,
-      "pctChg": -1.9,
-      "vol": 55.79,
+      "close": 167.9,
+      "pctChg": 2.38,
+      "vol": 85.91,
       "watchPrice": 0
     },
     {
@@ -200,9 +200,9 @@
       "name": "中国中免",
       "industry": "旅游服务",
       "group": "watch",
-      "close": 52.88,
-      "pctChg": -1.86,
-      "vol": 23.75,
+      "close": 53.1,
+      "pctChg": 0.42,
+      "vol": 18.21,
       "watchPrice": 0
     },
     {
@@ -210,9 +210,9 @@
       "name": "华海药业",
       "industry": "化学制药",
       "group": "watch",
-      "close": 17.15,
-      "pctChg": 0.35,
-      "vol": 49.05,
+      "close": 17.37,
+      "pctChg": 1.28,
+      "vol": 56.25,
       "watchPrice": 0
     },
     {
@@ -220,9 +220,9 @@
       "name": "国电南瑞",
       "industry": "电气设备",
       "group": "watch",
-      "close": 23.51,
-      "pctChg": -0.13,
-      "vol": 41.57,
+      "close": 23.07,
+      "pctChg": -1.87,
+      "vol": 41.46,
       "watchPrice": 0
     },
     {
@@ -231,8 +231,8 @@
       "industry": "特种钢",
       "group": "watch",
       "close": 14.04,
-      "pctChg": -0.57,
-      "vol": 11.88,
+      "pctChg": 0.0,
+      "vol": 11.8,
       "watchPrice": 0
     },
     {
@@ -240,9 +240,9 @@
       "name": "安琪酵母",
       "industry": "食品",
       "group": "watch",
-      "close": 42.33,
-      "pctChg": -0.94,
-      "vol": 13.84,
+      "close": 42.31,
+      "pctChg": -0.05,
+      "vol": 6.99,
       "watchPrice": 0
     },
     {
@@ -250,9 +250,9 @@
       "name": "恒瑞医药",
       "industry": "化学制药",
       "group": "hold",
-      "close": 52.66,
-      "pctChg": 0.55,
-      "vol": 63.8,
+      "close": 49.5,
+      "pctChg": -6.0,
+      "vol": 238.74,
       "watchPrice": 0
     },
     {
@@ -260,9 +260,9 @@
       "name": "上海机场",
       "industry": "机场",
       "group": "hold",
-      "close": 22.95,
-      "pctChg": -0.22,
-      "vol": 9.26,
+      "close": 23.27,
+      "pctChg": 1.39,
+      "vol": 10.7,
       "watchPrice": 0
     },
     {
@@ -270,9 +270,9 @@
       "name": "迈瑞医疗",
       "industry": "医疗保健",
       "group": "watch",
-      "close": 150.63,
-      "pctChg": 0.05,
-      "vol": 6.68,
+      "close": 158.07,
+      "pctChg": 4.94,
+      "vol": 16.32,
       "watchPrice": 0
     },
     {
@@ -280,9 +280,9 @@
       "name": "百润股份",
       "industry": "红黄酒",
       "group": "watch",
-      "close": 18.28,
-      "pctChg": -2.97,
-      "vol": 11.5,
+      "close": 18.55,
+      "pctChg": 1.48,
+      "vol": 9.22,
       "watchPrice": 0
     },
     {
@@ -290,9 +290,9 @@
       "name": "三全食品",
       "industry": "食品",
       "group": "watch",
-      "close": 12.61,
-      "pctChg": -1.33,
-      "vol": 6.64,
+      "close": 12.68,
+      "pctChg": 0.56,
+      "vol": 6.7,
       "watchPrice": 0
     },
     {
@@ -300,17 +300,17 @@
       "name": "双汇发展",
       "industry": "食品",
       "group": "watch",
-      "close": 25.13,
-      "pctChg": 0.6,
-      "vol": 10.62,
+      "close": 25.08,
+      "pctChg": -0.2,
+      "vol": 7.6,
       "watchPrice": 0
     }
   ],
   "northbound": {
-    "today": 3284.7,
-    "week": 15250.2,
-    "month": 62515.5,
-    "updateTime": "2026-08-19",
+    "today": 2862.5,
+    "week": 14964.9,
+    "month": 62302.5,
+    "updateTime": "2026-08-20",
     "note": "北向成交总额（亿元）；官方2024-08起停披净买入，仅披露成交额"
   },
   "southbound": {
@@ -452,70 +452,70 @@
       "rank": 1,
       "code": "600802.SH",
       "name": "福建水泥",
-      "ratio": "19.13%",
+      "ratio": "19.71%",
       "concept": "—"
     },
     {
       "rank": 2,
       "code": "001335.SZ",
       "name": "信凯科技",
-      "ratio": "17.33%",
+      "ratio": "17.58%",
       "concept": "—"
     },
     {
       "rank": 3,
       "code": "603668.SH",
       "name": "天马科技",
-      "ratio": "15.99%",
+      "ratio": "16.77%",
       "concept": "—"
     },
     {
       "rank": 4,
       "code": "688693.SH",
       "name": "锴威特",
-      "ratio": "15.05%",
+      "ratio": "16.54%",
       "concept": "—"
     },
     {
       "rank": 5,
       "code": "600448.SH",
       "name": "华纺股份",
-      "ratio": "14.90%",
+      "ratio": "15.17%",
       "concept": "—"
     },
     {
       "rank": 6,
       "code": "603063.SH",
       "name": "禾望电气",
-      "ratio": "13.95%",
+      "ratio": "14.96%",
       "concept": "—"
     },
     {
       "rank": 7,
-      "code": "301287.SZ",
-      "name": "康力源",
-      "ratio": "13.94%",
+      "code": "688648.SH",
+      "name": "中邮科技",
+      "ratio": "14.25%",
       "concept": "—"
     },
     {
       "rank": 8,
-      "code": "688576.SH",
-      "name": "西山科技",
-      "ratio": "13.34%",
+      "code": "301287.SZ",
+      "name": "康力源",
+      "ratio": "14.22%",
       "concept": "—"
     },
     {
       "rank": 9,
-      "code": "301157.SZ",
-      "name": "华塑科技",
-      "ratio": "13.03%",
+      "code": "688576.SH",
+      "name": "西山科技",
+      "ratio": "14.06%",
       "concept": "—"
     },
     {
       "rank": 10,
-      "code": "688648.SH",
-      "name": "中邮科技",
-      "ratio": "12.91%",
+      "code": "301157.SZ",
+      "name": "华塑科技",
+      "ratio": "13.86%",
       "concept": "—"
     }
   ],
@@ -1432,7 +1432,7 @@
     "leverage_concentration_top10": {
       "source": "Tushare margin_detail + daily_basic",
       "freq": "日更",
-      "lastUpdate": "2026-08-18",
+      "lastUpdate": "2026-08-19",
       "note": "融资余额占流通市值比，T+1口径每日更新"
     },
     "medicalSectorFunds": {
@@ -1492,7 +1492,7 @@
     "marginTrading": {
       "source": "Tushare margin（沪深北交易所两融汇总）",
       "freq": "日更",
-      "lastUpdate": "2026-08-18",
+      "lastUpdate": "2026-08-19",
       "note": "T+1口径：交易日当晚更新前一交易日数据"
     }
   },
@@ -1786,146 +1786,146 @@
   ],
   "mainforce_inflow_top10": [
     {
-      "name": "京东方A",
-      "code": "000725.SZ",
-      "concept": "元器件",
-      "sector": "元器件",
-      "amount": "+30.79亿"
+      "name": "紫金矿业",
+      "code": "601899.SH",
+      "concept": "铜",
+      "sector": "铜",
+      "amount": "+15.92亿"
     },
     {
-      "name": "工商银行",
-      "code": "601398.SH",
-      "concept": "银行",
-      "sector": "银行",
-      "amount": "+7.95亿"
+      "name": "比亚迪",
+      "code": "002594.SZ",
+      "concept": "汽车整车",
+      "sector": "汽车整车",
+      "amount": "+7.02亿"
     },
     {
-      "name": "贝达药业",
-      "code": "300558.SZ",
-      "concept": "化学制药",
-      "sector": "化学制药",
-      "amount": "+7.85亿"
-    },
-    {
-      "name": "中微公司",
-      "code": "688012.SH",
+      "name": "普冉股份",
+      "code": "688766.SH",
       "concept": "半导体",
       "sector": "半导体",
-      "amount": "+7.62亿"
+      "amount": "+6.74亿"
     },
     {
-      "name": "农业银行",
-      "code": "601288.SH",
-      "concept": "银行",
-      "sector": "银行",
-      "amount": "+7.37亿"
+      "name": "天孚通信",
+      "code": "300394.SZ",
+      "concept": "通信设备",
+      "sector": "通信设备",
+      "amount": "+5.93亿"
     },
+    {
+      "name": "泰格医药",
+      "code": "300347.SZ",
+      "concept": "医疗保健",
+      "sector": "医疗保健",
+      "amount": "+5.64亿"
+    },
+    {
+      "name": "蓝思科技",
+      "code": "300433.SZ",
+      "concept": "元器件",
+      "sector": "元器件",
+      "amount": "+5.63亿"
+    },
+    {
+      "name": "太辰光",
+      "code": "300570.SZ",
+      "concept": "通信设备",
+      "sector": "通信设备",
+      "amount": "+5.56亿"
+    },
+    {
+      "name": "牧原股份",
+      "code": "002714.SZ",
+      "concept": "农业综合",
+      "sector": "农业综合",
+      "amount": "+5.11亿"
+    },
+    {
+      "name": "浪潮信息",
+      "code": "000977.SZ",
+      "concept": "IT设备",
+      "sector": "IT设备",
+      "amount": "+5.06亿"
+    },
+    {
+      "name": "药明康德",
+      "code": "603259.SH",
+      "concept": "化学制药",
+      "sector": "化学制药",
+      "amount": "+4.53亿"
+    }
+  ],
+  "mainforce_outflow_top10": [
     {
       "name": "寒武纪",
       "code": "688256.SH",
       "concept": "半导体",
       "sector": "半导体",
-      "amount": "+6.52亿"
+      "amount": "-19.11亿"
     },
     {
-      "name": "拓荆科技",
-      "code": "688072.SH",
-      "concept": "半导体",
-      "sector": "半导体",
-      "amount": "+5.65亿"
+      "name": "京东方A",
+      "code": "000725.SZ",
+      "concept": "元器件",
+      "sector": "元器件",
+      "amount": "-15.94亿"
     },
     {
-      "name": "聚和材料",
-      "code": "688503.SH",
+      "name": "金风科技",
+      "code": "002202.SZ",
       "concept": "电气设备",
       "sector": "电气设备",
-      "amount": "+4.82亿"
+      "amount": "-11.39亿"
     },
     {
-      "name": "卧龙电驱",
-      "code": "600580.SH",
-      "concept": "电气设备",
-      "sector": "电气设备",
-      "amount": "+4.8亿"
+      "name": "C宇树",
+      "code": "688836.SH",
+      "concept": "专用机械",
+      "sector": "专用机械",
+      "amount": "-10.75亿"
     },
     {
-      "name": "中国银行",
-      "code": "601988.SH",
-      "concept": "银行",
-      "sector": "银行",
-      "amount": "+4.78亿"
-    }
-  ],
-  "mainforce_outflow_top10": [
-    {
-      "name": "兆易创新",
-      "code": "603986.SH",
-      "concept": "半导体",
-      "sector": "半导体",
-      "amount": "-26.03亿"
-    },
-    {
-      "name": "新易盛",
-      "code": "300502.SZ",
-      "concept": "通信设备",
-      "sector": "通信设备",
-      "amount": "-25.62亿"
+      "name": "沃森生物",
+      "code": "300142.SZ",
+      "concept": "生物制药",
+      "sector": "生物制药",
+      "amount": "-10.14亿"
     },
     {
       "name": "长鑫科技",
       "code": "688825.SH",
       "concept": "半导体",
       "sector": "半导体",
-      "amount": "-20.66亿"
+      "amount": "-9.39亿"
     },
     {
-      "name": "中际旭创",
-      "code": "300308.SZ",
-      "concept": "通信设备",
-      "sector": "通信设备",
-      "amount": "-18.63亿"
+      "name": "石药创新",
+      "code": "300765.SZ",
+      "concept": "生物制药",
+      "sector": "生物制药",
+      "amount": "-8.61亿"
     },
     {
-      "name": "中石科技",
-      "code": "300684.SZ",
+      "name": "宝鼎科技",
+      "code": "002552.SZ",
       "concept": "元器件",
       "sector": "元器件",
-      "amount": "-14.71亿"
+      "amount": "-8.08亿"
     },
     {
-      "name": "东山精密",
-      "code": "002384.SZ",
-      "concept": "元器件",
-      "sector": "元器件",
-      "amount": "-13.9亿"
+      "name": "兴业银锡",
+      "code": "000426.SZ",
+      "concept": "铅锌",
+      "sector": "铅锌",
+      "amount": "-6.92亿"
     },
     {
-      "name": "工业富联",
-      "code": "601138.SH",
-      "concept": "通信设备",
-      "sector": "通信设备",
-      "amount": "-13.52亿"
-    },
-    {
-      "name": "紫光股份",
-      "code": "000938.SZ",
-      "concept": "IT设备",
-      "sector": "IT设备",
-      "amount": "-13.4亿"
-    },
-    {
-      "name": "中兴通讯",
-      "code": "000063.SZ",
-      "concept": "通信设备",
-      "sector": "通信设备",
-      "amount": "-13.28亿"
-    },
-    {
-      "name": "东方财富",
-      "code": "300059.SZ",
-      "concept": "证券",
-      "sector": "证券",
-      "amount": "-11.92亿"
+      "name": "金健米业",
+      "code": "600127.SH",
+      "concept": "农业综合",
+      "sector": "农业综合",
+      "amount": "-6.74亿"
     }
   ],
   "privateFund_inflow": [
@@ -2032,7 +2032,7 @@
       "note": "消费复苏不及预期，私募集体减持"
     }
   ],
-  "sectorPeriod": "2026.07.15~2026.07.22 (近4周主力累计)",
+  "sectorPeriod": "2026.07.24~2026.08.20 (近4周主力累计)",
   "conceptSectors": [
     {
       "name": "AI算力",
@@ -5283,29 +5283,40 @@
         "y5_chg": 0.0057,
         "y10_chg": -0.0033,
         "y30_chg": -0.0154
+      },
+      {
+        "date": "2026-08-20",
+        "y2": 1.2311,
+        "y5": 1.39,
+        "y10": 1.6832,
+        "y30": 2.1325,
+        "y2_chg": 0.0062,
+        "y5_chg": 0.0001,
+        "y10_chg": 0.0001,
+        "y30_chg": -0.003
       }
     ],
     "curveCompare": {
       "latest": {
-        "date": "2026-08-19",
-        "y2": 1.2249,
-        "y5": 1.3899,
-        "y10": 1.6831,
-        "y30": 2.1355
+        "date": "2026-08-20",
+        "y2": 1.2311,
+        "y5": 1.39,
+        "y10": 1.6832,
+        "y30": 2.1325
       },
       "1M_ago": {
-        "date": "2026-07-18",
-        "y2": 1.228,
-        "y5": 1.423,
-        "y10": 1.712,
-        "y30": 2.215
+        "date": "2026-07-20",
+        "y2": 1.2691,
+        "y5": 1.4486,
+        "y10": 1.7453,
+        "y30": 2.2495
       },
       "3M_ago": {
-        "date": "2026-05-19",
-        "y2": 1.262,
-        "y5": 1.443,
-        "y10": 1.734,
-        "y30": 2.221
+        "date": "2026-05-20",
+        "y2": 1.255,
+        "y5": 1.437,
+        "y10": 1.738,
+        "y30": 2.231
       },
       "6M_ago": {
         "date": "2026-02-14",
@@ -5315,27 +5326,27 @@
         "y30": 2.246
       },
       "1Y_ago": {
-        "date": "2025-08-19",
-        "y2": 1.427,
-        "y5": 1.625,
-        "y10": 1.772,
-        "y30": 2.098
+        "date": "2025-08-20",
+        "y2": 1.44,
+        "y5": 1.64,
+        "y10": 1.782,
+        "y30": 2.105
       }
     },
     "stats": {
       "latest": {
-        "date": "2026-08-19",
-        "y2": 1.2249,
-        "y5": 1.3899,
-        "y10": 1.6831,
-        "y30": 2.1355,
-        "spread": 0.911
+        "date": "2026-08-20",
+        "y2": 1.2311,
+        "y5": 1.39,
+        "y10": 1.6832,
+        "y30": 2.1325,
+        "spread": 0.901
       },
       "1m_change": {
-        "y2": -0.3,
-        "y5": -3.3,
-        "y10": -2.9,
-        "y30": -7.9
+        "y2": -3.8,
+        "y5": -5.9,
+        "y10": -6.2,
+        "y30": -11.7
       },
       "range": {
         "y2": {
@@ -7134,6 +7145,11 @@
     },
     "news": [
       {
+        "date": "2026-08-20",
+        "title": "10年期国债收益率回升至1.683%，债市出现调整",
+        "source": "中债登"
+      },
+      {
         "date": "2026-08-19",
         "title": "10年期国债收益率续降至1.683%，债市持续走牛",
         "source": "中债登"
@@ -7225,7 +7241,7 @@
       }
     ],
     "liquidityTools": {
-      "updateTime": "2026-08-19",
+      "updateTime": "2026-08-20",
       "policyRate": "1.40",
       "dr001": "1.38",
       "dr007": "1.42",
@@ -7291,18 +7307,12 @@
       "comment": "DR007（1.42%）贴近7天逆回购政策利率（1.40%），资金面整体均衡；本月公开市场净投放2000亿元，央行持续呵护流动性。"
     },
     "marginTrading": {
-      "updateTime": "2026-08-18",
-      "trend": "上升",
-      "totalBalance": 26979.0,
-      "finBalance": 26708.69,
-      "secBalance": 270.44,
+      "updateTime": "2026-08-19",
+      "trend": "下降",
+      "totalBalance": 26676.0,
+      "finBalance": 26411.51,
+      "secBalance": 264.53,
       "daily": [
-        {
-          "date": "06-24",
-          "total": 30151,
-          "fin": 29926.76,
-          "sec": 224.73
-        },
         {
           "date": "06-25",
           "total": 30330,
@@ -7536,9 +7546,15 @@
           "total": 26979,
           "fin": 26708.69,
           "sec": 270.44
+        },
+        {
+          "date": "08-19",
+          "total": 26676,
+          "fin": 26411.51,
+          "sec": 264.53
         }
       ],
-      "comment": "截至8月18日两融余额26979亿，较前日增加约54亿，连续2日上升。融资余额26709亿，融券余额270亿。杠杆资金持续回流，市场风险偏好回升。水温🟡平（两融连续2日上升；较前日增加约54亿；DR007 1.42%高于政策利率1.40%；本月公开市场净投放2000亿；10Y收益率近1月-3bp）。结论：当前杠杆资金环境中性，股票市场做多需谨慎。",
+      "comment": "截至8月19日两融余额26676亿，较前日减少约303亿。融资余额26412亿，融券余额265亿。杠杆资金持续离场，市场风险偏好下降。水温🟡平（较前日减少约303亿；DR007 1.42%高于政策利率1.40%；本月公开市场净投放2000亿；10Y收益率近1月-6bp）。结论：当前杠杆资金环境中性，股票市场做多需谨慎。",
       "temp": "🟡平",
       "verdict": "中性（谨慎）"
     }
@@ -7547,26 +7563,26 @@
     {
       "code": "000001.OF",
       "name": "华夏成长",
-      "nav": 1.319,
-      "accumNav": 3.892,
-      "date": "20260819",
-      "change": -0.09
+      "nav": 1.323,
+      "accumNav": 3.896,
+      "date": "20260820",
+      "change": 0.004
     },
     {
       "code": "005827.OF",
       "name": "易方达蓝筹精选",
-      "nav": 1.5271,
-      "accumNav": 1.5271,
-      "date": "20260819",
-      "change": -0.03
+      "nav": 1.5341,
+      "accumNav": 1.5341,
+      "date": "20260820",
+      "change": 0.007
     },
     {
       "code": "110011.OF",
       "name": "易方达中小盘",
-      "nav": 4.2164,
-      "accumNav": 6.0064,
-      "date": "20260819",
-      "change": -0.02
+      "nav": 4.2605,
+      "accumNav": 6.0505,
+      "date": "20260820",
+      "change": 0.044
     },
     {
       "code": "163406.OF",
@@ -7579,10 +7595,10 @@
     {
       "code": "260108.OF",
       "name": "景顺长城新兴成长",
-      "nav": 1.556,
-      "accumNav": 3.363,
-      "date": "20260819",
-      "change": -0.007
+      "nav": 1.565,
+      "accumNav": 3.372,
+      "date": "20260820",
+      "change": 0.009
     },
     {
       "code": "070002.OF",
@@ -7595,10 +7611,10 @@
     {
       "code": "519732.OF",
       "name": "交银定期支付双息平衡",
-      "nav": 8.812,
-      "accumNav": 8.812,
-      "date": "20260819",
-      "change": -0.518
+      "nav": 8.85,
+      "accumNav": 8.85,
+      "date": "20260820",
+      "change": 0.038
     },
     {
       "code": "001410.OF",
@@ -7611,70 +7627,70 @@
     {
       "code": "003494.OF",
       "name": "富国天惠成长",
-      "nav": 3.0383,
-      "accumNav": 3.3433,
-      "date": "20260819",
-      "change": -0.097
+      "nav": 3.0804,
+      "accumNav": 3.3854,
+      "date": "20260820",
+      "change": 0.042
     },
     {
       "code": "008764.OF",
       "name": "睿远成长价值",
-      "nav": 1.5258,
-      "accumNav": 1.5258,
-      "date": "20260818",
-      "change": 0.0
+      "nav": 1.5234,
+      "accumNav": 1.5234,
+      "date": "20260819",
+      "change": -0.002
     }
   ],
   "eciData": {
-    "updateTime": "2026-08-19 收盘（Tushare自动）",
-    "period": "2026.07.23~2026.08.19 (20个交易日)",
+    "updateTime": "2026-08-20 收盘（Tushare自动）",
+    "period": "2026.07.24~2026.08.20 (20个交易日)",
     "totalIndustries": 31,
-    "divergentCount": 7,
+    "divergentCount": 8,
     "sectors": [
       {
         "sector": "医药生物",
-        "eci": 57.2,
-        "volConvergence": 8.5,
-        "fundConcentration": 5.0,
-        "trendSync": 13.2,
-        "consistencyMomentum": 4.8,
+        "eci": 63.9,
+        "volConvergence": 7.5,
+        "fundConcentration": 9.5,
+        "trendSync": 13.3,
+        "consistencyMomentum": 7.2,
         "activity": 12.5,
         "policy": 7.5,
-        "currentCorr": 0.84,
-        "predictedCorr": 0.8,
-        "trend": "↓下降",
-        "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
-        "sampleStocks": [],
-        "change5d": -6.5,
-        "change1m": -17.7
-      },
-      {
-        "sector": "电子",
-        "eci": 59.8,
-        "volConvergence": 12.0,
-        "fundConcentration": 12.0,
-        "trendSync": 13.9,
-        "consistencyMomentum": 6.4,
-        "activity": 2.0,
-        "policy": 7.5,
-        "currentCorr": 0.92,
-        "predictedCorr": 0.9,
+        "currentCorr": 0.86,
+        "predictedCorr": 0.84,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": 4.0,
-        "change1m": -7.2
+        "change5d": -9.2,
+        "change1m": -9.1
+      },
+      {
+        "sector": "电子",
+        "eci": 63.2,
+        "volConvergence": 11.5,
+        "fundConcentration": 12.5,
+        "trendSync": 14.2,
+        "consistencyMomentum": 9.0,
+        "activity": 2.2,
+        "policy": 7.5,
+        "currentCorr": 0.93,
+        "predictedCorr": 0.92,
+        "trend": "↑上升",
+        "stocks": 5,
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
+        "sampleStocks": [],
+        "change5d": -0.1,
+        "change1m": -2.2
       },
       {
         "sector": "计算机",
-        "eci": 50.6,
+        "eci": 50.4,
         "volConvergence": 2.0,
-        "fundConcentration": 4.0,
+        "fundConcentration": 6.0,
         "trendSync": 14.6,
-        "consistencyMomentum": 9.4,
-        "activity": 8.0,
+        "consistencyMomentum": 10.8,
+        "activity": 4.5,
         "policy": 7.5,
         "currentCorr": 0.93,
         "predictedCorr": 0.93,
@@ -7682,20 +7698,20 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 3.0,
-        "change1m": -5.4
+        "change5d": 5.5,
+        "change1m": -8.6
       },
       {
         "sector": "电力设备",
-        "eci": 61.8,
+        "eci": 59.7,
         "volConvergence": 13.5,
-        "fundConcentration": 11.5,
+        "fundConcentration": 9.0,
         "trendSync": 13.5,
-        "consistencyMomentum": 6.6,
-        "activity": 3.0,
+        "consistencyMomentum": 8.4,
+        "activity": 1.8,
         "policy": 7.5,
-        "currentCorr": 0.83,
-        "predictedCorr": 0.82,
+        "currentCorr": 0.87,
+        "predictedCorr": 0.89,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
@@ -7717,74 +7733,74 @@
             "return": "-18.3%"
           }
         },
-        "change5d": -4.8,
-        "change1m": 11.9
+        "change5d": -8.9,
+        "change1m": 9.8
       },
       {
         "sector": "食品饮料",
-        "eci": 53.6,
+        "eci": 59.6,
         "volConvergence": 2.5,
-        "fundConcentration": 8.5,
+        "fundConcentration": 10.0,
         "trendSync": 12.8,
-        "consistencyMomentum": 5.4,
-        "activity": 11.5,
+        "consistencyMomentum": 9.6,
+        "activity": 11.2,
         "policy": 7.5,
         "currentCorr": 0.69,
-        "predictedCorr": 0.71,
-        "trend": "↓下降",
+        "predictedCorr": 0.7,
+        "trend": "↑上升",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": -2.4,
-        "change1m": -6.1
+        "change5d": -0.6,
+        "change1m": -2.6
       },
       {
         "sector": "银行",
-        "eci": 57.3,
+        "eci": 63.4,
         "volConvergence": 1.5,
         "fundConcentration": 15.0,
         "trendSync": 15.0,
-        "consistencyMomentum": 7.8,
-        "activity": 4.8,
+        "consistencyMomentum": 11.6,
+        "activity": 6.5,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
-        "trend": "→震荡",
+        "trend": "↑上升",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 5.0,
-        "change1m": -10.7
+        "change5d": 13.1,
+        "change1m": -4.2
       },
       {
         "sector": "非银金融",
-        "eci": 50.3,
+        "eci": 52.3,
         "volConvergence": 15.0,
         "fundConcentration": 0.5,
         "trendSync": 12.5,
-        "consistencyMomentum": 8.0,
-        "activity": 1.8,
+        "consistencyMomentum": 10.4,
+        "activity": 1.2,
         "policy": 7.5,
-        "currentCorr": 0.54,
-        "predictedCorr": 0.61,
-        "trend": "→震荡",
+        "currentCorr": 0.52,
+        "predictedCorr": 0.6,
+        "trend": "↑上升",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 2.4,
-        "change1m": -15.9
+        "change5d": 2.9,
+        "change1m": -8.1
       },
       {
         "sector": "汽车",
-        "eci": 54.0,
-        "volConvergence": 9.5,
-        "fundConcentration": 9.0,
+        "eci": 53.7,
+        "volConvergence": 10.0,
+        "fundConcentration": 8.0,
         "trendSync": 12.8,
-        "consistencyMomentum": 7.6,
-        "activity": 2.2,
+        "consistencyMomentum": 8.0,
+        "activity": 2.0,
         "policy": 7.5,
-        "currentCorr": 0.52,
-        "predictedCorr": 0.52,
+        "currentCorr": 0.51,
+        "predictedCorr": 0.48,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
@@ -7806,34 +7822,34 @@
             "return": "-68.5%"
           }
         },
-        "change5d": -3.2,
-        "change1m": 9.9
+        "change5d": 0.7,
+        "change1m": 7.3
       },
       {
         "sector": "机械设备",
-        "eci": 62.4,
-        "volConvergence": 11.5,
-        "fundConcentration": 11.0,
+        "eci": 63.3,
+        "volConvergence": 12.0,
+        "fundConcentration": 11.5,
         "trendSync": 13.8,
-        "consistencyMomentum": 7.6,
+        "consistencyMomentum": 7.4,
         "activity": 4.8,
         "policy": 7.5,
-        "currentCorr": 0.85,
-        "predictedCorr": 0.86,
+        "currentCorr": 0.87,
+        "predictedCorr": 0.88,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": -2.7,
-        "change1m": 10.0
+        "change5d": 0.7,
+        "change1m": 12.5
       },
       {
         "sector": "国防军工",
-        "eci": 57.4,
+        "eci": 55.7,
         "volConvergence": 12.5,
-        "fundConcentration": 6.5,
+        "fundConcentration": 3.5,
         "trendSync": 15.0,
-        "consistencyMomentum": 7.4,
+        "consistencyMomentum": 8.8,
         "activity": 2.8,
         "policy": 7.5,
         "currentCorr": 0.95,
@@ -7842,20 +7858,20 @@
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": 0.3,
-        "change1m": 5.0
+        "change5d": -0.4,
+        "change1m": 6.6
       },
       {
         "sector": "通信",
-        "eci": 54.8,
+        "eci": 55.3,
         "volConvergence": 3.0,
-        "fundConcentration": 13.0,
-        "trendSync": 13.5,
-        "consistencyMomentum": 7.8,
-        "activity": 4.5,
+        "fundConcentration": 14.0,
+        "trendSync": 13.1,
+        "consistencyMomentum": 8.4,
+        "activity": 3.8,
         "policy": 7.5,
-        "currentCorr": 0.84,
-        "predictedCorr": 0.84,
+        "currentCorr": 0.77,
+        "predictedCorr": 0.71,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
@@ -7877,21 +7893,20 @@
             "return": "-30.8%"
           }
         },
-        "change5d": -0.9,
-        "change1m": -4.1,
-        "fundAccum": true
+        "change5d": 3.3,
+        "change1m": -1.3
       },
       {
         "sector": "有色金属",
-        "eci": 54.2,
-        "volConvergence": 6.5,
-        "fundConcentration": 9.5,
-        "trendSync": 14.1,
-        "consistencyMomentum": 6.4,
-        "activity": 4.8,
+        "eci": 51.4,
+        "volConvergence": 6.0,
+        "fundConcentration": 7.0,
+        "trendSync": 13.8,
+        "consistencyMomentum": 7.8,
+        "activity": 4.2,
         "policy": 7.5,
         "currentCorr": 0.86,
-        "predictedCorr": 0.88,
+        "predictedCorr": 0.85,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
@@ -7913,41 +7928,41 @@
             "return": "-22.1%"
           }
         },
-        "change5d": -10.6,
-        "change1m": 10.3
+        "change5d": -6.6,
+        "change1m": 8.4
       },
       {
         "sector": "家用电器",
-        "eci": 56.4,
-        "volConvergence": 8.0,
+        "eci": 59.1,
+        "volConvergence": 9.0,
         "fundConcentration": 13.5,
         "trendSync": 15.0,
-        "consistencyMomentum": 3.8,
-        "activity": 3.0,
+        "consistencyMomentum": 5.0,
+        "activity": 3.2,
         "policy": 7.5,
         "currentCorr": 0.95,
-        "predictedCorr": 0.91,
+        "predictedCorr": 0.92,
         "trend": "↓下降",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
-        "change5d": -8.7,
-        "change1m": -0.5
+        "change5d": -3.2,
+        "change1m": -0.2
       },
       {
         "sector": "房地产",
-        "eci": 50.0,
-        "volConvergence": 5.5,
-        "fundConcentration": 4.5,
+        "eci": 48.6,
+        "volConvergence": 4.0,
+        "fundConcentration": 6.5,
         "trendSync": 14.1,
-        "consistencyMomentum": 7.4,
-        "activity": 6.0,
+        "consistencyMomentum": 5.8,
+        "activity": 5.8,
         "policy": 7.5,
         "currentCorr": 0.83,
         "predictedCorr": 0.8,
-        "trend": "→震荡",
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -7966,23 +7981,23 @@
             "return": "-19.5%"
           }
         },
-        "change5d": -12.0,
-        "change1m": 0.0
+        "change5d": -9.0,
+        "change1m": -2.2
       },
       {
         "sector": "建筑装饰",
-        "eci": 48.8,
-        "volConvergence": 9.0,
+        "eci": 48.0,
+        "volConvergence": 10.5,
         "fundConcentration": 1.5,
         "trendSync": 13.1,
-        "consistencyMomentum": 6.8,
-        "activity": 6.0,
+        "consistencyMomentum": 5.8,
+        "activity": 4.8,
         "policy": 7.5,
         "currentCorr": 0.87,
-        "predictedCorr": 0.84,
-        "trend": "→震荡",
+        "predictedCorr": 0.85,
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8001,44 +8016,44 @@
             "return": "-25.6%"
           }
         },
-        "change5d": -1.0,
-        "change1m": -1.3
+        "change5d": 0.6,
+        "change1m": -4.2
       },
       {
         "sector": "交通运输",
-        "eci": 52.6,
+        "eci": 57.4,
         "volConvergence": 7.0,
-        "fundConcentration": 14.0,
-        "trendSync": 13.3,
-        "consistencyMomentum": 4.0,
-        "activity": 1.5,
+        "fundConcentration": 13.0,
+        "trendSync": 13.2,
+        "consistencyMomentum": 8.8,
+        "activity": 2.2,
         "policy": 7.5,
-        "currentCorr": 0.66,
-        "predictedCorr": 0.75,
-        "trend": "↓下降",
+        "currentCorr": 0.62,
+        "predictedCorr": 0.66,
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
-        "change5d": 0.9,
-        "change1m": 2.7
+        "change5d": 5.3,
+        "change1m": 3.3
       },
       {
         "sector": "传媒",
-        "eci": 49.7,
+        "eci": 47.1,
         "volConvergence": 1.0,
-        "fundConcentration": 3.5,
+        "fundConcentration": 5.0,
         "trendSync": 13.7,
-        "consistencyMomentum": 7.8,
-        "activity": 11.2,
+        "consistencyMomentum": 9.2,
+        "activity": 6.0,
         "policy": 7.5,
         "currentCorr": 0.87,
         "predictedCorr": 0.85,
-        "trend": "→震荡",
+        "trend": "↑上升",
         "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": -2.3,
-        "change1m": -5.4
+        "change5d": -0.3,
+        "change1m": -12.3
       },
       {
         "sector": "化工",
@@ -8077,18 +8092,18 @@
       },
       {
         "sector": "建筑材料",
-        "eci": 55.9,
+        "eci": 59.1,
         "volConvergence": 11.0,
-        "fundConcentration": 7.0,
+        "fundConcentration": 8.5,
         "trendSync": 13.3,
-        "consistencyMomentum": 8.0,
+        "consistencyMomentum": 9.4,
         "activity": 3.5,
         "policy": 7.5,
-        "currentCorr": 0.73,
+        "currentCorr": 0.74,
         "predictedCorr": 0.72,
-        "trend": "→震荡",
+        "trend": "↑上升",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8107,23 +8122,23 @@
             "return": "-21.3%"
           }
         },
-        "change5d": -7.7,
-        "change1m": 1.6
+        "change5d": -1.1,
+        "change1m": 7.4
       },
       {
         "sector": "农林牧渔",
-        "eci": 61.3,
+        "eci": 64.0,
         "volConvergence": 0.5,
         "fundConcentration": 10.5,
-        "trendSync": 13.6,
-        "consistencyMomentum": 8.6,
-        "activity": 14.5,
+        "trendSync": 13.5,
+        "consistencyMomentum": 11.4,
+        "activity": 14.2,
         "policy": 7.5,
         "currentCorr": 0.76,
-        "predictedCorr": 0.7,
-        "trend": "→震荡",
+        "predictedCorr": 0.68,
+        "trend": "↑上升",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8142,35 +8157,35 @@
             "return": "-15.6%"
           }
         },
-        "change5d": 5.3,
-        "change1m": -1.8
+        "change5d": 11.4,
+        "change1m": 2.9
       },
       {
         "sector": "公用事业",
-        "eci": 55.3,
+        "eci": 53.6,
         "volConvergence": 14.5,
         "fundConcentration": 1.0,
         "trendSync": 12.8,
-        "consistencyMomentum": 10.8,
-        "activity": 3.2,
+        "consistencyMomentum": 11.2,
+        "activity": 1.2,
         "policy": 7.5,
-        "currentCorr": 0.79,
+        "currentCorr": 0.8,
         "predictedCorr": 0.95,
         "trend": "↑上升",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性在增强，可加仓",
         "sampleStocks": [],
-        "change5d": 8.3,
-        "change1m": -0.1
+        "change5d": -6.6,
+        "change1m": -7.5
       },
       {
         "sector": "轻工制造",
-        "eci": 41.6,
-        "volConvergence": 6.0,
+        "eci": 42.7,
+        "volConvergence": 6.5,
         "fundConcentration": 3.0,
         "trendSync": 13.5,
-        "consistencyMomentum": 4.2,
-        "activity": 3.2,
+        "consistencyMomentum": 4.4,
+        "activity": 3.5,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
@@ -8195,17 +8210,17 @@
             "return": "-17.2%"
           }
         },
-        "change5d": -2.4,
-        "change1m": -16.5
+        "change5d": 0.7,
+        "change1m": -15.0
       },
       {
         "sector": "纺织服装",
-        "eci": 46.9,
-        "volConvergence": 4.5,
-        "fundConcentration": 6.0,
+        "eci": 47.4,
+        "volConvergence": 5.5,
+        "fundConcentration": 7.5,
         "trendSync": 14.2,
-        "consistencyMomentum": 4.8,
-        "activity": 5.2,
+        "consistencyMomentum": 4.2,
+        "activity": 3.8,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
@@ -8230,23 +8245,23 @@
             "return": "-13.5%"
           }
         },
-        "change5d": -15.7,
-        "change1m": -13.8
+        "change5d": -10.7,
+        "change1m": -18.4
       },
       {
         "sector": "钢铁",
-        "eci": 52.9,
-        "volConvergence": 7.5,
-        "fundConcentration": 10.0,
+        "eci": 47.8,
+        "volConvergence": 8.0,
+        "fundConcentration": 4.5,
         "trendSync": 13.8,
-        "consistencyMomentum": 7.0,
-        "activity": 1.8,
+        "consistencyMomentum": 8.2,
+        "activity": 1.0,
         "policy": 7.5,
-        "currentCorr": 0.85,
-        "predictedCorr": 0.91,
+        "currentCorr": 0.84,
+        "predictedCorr": 0.87,
         "trend": "→震荡",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8265,23 +8280,23 @@
             "return": "-12.8%"
           }
         },
-        "change5d": 7.2,
-        "change1m": -4.0
+        "change5d": 2.7,
+        "change1m": -12.3
       },
       {
         "sector": "煤炭",
-        "eci": 66.0,
+        "eci": 71.3,
         "volConvergence": 13.0,
         "fundConcentration": 14.5,
-        "trendSync": 12.4,
-        "consistencyMomentum": 6.2,
-        "activity": 5.8,
+        "trendSync": 12.0,
+        "consistencyMomentum": 10.0,
+        "activity": 7.2,
         "policy": 7.5,
-        "currentCorr": 0.6,
-        "predictedCorr": 0.38,
-        "trend": "→震荡",
+        "currentCorr": 0.56,
+        "predictedCorr": 0.28,
+        "trend": "↑上升",
         "stocks": 5,
-        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性震荡，观望为主",
+        "advice": "板块即将强联动，适合ETF或龙头一揽子买入 | 一致性在增强，可加仓",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8300,23 +8315,23 @@
             "return": "-14.3%"
           }
         },
-        "change5d": -7.6,
-        "change1m": -5.2
+        "change5d": 3.5,
+        "change1m": 0.0
       },
       {
         "sector": "石油石化",
-        "eci": 49.3,
-        "volConvergence": 3.5,
-        "fundConcentration": 12.5,
-        "trendSync": 13.1,
-        "consistencyMomentum": 3.8,
+        "eci": 53.7,
+        "volConvergence": 4.5,
+        "fundConcentration": 12.0,
+        "trendSync": 12.9,
+        "consistencyMomentum": 7.4,
         "activity": 4.0,
         "policy": 7.5,
-        "currentCorr": 0.67,
-        "predictedCorr": 0.67,
-        "trend": "↓下降",
+        "currentCorr": 0.6,
+        "predictedCorr": 0.52,
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8335,36 +8350,36 @@
             "return": "-11.6%"
           }
         },
-        "change5d": -1.7,
-        "change1m": -11.4,
+        "change5d": 5.0,
+        "change1m": -3.6,
         "fundAccum": true
       },
       {
         "sector": "社会服务",
-        "eci": 44.2,
+        "eci": 42.6,
         "volConvergence": 5.0,
-        "fundConcentration": 2.0,
+        "fundConcentration": 2.5,
         "trendSync": 13.9,
-        "consistencyMomentum": 6.4,
-        "activity": 5.0,
+        "consistencyMomentum": 5.6,
+        "activity": 3.8,
         "policy": 7.5,
-        "currentCorr": 0.88,
-        "predictedCorr": 0.9,
-        "trend": "→震荡",
+        "currentCorr": 0.87,
+        "predictedCorr": 0.87,
+        "trend": "↓下降",
         "stocks": 5,
-        "advice": "必须精选个股，板块参考意义不大 | 一致性震荡，观望为主",
+        "advice": "必须精选个股，板块参考意义不大 | 一致性在减弱，控制仓位",
         "sampleStocks": [],
-        "change5d": -4.0,
-        "change1m": -7.5
+        "change5d": -6.2,
+        "change1m": -10.1
       },
       {
         "sector": "环保",
-        "eci": 57.2,
-        "volConvergence": 10.5,
-        "fundConcentration": 8.0,
+        "eci": 51.8,
+        "volConvergence": 9.5,
+        "fundConcentration": 5.5,
         "trendSync": 15.0,
-        "consistencyMomentum": 7.0,
-        "activity": 3.5,
+        "consistencyMomentum": 6.6,
+        "activity": 2.5,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.94,
@@ -8389,17 +8404,17 @@
             "return": "-10.3%"
           }
         },
-        "change5d": 1.3,
-        "change1m": 3.9
+        "change5d": -1.4,
+        "change1m": -1.9
       },
       {
         "sector": "美容护理",
-        "eci": 57.0,
-        "volConvergence": 4.0,
-        "fundConcentration": 7.5,
+        "eci": 63.6,
+        "volConvergence": 3.5,
+        "fundConcentration": 11.0,
         "trendSync": 15.0,
-        "consistencyMomentum": 8.8,
-        "activity": 8.5,
+        "consistencyMomentum": 8.2,
+        "activity": 12.0,
         "policy": 7.5,
         "currentCorr": 0.95,
         "predictedCorr": 0.95,
@@ -8424,23 +8439,23 @@
             "return": "-15.3%"
           }
         },
-        "change5d": -1.6,
-        "change1m": 1.0
+        "change5d": 5.9,
+        "change1m": 8.7
       },
       {
         "sector": "综合",
-        "eci": 54.7,
-        "volConvergence": 10.0,
-        "fundConcentration": 2.5,
+        "eci": 52.9,
+        "volConvergence": 8.5,
+        "fundConcentration": 2.0,
         "trendSync": 15.0,
-        "consistencyMomentum": 5.4,
-        "activity": 8.8,
+        "consistencyMomentum": 6.8,
+        "activity": 7.8,
         "policy": 7.5,
         "currentCorr": 0.95,
-        "predictedCorr": 0.93,
-        "trend": "↓下降",
+        "predictedCorr": 0.94,
+        "trend": "→震荡",
         "stocks": 5,
-        "advice": "关注龙头个股，等待一致性确认 | 一致性在减弱，控制仓位",
+        "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
         "sampleStocks": [],
         "leaders": {
           "mvLeader": {
@@ -8459,20 +8474,20 @@
             "return": "-20.1%"
           }
         },
-        "change5d": -3.0,
-        "change1m": -6.6
+        "change5d": -3.9,
+        "change1m": -6.4
       },
       {
         "sector": "基础化工",
-        "eci": 57.7,
+        "eci": 57.9,
         "volConvergence": 14.0,
-        "fundConcentration": 5.5,
+        "fundConcentration": 4.0,
         "trendSync": 13.6,
-        "consistencyMomentum": 6.8,
-        "activity": 4.5,
+        "consistencyMomentum": 8.8,
+        "activity": 4.2,
         "policy": 7.5,
-        "currentCorr": 0.8,
-        "predictedCorr": 0.82,
+        "currentCorr": 0.79,
+        "predictedCorr": 0.79,
         "trend": "→震荡",
         "stocks": 5,
         "advice": "关注龙头个股，等待一致性确认 | 一致性震荡，观望为主",
@@ -8494,8 +8509,8 @@
             "return": "-13.7%"
           }
         },
-        "change5d": -4.7,
-        "change1m": 15.9
+        "change5d": -0.2,
+        "change1m": 17.2
       }
     ],
     "indicators": {
@@ -9182,141 +9197,141 @@
     {
       "ticker": "159883",
       "name": "永赢中证全指医疗器械ETF",
-      "close": 0.436,
-      "changePct": -2.46,
-      "preClose": 0.447
+      "close": 0.456,
+      "changePct": 4.59,
+      "preClose": 0.436
     },
     {
       "ticker": "159892",
       "name": "华夏恒生生物科技ETF(QDII)",
-      "close": 0.79,
-      "changePct": -0.38,
-      "preClose": 0.793
+      "close": 0.826,
+      "changePct": 4.56,
+      "preClose": 0.79
     },
     {
       "ticker": "159265",
       "name": "鹏华国证港股通消费主题ETF",
-      "close": 0.816,
-      "changePct": 0.25,
-      "preClose": 0.814
+      "close": 0.827,
+      "changePct": 1.35,
+      "preClose": 0.816
     },
     {
       "ticker": "159736",
       "name": "天弘中证食品饮料ETF",
-      "close": 0.591,
-      "changePct": -1.66,
-      "preClose": 0.601
+      "close": 0.596,
+      "changePct": 0.85,
+      "preClose": 0.591
     },
     {
       "ticker": "518880",
       "name": "华安易富黄金ETF",
-      "close": 8.974,
-      "changePct": -1.15,
-      "preClose": 9.078
+      "close": 9.234,
+      "changePct": 2.9,
+      "preClose": 8.974
     },
     {
       "ticker": "562510",
       "name": "华夏中证旅游主题ETF",
-      "close": 0.56,
-      "changePct": -1.41,
-      "preClose": 0.568
+      "close": 0.568,
+      "changePct": 1.43,
+      "preClose": 0.56
     }
   ],
   "sectorCommentary": [
     {
       "code": "000928.SH",
       "name": "中证能源",
-      "pctChg": -0.03,
-      "close": 3463.44,
-      "comment": "窄幅震荡",
-      "tone": "flat"
+      "pctChg": -0.33,
+      "close": 3451.93,
+      "comment": "领跌，注意风险",
+      "tone": "down"
     },
     {
       "code": "000987.SH",
       "name": "中证材料",
-      "pctChg": -3.07,
-      "close": 4923.56,
-      "comment": "回调，观望为主",
-      "tone": "down"
+      "pctChg": 0.79,
+      "close": 4962.41,
+      "comment": "跟涨，表现平稳",
+      "tone": "up"
     },
     {
       "code": "399383.SZ",
       "name": "中证工业",
-      "pctChg": -3.14,
-      "close": 2714.94,
-      "comment": "回调，观望为主",
+      "pctChg": -0.45,
+      "close": 2702.65,
+      "comment": "领跌，注意风险，连跌3日",
       "tone": "down"
     },
     {
       "code": "000989.SH",
       "name": "中证可选",
-      "pctChg": -2.12,
-      "close": 4593.81,
-      "comment": "回调，观望为主",
-      "tone": "down"
+      "pctChg": 0.77,
+      "close": 4629.04,
+      "comment": "跟涨，表现平稳",
+      "tone": "up"
     },
     {
       "code": "000932.SH",
       "name": "中证消费",
-      "pctChg": -1.08,
-      "close": 12489.98,
-      "comment": "回调，观望为主",
-      "tone": "down"
+      "pctChg": 0.71,
+      "close": 12578.17,
+      "comment": "跟涨，表现平稳",
+      "tone": "up"
     },
     {
       "code": "000933.SH",
       "name": "中证医药",
-      "pctChg": -1.44,
-      "close": 8168.13,
-      "comment": "回调，观望为主",
-      "tone": "down"
-    },
-    {
-      "code": "000934.SH",
-      "name": "中证金融",
-      "pctChg": 0.62,
-      "close": 5599.14,
+      "pctChg": 2.77,
+      "close": 8394.76,
       "comment": "领涨，资金关注度高",
       "tone": "up"
     },
     {
+      "code": "000934.SH",
+      "name": "中证金融",
+      "pctChg": 0.21,
+      "close": 5610.99,
+      "comment": "窄幅震荡",
+      "tone": "flat"
+    },
+    {
       "code": "000935.SH",
       "name": "中证信息",
-      "pctChg": -7.4,
-      "close": 7820.63,
-      "comment": "领跌，注意风险",
-      "tone": "down"
+      "pctChg": -0.18,
+      "close": 7806.66,
+      "comment": "窄幅震荡，连跌3日",
+      "tone": "flat"
     },
     {
       "code": "801770.SI",
       "name": "中证电信",
-      "pctChg": -7.95,
-      "close": 7092.23,
-      "comment": "领跌，注意风险",
-      "tone": "down"
+      "pctChg": 1.75,
+      "close": 7216.06,
+      "comment": "领涨，资金关注度高",
+      "tone": "up"
     },
     {
       "code": "801160.SI",
       "name": "中证公用",
-      "pctChg": -1.19,
-      "close": 2435.63,
-      "comment": "回调，观望为主，连跌4日",
-      "tone": "down"
+      "pctChg": -0.16,
+      "close": 2431.85,
+      "comment": "窄幅震荡，连跌5日",
+      "tone": "flat"
     }
   ],
   "nationalETFWatch": {
-    "trade_date": "2026-08-19",
+    "trade_date": "2026-08-20",
     "items": [
       {
         "name": "嘉实300ETF",
         "code": "159919.SZ",
-        "share": 61.33,
-        "prevShare": 61.72,
-        "shareChg": -0.4,
-        "avgPrice": 4.879,
-        "netFlow": -1.93,
-        "shareChg5d": -2.07,
-        "netFlow5d": -10.24
+        "share": 62.66,
+        "prevShare": 61.33,
+        "shareChg": 1.33,
+        "avgPrice": 4.863,
+        "netFlow": 6.48,
+        "shareChg5d": -0.19,
+        "netFlow5d": -1.04
       },
       {
         "name": "华泰柏瑞300ETF",
@@ -9409,24 +9424,24 @@
       {
         "name": "易方达创业板ETF",
         "code": "159915.SZ",
-        "share": 171.91,
-        "prevShare": 171.14,
-        "shareChg": 0.77,
-        "avgPrice": 3.558,
-        "netFlow": 2.74,
-        "shareChg5d": -9.76,
-        "netFlow5d": -35.99
+        "share": 184.1,
+        "prevShare": 171.91,
+        "shareChg": 12.19,
+        "avgPrice": 3.518,
+        "netFlow": 42.89,
+        "shareChg5d": 4.29,
+        "netFlow5d": 13.72
       },
       {
         "name": "华安创业板50ETF",
         "code": "159949.SZ",
-        "share": 146.14,
-        "prevShare": 148.14,
-        "shareChg": -2.0,
-        "avgPrice": 1.669,
-        "netFlow": -3.34,
-        "shareChg5d": -7.69,
-        "netFlow5d": -13.1
+        "share": 149.57,
+        "prevShare": 146.14,
+        "shareChg": 3.43,
+        "avgPrice": 1.646,
+        "netFlow": 5.65,
+        "shareChg5d": -2.95,
+        "netFlow5d": -5.2
       },
       {
         "name": "华泰柏瑞A500ETF",
@@ -9442,24 +9457,24 @@
       {
         "name": "南方A500ETF",
         "code": "159352.SZ",
-        "share": 269.85,
-        "prevShare": 273.24,
-        "shareChg": -3.39,
-        "avgPrice": 1.277,
-        "netFlow": -4.33,
-        "shareChg5d": -8.37,
-        "netFlow5d": -10.81
+        "share": 273.9,
+        "prevShare": 269.85,
+        "shareChg": 4.05,
+        "avgPrice": 1.27,
+        "netFlow": 5.14,
+        "shareChg5d": -3.09,
+        "netFlow5d": -4.07
       },
       {
         "name": "国泰A500ETF",
         "code": "159338.SZ",
-        "share": 208.7,
-        "prevShare": 215.0,
-        "shareChg": -6.3,
-        "avgPrice": 1.225,
-        "netFlow": -7.72,
-        "shareChg5d": -16.35,
-        "netFlow5d": -20.23
+        "share": 215.27,
+        "prevShare": 208.7,
+        "shareChg": 6.57,
+        "avgPrice": 1.219,
+        "netFlow": 8.01,
+        "shareChg5d": -9.0,
+        "netFlow5d": -11.24
       },
       {
         "name": "华夏A500ETF",
@@ -9475,75 +9490,151 @@
       {
         "name": "易方达A500ETF",
         "code": "159361.SZ",
-        "share": 225.11,
-        "prevShare": 227.33,
-        "shareChg": -2.22,
-        "avgPrice": 1.249,
-        "netFlow": -2.77,
-        "shareChg5d": -3.93,
-        "netFlow5d": -4.96
+        "share": 229.61,
+        "prevShare": 225.11,
+        "shareChg": 4.5,
+        "avgPrice": 1.244,
+        "netFlow": 5.6,
+        "shareChg5d": 0.57,
+        "netFlow5d": 0.64
       }
     ],
     "total": {
-      "shareChg": 60.02,
-      "netFlow": 181.25,
-      "shareChg5d": -49.75,
-      "netFlow5d": -118.23
+      "shareChg": 105.63,
+      "netFlow": 272.37,
+      "shareChg5d": -11.95,
+      "netFlow5d": -30.09
     }
   },
   "sectorScan": {
-    "trade_date": "2026-08-19",
-    "summary": "今日4个板块出现吸筹信号：黄金连续4日净流入、水运连续3日净流入、石油开采连续4日净流入。",
+    "trade_date": "2026-08-20",
+    "summary": "今日3个板块出现吸筹信号：石油加工连续5日净流入、水运连续4日净流入、银行连续3日净流入；1个板块启动确认（铁路）；1个板块存在高潮风险（黄金），谨慎追高。",
     "items": [
       {
-        "sector": "黄金",
-        "netInflow1d": 12.77,
-        "netInflow5d": 6.41,
-        "consecutiveDays": 4,
-        "sectorPctChg": 0.47,
-        "pct5d": -0.66,
+        "sector": "石油加工",
+        "netInflow1d": 0.21,
+        "netInflow5d": 4.73,
+        "consecutiveDays": 5,
+        "sectorPctChg": 0.3,
+        "pct5d": 0.98,
         "status": "吸筹中",
-        "stocks": [],
-        "score": 106.7
+        "stocks": [
+          {
+            "name": "恒力石化",
+            "code": "600346.SH",
+            "netInflow": 0.4,
+            "pctChg": -0.11
+          },
+          {
+            "name": "华锦股份",
+            "code": "000059.SZ",
+            "netInflow": 0.16,
+            "pctChg": -3.94
+          }
+        ],
+        "score": 110.0
+      },
+      {
+        "sector": "黄金",
+        "netInflow1d": 6.38,
+        "netInflow5d": 29.19,
+        "consecutiveDays": 5,
+        "sectorPctChg": 5.45,
+        "pct5d": 10.53,
+        "status": "高潮风险",
+        "stocks": [
+          {
+            "name": "山东黄金",
+            "code": "600547.SH",
+            "netInflow": 4.35,
+            "pctChg": 8.59
+          },
+          {
+            "name": "晓程科技",
+            "code": "300139.SZ",
+            "netInflow": 2.38,
+            "pctChg": 5.93
+          }
+        ],
+        "score": 110.0
       },
       {
         "sector": "水运",
-        "netInflow1d": 6.72,
-        "netInflow5d": 13.71,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.19,
-        "pct5d": 2.5,
+        "netInflow1d": 1.06,
+        "netInflow5d": 19.04,
+        "consecutiveDays": 4,
+        "sectorPctChg": 0.85,
+        "pct5d": 4.04,
         "status": "吸筹中",
-        "stocks": [],
+        "stocks": [
+          {
+            "name": "中远海能",
+            "code": "600026.SH",
+            "netInflow": 0.56,
+            "pctChg": -0.05
+          },
+          {
+            "name": "招商轮船",
+            "code": "601872.SH",
+            "netInflow": 0.48,
+            "pctChg": -0.75
+          }
+        ],
         "score": 100.0
       },
       {
-        "sector": "石油开采",
-        "netInflow1d": 0.86,
-        "netInflow5d": 1.87,
-        "consecutiveDays": 4,
-        "sectorPctChg": -1.27,
-        "pct5d": -0.22,
+        "sector": "银行",
+        "netInflow1d": 26.22,
+        "netInflow5d": 88.16,
+        "consecutiveDays": 3,
+        "sectorPctChg": 0.81,
+        "pct5d": 2.07,
         "status": "吸筹中",
-        "stocks": [],
-        "score": 93.3
+        "stocks": [
+          {
+            "name": "农业银行",
+            "code": "601288.SH",
+            "netInflow": 4.45,
+            "pctChg": 0.59
+          },
+          {
+            "name": "平安银行",
+            "code": "000001.SZ",
+            "netInflow": 3.43,
+            "pctChg": 1.15
+          }
+        ],
+        "score": 100.0
       },
       {
-        "sector": "石油加工",
-        "netInflow1d": 2.77,
-        "netInflow5d": 0.1,
-        "consecutiveDays": 4,
-        "sectorPctChg": -0.94,
-        "pct5d": -1.21,
-        "status": "吸筹中",
-        "stocks": [],
-        "score": 80.0
+        "sector": "铁路",
+        "netInflow1d": 0.07,
+        "netInflow5d": 0.01,
+        "consecutiveDays": 3,
+        "sectorPctChg": 1.59,
+        "pct5d": -0.55,
+        "status": "启动确认",
+        "stocks": [
+          {
+            "name": "广深铁路",
+            "code": "601333.SH",
+            "netInflow": 0.53,
+            "pctChg": 0.68
+          },
+          {
+            "name": "西部创业",
+            "code": "000557.SZ",
+            "netInflow": 0.09,
+            "pctChg": 3.09
+          }
+        ],
+        "score": 60.0
       }
     ]
   },
   "bottomWatch": {
-    "trade_date": "2026-08-19",
-    "days": 80,
+    "trade_date": "2026-08-20",
+    "days": 81,
     "windows": [
       30,
       60
@@ -9556,141 +9647,166 @@
     },
     "counts": {
       "both": 0,
-      "d30": 2,
+      "d30": 1,
       "d60": 0
     },
     "items": [
       {
-        "sector": "电信运营",
-        "hit30": true,
-        "hit60": false,
-        "both": false,
-        "inflow30d": 53.54,
-        "inflow60d": 7.76,
-        "positiveRatio30": 60.0,
-        "positiveRatio60": 50.0,
-        "inflow5d": 1.73,
-        "pricePosition": 0.138,
-        "score": 81.2,
-        "leaders": [],
-        "firstSeen": "08-18",
-        "streakDays": 2
-      },
-      {
         "sector": "石油加工",
         "hit30": true,
         "hit60": false,
         "both": false,
-        "inflow30d": 14.27,
-        "inflow60d": -32.74,
-        "positiveRatio30": 63.3,
-        "positiveRatio60": 46.7,
-        "inflow5d": 0.1,
-        "pricePosition": 0.188,
-        "score": 41.6,
-        "leaders": [],
+        "inflow30d": 15.53,
+        "inflow60d": -28.27,
+        "positiveRatio30": 66.7,
+        "positiveRatio60": 48.3,
+        "inflow5d": 4.73,
+        "pricePosition": 0.197,
+        "score": 62.7,
+        "leaders": [
+          {
+            "name": "华锦股份",
+            "code": "000059.SZ",
+            "pctChg": -3.94,
+            "strength": "站上20/60日线，距60日高点7%"
+          }
+        ],
         "firstSeen": "08-19",
-        "streakDays": 1
+        "streakDays": 2
       }
     ],
-    "summary": "2 个板块出现底部资金积聚信号——30日档（较新积聚）：电信运营、石油加工。长周期资金缓慢流入且价格处于长期低位，关注率先走强的龙头。",
+    "summary": "1 个板块出现底部资金积聚信号——30日档（较新积聚）：石油加工。长周期资金缓慢流入且价格处于长期低位，关注率先走强的龙头。",
     "freshness": [
-      {
-        "sector": "电信运营",
-        "firstSeen": "08-18",
-        "streakDays": 2,
-        "stage": "新进入积聚"
-      },
       {
         "sector": "石油加工",
         "firstSeen": "08-19",
-        "streakDays": 1,
+        "streakDays": 2,
         "stage": "新进入积聚"
       }
     ]
   },
   "eciSubsectors": {
-    "trade_date": "2026-08-19",
+    "trade_date": "2026-08-20",
     "items": [
       {
         "parent": "煤炭",
-        "parentEci": 66.0,
+        "parentEci": 71.3,
         "subs": [
           {
             "name": "焦炭加工",
-            "eci": 66.2,
-            "inflow20d": -0.95,
+            "eci": 67.8,
+            "inflow20d": -3.95,
             "positiveRatio": 50.0,
-            "leaders": []
+            "leaders": [
+              {
+                "name": "开滦股份",
+                "code": "600997.SH",
+                "pctChg": -0.18
+              },
+              {
+                "name": "云煤能源",
+                "code": "600792.SH",
+                "pctChg": -4.26
+              }
+            ]
           },
           {
             "name": "煤炭开采",
-            "eci": 60.7,
-            "inflow20d": 14.69,
+            "eci": 64.8,
+            "inflow20d": 7.44,
             "positiveRatio": 56.7,
-            "leaders": []
+            "leaders": [
+              {
+                "name": "大有能源",
+                "code": "600403.SH",
+                "pctChg": 4.25
+              },
+              {
+                "name": "山西焦煤",
+                "code": "000983.SZ",
+                "pctChg": 1.9
+              }
+            ]
           }
         ]
       },
       {
         "parent": "银行",
-        "parentEci": 57.3,
+        "parentEci": 63.4,
         "subs": [
           {
             "name": "银行",
-            "eci": 70.0,
-            "inflow20d": 260.99,
-            "positiveRatio": 66.7,
-            "leaders": []
+            "eci": 72.8,
+            "inflow20d": 264.13,
+            "positiveRatio": 70.0,
+            "leaders": [
+              {
+                "name": "农业银行",
+                "code": "601288.SH",
+                "pctChg": 0.59
+              },
+              {
+                "name": "平安银行",
+                "code": "000001.SZ",
+                "pctChg": 1.15
+              }
+            ]
           }
         ]
       }
     ],
     "watchlist": [
       {
-        "parent": "机械设备",
-        "eci": 62.4,
-        "inflow30d": -398.47,
-        "posRatio": 40.0,
-        "gap": "30日净流出398.5亿，待资金回正"
-      },
-      {
-        "parent": "电力设备",
-        "eci": 61.8,
-        "inflow30d": -467.08,
-        "posRatio": 43.3,
-        "gap": "30日净流出467.1亿，待资金回正"
-      },
-      {
         "parent": "农林牧渔",
-        "eci": 61.3,
-        "inflow30d": -31.66,
-        "posRatio": 48.0,
-        "gap": "30日净流出31.7亿，待资金回正"
+        "eci": 64.0,
+        "inflow30d": -27.37,
+        "posRatio": 50.0,
+        "gap": "30日净流出27.4亿，待资金回正"
       },
       {
-        "parent": "电子",
-        "eci": 59.8,
-        "inflow30d": -1131.31,
+        "parent": "医药生物",
+        "eci": 63.9,
+        "inflow30d": -419.63,
+        "posRatio": 40.7,
+        "gap": "30日净流出419.6亿，待资金回正"
+      },
+      {
+        "parent": "美容护理",
+        "eci": 63.6,
+        "inflow30d": -13.35,
+        "posRatio": 36.7,
+        "gap": "30日净流出13.4亿，待资金回正"
+      },
+      {
+        "parent": "食品饮料",
+        "eci": 59.6,
+        "inflow30d": 12.33,
+        "posRatio": 46.1,
+        "gap": "流入占比46.1%，未过半"
+      },
+      {
+        "parent": "家用电器",
+        "eci": 59.1,
+        "inflow30d": 33.42,
         "posRatio": 43.3,
-        "gap": "30日净流出1131.3亿，待资金回正"
+        "gap": "流入占比43.3%，未过半"
       }
     ]
   },
   "marginWatch": {
-    "trade_date": "2026-08-18",
+    "trade_date": "2026-08-19",
     "threshold": 3.0,
     "items": [
       {
         "code": "002216.SZ",
         "name": "三全食品",
         "group": "watch",
-        "rzye": 1.66,
-        "inc3d": 0.16,
-        "incPct": 0.2,
-        "inc5d": 0.19,
-        "inc5dPct": 0.24,
-        "consecutiveUpDays": 3,
+        "rzye": 1.67,
+        "inc3d": 0.1,
+        "incPct": 0.13,
+        "inc5d": 0.16,
+        "inc5dPct": 0.2,
+        "consecutiveUpDays": 4,
         "triggered": false,
         "level": null
       },
@@ -9698,24 +9814,24 @@
         "code": "002568.SZ",
         "name": "百润股份",
         "group": "watch",
-        "rzye": 2.69,
-        "inc3d": 0.15,
-        "incPct": 0.1,
+        "rzye": 2.67,
+        "inc3d": 0.1,
+        "incPct": 0.07,
         "inc5d": 0.09,
         "inc5dPct": 0.06,
-        "consecutiveUpDays": 3,
+        "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
       },
       {
-        "code": "600276.SH",
-        "name": "恒瑞医药",
-        "group": "hold",
-        "rzye": 61.05,
-        "inc3d": 2.54,
-        "incPct": 0.08,
-        "inc5d": 4.75,
-        "inc5dPct": 0.14,
+        "code": "600521.SH",
+        "name": "华海药业",
+        "group": "watch",
+        "rzye": 8.92,
+        "inc3d": 0.18,
+        "incPct": 0.07,
+        "inc5d": 0.22,
+        "inc5dPct": 0.09,
         "consecutiveUpDays": 1,
         "triggered": false,
         "level": null
@@ -9724,11 +9840,24 @@
         "code": "688016.SH",
         "name": "心脉医疗",
         "group": "hold",
-        "rzye": 4.68,
-        "inc3d": 0.06,
-        "incPct": 0.05,
-        "inc5d": 0.01,
-        "inc5dPct": 0.01,
+        "rzye": 4.71,
+        "inc3d": 0.02,
+        "incPct": 0.02,
+        "inc5d": -0.03,
+        "inc5dPct": -0.03,
+        "consecutiveUpDays": 1,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600276.SH",
+        "name": "恒瑞医药",
+        "group": "hold",
+        "rzye": 60.57,
+        "inc3d": 0.21,
+        "incPct": 0.01,
+        "inc5d": 3.43,
+        "inc5dPct": 0.1,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -9737,12 +9866,51 @@
         "code": "600009.SH",
         "name": "上海机场",
         "group": "hold",
-        "rzye": 16.3,
-        "inc3d": 0.19,
-        "incPct": 0.03,
-        "inc5d": 0.15,
-        "inc5dPct": 0.03,
+        "rzye": 16.13,
+        "inc3d": 0.02,
+        "incPct": 0.0,
+        "inc5d": 0.03,
+        "inc5dPct": 0.01,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600298.SH",
+        "name": "安琪酵母",
+        "group": "watch",
+        "rzye": 4.35,
+        "inc3d": 0.0,
+        "incPct": 0.0,
+        "inc5d": -0.13,
+        "inc5dPct": -0.04,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "688029.SH",
+        "name": "南微医学",
+        "group": "hold",
+        "rzye": 4.72,
+        "inc3d": -0.02,
+        "incPct": -0.01,
+        "inc5d": -0.1,
+        "inc5dPct": -0.07,
         "consecutiveUpDays": 1,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "000895.SZ",
+        "name": "双汇发展",
+        "group": "watch",
+        "rzye": 2.03,
+        "inc3d": -0.06,
+        "incPct": -0.01,
+        "inc5d": -0.11,
+        "inc5dPct": -0.01,
+        "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
       },
@@ -9750,11 +9918,37 @@
         "code": "601888.SH",
         "name": "中国中免",
         "group": "watch",
-        "rzye": 36.87,
-        "inc3d": 0.23,
-        "incPct": 0.02,
-        "inc5d": 0.37,
-        "inc5dPct": 0.04,
+        "rzye": 36.67,
+        "inc3d": -0.24,
+        "incPct": -0.02,
+        "inc5d": 0.19,
+        "inc5dPct": 0.02,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "000708.SZ",
+        "name": "中信特钢",
+        "group": "watch",
+        "rzye": 1.49,
+        "inc3d": -0.11,
+        "incPct": -0.02,
+        "inc5d": -0.14,
+        "inc5dPct": -0.02,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "688271.SH",
+        "name": "联影医疗",
+        "group": "watch",
+        "rzye": 12.94,
+        "inc3d": -0.24,
+        "incPct": -0.03,
+        "inc5d": -0.41,
+        "inc5dPct": -0.05,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -9763,10 +9957,10 @@
         "code": "603816.SH",
         "name": "顾家家居",
         "group": "watch",
-        "rzye": 1.83,
-        "inc3d": 0.03,
-        "incPct": 0.02,
-        "inc5d": 0.08,
+        "rzye": 1.81,
+        "inc3d": -0.06,
+        "incPct": -0.03,
+        "inc5d": 0.07,
         "inc5dPct": 0.04,
         "consecutiveUpDays": 0,
         "triggered": false,
@@ -9776,89 +9970,11 @@
         "code": "600309.SH",
         "name": "万华化学",
         "group": "watch",
-        "rzye": 31.6,
-        "inc3d": 0.1,
-        "incPct": 0.0,
-        "inc5d": 1.17,
-        "inc5dPct": 0.05,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "000895.SZ",
-        "name": "双汇发展",
-        "group": "watch",
-        "rzye": 2.05,
-        "inc3d": -0.03,
-        "incPct": -0.0,
-        "inc5d": -0.06,
-        "inc5dPct": -0.01,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "300760.SZ",
-        "name": "迈瑞医疗",
-        "group": "watch",
-        "rzye": 50.96,
-        "inc3d": -0.04,
-        "incPct": -0.0,
-        "inc5d": -0.38,
-        "inc5dPct": -0.02,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "600521.SH",
-        "name": "华海药业",
-        "group": "watch",
-        "rzye": 8.63,
-        "inc3d": 0.01,
-        "incPct": 0.0,
-        "inc5d": -0.39,
-        "inc5dPct": -0.15,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "688271.SH",
-        "name": "联影医疗",
-        "group": "watch",
-        "rzye": 13.16,
-        "inc3d": -0.05,
-        "incPct": -0.01,
-        "inc5d": -0.15,
-        "inc5dPct": -0.02,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "600298.SH",
-        "name": "安琪酵母",
-        "group": "watch",
-        "rzye": 4.43,
-        "inc3d": -0.06,
-        "incPct": -0.02,
-        "inc5d": -0.01,
+        "rzye": 30.36,
+        "inc3d": -0.96,
+        "incPct": -0.04,
+        "inc5d": -0.05,
         "inc5dPct": -0.0,
-        "consecutiveUpDays": 2,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "000708.SZ",
-        "name": "中信特钢",
-        "group": "watch",
-        "rzye": 1.5,
-        "inc3d": -0.14,
-        "incPct": -0.02,
-        "inc5d": -0.15,
-        "inc5dPct": -0.02,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -9867,23 +9983,23 @@
         "code": "600406.SH",
         "name": "国电南瑞",
         "group": "watch",
-        "rzye": 28.44,
-        "inc3d": -0.64,
-        "incPct": -0.03,
-        "inc5d": 0.05,
-        "inc5dPct": 0.0,
+        "rzye": 27.9,
+        "inc3d": -0.77,
+        "incPct": -0.04,
+        "inc5d": -0.63,
+        "inc5dPct": -0.03,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
       },
       {
-        "code": "688029.SH",
-        "name": "南微医学",
-        "group": "hold",
-        "rzye": 4.71,
-        "inc3d": -0.07,
+        "code": "300760.SZ",
+        "name": "迈瑞医疗",
+        "group": "watch",
+        "rzye": 50.2,
+        "inc3d": -0.87,
         "incPct": -0.05,
-        "inc5d": -0.05,
+        "inc5d": -0.82,
         "inc5dPct": -0.04,
         "consecutiveUpDays": 0,
         "triggered": false,
@@ -9893,11 +10009,11 @@
         "code": "603259.SH",
         "name": "药明康德",
         "group": "watch",
-        "rzye": 53.45,
-        "inc3d": -5.68,
-        "incPct": -0.14,
-        "inc5d": -2.96,
-        "inc5dPct": -0.07,
+        "rzye": 53.18,
+        "inc3d": -5.18,
+        "incPct": -0.13,
+        "inc5d": -1.76,
+        "inc5dPct": -0.04,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -9905,922 +10021,854 @@
     ]
   },
   "sectorFlows": {
-    "trade_date": "2026-08-19",
+    "trade_date": "2026-08-20",
     "items": [
       {
         "name": "银行",
-        "net5": 79.3,
-        "net10": 73.3,
-        "net20": 261.0,
+        "net5": 88.2,
+        "net10": 90.1,
+        "net20": 264.1,
+        "tag": "加速流入"
+      },
+      {
+        "name": "黄金",
+        "net5": 29.2,
+        "net10": 29.2,
+        "net20": 42.9,
         "tag": "加速流入"
       },
       {
         "name": "水运",
-        "net5": 13.7,
-        "net10": -3.3,
-        "net20": 29.6,
-        "tag": "拐点·转流入"
-      },
-      {
-        "name": "黄金",
-        "net5": 6.4,
-        "net10": 24.2,
-        "net20": 39.2,
-        "tag": "减速流入"
-      },
-      {
-        "name": "煤炭开采",
-        "net5": 3.9,
-        "net10": 9.5,
-        "net20": 14.7,
-        "tag": "减速流入"
-      },
-      {
-        "name": "石油开采",
-        "net5": 1.9,
-        "net10": -4.4,
-        "net20": -11.3,
-        "tag": "拐点·转流入"
-      },
-      {
-        "name": "电信运营",
-        "net5": 1.7,
-        "net10": -0.8,
-        "net20": 28.4,
-        "tag": "拐点·转流入"
-      },
-      {
-        "name": "种植业",
-        "net5": 1.5,
-        "net10": -2.2,
-        "net20": 0.8,
-        "tag": "拐点·转流入"
-      },
-      {
-        "name": "渔业",
-        "net5": 1.2,
-        "net10": 2.2,
-        "net20": 2.8,
+        "net5": 19.0,
+        "net10": 2.5,
+        "net20": 26.6,
         "tag": "加速流入"
       },
       {
-        "name": "商品城",
-        "net5": 0.6,
-        "net10": -2.5,
-        "net20": 0.8,
+        "name": "煤炭开采",
+        "net5": 6.6,
+        "net10": -0.9,
+        "net20": 7.4,
         "tag": "拐点·转流入"
       },
       {
         "name": "石油加工",
-        "net5": 0.1,
-        "net10": -0.9,
-        "net20": -0.0,
+        "net5": 4.7,
+        "net10": -3.0,
+        "net20": -1.6,
         "tag": "拐点·转流入"
       },
       {
-        "name": "公路",
-        "net5": -0.3,
-        "net10": -0.7,
-        "net20": -1.0,
-        "tag": "持续流出"
-      },
-      {
-        "name": "石油贸易",
-        "net5": -0.7,
-        "net10": -0.4,
-        "net20": -1.4,
-        "tag": "持续流出"
-      },
-      {
-        "name": "批发业",
-        "net5": -0.9,
-        "net10": -0.9,
-        "net20": -0.4,
-        "tag": "持续流出"
-      },
-      {
-        "name": "铁路",
-        "net5": -1.3,
-        "net10": -5.3,
+        "name": "商品城",
+        "net5": 4.2,
+        "net10": 1.6,
         "net20": 6.3,
-        "tag": "反复"
+        "tag": "加速流入"
       },
       {
-        "name": "汽车服务",
-        "net5": -1.5,
-        "net10": -1.6,
-        "net20": -0.9,
-        "tag": "持续流出"
+        "name": "种植业",
+        "net5": 3.6,
+        "net10": -2.5,
+        "net20": -1.9,
+        "tag": "拐点·转流入"
+      },
+      {
+        "name": "石油开采",
+        "net5": 3.5,
+        "net10": -10.8,
+        "net20": -18.7,
+        "tag": "拐点·转流入"
+      },
+      {
+        "name": "饲料",
+        "net5": 2.9,
+        "net10": 1.0,
+        "net20": -6.6,
+        "tag": "加速流入"
+      },
+      {
+        "name": "渔业",
+        "net5": 0.6,
+        "net10": 1.8,
+        "net20": 2.2,
+        "tag": "减速流入"
       },
       {
         "name": "橡胶",
-        "net5": -1.9,
-        "net10": -0.3,
+        "net5": 0.1,
+        "net10": -0.4,
+        "net20": -0.1,
+        "tag": "拐点·转流入"
+      },
+      {
+        "name": "石油贸易",
+        "net5": 0.1,
+        "net10": -0.7,
+        "net20": -1.5,
+        "tag": "拐点·转流入"
+      },
+      {
+        "name": "铁路",
+        "net5": 0.0,
+        "net10": -5.1,
+        "net20": 3.9,
+        "tag": "拐点·转流入"
+      },
+      {
+        "name": "商贸代理",
+        "net5": -0.1,
+        "net10": -1.4,
         "net20": 0.6,
         "tag": "反复"
       },
       {
         "name": "特种钢",
-        "net5": -2.0,
-        "net10": -6.6,
-        "net20": -1.8,
+        "net5": -0.1,
+        "net10": -4.9,
+        "net20": -4.0,
         "tag": "持续流出"
       },
       {
-        "name": "商贸代理",
-        "net5": -2.2,
-        "net10": -2.0,
-        "net20": 2.1,
-        "tag": "反复"
-      },
-      {
-        "name": "电器连锁",
-        "net5": -2.3,
-        "net10": -2.0,
-        "net20": -1.2,
+        "name": "公路",
+        "net5": -0.3,
+        "net10": -0.6,
+        "net20": -1.1,
         "tag": "持续流出"
       },
       {
-        "name": "轻工机械",
-        "net5": -2.3,
-        "net10": -5.6,
-        "net20": 1.0,
-        "tag": "反复"
-      },
-      {
-        "name": "饲料",
-        "net5": -2.4,
-        "net10": -2.2,
-        "net20": -8.9,
-        "tag": "持续流出"
-      },
-      {
-        "name": "农用机械",
-        "net5": -2.5,
-        "net10": -2.7,
-        "net20": -1.3,
-        "tag": "持续流出"
-      },
-      {
-        "name": "酒店餐饮",
-        "net5": -2.6,
-        "net10": -2.8,
-        "net20": -7.8,
-        "tag": "持续流出"
-      },
-      {
-        "name": "机场",
-        "net5": -2.8,
-        "net10": -5.2,
-        "net20": -3.7,
-        "tag": "持续流出"
-      },
-      {
-        "name": "水务",
-        "net5": -2.9,
-        "net10": -4.3,
-        "net20": -2.9,
-        "tag": "持续流出"
-      },
-      {
-        "name": "路桥",
-        "net5": -2.9,
-        "net10": -5.2,
-        "net20": 2.0,
-        "tag": "反复"
-      },
-      {
-        "name": "化工机械",
-        "net5": -3.2,
-        "net10": -11.3,
-        "net20": -10.6,
-        "tag": "持续流出"
-      },
-      {
-        "name": "焦炭加工",
-        "net5": -3.2,
-        "net10": -1.0,
+        "name": "汽车服务",
+        "net5": -0.3,
+        "net10": -0.8,
         "net20": -1.0,
         "tag": "持续流出"
       },
       {
-        "name": "红黄酒",
-        "net5": -3.2,
-        "net10": -4.3,
-        "net20": -4.3,
+        "name": "批发业",
+        "net5": -0.4,
+        "net10": -0.6,
+        "net20": -0.6,
         "tag": "持续流出"
       },
       {
-        "name": "公共交通",
-        "net5": -4.0,
-        "net10": -7.0,
-        "net20": -7.3,
+        "name": "机场",
+        "net5": -0.9,
+        "net10": -3.3,
+        "net20": -3.4,
+        "tag": "持续流出"
+      },
+      {
+        "name": "农用机械",
+        "net5": -1.1,
+        "net10": -2.3,
+        "net20": -2.4,
+        "tag": "持续流出"
+      },
+      {
+        "name": "普钢",
+        "net5": -1.1,
+        "net10": -19.2,
+        "net20": -17.5,
+        "tag": "持续流出"
+      },
+      {
+        "name": "电信运营",
+        "net5": -1.1,
+        "net10": -1.6,
+        "net20": 24.5,
+        "tag": "反复"
+      },
+      {
+        "name": "酒店餐饮",
+        "net5": -1.2,
+        "net10": -1.3,
+        "net20": -7.0,
+        "tag": "持续流出"
+      },
+      {
+        "name": "电器连锁",
+        "net5": -1.3,
+        "net10": -1.9,
+        "net20": -1.1,
+        "tag": "持续流出"
+      },
+      {
+        "name": "路桥",
+        "net5": -1.5,
+        "net10": -3.6,
+        "net20": 1.0,
+        "tag": "反复"
+      },
+      {
+        "name": "水务",
+        "net5": -1.7,
+        "net10": -2.2,
+        "net20": -5.0,
+        "tag": "持续流出"
+      },
+      {
+        "name": "水泥",
+        "net5": -1.8,
+        "net10": -6.0,
+        "net20": -6.3,
         "tag": "持续流出"
       },
       {
         "name": "港口",
-        "net5": -4.1,
-        "net10": -7.8,
-        "net20": 1.4,
-        "tag": "反复"
-      },
-      {
-        "name": "软饮料",
-        "net5": -4.4,
-        "net10": -8.8,
-        "net20": -16.1,
+        "net5": -1.8,
+        "net10": -4.9,
+        "net20": -0.2,
         "tag": "持续流出"
       },
       {
-        "name": "啤酒",
-        "net5": -4.7,
-        "net10": -7.4,
-        "net20": -2.2,
+        "name": "轻工机械",
+        "net5": -1.8,
+        "net10": -4.9,
+        "net20": -0.9,
+        "tag": "持续流出"
+      },
+      {
+        "name": "铜",
+        "net5": -2.2,
+        "net10": -57.6,
+        "net20": -18.5,
         "tag": "持续流出"
       },
       {
         "name": "其他商业",
-        "net5": -5.2,
+        "net5": -2.4,
+        "net10": -5.1,
+        "net20": -4.1,
+        "tag": "持续流出"
+      },
+      {
+        "name": "旅游景点",
+        "net5": -2.4,
+        "net10": -4.2,
+        "net20": -4.5,
+        "tag": "持续流出"
+      },
+      {
+        "name": "运输设备",
+        "net5": -2.5,
+        "net10": -7.8,
+        "net20": -6.5,
+        "tag": "持续流出"
+      },
+      {
+        "name": "其他建材",
+        "net5": -2.8,
+        "net10": -8.4,
+        "net20": -10.3,
+        "tag": "持续流出"
+      },
+      {
+        "name": "公共交通",
+        "net5": -2.9,
         "net10": -6.9,
+        "net20": -8.1,
+        "tag": "持续流出"
+      },
+      {
+        "name": "乳制品",
+        "net5": -3.0,
+        "net10": -12.3,
+        "net20": -11.8,
+        "tag": "持续流出"
+      },
+      {
+        "name": "日用化工",
+        "net5": -3.0,
+        "net10": -3.0,
+        "net20": -5.8,
+        "tag": "持续流出"
+      },
+      {
+        "name": "红黄酒",
+        "net5": -3.0,
+        "net10": -4.1,
         "net20": -4.5,
         "tag": "持续流出"
       },
       {
         "name": "园区开发",
-        "net5": -5.5,
-        "net10": -5.2,
-        "net20": -3.4,
+        "net5": -3.2,
+        "net10": -5.3,
+        "net20": -4.0,
         "tag": "持续流出"
       },
       {
-        "name": "水泥",
-        "net5": -5.7,
-        "net10": -6.5,
-        "net20": -3.6,
-        "tag": "持续流出"
-      },
-      {
-        "name": "钢加工",
-        "net5": -5.9,
-        "net10": -10.1,
-        "net20": -7.8,
-        "tag": "持续流出"
-      },
-      {
-        "name": "旅游景点",
-        "net5": -6.0,
-        "net10": -8.1,
-        "net20": -5.9,
-        "tag": "持续流出"
-      },
-      {
-        "name": "林业",
-        "net5": -6.4,
-        "net10": -6.0,
-        "net20": -1.8,
+        "name": "化工机械",
+        "net5": -3.4,
+        "net10": -11.8,
+        "net20": -10.2,
         "tag": "持续流出"
       },
       {
         "name": "摩托车",
-        "net5": -6.6,
-        "net10": -10.0,
-        "net20": -1.8,
-        "tag": "持续流出"
-      },
-      {
-        "name": "日用化工",
-        "net5": -6.6,
-        "net10": -7.5,
-        "net20": -7.5,
-        "tag": "持续流出"
-      },
-      {
-        "name": "供气供热",
-        "net5": -6.8,
-        "net10": -12.1,
-        "net20": -25.2,
-        "tag": "持续流出"
-      },
-      {
-        "name": "其他建材",
-        "net5": -6.9,
-        "net10": -10.5,
-        "net20": -8.4,
-        "tag": "持续流出"
-      },
-      {
-        "name": "百货",
-        "net5": -6.9,
-        "net10": -6.8,
-        "net20": 0.0,
-        "tag": "反复"
-      },
-      {
-        "name": "纺织机械",
-        "net5": -7.5,
-        "net10": -9.4,
-        "net20": -7.3,
-        "tag": "持续流出"
-      },
-      {
-        "name": "旅游服务",
-        "net5": -7.7,
-        "net10": -13.2,
-        "net20": -21.4,
-        "tag": "持续流出"
-      },
-      {
-        "name": "超市连锁",
-        "net5": -8.3,
-        "net10": -8.0,
-        "net20": -5.8,
-        "tag": "持续流出"
-      },
-      {
-        "name": "运输设备",
-        "net5": -8.5,
-        "net10": -11.7,
-        "net20": -2.0,
+        "net5": -3.7,
+        "net10": -8.3,
+        "net20": -3.6,
         "tag": "持续流出"
       },
       {
         "name": "家居用品",
-        "net5": -8.8,
-        "net10": -13.3,
-        "net20": -22.8,
+        "net5": -4.0,
+        "net10": -8.4,
+        "net20": -22.4,
         "tag": "持续流出"
       },
       {
-        "name": "纺织",
-        "net5": -8.8,
-        "net10": -11.1,
-        "net20": -21.4,
-        "tag": "持续流出"
-      },
-      {
-        "name": "房产服务",
-        "net5": -9.2,
-        "net10": -7.4,
-        "net20": -10.5,
-        "tag": "持续流出"
-      },
-      {
-        "name": "水力发电",
-        "net5": -9.4,
-        "net10": -19.9,
-        "net20": -26.4,
-        "tag": "持续流出"
-      },
-      {
-        "name": "造纸",
-        "net5": -10.0,
-        "net10": -13.6,
-        "net20": -13.1,
-        "tag": "持续流出"
-      },
-      {
-        "name": "综合类",
-        "net5": -10.2,
-        "net10": -9.1,
-        "net20": -20.3,
-        "tag": "持续流出"
-      },
-      {
-        "name": "空运",
-        "net5": -11.0,
-        "net10": -25.1,
-        "net20": -13.3,
-        "tag": "持续流出"
-      },
-      {
-        "name": "乳制品",
-        "net5": -11.4,
-        "net10": -17.8,
-        "net20": -14.6,
-        "tag": "持续流出"
-      },
-      {
-        "name": "出版业",
-        "net5": -12.1,
-        "net10": -20.0,
-        "net20": -2.6,
+        "name": "旅游服务",
+        "net5": -4.3,
+        "net10": -8.1,
+        "net20": -18.6,
         "tag": "持续流出"
       },
       {
         "name": "仓储物流",
-        "net5": -12.4,
-        "net10": -21.8,
-        "net20": -9.3,
-        "tag": "持续流出"
-      },
-      {
-        "name": "陶瓷",
-        "net5": -13.2,
-        "net10": -22.9,
-        "net20": -31.9,
-        "tag": "持续流出"
-      },
-      {
-        "name": "普钢",
-        "net5": -13.3,
-        "net10": -27.5,
+        "net5": -4.4,
+        "net10": -15.9,
         "net20": -10.4,
         "tag": "持续流出"
       },
       {
-        "name": "船舶",
-        "net5": -13.4,
-        "net10": -31.5,
-        "net20": -30.5,
+        "name": "焦炭加工",
+        "net5": -4.6,
+        "net10": -4.7,
+        "net20": -4.0,
         "tag": "持续流出"
       },
       {
-        "name": "医药商业",
-        "net5": -13.5,
-        "net10": -22.6,
-        "net20": -24.1,
+        "name": "软饮料",
+        "net5": -4.6,
+        "net10": -7.7,
+        "net20": -16.9,
         "tag": "持续流出"
       },
       {
-        "name": "多元金融",
-        "net5": -14.3,
-        "net10": -23.2,
-        "net20": -20.1,
+        "name": "钢加工",
+        "net5": -4.6,
+        "net10": -9.2,
+        "net20": -12.1,
         "tag": "持续流出"
       },
       {
-        "name": "农业综合",
-        "net5": -15.5,
-        "net10": -21.3,
-        "net20": -26.6,
+        "name": "啤酒",
+        "net5": -4.8,
+        "net10": -7.7,
+        "net20": -3.5,
         "tag": "持续流出"
       },
       {
-        "name": "服饰",
-        "net5": -15.5,
-        "net10": -24.6,
-        "net20": -13.5,
+        "name": "综合类",
+        "net5": -5.2,
+        "net10": -9.3,
+        "net20": -23.4,
         "tag": "持续流出"
       },
       {
-        "name": "区域地产",
-        "net5": -17.2,
-        "net10": -13.3,
-        "net20": -22.8,
+        "name": "林业",
+        "net5": -5.3,
+        "net10": -7.1,
+        "net20": -3.6,
         "tag": "持续流出"
       },
       {
-        "name": "矿物制品",
-        "net5": -19.5,
-        "net10": -23.4,
-        "net20": -35.7,
+        "name": "供气供热",
+        "net5": -5.5,
+        "net10": -14.6,
+        "net20": -30.2,
         "tag": "持续流出"
       },
       {
-        "name": "机床制造",
-        "net5": -19.9,
-        "net10": -24.9,
-        "net20": -24.9,
-        "tag": "持续流出"
-      },
-      {
-        "name": "装修装饰",
-        "net5": -21.2,
-        "net10": -29.3,
-        "net20": -42.8,
-        "tag": "持续流出"
-      },
-      {
-        "name": "保险",
-        "net5": -22.5,
-        "net10": -56.3,
-        "net20": -74.9,
-        "tag": "持续流出"
-      },
-      {
-        "name": "染料涂料",
-        "net5": -23.6,
-        "net10": -23.1,
-        "net20": -24.4,
-        "tag": "持续流出"
-      },
-      {
-        "name": "化纤",
-        "net5": -25.0,
-        "net10": -38.0,
-        "net20": -19.0,
-        "tag": "持续流出"
-      },
-      {
-        "name": "文教休闲",
-        "net5": -26.4,
-        "net10": -35.1,
-        "net20": -39.9,
-        "tag": "持续流出"
-      },
-      {
-        "name": "农药化肥",
-        "net5": -26.5,
-        "net10": -50.2,
-        "net20": -41.8,
-        "tag": "持续流出"
-      },
-      {
-        "name": "全国地产",
-        "net5": -26.9,
-        "net10": -12.0,
-        "net20": -21.9,
-        "tag": "持续流出"
-      },
-      {
-        "name": "工程机械",
-        "net5": -26.9,
-        "net10": -47.6,
-        "net20": -27.3,
-        "tag": "持续流出"
-      },
-      {
-        "name": "铅锌",
-        "net5": -30.2,
-        "net10": -42.6,
-        "net20": -25.3,
-        "tag": "持续流出"
-      },
-      {
-        "name": "家用电器",
-        "net5": -33.5,
-        "net10": -59.8,
-        "net20": -3.0,
-        "tag": "持续流出"
-      },
-      {
-        "name": "白酒",
-        "net5": -33.6,
-        "net10": -40.6,
-        "net20": -33.0,
+        "name": "百货",
+        "net5": -5.8,
+        "net10": -4.5,
+        "net20": -4.2,
         "tag": "持续流出"
       },
       {
         "name": "汽车整车",
-        "net5": -34.6,
-        "net10": -66.2,
-        "net20": -54.7,
+        "net5": -6.7,
+        "net10": -34.3,
+        "net20": -55.1,
+        "tag": "持续流出"
+      },
+      {
+        "name": "纺织",
+        "net5": -6.7,
+        "net10": -9.5,
+        "net20": -23.5,
+        "tag": "持续流出"
+      },
+      {
+        "name": "房产服务",
+        "net5": -7.1,
+        "net10": -7.5,
+        "net20": -11.0,
+        "tag": "持续流出"
+      },
+      {
+        "name": "造纸",
+        "net5": -7.1,
+        "net10": -13.6,
+        "net20": -17.9,
+        "tag": "持续流出"
+      },
+      {
+        "name": "空运",
+        "net5": -7.3,
+        "net10": -21.0,
+        "net20": -20.8,
+        "tag": "持续流出"
+      },
+      {
+        "name": "纺织机械",
+        "net5": -7.7,
+        "net10": -9.7,
+        "net20": -9.3,
+        "tag": "持续流出"
+      },
+      {
+        "name": "区域地产",
+        "net5": -7.9,
+        "net10": -10.5,
+        "net20": -20.0,
+        "tag": "持续流出"
+      },
+      {
+        "name": "多元金融",
+        "net5": -7.9,
+        "net10": -17.8,
+        "net20": -21.0,
+        "tag": "持续流出"
+      },
+      {
+        "name": "超市连锁",
+        "net5": -8.0,
+        "net10": -4.7,
+        "net20": -6.1,
+        "tag": "持续流出"
+      },
+      {
+        "name": "出版业",
+        "net5": -8.6,
+        "net10": -14.6,
+        "net20": -3.4,
+        "tag": "持续流出"
+      },
+      {
+        "name": "服饰",
+        "net5": -8.7,
+        "net10": -19.9,
+        "net20": -14.8,
+        "tag": "持续流出"
+      },
+      {
+        "name": "陶瓷",
+        "net5": -8.7,
+        "net10": -26.6,
+        "net20": -33.6,
+        "tag": "持续流出"
+      },
+      {
+        "name": "全国地产",
+        "net5": -9.7,
+        "net10": -10.4,
+        "net20": -19.6,
+        "tag": "持续流出"
+      },
+      {
+        "name": "农药化肥",
+        "net5": -10.4,
+        "net10": -50.8,
+        "net20": -67.6,
+        "tag": "持续流出"
+      },
+      {
+        "name": "机床制造",
+        "net5": -10.8,
+        "net10": -22.9,
+        "net20": -24.9,
+        "tag": "持续流出"
+      },
+      {
+        "name": "文教休闲",
+        "net5": -10.9,
+        "net10": -25.4,
+        "net20": -37.8,
+        "tag": "持续流出"
+      },
+      {
+        "name": "水力发电",
+        "net5": -11.6,
+        "net10": -18.6,
+        "net20": -26.0,
         "tag": "持续流出"
       },
       {
         "name": "电器仪表",
-        "net5": -34.9,
-        "net10": -42.0,
-        "net20": -40.3,
+        "net5": -11.8,
+        "net10": -35.2,
+        "net20": -41.4,
         "tag": "持续流出"
       },
       {
-        "name": "航空",
-        "net5": -35.5,
-        "net10": -44.1,
+        "name": "船舶",
+        "net5": -12.4,
+        "net10": -31.2,
+        "net20": -37.4,
+        "tag": "持续流出"
+      },
+      {
+        "name": "工程机械",
+        "net5": -12.8,
+        "net10": -42.1,
         "net20": -38.0,
         "tag": "持续流出"
       },
       {
-        "name": "生物制药",
-        "net5": -38.8,
-        "net10": -68.0,
-        "net20": -108.3,
+        "name": "农业综合",
+        "net5": -14.6,
+        "net10": -17.6,
+        "net20": -31.3,
+        "tag": "持续流出"
+      },
+      {
+        "name": "装修装饰",
+        "net5": -16.2,
+        "net10": -27.6,
+        "net20": -43.8,
+        "tag": "持续流出"
+      },
+      {
+        "name": "化纤",
+        "net5": -16.6,
+        "net10": -37.9,
+        "net20": -28.3,
+        "tag": "持续流出"
+      },
+      {
+        "name": "矿物制品",
+        "net5": -16.9,
+        "net10": -27.4,
+        "net20": -40.7,
+        "tag": "持续流出"
+      },
+      {
+        "name": "医药商业",
+        "net5": -17.2,
+        "net10": -20.9,
+        "net20": -24.6,
+        "tag": "持续流出"
+      },
+      {
+        "name": "染料涂料",
+        "net5": -17.2,
+        "net10": -20.6,
+        "net20": -26.4,
+        "tag": "持续流出"
+      },
+      {
+        "name": "保险",
+        "net5": -18.2,
+        "net10": -47.3,
+        "net20": -79.4,
+        "tag": "持续流出"
+      },
+      {
+        "name": "铝",
+        "net5": -21.4,
+        "net10": -66.7,
+        "net20": -93.5,
+        "tag": "持续流出"
+      },
+      {
+        "name": "家用电器",
+        "net5": -21.5,
+        "net10": -52.8,
+        "net20": -5.7,
+        "tag": "持续流出"
+      },
+      {
+        "name": "铅锌",
+        "net5": -23.2,
+        "net10": -43.1,
+        "net20": -40.8,
         "tag": "持续流出"
       },
       {
         "name": "食品",
-        "net5": -39.5,
-        "net10": -51.8,
-        "net20": -43.2,
+        "net5": -26.6,
+        "net10": -43.0,
+        "net20": -41.7,
+        "tag": "持续流出"
+      },
+      {
+        "name": "建筑工程",
+        "net5": -27.9,
+        "net10": -70.0,
+        "net20": -123.9,
+        "tag": "持续流出"
+      },
+      {
+        "name": "玻璃",
+        "net5": -29.0,
+        "net10": -80.0,
+        "net20": -97.1,
+        "tag": "持续流出"
+      },
+      {
+        "name": "环境保护",
+        "net5": -30.4,
+        "net10": -43.4,
+        "net20": -55.7,
         "tag": "持续流出"
       },
       {
         "name": "塑料",
-        "net5": -41.3,
-        "net10": -59.0,
-        "net20": -74.7,
+        "net5": -30.8,
+        "net10": -56.7,
+        "net20": -81.8,
+        "tag": "持续流出"
+      },
+      {
+        "name": "机械基件",
+        "net5": -31.0,
+        "net10": -65.8,
+        "net20": -82.0,
+        "tag": "持续流出"
+      },
+      {
+        "name": "影视音像",
+        "net5": -34.0,
+        "net10": -71.6,
+        "net20": -63.1,
+        "tag": "持续流出"
+      },
+      {
+        "name": "航空",
+        "net5": -34.5,
+        "net10": -46.0,
+        "net20": -61.4,
         "tag": "持续流出"
       },
       {
         "name": "中成药",
         "net5": -41.4,
-        "net10": -55.3,
-        "net20": -80.7,
+        "net10": -40.8,
+        "net20": -69.2,
         "tag": "持续流出"
       },
       {
-        "name": "环境保护",
-        "net5": -43.9,
-        "net10": -54.1,
-        "net20": -43.0,
-        "tag": "持续流出"
-      },
-      {
-        "name": "机械基件",
-        "net5": -44.0,
-        "net10": -66.6,
-        "net20": -77.3,
-        "tag": "持续流出"
-      },
-      {
-        "name": "铝",
-        "net5": -44.6,
-        "net10": -61.8,
-        "net20": -53.8,
-        "tag": "持续流出"
-      },
-      {
-        "name": "铜",
-        "net5": -46.0,
-        "net10": -83.1,
-        "net20": -1.1,
-        "tag": "持续流出"
-      },
-      {
-        "name": "玻璃",
-        "net5": -48.4,
-        "net10": -77.5,
-        "net20": -97.5,
-        "tag": "持续流出"
-      },
-      {
-        "name": "影视音像",
-        "net5": -56.1,
-        "net10": -83.5,
-        "net20": -60.0,
-        "tag": "持续流出"
-      },
-      {
-        "name": "火力发电",
-        "net5": -56.4,
-        "net10": -87.7,
-        "net20": -165.3,
-        "tag": "持续流出"
-      },
-      {
-        "name": "建筑工程",
-        "net5": -58.3,
-        "net10": -88.8,
-        "net20": -115.9,
-        "tag": "持续流出"
-      },
-      {
-        "name": "新型电力",
-        "net5": -63.8,
-        "net10": -115.3,
-        "net20": -180.7,
+        "name": "白酒",
+        "net5": -43.6,
+        "net10": -30.7,
+        "net20": -38.2,
         "tag": "持续流出"
       },
       {
         "name": "广告包装",
-        "net5": -70.7,
-        "net10": -84.5,
-        "net20": -43.5,
-        "tag": "持续流出"
-      },
-      {
-        "name": "化学制药",
-        "net5": -72.9,
-        "net10": -50.3,
-        "net20": -137.7,
+        "net5": -46.4,
+        "net10": -67.2,
+        "net20": -47.6,
         "tag": "持续流出"
       },
       {
         "name": "医疗保健",
-        "net5": -83.0,
-        "net10": -115.6,
-        "net20": -153.5,
+        "net5": -58.6,
+        "net10": -63.6,
+        "net20": -118.9,
         "tag": "持续流出"
       },
       {
-        "name": "IT设备",
-        "net5": -92.0,
-        "net10": -178.6,
-        "net20": -251.3,
+        "name": "新型电力",
+        "net5": -60.5,
+        "net10": -96.1,
+        "net20": -192.8,
         "tag": "持续流出"
       },
       {
-        "name": "证券",
-        "net5": -105.8,
-        "net10": -193.9,
-        "net20": -235.7,
+        "name": "化学制药",
+        "net5": -67.7,
+        "net10": -3.4,
+        "net20": -118.5,
         "tag": "持续流出"
       },
       {
         "name": "汽车配件",
-        "net5": -107.6,
-        "net10": -162.1,
-        "net20": -111.6,
+        "net5": -71.3,
+        "net10": -141.1,
+        "net20": -137.0,
         "tag": "持续流出"
       },
       {
         "name": "小金属",
-        "net5": -122.7,
-        "net10": -268.5,
-        "net20": -290.5,
+        "net5": -74.6,
+        "net10": -241.0,
+        "net20": -345.6,
+        "tag": "持续流出"
+      },
+      {
+        "name": "火力发电",
+        "net5": -75.3,
+        "net10": -73.6,
+        "net20": -172.4,
+        "tag": "持续流出"
+      },
+      {
+        "name": "生物制药",
+        "net5": -75.9,
+        "net10": -65.2,
+        "net20": -120.0,
         "tag": "持续流出"
       },
       {
         "name": "专用机械",
-        "net5": -134.3,
-        "net10": -160.1,
-        "net20": -168.7,
+        "net5": -98.4,
+        "net10": -151.2,
+        "net20": -180.4,
         "tag": "持续流出"
       },
       {
         "name": "化工原料",
-        "net5": -134.8,
-        "net10": -212.3,
-        "net20": -283.3,
+        "net5": -105.4,
+        "net10": -231.4,
+        "net20": -339.5,
+        "tag": "持续流出"
+      },
+      {
+        "name": "IT设备",
+        "net5": -106.8,
+        "net10": -171.2,
+        "net20": -217.9,
         "tag": "持续流出"
       },
       {
         "name": "互联网",
-        "net5": -154.3,
-        "net10": -224.8,
-        "net20": -176.7,
+        "net5": -108.4,
+        "net10": -167.1,
+        "net20": -164.4,
         "tag": "持续流出"
       },
       {
-        "name": "电气设备",
-        "net5": -242.2,
-        "net10": -375.1,
-        "net20": -236.8,
+        "name": "证券",
+        "net5": -123.0,
+        "net10": -152.9,
+        "net20": -273.2,
         "tag": "持续流出"
       },
       {
         "name": "通信设备",
-        "net5": -266.2,
-        "net10": -233.2,
-        "net20": -121.5,
+        "net5": -185.5,
+        "net10": -251.7,
+        "net20": -63.7,
         "tag": "持续流出"
       },
       {
         "name": "软件服务",
-        "net5": -276.4,
-        "net10": -456.7,
-        "net20": -308.5,
+        "net5": -199.3,
+        "net10": -404.4,
+        "net20": -281.8,
+        "tag": "持续流出"
+      },
+      {
+        "name": "电气设备",
+        "net5": -219.4,
+        "net10": -290.4,
+        "net20": -445.5,
         "tag": "持续流出"
       },
       {
         "name": "半导体",
-        "net5": -317.3,
-        "net10": -276.1,
-        "net20": -113.4,
-        "tag": "持续流出"
+        "net5": -223.8,
+        "net10": -330.2,
+        "net20": 21.7,
+        "tag": "反复"
       },
       {
         "name": "元器件",
-        "net5": -451.9,
-        "net10": -627.3,
-        "net20": -909.5,
+        "net5": -323.4,
+        "net10": -633.2,
+        "net20": -865.2,
         "tag": "持续流出"
       }
     ],
     "note": "Tushare 二级行业主力净流入；节奏=近5日日均 vs 前5日日均（加速流入/减速流入/拐点/持续流出）"
   },
   "vcpWatch": {
-    "trade_date": "2026-08-19",
+    "trade_date": "2026-08-20",
     "stats": {
       "total": 35,
-      "green": 0,
-      "yellow": 1
+      "green": 1,
+      "yellow": 0
     },
     "items": [
       {
         "code": "801790.SI",
         "name": "非银金融",
         "kind": "行业",
-        "vol20": 14.3,
-        "volPct": 2.5,
-        "amtRatio": 0.63,
-        "nHit": 2,
+        "vol20": 13.6,
+        "volPct": 1.6,
+        "amtRatio": 0.58,
+        "nHit": 4,
         "nLeaders": 5,
-        "signal": "🟡",
+        "signal": "🟢",
         "leaders": [
           {
             "code": "601628.SH",
             "name": "中国人寿",
-            "mv": 7671.0,
-            "vol20": 37.4,
-            "volPct": 86.9,
-            "ampRatio": 0.7,
-            "volRatio": 0.84,
+            "mv": 7682.0,
+            "vol20": 36.1,
+            "volPct": 82.4,
+            "ampRatio": 0.67,
+            "volRatio": 0.72,
             "narrow": true,
             "shrink": false
           },
           {
             "code": "601318.SH",
             "name": "中国平安",
-            "mv": 5552.0,
-            "vol20": 30.6,
+            "mv": 5558.0,
+            "vol20": 31.0,
             "volPct": 75.4,
-            "ampRatio": 0.75,
-            "volRatio": 0.76,
+            "ampRatio": 0.71,
+            "volRatio": 0.67,
             "narrow": true,
-            "shrink": false
+            "shrink": true
           },
           {
             "code": "600030.SH",
             "name": "中信证券",
-            "mv": 3306.0,
-            "vol20": 21.1,
-            "volPct": 45.9,
-            "ampRatio": 0.61,
-            "volRatio": 0.6,
+            "mv": 3293.0,
+            "vol20": 21.5,
+            "volPct": 49.6,
+            "ampRatio": 0.62,
+            "volRatio": 0.57,
             "narrow": true,
             "shrink": true
           },
           {
             "code": "300059.SZ",
             "name": "东方财富",
-            "mv": 2501.0,
-            "vol20": 28.6,
-            "volPct": 42.6,
-            "ampRatio": 0.61,
-            "volRatio": 0.66,
+            "mv": 2510.0,
+            "vol20": 29.3,
+            "volPct": 45.9,
+            "ampRatio": 0.62,
+            "volRatio": 0.63,
             "narrow": true,
             "shrink": true
           },
           {
             "code": "601319.SH",
             "name": "中国人保",
-            "mv": 2442.0,
-            "vol20": 31.1,
-            "volPct": 68.9,
-            "ampRatio": 0.64,
-            "volRatio": 0.8,
-            "narrow": true,
-            "shrink": false
-          }
-        ]
-      },
-      {
-        "code": "801960.SI",
-        "name": "石油石化",
-        "kind": "行业",
-        "vol20": 20.1,
-        "volPct": 43.4,
-        "amtRatio": 0.87,
-        "nHit": 1,
-        "nLeaders": 5,
-        "signal": "⚪",
-        "leaders": [
-          {
-            "code": "601857.SH",
-            "name": "中国石油",
-            "mv": 18151.0,
-            "vol20": 38.7,
-            "volPct": 84.8,
-            "ampRatio": 0.8,
-            "volRatio": 0.69,
-            "narrow": false,
-            "shrink": true
-          },
-          {
-            "code": "600028.SH",
-            "name": "中国石化",
-            "mv": 4889.0,
-            "vol20": 28.7,
-            "volPct": 78.3,
-            "ampRatio": 0.89,
-            "volRatio": 0.88,
-            "narrow": false,
-            "shrink": false
-          },
-          {
-            "code": "600346.SH",
-            "name": "恒力石化",
-            "mv": 1328.0,
-            "vol20": 38.4,
-            "volPct": 31.1,
-            "ampRatio": 0.67,
-            "volRatio": 0.64,
+            "mv": 2456.0,
+            "vol20": 30.7,
+            "volPct": 65.2,
+            "ampRatio": 0.62,
+            "volRatio": 0.65,
             "narrow": true,
             "shrink": true
-          },
-          {
-            "code": "002493.SZ",
-            "name": "荣盛石化",
-            "mv": 1252.0,
-            "vol20": 47.9,
-            "volPct": 72.5,
-            "ampRatio": 0.82,
-            "volRatio": 0.92,
-            "narrow": false,
-            "shrink": false
-          },
-          {
-            "code": "600938.SH",
-            "name": "中国海油",
-            "mv": 997.0,
-            "vol20": 51.9,
-            "volPct": 89.8,
-            "ampRatio": 0.75,
-            "volRatio": 0.8,
-            "narrow": false,
-            "shrink": false
           }
         ]
       },
@@ -10828,9 +10876,9 @@
         "code": "801040.SI",
         "name": "钢铁",
         "kind": "行业",
-        "vol20": 21.6,
-        "volPct": 51.6,
-        "amtRatio": 0.77,
+        "vol20": 19.7,
+        "volPct": 34.0,
+        "amtRatio": 0.74,
         "nHit": 2,
         "nLeaders": 5,
         "signal": "⚪",
@@ -10838,22 +10886,22 @@
           {
             "code": "600019.SH",
             "name": "宝钢股份",
-            "mv": 1266.0,
-            "vol20": 26.4,
-            "volPct": 78.3,
-            "ampRatio": 1.0,
-            "volRatio": 1.11,
+            "mv": 1261.0,
+            "vol20": 25.9,
+            "volPct": 75.0,
+            "ampRatio": 1.01,
+            "volRatio": 1.03,
             "narrow": false,
             "shrink": false
           },
           {
             "code": "600010.SH",
             "name": "包钢股份",
-            "mv": 680.0,
-            "vol20": 33.7,
-            "volPct": 20.5,
-            "ampRatio": 0.69,
-            "volRatio": 0.73,
+            "mv": 683.0,
+            "vol20": 23.2,
+            "volPct": 4.9,
+            "ampRatio": 0.68,
+            "volRatio": 0.72,
             "narrow": true,
             "shrink": false
           },
@@ -10861,10 +10909,10 @@
             "code": "000708.SZ",
             "name": "中信特钢",
             "mv": 709.0,
-            "vol20": 30.4,
-            "volPct": 70.5,
-            "ampRatio": 0.79,
-            "volRatio": 0.94,
+            "vol20": 29.5,
+            "volPct": 66.0,
+            "ampRatio": 0.81,
+            "volRatio": 0.89,
             "narrow": false,
             "shrink": false
           },
@@ -10872,23 +10920,159 @@
             "code": "001203.SZ",
             "name": "大中矿业",
             "mv": 345.0,
-            "vol20": 47.3,
-            "volPct": 22.5,
+            "vol20": 47.7,
+            "volPct": 23.0,
             "ampRatio": 0.73,
-            "volRatio": 0.55,
+            "volRatio": 0.57,
             "narrow": true,
             "shrink": true
           },
           {
             "code": "000629.SZ",
             "name": "钒钛股份",
-            "mv": 278.0,
-            "vol20": 27.9,
-            "volPct": 17.6,
-            "ampRatio": 0.54,
-            "volRatio": 0.63,
+            "mv": 280.0,
+            "vol20": 28.0,
+            "volPct": 18.0,
+            "ampRatio": 0.53,
+            "volRatio": 0.59,
             "narrow": true,
             "shrink": true
+          }
+        ]
+      },
+      {
+        "code": "801960.SI",
+        "name": "石油石化",
+        "kind": "行业",
+        "vol20": 19.4,
+        "volPct": 39.3,
+        "amtRatio": 0.91,
+        "nHit": 0,
+        "nLeaders": 5,
+        "signal": "⚪",
+        "leaders": [
+          {
+            "code": "601857.SH",
+            "name": "中国石油",
+            "mv": 17795.0,
+            "vol20": 37.2,
+            "volPct": 83.6,
+            "ampRatio": 0.79,
+            "volRatio": 0.71,
+            "narrow": false,
+            "shrink": false
+          },
+          {
+            "code": "600028.SH",
+            "name": "中国石化",
+            "mv": 4870.0,
+            "vol20": 27.2,
+            "volPct": 71.3,
+            "ampRatio": 0.88,
+            "volRatio": 0.78,
+            "narrow": false,
+            "shrink": false
+          },
+          {
+            "code": "600346.SH",
+            "name": "恒力石化",
+            "mv": 1326.0,
+            "vol20": 39.1,
+            "volPct": 31.6,
+            "ampRatio": 0.71,
+            "volRatio": 0.73,
+            "narrow": true,
+            "shrink": false
+          },
+          {
+            "code": "002493.SZ",
+            "name": "荣盛石化",
+            "mv": 1263.0,
+            "vol20": 49.3,
+            "volPct": 73.8,
+            "ampRatio": 0.86,
+            "volRatio": 0.98,
+            "narrow": false,
+            "shrink": false
+          },
+          {
+            "code": "600938.SH",
+            "name": "中国海油",
+            "mv": 996.0,
+            "vol20": 51.9,
+            "volPct": 89.3,
+            "ampRatio": 0.72,
+            "volRatio": 0.81,
+            "narrow": true,
+            "shrink": false
+          }
+        ]
+      },
+      {
+        "code": "801730.SI",
+        "name": "电力设备",
+        "kind": "行业",
+        "vol20": 29.4,
+        "volPct": 53.3,
+        "amtRatio": 0.74,
+        "nHit": 1,
+        "nLeaders": 5,
+        "signal": "⚪",
+        "leaders": [
+          {
+            "code": "300750.SZ",
+            "name": "宁德时代",
+            "mv": 16401.0,
+            "vol20": 39.5,
+            "volPct": 58.6,
+            "ampRatio": 0.81,
+            "volRatio": 0.72,
+            "narrow": false,
+            "shrink": false
+          },
+          {
+            "code": "600406.SH",
+            "name": "国电南瑞",
+            "mv": 1847.0,
+            "vol20": 35.8,
+            "volPct": 94.7,
+            "ampRatio": 0.86,
+            "volRatio": 0.76,
+            "narrow": false,
+            "shrink": false
+          },
+          {
+            "code": "300274.SZ",
+            "name": "阳光电源",
+            "mv": 1760.0,
+            "vol20": 63.4,
+            "volPct": 60.2,
+            "ampRatio": 0.72,
+            "volRatio": 0.59,
+            "narrow": true,
+            "shrink": true
+          },
+          {
+            "code": "300014.SZ",
+            "name": "亿纬锂能",
+            "mv": 1163.0,
+            "vol20": 40.2,
+            "volPct": 33.2,
+            "ampRatio": 0.82,
+            "volRatio": 0.67,
+            "narrow": false,
+            "shrink": true
+          },
+          {
+            "code": "605117.SH",
+            "name": "德业股份",
+            "mv": 1193.0,
+            "vol20": 66.5,
+            "volPct": 83.6,
+            "ampRatio": 0.73,
+            "volRatio": 0.71,
+            "narrow": true,
+            "shrink": false
           }
         ]
       },
@@ -10896,9 +11080,9 @@
         "code": "801950.SI",
         "name": "煤炭",
         "kind": "行业",
-        "vol20": 25.5,
+        "vol20": 25.4,
         "volPct": 56.1,
-        "amtRatio": 0.74,
+        "amtRatio": 0.8,
         "nHit": 1,
         "nLeaders": 5,
         "signal": "⚪",
@@ -10906,43 +11090,43 @@
           {
             "code": "601088.SH",
             "name": "中国神华",
-            "mv": 7672.0,
+            "mv": 7677.0,
             "vol20": 31.5,
-            "volPct": 71.7,
-            "ampRatio": 0.86,
-            "volRatio": 0.74,
+            "volPct": 72.1,
+            "ampRatio": 0.84,
+            "volRatio": 0.69,
             "narrow": false,
-            "shrink": false
+            "shrink": true
           },
           {
             "code": "601225.SH",
             "name": "陕西煤业",
-            "mv": 2481.0,
-            "vol20": 34.6,
-            "volPct": 62.3,
-            "ampRatio": 0.79,
-            "volRatio": 0.84,
+            "mv": 2477.0,
+            "vol20": 33.7,
+            "volPct": 59.0,
+            "ampRatio": 0.8,
+            "volRatio": 0.79,
             "narrow": false,
             "shrink": false
           },
           {
             "code": "600188.SH",
             "name": "兖矿能源",
-            "mv": 1300.0,
-            "vol20": 80.2,
-            "volPct": 99.6,
-            "ampRatio": 0.87,
-            "volRatio": 0.93,
+            "mv": 1273.0,
+            "vol20": 79.9,
+            "volPct": 99.2,
+            "ampRatio": 0.9,
+            "volRatio": 0.9,
             "narrow": false,
             "shrink": false
           },
           {
             "code": "601898.SH",
             "name": "中煤能源",
-            "mv": 1312.0,
-            "vol20": 52.9,
-            "volPct": 75.8,
-            "ampRatio": 0.78,
+            "mv": 1305.0,
+            "vol20": 52.3,
+            "volPct": 73.8,
+            "ampRatio": 0.77,
             "volRatio": 0.9,
             "narrow": false,
             "shrink": false
@@ -10950,79 +11134,11 @@
           {
             "code": "002128.SZ",
             "name": "电投能源",
-            "mv": 610.0,
-            "vol20": 52.9,
-            "volPct": 86.9,
-            "ampRatio": 0.7,
-            "volRatio": 0.63,
-            "narrow": true,
-            "shrink": true
-          }
-        ]
-      },
-      {
-        "code": "801110.SI",
-        "name": "家用电器",
-        "kind": "行业",
-        "vol20": 13.6,
-        "volPct": 58.2,
-        "amtRatio": 0.8,
-        "nHit": 2,
-        "nLeaders": 5,
-        "signal": "⚪",
-        "leaders": [
-          {
-            "code": "000333.SZ",
-            "name": "美的集团",
-            "mv": 5820.0,
-            "vol20": 21.4,
-            "volPct": 78.3,
-            "ampRatio": 0.93,
-            "volRatio": 0.73,
-            "narrow": false,
-            "shrink": false
-          },
-          {
-            "code": "000651.SZ",
-            "name": "格力电器",
-            "mv": 2282.0,
-            "vol20": 19.3,
-            "volPct": 79.1,
-            "ampRatio": 1.02,
-            "volRatio": 0.91,
-            "narrow": false,
-            "shrink": false
-          },
-          {
-            "code": "002050.SZ",
-            "name": "三花智控",
-            "mv": 1358.0,
-            "vol20": 57.2,
-            "volPct": 74.6,
-            "ampRatio": 0.63,
-            "volRatio": 0.55,
-            "narrow": true,
-            "shrink": true
-          },
-          {
-            "code": "600690.SH",
-            "name": "海尔智家",
-            "mv": 1374.0,
-            "vol20": 23.6,
-            "volPct": 68.9,
-            "ampRatio": 0.95,
-            "volRatio": 0.76,
-            "narrow": false,
-            "shrink": false
-          },
-          {
-            "code": "002429.SZ",
-            "name": "兆驰股份",
-            "mv": 366.0,
-            "vol20": 46.3,
-            "volPct": 26.2,
-            "ampRatio": 0.66,
-            "volRatio": 0.69,
+            "mv": 603.0,
+            "vol20": 41.5,
+            "volPct": 55.7,
+            "ampRatio": 0.73,
+            "volRatio": 0.58,
             "narrow": true,
             "shrink": true
           }
@@ -11032,65 +11148,65 @@
         "code": "801740.SI",
         "name": "国防军工",
         "kind": "行业",
-        "vol20": 31.5,
-        "volPct": 58.6,
-        "amtRatio": 0.71,
-        "nHit": 1,
+        "vol20": 31.1,
+        "volPct": 56.6,
+        "amtRatio": 0.7,
+        "nHit": 2,
         "nLeaders": 5,
         "signal": "⚪",
         "leaders": [
           {
             "code": "600150.SH",
             "name": "中国船舶",
-            "mv": 2494.0,
-            "vol20": 32.2,
-            "volPct": 54.1,
-            "ampRatio": 0.6,
-            "volRatio": 0.7,
+            "mv": 2483.0,
+            "vol20": 32.3,
+            "volPct": 54.5,
+            "ampRatio": 0.61,
+            "volRatio": 0.68,
             "narrow": true,
-            "shrink": false
+            "shrink": true
           },
           {
             "code": "600760.SH",
             "name": "中航沈飞",
-            "mv": 1232.0,
-            "vol20": 24.8,
-            "volPct": 11.5,
-            "ampRatio": 0.7,
-            "volRatio": 0.84,
+            "mv": 1231.0,
+            "vol20": 25.1,
+            "volPct": 13.1,
+            "ampRatio": 0.67,
+            "volRatio": 0.81,
             "narrow": true,
             "shrink": false
           },
           {
             "code": "601698.SH",
             "name": "中国卫通",
-            "mv": 1093.0,
-            "vol20": 51.6,
-            "volPct": 51.6,
-            "ampRatio": 0.5,
-            "volRatio": 0.57,
+            "mv": 1029.0,
+            "vol20": 54.8,
+            "volPct": 64.3,
+            "ampRatio": 0.54,
+            "volRatio": 0.64,
             "narrow": true,
             "shrink": true
           },
           {
             "code": "600893.SH",
             "name": "航发动力",
-            "mv": 948.0,
-            "vol20": 35.5,
-            "volPct": 43.0,
-            "ampRatio": 0.71,
-            "volRatio": 0.97,
+            "mv": 954.0,
+            "vol20": 37.7,
+            "volPct": 43.9,
+            "ampRatio": 0.72,
+            "volRatio": 0.91,
             "narrow": true,
             "shrink": false
           },
           {
             "code": "600118.SH",
             "name": "中国卫星",
-            "mv": 798.0,
-            "vol20": 58.6,
-            "volPct": 42.2,
-            "ampRatio": 0.76,
-            "volRatio": 0.79,
+            "mv": 727.0,
+            "vol20": 70.9,
+            "volPct": 70.1,
+            "ampRatio": 0.79,
+            "volRatio": 0.81,
             "narrow": false,
             "shrink": false
           }
@@ -11463,12 +11579,87 @@
   },
   "etfRotation": {
     "trade_date": "2026-08-14",
-    "items": [],
-    "inflowTop3": [],
-    "outflowTop3": [],
-    "totalToday": 0,
-    "total5d": 0,
-    "moneyToday": null,
+    "items": [
+      {
+        "cat": "商品",
+        "todayNet": 7.1,
+        "net5d": 79.8,
+        "count": 15
+      },
+      {
+        "cat": "债券",
+        "todayNet": 4.6,
+        "net5d": 72.2,
+        "count": 52
+      },
+      {
+        "cat": "金融地产",
+        "todayNet": -7.1,
+        "net5d": 7.0,
+        "count": 46
+      },
+      {
+        "cat": "消费",
+        "todayNet": -0.4,
+        "net5d": -3.6,
+        "count": 73
+      },
+      {
+        "cat": "新能源",
+        "todayNet": -7.8,
+        "net5d": -11.7,
+        "count": 64
+      },
+      {
+        "cat": "医药",
+        "todayNet": -30.0,
+        "net5d": -68.8,
+        "count": 50
+      },
+      {
+        "cat": "其他",
+        "todayNet": -22.2,
+        "net5d": -90.4,
+        "count": 444
+      },
+      {
+        "cat": "港股海外",
+        "todayNet": -32.2,
+        "net5d": -95.5,
+        "count": 251
+      },
+      {
+        "cat": "红利",
+        "todayNet": -13.9,
+        "net5d": -103.8,
+        "count": 86
+      },
+      {
+        "cat": "科技",
+        "todayNet": 35.9,
+        "net5d": -207.9,
+        "count": 294
+      },
+      {
+        "cat": "宽基",
+        "todayNet": -204.4,
+        "net5d": -921.9,
+        "count": 313
+      }
+    ],
+    "inflowTop3": [
+      "商品",
+      "债券",
+      "金融地产"
+    ],
+    "outflowTop3": [
+      "宽基",
+      "科技",
+      "红利"
+    ],
+    "totalToday": -270.4,
+    "total5d": -1344.6,
+    "moneyToday": 0.2,
     "note": "份额变化×当日收盘价估算（不含货币ETF），5日净额按分类汇总；新发/退市ETF会造成少量误差"
   },
   "indexVol": {
@@ -11477,34 +11668,34 @@
       {
         "code": "000300.SH",
         "name": "沪深300",
-        "hv20": 27.6,
+        "hv20": 26.9,
         "hv60": 25.0,
-        "hv20Chg5": -1.8,
-        "hvPct1y": 91.6,
-        "peTtm": 14.25,
-        "pePct2y": 81.6,
+        "hv20Chg5": -0.8,
+        "hvPct1y": 90.4,
+        "peTtm": 14.22,
+        "pePct2y": 80.1,
         "status": "平稳",
         "low": false
       },
       {
         "code": "000905.SH",
         "name": "中证500",
-        "hv20": 45.4,
-        "hv60": 36.0,
-        "hv20Chg5": -0.3,
-        "hvPct1y": 99.6,
-        "peTtm": 35.7,
-        "pePct2y": 80.4,
+        "hv20": 44.8,
+        "hv60": 36.1,
+        "hv20Chg5": 0.9,
+        "hvPct1y": 99.2,
+        "peTtm": 35.77,
+        "pePct2y": 80.6,
         "status": "升温",
         "low": false
       },
       {
         "code": "000852.SH",
         "name": "中证1000",
-        "hv20": 48.1,
-        "hv60": 36.9,
-        "hv20Chg5": 1.6,
-        "hvPct1y": 100.0,
+        "hv20": 47.5,
+        "hv60": 37.0,
+        "hv20Chg5": 1.9,
+        "hvPct1y": 99.6,
         "peTtm": null,
         "pePct2y": null,
         "status": "升温",
@@ -11513,34 +11704,34 @@
       {
         "code": "000016.SH",
         "name": "上证50",
-        "hv20": 21.3,
+        "hv20": 20.1,
         "hv60": 21.3,
-        "hv20Chg5": -2.8,
-        "hvPct1y": 87.2,
-        "peTtm": 11.53,
-        "pePct2y": 74.3,
+        "hv20Chg5": -2.1,
+        "hvPct1y": 82.0,
+        "peTtm": 11.46,
+        "pePct2y": 68.5,
         "status": "平稳",
         "low": false
       },
       {
         "code": "399006.SZ",
         "name": "创业板指",
-        "hv20": 64.2,
+        "hv20": 63.6,
         "hv60": 50.7,
-        "hv20Chg5": -0.3,
-        "hvPct1y": 99.2,
-        "peTtm": 42.05,
-        "pePct2y": 77.0,
+        "hv20Chg5": 1.7,
+        "hvPct1y": 98.8,
+        "peTtm": 41.42,
+        "pePct2y": 73.8,
         "status": "升温",
         "low": false
       },
       {
         "code": "000688.SH",
         "name": "科创50",
-        "hv20": 73.3,
-        "hv60": 63.2,
-        "hv20Chg5": -5.4,
-        "hvPct1y": 96.0,
+        "hv20": 72.2,
+        "hv60": 62.8,
+        "hv20Chg5": 1.0,
+        "hvPct1y": 95.2,
         "peTtm": null,
         "pePct2y": null,
         "status": "平稳",
@@ -11549,10 +11740,10 @@
       {
         "code": "000510.SH",
         "name": "中证A500",
-        "hv20": 33.0,
+        "hv20": 32.4,
         "hv60": 28.7,
-        "hv20Chg5": -1.4,
-        "hvPct1y": 96.0,
+        "hv20Chg5": -0.2,
+        "hvPct1y": 94.0,
         "peTtm": null,
         "pePct2y": null,
         "status": "平稳",
@@ -11561,10 +11752,10 @@
       {
         "code": "000001.SH",
         "name": "上证综指",
-        "hv20": 21.3,
+        "hv20": 20.2,
         "hv60": 18.5,
-        "hv20Chg5": -0.4,
-        "hvPct1y": 93.2,
+        "hv20Chg5": -0.6,
+        "hvPct1y": 89.6,
         "peTtm": 16.57,
         "pePct2y": 74.4,
         "status": "平稳",
@@ -11573,19 +11764,19 @@
       {
         "code": "399001.SZ",
         "name": "深证成指",
-        "hv20": 45.2,
+        "hv20": 44.8,
         "hv60": 36.9,
-        "hv20Chg5": -0.2,
-        "hvPct1y": 99.6,
-        "peTtm": 32.6,
-        "pePct2y": 80.1,
+        "hv20Chg5": 1.1,
+        "hvPct1y": 98.8,
+        "peTtm": 32.56,
+        "pePct2y": 79.4,
         "status": "升温",
         "low": false
       }
     ],
     "note": "HV20/HV60为年化历史波动率；HV20>HV60×1.2升温，<HV60×0.85降温；低位=HV20近一年分位<25%"
   },
-  "nationalTeamComment": "全市场ETF（不含货币）昨日份额基本持平（净额不足1亿元）。华泰柏瑞300ETF单日份额-24.36亿份（约-115.1亿元），疑似大资金出场。10只核心宽基ETF（华泰柏瑞300ETF、易方达300ETF、嘉实300ETF、南方500ETF等）同日同向减持，呈共振形态，疑似国家队统一动作/托市信号。中证1000系列合计净流出229.3亿 → 短期利空中证1000/小盘股。沪深300系列合计净流出145.1亿 → 短期利空沪深300/大盘蓝筹。中证500系列合计净流出86.5亿 → 短期利空中证500/中盘股。央企主题组当日有动作：港股通央企红利ETF(景顺)（强信号）；国新/诚通多为发行人关联方，单边异动多为自身调仓。沪深300波动率HV20为27.6%（近一年92%分位），中证500、中证1000、创业板指、深证成指波动升温。",
+  "nationalTeamComment": "全市场ETF（不含货币）昨日净赎回约270亿元（份额变化×收盘价口径）。华泰柏瑞300ETF单日份额-24.36亿份（约-115.1亿元），疑似大资金出场。近5日份额口径资金主要流入商品、债券、金融地产类，流出宽基、科技、红利类。10只核心宽基ETF（华泰柏瑞300ETF、易方达300ETF、嘉实300ETF、南方500ETF等）同日同向减持，呈共振形态，疑似国家队统一动作/托市信号。中证1000系列合计净流出229.3亿 → 短期利空中证1000/小盘股。沪深300系列合计净流出145.1亿 → 短期利空沪深300/大盘蓝筹。中证500系列合计净流出86.5亿 → 短期利空中证500/中盘股。央企主题组当日有动作：港股通央企红利ETF(景顺)（强信号）；国新/诚通多为发行人关联方，单边异动多为自身调仓。沪深300波动率HV20为26.9%（近一年90%分位），中证500、中证1000、创业板指、深证成指波动升温。",
   "ntRotation": {
     "trade_date": "2026-08-14",
     "groups": [
@@ -11933,95 +12124,38 @@
     "note": "信号口径：单日份额|>2%|且金额|>5亿|=关注，|>3%|且|>1亿|或|>20亿|=强信号；≥3只核心宽基同向异动=共振·疑似国家队；连续3日同向=趋势性增/减仓"
   },
   "vcpStocks": {
-    "trade_date": "2026-08-18",
+    "trade_date": "2026-08-20",
     "poolSize": 717,
     "poolRaw": 1800,
     "mvDate": "20260818",
-    "scanned": 22,
+    "scanned": 25,
     "items": [
-      {
-        "code": "000708.SZ",
-        "name": "中信特钢",
-        "sector": "特种钢",
-        "star": true,
-        "close": 14.12,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": {
-          "type": "杯柄型",
-          "days": 10,
-          "amplitude": 11.2,
-          "riseFromLow": 15.8,
-          "volRatio": 0.91,
-          "segAmps": [
-            6.7,
-            5.6,
-            6.3
-          ],
-          "pivot": 15.05,
-          "distPct": 6.6,
-          "formed": true
-        },
-        "distMain": 6.6,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴6.6%｜水温中性·谨慎关注｜板块不配合⚠️",
-        "daily": {
-          "contractions": [
-            7.7,
-            4.6,
-            2.5,
-            3.0
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "持平",
-          "rightShrink": true,
-          "pivot": 15.05,
-          "distPct": 6.6,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            14.6,
-            17.2,
-            12.4,
-            6.6
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "持平",
-          "rightShrink": true,
-          "pivot": 15.05,
-          "distPct": 6.6,
-          "formed": false
-        }
-      },
       {
         "code": "000895.SZ",
         "name": "双汇发展",
         "sector": "食品",
         "star": true,
-        "close": 24.98,
+        "close": 25.08,
         "tag": "—",
         "pattern": "杯柄型",
         "platform": {
           "type": "杯柄型",
-          "days": 20,
+          "days": 21,
           "amplitude": 12.9,
           "riseFromLow": 13.0,
-          "volRatio": 0.94,
+          "volRatio": 0.92,
           "segAmps": [
-            7.0,
-            6.7,
-            5.5
+            9.9,
+            12.3,
+            3.8
           ],
           "pivot": 26.87,
-          "distPct": 7.6,
+          "distPct": 7.1,
           "formed": true
         },
-        "distMain": 7.6,
+        "distMain": 7.1,
         "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴7.6%｜水温中性·谨慎关注｜板块不配合⚠️",
+        "advice": "杯柄型·距枢轴7.1%｜水温中性·谨慎关注｜板块不配合⚠️",
         "daily": {
           "contractions": [
             4.7,
@@ -12034,7 +12168,7 @@
           "volTrend": "放大",
           "rightShrink": true,
           "pivot": 25.1,
-          "distPct": 0.5,
+          "distPct": 0.1,
           "formed": false
         },
         "weekly": {
@@ -12049,64 +12183,64 @@
           "volTrend": "放大",
           "rightShrink": false,
           "pivot": 26.87,
-          "distPct": 7.6,
+          "distPct": 7.1,
           "formed": false
         }
       },
       {
-        "code": "300760.SZ",
-        "name": "迈瑞医疗",
-        "sector": "医疗保健",
+        "code": "000708.SZ",
+        "name": "中信特钢",
+        "sector": "特种钢",
         "star": true,
-        "close": 150.55,
+        "close": 14.04,
         "tag": "—",
         "pattern": "杯柄型",
         "platform": {
           "type": "杯柄型",
           "days": 12,
-          "amplitude": 11.3,
-          "riseFromLow": 12.0,
-          "volRatio": 0.79,
+          "amplitude": 11.2,
+          "riseFromLow": 14.1,
+          "volRatio": 0.89,
           "segAmps": [
-            7.0,
-            5.2,
-            4.5
+            6.7,
+            6.9,
+            6.3
           ],
-          "pivot": 162.0,
-          "distPct": 7.6,
+          "pivot": 15.05,
+          "distPct": 7.2,
           "formed": true
         },
-        "distMain": 7.6,
+        "distMain": 7.2,
         "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴7.6%｜水温中性·谨慎关注｜板块不配合⚠️",
+        "advice": "杯柄型·距枢轴7.2%｜水温中性·谨慎关注｜板块不配合⚠️",
         "daily": {
           "contractions": [
-            14.2,
-            5.6,
-            4.4,
-            6.7
+            7.7,
+            4.6,
+            2.5,
+            3.0
           ],
           "count": 4,
-          "decreasing": false,
+          "decreasing": true,
           "volTrend": "持平",
           "rightShrink": true,
-          "pivot": 162.0,
-          "distPct": 7.6,
+          "pivot": 15.05,
+          "distPct": 7.2,
           "formed": false
         },
         "weekly": {
           "contractions": [
-            5.8,
-            26.1,
-            9.8,
-            26.0
+            14.6,
+            17.2,
+            12.4,
+            6.6
           ],
           "count": 4,
-          "decreasing": false,
-          "volTrend": "放大",
+          "decreasing": true,
+          "volTrend": "持平",
           "rightShrink": true,
-          "pivot": 162.0,
-          "distPct": 7.6,
+          "pivot": 15.05,
+          "distPct": 7.2,
           "formed": false
         }
       },
@@ -12115,27 +12249,27 @@
         "name": "万华化学",
         "sector": "化工原料",
         "star": true,
-        "close": 73.27,
+        "close": 75.16,
         "tag": "日线✅",
         "pattern": "底部平台型",
         "platform": {
           "type": "底部平台型",
-          "days": 19,
+          "days": 20,
           "amplitude": 12.4,
           "riseFromLow": 6.4,
-          "volRatio": 0.87,
+          "volRatio": 0.86,
           "segAmps": [
             9.7,
             5.8,
-            4.5
+            5.1
           ],
           "pivot": 76.57,
-          "distPct": 4.5,
+          "distPct": 1.9,
           "formed": true
         },
-        "distMain": 4.5,
+        "distMain": 1.9,
         "sectorFit": "板块不配合⚠️",
-        "advice": "底部平台型·距枢轴4.5%｜水温中性·谨慎关注｜板块不配合⚠️",
+        "advice": "底部平台型·距枢轴1.9%｜水温中性·谨慎关注｜板块不配合⚠️",
         "daily": {
           "contractions": [
             14.1,
@@ -12148,7 +12282,7 @@
           "volTrend": "递减",
           "rightShrink": true,
           "pivot": 75.81,
-          "distPct": 3.5,
+          "distPct": 0.9,
           "formed": true
         },
         "weekly": {
@@ -12163,7 +12297,7 @@
           "volTrend": "放大",
           "rightShrink": true,
           "pivot": 76.57,
-          "distPct": 4.5,
+          "distPct": 1.9,
           "formed": false
         }
       },
@@ -12172,27 +12306,27 @@
         "name": "心脉医疗",
         "sector": "医疗保健",
         "star": true,
-        "close": 92.16,
+        "close": 93.52,
         "tag": "—",
         "pattern": "底部平台型",
         "platform": {
           "type": "底部平台型",
-          "days": 36,
+          "days": 37,
           "amplitude": 12.4,
           "riseFromLow": 6.4,
-          "volRatio": 0.86,
+          "volRatio": 0.88,
           "segAmps": [
             9.9,
             8.5,
             7.7
           ],
           "pivot": 97.43,
-          "distPct": 5.7,
+          "distPct": 4.2,
           "formed": true
         },
-        "distMain": 5.7,
+        "distMain": 4.2,
         "sectorFit": "板块不配合⚠️",
-        "advice": "底部平台型·距枢轴5.7%｜水温中性·谨慎关注｜板块不配合⚠️",
+        "advice": "底部平台型·距枢轴4.2%｜水温中性·谨慎关注｜板块不配合⚠️",
         "daily": {
           "contractions": [
             6.4,
@@ -12205,7 +12339,7 @@
           "volTrend": "持平",
           "rightShrink": true,
           "pivot": 97.43,
-          "distPct": 5.7,
+          "distPct": 4.2,
           "formed": false
         },
         "weekly": {
@@ -12220,7 +12354,121 @@
           "volTrend": "递减",
           "rightShrink": true,
           "pivot": 97.43,
-          "distPct": 5.7,
+          "distPct": 4.2,
+          "formed": false
+        }
+      },
+      {
+        "code": "600688.SH",
+        "name": "上海石化",
+        "sector": "石油加工",
+        "star": false,
+        "close": 2.81,
+        "tag": "—",
+        "pattern": "底部平台型",
+        "platform": {
+          "type": "底部平台型",
+          "days": 33,
+          "amplitude": 11.9,
+          "riseFromLow": 7.4,
+          "volRatio": 0.51,
+          "segAmps": [
+            10.3,
+            9.0,
+            5.1
+          ],
+          "pivot": 3.0,
+          "distPct": 6.8,
+          "formed": true
+        },
+        "distMain": 6.8,
+        "sectorFit": "板块配合✅",
+        "advice": "底部平台型·距枢轴6.8%｜水温中性·谨慎关注｜板块配合✅",
+        "daily": {
+          "contractions": [
+            7.5,
+            8.2,
+            3.1,
+            4.8
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 2.85,
+          "distPct": 1.4,
+          "formed": false
+        },
+        "weekly": {
+          "contractions": [
+            13.2,
+            16.4,
+            27.4,
+            12.4
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "放大",
+          "rightShrink": true,
+          "pivot": 2.9,
+          "distPct": 3.2,
+          "formed": false
+        }
+      },
+      {
+        "code": "600009.SH",
+        "name": "上海机场",
+        "sector": "机场",
+        "star": true,
+        "close": 23.27,
+        "tag": "—",
+        "pattern": "底部平台型",
+        "platform": {
+          "type": "底部平台型",
+          "days": 36,
+          "amplitude": 12.4,
+          "riseFromLow": 4.3,
+          "volRatio": 0.93,
+          "segAmps": [
+            8.2,
+            6.6,
+            7.8
+          ],
+          "pivot": 24.95,
+          "distPct": 7.2,
+          "formed": true
+        },
+        "distMain": 7.2,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "底部平台型·距枢轴7.2%｜水温中性·谨慎关注｜板块不配合⚠️",
+        "daily": {
+          "contractions": [
+            5.1,
+            4.4,
+            6.3,
+            4.7
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "持平",
+          "rightShrink": true,
+          "pivot": 24.95,
+          "distPct": 7.2,
+          "formed": false
+        },
+        "weekly": {
+          "contractions": [
+            4.8,
+            17.5,
+            9.0,
+            6.3
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "放大",
+          "rightShrink": true,
+          "pivot": 24.95,
+          "distPct": 7.2,
           "formed": false
         }
       }
@@ -12228,144 +12476,131 @@
     "note": "池=上证50∪中证500∪沪深300∪中证1000成分（周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；形态两类：杯柄型=底部抬升≥10%后做柄（平台上沿=枢轴）；底部平台型=底部区域规律窄幅缩量平台；共同要件=10~50日窄幅(振幅≤14%)+缩量+分段振幅规律收缩；收缩型已降级不单独展示；只展示距枢轴<8%的成型/临近成型个股，杯柄型优先；建议=水温×板块合适度，仅供关注优先级参考"
   },
   "actionableSectors": {
-    "trade_date": "2026-08-19",
+    "trade_date": "2026-08-20",
     "items": [
-      {
-        "sector": "通信",
-        "subSector": "电信运营",
-        "reasons": [
-          "30日档较新积聚",
-          "积聚2天（新进入积聚）",
-          "资金节奏：拐点·转流入（近5日+1.7亿）"
-        ],
-        "priority": 3,
-        "pricePosition": 0.138,
-        "firstSeen": "08-18",
-        "streakDays": 2
-      },
       {
         "sector": "石油石化",
         "subSector": "石油加工",
         "reasons": [
           "30日档较新积聚",
-          "积聚1天（新进入积聚）",
-          "资金节奏：拐点·转流入（近5日+0.1亿）"
+          "积聚2天（新进入积聚）",
+          "资金节奏：拐点·转流入（近5日+4.7亿）"
         ],
         "priority": 3,
-        "pricePosition": 0.188,
+        "pricePosition": 0.197,
         "firstSeen": "08-19",
-        "streakDays": 1
+        "streakDays": 2
       }
     ],
     "vetoed": [],
     "note": "入选=双确认/双档共振/60日档/30日档；否决=资金节奏拐点·转流出或持续流出、扫描榜高潮风险；仅基于底部积聚命中板块，无命中则空名单"
   },
   "eciQuadrant": {
-    "trade_date": "2026.07.23~2026.08.19 (20个交易日)",
+    "trade_date": "2026.07.24~2026.08.20 (20个交易日)",
     "yMode": "monthly",
-    "xMedian": 54.7,
-    "yMedian": -1.8,
+    "xMedian": 53.7,
+    "yMedian": -2.2,
     "items": [
       {
         "sector": "医药生物",
-        "eci": 57.2,
-        "chg": -17.7,
+        "eci": 63.9,
+        "chg": -9.1,
         "quadrant": "景气高位·边际走弱"
       },
       {
         "sector": "电子",
-        "eci": 59.8,
-        "chg": -7.2,
-        "quadrant": "景气高位·边际走弱"
+        "eci": 63.2,
+        "chg": -2.2,
+        "quadrant": "景气高位·持续改善"
       },
       {
         "sector": "计算机",
-        "eci": 50.6,
-        "chg": -5.4,
+        "eci": 50.4,
+        "chg": -8.6,
         "quadrant": "景气低位·仍在筑底"
       },
       {
         "sector": "电力设备",
-        "eci": 61.8,
-        "chg": 11.9,
+        "eci": 59.7,
+        "chg": 9.8,
         "quadrant": "景气高位·持续改善"
       },
       {
         "sector": "食品饮料",
-        "eci": 53.6,
-        "chg": -6.1,
-        "quadrant": "景气低位·仍在筑底"
+        "eci": 59.6,
+        "chg": -2.6,
+        "quadrant": "景气高位·边际走弱"
       },
       {
         "sector": "银行",
-        "eci": 57.3,
-        "chg": -10.7,
+        "eci": 63.4,
+        "chg": -4.2,
         "quadrant": "景气高位·边际走弱"
       },
       {
         "sector": "非银金融",
-        "eci": 50.3,
-        "chg": -15.9,
+        "eci": 52.3,
+        "chg": -8.1,
         "quadrant": "景气低位·仍在筑底"
       },
       {
         "sector": "汽车",
-        "eci": 54.0,
-        "chg": 9.9,
-        "quadrant": "景气低位·边际修复"
+        "eci": 53.7,
+        "chg": 7.3,
+        "quadrant": "景气高位·持续改善"
       },
       {
         "sector": "机械设备",
-        "eci": 62.4,
-        "chg": 10.0,
+        "eci": 63.3,
+        "chg": 12.5,
         "quadrant": "景气高位·持续改善"
       },
       {
         "sector": "国防军工",
-        "eci": 57.4,
-        "chg": 5.0,
+        "eci": 55.7,
+        "chg": 6.6,
         "quadrant": "景气高位·持续改善"
       },
       {
         "sector": "通信",
-        "eci": 54.8,
-        "chg": -4.1,
-        "quadrant": "景气高位·边际走弱"
+        "eci": 55.3,
+        "chg": -1.3,
+        "quadrant": "景气高位·持续改善"
       },
       {
         "sector": "有色金属",
-        "eci": 54.2,
-        "chg": 10.3,
+        "eci": 51.4,
+        "chg": 8.4,
         "quadrant": "景气低位·边际修复"
       },
       {
         "sector": "家用电器",
-        "eci": 56.4,
-        "chg": -0.5,
+        "eci": 59.1,
+        "chg": -0.2,
         "quadrant": "景气高位·持续改善"
       },
       {
         "sector": "房地产",
-        "eci": 50.0,
-        "chg": 0.0,
+        "eci": 48.6,
+        "chg": -2.2,
         "quadrant": "景气低位·边际修复"
       },
       {
         "sector": "建筑装饰",
-        "eci": 48.8,
-        "chg": -1.3,
-        "quadrant": "景气低位·边际修复"
+        "eci": 48.0,
+        "chg": -4.2,
+        "quadrant": "景气低位·仍在筑底"
       },
       {
         "sector": "交通运输",
-        "eci": 52.6,
-        "chg": 2.7,
-        "quadrant": "景气低位·边际修复"
+        "eci": 57.4,
+        "chg": 3.3,
+        "quadrant": "景气高位·持续改善"
       },
       {
         "sector": "传媒",
-        "eci": 49.7,
-        "chg": -5.4,
+        "eci": 47.1,
+        "chg": -12.3,
         "quadrant": "景气低位·仍在筑底"
       },
       {
@@ -12376,80 +12611,80 @@
       },
       {
         "sector": "建筑材料",
-        "eci": 55.9,
-        "chg": 1.6,
+        "eci": 59.1,
+        "chg": 7.4,
         "quadrant": "景气高位·持续改善"
       },
       {
         "sector": "农林牧渔",
-        "eci": 61.3,
-        "chg": -1.8,
+        "eci": 64.0,
+        "chg": 2.9,
         "quadrant": "景气高位·持续改善"
       },
       {
         "sector": "公用事业",
-        "eci": 55.3,
-        "chg": -0.1,
-        "quadrant": "景气高位·持续改善"
-      },
-      {
-        "sector": "轻工制造",
-        "eci": 41.6,
-        "chg": -16.5,
-        "quadrant": "景气低位·仍在筑底"
-      },
-      {
-        "sector": "纺织服装",
-        "eci": 46.9,
-        "chg": -13.8,
-        "quadrant": "景气低位·仍在筑底"
-      },
-      {
-        "sector": "钢铁",
-        "eci": 52.9,
-        "chg": -4.0,
-        "quadrant": "景气低位·仍在筑底"
-      },
-      {
-        "sector": "煤炭",
-        "eci": 66.0,
-        "chg": -5.2,
-        "quadrant": "景气高位·边际走弱"
-      },
-      {
-        "sector": "石油石化",
-        "eci": 49.3,
-        "chg": -11.4,
-        "quadrant": "景气低位·仍在筑底"
-      },
-      {
-        "sector": "社会服务",
-        "eci": 44.2,
+        "eci": 53.6,
         "chg": -7.5,
         "quadrant": "景气低位·仍在筑底"
       },
       {
-        "sector": "环保",
-        "eci": 57.2,
-        "chg": 3.9,
+        "sector": "轻工制造",
+        "eci": 42.7,
+        "chg": -15.0,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "纺织服装",
+        "eci": 47.4,
+        "chg": -18.4,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "钢铁",
+        "eci": 47.8,
+        "chg": -12.3,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "煤炭",
+        "eci": 71.3,
+        "chg": 0.0,
         "quadrant": "景气高位·持续改善"
       },
       {
+        "sector": "石油石化",
+        "eci": 53.7,
+        "chg": -3.6,
+        "quadrant": "景气高位·边际走弱"
+      },
+      {
+        "sector": "社会服务",
+        "eci": 42.6,
+        "chg": -10.1,
+        "quadrant": "景气低位·仍在筑底"
+      },
+      {
+        "sector": "环保",
+        "eci": 51.8,
+        "chg": -1.9,
+        "quadrant": "景气低位·边际修复"
+      },
+      {
         "sector": "美容护理",
-        "eci": 57.0,
-        "chg": 1.0,
+        "eci": 63.6,
+        "chg": 8.7,
         "quadrant": "景气高位·持续改善"
       },
       {
         "sector": "综合",
-        "eci": 54.7,
-        "chg": -6.6,
-        "quadrant": "景气高位·边际走弱"
+        "eci": 52.9,
+        "chg": -6.4,
+        "quadrant": "景气低位·仍在筑底"
       },
       {
         "sector": "基础化工",
-        "eci": 57.7,
-        "chg": 15.9,
+        "eci": 57.9,
+        "chg": 17.2,
         "quadrant": "景气高位·持续改善"
       }
     ],
