@@ -95,7 +95,8 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
   const ntText = (data.nationalTeamComment || '').split('。').filter(Boolean)[0];
   const dualNote = data.bottomWatch?.dualConfirmNote || '';
   const act = data.actionableSectors;
-  const hasDigest = mtTail || ntText || sectors.length > 0 || dualNote;
+  const lowVolText = data.lowVolDigest || '';
+  const hasDigest = mtTail || ntText || sectors.length > 0 || dualNote || lowVolText;
 
   return (
     <div className="space-y-4">
@@ -171,6 +172,16 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                 >
                   <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-teal-500 text-white">双确认</Badge>
                   <span className="text-xs text-slate-600 leading-snug flex-1">{dualNote}</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
+                </button>
+              )}
+              {lowVolText && (
+                <button
+                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-cyan-50 transition-colors"
+                  onClick={() => onNavigate?.('national', 'index-vol')}
+                >
+                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-cyan-600 text-white">宽基低波</Badge>
+                  <span className="text-xs text-slate-600 leading-snug flex-1">{lowVolText}</span>
                   <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
                 </button>
               )}

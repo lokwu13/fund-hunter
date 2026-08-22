@@ -3327,7 +3327,16 @@ def fetch_nt_upgrade(pro, trade_date, data):
             'items': vol_items,
             'note': 'HV20/HV60为年化历史波动率；HV20>HV60×1.2升温，<HV60×0.85降温；低位=HV20近一年分位<25%',
         }
-        print(f"  indexVol: {len(vol_items)} indices, "
+        # 每日评语速览·宽基低波提示：HV20 近一年分位 <25% 的宽基全部列出；无命中则清除残留字段
+        low_hits = [v for v in vol_items if v.get('low')]
+        if low_hits:
+            names = '、'.join(v['name'] for v in low_hits)
+            pcts = '/'.join(f"{v['hvPct1y']:.0f}%" for v in low_hits)
+            data['lowVolDigest'] = (f"宽基低波：{names} 20日波动率处一年低位"
+                                    f"（分位 {pcts}），形态发育友好。")
+        else:
+            data.pop('lowVolDigest', None)
+        print(f"  indexVol: {len(vol_items)} indices, low={len(low_hits)}, "
               + ', '.join(f"{v['name']}{v['status']}" for v in vol_items[:3]))
     except Exception as e:
         print(f"  Warning: indexVol failed: {e}")

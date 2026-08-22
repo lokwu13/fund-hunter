@@ -614,6 +614,7 @@ export interface FundData {
       low: boolean;
     }>;
   };
+  lowVolDigest?: string;
   nationalTeamComment?: string;
   actionableSectors?: {
     trade_date: string;

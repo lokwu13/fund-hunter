@@ -933,7 +933,7 @@ export default function NationalTeamPanel() {
 
       {/* ====== 宽基波动率（ETF VIX） ====== */}
       {data.indexVol && data.indexVol.items.length > 0 && (
-        <Card>
+        <Card id="index-vol">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-bold flex items-center gap-2">
               <Gauge className="w-5 h-5 text-red-600" />
