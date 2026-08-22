@@ -9456,7 +9456,7 @@
   },
   "sectorScan": {
     "trade_date": "2026-08-21",
-    "summary": "今日2个板块启动确认（水运、铜）；1个板块存在高潮风险（黄金），谨慎追高。",
+    "summary": "今日1个板块存在高潮风险（黄金），谨慎追高；2个板块高位流入（水运、铜），位置偏高谨慎。",
     "items": [
       {
         "sector": "黄金",
@@ -9466,6 +9466,11 @@
         "sectorPctChg": 5.09,
         "pct5d": 15.61,
         "status": "高潮风险",
+        "tier": "risk",
+        "distHigh": 0.0,
+        "ret20": 38.0,
+        "volRatio": 0.95,
+        "lowVol": false,
         "stocks": [
           {
             "name": "晓程科技",
@@ -9489,7 +9494,12 @@
         "consecutiveDays": 5,
         "sectorPctChg": 2.18,
         "pct5d": 7.2,
-        "status": "启动确认",
+        "status": "高位流入·谨慎",
+        "tier": "high",
+        "distHigh": 0.0,
+        "ret20": 11.8,
+        "volRatio": 1.44,
+        "lowVol": false,
         "stocks": [
           {
             "name": "招商轮船",
@@ -9504,7 +9514,7 @@
             "pctChg": 2.22
           }
         ],
-        "score": 120.0
+        "score": 70.0
       },
       {
         "sector": "铜",
@@ -9513,7 +9523,12 @@
         "consecutiveDays": 2,
         "sectorPctChg": 3.06,
         "pct5d": 2.92,
-        "status": "启动确认",
+        "status": "高位流入·谨慎",
+        "tier": "high",
+        "distHigh": -13.6,
+        "ret20": 16.4,
+        "volRatio": 0.92,
+        "lowVol": false,
         "stocks": [
           {
             "name": "紫金矿业",
@@ -9528,9 +9543,10 @@
             "pctChg": 2.81
           }
         ],
-        "score": 40.0
+        "score": -10.0
       }
-    ]
+    ],
+    "note": "位置口径：行业等权收益合成指数近似（非真实板块指数）；⭐低位=距60日高点回撤≥3%且近20日涨幅≤10%（回测10日胜率约59%）；高位=距60日高点<3%或近20日涨幅>10%（回测10日胜率仅17~29%，信号降级为\"高位流入·谨慎\"）；双头风险=接近前高+连续净流入+流入减速；缩量=近5日均额/前5日均额<0.8，低位缩量吸筹加分"
   },
   "bottomWatch": {
     "trade_date": "2026-08-21",
