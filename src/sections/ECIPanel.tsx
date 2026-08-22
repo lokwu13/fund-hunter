@@ -64,6 +64,8 @@ const SCAN_STATUS_COLORS: Record<string, string> = {
   '吸筹中': 'bg-blue-500 text-white',
   '启动确认': 'bg-emerald-500 text-white',
   '高潮风险': 'bg-orange-500 text-white',
+  '双头风险': 'bg-rose-600 text-white',
+  '高位流入·谨慎': 'bg-slate-300 text-slate-600',
   '无信号': 'bg-slate-200 text-slate-500',
 };
 
@@ -198,8 +200,12 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                 </thead>
                 <tbody>
                   {data.sectorScan.items.map((it: any) => (
-                    <tr key={it.sector} className="border-b border-slate-50 hover:bg-slate-50/60">
-                      <td className="py-1.5 font-medium text-slate-700">{it.sector}</td>
+                    <tr key={it.sector} className={`border-b border-slate-50 hover:bg-slate-50/60 ${it.tier === 'high' ? 'opacity-50' : ''}`}>
+                      <td className="py-1.5 font-medium text-slate-700">
+                        {it.tier === 'core' && <span title="⭐低位核心信号（距60日高点回撤≥3%且近20日涨幅≤10%）">⭐</span>}
+                        {it.sector}
+                        {it.lowVol && <span className="ml-1 text-[9px] text-indigo-500" title="缩量：近5日均额/前5日均额<0.8">缩量</span>}
+                      </td>
                       <td className="text-right">
                         {it.consecutiveDays > 0
                           ? <span className="text-emerald-600 font-semibold">{it.consecutiveDays}天</span>
@@ -227,7 +233,10 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                         </div>
                       </td>
                       <td className="text-right">
-                        <Badge className={`text-[10px] border-0 ${SCAN_STATUS_COLORS[it.status] || SCAN_STATUS_COLORS['无信号']}`}>
+                        <Badge
+                          className={`text-[10px] border-0 ${SCAN_STATUS_COLORS[it.status] || SCAN_STATUS_COLORS['无信号']}`}
+                          title={it.distHigh !== undefined ? `距60日高点 ${it.distHigh}%${it.ret20 != null ? `，近20日 ${it.ret20 >= 0 ? '+' : ''}${it.ret20}%` : ''}` : undefined}
+                        >
                           {it.status}
                         </Badge>
                       </td>
@@ -237,6 +246,9 @@ export default function ECIPanel({ data }: ECIPanelProps) {
               </table>
             </div>
             <p className="text-[10px] text-slate-400 mt-1.5">主力净流入=特大单+大单买入-卖出（Tushare 口径）；底部积聚分 30 日/60 日双档：持续净流入且行业价格处于长期低位，双档同时命中为🔥共振；吸筹中=资金连续流入但价格未动，启动确认=资金流入+当日大涨，高潮风险=连续流入+5日涨幅过热</p>
+            {data.sectorScan.note && (
+              <p className="text-[10px] text-slate-400 mt-1">{data.sectorScan.note}</p>
+            )}
           </CardContent>
         </Card>
       )}

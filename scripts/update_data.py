@@ -855,28 +855,55 @@ def _scan_rank_scores(items, n):
 
 
 def _scan_summary(items):
-    """扫描榜自动总评（items 已只含信号板块）。"""
+    """扫描榜自动总评（items 已只含信号板块，2026-08-22 起含位置分层）。"""
     absorb = [i for i in items if i['status'] == '吸筹中']
     start = [i for i in items if i['status'] == '启动确认']
     risk = [i for i in items if i['status'] == '高潮风险']
+    dt = [i for i in items if i['status'] == '双头风险']
+    hi = [i for i in items if i['status'] == '高位流入·谨慎']
     parts = []
     if absorb:
-        parts.append(f"{len(absorb)}个板块出现吸筹信号："
-                     + '、'.join(f"{i['sector']}连续{i['consecutiveDays']}日净流入" for i in absorb[:3]))
+        core = [i for i in absorb if i.get('tier') == 'core']
+        txt = (f"{len(absorb)}个板块出现吸筹信号："
+               + '、'.join(f"{i['sector']}连续{i['consecutiveDays']}日净流入" for i in absorb[:3]))
+        if core:
+            txt += f"（其中⭐低位 {len(core)} 个）"
+        parts.append(txt)
     if start:
-        parts.append(f"{len(start)}个板块启动确认（{'、'.join(i['sector'] for i in start[:3])}）")
+        core = [i for i in start if i.get('tier') == 'core']
+        txt = f"{len(start)}个板块启动确认（{'、'.join(i['sector'] for i in start[:3])}）"
+        if core:
+            txt += f"，其中⭐低位 {len(core)} 个"
+        parts.append(txt)
     if risk:
         parts.append(f"{len(risk)}个板块存在高潮风险（{'、'.join(i['sector'] for i in risk[:3])}），谨慎追高")
+    if dt:
+        parts.append(f"{len(dt)}个板块双头风险（{'、'.join(i['sector'] for i in dt[:3])}）：接近前高且流入减速")
+    if hi:
+        parts.append(f"{len(hi)}个板块高位流入（{'、'.join(i['sector'] for i in hi[:3])}），位置偏高谨慎")
     return '今日' + '；'.join(parts) + '。'
+
+
+SCAN_POSITION_NOTE = ('位置口径：行业等权收益合成指数近似（非真实板块指数）；'
+                      '⭐低位=距60日高点回撤≥3%且近20日涨幅≤10%（回测10日胜率约59%）；'
+                      '高位=距60日高点<3%或近20日涨幅>10%（回测10日胜率仅17~29%，信号降级为"高位流入·谨慎"）；'
+                      '双头风险=接近前高+连续净流入+流入减速；缩量=近5日均额/前5日均额<0.8，低位缩量吸筹加分')
 
 
 def build_sector_scan(hist, trade_date, today_map):
     """板块资金扫描榜（精简版）：只保留触发信号的板块，每个板块附 2 只吸筹个股。
 
-    信号规则（数据来自行业资金历史沉淀）：
-    - 吸筹中：连续净流入 ≥3 天 且 当日涨幅 <1%（资金进、价未动）
-    - 启动确认：连续净流入 ≥2 天 且 当日涨幅 ≥1.5%
-    - 高潮风险：连续净流入 ≥3 天 且 近5日涨幅 ≥8%（风险提示优先判定）
+    信号规则（2026-08-22 位置分层版，数据来自行业资金历史沉淀）：
+    - 位置分层（等权收益合成指数近似，非真实板块指数）：
+      高位 = 距60日高点 <3% 或 近20日涨幅 >10%；
+      低位 = 距60日高点回撤 ≥3% 且 近20日涨幅 ≤10%；半路 = 历史不足等兜底。
+    - 高潮风险：连续净流入 ≥3 天 且 近5日涨幅 ≥8%（任何位置都发，最高优先）
+    - 双头风险：高位（距高点<3%）+ 连续净流入 ≥2 天 + 流入减速（当日 < 近3日均值）
+    - 启动确认：连续净流入 ≥2 天 且 当日涨幅 ≥1.5%（仅低位/半路发）
+    - 吸筹中：连续净流入 ≥3 天 且 当日涨幅 <1%（仅低位/半路发；低位+量比<0.8 标记"缩量"）
+    - 高位触发吸筹/启动条件的，改标「高位流入·谨慎」沉底展示
+    回测依据（81交易日×110行业）：低位信号10日胜率~59%/中位+1.4~1.9%，
+    高位信号胜率17~29%/中位-3.4~-3.8%；高潮风险高位触发 8/8 后续下跌。
     """
     industries = set()
     for day in hist['days'].values():
@@ -899,12 +926,45 @@ def build_sector_scan(hist, trade_date, today_map):
         for r in rows[-5:]:
             acc *= (1 + r[2] / 100.0)
         pct5 = (acc - 1) * 100
+
+        # ── 位置分层：等权收益合成指数（与 2026-08-22 回测同口径）──
+        px = 1.0
+        pxs = []
+        for _, _n, r, _a in rows:
+            px *= (1 + r / 100.0)
+            pxs.append(px)
+        win60 = pxs[-60:]
+        dist_high = (px / max(win60) - 1) * 100
+        ret20 = (px / pxs[-21] - 1) * 100 if len(pxs) >= 21 else None
+        if ret20 is None:
+            tier = 'mid'  # 历史不足 20 日，兜底半路层
+        elif dist_high > -3 or ret20 > 10:
+            tier = 'high'
+        else:
+            tier = 'low'
+
+        # 量比：近5日均额 / 前5日均额
+        amt5 = sum(r[3] for r in rows[-5:]) / 5
+        amt_prev5 = sum(r[3] for r in rows[-10:-5]) / 5 if len(rows) >= 10 else 0
+        vol_ratio = round(amt5 / amt_prev5, 2) if amt_prev5 > 0 else None
+
+        # ── 信号判定（高潮风险 > 双头风险 > 启动/吸筹，高位降级）──
+        slowing = consec >= 2 and rows[-1][1] < sum(r[1] for r in rows[-3:]) / 3
+        low_vol = tier == 'low' and vol_ratio is not None and vol_ratio < 0.8
         if consec >= 3 and pct5 >= 8:
-            status = '高潮风险'
+            status, out_tier = '高潮风险', 'risk'
+        elif dist_high > -3 and slowing:
+            status, out_tier = '双头风险', 'risk'
         elif consec >= 2 and ret1 >= 1.5:
-            status = '启动确认'
+            if tier == 'high':
+                status, out_tier = '高位流入·谨慎', 'high'
+            else:
+                status, out_tier = '启动确认', ('core' if tier == 'low' else 'mid')
         elif consec >= 3 and ret1 < 1:
-            status = '吸筹中'
+            if tier == 'high':
+                status, out_tier = '高位流入·谨慎', 'high'
+            else:
+                status, out_tier = '吸筹中', ('core' if tier == 'low' else 'mid')
         else:
             continue  # 无信号不展示
         stocks = [{'name': s['name'], 'code': s['code'], 'netInflow': s['net'], 'pctChg': s['pct']}
@@ -917,17 +977,27 @@ def build_sector_scan(hist, trade_date, today_map):
             'sectorPctChg': round(ret1, 2),
             'pct5d': round(pct5, 2),
             'status': status,
+            'tier': out_tier,
+            'distHigh': round(dist_high, 1),
+            'ret20': round(ret20, 1) if ret20 is not None else None,
+            'volRatio': vol_ratio,
+            'lowVol': low_vol,
             'stocks': stocks,
         })
     d = f"{latest[:4]}-{latest[4:6]}-{latest[6:]}"
     if not items:
-        return {'trade_date': d, 'summary': '今日无板块触发吸筹/启动/高潮信号，资金以观望为主。', 'items': []}
+        return {'trade_date': d, 'summary': '今日无板块触发吸筹/启动/高潮信号，资金以观望为主。', 'items': [],
+                'note': SCAN_POSITION_NOTE}
     rank_score = _scan_rank_scores(items, len(items))
+    tier_adj = {'core': 30, 'mid': 0, 'high': -50, 'risk': 0}
     for it in items:
         it['score'] = round(it['consecutiveDays'] * 20 + rank_score[id(it)]
-                            - (20 if it['pct5d'] > 8 else 0), 1)
+                            - (20 if it['pct5d'] > 8 else 0)
+                            + tier_adj.get(it['tier'], 0)
+                            + (10 if it.get('lowVol') else 0), 1)
     items.sort(key=lambda x: -x['score'])
-    return {'trade_date': d, 'summary': _scan_summary(items), 'items': items}
+    return {'trade_date': d, 'summary': _scan_summary(items), 'items': items,
+            'note': SCAN_POSITION_NOTE}
 
 
 def _find_bottom_leaders(pro, trade_date, sector, today_map, max_check=5):

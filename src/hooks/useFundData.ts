@@ -315,6 +315,7 @@ export interface FundData {
   sectorScan?: {
     trade_date: string;
     summary: string;
+    note?: string;
     items: Array<{
       sector: string;
       netInflow1d: number;
@@ -324,6 +325,11 @@ export interface FundData {
       pct5d?: number;
       score: number;
       status: string;
+      tier?: 'core' | 'mid' | 'high' | 'risk';
+      distHigh?: number;
+      ret20?: number | null;
+      volRatio?: number | null;
+      lowVol?: boolean;
       stocks?: Array<{ name: string; code: string; netInflow: number; pctChg: number }>;
     }>;
   };
