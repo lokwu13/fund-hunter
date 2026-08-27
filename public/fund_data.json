@@ -860,80 +860,80 @@
     {
       "name": "綠色動力環保",
       "code": "01330.HK",
-      "ratio": "73.04%",
-      "vol": 295405020,
+      "ratio": "73.06%",
+      "vol": 295488020,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "大眾公用",
       "code": "01635.HK",
-      "ratio": "72.16%",
-      "vol": 385123000,
+      "ratio": "71.59%",
+      "vol": 382091000,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "中國電信",
       "code": "00728.HK",
-      "ratio": "70.76%",
-      "vol": 9821081076,
+      "ratio": "71.01%",
+      "vol": 9855385184,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "中國神華",
       "code": "01088.HK",
-      "ratio": "69.43%",
-      "vol": 2345555214,
+      "ratio": "69.45%",
+      "vol": 2346083293,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "龍蟠科技",
       "code": "02465.HK",
-      "ratio": "68.54%",
-      "vol": 92544388,
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "天津創業環保股份",
-      "code": "01065.HK",
-      "ratio": "68.35%",
-      "vol": 232436100,
+      "ratio": "68.93%",
+      "vol": 93065888,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "凱盛新能",
       "code": "01108.HK",
-      "ratio": "68.32%",
-      "vol": 170830000,
+      "ratio": "68.51%",
+      "vol": 171290000,
+      "concept": "—",
+      "sector": "—"
+    },
+    {
+      "name": "天津創業環保股份",
+      "code": "01065.HK",
+      "ratio": "68.36%",
+      "vol": 232434100,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "弘業期貨",
       "code": "03678.HK",
-      "ratio": "66.37%",
-      "vol": 165738000,
+      "ratio": "65.95%",
+      "vol": 164703000,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "廣汽集團",
       "code": "02238.HK",
-      "ratio": "64.52%",
-      "vol": 1815461345,
+      "ratio": "64.61%",
+      "vol": 1817957345,
       "concept": "—",
       "sector": "—"
     },
     {
-      "name": "萬科企業",
-      "code": "02202.HK",
-      "ratio": "61.18%",
-      "vol": 1350338334,
+      "name": "江蘇寧滬高速公路",
+      "code": "00177.HK",
+      "ratio": "61.00%",
+      "vol": 745623576,
       "concept": "—",
       "sector": "—"
     }
@@ -1444,7 +1444,7 @@
     "southbound_concentration_top10": {
       "source": "Tushare hk_hold（港交所CCASS港股通持股）",
       "freq": "日更",
-      "lastUpdate": "2026-08-26",
+      "lastUpdate": "2026-08-27",
       "note": "港股通持股占港股总股本比例，交易日盘后更新；名称为港交所登记繁体原名"
     },
     "foreign_concentration_top10": {
