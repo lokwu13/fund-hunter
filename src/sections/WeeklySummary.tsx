@@ -365,6 +365,18 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
               </div>
             ))}
           </div>
+          {/* 备选池（纯展示，不进信号/预警） */}
+          {(data.myETFAlt || []).length > 0 && (
+            <div className="mt-2 flex items-center gap-2 flex-wrap rounded-lg border border-dashed border-slate-200 bg-slate-50/60 px-2.5 py-1.5">
+              <span className="text-[10px] text-slate-400 flex-shrink-0">备选</span>
+              {(data.myETFAlt || []).map((e) => (
+                <span key={e.ticker} className="text-[11px] text-slate-500 whitespace-nowrap" title={e.name}>
+                  {e.ticker} {e.name}
+                  <span className={`ml-1 font-semibold ${pctClass(e.changePct)}`}>{fmtPct(e.changePct)}</span>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

@@ -50,7 +50,6 @@ STOCKS = {
     '603259.SH': {'name': '药明康德', 'industry': '化学制药', 'group': 'watch', 'watchPrice': 0},
     '300760.SZ': {'name': '迈瑞医疗', 'industry': '医疗保健', 'group': 'watch', 'watchPrice': 0},
     '688271.SH': {'name': '联影医疗', 'industry': '医疗保健', 'group': 'watch', 'watchPrice': 0},
-    '603816.SH': {'name': '顾家家居', 'industry': '家居用品', 'group': 'watch', 'watchPrice': 0},
     '600521.SH': {'name': '华海药业', 'industry': '化学制药', 'group': 'watch', 'watchPrice': 0},
     '000708.SZ': {'name': '中信特钢', 'industry': '特种钢',   'group': 'watch', 'watchPrice': 0},
 }
@@ -63,6 +62,13 @@ MY_ETFS = {
     '159736.SZ': {'name': '天弘中证食品饮料ETF',       'ticker': '159736'},
     '518880.SH': {'name': '华安易富黄金ETF',           'ticker': '518880'},
     '562510.SH': {'name': '华夏中证旅游主题ETF',       'ticker': '562510'},
+}
+
+# 备选 ETF 池（2026-08-28 用户指令新增）：纯展示，不进任何信号/预警计算
+MY_ETFS_ALT = {
+    '159731.SZ': {'name': '华夏中证石化产业ETF',         'ticker': '159731'},
+    '512070.SH': {'name': '易方达沪深300非银行金融ETF',  'ticker': '512070'},
+    '512800.SH': {'name': '华宝中证银行ETF',             'ticker': '512800'},
 }
 
 # ETFs
@@ -186,14 +192,14 @@ def fetch_etfs_batch(pro, trade_date):
     return etf_data
 
 
-def fetch_my_etfs(pro, trade_date):
+def fetch_my_etfs(pro, trade_date, etfs=None):
     """Fetch user's own ETF account quotes via fund_daily.
 
     注意：fund_daily 不支持逗号分隔的批量 ts_code（实测批量返回空），
-    因此逐只查询。
+    因此逐只查询。etfs 默认 MY_ETFS，备选池传 MY_ETFS_ALT（纯展示用）。
     """
     etf_data = []
-    for tc, info in MY_ETFS.items():
+    for tc, info in (etfs or MY_ETFS).items():
         try:
             time.sleep(API_DELAY)
             df = pro.fund_daily(ts_code=tc, start_date=trade_date, end_date=trade_date)
@@ -3519,6 +3525,12 @@ def main():
         print(f"  Updated {len(my_etfs)} my ETFs")
         for e in my_etfs[:3]:
             print(f"    {e['name']}: {e['close']} ({e['changePct']:+.2f}%)")
+
+    # ── 4b. 备选 ETF 池（纯展示，不进信号/预警）──
+    alt_etfs = fetch_my_etfs(pro, trade_date, MY_ETFS_ALT)
+    if alt_etfs:
+        data['myETFAlt'] = alt_etfs
+        print(f"  Updated {len(alt_etfs)} alt ETFs（备选池）")
 
     # ── 5. Announcements + holdingsNews (全量覆盖旧手工数据) ──
     print("\n[5/17] Fetching announcements & building holdingsNews...")

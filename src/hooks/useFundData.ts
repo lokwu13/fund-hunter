@@ -495,6 +495,7 @@ export interface FundData {
     preClose?: number;
   }>;
   myETF?: MyETFItem[];
+  myETFAlt?: MyETFItem[];
   hotFundNavs?: Array<{
     code: string;
     name: string;
