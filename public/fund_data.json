@@ -1,7 +1,7 @@
 {
   "updateTime": "2026-08-27 收盘 (Tushare自动)",
   "week": "2026.08.24 - 08.28",
-  "marketStatus": "正常交易",
+  "marketStatus": "数据至 08月27日 收盘",
   "indices": {
     "shIndex": {
       "name": "上证指数",
@@ -314,10 +314,10 @@
     "note": "北向成交总额（亿元）；官方2024-08起停披净买入，仅披露成交额"
   },
   "southbound": {
-    "today": -11.25,
-    "week": -69.59,
-    "month": 138.39,
-    "updateTime": "2026-08-26"
+    "today": 15.75,
+    "week": -2.73,
+    "month": 189.09,
+    "updateTime": "2026-08-27"
   },
   "foreignSummary": {
     "totalBuys": 0,
