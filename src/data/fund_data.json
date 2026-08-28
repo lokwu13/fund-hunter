@@ -858,72 +858,72 @@
     {
       "name": "大眾公用",
       "code": "01635.HK",
-      "ratio": "71.59%",
-      "vol": 382091000,
+      "ratio": "71.49%",
+      "vol": 381570000,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "中國電信",
       "code": "00728.HK",
-      "ratio": "71.01%",
-      "vol": 9855385184,
+      "ratio": "71.00%",
+      "vol": 9854805184,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "中國神華",
       "code": "01088.HK",
-      "ratio": "69.45%",
-      "vol": 2346083293,
+      "ratio": "69.40%",
+      "vol": 2344518793,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "龍蟠科技",
       "code": "02465.HK",
-      "ratio": "68.93%",
-      "vol": 93065888,
+      "ratio": "68.87%",
+      "vol": 92989888,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "凱盛新能",
       "code": "01108.HK",
-      "ratio": "68.51%",
-      "vol": 171290000,
+      "ratio": "68.76%",
+      "vol": 171922000,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "天津創業環保股份",
       "code": "01065.HK",
-      "ratio": "68.36%",
-      "vol": 232434100,
+      "ratio": "68.33%",
+      "vol": 232364100,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "弘業期貨",
       "code": "03678.HK",
-      "ratio": "65.95%",
-      "vol": 164703000,
+      "ratio": "65.28%",
+      "vol": 163017000,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "廣汽集團",
       "code": "02238.HK",
-      "ratio": "64.61%",
-      "vol": 1817957345,
+      "ratio": "64.71%",
+      "vol": 1820803345,
       "concept": "—",
       "sector": "—"
     },
     {
-      "name": "江蘇寧滬高速公路",
-      "code": "00177.HK",
+      "name": "華電國際電力股份",
+      "code": "01071.HK",
       "ratio": "61.00%",
-      "vol": 745623576,
+      "vol": 1047613036,
       "concept": "—",
       "sector": "—"
     }
@@ -1434,7 +1434,7 @@
     "southbound_concentration_top10": {
       "source": "Tushare hk_hold（港交所CCASS港股通持股）",
       "freq": "日更",
-      "lastUpdate": "2026-08-27",
+      "lastUpdate": "2026-08-28",
       "note": "港股通持股占港股总股本比例，交易日盘后更新；名称为港交所登记繁体原名"
     },
     "foreign_concentration_top10": {
@@ -9104,36 +9104,7 @@
       "stockName": "药明康德",
       "group": "watch",
       "industry": "化学制药",
-      "items": [
-        {
-          "type": "公告",
-          "date": "2026-08-28",
-          "title": "国浩律师（上海）事务所关于无锡药明康德新药开发股份有限公司A股差异化权益分派事项的专项核查意见",
-          "content": "国浩律师（上海）事务所关于无锡药明康德新药开发股份有限公司A股差异化权益分派事项的专项核查意见",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225520802.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-08-28",
-          "title": "2026年半年度A股权益分派实施公告",
-          "content": "2026年半年度A股权益分派实施公告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225520526.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-08-28",
-          "title": "关于出售部分股票资产的公告",
-          "content": "关于出售部分股票资产的公告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225520321.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-08-25",
-          "title": "自愿性公告",
-          "content": "自愿性公告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-08-25/1225500481.PDF"
-        }
-      ]
+      "items": []
     },
     {
       "stockCode": "300760.SZ",
