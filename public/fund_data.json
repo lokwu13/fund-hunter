@@ -176,16 +176,6 @@
       "watchPrice": 0
     },
     {
-      "code": "603816.SH",
-      "name": "顾家家居",
-      "industry": "家居用品",
-      "group": "watch",
-      "close": 24.79,
-      "pctChg": -1.82,
-      "vol": 4.24,
-      "watchPrice": 0
-    },
-    {
       "code": "603259.SH",
       "name": "药明康德",
       "industry": "化学制药",
@@ -10172,19 +10162,6 @@
         "level": null
       },
       {
-        "code": "603816.SH",
-        "name": "顾家家居",
-        "group": "watch",
-        "rzye": 1.86,
-        "inc3d": 0.1,
-        "incPct": 0.05,
-        "inc5d": 0.05,
-        "inc5dPct": 0.02,
-        "consecutiveUpDays": 3,
-        "triggered": false,
-        "level": null
-      },
-      {
         "code": "600309.SH",
         "name": "万华化学",
         "group": "watch",
@@ -13237,5 +13214,28 @@
       }
     ],
     "note": "以 ECI 预期一致性指数近似行业景气度（日更），较券商产业景气指数（月更）更及时；X/Y 中线=31 行业当前中位数"
-  }
+  },
+  "myETFAlt": [
+    {
+      "ticker": "159731",
+      "name": "华夏中证石化产业ETF",
+      "close": 0.957,
+      "changePct": 2.24,
+      "preClose": 0.936
+    },
+    {
+      "ticker": "512070",
+      "name": "易方达沪深300非银行金融ETF",
+      "close": 0.811,
+      "changePct": 0.62,
+      "preClose": 0.806
+    },
+    {
+      "ticker": "512800",
+      "name": "华宝中证银行ETF",
+      "close": 0.819,
+      "changePct": -1.21,
+      "preClose": 0.829
+    }
+  ]
 }
