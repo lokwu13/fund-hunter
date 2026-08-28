@@ -8902,6 +8902,13 @@
       "items": [
         {
           "type": "公告",
+          "date": "2026-08-28",
+          "title": "国电南瑞关于以集中竞价交易方式首次回购公司股份的公告",
+          "content": "国电南瑞关于以集中竞价交易方式首次回购公司股份的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225518029.PDF"
+        },
+        {
+          "type": "公告",
           "date": "2026-08-27",
           "title": "国电南瑞第九届董事会第十五次会议决议公告",
           "content": "国电南瑞第九届董事会第十五次会议决议公告",
@@ -8962,13 +8969,6 @@
           "title": "国电南瑞关于2026年半年度公司募集资金存放、管理与实际使用情况的专项报告",
           "content": "国电南瑞关于2026年半年度公司募集资金存放、管理与实际使用情况的专项报告",
           "url": "http://static.cninfo.com.cn/finalpage/2026-08-27/1225508094.PDF"
-        },
-        {
-          "type": "公告",
-          "date": "2026-08-25",
-          "title": "国电南瑞关于召开2026年半年度业绩说明会的公告",
-          "content": "国电南瑞关于召开2026年半年度业绩说明会的公告",
-          "url": "http://static.cninfo.com.cn/finalpage/2026-08-25/1225494046.PDF"
         }
       ]
     },
@@ -9102,6 +9102,27 @@
       "items": [
         {
           "type": "公告",
+          "date": "2026-08-28",
+          "title": "国浩律师（上海）事务所关于无锡药明康德新药开发股份有限公司A股差异化权益分派事项的专项核查意见",
+          "content": "国浩律师（上海）事务所关于无锡药明康德新药开发股份有限公司A股差异化权益分派事项的专项核查意见",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225520802.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-08-28",
+          "title": "2026年半年度A股权益分派实施公告",
+          "content": "2026年半年度A股权益分派实施公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225520526.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-08-28",
+          "title": "关于出售部分股票资产的公告",
+          "content": "关于出售部分股票资产的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225520321.PDF"
+        },
+        {
+          "type": "公告",
           "date": "2026-08-25",
           "title": "自愿性公告",
           "content": "自愿性公告",
@@ -9128,7 +9149,36 @@
       "stockName": "顾家家居",
       "group": "watch",
       "industry": "家居用品",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-08-28",
+          "title": "关于会计政策变更的公告",
+          "content": "关于会计政策变更的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225521382.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-08-28",
+          "title": "顾家家居2026年半年度报告_摘要",
+          "content": "顾家家居2026年半年度报告_摘要",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225521381.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-08-28",
+          "title": "顾家家居2026年半年度报告",
+          "content": "顾家家居2026年半年度报告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225521378.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-08-28",
+          "title": "顾家家居第五届董事会第二十四次会议决议公告",
+          "content": "顾家家居第五届董事会第二十四次会议决议公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225521373.PDF"
+        }
+      ]
     },
     {
       "stockCode": "600521.SH",
@@ -9628,20 +9678,7 @@
         "ret20": 6.7,
         "volRatio": 1.1,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "海螺水泥",
-            "code": "600585.SH",
-            "netInflow": 0.99,
-            "pctChg": 0.78
-          },
-          {
-            "name": "上峰材料",
-            "code": "000672.SZ",
-            "netInflow": 0.36,
-            "pctChg": 2.54
-          }
-        ],
+        "stocks": [],
         "score": 152.0
       },
       {
@@ -9657,20 +9694,7 @@
         "ret20": 4.8,
         "volRatio": 1.71,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "中粮资本",
-            "code": "002423.SZ",
-            "netInflow": 0.77,
-            "pctChg": 2.67
-          },
-          {
-            "name": "建元信托",
-            "code": "600816.SH",
-            "netInflow": 0.36,
-            "pctChg": 0.79
-          }
-        ],
+        "stocks": [],
         "score": 146.0
       },
       {
@@ -9686,20 +9710,7 @@
         "ret20": 7.0,
         "volRatio": 0.71,
         "lowVol": true,
-        "stocks": [
-          {
-            "name": "航发动力",
-            "code": "600893.SH",
-            "netInflow": 1.74,
-            "pctChg": 2.45
-          },
-          {
-            "name": "中航成飞",
-            "code": "302132.SZ",
-            "netInflow": 1.4,
-            "pctChg": 3.54
-          }
-        ],
+        "stocks": [],
         "score": 130.0
       },
       {
@@ -9715,20 +9726,7 @@
         "ret20": 9.5,
         "volRatio": 0.75,
         "lowVol": true,
-        "stocks": [
-          {
-            "name": "万通发展",
-            "code": "600246.SH",
-            "netInflow": 1.14,
-            "pctChg": 6.13
-          },
-          {
-            "name": "合肥城建",
-            "code": "002208.SZ",
-            "netInflow": 0.47,
-            "pctChg": 3.07
-          }
-        ],
+        "stocks": [],
         "score": 104.0
       },
       {
@@ -9744,20 +9742,7 @@
         "ret20": 6.8,
         "volRatio": 1.04,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "天禾股份",
-            "code": "002999.SZ",
-            "netInflow": 0.06,
-            "pctChg": 0.32
-          },
-          {
-            "name": "泰达股份",
-            "code": "000652.SZ",
-            "netInflow": 0.03,
-            "pctChg": 0.57
-          }
-        ],
+        "stocks": [],
         "score": 98.0
       },
       {
@@ -9773,20 +9758,7 @@
         "ret20": 7.4,
         "volRatio": 0.96,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "东方雨虹",
-            "code": "002271.SZ",
-            "netInflow": 0.36,
-            "pctChg": 2.25
-          },
-          {
-            "name": "万里石",
-            "code": "002785.SZ",
-            "netInflow": 0.25,
-            "pctChg": 4.0
-          }
-        ],
+        "stocks": [],
         "score": 96.0
       },
       {
@@ -9802,20 +9774,7 @@
         "ret20": 7.0,
         "volRatio": 0.97,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "供销大集",
-            "code": "000564.SZ",
-            "netInflow": 1.18,
-            "pctChg": 3.4
-          },
-          {
-            "name": "东百集团",
-            "code": "600693.SH",
-            "netInflow": 0.63,
-            "pctChg": 5.06
-          }
-        ],
+        "stocks": [],
         "score": 76.0
       },
       {
@@ -9831,20 +9790,7 @@
         "ret20": 2.1,
         "volRatio": 1.17,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "东方财富",
-            "code": "300059.SZ",
-            "netInflow": 3.99,
-            "pctChg": 1.34
-          },
-          {
-            "name": "长江证券",
-            "code": "000783.SZ",
-            "netInflow": 1.82,
-            "pctChg": 2.64
-          }
-        ],
+        "stocks": [],
         "score": 76.0
       },
       {
@@ -9860,20 +9806,7 @@
         "ret20": 14.7,
         "volRatio": 0.66,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "国联水产",
-            "code": "300094.SZ",
-            "netInflow": 0.18,
-            "pctChg": 3.09
-          },
-          {
-            "name": "大湖股份",
-            "code": "600257.SH",
-            "netInflow": 0.09,
-            "pctChg": 1.24
-          }
-        ],
+        "stocks": [],
         "score": 74.0
       },
       {
@@ -9889,20 +9822,7 @@
         "ret20": 12.5,
         "volRatio": 0.8,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "中国中车",
-            "code": "601766.SH",
-            "netInflow": 1.4,
-            "pctChg": 0.49
-          },
-          {
-            "name": "快意电梯",
-            "code": "002774.SZ",
-            "netInflow": 0.47,
-            "pctChg": 5.24
-          }
-        ],
+        "stocks": [],
         "score": 72.0
       },
       {
@@ -9918,20 +9838,7 @@
         "ret20": 20.5,
         "volRatio": 0.86,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "亨通光电",
-            "code": "600487.SH",
-            "netInflow": 20.42,
-            "pctChg": 9.98
-          },
-          {
-            "name": "中天科技",
-            "code": "600522.SH",
-            "netInflow": 16.91,
-            "pctChg": 7.99
-          }
-        ],
+        "stocks": [],
         "score": 50.0
       },
       {
@@ -9947,20 +9854,7 @@
         "ret20": 26.4,
         "volRatio": 0.77,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "京东方A",
-            "code": "000725.SZ",
-            "netInflow": 18.8,
-            "pctChg": 3.85
-          },
-          {
-            "name": "生益科技",
-            "code": "600183.SH",
-            "netInflow": 10.8,
-            "pctChg": 8.43
-          }
-        ],
+        "stocks": [],
         "score": 48.0
       },
       {
@@ -9976,20 +9870,7 @@
         "ret20": 12.0,
         "volRatio": 0.78,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "国瓷材料",
-            "code": "300285.SZ",
-            "netInflow": 11.57,
-            "pctChg": 9.19
-          },
-          {
-            "name": "开尔新材",
-            "code": "300234.SZ",
-            "netInflow": 0.24,
-            "pctChg": 5.82
-          }
-        ],
+        "stocks": [],
         "score": 42.0
       },
       {
@@ -10005,20 +9886,7 @@
         "ret20": 14.3,
         "volRatio": 1.0,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "中钨高新",
-            "code": "000657.SZ",
-            "netInflow": 9.94,
-            "pctChg": 7.19
-          },
-          {
-            "name": "云南锗业",
-            "code": "002428.SZ",
-            "netInflow": 8.01,
-            "pctChg": 8.44
-          }
-        ],
+        "stocks": [],
         "score": 24.0
       },
       {
@@ -10034,20 +9902,7 @@
         "ret20": 11.6,
         "volRatio": 0.72,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "宗申动力",
-            "code": "001696.SZ",
-            "netInflow": 0.58,
-            "pctChg": 1.81
-          },
-          {
-            "name": "九号公司",
-            "code": "689009.SH",
-            "netInflow": 0.37,
-            "pctChg": 1.85
-          }
-        ],
+        "stocks": [],
         "score": 20.0
       },
       {
@@ -10063,20 +9918,7 @@
         "ret20": 13.7,
         "volRatio": 1.13,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "兖矿能源",
-            "code": "600188.SH",
-            "netInflow": 1.44,
-            "pctChg": 5.0
-          },
-          {
-            "name": "华阳股份",
-            "code": "600348.SH",
-            "netInflow": 1.28,
-            "pctChg": 6.14
-          }
-        ],
+        "stocks": [],
         "score": 18.0
       },
       {
@@ -10092,20 +9934,7 @@
         "ret20": 10.0,
         "volRatio": 0.7,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "中国巨石",
-            "code": "600176.SH",
-            "netInflow": 15.0,
-            "pctChg": 7.95
-          },
-          {
-            "name": "国际复材",
-            "code": "301526.SZ",
-            "netInflow": 1.43,
-            "pctChg": 5.13
-          }
-        ],
+        "stocks": [],
         "score": 14.0
       },
       {
@@ -10121,20 +9950,7 @@
         "ret20": 12.5,
         "volRatio": 0.89,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "高能环境",
-            "code": "603588.SH",
-            "netInflow": 1.25,
-            "pctChg": 7.17
-          },
-          {
-            "name": "节能铁汉",
-            "code": "300197.SZ",
-            "netInflow": 0.47,
-            "pctChg": 1.99
-          }
-        ],
+        "stocks": [],
         "score": 12.0
       },
       {
@@ -10150,20 +9966,7 @@
         "ret20": 6.8,
         "volRatio": 1.0,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "云天化",
-            "code": "600096.SH",
-            "netInflow": 1.55,
-            "pctChg": 2.38
-          },
-          {
-            "name": "宏达股份",
-            "code": "600331.SH",
-            "netInflow": 1.24,
-            "pctChg": 3.33
-          }
-        ],
+        "stocks": [],
         "score": 10.0
       },
       {
@@ -10179,20 +9982,7 @@
         "ret20": 12.5,
         "volRatio": 1.19,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "科创新源",
-            "code": "300731.SZ",
-            "netInflow": 0.7,
-            "pctChg": 4.33
-          },
-          {
-            "name": "太力科技",
-            "code": "301595.SZ",
-            "netInflow": 0.23,
-            "pctChg": 8.23
-          }
-        ],
+        "stocks": [],
         "score": 8.0
       },
       {
@@ -10208,20 +9998,7 @@
         "ret20": 13.3,
         "volRatio": 0.83,
         "lowVol": false,
-        "stocks": [
-          {
-            "name": "上纬新材",
-            "code": "688585.SH",
-            "netInflow": 2.76,
-            "pctChg": 10.72
-          },
-          {
-            "name": "宝丰能源",
-            "code": "600989.SH",
-            "netInflow": 2.2,
-            "pctChg": 3.85
-          }
-        ],
+        "stocks": [],
         "score": -10.0
       }
     ],
@@ -10274,20 +10051,7 @@
         "inflow5d": 6.18,
         "pricePosition": 0.343,
         "score": 39.8,
-        "leaders": [
-          {
-            "name": "华锦股份",
-            "code": "000059.SZ",
-            "pctChg": 5.42,
-            "strength": "站上20/60日线，距60日高点1%"
-          },
-          {
-            "name": "恒力石化",
-            "code": "600346.SH",
-            "pctChg": 3.34,
-            "strength": "站上20/60日线，距60日高点9%"
-          }
-        ],
+        "leaders": [],
         "firstSeen": "08-19",
         "streakDays": 7,
         "dualConfirm": true
@@ -10322,18 +10086,7 @@
             "eci": 80.5,
             "inflow20d": 19.51,
             "positiveRatio": 60.0,
-            "leaders": [
-              {
-                "name": "兖矿能源",
-                "code": "600188.SH",
-                "pctChg": 5.0
-              },
-              {
-                "name": "华阳股份",
-                "code": "600348.SH",
-                "pctChg": 6.14
-              }
-            ]
+            "leaders": []
           }
         ]
       },
@@ -10346,18 +10099,7 @@
             "eci": 76.7,
             "inflow20d": 0.1,
             "positiveRatio": 66.7,
-            "leaders": [
-              {
-                "name": "华锦股份",
-                "code": "000059.SZ",
-                "pctChg": 5.42
-              },
-              {
-                "name": "恒力石化",
-                "code": "600346.SH",
-                "pctChg": 3.34
-              }
-            ]
+            "leaders": []
           }
         ]
       }
@@ -12172,91 +11914,16 @@
   },
   "etfRotation": {
     "trade_date": "2026-08-27",
-    "items": [
-      {
-        "cat": "债券",
-        "todayNet": 1.0,
-        "net5d": 107.1,
-        "count": 52
-      },
-      {
-        "cat": "科技",
-        "todayNet": -63.3,
-        "net5d": 81.1,
-        "count": 298
-      },
-      {
-        "cat": "商品",
-        "todayNet": -3.4,
-        "net5d": 32.6,
-        "count": 15
-      },
-      {
-        "cat": "宽基",
-        "todayNet": -19.6,
-        "net5d": 20.2,
-        "count": 313
-      },
-      {
-        "cat": "消费",
-        "todayNet": 0.3,
-        "net5d": -0.4,
-        "count": 74
-      },
-      {
-        "cat": "医药",
-        "todayNet": -3.3,
-        "net5d": -5.9,
-        "count": 51
-      },
-      {
-        "cat": "其他",
-        "todayNet": -7.4,
-        "net5d": -7.0,
-        "count": 450
-      },
-      {
-        "cat": "新能源",
-        "todayNet": 0.6,
-        "net5d": -7.4,
-        "count": 66
-      },
-      {
-        "cat": "红利",
-        "todayNet": 2.9,
-        "net5d": -7.4,
-        "count": 86
-      },
-      {
-        "cat": "港股海外",
-        "todayNet": -11.8,
-        "net5d": -50.3,
-        "count": 253
-      },
-      {
-        "cat": "金融地产",
-        "todayNet": -12.8,
-        "net5d": -52.8,
-        "count": 46
-      }
-    ],
-    "inflowTop3": [
-      "债券",
-      "科技",
-      "商品"
-    ],
-    "outflowTop3": [
-      "金融地产",
-      "港股海外",
-      "红利"
-    ],
-    "totalToday": -116.8,
-    "total5d": 109.8,
-    "moneyToday": 3070.3,
+    "items": [],
+    "inflowTop3": [],
+    "outflowTop3": [],
+    "totalToday": 0,
+    "total5d": 0,
+    "moneyToday": null,
     "note": "份额变化×当日收盘价估算（不含货币ETF），5日净额按分类汇总；新发/退市ETF会造成少量误差"
   },
   "indexVol": {
-    "trade_date": "2026-08-27",
+    "trade_date": "2026-08-28",
     "items": [
       {
         "code": "000300.SH",
@@ -12369,7 +12036,7 @@
     ],
     "note": "HV20/HV60为年化历史波动率；HV20>HV60×1.2升温，<HV60×0.85降温；低位=HV20近一年分位<25%"
   },
-  "nationalTeamComment": "全市场ETF（不含货币）昨日净赎回约117亿元（份额变化×收盘价口径）。华夏50ETF单日份额-3.37亿份（约-10.2亿元），疑似大资金出场；单边异动、未见跨公司共振，更可能是汇金自身调仓而非托市信号。近5日份额口径资金主要流入债券、科技、商品类，流出金融地产、港股海外、红利类。宽基组中中证500系列异动最集中（1只触发信号），但未达共振标准。科创50系列合计净流出22.6亿 → 短期利空科创50/硬科技。中证500系列合计净流入19.2亿 → 短期利多中证500/中盘股。沪深300系列合计净流出19.0亿 → 短期利空沪深300/大盘蓝筹。央企主题组未见单日异动，但港股通央企红利ETF(南方)趋势性减持 → 利空央企科技/央企红利主题。沪深300波动率HV20为20.9%（近一年80%分位），主要宽基波动平稳。",
+  "nationalTeamComment": "全市场ETF（不含货币）昨日份额基本持平（净额不足1亿元）。华夏50ETF单日份额-3.37亿份（约-10.2亿元），疑似大资金出场；单边异动、未见跨公司共振，更可能是汇金自身调仓而非托市信号。宽基组中中证500系列异动最集中（1只触发信号），但未达共振标准。科创50系列合计净流出22.6亿 → 短期利空科创50/硬科技。中证500系列合计净流入19.2亿 → 短期利多中证500/中盘股。沪深300系列合计净流出19.0亿 → 短期利空沪深300/大盘蓝筹。央企主题组未见单日异动，但港股通央企红利ETF(南方)趋势性减持 → 利空央企科技/央企红利主题。沪深300波动率HV20为20.9%（近一年80%分位），主要宽基波动平稳。",
   "ntRotation": {
     "trade_date": "2026-08-27",
     "groups": [
@@ -12707,10 +12374,10 @@
   },
   "vcpStocks": {
     "trade_date": "2026-08-27",
-    "poolSize": 697,
+    "poolSize": 707,
     "poolRaw": 1800,
-    "mvDate": "20260821",
-    "scanned": 28,
+    "mvDate": "20260827",
+    "scanned": 22,
     "items": [
       {
         "code": "300760.SZ",
@@ -12766,63 +12433,6 @@
           "rightShrink": true,
           "pivot": 162.0,
           "distPct": -0.0,
-          "formed": false
-        }
-      },
-      {
-        "code": "600028.SH",
-        "name": "中国石化",
-        "sector": "石油加工",
-        "star": false,
-        "close": 5.29,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": {
-          "type": "杯柄型",
-          "days": 13,
-          "amplitude": 9.3,
-          "riseFromLow": 18.7,
-          "volRatio": 0.89,
-          "segAmps": [
-            7.2,
-            5.3,
-            6.5
-          ],
-          "pivot": 5.4,
-          "distPct": 2.1,
-          "formed": true
-        },
-        "distMain": 2.1,
-        "sectorFit": "板块配合✅",
-        "advice": "杯柄型·距枢轴2.1%｜水温偏冷·只观察｜板块配合✅",
-        "daily": {
-          "contractions": [
-            3.7,
-            3.8,
-            4.2,
-            7.3
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 5.4,
-          "distPct": 2.1,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            13.2,
-            6.4,
-            41.9,
-            12.3
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "持平",
-          "rightShrink": true,
-          "pivot": 5.33,
-          "distPct": 0.8,
           "formed": false
         }
       },
@@ -13222,177 +12832,6 @@
           "rightShrink": true,
           "pivot": 76.57,
           "distPct": 0.9,
-          "formed": false
-        }
-      },
-      {
-        "code": "600688.SH",
-        "name": "上海石化",
-        "sector": "石油加工",
-        "star": false,
-        "close": 2.88,
-        "tag": "—",
-        "pattern": "底部平台型",
-        "platform": {
-          "type": "底部平台型",
-          "days": 38,
-          "amplitude": 11.9,
-          "riseFromLow": 7.4,
-          "volRatio": 0.49,
-          "segAmps": [
-            10.3,
-            9.0,
-            5.1
-          ],
-          "pivot": 3.0,
-          "distPct": 4.2,
-          "formed": true
-        },
-        "distMain": 4.2,
-        "sectorFit": "板块配合✅",
-        "advice": "底部平台型·距枢轴4.2%｜水温偏冷·只观察｜板块配合✅",
-        "daily": {
-          "contractions": [
-            8.2,
-            3.1,
-            4.8,
-            2.1
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 2.85,
-          "distPct": -1.0,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            13.2,
-            16.4,
-            27.4,
-            12.4
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "放大",
-          "rightShrink": true,
-          "pivot": 2.9,
-          "distPct": 0.7,
-          "formed": false
-        }
-      },
-      {
-        "code": "600292.SH",
-        "name": "电投水电",
-        "sector": "水力发电",
-        "star": false,
-        "close": 12.52,
-        "tag": "周线✅",
-        "pattern": "底部平台型",
-        "platform": {
-          "type": "底部平台型",
-          "days": 35,
-          "amplitude": 13.9,
-          "riseFromLow": 3.5,
-          "volRatio": 0.68,
-          "segAmps": [
-            13.9,
-            9.0,
-            8.9
-          ],
-          "pivot": 13.16,
-          "distPct": 5.1,
-          "formed": true
-        },
-        "distMain": 5.1,
-        "sectorFit": "板块配合✅",
-        "advice": "底部平台型·距枢轴5.1%｜水温偏冷·只观察｜板块配合✅",
-        "daily": {
-          "contractions": [
-            6.8,
-            2.8,
-            4.6,
-            8.2
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 12.53,
-          "distPct": 0.1,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            23.8,
-            23.5,
-            12.2,
-            5.4
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 12.98,
-          "distPct": 3.7,
-          "formed": true
-        }
-      },
-      {
-        "code": "000883.SZ",
-        "name": "湖北能源",
-        "sector": "水力发电",
-        "star": false,
-        "close": 4.61,
-        "tag": "—",
-        "pattern": "底部平台型",
-        "platform": {
-          "type": "底部平台型",
-          "days": 43,
-          "amplitude": 13.6,
-          "riseFromLow": 2.1,
-          "volRatio": 0.5,
-          "segAmps": [
-            10.3,
-            6.4,
-            6.6
-          ],
-          "pivot": 4.85,
-          "distPct": 5.2,
-          "formed": true
-        },
-        "distMain": 5.2,
-        "sectorFit": "板块配合✅",
-        "advice": "底部平台型·距枢轴5.2%｜水温偏冷·只观察｜板块配合✅",
-        "daily": {
-          "contractions": [
-            3.7,
-            5.4,
-            5.8,
-            2.9
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "持平",
-          "rightShrink": true,
-          "pivot": 4.85,
-          "distPct": 5.2,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            6.3,
-            15.2,
-            17.1,
-            6.0
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 4.85,
-          "distPct": 5.2,
           "formed": false
         }
       },
