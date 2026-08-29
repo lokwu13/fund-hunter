@@ -1,7 +1,7 @@
 {
   "updateTime": "2026-08-28 收盘 (Tushare自动)",
   "week": "2026.08.24 - 08.28",
-  "marketStatus": "正常交易",
+  "marketStatus": "数据至 08月28日 收盘",
   "indices": {
     "shIndex": {
       "name": "上证指数",
@@ -304,10 +304,10 @@
     "note": "北向成交总额（亿元）；官方2024-08起停披净买入，仅披露成交额"
   },
   "southbound": {
-    "today": 15.75,
-    "week": -2.73,
-    "month": 189.09,
-    "updateTime": "2026-08-27"
+    "today": 8.85,
+    "week": 57.46,
+    "month": 192.35,
+    "updateTime": "2026-08-28"
   },
   "foreignSummary": {
     "totalBuys": 0,
@@ -9104,7 +9104,36 @@
       "stockName": "药明康德",
       "group": "watch",
       "industry": "化学制药",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-08-28",
+          "title": "国浩律师（上海）事务所关于无锡药明康德新药开发股份有限公司A股差异化权益分派事项的专项核查意见",
+          "content": "国浩律师（上海）事务所关于无锡药明康德新药开发股份有限公司A股差异化权益分派事项的专项核查意见",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225520802.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-08-28",
+          "title": "2026年半年度A股权益分派实施公告",
+          "content": "2026年半年度A股权益分派实施公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225520526.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-08-28",
+          "title": "关于出售部分股票资产的公告",
+          "content": "关于出售部分股票资产的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-28/1225520321.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-08-25",
+          "title": "自愿性公告",
+          "content": "自愿性公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-08-25/1225500481.PDF"
+        }
+      ]
     },
     {
       "stockCode": "300760.SZ",
