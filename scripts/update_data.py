@@ -1008,7 +1008,9 @@ def build_sector_scan(hist, trade_date, today_map):
 
 def _find_bottom_leaders(pro, trade_date, sector, today_map, max_check=5):
     """率先脱离底部的龙头：今日行业主力净流入前 max_check 只，逐只拉近 60 日行情，
-    筛选收盘价站上 20/60 日均线 且 距 60 日高点 <15%（率先走强）。"""
+    筛选收盘价站上 20 日线 且 逼近/站上 60 日线（≥95%）且 距 60 日高点 <15%（率先走强）。
+    2026-08-29 放宽：原要求严格站上 60 日线，底部启动初期的龙头常仍在 60 日线下方，
+    导致板块龙头恒为空（08-28 水力发电/石油加工实证）。"""
     leaders = []
     start60 = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=100)).strftime('%Y%m%d')
     for s in (today_map.get(sector) or [])[:max_check]:
@@ -1024,13 +1026,27 @@ def _find_bottom_leaders(pro, trade_date, sector, today_map, max_check=5):
             ma60 = sum(closes[-60:]) / min(60, len(closes))
             high60 = df['high'].max()
             dist = (high60 / close - 1) * 100 if close else 999
-            if close > ma20 and close > ma60 and dist <= 15:
+            if close > ma20 and close >= ma60 * 0.95 and dist <= 15:
+                ma_txt = '站上20/60日线' if close > ma60 else '站上20日线·逼近60日线'
                 leaders.append({'name': s['name'], 'code': s['code'], 'pctChg': s['pct'],
-                                'strength': f"站上20/60日线，距60日高点{dist:.0f}%"})
+                                'strength': f"{ma_txt}，距60日高点{dist:.0f}%"})
         except Exception as e:
             print(f"  Warning: bottom leader check failed for {s['code']}: {e}")
     leaders.sort(key=lambda x: -x['pctChg'])
     return leaders[:3]
+
+
+def _pick_sector_leaders(pro, trade_date, sector, today_map, max_n=3):
+    """板块龙头统一口径（bottomWatch 卡片与 leaderStep 第2步共用，禁止各算各的）：
+    优先"率先脱离底部"趋势判定；无命中时扶正兜底——今日板块内主力净流入前 N（today_map）。
+    返回 (leaders, via)，via: 'trend'=率先脱离底部 / 'inflow'=主力净流入口径。"""
+    leaders = _find_bottom_leaders(pro, trade_date, sector, today_map)
+    if leaders:
+        return leaders[:max_n], 'trend'
+    fallback = [{'name': s['name'], 'code': s['code'], 'pctChg': s['pct'],
+                 'strength': '今日主力净流入居前（资金口径）'}
+                for s in (today_map.get(sector) or [])[:max_n]]
+    return fallback, 'inflow'
 
 
 def build_bottom_watch(hist, pro, trade_date, today_map):
@@ -1120,7 +1136,7 @@ def build_bottom_watch(hist, pro, trade_date, today_map):
               'd60': sum(1 for i in items if i['hit60'] and not i['hit30'])}
     result['counts'] = counts
     for it in items[:BOTTOM_LEADER_SECTORS]:
-        it['leaders'] = _find_bottom_leaders(pro, trade_date, it['sector'], today_map)
+        it['leaders'], it['leaderVia'] = _pick_sector_leaders(pro, trade_date, it['sector'], today_map)
     parts = []
     both = [i['sector'] for i in items if i['both']]
     only30 = [i['sector'] for i in items if i['hit30'] and not i['hit60']]
@@ -1153,42 +1169,65 @@ _CONCEPT_EXCLUDE = ('昨日', '涨停', '连板', '新高', '新低', '破净', 
 def build_leader_step(pro, trade_date, data, today_map):
     """第2步·选龙头（总览漏斗卡数据）。
 
-    - 能投/入围板块：复用 bottomWatch.leaders（率先脱离底部龙头）；为空则用今日板块内
-      主力净流入前 3（today_map 兜底）。能投名单独有板块用 today_map 前 2。
+    - 板块部分严格以第1步输出为输入（2026-08-29 断链修复，禁止另算一套积聚命中）：
+      ① actionableSectors 能投名单（subSector 二级口径优先，如 通信/电信运营→电信运营）
+      ② bottomWatch 入围命中板块，取并集；同时在两者中出现的板块标注"能投名单·X档"。
+      龙头统一走 _pick_sector_leaders（bottomWatch 已算好的直接复用，保证两处一致）。
     - 概念板块：东财 dc_index（单日全板块快照，含领涨股）取"大的活跃概念"——
       剔除纯技术性板块（昨日涨停/历史新高等），要求总市值 ≥300 亿且上涨家数 ≥5，
       按当日涨幅取前 3；成分龙头用 dc_member × 今日全市场涨幅（复用 today_map，0 额外行情调用）。
-    概念指数历史短，不套用积聚判定（口径见 note）。
-    每晚新增调用：dc_index 1 次 + dc_member ≤3 次。
+    概念指数历史短，不套用积聚判定——属"题材活跃轴"，与能投名单独立（口径见 note）。
+    每晚新增调用：dc_index 1 次 + dc_member ≤3 次 + 能投独有板块龙头日线 ≤5×2 次。
     """
     out = {'trade_date': f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}",
            'sectors': [], 'concepts': [],
-           'note': ('板块龙头=率先脱离底部/今日主力净流入居前；概念板块=东财概念指数当日口径'
-                    '（涨幅+总市值≥300亿+上涨家数≥5，剔除打板/新高类技术板块），'
-                    '概念指数历史短，未套用积聚判定，仅供人工二筛参考')}
+           'note': ('板块龙头=率先脱离底部（站上20日线·逼近/站上60日线·距60日高点<15%），'
+                    '无率先龙头时用今日主力净流入居前（资金口径）；'
+                    '概念板块=题材活跃轴（与能投名单独立，需自行甄别）：东财概念指数当日口径'
+                    '（涨幅+总市值≥300亿+上涨家数≥5，剔除打板/新高类技术板块），仅供人工二筛参考')}
     flat = {s['code']: s for lst in today_map.values() for s in lst}
-    # ① 能投/入围板块龙头
+    bw_items = (data.get('bottomWatch') or {}).get('items', [])
+    bw_by_sector = {b['sector']: b for b in bw_items}
+
+    def _norm_leaders(leaders):
+        return [{'name': l['name'], 'code': l['code'], 'pctChg': l.get('pctChg', 0),
+                 **({'strength': l['strength']} if l.get('strength') else {})}
+                for l in (leaders or [])[:3]]
+
+    # ① 能投名单板块（第1步输出，排最前）
     seen = set()
-    for it in (data.get('bottomWatch') or {}).get('items', []):
-        leaders = [{'name': l['name'], 'code': l['code'], 'pctChg': l.get('pctChg', 0)}
-                   for l in (it.get('leaders') or [])[:3]]
-        if not leaders:
-            leaders = [{'name': s['name'], 'code': s['code'], 'pctChg': s['pct']}
-                       for s in (today_map.get(it['sector']) or [])[:3]]
-        out['sectors'].append({'sector': it['sector'],
-                               'source': '双档共振' if it.get('both') else ('60日档' if it.get('hit60') else '30日档'),
-                               'leaders': leaders})
-        seen.add(it['sector'])
     for it in (data.get('actionableSectors') or {}).get('items', []):
         sub = it.get('subSector') or it.get('sector')
         if sub in seen:
             continue
-        leaders = [{'name': s['name'], 'code': s['code'], 'pctChg': s['pct']}
-                   for s in (today_map.get(sub) or [])[:2]]
+        bw = bw_by_sector.get(sub)
+        if bw and bw.get('leaders'):
+            leaders = _norm_leaders(bw['leaders'])
+            via = bw.get('leaderVia', 'trend')
+            tier = '双档共振' if bw.get('both') else ('60日档' if bw.get('hit60') else '30日档')
+            src = f'能投名单·{tier}'
+        else:
+            leaders, via = _pick_sector_leaders(pro, trade_date, sub, today_map)
+            src = '能投名单'
         if leaders:
-            out['sectors'].append({'sector': sub, 'source': '能投名单', 'leaders': leaders})
+            out['sectors'].append({'sector': sub, 'source': src, 'fromActionable': True,
+                                   'leaderVia': via, 'leaders': leaders})
             seen.add(sub)
-    # ② 大的活跃概念板块（东财概念指数）
+    # ② bottomWatch 其余入围板块（能投名单之外的积聚命中）
+    for b in bw_items:
+        if b['sector'] in seen:
+            continue
+        if b.get('leaders'):
+            leaders, via = _norm_leaders(b['leaders']), b.get('leaderVia', 'trend')
+        else:
+            leaders, via = _pick_sector_leaders(pro, trade_date, b['sector'], today_map)
+        if leaders:
+            out['sectors'].append({'sector': b['sector'],
+                                   'source': '双档共振' if b.get('both') else ('60日档' if b.get('hit60') else '30日档'),
+                                   'fromActionable': False, 'leaderVia': via, 'leaders': leaders})
+            seen.add(b['sector'])
+    out['sectors'] = out['sectors'][:6]
+    # ② 题材活跃轴：大的活跃概念板块（东财概念指数，与能投名单独立）
     try:
         time.sleep(API_DELAY)
         dc = pro.dc_index(trade_date=trade_date)
@@ -1400,6 +1439,14 @@ def build_mine_watch(pro, trade_date, data):
                        '消息=近7天公告命中处罚/立案/问询/诉讼/减持/退市等关键词；'
                        '基本面=中报归母净利同比≤-30%或亏损、商誉/净资产>40%（周更缓存）'),
     }
+    # 联动第2步：有雷的板块/概念龙头在 leaderStep 里就地打 ⛔ 标记
+    mined = {m['code']: m['types'] for m in items}
+    ls = data.get('leaderStep')
+    if ls and mined:
+        for grp in list(ls.get('sectors', [])) + list(ls.get('concepts', [])):
+            for l in grp.get('leaders', []):
+                if l.get('code') in mined:
+                    l['mine'] = mined[l['code']]
     print(f"  mineWatch: 扫描 {len(uni)} 只, 上榜 {len(items)} 只"
           + (f"（{'、'.join(i['name'] for i in items[:6])}）" if items else '，今日无雷'))
 

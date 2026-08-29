@@ -374,6 +374,7 @@ export interface FundData {
       streakDays?: number;
       dualConfirm?: boolean;
       leaders?: Array<{ name: string; code: string; pctChg: number; strength: string }>;
+      leaderVia?: string;
     }>;
   };
   vcpStocks?: {
@@ -622,14 +623,16 @@ export interface FundData {
     sectors: Array<{
       sector: string;
       source: string;
-      leaders: Array<{ name: string; code: string; pctChg: number }>;
+      fromActionable?: boolean;
+      leaderVia?: string;
+      leaders: Array<{ name: string; code: string; pctChg: number; strength?: string; mine?: string[] }>;
     }>;
     concepts: Array<{
       name: string;
       pctChange: number;
       totalMvY: number;
       upNum: number;
-      leaders: Array<{ name: string; code: string; pctChg: number }>;
+      leaders: Array<{ name: string; code: string; pctChg: number; mine?: string[] }>;
     }>;
   };
   mineWatch?: {

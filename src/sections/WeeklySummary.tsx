@@ -233,18 +233,21 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
             </div>
             <div className="space-y-1.5">
               {(data.leaderStep.sectors || []).map((s) => (
-                <div key={s.sector} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-sky-50/60">
+                <div key={s.sector} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${s.fromActionable ? 'bg-orange-50/70 border border-orange-200' : 'hover:bg-sky-50/60'}`}>
                   <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{s.sector}</span>
+                  {s.fromActionable && (
+                    <Badge className="text-[9px] h-4 px-1 border-0 bg-orange-500 text-white flex-shrink-0">←第1步能投</Badge>
+                  )}
                   <Badge variant="outline" className="text-[9px] h-4 px-1 border-sky-200 text-sky-600 flex-shrink-0">{s.source}</Badge>
                   <span className="text-[11px] text-slate-500">
                     {(s.leaders || []).length > 0
-                      ? s.leaders.map((l) => `${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')
+                      ? s.leaders.map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')
                       : '暂无率先龙头'}
                   </span>
                 </div>
               ))}
               {(data.leaderStep.concepts || []).length > 0 && (
-                <p className="text-[10px] font-semibold text-sky-700 pt-1 pl-2">大的活跃概念（东财概念指数当日口径）</p>
+                <p className="text-[10px] font-semibold text-sky-700 pt-1 pl-2">题材活跃轴·大的活跃概念（与能投名单独立，需自行甄别）</p>
               )}
               {(data.leaderStep.concepts || []).map((c) => (
                 <div key={c.name} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-sky-50/60">
@@ -252,11 +255,14 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                   <span className="text-[11px] font-bold text-red-500 flex-shrink-0">+{c.pctChange}%</span>
                   <span className="text-[10px] text-slate-400 flex-shrink-0">市值{c.totalMvY}亿·{c.upNum}家涨</span>
                   <span className="text-[11px] text-slate-500">
-                    {(c.leaders || []).map((l) => `${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')}
+                    {(c.leaders || []).map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')}
                   </span>
                 </div>
               ))}
             </div>
+            {[...(data.leaderStep.sectors || []), ...(data.leaderStep.concepts || [])].some((g) => (g.leaders || []).some((l) => l.mine)) && (
+              <p className="text-[10px] text-red-500 mt-1.5 pl-2">⛔ = 排雷命中（资金/消息/基本面），详见下方第4步·排雷</p>
+            )}
             {data.leaderStep.note && <p className="text-[10px] text-slate-400 mt-2">{data.leaderStep.note}</p>}
           </CardContent>
         </Card>
