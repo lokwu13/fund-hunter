@@ -617,23 +617,37 @@ export interface FundData {
     }>;
   };
   lowVolDigest?: string;
-  leaderStep?: {
+  dualAxes?: {
     trade_date: string;
-    note?: string;
-    sectors: Array<{
-      sector: string;
-      source: string;
-      fromActionable?: boolean;
-      leaderVia?: string;
-      leaders: Array<{ name: string; code: string; pctChg: number; strength?: string; mine?: string[] }>;
-    }>;
-    concepts: Array<{
-      name: string;
-      pctChange: number;
-      totalMvY: number;
-      upNum: number;
-      leaders: Array<{ name: string; code: string; pctChg: number; mine?: string[] }>;
-    }>;
+    trend: {
+      sectors: Array<{
+        sector: string;
+        source: string;
+        fromActionable?: boolean;
+        leaderVia?: string;
+        leaders: Array<{ name: string; code: string; pctChg: number; strength?: string; mine?: string[] }>;
+      }>;
+      note?: string;
+    };
+    short: {
+      sectors: Array<{
+        sector: string;
+        status: string;
+        pct5d?: number;
+        netInflow5d?: number;
+        consecDays?: number;
+        trendOverlap?: boolean;
+        leaders: Array<{ name: string; code: string; pctChg: number; strength?: string; mine?: string[] }>;
+      }>;
+      concepts: Array<{
+        name: string;
+        pctChange: number;
+        totalMvY: number;
+        upNum: number;
+        leaders: Array<{ name: string; code: string; pctChg: number; mine?: string[] }>;
+      }>;
+      note?: string;
+    };
   };
   mineWatch?: {
     trade_date: string;

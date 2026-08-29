@@ -1037,7 +1037,7 @@ def _find_bottom_leaders(pro, trade_date, sector, today_map, max_check=5):
 
 
 def _pick_sector_leaders(pro, trade_date, sector, today_map, max_n=3):
-    """板块龙头统一口径（bottomWatch 卡片与 leaderStep 第2步共用，禁止各算各的）：
+    """板块龙头统一口径（bottomWatch 卡片与 dualAxes 趋势轴共用，禁止各算各的）：
     优先"率先脱离底部"趋势判定；无命中时扶正兜底——今日板块内主力净流入前 N（today_map）。
     返回 (leaders, via)，via: 'trend'=率先脱离底部 / 'inflow'=主力净流入口径。"""
     leaders = _find_bottom_leaders(pro, trade_date, sector, today_map)
@@ -1166,26 +1166,61 @@ MINE_KEYWORDS = ['处罚', '立案', '问询', '警示', '诉讼', '仲裁', '�
 _CONCEPT_EXCLUDE = ('昨日', '涨停', '连板', '新高', '新低', '破净', '含一字', 'ST', '退市', 'B股')
 
 
-def build_leader_step(pro, trade_date, data, today_map):
-    """第2步·选龙头（总览漏斗卡数据）。
+def _ensure_mf_cache(pro, trade_date):
+    """主力资金流缓存（全市场，10 天滚动）：短线轴龙头排名 + 排雷资金雷共用。
+    每晚 1 次全市场 moneyflow 调用（当日已缓存则 0 调用）。net_mf_amount 万元→亿。"""
+    mf_cache = _load_json_cache(MINE_MF_CACHE_PATH, {})
+    if trade_date not in mf_cache:
+        try:
+            time.sleep(API_DELAY)
+            mf = pro.moneyflow(trade_date=trade_date)
+            if mf is not None and len(mf):
+                mf_cache[trade_date] = {r['ts_code']: round(float(r['net_mf_amount']) / 1e4, 2)
+                                        for _, r in mf.iterrows()}
+        except Exception as e:
+            print(f"  Warning: moneyflow cache update failed: {e}")
+        days_sorted = sorted(mf_cache)[-10:]
+        mf_cache = {d: mf_cache[d] for d in days_sorted}
+        _save_json_cache(MINE_MF_CACHE_PATH, mf_cache)
+    return mf_cache
 
-    - 板块部分严格以第1步输出为输入（2026-08-29 断链修复，禁止另算一套积聚命中）：
-      ① actionableSectors 能投名单（subSector 二级口径优先，如 通信/电信运营→电信运营）
-      ② bottomWatch 入围命中板块，取并集；同时在两者中出现的板块标注"能投名单·X档"。
-      龙头统一走 _pick_sector_leaders（bottomWatch 已算好的直接复用，保证两处一致）。
-    - 概念板块：东财 dc_index（单日全板块快照，含领涨股）取"大的活跃概念"——
-      剔除纯技术性板块（昨日涨停/历史新高等），要求总市值 ≥300 亿且上涨家数 ≥5，
-      按当日涨幅取前 3；成分龙头用 dc_member × 今日全市场涨幅（复用 today_map，0 额外行情调用）。
-    概念指数历史短，不套用积聚判定——属"题材活跃轴"，与能投名单独立（口径见 note）。
-    每晚新增调用：dc_index 1 次 + dc_member ≤3 次 + 能投独有板块龙头日线 ≤5×2 次。
+
+def _short_leaders(sector, today_map, mf_cache, max_n=3):
+    """短线龙头：板块成员按近 5 日主力净流入（全市场缓存，0 额外调用）排名取前 N；
+    缓存覆盖不足 2 只时回退今日主力净流入前 N（today_map 既有顺序）。"""
+    members = today_map.get(sector) or []
+    days = sorted(mf_cache)[-5:]
+    scored = []
+    for s in members[:12]:
+        nets = [mf_cache[d][s['code']] for d in days if s['code'] in mf_cache.get(d, {})]
+        if len(nets) >= 3:
+            scored.append((sum(nets), s))
+    if len(scored) < 2:
+        return [{'name': s['name'], 'code': s['code'], 'pctChg': s['pct'],
+                 'strength': '今日主力净流入居前（资金口径）'} for s in members[:max_n]]
+    scored.sort(key=lambda x: -x[0])
+    return [{'name': s['name'], 'code': s['code'], 'pctChg': s['pct'],
+             'strength': f'近5日主力净流入{net:+.1f}亿'} for net, s in scored[:max_n]]
+
+
+def build_dual_axes(pro, trade_date, data, today_map):
+    """总览并联双轴（2026-08-29 用户拍板：趋势轴∥短线轴，替代原串联第1/2步）。
+
+    - 趋势轴（周线/日线级，中线布局，下游接 VCP 形态确认）：板块严格以第1步输出为输入——
+      ① actionableSectors 能投名单（subSector 二级口径优先）② bottomWatch 入围命中板块，
+      取并集；同时在两者中出现的标注"能投名单·X档"。龙头统一走 _pick_sector_leaders
+      （bottomWatch 已算好的直接复用，两处一致）。
+    - 短线轴（60分钟/日线级）：题材活跃概念（东财 dc_index 当日口径）+ 短线强势板块
+      （sectorScan「启动确认」信号：连续净流入≥2天+当日涨幅≥1.5%，仅低位/半路层——
+      高潮风险/双头风险/高位流入一律排除，短线不追双头）。龙头=近5日主力净流入口径
+      （全市场缓存，0 额外行情调用）。
+    60分钟线实测：stk_mins 有权限但限频 1 次/分钟，全扫描需 10+ 分钟且挤占每晚预算，
+    成本不可控未启用，短线口径用日线近似（note 注明）。
+    每晚新增调用：dc_index 1 + dc_member ≤3 + moneyflow 1（缓存）+ 能投独有板块日线 ≤5×2。
     """
-    out = {'trade_date': f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}",
-           'sectors': [], 'concepts': [],
-           'note': ('板块龙头=率先脱离底部（站上20日线·逼近/站上60日线·距60日高点<15%），'
-                    '无率先龙头时用今日主力净流入居前（资金口径）；'
-                    '概念板块=题材活跃轴（与能投名单独立，需自行甄别）：东财概念指数当日口径'
-                    '（涨幅+总市值≥300亿+上涨家数≥5，剔除打板/新高类技术板块），仅供人工二筛参考')}
+    d = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
     flat = {s['code']: s for lst in today_map.values() for s in lst}
+    mf_cache = _ensure_mf_cache(pro, trade_date)
     bw_items = (data.get('bottomWatch') or {}).get('items', [])
     bw_by_sector = {b['sector']: b for b in bw_items}
 
@@ -1194,7 +1229,8 @@ def build_leader_step(pro, trade_date, data, today_map):
                  **({'strength': l['strength']} if l.get('strength') else {})}
                 for l in (leaders or [])[:3]]
 
-    # ① 能投名单板块（第1步输出，排最前）
+    # ── 趋势轴：能投名单板块（排最前）──
+    trend_sectors = []
     seen = set()
     for it in (data.get('actionableSectors') or {}).get('items', []):
         sub = it.get('subSector') or it.get('sector')
@@ -1210,10 +1246,10 @@ def build_leader_step(pro, trade_date, data, today_map):
             leaders, via = _pick_sector_leaders(pro, trade_date, sub, today_map)
             src = '能投名单'
         if leaders:
-            out['sectors'].append({'sector': sub, 'source': src, 'fromActionable': True,
-                                   'leaderVia': via, 'leaders': leaders})
+            trend_sectors.append({'sector': sub, 'source': src, 'fromActionable': True,
+                                  'leaderVia': via, 'leaders': leaders})
             seen.add(sub)
-    # ② bottomWatch 其余入围板块（能投名单之外的积聚命中）
+    # bottomWatch 其余入围板块（能投名单之外的积聚命中）
     for b in bw_items:
         if b['sector'] in seen:
             continue
@@ -1222,12 +1258,30 @@ def build_leader_step(pro, trade_date, data, today_map):
         else:
             leaders, via = _pick_sector_leaders(pro, trade_date, b['sector'], today_map)
         if leaders:
-            out['sectors'].append({'sector': b['sector'],
-                                   'source': '双档共振' if b.get('both') else ('60日档' if b.get('hit60') else '30日档'),
-                                   'fromActionable': False, 'leaderVia': via, 'leaders': leaders})
+            trend_sectors.append({'sector': b['sector'],
+                                  'source': '双档共振' if b.get('both') else ('60日档' if b.get('hit60') else '30日档'),
+                                  'fromActionable': False, 'leaderVia': via, 'leaders': leaders})
             seen.add(b['sector'])
-    out['sectors'] = out['sectors'][:6]
-    # ② 题材活跃轴：大的活跃概念板块（东财概念指数，与能投名单独立）
+    trend_sectors = trend_sectors[:6]
+
+    # ── 短线轴 A：短线强势板块（启动确认信号，排除高潮/双头/高位）──
+    trend_names = {s['sector'] for s in trend_sectors}
+    short_sectors = []
+    for it in (data.get('sectorScan') or {}).get('items', []):
+        if it.get('status') != '启动确认':
+            continue  # 高潮风险/双头风险/高位流入·谨慎/吸筹中 一律不进短线轴
+        leaders = _short_leaders(it['sector'], today_map, mf_cache)
+        if not leaders:
+            continue
+        short_sectors.append({'sector': it['sector'], 'status': it['status'],
+                              'pct5d': it.get('pct5d'), 'netInflow5d': it.get('netInflow5d'),
+                              'consecDays': it.get('consecutiveDays'),
+                              'trendOverlap': it['sector'] in trend_names,
+                              'leaders': leaders})
+    short_sectors = short_sectors[:4]
+
+    # ── 短线轴 B：题材活跃概念（东财概念指数当日口径，与能投名单独立）──
+    concepts = []
     try:
         time.sleep(API_DELAY)
         dc = pro.dc_index(trade_date=trade_date)
@@ -1250,16 +1304,33 @@ def build_leader_step(pro, trade_date, data, today_map):
                 if not leaders:
                     leaders = [{'name': r['leading'], 'code': str(r.get('leading_code', '')),
                                 'pctChg': round(float(r['leading_pct']), 2)}]
-                out['concepts'].append({'name': r['name'],
-                                        'pctChange': round(float(r['pct_change']), 2),
-                                        'totalMvY': round(float(r['total_mv']) / 1e4, 0),
-                                        'upNum': int(r['up_num']),
-                                        'leaders': leaders[:3]})
+                concepts.append({'name': r['name'],
+                                 'pctChange': round(float(r['pct_change']), 2),
+                                 'totalMvY': round(float(r['total_mv']) / 1e4, 0),
+                                 'upNum': int(r['up_num']),
+                                 'leaders': leaders[:3]})
     except Exception as e:
-        print(f"  Warning: leader step concepts failed: {e}")
-    data['leaderStep'] = out
-    print(f"  leaderStep: 板块 {len(out['sectors'])} 个, 概念 {len(out['concepts'])} 个"
-          + (f"（{'、'.join(c['name'] for c in out['concepts'])}）" if out['concepts'] else ''))
+        print(f"  Warning: dual axes concepts failed: {e}")
+
+    data['dualAxes'] = {
+        'trade_date': d,
+        'trend': {'sectors': trend_sectors,
+                  'note': ('趋势机会：周线/日线级别，服务中线布局，配合第3步形态确认等买点；'
+                           '板块=能投名单∪底部积聚命中，龙头=率先脱离底部（站上20日线·逼近/站上60日线·'
+                           '距60日高点<15%），无率先龙头时用今日主力净流入居前（与底部监测卡同口径）')},
+        'short': {'sectors': short_sectors, 'concepts': concepts,
+                  'note': ('短线机会：60分钟/日线级别，实际口径为日线近似（60分钟线限频1次/分钟未启用）；'
+                           '短线强势板块=启动确认信号（连续净流入≥2天+当日涨幅≥1.5%，低位/半路层，'
+                           '已排除高潮/双头/高位）；题材活跃概念=东财概念指数当日口径'
+                           '（涨幅+总市值≥300亿+上涨家数≥5，剔除打板/新高类），需自行甄别；'
+                           '龙头=近5日主力净流入口径')},
+    }
+    data.pop('leaderStep', None)
+    print(f"  dualAxes: 趋势轴板块 {len(trend_sectors)} 个, "
+          f"短线轴强势板块 {len(short_sectors)} 个"
+          + (f"（{'、'.join(s['sector'] for s in short_sectors)}）" if short_sectors else '')
+          + f", 概念 {len(concepts)} 个"
+          + (f"（{'、'.join(c['name'] for c in concepts)}）" if concepts else ''))
 
 
 def _cninfo_anns_for(tc, trade_date, days=7, session=None):
@@ -1319,11 +1390,16 @@ def build_mine_watch(pro, trade_date, data):
         for l in (it.get('leaders') or []):
             if l.get('code'):
                 uni.setdefault(l['code'], {'name': l['name'], 'src': '板块龙头'})
+    axes = data.get('dualAxes') or {}
+    for sec in (axes.get('trend') or {}).get('sectors', []):
+        for l in sec.get('leaders', []):
+            if l.get('code'):
+                uni.setdefault(l['code'], {'name': l['name'], 'src': '趋势轴龙头'})
     for grp in ('sectors', 'concepts'):
-        for sec in (data.get('leaderStep') or {}).get(grp, []):
+        for sec in (axes.get('short') or {}).get(grp, []):
             for l in sec.get('leaders', []):
                 if l.get('code'):
-                    uni.setdefault(l['code'], {'name': l['name'], 'src': '第2步龙头'})
+                    uni.setdefault(l['code'], {'name': l['name'], 'src': '短线轴龙头'})
 
     mines = {}  # code -> {'types': set, 'details': []}
     def _hit(code, typ, detail, date=''):
@@ -1331,21 +1407,9 @@ def build_mine_watch(pro, trade_date, data):
         m['types'].add(typ)
         m['details'].append({'type': typ, 'detail': detail, 'date': date})
 
-    # ── ① 资金面：融资红灯（marginWatch 既有口径）+ 主力5日净流出≥3亿（缓存）──
+    # ── ① 资金面：融资红灯（marginWatch 既有口径）+ 主力5日净流出≥3亿（全市场缓存）──
     mw_map = {m.get('code'): m for m in (data.get('marginWatch') or {}).get('items', [])}
-    mf_cache = _load_json_cache(MINE_MF_CACHE_PATH, {})
-    if trade_date not in mf_cache:
-        try:
-            time.sleep(API_DELAY)
-            mf = pro.moneyflow(trade_date=trade_date)
-            if mf is not None and len(mf):
-                mf_cache[trade_date] = {r['ts_code']: round(float(r['net_mf_amount']) / 1e4, 2)
-                                        for _, r in mf.iterrows() if r['ts_code'] in uni}
-        except Exception as e:
-            print(f"  Warning: mineWatch moneyflow failed: {e}")
-        days_sorted = sorted(mf_cache)[-10:]
-        mf_cache = {d: mf_cache[d] for d in days_sorted}
-        _save_json_cache(MINE_MF_CACHE_PATH, mf_cache)
+    mf_cache = _ensure_mf_cache(pro, trade_date)
     for code, meta in uni.items():
         m = mw_map.get(code)
         if m and (m.get('level') == 'alert' or m.get('triggered')):
@@ -1439,11 +1503,14 @@ def build_mine_watch(pro, trade_date, data):
                        '消息=近7天公告命中处罚/立案/问询/诉讼/减持/退市等关键词；'
                        '基本面=中报归母净利同比≤-30%或亏损、商誉/净资产>40%（周更缓存）'),
     }
-    # 联动第2步：有雷的板块/概念龙头在 leaderStep 里就地打 ⛔ 标记
+    # 联动双轴：有雷的板块/概念龙头在 dualAxes 里就地打 ⛔ 标记
     mined = {m['code']: m['types'] for m in items}
-    ls = data.get('leaderStep')
-    if ls and mined:
-        for grp in list(ls.get('sectors', [])) + list(ls.get('concepts', [])):
+    axes = data.get('dualAxes')
+    if axes and mined:
+        groups = list((axes.get('trend') or {}).get('sectors', [])) \
+            + list((axes.get('short') or {}).get('sectors', [])) \
+            + list((axes.get('short') or {}).get('concepts', []))
+        for grp in groups:
             for l in grp.get('leaders', []):
                 if l.get('code') in mined:
                     l['mine'] = mined[l['code']]
@@ -3938,12 +4005,12 @@ def main():
     _today_map = watch_ctx[3] if watch_ctx else {}
     fetch_vcp_stocks(pro, trade_date, data, _today_map)
 
-    # ── 16c. 总览漏斗：第2步选龙头（含概念板块）+ 第4步排雷 ──
-    print("\n[16c/17] Building leader step (sectors+concepts) + mine watch...")
+    # ── 16c. 总览并联双轴（趋势轴∥短线轴）+ 第4步排雷 ──
+    print("\n[16c/17] Building dual axes (trend/short) + mine watch...")
     try:
-        build_leader_step(pro, trade_date, data, _today_map)
+        build_dual_axes(pro, trade_date, data, _today_map)
     except Exception as e:
-        print(f"  Warning: leaderStep failed: {e}")
+        print(f"  Warning: dualAxes failed: {e}")
     try:
         build_mine_watch(pro, trade_date, data)
     except Exception as e:

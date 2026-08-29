@@ -191,81 +191,117 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
         </Card>
       )}
 
-      {/* ====== 第1步·圈板块（能投名单，覆盖原速览重复条目） ====== */}
-      {act && (
-        <Card
-          className="border-orange-200 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-          onClick={() => onNavigate?.('tools', 'bottom-watch')}
-        >
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-orange-500 text-white">第1步·圈板块</Badge>
-              <h3 className="text-sm font-bold text-slate-800">能投板块 ({act.items.length})</h3>
-              <span className="text-[10px] text-slate-400">{act.trade_date} · 点击去工具栏看积聚/四象限详情</span>
-            </div>
-            {act.items.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {act.items.map((it) => (
-                  <div key={it.sector} className="rounded-lg border border-orange-200 bg-orange-50/60 px-2.5 py-1.5">
-                    <span className="text-xs font-semibold text-orange-700">{it.subSector || it.sector}</span>
-                    <span className="text-[10px] text-slate-500 ml-1.5">{it.reasons[0] || ''}</span>
+      {/* ====== 并联双轴：趋势轴（周线/日线）∥ 短线轴（60分钟/日线） ====== */}
+      {data.dualAxes && (
+        <div>
+          <p className="text-[10px] text-slate-400 mb-1.5 pl-1">两轴并联·互为补充（非先后顺序）· {data.dualAxes.trade_date} · 排雷覆盖两轴全部标的</p>
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* ---- 趋势轴 ---- */}
+            <Card
+              className="border-orange-200 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => onNavigate?.('tools', 'bottom-watch')}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-orange-500 text-white">第1步·趋势轴</Badge>
+                  <h3 className="text-sm font-bold text-slate-800">周线/日线级机会</h3>
+                  <span className="text-[10px] text-slate-400">
+                    {(data.dualAxes.trend.sectors || []).length > 0
+                      ? `${data.dualAxes.trend.sectors.length} 板块 · ${data.dualAxes.trend.sectors.reduce((n, s) => n + (s.leaders || []).length, 0)} 龙头`
+                      : '今日无信号'}
+                  </span>
+                </div>
+                {act && act.items.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {act.items.map((it) => (
+                      <div key={it.sector} className="rounded-lg border border-orange-200 bg-orange-50/60 px-2 py-1">
+                        <span className="text-[11px] font-semibold text-orange-700">能投·{it.subSector || it.sector}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-xs text-slate-400">今日无能投板块（名单为空或全部被否决）</p>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* ====== 第2步·选龙头（板块龙头 + 大的活跃概念板块） ====== */}
-      {data.leaderStep && ((data.leaderStep.sectors || []).length > 0 || (data.leaderStep.concepts || []).length > 0) && (
-        <Card
-          className="border-sky-200 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-          onClick={() => onNavigate?.('tools', 'bottom-watch')}
-        >
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-sky-500 text-white">第2步·选龙头</Badge>
-              <h3 className="text-sm font-bold text-slate-800">板块龙头 + 活跃概念</h3>
-              <span className="text-[10px] text-slate-400">{data.leaderStep.trade_date}</span>
-            </div>
-            <div className="space-y-1.5">
-              {(data.leaderStep.sectors || []).map((s) => (
-                <div key={s.sector} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${s.fromActionable ? 'bg-orange-50/70 border border-orange-200' : 'hover:bg-sky-50/60'}`}>
-                  <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{s.sector}</span>
-                  {s.fromActionable && (
-                    <Badge className="text-[9px] h-4 px-1 border-0 bg-orange-500 text-white flex-shrink-0">←第1步能投</Badge>
+                )}
+                <div className="space-y-1.5">
+                  {(data.dualAxes.trend.sectors || []).length > 0 ? (
+                    data.dualAxes.trend.sectors.map((s) => (
+                      <div key={s.sector} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${s.fromActionable ? 'bg-orange-50/70 border border-orange-200' : 'hover:bg-orange-50/50'}`}>
+                        <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{s.sector}</span>
+                        {s.fromActionable && (
+                          <Badge className="text-[9px] h-4 px-1 border-0 bg-orange-500 text-white flex-shrink-0">能投名单</Badge>
+                        )}
+                        <Badge variant="outline" className="text-[9px] h-4 px-1 border-orange-200 text-orange-600 flex-shrink-0">{s.source}</Badge>
+                        <span className="text-[11px] text-slate-500">
+                          {(s.leaders || []).map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-slate-400 px-2">今日无趋势信号（能投名单与底部积聚均为空）</p>
                   )}
-                  <Badge variant="outline" className="text-[9px] h-4 px-1 border-sky-200 text-sky-600 flex-shrink-0">{s.source}</Badge>
-                  <span className="text-[11px] text-slate-500">
-                    {(s.leaders || []).length > 0
-                      ? s.leaders.map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')
-                      : '暂无率先龙头'}
+                </div>
+                {(data.dualAxes.trend.sectors || []).some((s) => (s.leaders || []).some((l) => l.mine)) && (
+                  <p className="text-[10px] text-red-500 mt-1.5 pl-2">⛔ = 排雷命中，详见下方第4步·排雷</p>
+                )}
+                {data.dualAxes.trend.note && <p className="text-[10px] text-slate-400 mt-2">{data.dualAxes.trend.note}</p>}
+              </CardContent>
+            </Card>
+
+            {/* ---- 短线轴 ---- */}
+            <Card
+              className="border-rose-200 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => onNavigate?.('tools', 'bottom-watch')}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-rose-500 text-white">第2步·短线轴</Badge>
+                  <h3 className="text-sm font-bold text-slate-800">60分钟/日线级机会</h3>
+                  <span className="text-[10px] text-slate-400">
+                    {(data.dualAxes.short.concepts || []).length > 0 || (data.dualAxes.short.sectors || []).length > 0
+                      ? `${(data.dualAxes.short.concepts || []).length} 概念 · ${(data.dualAxes.short.sectors || []).length} 强势板块 · ${[...(data.dualAxes.short.sectors || []), ...(data.dualAxes.short.concepts || [])].reduce((n, g) => n + (g.leaders || []).length, 0)} 龙头`
+                      : '今日无信号'}
                   </span>
                 </div>
-              ))}
-              {(data.leaderStep.concepts || []).length > 0 && (
-                <p className="text-[10px] font-semibold text-sky-700 pt-1 pl-2">题材活跃轴·大的活跃概念（与能投名单独立，需自行甄别）</p>
-              )}
-              {(data.leaderStep.concepts || []).map((c) => (
-                <div key={c.name} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-sky-50/60">
-                  <span className="text-xs font-semibold text-sky-800 flex-shrink-0">{c.name}</span>
-                  <span className="text-[11px] font-bold text-red-500 flex-shrink-0">+{c.pctChange}%</span>
-                  <span className="text-[10px] text-slate-400 flex-shrink-0">市值{c.totalMvY}亿·{c.upNum}家涨</span>
-                  <span className="text-[11px] text-slate-500">
-                    {(c.leaders || []).map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')}
-                  </span>
+                <div className="space-y-1.5">
+                  {(data.dualAxes.short.sectors || []).length > 0 && (
+                    <p className="text-[10px] font-semibold text-rose-700 pl-2">短线强势板块（启动确认·已排除高潮/双头/高位）</p>
+                  )}
+                  {(data.dualAxes.short.sectors || []).map((s) => (
+                    <div key={s.sector} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-rose-50/60">
+                      <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{s.sector}</span>
+                      <Badge variant="outline" className="text-[9px] h-4 px-1 border-rose-200 text-rose-600 flex-shrink-0">{s.status}</Badge>
+                      {s.trendOverlap && (
+                        <Badge variant="outline" className="text-[9px] h-4 px-1 border-orange-200 text-orange-600 flex-shrink-0">兼趋势轴</Badge>
+                      )}
+                      <span className="text-[10px] text-slate-400 flex-shrink-0">5日{s.pct5d != null ? `${s.pct5d >= 0 ? '+' : ''}${s.pct5d}%` : ''}</span>
+                      <span className="text-[11px] text-slate-500">
+                        {(s.leaders || []).map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')}
+                      </span>
+                    </div>
+                  ))}
+                  {(data.dualAxes.short.concepts || []).length > 0 && (
+                    <p className="text-[10px] font-semibold text-rose-700 pt-1 pl-2">题材活跃概念（与能投名单独立，需自行甄别）</p>
+                  )}
+                  {(data.dualAxes.short.concepts || []).map((c) => (
+                    <div key={c.name} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-rose-50/60">
+                      <span className="text-xs font-semibold text-rose-800 flex-shrink-0">{c.name}</span>
+                      <span className="text-[11px] font-bold text-red-500 flex-shrink-0">+{c.pctChange}%</span>
+                      <span className="text-[10px] text-slate-400 flex-shrink-0">市值{c.totalMvY}亿·{c.upNum}家涨</span>
+                      <span className="text-[11px] text-slate-500">
+                        {(c.leaders || []).map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')}
+                      </span>
+                    </div>
+                  ))}
+                  {(data.dualAxes.short.sectors || []).length === 0 && (data.dualAxes.short.concepts || []).length === 0 && (
+                    <p className="text-xs text-slate-400 px-2">今日无短线信号（无启动确认板块与活跃概念）</p>
+                  )}
                 </div>
-              ))}
-            </div>
-            {[...(data.leaderStep.sectors || []), ...(data.leaderStep.concepts || [])].some((g) => (g.leaders || []).some((l) => l.mine)) && (
-              <p className="text-[10px] text-red-500 mt-1.5 pl-2">⛔ = 排雷命中（资金/消息/基本面），详见下方第4步·排雷</p>
-            )}
-            {data.leaderStep.note && <p className="text-[10px] text-slate-400 mt-2">{data.leaderStep.note}</p>}
-          </CardContent>
-        </Card>
+                {[...(data.dualAxes.short.sectors || []), ...(data.dualAxes.short.concepts || [])].some((g) => (g.leaders || []).some((l) => l.mine)) && (
+                  <p className="text-[10px] text-red-500 mt-1.5 pl-2">⛔ = 排雷命中，详见下方第4步·排雷</p>
+                )}
+                {data.dualAxes.short.note && <p className="text-[10px] text-slate-400 mt-2">{data.dualAxes.short.note}</p>}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       )}
 
       {/* ====== VCP 形态精扫（总览精简版，点击去工具栏看明细） ====== */}
@@ -317,7 +353,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
               <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-red-600 text-white">第4步·排雷</Badge>
               <h3 className="text-sm font-bold text-red-800">入围标的排雷</h3>
               <span className="text-[10px] text-slate-400">
-                {data.mineWatch.trade_date} · 已扫 {data.mineWatch.checked} 只（板块龙头∪概念龙头∪VCP∪自选）
+                {data.mineWatch.trade_date} · 已扫 {data.mineWatch.checked} 只（趋势轴∪短线轴全部龙头∪VCP∪自选）
               </span>
             </div>
             {(data.mineWatch.items || []).length > 0 ? (
