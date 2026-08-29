@@ -1206,10 +1206,11 @@ def _short_leaders(sector, today_map, mf_cache, max_n=3):
 def build_dual_axes(pro, trade_date, data, today_map):
     """总览并联双轴（2026-08-29 用户拍板：趋势轴∥短线轴，替代原串联第1/2步）。
 
-    - 趋势轴（周线/日线级，中线布局，下游接 VCP 形态确认）：板块严格以第1步输出为输入——
-      ① actionableSectors 能投名单（subSector 二级口径优先）② bottomWatch 入围命中板块，
-      取并集；同时在两者中出现的标注"能投名单·X档"。龙头统一走 _pick_sector_leaders
-      （bottomWatch 已算好的直接复用，两处一致）。
+    - 趋势轴（周线/日线级，中线布局，下游接 VCP 形态确认）：板块 = ① actionableSectors
+      能投名单（subSector 二级口径优先）∪ ② bottomWatch 入围积聚 ∪ ③ sectorScan ⭐核心层
+      "吸筹中"板块（source=吸筹观察，排最后；双头/高潮/高位天然排除）；同时在能投与积聚中
+      出现的标注"能投名单·X档"。龙头统一走 _pick_sector_leaders（bottomWatch 已算好的
+      直接复用，两处一致）。
     - 短线轴（60分钟/日线级）：题材活跃概念（东财 dc_index 当日口径）+ 短线强势板块
       （sectorScan「启动确认」信号：连续净流入≥2天+当日涨幅≥1.5%，仅低位/半路层——
       高潮风险/双头风险/高位流入一律排除，短线不追双头）。龙头=近5日主力净流入口径
@@ -1262,7 +1263,19 @@ def build_dual_axes(pro, trade_date, data, today_map):
                                   'source': '双档共振' if b.get('both') else ('60日档' if b.get('hit60') else '30日档'),
                                   'fromActionable': False, 'leaderVia': via, 'leaders': leaders})
             seen.add(b['sector'])
-    trend_sectors = trend_sectors[:6]
+    # sectorScan ⭐核心层"吸筹中"板块（2026-08-29 断层修复：吸筹层不再是孤儿；
+    # 双头/高潮/高位风险天然排除——只收 status=吸筹中 且 tier=core）
+    for it in (data.get('sectorScan') or {}).get('items', []):
+        if it.get('status') != '吸筹中' or it.get('tier') != 'core':
+            continue
+        if it['sector'] in seen:
+            continue
+        leaders, via = _pick_sector_leaders(pro, trade_date, it['sector'], today_map)
+        if leaders:
+            trend_sectors.append({'sector': it['sector'], 'source': '吸筹观察',
+                                  'fromActionable': False, 'leaderVia': via, 'leaders': leaders})
+            seen.add(it['sector'])
+    trend_sectors = trend_sectors[:8]
 
     # ── 短线轴 A：短线强势板块（启动确认信号，排除高潮/双头/高位）──
     trend_names = {s['sector'] for s in trend_sectors}
@@ -1316,7 +1329,8 @@ def build_dual_axes(pro, trade_date, data, today_map):
         'trade_date': d,
         'trend': {'sectors': trend_sectors,
                   'note': ('趋势机会：周线/日线级别，服务中线布局，配合第3步形态确认等买点；'
-                           '板块=能投名单∪底部积聚命中，龙头=率先脱离底部（站上20日线·逼近/站上60日线·'
+                           '板块=能投名单∪底部积聚命中∪吸筹⭐观察（扫描榜核心层吸筹中，'
+                           '双头/高潮/高位已排除），龙头=率先脱离底部（站上20日线·逼近/站上60日线·'
                            '距60日高点<15%），无率先龙头时用今日主力净流入居前（与底部监测卡同口径）')},
         'short': {'sectors': short_sectors, 'concepts': concepts,
                   'note': ('短线机会：60分钟/日线级别，实际口径为日线近似（60分钟线限频1次/分钟未启用）；'

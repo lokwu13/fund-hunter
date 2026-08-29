@@ -140,6 +140,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <span className="text-xs font-bold text-emerald-700">🎯 今日能投板块</span>
               <span className="text-[10px] text-slate-400">{data.actionableSectors.trade_date} · 优先级：双确认 &gt; 🔥双档 &gt; 60日档 &gt; 30日档；资金节奏转流出/持续流出与扫描榜高潮风险一票否决</span>
+              <span className="text-[10px] text-emerald-600/80 w-full">口径关系：能投名单 = 总览第1步趋势轴的输入之一（趋势轴 = 能投 ∪ 底部积聚 ∪ 吸筹⭐观察）</span>
             </div>
             {data.actionableSectors.items.length > 0 ? (
               <div className="flex flex-wrap gap-1.5">

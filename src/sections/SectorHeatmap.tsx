@@ -425,6 +425,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
             {data.actionableSectors.note && (
               <CardDescription className="text-[10px]">{data.actionableSectors.note}</CardDescription>
             )}
+            <CardDescription className="text-[10px] text-emerald-600/80">口径关系：能投名单 = 总览第1步趋势轴的输入之一（趋势轴 = 能投 ∪ 底部积聚 ∪ 吸筹⭐观察）</CardDescription>
           </CardHeader>
           <CardContent>
             {data.actionableSectors.items.length > 0 ? (

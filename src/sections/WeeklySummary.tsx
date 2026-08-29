@@ -243,7 +243,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                       </div>
                     ))
                   ) : (
-                    <p className="text-xs text-slate-400 px-2">今日无合乎要求的入围（能投名单与底部积聚均为空）</p>
+                    <p className="text-xs text-slate-400 px-2">今日无合乎要求的入围（能投名单、底部积聚、吸筹观察均为空）</p>
                   )}
                 </div>
                 {trendSectors.some((s) => (s.leaders || []).some((l) => l.mine)) && (
