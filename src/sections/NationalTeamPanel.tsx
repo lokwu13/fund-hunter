@@ -58,36 +58,37 @@ const huijinOther = [
   { name: '金融街', code: '000402', shares: '5178万股', pct: '1.73%', change: '不变', note: '汇金资管' },
 ];
 
-// ====== 社保基金 2025Q1 数据 ======
+// ====== 社保基金 2026Q2 数据（证券时报·数据宝，截至 2026-08-28，中报十大流通股东口径） ======
 const shebaoSummary = {
-  totalStocks: 15,
-  totalValue: '52.15亿',
-  increase: 5,
-  decrease: 3,
-  newEntry: 5,
-  hold: 2,
+  totalStocks: 487,
+  totalValue: '1715.85亿',
+  increase: 121,
+  decrease: 155,
+  newEntry: 132,
+  hold: 79,
 };
 
 const shebaoIncrease = [
-  { name: '万华化学', code: '600309', combo: '103组合', change: '增持', value: '14.26亿', note: '化工龙头,持仓市值领先', pctChange: '+' },
-  { name: '小商品城', code: '600415', combo: '110+116组合', change: '增持', value: '合计6126万股', note: '持股量翻倍', pctChange: '+100%+' },
-  { name: '广联达', code: '002410', combo: '102组合', change: '增持', value: '5亿+', note: 'TMT个股', pctChange: '+' },
-  { name: '千禾味业', code: '603027', combo: '-', change: '增持', value: '-', note: '调味品', pctChange: '+' },
-  { name: '中国西电', code: '601179', combo: '-', change: '增持', value: '-', note: '电力设备', pctChange: '+' },
+  { name: '良信股份', code: '002706', combo: '2家组合', change: '增持', value: '4061万股', note: '电力设备', pctChange: '+146%' },
+  { name: '大华股份', code: '002236', combo: '2家组合', change: '增持', value: '5969万股', note: '计算机/安防', pctChange: '+121%' },
+  { name: '广汇能源', code: '600256', combo: '2家组合', change: '增持', value: '9935万股', note: '石油石化', pctChange: '+84%' },
+  { name: '保利发展', code: '600048', combo: '2家组合', change: '增持', value: '1.48亿股', note: '房地产', pctChange: '+71%' },
+  { name: '太阳纸业', code: '002078', combo: '3家组合', change: '增持', value: '9514万股', note: '轻工制造', pctChange: '+39%' },
 ];
 
 const shebaoNew = [
-  { name: '钧达股份', code: '002865', combo: '118组合', change: '新进', value: '5亿+', note: '新能源', sector: '光伏' },
-  { name: '三维化学', code: '002469', combo: '-', change: '新进', value: '-', note: '化工', sector: '化工' },
-  { name: '绝味食品', code: '603517', combo: '-', change: '新进', value: '-', note: '食品', sector: '消费' },
-  { name: '萤石网络', code: '688475', combo: '-', change: '新进', value: '-', note: '智能家居', sector: '科技' },
-  { name: '奥来德', code: '688378', combo: '-', change: '新进', value: '-', note: '光电材料', sector: '材料' },
+  { name: '紫金矿业', code: '601899', combo: '1家组合', change: '新进', value: '8100万股', note: '新进市值第一约20.36亿', sector: '有色金属' },
+  { name: '晶盛机电', code: '300316', combo: '-', change: '新进', value: '市值11.83亿', note: '新进市值第二', sector: '光伏设备' },
+  { name: '中钨高新', code: '000657', combo: '-', change: '新进', value: '市值7.66亿', note: '新进市值第三', sector: '硬质合金' },
+  { name: '渤海租赁', code: '000415', combo: '1家组合', change: '新进', value: '1.04亿股', note: '非银金融', sector: '非银' },
+  { name: '梅花生物', code: '600873', combo: '1家组合', change: '新进', value: '3759万股', note: '氨基酸龙头', sector: '基础化工' },
 ];
 
 const shebaoDecrease = [
-  { name: '九洲药业', code: '603456', combo: '17052+418组合', change: '减持', note: 'CXO', sector: '医药' },
-  { name: '圣泉集团', code: '605589', combo: '-', change: '减持', note: '化工材料', sector: '化工' },
-  { name: '中原传媒', code: '000719', combo: '-', change: '减持', note: '出版传媒, Q1净利+235%', sector: '传媒' },
+  { name: '南山铝业', code: '600219', combo: '1家组合', change: '减持', note: '有色金属,持股量-41.8%', sector: '有色' },
+  { name: '燕京啤酒', code: '000729', combo: '1家组合', change: '减持', note: '食品饮料,持股量-26.6%', sector: '食品' },
+  { name: '山推股份', code: '000680', combo: '4家组合', change: '减持', note: '机械设备,持股量-21.4%但仍4家扎堆', sector: '机械' },
+  { name: '兴业证券', code: '601377', combo: '1家组合', change: '减持', note: '非银金融,持股量-19.2%', sector: '非银' },
 ];
 
 // ====== 证金公司 2025Q1 数据 ======
@@ -543,7 +544,7 @@ export default function NationalTeamPanel() {
                 </Card>
 
                 <Card className="bg-red-50 border-red-200">
-                  <CardHeader className="pb-2"><CardTitle className="text-sm font-bold text-red-700 flex items-center gap-2"><TrendingDown className="w-4 h-4" />减持3只</CardTitle></CardHeader>
+                  <CardHeader className="pb-2"><CardTitle className="text-sm font-bold text-red-700 flex items-center gap-2"><TrendingDown className="w-4 h-4" />减持4只</CardTitle></CardHeader>
                   <CardContent className="pt-0">
                     {shebaoDecrease.map((s) => (
                       <div key={s.code} className="py-1.5 border-b border-red-100 last:border-0">
@@ -562,9 +563,9 @@ export default function NationalTeamPanel() {
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                 <h4 className="text-sm font-bold text-blue-800 mb-2">持仓特征</h4>
                 <ul className="text-xs text-blue-700 space-y-1">
-                  <li className="flex items-start gap-2"><ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />主板12只，科创板2只，创业板1只</li>
-                  <li className="flex items-start gap-2"><ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />"科技+消费"双核驱动，7只Q1净利同比增长</li>
-                  <li className="flex items-start gap-2"><ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />小商品城、九洲药业、绝味食品各有2家社保同时重仓</li>
+                  <li className="flex items-start gap-2"><ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />主板339只、创业板90只、科创板57只；电子/基础化工/机械设备上榜最多（54/49/44只）</li>
+                  <li className="flex items-start gap-2"><ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />中国巨石、山推股份、海大集团、星网锐捷各有4家社保组合同时重仓</li>
+                  <li className="flex items-start gap-2"><ChevronRight className="w-3 h-3 mt-0.5 flex-shrink-0" />持股比例最高：源飞宠物8.36%、佰奥智能8.04%、万泽股份7.87%；持股量最大：分众传媒2.97亿股</li>
                 </ul>
               </div>
             </TabsContent>
@@ -993,7 +994,7 @@ export default function NationalTeamPanel() {
             <TrendingUp className="w-5 h-5 text-red-600" />
             国家队近三个月增持最多TOP5
           </CardTitle>
-          <CardDescription>社保基金 2026Q1 一季报口径 · Q2 持仓随中报 8 月披露</CardDescription>
+          <CardDescription>社保基金 2026Q2 中报十大流通股东口径 · 证券时报·数据宝（截至2026-08-28）</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>

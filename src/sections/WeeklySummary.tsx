@@ -367,14 +367,20 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
           </div>
           {/* 备选池（纯展示，不进信号/预警） */}
           {(data.myETFAlt || []).length > 0 && (
-            <div className="mt-2 flex items-center gap-2 flex-wrap rounded-lg border border-dashed border-slate-200 bg-slate-50/60 px-2.5 py-1.5">
-              <span className="text-[10px] text-slate-400 flex-shrink-0">备选</span>
-              {(data.myETFAlt || []).map((e) => (
-                <span key={e.ticker} className="text-[11px] text-slate-500 whitespace-nowrap" title={e.name}>
-                  {e.ticker} {e.name}
-                  <span className={`ml-1 font-semibold ${pctClass(e.changePct)}`}>{fmtPct(e.changePct)}</span>
-                </span>
-              ))}
+            <div className="mt-2.5 rounded-lg border border-dashed border-amber-300 bg-amber-50/50 px-3 py-2">
+              <div className="flex items-center gap-1.5 mb-1">
+                <Eye className="w-3 h-3 text-amber-500" />
+                <span className="text-[11px] font-semibold text-amber-700">ETF 备选（{(data.myETFAlt || []).length}）</span>
+                <span className="text-[9px] text-slate-400">仅观察，不进信号</span>
+              </div>
+              <div className="flex items-center gap-x-4 gap-y-1 flex-wrap">
+                {(data.myETFAlt || []).map((e) => (
+                  <span key={e.ticker} className="text-xs text-slate-600 whitespace-nowrap" title={e.name}>
+                    <span className="text-slate-400">{e.ticker}</span> {e.name}
+                    <span className={`ml-1 font-semibold ${pctClass(e.changePct)}`}>{fmtPct(e.changePct)}</span>
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>

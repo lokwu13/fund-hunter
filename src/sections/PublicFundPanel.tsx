@@ -308,7 +308,7 @@ export default function PublicFundPanel() {
           {/* 私募净流入/流出TOP5 */}
           <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
             <p className="text-xs text-amber-700">
-              私募持仓随上市公司中报披露，2026Q2 数据 8 月出炉，当前为公开报道口径，仅供参考
+              已更新至 2026Q2 中报十大流通股东口径（私募排排网统计+公开报道，截至 2026-08-27 披露）；景林为美股13F口径，仅供参考
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">
