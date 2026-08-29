@@ -1138,6 +1138,272 @@ def build_bottom_watch(hist, pro, trade_date, today_map):
     return result
 
 
+# ══════════ 总览漏斗：第2步·选龙头 + 第4步·排雷（2026-08-29 用户拍板新增） ══════════
+
+MINE_MF_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  'cache', 'mine_moneyflow_cache.json')
+MINE_FINA_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                    'cache', 'mine_fundamental_cache.json')
+MINE_FINA_PERIOD = '20260630'      # 基本面雷使用的最新报告期（中报）
+MINE_KEYWORDS = ['处罚', '立案', '问询', '警示', '诉讼', '仲裁', '退市', '违规',
+                 '减持', '冻结', '下修', '预亏', '商誉减值', '担保逾期']
+_CONCEPT_EXCLUDE = ('昨日', '涨停', '连板', '新高', '新低', '破净', '含一字', 'ST', '退市', 'B股')
+
+
+def build_leader_step(pro, trade_date, data, today_map):
+    """第2步·选龙头（总览漏斗卡数据）。
+
+    - 能投/入围板块：复用 bottomWatch.leaders（率先脱离底部龙头）；为空则用今日板块内
+      主力净流入前 3（today_map 兜底）。能投名单独有板块用 today_map 前 2。
+    - 概念板块：东财 dc_index（单日全板块快照，含领涨股）取"大的活跃概念"——
+      剔除纯技术性板块（昨日涨停/历史新高等），要求总市值 ≥300 亿且上涨家数 ≥5，
+      按当日涨幅取前 3；成分龙头用 dc_member × 今日全市场涨幅（复用 today_map，0 额外行情调用）。
+    概念指数历史短，不套用积聚判定（口径见 note）。
+    每晚新增调用：dc_index 1 次 + dc_member ≤3 次。
+    """
+    out = {'trade_date': f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}",
+           'sectors': [], 'concepts': [],
+           'note': ('板块龙头=率先脱离底部/今日主力净流入居前；概念板块=东财概念指数当日口径'
+                    '（涨幅+总市值≥300亿+上涨家数≥5，剔除打板/新高类技术板块），'
+                    '概念指数历史短，未套用积聚判定，仅供人工二筛参考')}
+    flat = {s['code']: s for lst in today_map.values() for s in lst}
+    # ① 能投/入围板块龙头
+    seen = set()
+    for it in (data.get('bottomWatch') or {}).get('items', []):
+        leaders = [{'name': l['name'], 'code': l['code'], 'pctChg': l.get('pctChg', 0)}
+                   for l in (it.get('leaders') or [])[:3]]
+        if not leaders:
+            leaders = [{'name': s['name'], 'code': s['code'], 'pctChg': s['pct']}
+                       for s in (today_map.get(it['sector']) or [])[:3]]
+        out['sectors'].append({'sector': it['sector'],
+                               'source': '双档共振' if it.get('both') else ('60日档' if it.get('hit60') else '30日档'),
+                               'leaders': leaders})
+        seen.add(it['sector'])
+    for it in (data.get('actionableSectors') or {}).get('items', []):
+        sub = it.get('subSector') or it.get('sector')
+        if sub in seen:
+            continue
+        leaders = [{'name': s['name'], 'code': s['code'], 'pctChg': s['pct']}
+                   for s in (today_map.get(sub) or [])[:2]]
+        if leaders:
+            out['sectors'].append({'sector': sub, 'source': '能投名单', 'leaders': leaders})
+            seen.add(sub)
+    # ② 大的活跃概念板块（东财概念指数）
+    try:
+        time.sleep(API_DELAY)
+        dc = pro.dc_index(trade_date=trade_date)
+        if dc is not None and len(dc):
+            df = dc[~dc['name'].str.contains('|'.join(_CONCEPT_EXCLUDE))].copy()
+            df = df[(df['total_mv'] >= 3_000_000) & (df['up_num'] >= 5)]  # total_mv 单位万元
+            df = df.sort_values('pct_change', ascending=False).head(3)
+            for _, r in df.iterrows():
+                leaders = []
+                try:
+                    time.sleep(API_DELAY)
+                    mb = pro.dc_member(ts_code=r['ts_code'], trade_date=trade_date)
+                    for _, m in mb.iterrows():
+                        s = flat.get(m['con_code'])
+                        if s:
+                            leaders.append({'name': s['name'], 'code': m['con_code'], 'pctChg': s['pct']})
+                    leaders.sort(key=lambda x: -x['pctChg'])
+                except Exception as e:
+                    print(f"  Warning: dc_member failed for {r['name']}: {e}")
+                if not leaders:
+                    leaders = [{'name': r['leading'], 'code': str(r.get('leading_code', '')),
+                                'pctChg': round(float(r['leading_pct']), 2)}]
+                out['concepts'].append({'name': r['name'],
+                                        'pctChange': round(float(r['pct_change']), 2),
+                                        'totalMvY': round(float(r['total_mv']) / 1e4, 0),
+                                        'upNum': int(r['up_num']),
+                                        'leaders': leaders[:3]})
+    except Exception as e:
+        print(f"  Warning: leader step concepts failed: {e}")
+    data['leaderStep'] = out
+    print(f"  leaderStep: 板块 {len(out['sectors'])} 个, 概念 {len(out['concepts'])} 个"
+          + (f"（{'、'.join(c['name'] for c in out['concepts'])}）" if out['concepts'] else ''))
+
+
+def _cninfo_anns_for(tc, trade_date, days=7, session=None):
+    """单只个股巨潮公告（排雷消息面用，非自选股兜底）。"""
+    import requests
+    s = session or requests.Session()
+    s.headers.update({'User-Agent': UA_BROWSER,
+                      'Referer': 'http://www.cninfo.com.cn/new/commonUrl?url=disclosure/list/notice',
+                      'X-Requested-With': 'XMLHttpRequest'})
+    code = tc.split('.')[0]
+    column = 'sse' if tc.endswith('.SH') else 'szse'
+    start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=days)).strftime('%Y-%m-%d')
+    end = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
+    time.sleep(API_DELAY)
+    r = s.post('http://www.cninfo.com.cn/new/information/topSearch/query',
+               data={'keyWord': code, 'maxNum': 10}, timeout=15)
+    org_id = ''
+    for it in r.json():
+        if it.get('code') == code:
+            org_id = it.get('orgId', '')
+            break
+    time.sleep(API_DELAY)
+    r2 = s.post('http://www.cninfo.com.cn/new/hisAnnouncement/query', data={
+        'pageNum': 1, 'pageSize': 10, 'column': column, 'tabName': 'fulltext',
+        'plate': '', 'stock': f"{code},{org_id}" if org_id else code, 'searchkey': '',
+        'secid': '', 'category': '', 'trade': '', 'seDate': f'{start}~{end}',
+        'sortName': '', 'sortType': '', 'isHLtitle': 'true'}, timeout=15)
+    out = []
+    for a in (r2.json().get('announcements') or []):
+        title = str(a.get('announcementTitle', '')).replace('<em>', '').replace('</em>', '').strip()
+        ts_ms = a.get('announcementTime', 0)
+        d = (datetime.utcfromtimestamp(ts_ms / 1000) + timedelta(hours=8)).strftime('%Y-%m-%d') if ts_ms else ''
+        if title and d:
+            out.append({'title': title, 'date': d})
+    return out
+
+
+def build_mine_watch(pro, trade_date, data):
+    """第4步·排雷：入围标的重大缺陷扫描（总览红色卡，无雷也要明示）。
+
+    范围：能投/入围板块龙头 + 概念龙头 + VCP 精扫名单 + 自选持仓观察（去重）。
+    三类雷（命中才上榜，不凑数）：
+    - 资金面：融资红灯（marginWatch 既有口径直接引用）；近 5 日主力净流出 ≥3 亿
+      （moneyflow 每日 1 次全市场调用，缓存 10 天增量累加）；
+    - 消息面：近 7 天公告命中 处罚/立案/问询/诉讼/减持/退市 等关键词
+      （自选股复用 holdingsNews，0 调用；非自选 ≤5 只走巨潮，≤10 次）；
+    - 基本面：最新中报归母净利同比 ≤-30% 或亏损；商誉/归母净资产 >40%
+      （fina_indicator + balancesheet，周更缓存，每晚 0 增量）。
+    """
+    # ── 扫描名单（去重）──
+    uni = {}
+    for tc, info in STOCKS.items():
+        uni[tc] = {'name': info['name'], 'src': '自选'}
+    for it in (data.get('vcpStocks') or {}).get('items', []):
+        uni.setdefault(it['code'], {'name': it['name'], 'src': 'VCP'})
+    for it in (data.get('bottomWatch') or {}).get('items', []):
+        for l in (it.get('leaders') or []):
+            if l.get('code'):
+                uni.setdefault(l['code'], {'name': l['name'], 'src': '板块龙头'})
+    for grp in ('sectors', 'concepts'):
+        for sec in (data.get('leaderStep') or {}).get(grp, []):
+            for l in sec.get('leaders', []):
+                if l.get('code'):
+                    uni.setdefault(l['code'], {'name': l['name'], 'src': '第2步龙头'})
+
+    mines = {}  # code -> {'types': set, 'details': []}
+    def _hit(code, typ, detail, date=''):
+        m = mines.setdefault(code, {'types': set(), 'details': []})
+        m['types'].add(typ)
+        m['details'].append({'type': typ, 'detail': detail, 'date': date})
+
+    # ── ① 资金面：融资红灯（marginWatch 既有口径）+ 主力5日净流出≥3亿（缓存）──
+    mw_map = {m.get('code'): m for m in (data.get('marginWatch') or {}).get('items', [])}
+    mf_cache = _load_json_cache(MINE_MF_CACHE_PATH, {})
+    if trade_date not in mf_cache:
+        try:
+            time.sleep(API_DELAY)
+            mf = pro.moneyflow(trade_date=trade_date)
+            if mf is not None and len(mf):
+                mf_cache[trade_date] = {r['ts_code']: round(float(r['net_mf_amount']) / 1e4, 2)
+                                        for _, r in mf.iterrows() if r['ts_code'] in uni}
+        except Exception as e:
+            print(f"  Warning: mineWatch moneyflow failed: {e}")
+        days_sorted = sorted(mf_cache)[-10:]
+        mf_cache = {d: mf_cache[d] for d in days_sorted}
+        _save_json_cache(MINE_MF_CACHE_PATH, mf_cache)
+    for code, meta in uni.items():
+        m = mw_map.get(code)
+        if m and (m.get('level') == 'alert' or m.get('triggered')):
+            _hit(code, '资金', f"融资红灯：3日融资余额增量占流通市值{m.get('incPct', '?')}%", m.get('trade_date', ''))
+        nets = [mf_cache[d][code] for d in sorted(mf_cache)[-5:] if code in mf_cache[d]]
+        if len(nets) >= 3:
+            net5 = sum(nets)
+            if net5 <= -3:
+                _hit(code, '资金', f"近5日主力净流出{abs(net5):.1f}亿", trade_date)
+
+    # ── ② 消息面：公告关键词（自选复用 holdingsNews；非自选 ≤5 只巨潮兜底）──
+    hn = {}
+    for e in (data.get('holdingsNews') or []):
+        hn[e.get('code') or ''] = e.get('items') or []
+    extra = [c for c in uni if c not in hn][:5]
+    extra_anns = {}
+    if extra:
+        try:
+            import requests
+            sess = requests.Session()
+            for tc in extra:
+                try:
+                    extra_anns[tc] = _cninfo_anns_for(tc, trade_date, 7, sess)
+                except Exception as e:
+                    print(f"  Warning: mineWatch cninfo failed for {tc}: {e}")
+        except ImportError:
+            print("  Warning: requests not installed; mineWatch 消息面仅覆盖自选股")
+    cutoff = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=7)).strftime('%Y-%m-%d')
+    for code in uni:
+        anns = list(hn.get(code) or []) + list(extra_anns.get(code) or [])
+        for a in anns:
+            title = a.get('title', '')
+            if a.get('date', '') >= cutoff and any(k in title for k in MINE_KEYWORDS):
+                _hit(code, '消息', f"公告：{title[:38]}", a.get('date', ''))
+                break  # 每只股票消息面最多列一条最重
+
+    # ── ③ 基本面：中报净利/商誉（周更缓存）──
+    fina_cache = _load_json_cache(MINE_FINA_CACHE_PATH, {})
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    need = [c for c in uni
+            if fina_cache.get(c, {}).get('period') != MINE_FINA_PERIOD
+            or (datetime.now() - datetime.strptime(fina_cache[c].get('at', '2000-01-01'), '%Y-%m-%d')).days > 7]
+    for tc in need[:40]:  # 周更刷新，单次运行硬上限
+        rec = {'period': MINE_FINA_PERIOD, 'at': today_str}
+        try:
+            time.sleep(API_DELAY)
+            fi = pro.fina_indicator(ts_code=tc, period=MINE_FINA_PERIOD,
+                                    fields='ts_code,end_date,netprofit_yoy')
+            if fi is not None and len(fi):
+                v = fi.iloc[0]['netprofit_yoy']
+                rec['yoy'] = round(float(v), 1) if pd.notna(v) else None
+            time.sleep(API_DELAY)
+            inc = pro.income(ts_code=tc, period=MINE_FINA_PERIOD,
+                             fields='ts_code,end_date,n_income_attr_p')
+            if inc is not None and len(inc):
+                ni = inc.iloc[0]['n_income_attr_p']
+                rec['nIncome'] = round(float(ni) / 1e8, 2) if pd.notna(ni) else None
+            time.sleep(API_DELAY)
+            bs = pro.balancesheet(ts_code=tc, period=MINE_FINA_PERIOD,
+                                  fields='ts_code,goodwill,total_hldr_eqy_exc_min_int')
+            if bs is not None and len(bs):
+                gw, eq = bs.iloc[0]['goodwill'], bs.iloc[0]['total_hldr_eqy_exc_min_int']
+                if pd.notna(gw) and pd.notna(eq) and float(eq) > 0:
+                    rec['gwRatio'] = round(float(gw) / float(eq) * 100, 1)
+        except Exception as e:
+            print(f"  Warning: mineWatch fina failed for {tc}: {e}")
+        fina_cache[tc] = rec
+    if need:
+        _save_json_cache(MINE_FINA_CACHE_PATH, fina_cache)
+    for code in uni:
+        r = fina_cache.get(code) or {}
+        if r.get('period') != MINE_FINA_PERIOD:
+            continue
+        if r.get('nIncome') is not None and r['nIncome'] < 0:
+            _hit(code, '基本面', f"中报亏损（归母净利{r['nIncome']}亿）", MINE_FINA_PERIOD)
+        elif r.get('yoy') is not None and r['yoy'] <= -30:
+            _hit(code, '基本面', f"中报归母净利同比{r['yoy']}%", MINE_FINA_PERIOD)
+        if r.get('gwRatio') is not None and r['gwRatio'] > 40:
+            _hit(code, '基本面', f"商誉/归母净资产{r['gwRatio']}%", MINE_FINA_PERIOD)
+
+    items = []
+    for code, m in mines.items():
+        items.append({'code': code, 'name': uni[code]['name'], 'src': uni[code]['src'],
+                      'types': sorted(m['types']), 'details': m['details']})
+    items.sort(key=lambda x: (-len(x['types']), x['code']))
+    data['mineWatch'] = {
+        'trade_date': f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}",
+        'checked': len(uni),
+        'items': items,
+        'thresholds': ('资金=融资红灯(marginWatch既有口径)或近5日主力净流出≥3亿；'
+                       '消息=近7天公告命中处罚/立案/问询/诉讼/减持/退市等关键词；'
+                       '基本面=中报归母净利同比≤-30%或亏损、商誉/净资产>40%（周更缓存）'),
+    }
+    print(f"  mineWatch: 扫描 {len(uni)} 只, 上榜 {len(items)} 只"
+          + (f"（{'、'.join(i['name'] for i in items[:6])}）" if items else '，今日无雷'))
+
+
 def fetch_sector_watch(pro, trade_date, data):
     """板块资金观察台：行业资金历史沉淀 → 扫描榜（仅信号板块）+ 底部资金积聚监测。
 
@@ -3624,6 +3890,17 @@ def main():
     print("\n[16b/17] Building stock-level VCP scan (vcpStocks)...")
     _today_map = watch_ctx[3] if watch_ctx else {}
     fetch_vcp_stocks(pro, trade_date, data, _today_map)
+
+    # ── 16c. 总览漏斗：第2步选龙头（含概念板块）+ 第4步排雷 ──
+    print("\n[16c/17] Building leader step (sectors+concepts) + mine watch...")
+    try:
+        build_leader_step(pro, trade_date, data, _today_map)
+    except Exception as e:
+        print(f"  Warning: leaderStep failed: {e}")
+    try:
+        build_mine_watch(pro, trade_date, data)
+    except Exception as e:
+        print(f"  Warning: mineWatch failed: {e}")
 
     # ── 17. 国家队升级：份额雷达 + 板块轮动 + 汇金估算 + 宽基波动率 + 短评 ──
     print("\n[17/17] Building national team upgrade (share radar / rotation / est / vol)...")

@@ -616,6 +616,34 @@ export interface FundData {
     }>;
   };
   lowVolDigest?: string;
+  leaderStep?: {
+    trade_date: string;
+    note?: string;
+    sectors: Array<{
+      sector: string;
+      source: string;
+      leaders: Array<{ name: string; code: string; pctChg: number }>;
+    }>;
+    concepts: Array<{
+      name: string;
+      pctChange: number;
+      totalMvY: number;
+      upNum: number;
+      leaders: Array<{ name: string; code: string; pctChg: number }>;
+    }>;
+  };
+  mineWatch?: {
+    trade_date: string;
+    checked: number;
+    thresholds?: string;
+    items: Array<{
+      code: string;
+      name: string;
+      src: string;
+      types: string[];
+      details: Array<{ type: string; detail: string; date: string }>;
+    }>;
+  };
   nationalTeamComment?: string;
   actionableSectors?: {
     trade_date: string;
