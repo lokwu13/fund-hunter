@@ -103,8 +103,11 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
   const shortConcepts = axes?.short?.concepts ?? [];
   const vcpItems = data.vcpStocks?.items ?? [];
   const mw = data.mineWatch;
+  const broadEtfs = axes?.trend?.broadEtfs ?? [];
+  const broadVcpItems = data.broadVcp?.items ?? [];
+  const broadDigest = data.broadVcpDigest || '';
   const lowVolText = data.lowVolDigest || '';
-  const hasDigest = mtTail || ntText || sectors.length > 0 || dualNote || lowVolText;
+  const hasDigest = mtTail || ntText || sectors.length > 0 || dualNote || lowVolText || broadDigest;
 
   return (
     <div className="space-y-4">
@@ -194,6 +197,16 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                   <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
                 </button>
               )}
+              {broadDigest && (
+                <button
+                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-violet-50 transition-colors"
+                  onClick={() => onNavigate?.('tools')}
+                >
+                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-violet-600 text-white">宽基形态</Badge>
+                  <span className="text-xs text-slate-600 leading-snug flex-1">{broadDigest}</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
+                </button>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -246,6 +259,28 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                     <p className="text-xs text-slate-400 px-2">今日无合乎要求的入围（能投名单、底部积聚、吸筹观察均为空）</p>
                   )}
                 </div>
+                {/* ---- 宽基 ETF 组（指数位置层 × 份额资金 × 波动率） ---- */}
+                {broadEtfs.length > 0 && (
+                  <div className="mt-2 pt-2 border-t border-orange-100">
+                    <p className="text-[10px] font-semibold text-orange-700 pl-2 mb-1">宽基 ETF（指数位置×份额资金×波动率）</p>
+                    <div className="space-y-1">
+                      {broadEtfs.map((b) => (
+                        <div key={b.indexCode} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${b.status === '高位·仅展示' ? 'opacity-50' : b.status === '✅趋势候选' ? 'bg-emerald-50/70 border border-emerald-200' : 'hover:bg-orange-50/50'}`}>
+                          <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{b.indexName}</span>
+                          <span className="text-[10px] text-slate-400 flex-shrink-0">{b.etfCode.split('.')[0]}</span>
+                          <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 ${
+                            b.status === '✅趋势候选' ? 'bg-emerald-500 text-white' :
+                            b.status === '高位·仅展示' ? 'bg-slate-400 text-white' :
+                            b.tier === '低位' ? 'bg-amber-500 text-white' : 'bg-sky-500 text-white'
+                          }`}>{b.status}</Badge>
+                          <span className="text-[10px] text-slate-500">
+                            距60日高{b.distHigh60}% · 20日{b.ret20 != null ? `${b.ret20 >= 0 ? '+' : ''}${b.ret20}%` : '—'} · {b.shareNote}{b.hvPct1y != null ? ` · 波动分位${b.hvPct1y}%` : ''}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {trendSectors.some((s) => (s.leaders || []).some((l) => l.mine)) && (
                   <p className="text-[10px] text-red-500 mt-1.5 pl-2">⛔ = 排雷命中，详见下方第4步·排雷</p>
                 )}
@@ -349,6 +384,37 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
               </div>
             ) : (
               <p className="text-xs text-slate-400 px-2">今日无成型形态（VCP/杯柄/底部平台无合乎要求的入围）</p>
+            )}
+            {/* ---- 宽基 VCP 分区（9 大宽基同口径监测，成型未突破也展示盯突破） ---- */}
+            {broadVcpItems.length > 0 && (
+              <div className="mt-2 pt-2 border-t border-violet-100">
+                <p className="text-[10px] font-semibold text-violet-700 pl-2 mb-1">宽基（指数×代表ETF，形态成型未突破也盯）</p>
+                <div className="space-y-1">
+                  {broadVcpItems.map((b) => (
+                    <div key={b.indexCode} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${b.state === '无形态' ? 'opacity-50' : 'hover:bg-violet-50/60'}`}>
+                      <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{b.indexName}</span>
+                      <span className="text-[10px] text-slate-400 flex-shrink-0">{b.etfCode.split('.')[0]}</span>
+                      {b.pattern ? (
+                        <>
+                          <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${
+                            b.pattern === '杯柄型' ? 'bg-violet-500 text-white' : 'bg-teal-500 text-white'
+                          }`}>{b.pattern}</Badge>
+                          <Badge variant="outline" className={`text-[9px] h-4 px-1 flex-shrink-0 ${
+                            b.state === '已突破' ? 'border-red-300 text-red-600' :
+                            b.state === '临近买点' ? 'border-amber-300 text-amber-600' :
+                            'border-violet-300 text-violet-600'
+                          }`}>{b.state === '未突破·观察' ? '未突破·盯突破' : b.state}</Badge>
+                          <span className="text-[10px] text-slate-500">
+                            {b.days}日平台 · 枢轴{b.pivot} · 距枢轴{b.distPct}%
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-[10px] text-slate-400">无形态</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
             <p className="text-[10px] text-slate-400 mt-2">
               建议=水温×板块合适度，仅关注优先级参考，不构成操作建议 · 收缩型已降级不单独展示

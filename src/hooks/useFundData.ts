@@ -627,6 +627,21 @@ export interface FundData {
         leaderVia?: string;
         leaders: Array<{ name: string; code: string; pctChg: number; strength?: string; mine?: string[] }>;
       }>;
+      broadEtfs?: Array<{
+        indexCode: string;
+        indexName: string;
+        etfCode: string;
+        etfName: string;
+        close: number;
+        distHigh60: number;
+        ret20: number | null;
+        tier: string;
+        share5Pct: number | null;
+        share20Pct: number | null;
+        shareNote: string;
+        hvPct1y: number | null;
+        status: string;
+      }>;
       note?: string;
     };
     short: {
@@ -649,6 +664,26 @@ export interface FundData {
       note?: string;
     };
   };
+  broadTrend?: {
+    trade_date: string;
+    note?: string;
+    items: Array<{
+      indexCode: string; indexName: string; etfCode: string; etfName: string;
+      close: number; distHigh60: number; ret20: number | null; tier: string;
+      share5Pct: number | null; share20Pct: number | null; shareNote: string;
+      hvPct1y: number | null; status: string;
+    }>;
+  };
+  broadVcp?: {
+    trade_date: string;
+    note?: string;
+    items: Array<{
+      indexCode: string; indexName: string; etfCode: string; etfName: string;
+      pattern: string | null; days?: number; pivot?: number; distPct?: number;
+      amplitude?: number; volRatio?: number | null; state: string;
+    }>;
+  };
+  broadVcpDigest?: string;
   mineWatch?: {
     trade_date: string;
     checked: number;

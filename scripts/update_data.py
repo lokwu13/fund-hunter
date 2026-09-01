@@ -1203,6 +1203,159 @@ def _short_leaders(sector, today_map, mf_cache, max_n=3):
              'strength': f'近5日主力净流入{net:+.1f}亿'} for net, s in scored[:max_n]]
 
 
+# ══════════ 宽基 ETF：趋势评估 + 宽基 VCP（2026-09-01 用户拍板新增） ══════════
+
+BROAD_IDX_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                    'cache', 'broad_idx_cache.json')
+# 9 大宽基 → 代表 ETF（名称 2026-09-01 经 fund_basic 核实；展示顺序=用户指定顺序）
+BROAD_ETF_MAP = [
+    ('000300.SH', '沪深300',   '510300.SH', '华泰柏瑞沪深300ETF'),
+    ('000016.SH', '上证50',    '510050.SH', '华夏上证50ETF'),
+    ('000905.SH', '中证500',   '510500.SH', '南方中证500ETF'),
+    ('000852.SH', '中证1000',  '512100.SH', '南方中证1000ETF'),
+    ('000688.SH', '科创50',    '588000.SH', '华夏科创50ETF'),
+    ('399006.SZ', '创业板指',  '159915.SZ', '易方达创业板ETF'),
+    ('000510.SH', '中证A500',  '512050.SH', '华夏中证A500ETF'),
+    ('000001.SH', '上证综指',  '510210.SH', '富国上证综指ETF'),
+    ('399001.SZ', '深证成指',  '159903.SZ', '南方深证成份ETF'),
+]
+
+
+def _broad_idx_bars(pro, trade_date):
+    """9 大宽基指数日线 OHLCV 缓存（[date, close, high, low, vol]，≤300 条滚动）。
+    每晚 1 次 index_daily 批量调用（按 trade_date 全量快照过滤 9 只）；
+    首次/缺历史时逐只回补（≤9 次，一次性）。"""
+    cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {})
+    try:
+        time.sleep(API_DELAY)
+        snap = pro.index_daily(trade_date=trade_date)
+        if snap is not None and len(snap):
+            for _, r in snap.iterrows():
+                tc = r['ts_code']
+                if tc not in [c for c, _, _, _ in BROAD_ETF_MAP]:
+                    continue
+                rows = cache.setdefault(tc, [])
+                if not rows or rows[-1][0] != trade_date:
+                    rows.append([trade_date, round(float(r['close']), 3),
+                                 round(float(r['high']), 3), round(float(r['low']), 3),
+                                 round(float(r['vol']), 1)])
+    except Exception as e:
+        print(f"  Warning: broad idx daily batch failed: {e}")
+    for tc, _, _, _ in BROAD_ETF_MAP:
+        rows = cache.get(tc, [])
+        if len(rows) < 120:
+            try:
+                time.sleep(API_DELAY)
+                start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=600)).strftime('%Y%m%d')
+                df = pro.index_daily(ts_code=tc, start_date=start, end_date=trade_date)
+                if df is not None and len(df):
+                    have = {r[0] for r in rows}
+                    for _, r in df.sort_values('trade_date').iterrows():
+                        if r['trade_date'] not in have:
+                            rows.append([r['trade_date'], round(float(r['close']), 3),
+                                         round(float(r['high']), 3), round(float(r['low']), 3),
+                                         round(float(r['vol']), 1)])
+                    rows.sort(key=lambda x: x[0])
+                    cache[tc] = rows
+            except Exception as e:
+                print(f"  Warning: broad idx backfill failed for {tc}: {e}")
+        cache[tc] = cache.get(tc, [])[-300:]
+    _save_json_cache(BROAD_IDX_CACHE_PATH, cache)
+    return cache
+
+
+def build_broad_watch(pro, trade_date, data):
+    """宽基 ETF 趋势评估（趋势轴宽基组）+ 宽基 VCP 三档监测（第3步宽基分区+速览提示）。
+
+    - 趋势位置层（与板块扫描同口径，用指数收盘）：高位=距60日高点>-3% 或 近20日涨幅>10%；
+      低位=距60日高点≤-5% 且 近20日涨幅≤5%；其余=半路。
+      低位且份额资金未流出=✅趋势候选；半路=观察；高位=仅展示标灰。
+    - 份额资金：etfShareRadar 19 只雷达内 ETF 直接引用 5 日份额变化；雷达外标注"无份额监测"。
+    - 波动率：引用 indexVol 的 HV20 近一年分位。
+    - 宽基 VCP：复用 _vcp_platform（杯柄型/底部平台型同口径），状态三档——
+      未突破·观察（成型但距枢轴≥5%，盯突破）、临近买点（距枢轴<5%）、已突破（收盘站上枢轴）。
+    每晚新增调用：index_daily 批量 1 次（与 nt_upgrade 既有调用不同维度，独立缓存）。
+    """
+    d = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
+    cache = _broad_idx_bars(pro, trade_date)
+    radar = {i['code']: i for i in (data.get('etfShareRadar') or {}).get('items', [])}
+    vol_map = {i['code']: i for i in (data.get('indexVol') or {}).get('items', [])}
+    trend_items, vcp_items = [], []
+    for ic, iname, ec, ename in BROAD_ETF_MAP:
+        rows = cache.get(ic, [])
+        if len(rows) < 25:
+            continue
+        closes = [r[1] for r in rows]
+        close = closes[-1]
+        dist_high = round((close / max(closes[-60:]) - 1) * 100, 1)
+        ret20 = round((close / closes[-21] - 1) * 100, 1) if len(closes) >= 21 else None
+        if dist_high > -3 or (ret20 is not None and ret20 > 10):
+            tier = '高位'
+        elif dist_high <= -5 and (ret20 is None or ret20 <= 5):
+            tier = '低位'
+        else:
+            tier = '半路'
+        ri = radar.get(ec)
+        if ri:
+            share5, share20 = ri.get('chg5Pct'), ri.get('chg20Pct')
+            share_txt = f"份额5日{share5:+.1f}%" if share5 is not None else '份额无变化数据'
+            flow_out = share5 is not None and share5 < 0
+        else:
+            share5 = share20 = None
+            share_txt = '无份额监测'
+            flow_out = False
+        hv = (vol_map.get(ic) or {}).get('hvPct1y')
+        if tier == '高位':
+            status = '高位·仅展示'
+        elif tier == '低位':
+            status = '低位观察（份额流出）' if flow_out else '✅趋势候选'
+        else:
+            status = '观察'
+        trend_items.append({'indexCode': ic, 'indexName': iname, 'etfCode': ec, 'etfName': ename,
+                            'close': close, 'distHigh60': dist_high, 'ret20': ret20,
+                            'tier': tier, 'share5Pct': share5, 'share20Pct': share20,
+                            'shareNote': share_txt, 'hvPct1y': hv, 'status': status})
+        # ── VCP 形态（同一批 bars，复用个股口径）──
+        bars = [[r[0], r[2], r[3], r[1], r[4]] for r in rows]  # [date, high, low, close, vol]
+        v = _vcp_platform(bars)
+        if v:
+            if v['distPct'] < 0:
+                state = '已突破'
+            elif v['distPct'] < 5:
+                state = '临近买点'
+            else:
+                state = '未突破·观察'
+            vcp_items.append({'indexCode': ic, 'indexName': iname, 'etfCode': ec, 'etfName': ename,
+                              'pattern': v['type'], 'days': v['days'], 'pivot': v['pivot'],
+                              'distPct': v['distPct'], 'amplitude': v['amplitude'],
+                              'volRatio': v.get('volRatio'), 'state': state})
+        else:
+            vcp_items.append({'indexCode': ic, 'indexName': iname, 'etfCode': ec, 'etfName': ename,
+                              'pattern': None, 'state': '无形态'})
+    data['broadTrend'] = {
+        'trade_date': d, 'items': trend_items,
+        'note': ('位置层口径同板块扫描（高位=距60日高点>-3%或近20日>10%；低位=距高点≤-5%且20日≤5%）；'
+                 '低位且份额未流出=✅趋势候选；份额=etfShareRadar 5日份额变化，雷达外标"无份额监测"；'
+                 '波动=HV20近一年分位（indexVol）')}
+    data['broadVcp'] = {
+        'trade_date': d, 'items': vcp_items,
+        'note': ('宽基 VCP 与个股同口径（10~50日窄幅≤14%+缩量+分段收缩）；'
+                 '未突破·观察=成型但距枢轴≥5%（盯突破）；临近买点=距枢轴<5%；已突破=收盘站上枢轴')}
+    watch = [i for i in vcp_items if i.get('state') in ('未突破·观察', '临近买点')]
+    if watch:
+        data['broadVcpDigest'] = '宽基形态：' + '；'.join(
+            f"{i['indexName']} {i['pattern']} {i['state']}"
+            + (f"（盯 {i['etfCode'].split('.')[0]} 突破确认，距枢轴{i['distPct']}%）" if i['state'] == '未突破·观察'
+               else f"（距枢轴{i['distPct']}%）")
+            for i in watch[:3])
+    else:
+        data.pop('broadVcpDigest', None)
+    print(f"  broadWatch: 趋势 {len(trend_items)} 只"
+          f"（✅{sum(1 for i in trend_items if i['status'] == '✅趋势候选')}），"
+          f"VCP 成型 {sum(1 for i in vcp_items if i.get('pattern'))} 只"
+          + (f"（{'、'.join(i['indexName'] + i['state'] for i in watch)}）" if watch else ''))
+
+
 def build_dual_axes(pro, trade_date, data, today_map):
     """总览并联双轴（2026-08-29 用户拍板：趋势轴∥短线轴，替代原串联第1/2步）。
 
@@ -1328,6 +1481,7 @@ def build_dual_axes(pro, trade_date, data, today_map):
     data['dualAxes'] = {
         'trade_date': d,
         'trend': {'sectors': trend_sectors,
+                  'broadEtfs': (data.get('broadTrend') or {}).get('items', []),
                   'note': ('趋势机会：周线/日线级别，服务中线布局，配合第3步形态确认等买点；'
                            '板块=能投名单∪底部积聚命中∪吸筹⭐观察（扫描榜核心层吸筹中，'
                            '双头/高潮/高位已排除），龙头=率先脱离底部（站上20日线·逼近/站上60日线·'
@@ -4019,8 +4173,12 @@ def main():
     _today_map = watch_ctx[3] if watch_ctx else {}
     fetch_vcp_stocks(pro, trade_date, data, _today_map)
 
-    # ── 16c. 总览并联双轴（趋势轴∥短线轴）+ 第4步排雷 ──
-    print("\n[16c/17] Building dual axes (trend/short) + mine watch...")
+    # ── 16c. 总览并联双轴（趋势轴∥短线轴）+ 宽基趋势/VCP + 第4步排雷 ──
+    print("\n[16c/17] Building dual axes (trend/short) + broad watch + mine watch...")
+    try:
+        build_broad_watch(pro, trade_date, data)
+    except Exception as e:
+        print(f"  Warning: broadWatch failed: {e}")
     try:
         build_dual_axes(pro, trade_date, data, _today_map)
     except Exception as e:
