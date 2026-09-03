@@ -8786,7 +8786,36 @@
       "stockName": "恒瑞医药",
       "group": "hold",
       "industry": "化学制药",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "恒瑞医药关于回购公司A股股份的进展公告",
+          "content": "恒瑞医药关于回购公司A股股份的进展公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225543632.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "H股公告-证券变动月报表",
+          "content": "H股公告-证券变动月报表",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225543628.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "恒瑞医药关于召开2026年半年度业绩说明会的公告",
+          "content": "恒瑞医药关于召开2026年半年度业绩说明会的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225543610.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "恒瑞医药关于药品上市许可申请获受理的提示性公告",
+          "content": "恒瑞医药关于药品上市许可申请获受理的提示性公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225543604.PDF"
+        }
+      ]
     },
     {
       "stockCode": "688016.SH",
