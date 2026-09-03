@@ -9292,13 +9292,6 @@
       "preClose": 0.801
     },
     {
-      "ticker": "159736",
-      "name": "天弘中证食品饮料ETF",
-      "close": 0.586,
-      "changePct": -1.51,
-      "preClose": 0.595
-    },
-    {
       "ticker": "518880",
       "name": "华安易富黄金ETF",
       "close": 8.902,
@@ -9311,6 +9304,20 @@
       "close": 0.577,
       "changePct": -0.69,
       "preClose": 0.581
+    },
+    {
+      "ticker": "159731",
+      "name": "华夏中证石化产业ETF",
+      "close": 0.946,
+      "changePct": -2.37,
+      "preClose": 0.969
+    },
+    {
+      "ticker": "512070",
+      "name": "易方达沪深300非银行金融ETF",
+      "close": 0.805,
+      "changePct": -1.59,
+      "preClose": 0.818
     }
   ],
   "sectorCommentary": [
@@ -12728,20 +12735,6 @@
     "note": "以 ECI 预期一致性指数近似行业景气度（日更），较券商产业景气指数（月更）更及时；X/Y 中线=31 行业当前中位数"
   },
   "myETFAlt": [
-    {
-      "ticker": "159731",
-      "name": "华夏中证石化产业ETF",
-      "close": 0.946,
-      "changePct": -2.37,
-      "preClose": 0.969
-    },
-    {
-      "ticker": "512070",
-      "name": "易方达沪深300非银行金融ETF",
-      "close": 0.805,
-      "changePct": -1.59,
-      "preClose": 0.818
-    },
     {
       "ticker": "512800",
       "name": "华宝中证银行ETF",
