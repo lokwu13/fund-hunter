@@ -3977,6 +3977,179 @@ def _build_nt_comment(data):
     return ''.join(sents)
 
 
+# ══════════════════════════════════════════════════════════════
+# 指增 ETF 跟踪（宽基栏目第六卡，2026-09-04 样表验收后上线）
+# ══════════════════════════════════════════════════════════════
+ZIZENG_BASIC_CACHE = 'scripts/cache/zizeng_basic_cache.json'
+ZIZENG_MIN_SCALE = 2.0  # 亿；≥5 亿前端打"达标"徽标
+
+# benchmark 关键字 → 指数代码（按关键字长度降序匹配，避免 中证A50 误中 中证A500）
+ZIZENG_INDEX_MAP = [
+    ('上证科创板综合价格', '000681.SH'), ('上证科创板综合', '000680.SH'),
+    ('上证科创板50成份', '000688.SH'), ('上证科创板100', '000698.SH'),
+    ('MSCI中国A50互联互通', None),
+    ('创业板综合', '399102.SZ'), ('创业板指数', '399006.SZ'),
+    ('中证A500', '000510.SH'), ('中证A50', '930050.CSI'),
+    ('中证1000', '000852.SH'), ('中证2000', '932000.CSI'),
+    ('中证800', '000906.SH'), ('中证500', '000905.SH'),
+    ('沪深300', '000300.SH'), ('上证50', '000016.SH'), ('上证综合', '000001.SH'),
+]
+ZIZENG_INDEX_NAME = {'000300.SH': '沪深300', '000905.SH': '中证500', '000852.SH': '中证1000',
+                     '932000.CSI': '中证2000', '000510.SH': '中证A500', '930050.CSI': '中证A50',
+                     '000016.SH': '上证50', '399006.SZ': '创业板指', '399102.SZ': '创业板综',
+                     '000688.SH': '科创50', '000698.SH': '科创100', '000680.SH': '科创综指',
+                     '000681.SH': '科创综合价格', '000001.SH': '上证综指', '000906.SH': '中证800'}
+
+
+def _zizeng_map_index(benchmark):
+    for kw, code in ZIZENG_INDEX_MAP:
+        if kw in (benchmark or ''):
+            return code
+    return None
+
+
+def build_zizeng_etf(pro, trade_date, data):
+    """指增 ETF 超额收益跟踪（样表口径，2026-09-04 验收）。
+
+    - 候选：fund_basic 名称含"增强"且 invest_type=增强指数型 的场内 ETF（fund_basic 周五周更，缓存复用）；
+      规模 = 份额(fund_share) × 收盘(fund_daily) ≥ 2 亿；跟踪指数可映射。
+    - 超额 = 复权净值(adj_nav)涨幅 − 跟踪指数涨幅，近1月(21个交易日)/YTD 双档；
+      YTD 基准 = 上一年最后一个净值日/交易日。
+    - 份额变化：复用 fetch_nt_upgrade 的 etf cache snapshots（12 天全市场快照），零新增调用。
+    - 折溢价 = 当日收盘 / 最新单位净值 - 1（净值 T+1 披露，输出带 nav_date 供前端注明）。
+    每晚调用 ≈25 次：fund_basic 1(仅周五) + fund_daily 1 + index_daily ≈指数种数 + fund_nav ≈入选只数。
+    """
+    y0 = str(int(trade_date[:4]) - 1)
+    nav_start, ytd_base = f'{y0}1210', f'{y0}1231'
+
+    # ── 1. fund_basic 周更（周五刷新 / 缓存缺失时刷新，失败回退旧缓存）──
+    basic = None
+    try:
+        with open(ZIZENG_BASIC_CACHE, encoding='utf-8') as f:
+            basic = json.load(f)
+    except Exception:
+        basic = None
+    if basic is None or datetime.strptime(trade_date, '%Y%m%d').weekday() == 4:
+        try:
+            time.sleep(API_DELAY)
+            fb_new = pro.fund_basic(market='E', status='L')
+            if fb_new is not None and len(fb_new):
+                basic = {'fetched': trade_date, 'items': fb_new.to_dict('records')}
+                os.makedirs(os.path.dirname(ZIZENG_BASIC_CACHE), exist_ok=True)
+                with open(ZIZENG_BASIC_CACHE, 'w', encoding='utf-8') as f:
+                    json.dump(basic, f, ensure_ascii=False)
+        except Exception as e:
+            print(f"  Warning: zizeng fund_basic failed: {e}")
+    if not basic:
+        print("  Warning: zizeng basic unavailable, skip")
+        return
+    fb = pd.DataFrame(basic['items'])
+    cand = fb[fb['name'].str.contains('增强', na=False)
+              & (fb['invest_type'] == '增强指数型')].copy()
+    cand['idx_code'] = cand['benchmark'].map(_zizeng_map_index)
+
+    # ── 2. 份额（复用 etf cache 全市场快照）+ 收盘（同一日期配对）──
+    cache = _etf_cache_load()
+    snaps = cache.get('snapshots') or {}
+    sdates = [d0 for d0 in sorted(snaps) if d0 <= trade_date]
+    if not sdates:
+        print("  Warning: zizeng no share snapshot, skip")
+        return
+    sd = sdates[-1]
+    share_now = snaps[sd]
+    share_5ago = snaps[sdates[-6]] if len(sdates) >= 6 else {}
+    close_now = {}
+    try:
+        time.sleep(API_DELAY)
+        df_fd = pro.fund_daily(trade_date=sd)
+        if df_fd is not None and len(df_fd):
+            close_now = dict(zip(df_fd['ts_code'], df_fd['close'].astype(float)))
+    except Exception as e:
+        print(f"  Warning: zizeng fund_daily failed: {e}")
+
+    cand['scale'] = cand['ts_code'].map(
+        lambda c: round(share_now.get(c, 0) * close_now.get(c, 0), 2))
+    pool = cand[(cand['scale'] >= ZIZENG_MIN_SCALE) & cand['idx_code'].notna()].copy()
+    if not len(pool):
+        print("  Warning: zizeng pool empty, skip")
+        return
+
+    # ── 3. 跟踪指数行情（每只指数 1 次）──
+    idx_ret = {}
+    for ic in sorted(pool['idx_code'].unique()):
+        try:
+            time.sleep(API_DELAY)
+            df = pro.index_daily(ts_code=ic, start_date=nav_start, end_date=trade_date)
+            if df is None or not len(df):
+                continue
+            df = df.sort_values('trade_date')
+            closes = list(df['close'].astype(float))
+            base = df[df['trade_date'] <= ytd_base]
+            r1m = closes[-1] / closes[-22] - 1 if len(closes) >= 22 else None
+            rytd = closes[-1] / float(base.iloc[-1]['close']) - 1 if len(base) else None
+            idx_ret[ic] = {'r1m': r1m, 'rytd': rytd}
+        except Exception as e:
+            print(f"  Warning: zizeng index {ic} failed: {e}")
+
+    # ── 4. 逐只基金复权净值（T+1 披露，记录 nav_date）──
+    items, nav_dates = [], []
+    for _, f in pool.iterrows():
+        try:
+            time.sleep(API_DELAY)
+            nav = pro.fund_nav(ts_code=f['ts_code'], start_date=nav_start, end_date=trade_date)
+        except Exception as e:
+            print(f"  Warning: zizeng nav {f['ts_code']} failed: {e}")
+            continue
+        if nav is None or not len(nav):
+            continue
+        nav = nav.sort_values('nav_date')
+        adj = list(nav['adj_nav'].astype(float))
+        nav_dates.append(str(nav.iloc[-1]['nav_date']))
+        base = nav[nav['nav_date'] <= ytd_base]
+        r1m = adj[-1] / adj[-22] - 1 if len(adj) >= 22 else None
+        rytd = adj[-1] / float(base.iloc[-1]['adj_nav']) - 1 if len(base) else None
+        ir = idx_ret.get(f['idx_code']) or {}
+        ex1m = round((r1m - ir['r1m']) * 100, 2) if r1m is not None and ir.get('r1m') is not None else None
+        exytd = round((rytd - ir['rytd']) * 100, 2) if rytd is not None and ir.get('rytd') is not None else None
+        s_now = share_now.get(f['ts_code'])
+        s_5 = share_5ago.get(f['ts_code'])
+        share5 = round((s_now / s_5 - 1) * 100, 2) if s_now and s_5 else None
+        unit_nav = nav.iloc[-1]['unit_nav']
+        cl = close_now.get(f['ts_code'])
+        prem = round((cl / float(unit_nav) - 1) * 100, 2) if cl and pd.notna(unit_nav) and float(unit_nav) > 0 else None
+        fee = round(float(f['m_fee'] or 0) + float(f['c_fee'] or 0), 2)
+        items.append({
+            'code': f['ts_code'].split('.')[0], 'tsCode': f['ts_code'], 'name': f['name'],
+            'idx': ZIZENG_INDEX_NAME.get(f['idx_code'], f['idx_code']),
+            'scale': f['scale'], 'fee': fee, 'share5Pct': share5, 'premiumPct': prem,
+            'r1m': round(r1m * 100, 2) if r1m is not None else None,
+            'i1m': round(ir['r1m'] * 100, 2) if ir.get('r1m') is not None else None,
+            'ex1m': ex1m,
+            'rytd': round(rytd * 100, 2) if rytd is not None else None,
+            'iytd': round(ir['rytd'] * 100, 2) if ir.get('rytd') is not None else None,
+            'exytd': exytd, 'list': f.get('list_date'),
+        })
+    items.sort(key=lambda r: (r['exytd'] is None, -(r['exytd'] or -999)))
+    if not items:
+        print("  Warning: zizeng items empty, skip")
+        return
+
+    valid = [r['exytd'] for r in items if r['exytd'] is not None]
+    med = round(sorted(valid)[len(valid) // 2], 2) if valid else None
+    data['zizengETF'] = {
+        'trade_date': f"{sd[:4]}-{sd[4:6]}-{sd[6:]}",
+        'nav_date': f"{max(nav_dates)[:4]}-{max(nav_dates)[4:6]}-{max(nav_dates)[6:]}" if nav_dates else None,
+        'items': items,
+        'stats': {'total': len(items), 'pass5': sum(1 for r in items if r['scale'] >= 5),
+                  'medianYtd': med, 'posYtd': sum(1 for v in valid if v > 0), 'validYtd': len(valid)},
+        'note': ('超额=复权净值涨幅−跟踪指数涨幅（未含指数股息，全收益口径超额会再低1-3点/年）；'
+                 '近1月=21个交易日，YTD基准=上年末；规模=份额×收盘（≥5亿=达标）；'
+                 '净值T+1披露，折溢价=当日收盘/最新单位净值−1（存在口径时差，仅供参考）'),
+    }
+    print(f"  zizengETF: {len(items)} 只（≥5亿 {data['zizengETF']['stats']['pass5']}），"
+          f"YTD超额中位 {med}%，净值日 {data['zizengETF']['nav_date']}")
+
+
 def main():
     print("=" * 60)
     print("Fund Hunter - Daily Data Update (Batch Mode)")
@@ -4147,6 +4320,12 @@ def main():
     # ── 17. 宽基升级：份额雷达 + 板块轮动 + 宽基波动率 + 短评 ──
     print("\n[17/17] Building national team upgrade (share radar / rotation / est / vol)...")
     fetch_nt_upgrade(pro, trade_date, data)
+
+    # ── 17b. 指增 ETF 跟踪（宽基栏目第六卡；份额复用 nt 快照）──
+    try:
+        build_zizeng_etf(pro, trade_date, data)
+    except Exception as e:
+        print(f"  Warning: zizengETF failed: {e}")
 
     # ── Metadata ──
     # updateTime 以数据实际最新日期为准（盘中/早间运行时各板块数据仍是前一交易日）

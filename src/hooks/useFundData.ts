@@ -684,6 +684,19 @@ export interface FundData {
     }>;
   };
   broadVcpDigest?: string;
+  zizengETF?: {
+    trade_date: string;
+    nav_date?: string | null;
+    note?: string;
+    stats?: { total: number; pass5: number; medianYtd: number | null; posYtd: number; validYtd: number };
+    items: Array<{
+      code: string; tsCode: string; name: string; idx: string;
+      scale: number; fee: number; share5Pct: number | null; premiumPct: number | null;
+      r1m: number | null; i1m: number | null; ex1m: number | null;
+      rytd: number | null; iytd: number | null; exytd: number | null;
+      list?: string;
+    }>;
+  };
   mineWatch?: {
     trade_date: string;
     checked: number;

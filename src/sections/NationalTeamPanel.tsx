@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Activity, Quote, Radar, ArrowLeftRight, Gauge, Shapes, LayoutGrid } from 'lucide-react';
+import { Activity, Quote, Radar, ArrowLeftRight, Gauge, Shapes, LayoutGrid, Sigma } from 'lucide-react';
 import { useFundData } from '@/hooks/useFundData';
 
 export default function NationalTeamPanel() {
@@ -436,6 +436,89 @@ export default function NationalTeamPanel() {
         </Card>
       )}
 
+      {/* ====== 指增 ETF 跟踪（超额收益，样表口径 2026-09-04 验收） ====== */}
+      <Card>
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base font-bold flex items-center gap-2">
+              <Sigma className="w-5 h-5 text-red-600" />
+              指增 ETF 跟踪{data.zizengETF?.nav_date ? `（净值日期 ${data.zizengETF.nav_date}）` : ''}
+            </CardTitle>
+            {data.zizengETF?.stats && (
+              <Badge className="bg-slate-100 text-slate-600 text-xs">
+                入选 {data.zizengETF.stats.total} 只 · ≥5亿达标 {data.zizengETF.stats.pass5} 只
+              </Badge>
+            )}
+          </div>
+          <CardDescription>{data.zizengETF?.note ?? '指增 ETF 超额收益跟踪（规模≥2亿，超额=复权净值−跟踪指数）'}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {data.zizengETF && data.zizengETF.items.length > 0 ? (
+            <>
+              {data.zizengETF.stats && data.zizengETF.stats.medianYtd != null && (
+                <div className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 mb-3 text-xs text-slate-600">
+                  YTD 超额中位数 <b className={data.zizengETF.stats.medianYtd >= 0 ? 'text-red-600' : 'text-green-600'}>
+                    {data.zizengETF.stats.medianYtd >= 0 ? '+' : ''}{data.zizengETF.stats.medianYtd}%
+                  </b>，正超额 {data.zizengETF.stats.posYtd}/{data.zizengETF.stats.validYtd} 只
+                  <span className="text-slate-400">（规模口径日 {data.zizengETF.trade_date}）</span>
+                </div>
+              )}
+              <div className="overflow-x-auto">
+                <Table className="min-w-[1080px]">
+                  <TableHeader>
+                    <TableRow className="bg-red-50">
+                      <TableHead className="text-xs">名称</TableHead>
+                      <TableHead className="text-xs">跟踪指数</TableHead>
+                      <TableHead className="text-xs text-right">规模(亿)</TableHead>
+                      <TableHead className="text-xs text-right">费率</TableHead>
+                      <TableHead className="text-xs text-right">份额5日</TableHead>
+                      <TableHead className="text-xs text-right">折溢价</TableHead>
+                      <TableHead className="text-xs text-right">近1月基金</TableHead>
+                      <TableHead className="text-xs text-right">近1月指数</TableHead>
+                      <TableHead className="text-xs text-right">近1月超额</TableHead>
+                      <TableHead className="text-xs text-right">YTD基金</TableHead>
+                      <TableHead className="text-xs text-right">YTD指数</TableHead>
+                      <TableHead className="text-xs text-right">YTD超额</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {data.zizengETF.items.map((z) => (
+                      <TableRow key={z.tsCode} className="hover:bg-slate-50">
+                        <TableCell className="text-xs font-semibold whitespace-nowrap">
+                          {z.name}
+                          <span className="text-slate-400 ml-1">{z.code}</span>
+                          {z.scale >= 5 && (
+                            <Badge variant="outline" className="text-[10px] ml-1 bg-amber-50 text-amber-700 border-amber-200">达标</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-xs whitespace-nowrap">{z.idx}</TableCell>
+                        <TableCell className="text-xs text-right">{z.scale.toFixed(1)}</TableCell>
+                        <TableCell className="text-xs text-right text-slate-500">{z.fee.toFixed(2)}%</TableCell>
+                        <TableCell className={`text-xs text-right ${z.share5Pct == null ? 'text-slate-300' : z.share5Pct > 0 ? 'text-red-600' : z.share5Pct < 0 ? 'text-green-600' : 'text-slate-500'}`}>
+                          {z.share5Pct != null ? `${z.share5Pct >= 0 ? '+' : ''}${z.share5Pct.toFixed(1)}%` : '--'}
+                        </TableCell>
+                        <TableCell className={`text-xs text-right ${z.premiumPct == null ? 'text-slate-300' : Math.abs(z.premiumPct) >= 0.5 ? 'text-amber-600' : 'text-slate-500'}`}>
+                          {z.premiumPct != null ? `${z.premiumPct >= 0 ? '+' : ''}${z.premiumPct.toFixed(2)}%` : '--'}
+                        </TableCell>
+                        {([z.r1m, z.i1m, z.ex1m, z.rytd, z.iytd, z.exytd] as Array<number | null>).map((v, i) => (
+                          <TableCell key={i} className={`text-xs text-right ${v == null ? 'text-slate-300' : v > 0 ? 'text-red-600' : v < 0 ? 'text-green-600' : 'text-slate-500'} ${(i === 2 || i === 5) ? 'font-bold' : ''}`}>
+                            {v != null ? `${v >= 0 ? '+' : ''}${v.toFixed(2)}%` : '--'}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </>
+          ) : (
+            <div className="text-sm text-slate-400 text-center py-8">
+              指增 ETF 数据暂未生成（每晚随数据更新产出；净值为 T+1 披露口径）
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* ====== 数据更新说明 ====== */}
       <Card className="bg-slate-50 border-slate-200">
         <CardContent className="p-4">
@@ -455,6 +538,10 @@ export default function NationalTeamPanel() {
             <div>
               <p className="font-semibold mb-1">波动率 / 估值</p>
               <p>HV20/HV60 历史波动率与 PE TTM 分位，每日更新</p>
+            </div>
+            <div>
+              <p className="font-semibold mb-1">指增 ETF 跟踪</p>
+              <p>规模≥2亿指增 ETF 的超额收益/份额/折溢价；基金名单每周五刷新，净值 T+1 披露</p>
             </div>
           </div>
           <p className="text-xs text-slate-400 mt-3">数据来源：Tushare（指数日线 / ETF 份额 / 指数估值） · 口径详见各卡片说明</p>
