@@ -468,7 +468,7 @@ def fetch_hot_fund_navs(pro, trade_date, existing):
     return updated
 
 
-# 宽基 ETF 份额监控池（跟踪国家队/汇金宽基申赎动向的经典名单，16 只）
+# 宽基 ETF 份额监控池（核心宽基申赎动向名单，16 只）
 NATIONAL_ETF_WATCH = {
     '159919.SZ': '嘉实300ETF',
     '510300.SH': '华泰柏瑞300ETF',
@@ -1269,7 +1269,7 @@ def build_broad_watch(pro, trade_date, data):
     - 趋势位置层（与板块扫描同口径，用指数收盘）：高位=距60日高点>-3% 或 近20日涨幅>10%；
       低位=距60日高点≤-5% 且 近20日涨幅≤5%；其余=半路。
       低位且份额资金未流出=✅趋势候选；半路=观察；高位=仅展示标灰。
-    - 份额资金：etfShareRadar 19 只雷达内 ETF 直接引用 5 日份额变化；雷达外标注"无份额监测"。
+    - 份额资金：etfShareRadar 13 只雷达内 ETF 直接引用 5 日份额变化；雷达外标注"无份额监测"。
     - 波动率：引用 indexVol 的 HV20 近一年分位。
     - 宽基 VCP：复用 _vcp_platform（杯柄型/底部平台型同口径），状态三档——
       未突破·观察（成型但距枢轴≥5%，盯突破）、临近买点（距枢轴<5%）、已突破（收盘站上枢轴）。
@@ -3367,15 +3367,13 @@ def load_existing_data():
 
 
 # ══════════════════════════════════════════════════════════════
-# 国家队栏目升级：ETF份额雷达 / 板块资金轮动(份额口径) / 汇金持仓估算 / 宽基波动率
+# 宽基栏目：ETF份额雷达 / 板块资金轮动(份额口径) / 宽基波动率
 # ══════════════════════════════════════════════════════════════
 import re as _re
 
 ETF_SHARE_CACHE = 'scripts/cache/etf_share_history.json'
-NT_RATIO_CONFIG = 'scripts/config/national_team_ratio.json'
-
-# ETF 份额雷达监控池（19 只；名称已用 fund_basic 核对）
-# group: broad=宽基组（汇金系），soe=央企主题组（国新/诚通）；series 用于轮动表分节与合计行
+# ETF 份额雷达监控池（13 只宽基；名称已用 fund_basic 核对）
+# group 统一为 broad；series 用于轮动表分节与合计行
 ETF_RADAR_WATCH = {
     '510300.SH': {'name': '华泰柏瑞300ETF', 'group': 'broad', 'series': '沪深300系列'},
     '510310.SH': {'name': '易方达300ETF',   'group': 'broad', 'series': '沪深300系列'},
@@ -3390,15 +3388,9 @@ ETF_RADAR_WATCH = {
     '588080.SH': {'name': '易方达科创50ETF', 'group': 'broad', 'series': '科创50系列'},
     '510180.SH': {'name': '华安180ETF',     'group': 'broad', 'series': '上证180'},
     '159915.SZ': {'name': '易方达创业板ETF', 'group': 'broad', 'series': '创业板'},
-    '560170.SH': {'name': '央企科技ETF',      'group': 'soe', 'series': '国新系'},
-    '520660.SH': {'name': '港股通央企红利ETF(南方)', 'group': 'soe', 'series': '国新系'},
-    '520990.SH': {'name': '港股通央企红利ETF(景顺)', 'group': 'soe', 'series': '国新系'},
-    '159335.SZ': {'name': '央企科创ETF',      'group': 'soe', 'series': '诚通系'},
-    '159336.SZ': {'name': '央企红利ETF',      'group': 'soe', 'series': '诚通系'},
-    '560810.SH': {'name': '央企ESG ETF',      'group': 'soe', 'series': '诚通系'},
 }
 
-# 国家队短评（B）：系列 → 利多/利空影响的指数/主题
+# 宽基系列 → 份额异动影响映射（用于短评）
 SERIES_IMPACT = {
     '沪深300系列': '沪深300/大盘蓝筹',
     '上证50': '上证50/超大盘蓝筹',
@@ -3407,8 +3399,6 @@ SERIES_IMPACT = {
     '科创50系列': '科创50/硬科技',
     '上证180': '上证180/大盘价值',
     '创业板': '创业板/成长股',
-    '国新系': '央企科技/央企红利主题',
-    '诚通系': '央企科创/央企红利主题',
 }
 
 # 宽基波动率（ETF VIX）标的指数
@@ -3483,7 +3473,7 @@ def _pct_rank100(values, v):
 
 
 def fetch_nt_upgrade(pro, trade_date, data):
-    """国家队升级主流程：份额雷达 + 板块轮动 + 汇金估算 + 宽基波动率 + 自动短评。
+    """宽基栏目主流程：份额雷达 + 板块轮动 + 宽基波动率 + 自动短评。
 
     每晚增量调用（≤10 次）：fund_share 批量 1 + fund_daily 批量 1 +
     index_daily 按 trade_date 1 + index_dailybasic 6 + （名称表每周五 1）。
@@ -3662,7 +3652,7 @@ def fetch_nt_upgrade(pro, trade_date, data):
 
     _etf_cache_save(cache)
 
-    # ════════ 1. ETF 份额雷达（19 只：宽基组 + 央企主题组） ════════
+    # ════════ 1. ETF 份额雷达（13 只核心宽基） ════════
     try:
         items = []
         for tc, meta in ETF_RADAR_WATCH.items():
@@ -3723,33 +3713,20 @@ def fetch_nt_upgrade(pro, trade_date, data):
     except Exception as e:
         print(f"  Warning: etfShareRadar failed: {e}")
 
-    # ════════ 1b. 国家队持仓轮动表（宽基组按系列分节 + 央企主题组） ════════
+    # ════════ 1b. 宽基份额轮动表（按系列分节） ════════
     try:
         radar_items = (data.get('etfShareRadar') or {}).get('items') or []
         if radar_items:
-            # 央企组真实占比/持有人（config 中带 owner 的条目）
-            nt_ratio_cfg = {}
-            try:
-                with open(NT_RATIO_CONFIG, encoding='utf-8') as f:
-                    nt_ratio_cfg = json.load(f)
-            except Exception:
-                pass
-
             def _rot_row(it):
-                row = {
+                return {
                     'code': it['code'], 'name': it['name'],
                     'share': it['share'], 'chg1': it['chg1'], 'chg1Pct': it['chg1Pct'],
                     'amt1': it['amt1'], 'chg5Pct': it['chg5Pct'],
                     'signal': it['signal'], 'trend3': it['trend3'],
                 }
-                cfg = nt_ratio_cfg.get(it['code']) or {}
-                if cfg.get('owner'):
-                    row['owner'] = cfg['owner']
-                    row['ratio'] = cfg.get('ratio')
-                return row
 
             groups = []
-            for gkey, gname in (('broad', '宽基组（汇金系）'), ('soe', '央企主题组（国新/诚通）')):
+            for gkey, gname in (('broad', '宽基组'),):
                 gitems = [i for i in radar_items if i.get('group') == gkey]
                 series_list = []
                 seen = []
@@ -3791,7 +3768,7 @@ def fetch_nt_upgrade(pro, trade_date, data):
                 'trade_date': f"{od[:4]}-{od[4:6]}-{od[6:]}",
                 'groups': groups,
                 'resonance': resonance,
-                'note': '信号口径：单日份额|>2%|且金额|>5亿|=关注，|>3%|且|>1亿|或|>20亿|=强信号；≥3只核心宽基同向异动=共振·疑似国家队；连续3日同向=趋势性增/减仓',
+                'note': '信号口径：单日份额|>2%|且金额|>5亿|=关注，|>3%|且|>1亿|或|>20亿|=强信号；≥3只核心宽基同向异动=共振·大资金情绪信号；连续3日同向=趋势性增/减仓',
             }
             print(f"  ntRotation: {len(groups)} groups, resonance={resonance['hit']}")
     except Exception as e:
@@ -3837,7 +3814,7 @@ def fetch_nt_upgrade(pro, trade_date, data):
     except Exception as e:
         print(f"  Warning: etfRotation failed: {e}")
 
-    # ════════ 3. 国家队持仓估算（已下线，清除存量字段；占比配置保留供轮动v2复用） ════════
+    # ════════ 3. 主体持仓估算（已下线，清除存量字段） ════════
     data.pop('nationalTeamEst', None)
 
     # ════════ 4. 宽基波动率（ETF VIX） ════════
@@ -3903,11 +3880,13 @@ def fetch_nt_upgrade(pro, trade_date, data):
 
 
 def _build_nt_comment(data):
-    """规则生成 3-5 句平实短评。"""
+    """规则生成 4-6 句宽基市场短评（纯宽基口径：份额异动/位置层/形态/波动，无主体归因）。"""
     sents = []
     rot = data.get('etfRotation') or {}
     radar = data.get('etfShareRadar') or {}
     vol = data.get('indexVol') or {}
+    bt = (data.get('broadTrend') or {}).get('items') or []
+    bv = (data.get('broadVcp') or {}).get('items') or []
 
     # 1) 全市场 ETF 份额净增减
     if rot:
@@ -3918,18 +3897,20 @@ def _build_nt_comment(data):
             direction = '净申购' if t >= 0 else '净赎回'
             sents.append(f"全市场ETF（不含货币）昨日{direction}约{abs(t):.0f}亿元（份额变化×收盘价口径）。")
 
-    # 2) 异动
+    # 2) 宽基份额异动 / 共振
     alerts = [i for i in radar.get('items', []) if i.get('alert')]
     if alerts:
         a = alerts[0]
-        act = '进场' if (a.get('chg1') or 0) > 0 else '出场'
-        sent = f"{a['name']}单日份额{a['chg1']:+.2f}亿份（约{a['amt1']:+.1f}亿元），疑似大资金{act}"
-        ntr_res = (data.get('ntRotation') or {}).get('resonance') or {}
-        if not ntr_res.get('hit'):
-            sent += "；单边异动、未见跨公司共振，更可能是汇金自身调仓而非托市信号"
+        act = '流入' if (a.get('chg1') or 0) > 0 else '流出'
+        sent = f"{a['name']}单日份额{a['chg1']:+.2f}亿份（约{a['amt1']:+.1f}亿元），大额资金{act}信号"
+        res = (data.get('ntRotation') or {}).get('resonance') or {}
+        if res.get('hit'):
+            sent += f"，且{res['count']}只核心宽基同日同向{res['direction']}、呈共振，大资金情绪信号明确"
+        else:
+            sent += "；未见跨公司共振，暂属个别产品资金行为"
         sents.append(sent + "。")
     elif radar:
-        sents.append("19只重点监控ETF份额未见明显异动，无大资金进出信号。")
+        sents.append("13只宽基ETF份额未见明显异动，资金面平稳。")
 
     # 3) 板块轮动主线
     if rot.get('inflowTop3') or rot.get('outflowTop3'):
@@ -3937,71 +3918,47 @@ def _build_nt_comment(data):
         outflow = '、'.join(rot.get('outflowTop3') or []) or '无'
         sents.append(f"近5日份额口径资金主要流入{inflow}类，流出{outflow}类。")
 
-    # 4) 国家队轮动：系列异动 + 共振 + 央企主题组动作
-    ntr = data.get('ntRotation') or {}
-    if ntr:
-        res = ntr.get('resonance') or {}
-        if res.get('hit'):
-            sents.append(f"{res['count']}只核心宽基ETF（{'、'.join(res.get('names', [])[:4])}等）"
-                         f"同日同向{res['direction']}，呈共振形态，疑似国家队统一动作/托市信号。")
-        else:
-            # 找异动最集中的系列
-            hot = []
-            for g in ntr.get('groups', []):
-                if g.get('key') != 'broad':
-                    continue
-                for s in g.get('series', []):
-                    n = sum(1 for r in s.get('items', []) if r.get('signal'))
-                    if n:
-                        hot.append((n, s['name']))
-            if hot:
-                hot.sort(reverse=True)
-                sents.append(f"宽基组中{hot[0][1]}异动最集中（{hot[0][0]}只触发信号），但未达共振标准。")
-            else:
-                sents.append("宽基组各系列份额平稳，未见国家队典型操作痕迹。")
-        # ── 利多/利空点名：按系列合计份额金额映射到宽基指数/主题（B）──
-        flow_sents = []
-        calm_series = []
-        for g in ntr.get('groups', []):
-            for s in g.get('series', []):
-                t = s.get('total') or {}
-                amt = t.get('amt1')
-                target = SERIES_IMPACT.get(s['name'])
-                if not target:
-                    continue
-                if amt is not None and abs(amt) >= 5:
-                    d_ = '净流入' if amt > 0 else '净流出'
-                    impact = '利多' if amt > 0 else '利空'
-                    flow_sents.append((abs(amt), f"{s['name']}合计{d_}{abs(amt):.1f}亿 → 短期{impact}{target}"))
-                elif amt is not None and abs(amt) < 1 and not any(
-                        r.get('signal') for r in s.get('items', [])):
-                    calm_series.append(f"{target}（份额稳定 → 中性，不受汇金调仓影响）")
-        flow_sents.sort(reverse=True)
-        for _, txt in flow_sents[:3]:
-            sents.append(txt + "。")
-        if not flow_sents and calm_series:
-            sents.append(f"{calm_series[0]}。")
-        soe_sig = []
-        soe_trend = []
-        for g in ntr.get('groups', []):
-            if g.get('key') != 'soe':
-                continue
-            for s in g.get('series', []):
-                for r in s.get('items', []):
-                    if r.get('signal'):
-                        soe_sig.append(f"{r['name']}（{r['signal']}）")
-                    elif r.get('trend3'):
-                        impact = '利多' if '增持' in r['trend3'] else '利空'
-                        theme = SERIES_IMPACT.get(s['name'], '央企主题')
-                        soe_trend.append(f"{r['name']}{r['trend3']} → {impact}{theme}")
-        if soe_sig:
-            sents.append(f"央企主题组当日有动作：{'、'.join(soe_sig[:3])}；国新/诚通多为发行人关联方，单边异动多为自身调仓。")
-        elif soe_trend:
-            sents.append(f"央企主题组未见单日异动，但{'、'.join(soe_trend[:2])}。")
-        else:
-            sents.append("央企主题组（国新/诚通系）当日未见明显动作。")
+    # 4) 宽基位置层 + VCP 形态
+    if bt:
+        low = [i['indexName'] for i in bt if i.get('status') == '✅趋势候选']
+        low_out = [i['indexName'] for i in bt if i.get('status') == '低位观察（份额流出）']
+        high = [i['indexName'] for i in bt if i.get('status') == '高位·仅展示']
+        if low:
+            sents.append(f"位置层处于低位且份额未流出：{'、'.join(low)}，列为趋势候选。")
+        elif low_out:
+            sents.append(f"{'、'.join(low_out)}处低位但份额仍在流出，暂只观察。")
+        if high:
+            sents.append(f"{'、'.join(high)}处高位（距60日高点3%内或近20日涨幅>10%），仅展示不作候选。")
+        if not low and not low_out and not high:
+            sents.append("主要宽基多处于半路位置，暂无低位趋势候选。")
+    if bv:
+        brk = [i for i in bv if i.get('state') == '已突破']
+        watch = [i for i in bv if i.get('state') in ('临近买点', '未突破·观察')]
+        if brk:
+            sents.append(f"{'、'.join(i['indexName'] for i in brk)}已收盘站上平台枢轴，形态突破确认。")
+        for i in watch[:2]:
+            sents.append(f"{i['indexName']}形成{i['pattern']}（{i['days']}日，振幅{i['amplitude']}%），"
+                         f"{i['state']}、距枢轴{i['distPct']}%，盯{i['etfCode'].split('.')[0]}突破确认。")
 
-    # 5) 波动率状态
+    # 5) 宽基系列份额净额映射
+    ntr = data.get('ntRotation') or {}
+    flow_sents = []
+    for g in ntr.get('groups', []):
+        for s in g.get('series', []):
+            t = s.get('total') or {}
+            amt = t.get('amt1')
+            target = SERIES_IMPACT.get(s['name'])
+            if not target or amt is None:
+                continue
+            if abs(amt) >= 5:
+                d_ = '净流入' if amt > 0 else '净流出'
+                impact = '利多' if amt > 0 else '利空'
+                flow_sents.append((abs(amt), f"{s['name']}ETF合计{d_}{abs(amt):.1f}亿 → 短期{impact}{target}"))
+    flow_sents.sort(reverse=True)
+    for _, txt in flow_sents[:2]:
+        sents.append(txt + "。")
+
+    # 6) 波动率状态
     vitems = vol.get('items') or []
     if vitems:
         hs = next((v for v in vitems if v['code'] == '000300.SH'), vitems[0])
@@ -4187,7 +4144,7 @@ def main():
     except Exception as e:
         print(f"  Warning: mineWatch failed: {e}")
 
-    # ── 17. 国家队升级：份额雷达 + 板块轮动 + 汇金估算 + 宽基波动率 + 短评 ──
+    # ── 17. 宽基升级：份额雷达 + 板块轮动 + 宽基波动率 + 短评 ──
     print("\n[17/17] Building national team upgrade (share radar / rotation / est / vol)...")
     fetch_nt_upgrade(pro, trade_date, data)
 

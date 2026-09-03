@@ -243,7 +243,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
         </div>
       </div>
 
-      {/* ====== 板块资金轮动（份额口径，从国家队栏目迁入） ====== */}
+      {/* ====== 板块资金轮动（份额口径，从宽基栏目迁入） ====== */}
       {data.etfRotation && data.etfRotation.items.length > 0 && (
         <Card>
           <CardHeader className="pb-2">

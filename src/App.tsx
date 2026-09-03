@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import {
   Activity, Building2, Globe,
-  Landmark, Clock, AlertCircle, RefreshCw,
+  LayoutGrid, Clock, AlertCircle, RefreshCw,
   BarChart3, Target, Wifi, WifiOff,
   Banknote, Wrench
 } from 'lucide-react';
@@ -86,7 +86,7 @@ function App() {
               <BarChart3 className="w-3.5 h-3.5 mr-1" />总览
             </TabsTrigger>
             <TabsTrigger value="national" className="rounded-lg data-[state=active]:bg-red-600 data-[state=active]:text-white text-xs">
-              <Landmark className="w-3.5 h-3.5 mr-1" />国家队
+              <LayoutGrid className="w-3.5 h-3.5 mr-1" />宽基
             </TabsTrigger>
             <TabsTrigger value="public" className="rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white text-xs">
               <Building2 className="w-3.5 h-3.5 mr-1" />基金

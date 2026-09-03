@@ -159,7 +159,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                   className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-red-50 transition-colors"
                   onClick={() => onNavigate?.('national', 'nt-comment')}
                 >
-                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-red-600 text-white">国家队</Badge>
+                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-red-600 text-white">宽基短评</Badge>
                   <span className="text-xs text-slate-600 leading-snug flex-1">{ntText}。</span>
                   <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
                 </button>
