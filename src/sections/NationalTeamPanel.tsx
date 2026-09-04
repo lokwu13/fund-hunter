@@ -52,7 +52,7 @@ export default function NationalTeamPanel() {
 
       {/* ====== 宽基指数全景（趋势 + 波动 + 形态 三合一） ====== */}
       {trendItems.length > 0 && (
-        <Card id="index-vol">
+        <Card id="broad-overview">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-bold flex items-center gap-2">
               <LayoutGrid className="w-5 h-5 text-red-600" />
@@ -383,7 +383,7 @@ export default function NationalTeamPanel() {
 
       {/* ====== 宽基波动率明细（ETF VIX） ====== */}
       {data.indexVol && data.indexVol.items.length > 0 && (
-        <Card>
+        <Card id="index-vol">
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-bold flex items-center gap-2">
               <Gauge className="w-5 h-5 text-red-600" />
