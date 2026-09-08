@@ -8824,7 +8824,57 @@
       "stockName": "恒瑞医药",
       "group": "hold",
       "industry": "化学制药",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-09-08",
+          "title": "H股公告-为2026年第一次临时股东会暂停办理H股股份过户登记手续",
+          "content": "H股公告-为2026年第一次临时股东会暂停办理H股股份过户登记手续",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-08/1225552209.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-08",
+          "title": "恒瑞医药关于获得药物临床试验批准通知书的公告",
+          "content": "恒瑞医药关于获得药物临床试验批准通知书的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-08/1225551075.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-04",
+          "title": "恒瑞医药关于药品上市许可申请获受理的提示性公告",
+          "content": "恒瑞医药关于药品上市许可申请获受理的提示性公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-04/1225546081.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-04",
+          "title": "恒瑞医药关于获得药品注册批准的公告",
+          "content": "恒瑞医药关于获得药品注册批准的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-04/1225546078.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "恒瑞医药关于回购公司A股股份的进展公告",
+          "content": "恒瑞医药关于回购公司A股股份的进展公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225543632.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "H股公告-证券变动月报表",
+          "content": "H股公告-证券变动月报表",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225543628.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "恒瑞医药关于召开2026年半年度业绩说明会的公告",
+          "content": "恒瑞医药关于召开2026年半年度业绩说明会的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225543610.PDF"
+        }
+      ]
     },
     {
       "stockCode": "688016.SH",
@@ -8852,21 +8902,52 @@
       "stockName": "万华化学",
       "group": "watch",
       "industry": "化工原料",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-09-07",
+          "title": "万华化学2026年半年度权益分派实施公告",
+          "content": "万华化学2026年半年度权益分派实施公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-07/1225550253.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-04",
+          "title": "万华化学关于使用闲置资金购买结构性存款的进展公告",
+          "content": "万华化学关于使用闲置资金购买结构性存款的进展公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-04/1225545935.PDF"
+        }
+      ]
     },
     {
       "stockCode": "600406.SH",
       "stockName": "国电南瑞",
       "group": "watch",
       "industry": "电气设备",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "国电南瑞关于以集中竞价交易方式股份回购进展情况的公告",
+          "content": "国电南瑞关于以集中竞价交易方式股份回购进展情况的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225543119.PDF"
+        }
+      ]
     },
     {
       "stockCode": "002216.SZ",
       "stockName": "三全食品",
       "group": "watch",
       "industry": "食品",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-09-05",
+          "title": "关于2026年员工持股计划开户完成的公告",
+          "content": "关于2026年员工持股计划开户完成的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-05/1225547777.PDF"
+        }
+      ]
     },
     {
       "stockCode": "000895.SZ",
@@ -8880,28 +8961,88 @@
       "stockName": "安琪酵母",
       "group": "watch",
       "industry": "食品",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-09-04",
+          "title": "安琪酵母股份有限公司关于2024年限制性股票激励计划第一个解除限售期限制性股票解锁暨上市公告",
+          "content": "安琪酵母股份有限公司关于2024年限制性股票激励计划第一个解除限售期限制性股票解锁暨上市公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-04/1225546499.PDF"
+        }
+      ]
     },
     {
       "stockCode": "002568.SZ",
       "stockName": "百润股份",
       "group": "watch",
       "industry": "红黄酒",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-09-08",
+          "title": "上海市锦天城律师事务所关于上海百润投资控股集团股份有限公司控股股东、实际控制人增持股份的法律意见书",
+          "content": "上海市锦天城律师事务所关于上海百润投资控股集团股份有限公司控股股东、实际控制人增持股份的法律意见书",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-08/1225550662.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-08",
+          "title": "关于实际控制人增持计划实施完毕暨增持结果的公告",
+          "content": "关于实际控制人增持计划实施完毕暨增持结果的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-08/1225550661.PDF"
+        }
+      ]
     },
     {
       "stockCode": "601888.SH",
       "stockName": "中国中免",
       "group": "watch",
       "industry": "旅游服务",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-09-05",
+          "title": "H股公告-月报表",
+          "content": "H股公告-月报表",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-05/1225548637.PDF"
+        }
+      ]
     },
     {
       "stockCode": "603259.SH",
       "stockName": "药明康德",
       "group": "watch",
       "industry": "化学制药",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-09-08",
+          "title": "H股公告",
+          "content": "H股公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-08/1225551099.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-05",
+          "title": "H股公告",
+          "content": "H股公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-05/1225548702.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-04",
+          "title": "H股公告",
+          "content": "H股公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-04/1225545946.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "H股公告",
+          "content": "H股公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225543590.PDF"
+        }
+      ]
     },
     {
       "stockCode": "300760.SZ",
@@ -8915,7 +9056,29 @@
       "stockName": "联影医疗",
       "group": "watch",
       "industry": "医疗保健",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "联影医疗2026年半年度权益分派实施公告",
+          "content": "联影医疗2026年半年度权益分派实施公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225544243.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "联影医疗关于2026年半年度权益分派实施后调整回购价格上限的公告",
+          "content": "联影医疗关于2026年半年度权益分派实施后调整回购价格上限的公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225544239.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-09-03",
+          "title": "上海市通力律师事务所关于上海联影医疗科技股份有限公司差异化分红事项之专项法律意见书",
+          "content": "上海市通力律师事务所关于上海联影医疗科技股份有限公司差异化分红事项之专项法律意见书",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-03/1225544234.PDF"
+        }
+      ]
     },
     {
       "stockCode": "600521.SH",
