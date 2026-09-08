@@ -373,7 +373,8 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                       {it.name}
                     </span>
                     <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${
-                      it.pattern === '杯柄型' ? 'bg-violet-500 text-white' : 'bg-teal-500 text-white'
+                      it.pattern === '杯柄型' ? 'bg-violet-500 text-white' :
+                      it.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-teal-500 text-white'
                     }`}>{it.pattern}</Badge>
                     <span className={`text-xs font-bold flex-shrink-0 ${
                       (it.distMain ?? 99) <= 3 ? 'text-red-500' : 'text-amber-600'

@@ -2818,6 +2818,7 @@ VCP_DAILY_WIN, VCP_DAILY_K = 60, 2      # 日线级：近60交易日窗口，摆
 VCP_WEEK_WIN, VCP_WEEK_K = 40, 1        # 周线级：近40周窗口，摆动高点±1周确认
 VCP_MIN_CONTRACTIONS = 2                # 最少收缩次数（递减即达标）
 VCP_DECAY_TOL = 1.25                    # 收缩递减容差（后次 ≤ 前次×1.25 且末次<首次）
+VCP_CONTRACT_MIN = 3                    # VCP收缩型正式类别：≥3 次递减收缩（2026-09-08 用户口径，优先级最高）
 VCP_SHOW_DIST = 8.0                     # 只展示距枢轴 <8%（容忍 3% 以内已突破）
 VCP_SECTOR_LEADERS = 3                  # 每个命中板块取池内龙头数
 
@@ -3129,7 +3130,8 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             if s.get('status') == '高潮风险':
                 bad_sectors.add(s['sector'])
 
-        # ── 平台两类判定（杯柄型/底部平台型）；收缩型降级：不再单独展示 ──
+        # ── 形态判定：VCP收缩型优先（≥3次递减收缩+量能递减，任一日/周级别命中即定，
+        #    不被杯柄/底部平台覆盖）；收缩<3 次才走平台两类判定 ──
         items = []
         for code, meta in targets.items():
             rows = stock_daily.get(code) or []
@@ -3139,12 +3141,17 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             pf = _vcp_platform(bars)
             d_lv = _vcp_level(bars, VCP_DAILY_WIN, VCP_DAILY_K)
             w_lv = _vcp_level(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K)
-            p_ok = bool(pf and pf['formed'])
             d_ok = bool(d_lv and d_lv['formed'])
             w_ok = bool(w_lv and w_lv['formed'])
-            if not p_ok:
-                continue   # 收缩型降级（用户：纯大幅波动收缩胜率不高），仅作 tag 辅助信息
-            main_lv, pattern = pf, pf['type']
+            d_c3 = bool(d_ok and d_lv['count'] >= VCP_CONTRACT_MIN)
+            w_c3 = bool(w_ok and w_lv['count'] >= VCP_CONTRACT_MIN)
+            if d_c3 or w_c3:
+                main_lv = d_lv if d_c3 else w_lv      # 枢轴=最近收缩高点（_vcp_level 口径）
+                pattern = 'VCP收缩型'
+            elif pf and pf['formed']:
+                main_lv, pattern = pf, pf['type']
+            else:
+                continue
             if not (-5 <= main_lv['distPct'] <= VCP_SHOW_DIST):
                 continue   # 只展示成型或临近成型（距枢轴 <8%）
             sec = meta['sector']
@@ -3167,15 +3174,17 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                           'distMain': main_lv['distPct'],
                           'sectorFit': fit_txt, 'advice': advice,
                           'daily': d_lv, 'weekly': w_lv})
-        items.sort(key=lambda x: (0 if x['pattern'] == '杯柄型' else 1, x['distMain']))
+        items.sort(key=lambda x: ({'VCP收缩型': 0, '杯柄型': 1, '底部平台型': 2}.get(x['pattern'], 3),
+                                  x['distMain']))
         eff_d = f'{eff[:4]}-{eff[4:6]}-{eff[6:]}'
         data['vcpStocks'] = {
             'trade_date': eff_d, 'poolSize': len(pool), 'poolRaw': len(pool_raw),
             'mvDate': mc.get('mvDate'), 'scanned': len(targets),
             'items': items[:15],
             'note': '池=上证50∪中证500∪沪深300∪中证1000成分（周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
-                    '形态两类：杯柄型=底部抬升≥10%后做柄（平台上沿=枢轴）；底部平台型=底部区域规律窄幅缩量平台；共同要件=10~50日窄幅(振幅≤14%)+缩量+分段振幅规律收缩；'
-                    '收缩型已降级不单独展示；只展示距枢轴<8%的成型/临近成型个股，杯柄型优先；建议=水温×板块合适度，仅供关注优先级参考',
+                    '形态三类（2026-09-08 口径）：VCP收缩型=≥3次排浪递减收缩+量能递减（日线或周线级别，递减容差25%，枢轴=最近收缩高点），优先级最高、不被平台类覆盖；'
+                    '杯柄型=底部抬升≥10%后做柄（平台上沿=枢轴）；底部平台型=底部区域规律窄幅缩量平台；平台共同要件=10~50日窄幅(振幅≤14%)+缩量+分段振幅规律收缩；'
+                    '只展示距枢轴<8%的成型/临近成型个股，收缩型优先；建议=水温×板块合适度，仅供关注优先级参考',
         }
         print(f"  vcpStocks: scanned {len(targets)}, formed {len(items)} "
               f"({[i['name'] + ':' + i['pattern'] for i in items[:5]]})")

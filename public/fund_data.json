@@ -12270,6 +12270,391 @@
     "scanned": 32,
     "items": [
       {
+        "code": "600030.SH",
+        "name": "中信证券",
+        "sector": "非银金融",
+        "star": false,
+        "close": 27.67,
+        "tag": "周线✅",
+        "pattern": "VCP收缩型",
+        "platform": {
+          "type": "杯柄型",
+          "days": 50,
+          "amplitude": 13.3,
+          "riseFromLow": 11.7,
+          "volRatio": 0.92,
+          "segAmps": [
+            13.3,
+            5.2,
+            5.7
+          ],
+          "pivot": 29.88,
+          "distPct": 8.0,
+          "formed": true
+        },
+        "distMain": 2.4,
+        "sectorFit": "板块中性",
+        "advice": "VCP收缩型·距枢轴2.4%｜水温中性·谨慎关注｜板块中性",
+        "daily": {
+          "contractions": [
+            7.6,
+            4.3,
+            3.3,
+            6.7
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 28.08,
+          "distPct": 1.5,
+          "formed": false
+        },
+        "weekly": {
+          "contractions": [
+            10.3,
+            10.4,
+            8.3,
+            6.7
+          ],
+          "count": 4,
+          "decreasing": true,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 28.33,
+          "distPct": 2.4,
+          "formed": true
+        }
+      },
+      {
+        "code": "600050.SH",
+        "name": "中国联通",
+        "sector": "电信运营",
+        "star": false,
+        "close": 4.22,
+        "tag": "日线✅+周线✅",
+        "pattern": "VCP收缩型",
+        "platform": {
+          "type": "底部平台型",
+          "days": 41,
+          "amplitude": 12.9,
+          "riseFromLow": 3.3,
+          "volRatio": 0.98,
+          "segAmps": [
+            9.5,
+            4.8,
+            5.3
+          ],
+          "pivot": 4.54,
+          "distPct": 7.6,
+          "formed": true
+        },
+        "distMain": 2.8,
+        "sectorFit": "板块配合✅",
+        "advice": "VCP收缩型·距枢轴2.8%｜水温中性·谨慎关注｜板块配合✅",
+        "daily": {
+          "contractions": [
+            8.8,
+            2.3,
+            2.5,
+            1.4
+          ],
+          "count": 4,
+          "decreasing": true,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 4.34,
+          "distPct": 2.8,
+          "formed": true
+        },
+        "weekly": {
+          "contractions": [
+            16.6,
+            11.3,
+            8.8,
+            3.0
+          ],
+          "count": 4,
+          "decreasing": true,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 4.34,
+          "distPct": 2.8,
+          "formed": true
+        }
+      },
+      {
+        "code": "601728.SH",
+        "name": "中国电信",
+        "sector": "电信运营",
+        "star": false,
+        "close": 6.34,
+        "tag": "周线✅",
+        "pattern": "VCP收缩型",
+        "platform": {
+          "type": "杯柄型",
+          "days": 29,
+          "amplitude": 13.6,
+          "riseFromLow": 21.2,
+          "volRatio": 0.99,
+          "segAmps": [
+            10.7,
+            8.8,
+            4.8
+          ],
+          "pivot": 6.67,
+          "distPct": 5.2,
+          "formed": true
+        },
+        "distMain": 3.0,
+        "sectorFit": "板块配合✅",
+        "advice": "VCP收缩型·距枢轴3.0%｜水温中性·谨慎关注｜板块配合✅",
+        "daily": {
+          "contractions": [
+            4.6,
+            7.1,
+            6.6,
+            2.0
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 6.53,
+          "distPct": 3.0,
+          "formed": false
+        },
+        "weekly": {
+          "contractions": [
+            20.0,
+            19.2,
+            7.1,
+            6.6
+          ],
+          "count": 4,
+          "decreasing": true,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 6.53,
+          "distPct": 3.0,
+          "formed": true
+        }
+      },
+      {
+        "code": "600309.SH",
+        "name": "万华化学",
+        "sector": "化工原料",
+        "star": true,
+        "close": 76.74,
+        "tag": "周线✅",
+        "pattern": "VCP收缩型",
+        "platform": null,
+        "distMain": 3.3,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "VCP收缩型·距枢轴3.3%｜水温中性·谨慎关注｜板块不配合⚠️",
+        "daily": {
+          "contractions": [
+            4.7,
+            5.1,
+            4.1,
+            6.1
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "持平",
+          "rightShrink": true,
+          "pivot": 78.68,
+          "distPct": 2.5,
+          "formed": false
+        },
+        "weekly": {
+          "contractions": [
+            27.5,
+            14.1,
+            10.7,
+            6.5
+          ],
+          "count": 4,
+          "decreasing": true,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 79.28,
+          "distPct": 3.3,
+          "formed": true
+        }
+      },
+      {
+        "code": "300059.SZ",
+        "name": "东方财富",
+        "sector": "非银金融",
+        "star": false,
+        "close": 18.99,
+        "tag": "周线✅",
+        "pattern": "VCP收缩型",
+        "platform": {
+          "type": "杯柄型",
+          "days": 38,
+          "amplitude": 13.0,
+          "riseFromLow": 17.8,
+          "volRatio": 0.49,
+          "segAmps": [
+            9.7,
+            6.5,
+            5.5
+          ],
+          "pivot": 21.05,
+          "distPct": 10.8,
+          "formed": true
+        },
+        "distMain": 3.5,
+        "sectorFit": "板块中性",
+        "advice": "VCP收缩型·距枢轴3.5%｜水温中性·谨慎关注｜板块中性",
+        "daily": {
+          "contractions": [
+            5.9,
+            3.4,
+            9.1,
+            3.0
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 19.65,
+          "distPct": 3.5,
+          "formed": false
+        },
+        "weekly": {
+          "contractions": [
+            20.3,
+            12.6,
+            9.2,
+            4.7
+          ],
+          "count": 4,
+          "decreasing": true,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 19.65,
+          "distPct": 3.5,
+          "formed": true
+        }
+      },
+      {
+        "code": "600019.SH",
+        "name": "宝钢股份",
+        "sector": "钢铁",
+        "star": false,
+        "close": 5.75,
+        "tag": "周线✅",
+        "pattern": "VCP收缩型",
+        "platform": {
+          "type": "杯柄型",
+          "days": 18,
+          "amplitude": 8.9,
+          "riseFromLow": 12.1,
+          "volRatio": 1.0,
+          "segAmps": [
+            8.9,
+            3.5,
+            3.3
+          ],
+          "pivot": 6.14,
+          "distPct": 6.8,
+          "formed": true
+        },
+        "distMain": 3.7,
+        "sectorFit": "板块中性",
+        "advice": "VCP收缩型·距枢轴3.7%｜水温中性·谨慎关注｜板块中性",
+        "daily": {
+          "contractions": [
+            2.3,
+            10.2,
+            2.7,
+            3.4
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "持平",
+          "rightShrink": false,
+          "pivot": 5.93,
+          "distPct": 3.1,
+          "formed": false
+        },
+        "weekly": {
+          "contractions": [
+            14.7,
+            14.0,
+            10.2,
+            4.0
+          ],
+          "count": 4,
+          "decreasing": true,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 5.96,
+          "distPct": 3.7,
+          "formed": true
+        }
+      },
+      {
+        "code": "600010.SH",
+        "name": "包钢股份",
+        "sector": "钢铁",
+        "star": false,
+        "close": 2.19,
+        "tag": "日线✅+周线✅",
+        "pattern": "VCP收缩型",
+        "platform": {
+          "type": "底部平台型",
+          "days": 35,
+          "amplitude": 12.2,
+          "riseFromLow": 6.4,
+          "volRatio": 0.61,
+          "segAmps": [
+            10.2,
+            7.0,
+            6.0
+          ],
+          "pivot": 2.3,
+          "distPct": 5.0,
+          "formed": true
+        },
+        "distMain": 4.6,
+        "sectorFit": "板块中性",
+        "advice": "VCP收缩型·距枢轴4.6%｜水温中性·谨慎关注｜板块中性",
+        "daily": {
+          "contractions": [
+            6.1,
+            2.6,
+            2.2,
+            2.2
+          ],
+          "count": 4,
+          "decreasing": true,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 2.29,
+          "distPct": 4.6,
+          "formed": true
+        },
+        "weekly": {
+          "contractions": [
+            19.0,
+            9.7,
+            8.8,
+            6.1
+          ],
+          "count": 4,
+          "decreasing": true,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 2.29,
+          "distPct": 4.6,
+          "formed": true
+        }
+      },
+      {
         "code": "300760.SZ",
         "name": "迈瑞医疗",
         "sector": "医疗保健",
@@ -12384,63 +12769,6 @@
         }
       },
       {
-        "code": "601728.SH",
-        "name": "中国电信",
-        "sector": "电信运营",
-        "star": false,
-        "close": 6.34,
-        "tag": "周线✅",
-        "pattern": "杯柄型",
-        "platform": {
-          "type": "杯柄型",
-          "days": 29,
-          "amplitude": 13.6,
-          "riseFromLow": 21.2,
-          "volRatio": 0.99,
-          "segAmps": [
-            10.7,
-            8.8,
-            4.8
-          ],
-          "pivot": 6.67,
-          "distPct": 5.2,
-          "formed": true
-        },
-        "distMain": 5.2,
-        "sectorFit": "板块配合✅",
-        "advice": "杯柄型·距枢轴5.2%｜水温中性·谨慎关注｜板块配合✅",
-        "daily": {
-          "contractions": [
-            4.6,
-            7.1,
-            6.6,
-            2.0
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 6.53,
-          "distPct": 3.0,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            20.0,
-            19.2,
-            7.1,
-            6.6
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 6.53,
-          "distPct": 3.0,
-          "formed": true
-        }
-      },
-      {
         "code": "601628.SH",
         "name": "中国人寿",
         "sector": "非银金融",
@@ -12495,63 +12823,6 @@
           "pivot": 39.96,
           "distPct": 3.9,
           "formed": false
-        }
-      },
-      {
-        "code": "600019.SH",
-        "name": "宝钢股份",
-        "sector": "钢铁",
-        "star": false,
-        "close": 5.75,
-        "tag": "周线✅",
-        "pattern": "杯柄型",
-        "platform": {
-          "type": "杯柄型",
-          "days": 18,
-          "amplitude": 8.9,
-          "riseFromLow": 12.1,
-          "volRatio": 1.0,
-          "segAmps": [
-            8.9,
-            3.5,
-            3.3
-          ],
-          "pivot": 6.14,
-          "distPct": 6.8,
-          "formed": true
-        },
-        "distMain": 6.8,
-        "sectorFit": "板块中性",
-        "advice": "杯柄型·距枢轴6.8%｜水温中性·谨慎关注｜板块中性",
-        "daily": {
-          "contractions": [
-            2.3,
-            10.2,
-            2.7,
-            3.4
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "持平",
-          "rightShrink": false,
-          "pivot": 5.93,
-          "distPct": 3.1,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            14.7,
-            14.0,
-            10.2,
-            4.0
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 5.96,
-          "distPct": 3.7,
-          "formed": true
         }
       },
       {
@@ -12669,63 +12940,6 @@
         }
       },
       {
-        "code": "600030.SH",
-        "name": "中信证券",
-        "sector": "非银金融",
-        "star": false,
-        "close": 27.67,
-        "tag": "周线✅",
-        "pattern": "杯柄型",
-        "platform": {
-          "type": "杯柄型",
-          "days": 50,
-          "amplitude": 13.3,
-          "riseFromLow": 11.7,
-          "volRatio": 0.92,
-          "segAmps": [
-            13.3,
-            5.2,
-            5.7
-          ],
-          "pivot": 29.88,
-          "distPct": 8.0,
-          "formed": true
-        },
-        "distMain": 8.0,
-        "sectorFit": "板块中性",
-        "advice": "杯柄型·距枢轴8.0%｜水温中性·谨慎关注｜板块中性",
-        "daily": {
-          "contractions": [
-            7.6,
-            4.3,
-            3.3,
-            6.7
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 28.08,
-          "distPct": 1.5,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            10.3,
-            10.4,
-            8.3,
-            6.7
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 28.33,
-          "distPct": 2.4,
-          "formed": true
-        }
-      },
-      {
         "code": "600009.SH",
         "name": "上海机场",
         "sector": "机场",
@@ -12781,180 +12995,9 @@
           "distPct": 4.6,
           "formed": false
         }
-      },
-      {
-        "code": "600010.SH",
-        "name": "包钢股份",
-        "sector": "钢铁",
-        "star": false,
-        "close": 2.19,
-        "tag": "日线✅+周线✅",
-        "pattern": "底部平台型",
-        "platform": {
-          "type": "底部平台型",
-          "days": 35,
-          "amplitude": 12.2,
-          "riseFromLow": 6.4,
-          "volRatio": 0.61,
-          "segAmps": [
-            10.2,
-            7.0,
-            6.0
-          ],
-          "pivot": 2.3,
-          "distPct": 5.0,
-          "formed": true
-        },
-        "distMain": 5.0,
-        "sectorFit": "板块中性",
-        "advice": "底部平台型·距枢轴5.0%｜水温中性·谨慎关注｜板块中性",
-        "daily": {
-          "contractions": [
-            6.1,
-            2.6,
-            2.2,
-            2.2
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 2.29,
-          "distPct": 4.6,
-          "formed": true
-        },
-        "weekly": {
-          "contractions": [
-            19.0,
-            9.7,
-            8.8,
-            6.1
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 2.29,
-          "distPct": 4.6,
-          "formed": true
-        }
-      },
-      {
-        "code": "601698.SH",
-        "name": "中国卫通",
-        "sector": "电信运营",
-        "star": false,
-        "close": 23.98,
-        "tag": "周线✅",
-        "pattern": "底部平台型",
-        "platform": {
-          "type": "底部平台型",
-          "days": 13,
-          "amplitude": 10.4,
-          "riseFromLow": 3.4,
-          "volRatio": 0.6,
-          "segAmps": [
-            10.4,
-            3.2,
-            3.3
-          ],
-          "pivot": 25.62,
-          "distPct": 6.8,
-          "formed": true
-        },
-        "distMain": 6.8,
-        "sectorFit": "板块配合✅",
-        "advice": "底部平台型·距枢轴6.8%｜水温中性·谨慎关注｜板块配合✅",
-        "daily": {
-          "contractions": [
-            11.7,
-            32.4,
-            6.7,
-            15.1
-          ],
-          "count": 4,
-          "decreasing": false,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 24.47,
-          "distPct": 2.0,
-          "formed": false
-        },
-        "weekly": {
-          "contractions": [
-            31.1,
-            26.7,
-            32.4,
-            11.9
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 27.12,
-          "distPct": 13.1,
-          "formed": true
-        }
-      },
-      {
-        "code": "600050.SH",
-        "name": "中国联通",
-        "sector": "电信运营",
-        "star": false,
-        "close": 4.22,
-        "tag": "日线✅+周线✅",
-        "pattern": "底部平台型",
-        "platform": {
-          "type": "底部平台型",
-          "days": 41,
-          "amplitude": 12.9,
-          "riseFromLow": 3.3,
-          "volRatio": 0.98,
-          "segAmps": [
-            9.5,
-            4.8,
-            5.3
-          ],
-          "pivot": 4.54,
-          "distPct": 7.6,
-          "formed": true
-        },
-        "distMain": 7.6,
-        "sectorFit": "板块配合✅",
-        "advice": "底部平台型·距枢轴7.6%｜水温中性·谨慎关注｜板块配合✅",
-        "daily": {
-          "contractions": [
-            8.8,
-            2.3,
-            2.5,
-            1.4
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 4.34,
-          "distPct": 2.8,
-          "formed": true
-        },
-        "weekly": {
-          "contractions": [
-            16.6,
-            11.3,
-            8.8,
-            3.0
-          ],
-          "count": 4,
-          "decreasing": true,
-          "volTrend": "递减",
-          "rightShrink": true,
-          "pivot": 4.34,
-          "distPct": 2.8,
-          "formed": true
-        }
       }
     ],
-    "note": "池=上证50∪中证500∪沪深300∪中证1000成分（周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；形态两类：杯柄型=底部抬升≥10%后做柄（平台上沿=枢轴）；底部平台型=底部区域规律窄幅缩量平台；共同要件=10~50日窄幅(振幅≤14%)+缩量+分段振幅规律收缩；收缩型已降级不单独展示；只展示距枢轴<8%的成型/临近成型个股，杯柄型优先；建议=水温×板块合适度，仅供关注优先级参考"
+    "note": "池=上证50∪中证500∪沪深300∪中证1000成分（周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；形态三类（2026-09-08 口径）：VCP收缩型=≥3次排浪递减收缩+量能递减（日线或周线级别，递减容差25%，枢轴=最近收缩高点），优先级最高、不被平台类覆盖；杯柄型=底部抬升≥10%后做柄（平台上沿=枢轴）；底部平台型=底部区域规律窄幅缩量平台；平台共同要件=10~50日窄幅(振幅≤14%)+缩量+分段振幅规律收缩；只展示距枢轴<8%的成型/临近成型个股，收缩型优先；建议=水温×板块合适度，仅供关注优先级参考"
   },
   "actionableSectors": {
     "trade_date": "2026-09-07",

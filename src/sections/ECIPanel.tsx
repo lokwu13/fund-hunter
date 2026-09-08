@@ -940,7 +940,10 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                   <tbody>
                     {data.vcpStocks.items.map((it: any) => {
                       const isPlatform = !!it.platform;
-                      const lv = isPlatform ? null : (it.daily?.formed ? it.daily : it.weekly);
+                      const isContract = it.pattern === 'VCP收缩型';
+                      const lv = isContract
+                        ? ((it.daily?.formed && it.daily?.count >= 3) ? it.daily : it.weekly)
+                        : (it.daily?.formed ? it.daily : it.weekly);
                       const pv = isPlatform ? it.platform : lv;
                       return (
                         <tr key={it.code} className="border-b border-slate-50 hover:bg-violet-50/40 align-top">
@@ -951,15 +954,21 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                           </td>
                           <td className="text-slate-500">{it.sector}</td>
                           <td className="text-center">
-                            {isPlatform ? (
+                            {isPlatform || isContract ? (
                               <div>
                                 <span
                                   className={`text-[10px] font-bold text-white rounded px-1.5 py-0.5 ${
-                                    it.pattern === '杯柄型' ? 'bg-violet-500' : 'bg-teal-500'
+                                    it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : 'bg-teal-500'
                                   }`}
-                                  title={`平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·分段振幅${(it.platform.segAmps || []).join('→')}%`}
+                                  title={isPlatform
+                                    ? `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·分段振幅${(it.platform.segAmps || []).join('→')}%`
+                                    : `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}·枢轴=最近收缩高点`}
                                 >{it.pattern}</span>
-                                <p className="text-[9px] text-violet-400 mt-0.5">平台{it.platform.days}天·振幅{it.platform.amplitude}%</p>
+                                <p className="text-[9px] text-violet-400 mt-0.5">
+                                  {isPlatform
+                                    ? `平台${it.platform.days}天·振幅${it.platform.amplitude}%`
+                                    : `收缩${lv?.count ?? 0}次·量能${lv?.volTrend ?? '—'}`}
+                                </p>
                               </div>
                             ) : (
                               <span className="text-[10px] text-violet-600">{it.pattern || '—'}</span>
