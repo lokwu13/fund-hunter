@@ -9491,7 +9491,7 @@
   },
   "sectorScan": {
     "trade_date": "2026-09-07",
-    "summary": "今日5个板块双头风险（乳制品、机场、旅游服务）：接近前高且流入减速；7个板块高位流入（超市连锁、路桥、渔业），位置偏高谨慎。",
+    "summary": "今日2个板块出现吸筹信号：机场连续3日净流入、路桥连续3日净流入（其中⭐低位 1 个）；8个板块启动确认（乳制品、超市连锁、旅游服务），其中⭐低位 5 个；1个板块高位流入（种植业），位置偏高谨慎；1个板块低位关注（空运）：历史低位+持续流入。",
     "items": [
       {
         "sector": "乳制品",
@@ -9500,12 +9500,16 @@
         "consecutiveDays": 5,
         "sectorPctChg": 1.88,
         "pct5d": 2.93,
-        "status": "双头风险",
-        "tier": "risk",
+        "status": "启动确认",
+        "tier": "mid",
         "distHigh": -0.2,
         "ret20": 5.6,
         "volRatio": 0.95,
         "lowVol": false,
+        "histPct": 35.6,
+        "distHigh250": -14.9,
+        "histLow": false,
+        "histHigh": false,
         "stocks": [
           {
             "name": "伊利股份",
@@ -9523,105 +9527,22 @@
         "score": 140.0
       },
       {
-        "sector": "机场",
-        "netInflow1d": 0.19,
-        "netInflow5d": 3.08,
-        "consecutiveDays": 3,
-        "sectorPctChg": 0.19,
-        "pct5d": 2.52,
-        "status": "双头风险",
-        "tier": "risk",
-        "distHigh": -1.8,
-        "ret20": 1.1,
-        "volRatio": 1.09,
-        "lowVol": false,
-        "stocks": [
-          {
-            "name": "海南机场",
-            "code": "600515.SH",
-            "netInflow": 0.14,
-            "pctChg": 0.71
-          },
-          {
-            "name": "深圳机场",
-            "code": "000089.SZ",
-            "netInflow": 0.03,
-            "pctChg": -0.15
-          }
-        ],
-        "score": 92.7
-      },
-      {
-        "sector": "旅游服务",
-        "netInflow1d": 0.28,
-        "netInflow5d": 2.1,
-        "consecutiveDays": 3,
-        "sectorPctChg": 1.73,
-        "pct5d": 7.64,
-        "status": "双头风险",
-        "tier": "risk",
-        "distHigh": 0.0,
-        "ret20": 11.8,
-        "volRatio": 1.61,
-        "lowVol": false,
-        "stocks": [
-          {
-            "name": "凯撒旅业",
-            "code": "000796.SZ",
-            "netInflow": 0.58,
-            "pctChg": 2.97
-          },
-          {
-            "name": "众信旅游",
-            "code": "002707.SZ",
-            "netInflow": 0.08,
-            "pctChg": 2.34
-          }
-        ],
-        "score": 89.1
-      },
-      {
-        "sector": "食品",
-        "netInflow1d": 2.81,
-        "netInflow5d": 1.68,
-        "consecutiveDays": 2,
-        "sectorPctChg": 2.0,
-        "pct5d": 3.97,
-        "status": "双头风险",
-        "tier": "risk",
-        "distHigh": 0.0,
-        "ret20": 5.3,
-        "volRatio": 1.06,
-        "lowVol": false,
-        "stocks": [
-          {
-            "name": "莲花控股",
-            "code": "600186.SH",
-            "netInflow": 4.28,
-            "pctChg": 5.64
-          },
-          {
-            "name": "中粮糖业",
-            "code": "600737.SH",
-            "netInflow": 0.93,
-            "pctChg": 5.77
-          }
-        ],
-        "score": 65.5
-      },
-      {
         "sector": "超市连锁",
         "netInflow1d": 3.07,
         "netInflow5d": 6.19,
         "consecutiveDays": 3,
         "sectorPctChg": 4.21,
         "pct5d": 7.5,
-        "status": "高位流入·谨慎",
-        "tier": "high",
+        "status": "启动确认",
+        "tier": "core",
         "distHigh": 0.0,
         "ret20": 5.0,
         "volRatio": 1.95,
         "lowVol": false,
+        "histPct": 32.8,
+        "distHigh250": -25.1,
+        "histLow": true,
+        "histHigh": false,
         "stocks": [
           {
             "name": "永辉超市",
@@ -9636,65 +9557,106 @@
             "pctChg": 3.42
           }
         ],
-        "score": 46.4
+        "score": 126.4
       },
       {
-        "sector": "互联网",
-        "netInflow1d": 0.86,
-        "netInflow5d": -13.43,
-        "consecutiveDays": 2,
-        "sectorPctChg": 0.64,
-        "pct5d": 2.46,
-        "status": "双头风险",
-        "tier": "risk",
-        "distHigh": -0.3,
-        "ret20": 0.4,
-        "volRatio": 1.55,
-        "lowVol": false,
-        "stocks": [
-          {
-            "name": "易点天下",
-            "code": "301171.SZ",
-            "netInflow": 2.56,
-            "pctChg": 5.28
-          },
-          {
-            "name": "行云科技",
-            "code": "300209.SZ",
-            "netInflow": 1.89,
-            "pctChg": 3.16
-          }
-        ],
-        "score": 43.6
-      },
-      {
-        "sector": "路桥",
-        "netInflow1d": 0.43,
-        "netInflow5d": 0.59,
+        "sector": "机场",
+        "netInflow1d": 0.19,
+        "netInflow5d": 3.08,
         "consecutiveDays": 3,
-        "sectorPctChg": 0.3,
-        "pct5d": 0.74,
-        "status": "高位流入·谨慎",
-        "tier": "high",
-        "distHigh": -0.9,
-        "ret20": 2.3,
-        "volRatio": 0.88,
+        "sectorPctChg": 0.19,
+        "pct5d": 2.52,
+        "status": "吸筹中",
+        "tier": "core",
+        "distHigh": -1.8,
+        "ret20": 1.1,
+        "volRatio": 1.09,
         "lowVol": false,
+        "histPct": 25.2,
+        "distHigh250": -23.3,
+        "histLow": true,
+        "histHigh": false,
         "stocks": [
           {
-            "name": "赣粤高速",
-            "code": "600269.SH",
-            "netInflow": 0.3,
-            "pctChg": 2.04
+            "name": "海南机场",
+            "code": "600515.SH",
+            "netInflow": 0.14,
+            "pctChg": 0.71
           },
           {
-            "name": "皖通高速",
-            "code": "600012.SH",
-            "netInflow": 0.13,
-            "pctChg": 1.76
+            "name": "深圳机场",
+            "code": "000089.SZ",
+            "netInflow": 0.03,
+            "pctChg": -0.15
           }
         ],
-        "score": 28.2
+        "score": 122.7
+      },
+      {
+        "sector": "旅游服务",
+        "netInflow1d": 0.28,
+        "netInflow5d": 2.1,
+        "consecutiveDays": 3,
+        "sectorPctChg": 1.73,
+        "pct5d": 7.64,
+        "status": "启动确认",
+        "tier": "core",
+        "distHigh": 0.0,
+        "ret20": 11.8,
+        "volRatio": 1.61,
+        "lowVol": false,
+        "histPct": 30.4,
+        "distHigh250": -29.3,
+        "histLow": true,
+        "histHigh": false,
+        "stocks": [
+          {
+            "name": "凯撒旅业",
+            "code": "000796.SZ",
+            "netInflow": 0.58,
+            "pctChg": 2.97
+          },
+          {
+            "name": "众信旅游",
+            "code": "002707.SZ",
+            "netInflow": 0.08,
+            "pctChg": 2.34
+          }
+        ],
+        "score": 119.1
+      },
+      {
+        "sector": "食品",
+        "netInflow1d": 2.81,
+        "netInflow5d": 1.68,
+        "consecutiveDays": 2,
+        "sectorPctChg": 2.0,
+        "pct5d": 3.97,
+        "status": "启动确认",
+        "tier": "core",
+        "distHigh": 0.0,
+        "ret20": 5.3,
+        "volRatio": 1.06,
+        "lowVol": false,
+        "histPct": 29.6,
+        "distHigh250": -13.1,
+        "histLow": true,
+        "histHigh": false,
+        "stocks": [
+          {
+            "name": "莲花控股",
+            "code": "600186.SH",
+            "netInflow": 4.28,
+            "pctChg": 5.64
+          },
+          {
+            "name": "中粮糖业",
+            "code": "600737.SH",
+            "netInflow": 0.93,
+            "pctChg": 5.77
+          }
+        ],
+        "score": 95.5
       },
       {
         "sector": "渔业",
@@ -9703,12 +9665,16 @@
         "consecutiveDays": 2,
         "sectorPctChg": 4.81,
         "pct5d": 7.03,
-        "status": "高位流入·谨慎",
-        "tier": "high",
+        "status": "启动确认",
+        "tier": "core",
         "distHigh": 0.0,
         "ret20": 15.1,
         "volRatio": 1.23,
         "lowVol": false,
+        "histPct": 63.2,
+        "distHigh250": -21.4,
+        "histLow": true,
+        "histHigh": false,
         "stocks": [
           {
             "name": "东方海洋",
@@ -9723,36 +9689,73 @@
             "pctChg": 5.71
           }
         ],
-        "score": 11.8
+        "score": 91.8
       },
       {
-        "sector": "旅游景点",
-        "netInflow1d": 0.79,
-        "netInflow5d": -5.72,
+        "sector": "空运",
+        "netInflow1d": 0.09,
+        "netInflow5d": 0.13,
         "consecutiveDays": 2,
-        "sectorPctChg": 2.78,
-        "pct5d": 5.81,
-        "status": "高位流入·谨慎",
-        "tier": "high",
-        "distHigh": 0.0,
-        "ret20": 8.8,
-        "volRatio": 1.75,
+        "sectorPctChg": 0.02,
+        "pct5d": 1.08,
+        "status": "低位关注",
+        "tier": "core",
+        "distHigh": -12.2,
+        "ret20": -4.0,
+        "volRatio": 1.07,
         "lowVol": false,
+        "histPct": 6.0,
+        "distHigh250": -34.9,
+        "histLow": true,
+        "histHigh": false,
         "stocks": [
           {
-            "name": "云南旅游",
-            "code": "002059.SZ",
-            "netInflow": 0.93,
-            "pctChg": 7.05
+            "name": "海航控股",
+            "code": "600221.SH",
+            "netInflow": 0.32,
+            "pctChg": 0.0
           },
           {
-            "name": "丽江股份",
-            "code": "002033.SZ",
-            "netInflow": 0.26,
-            "pctChg": 1.64
+            "name": "中国东航",
+            "code": "600115.SH",
+            "netInflow": 0.05,
+            "pctChg": 0.29
           }
         ],
-        "score": 0.9
+        "score": 80.9
+      },
+      {
+        "sector": "路桥",
+        "netInflow1d": 0.43,
+        "netInflow5d": 0.59,
+        "consecutiveDays": 3,
+        "sectorPctChg": 0.3,
+        "pct5d": 0.74,
+        "status": "吸筹中",
+        "tier": "mid",
+        "distHigh": -0.9,
+        "ret20": 2.3,
+        "volRatio": 0.88,
+        "lowVol": false,
+        "histPct": 41.2,
+        "distHigh250": -7.6,
+        "histLow": false,
+        "histHigh": false,
+        "stocks": [
+          {
+            "name": "赣粤高速",
+            "code": "600269.SH",
+            "netInflow": 0.3,
+            "pctChg": 2.04
+          },
+          {
+            "name": "皖通高速",
+            "code": "600012.SH",
+            "netInflow": 0.13,
+            "pctChg": 1.76
+          }
+        ],
+        "score": 78.2
       },
       {
         "sector": "影视音像",
@@ -9761,12 +9764,16 @@
         "consecutiveDays": 2,
         "sectorPctChg": 1.7,
         "pct5d": 3.73,
-        "status": "高位流入·谨慎",
-        "tier": "high",
+        "status": "启动确认",
+        "tier": "core",
         "distHigh": 0.0,
         "ret20": 6.4,
         "volRatio": 2.52,
         "lowVol": false,
+        "histPct": 27.2,
+        "distHigh250": -32.2,
+        "histLow": true,
+        "histHigh": false,
         "stocks": [
           {
             "name": "儒意电影",
@@ -9781,7 +9788,40 @@
             "pctChg": 2.0
           }
         ],
-        "score": -10.0
+        "score": 70.0
+      },
+      {
+        "sector": "旅游景点",
+        "netInflow1d": 0.79,
+        "netInflow5d": -5.72,
+        "consecutiveDays": 2,
+        "sectorPctChg": 2.78,
+        "pct5d": 5.81,
+        "status": "启动确认",
+        "tier": "mid",
+        "distHigh": 0.0,
+        "ret20": 8.8,
+        "volRatio": 1.75,
+        "lowVol": false,
+        "histPct": 38.8,
+        "distHigh250": -14.6,
+        "histLow": false,
+        "histHigh": false,
+        "stocks": [
+          {
+            "name": "云南旅游",
+            "code": "002059.SZ",
+            "netInflow": 0.93,
+            "pctChg": 7.05
+          },
+          {
+            "name": "丽江股份",
+            "code": "002033.SZ",
+            "netInflow": 0.26,
+            "pctChg": 1.64
+          }
+        ],
+        "score": 47.3
       },
       {
         "sector": "百货",
@@ -9790,12 +9830,16 @@
         "consecutiveDays": 2,
         "sectorPctChg": 3.82,
         "pct5d": 9.19,
-        "status": "高位流入·谨慎",
-        "tier": "high",
+        "status": "启动确认",
+        "tier": "mid",
         "distHigh": 0.0,
         "ret20": 12.7,
         "volRatio": 1.84,
         "lowVol": false,
+        "histPct": 41.2,
+        "distHigh250": -17.9,
+        "histLow": false,
+        "histHigh": false,
         "stocks": [
           {
             "name": "供销大集",
@@ -9810,7 +9854,7 @@
             "pctChg": 9.21
           }
         ],
-        "score": -15.5
+        "score": 34.5
       },
       {
         "sector": "种植业",
@@ -9825,6 +9869,10 @@
         "ret20": 32.3,
         "volRatio": 1.21,
         "lowVol": false,
+        "histPct": 97.6,
+        "distHigh250": -3.3,
+        "histLow": false,
+        "histHigh": true,
         "stocks": [
           {
             "name": "神农种业",
@@ -9839,14 +9887,14 @@
             "pctChg": 9.98
           }
         ],
-        "score": -22.7
+        "score": -26.4
       }
     ],
-    "note": "位置口径：行业等权收益合成指数近似（非真实板块指数）；⭐低位=距60日高点回撤≥3%且近20日涨幅≤10%（回测10日胜率约59%）；高位=距60日高点<3%或近20日涨幅>10%（回测10日胜率仅17~29%，信号降级为\"高位流入·谨慎\"）；双头风险=接近前高+连续净流入+流入减速；缩量=近5日均额/前5日均额<0.8，低位缩量吸筹加分"
+    "note": "位置口径：行业等权收益合成指数近似（非真实板块指数）；⭐低位=距60日高点回撤≥3%且近20日涨幅≤10%（回测10日胜率约59%）；高位=距60日高点<3%或近20日涨幅>10%（回测10日胜率仅17~29%）；历史位置=250日（或可得最长）窗口一年分位，🟢历史低位=分位≤30%或距250日高点回撤≥20%；双头风险/高位流入·谨慎需一年分位≥70%才生效（历史低位的短窗新高不再误判）；低位关注=历史低位+连续净流入≥2天（涨幅温和未触发启动/吸筹）；缩量=近5日均额/前5日均额<0.8，低位缩量吸筹加分"
   },
   "bottomWatch": {
     "trade_date": "2026-09-07",
-    "days": 93,
+    "days": 250,
     "windows": [
       30,
       60
@@ -9859,44 +9907,11 @@
     },
     "counts": {
       "both": 0,
-      "d30": 1,
+      "d30": 0,
       "d60": 0
     },
-    "items": [
-      {
-        "sector": "电信运营",
-        "hit30": true,
-        "hit60": false,
-        "both": false,
-        "inflow30d": 27.26,
-        "inflow60d": 8.35,
-        "positiveRatio30": 50.0,
-        "positiveRatio60": 50.0,
-        "inflow5d": 0.77,
-        "pricePosition": 0.103,
-        "score": 57.9,
-        "leaders": [
-          {
-            "name": "中国移动",
-            "code": "600941.SH",
-            "pctChg": -1.6,
-            "strength": "站上20/60日线，距60日高点2%"
-          }
-        ],
-        "leaderVia": "trend",
-        "firstSeen": "08-28",
-        "streakDays": 7
-      }
-    ],
-    "summary": "1 个板块出现底部资金积聚信号——30日档（较新积聚）：电信运营。长周期资金缓慢流入且价格处于长期低位，关注率先走强的龙头。",
-    "freshness": [
-      {
-        "sector": "电信运营",
-        "firstSeen": "08-28",
-        "streakDays": 7,
-        "stage": "积聚跟踪中"
-      }
-    ]
+    "items": [],
+    "freshness": []
   },
   "eciSubsectors": {
     "trade_date": "2026-09-07",

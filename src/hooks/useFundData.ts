@@ -330,6 +330,10 @@ export interface FundData {
       ret20?: number | null;
       volRatio?: number | null;
       lowVol?: boolean;
+      histPct?: number | null;
+      distHigh250?: number;
+      histLow?: boolean;
+      histHigh?: boolean;
       stocks?: Array<{ name: string; code: string; netInflow: number; pctChg: number }>;
     }>;
   };

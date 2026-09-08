@@ -724,7 +724,7 @@ def fetch_bond_yields(trade_date, data):
 # 历史数据每天增量积累在 scripts/cache/sector_history.json（不部署，随 workflow 提交回写延续）。
 SECTOR_HISTORY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache', 'sector_history.json')
 SECTOR_HISTORY_MAX_DAYS = 250   # 历史最长保留交易日数
-SECTOR_BACKFILL_DAYS = 60       # 首次运行回补交易日数（每天 2 次调用，约 3 分钟）
+SECTOR_BACKFILL_DAYS = 250      # 首次运行回补交易日数（250=一年窗口，支撑历史位置分层；每日 2 次调用，落盘可断点续传）
 BOTTOM_WINDOW = 60              # 底部积聚监测窗口（交易日）
 BOTTOM_MIN_DAYS = 40            # 历史不足该天数时降级为"数据积累中"
 BOTTOM_TIERS = (30, 60)         # 双档监测窗口（30日=较新积聚，60日=长期扎实吸筹）
@@ -866,6 +866,7 @@ def _scan_summary(items):
     risk = [i for i in items if i['status'] == '高潮风险']
     dt = [i for i in items if i['status'] == '双头风险']
     hi = [i for i in items if i['status'] == '高位流入·谨慎']
+    lw = [i for i in items if i['status'] == '低位关注']
     parts = []
     if absorb:
         core = [i for i in absorb if i.get('tier') == 'core']
@@ -886,27 +887,36 @@ def _scan_summary(items):
         parts.append(f"{len(dt)}个板块双头风险（{'、'.join(i['sector'] for i in dt[:3])}）：接近前高且流入减速")
     if hi:
         parts.append(f"{len(hi)}个板块高位流入（{'、'.join(i['sector'] for i in hi[:3])}），位置偏高谨慎")
+    if lw:
+        parts.append(f"{len(lw)}个板块低位关注（{'、'.join(i['sector'] for i in lw[:3])}）：历史低位+持续流入")
     return '今日' + '；'.join(parts) + '。'
 
 
 SCAN_POSITION_NOTE = ('位置口径：行业等权收益合成指数近似（非真实板块指数）；'
                       '⭐低位=距60日高点回撤≥3%且近20日涨幅≤10%（回测10日胜率约59%）；'
-                      '高位=距60日高点<3%或近20日涨幅>10%（回测10日胜率仅17~29%，信号降级为"高位流入·谨慎"）；'
-                      '双头风险=接近前高+连续净流入+流入减速；缩量=近5日均额/前5日均额<0.8，低位缩量吸筹加分')
+                      '高位=距60日高点<3%或近20日涨幅>10%（回测10日胜率仅17~29%）；'
+                      '历史位置=250日（或可得最长）窗口一年分位，🟢历史低位=分位≤30%或距250日高点回撤≥20%；'
+                      '双头风险/高位流入·谨慎需一年分位≥70%才生效（历史低位的短窗新高不再误判）；'
+                      '低位关注=历史低位+连续净流入≥2天（涨幅温和未触发启动/吸筹）；'
+                      '缩量=近5日均额/前5日均额<0.8，低位缩量吸筹加分')
 
 
 def build_sector_scan(hist, trade_date, today_map):
     """板块资金扫描榜（精简版）：只保留触发信号的板块，每个板块附 2 只吸筹个股。
 
-    信号规则（2026-08-22 位置分层版，数据来自行业资金历史沉淀）：
-    - 位置分层（等权收益合成指数近似，非真实板块指数）：
+    信号规则（2026-09-08 历史位置分层版，数据来自行业资金历史沉淀）：
+    - 短窗位置分层（等权收益合成指数近似，非真实板块指数）：
       高位 = 距60日高点 <3% 或 近20日涨幅 >10%；
       低位 = 距60日高点回撤 ≥3% 且 近20日涨幅 ≤10%；半路 = 历史不足等兜底。
+    - 长窗历史位置（一年窗口）：histPct=250日（或可得最长）价格分位，
+      distHigh250=距250日高点回撤；历史低位=分位≤30 或 回撤≥20%，历史高位=分位≥70。
     - 高潮风险：连续净流入 ≥3 天 且 近5日涨幅 ≥8%（任何位置都发，最高优先）
-    - 双头风险：高位（距高点<3%）+ 连续净流入 ≥2 天 + 流入减速（当日 < 近3日均值）
-    - 启动确认：连续净流入 ≥2 天 且 当日涨幅 ≥1.5%（仅低位/半路发）
-    - 吸筹中：连续净流入 ≥3 天 且 当日涨幅 <1%（仅低位/半路发；低位+量比<0.8 标记"缩量"）
-    - 高位触发吸筹/启动条件的，改标「高位流入·谨慎」沉底展示
+    - 双头风险：距60日高点<3% + 连续净流入 ≥2 天 + 流入减速（当日 < 近3日均值）
+      **且历史高位（一年分位≥70）**——历史低位的"接近短窗前高"不再误判双头
+    - 启动确认：连续净流入 ≥2 天 且 当日涨幅 ≥1.5%（仅当 短窗高位且历史高位 时降「高位流入·谨慎」；
+      短窗高但长窗不高 → 正常发启动确认，tier=mid）
+    - 吸筹中：连续净流入 ≥3 天 且 当日涨幅 <1%（同上高位谨慎门槛；低位/历史低位+量比<0.8 标记"缩量"）
+    - 低位关注：历史低位 + 连续净流入 ≥2 天（涨幅温和未触发启动/吸筹的兜底信号，tier=core）
     回测依据（81交易日×110行业）：低位信号10日胜率~59%/中位+1.4~1.9%，
     高位信号胜率17~29%/中位-3.4~-3.8%；高潮风险高位触发 8/8 后续下跌。
     """
@@ -948,28 +958,40 @@ def build_sector_scan(hist, trade_date, today_map):
         else:
             tier = 'low'
 
+        # ── 长周期历史位置（2026-09-08 新增）：一年窗口分位 + 距250日高点回撤 ──
+        # 短窗（60日）分层无法识别"长期低位反弹"（如机场/旅游服务：长周期低位、
+        # 短期贴近60日新高被误判双头）。历史高位（hist_high）作为双头/高位谨慎的一票否决前提。
+        win250 = pxs[-250:]
+        hist_pct = _pct_rank100(win250, px)
+        dist_high250 = (px / max(win250) - 1) * 100
+        hist_low = hist_pct is not None and (hist_pct <= 30 or dist_high250 <= -20)
+        hist_high = hist_pct is not None and hist_pct >= 70
+
         # 量比：近5日均额 / 前5日均额
         amt5 = sum(r[3] for r in rows[-5:]) / 5
         amt_prev5 = sum(r[3] for r in rows[-10:-5]) / 5 if len(rows) >= 10 else 0
         vol_ratio = round(amt5 / amt_prev5, 2) if amt_prev5 > 0 else None
 
-        # ── 信号判定（高潮风险 > 双头风险 > 启动/吸筹，高位降级）──
+        # ── 信号判定（高潮风险 > 双头风险（需历史高位）> 启动/吸筹（高位谨慎需历史高位）> 低位关注）──
         slowing = consec >= 2 and rows[-1][1] < sum(r[1] for r in rows[-3:]) / 3
-        low_vol = tier == 'low' and vol_ratio is not None and vol_ratio < 0.8
+        low_vol = (tier == 'low' or hist_low) and vol_ratio is not None and vol_ratio < 0.8
         if consec >= 3 and pct5 >= 8:
             status, out_tier = '高潮风险', 'risk'
-        elif dist_high > -3 and slowing:
+        elif dist_high > -3 and slowing and hist_high:
             status, out_tier = '双头风险', 'risk'
         elif consec >= 2 and ret1 >= 1.5:
-            if tier == 'high':
+            if tier == 'high' and hist_high:
                 status, out_tier = '高位流入·谨慎', 'high'
             else:
-                status, out_tier = '启动确认', ('core' if tier == 'low' else 'mid')
+                # 短窗偏高但一年分位未达高位 → 正常发启动确认（不降级）
+                status, out_tier = '启动确认', ('core' if (tier == 'low' or hist_low) else 'mid')
         elif consec >= 3 and ret1 < 1:
-            if tier == 'high':
+            if tier == 'high' and hist_high:
                 status, out_tier = '高位流入·谨慎', 'high'
             else:
-                status, out_tier = '吸筹中', ('core' if tier == 'low' else 'mid')
+                status, out_tier = '吸筹中', ('core' if (tier == 'low' or hist_low) else 'mid')
+        elif hist_low and consec >= 2:
+            status, out_tier = '低位关注', 'core'
         else:
             continue  # 无信号不展示
         stocks = [{'name': s['name'], 'code': s['code'], 'netInflow': s['net'], 'pctChg': s['pct']}
@@ -987,6 +1009,10 @@ def build_sector_scan(hist, trade_date, today_map):
             'ret20': round(ret20, 1) if ret20 is not None else None,
             'volRatio': vol_ratio,
             'lowVol': low_vol,
+            'histPct': hist_pct,
+            'distHigh250': round(dist_high250, 1),
+            'histLow': hist_low,
+            'histHigh': hist_high,
             'stocks': stocks,
         })
     d = f"{latest[:4]}-{latest[4:6]}-{latest[6:]}"
