@@ -418,7 +418,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
               </div>
             )}
             <p className="text-[10px] text-slate-400 mt-2">
-              建议=水温×板块合适度，仅关注优先级参考，不构成操作建议 · 收缩型已降级不单独展示
+              建议=水温×板块合适度，仅关注优先级参考，不构成操作建议 · VCP收缩型=≥3次递减收缩+量能递减（橙色徽章，优先级最高）
             </p>
           </CardContent>
         </Card>
