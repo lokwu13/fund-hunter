@@ -960,10 +960,10 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                               <div>
                                 <span
                                   className={`text-[10px] font-bold text-white rounded px-1.5 py-0.5 ${
-                                    it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : 'bg-teal-500'
+                                    it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : it.pattern === '底部整理' ? 'bg-slate-500' : 'bg-teal-500'
                                   }`}
                                   title={isPlatform
-                                    ? `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·分段振幅${(it.platform.segAmps || []).join('→')}%`
+                                    ? `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·分段振幅${(it.platform.segAmps || []).join('→')}%·一年分位${it.histPct ?? '—'}%（≤30%或距250日高点回撤≥20%即底部整理，不算杯柄）`
                                     : `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}·枢轴=最近收缩高点`}
                                 >{it.pattern}</span>
                                 <p className="text-[9px] text-violet-400 mt-0.5">

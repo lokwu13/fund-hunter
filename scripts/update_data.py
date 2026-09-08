@@ -3157,13 +3157,21 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 bad_sectors.add(s['sector'])
 
         # ── 形态判定：VCP收缩型优先（≥3次递减收缩+量能递减，任一日/周级别命中即定，
-        #    不被杯柄/底部平台覆盖）；收缩<3 次才走平台两类判定 ──
+        #    不被平台类覆盖）；收缩<3 次才走平台判定。平台类加个股一年分位门槛
+        #    （2026-09-08 v2 用户裁决：南微医学这类"刚脱离前低10%但整体仍在历史底部"
+        #    不算杯柄）：histPct≤30% 或 距250日高点回撤≥20% → 「底部整理」；
+        #    仅 histPct>30% 且抬升≥10% 才保留「杯柄型」。原「底部平台型」并入「底部整理」──
         items = []
         for code, meta in targets.items():
             rows = stock_daily.get(code) or []
             if len(rows) < 60:
                 continue
             bars = [(r[0], r[2], r[3], r[1], r[4]) for r in rows]  # (date, high, low, close, vol)
+            # 个股一年位置：250 交易日窗口价格分位 + 距250日高点回撤（复用日线缓存，零新增调用）
+            closes250 = [r[1] for r in rows[-250:]]
+            hist_pct = _pct_rank100(closes250, rows[-1][1])
+            dist_high250 = (rows[-1][1] / max(closes250) - 1) * 100
+            hist_low = (hist_pct is not None and hist_pct <= 30) or dist_high250 <= -20
             pf = _vcp_platform(bars)
             d_lv = _vcp_level(bars, VCP_DAILY_WIN, VCP_DAILY_K)
             w_lv = _vcp_level(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K)
@@ -3175,7 +3183,9 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 main_lv = d_lv if d_c3 else w_lv      # 枢轴=最近收缩高点（_vcp_level 口径）
                 pattern = 'VCP收缩型'
             elif pf and pf['formed']:
-                main_lv, pattern = pf, pf['type']
+                main_lv = pf
+                # 杯柄型需历史位置配合：分位≤30% 或回撤≥20% 的一律「底部整理」
+                pattern = '杯柄型' if (pf['type'] == '杯柄型' and not hist_low) else '底部整理'
             else:
                 continue
             if not (-5 <= main_lv['distPct'] <= VCP_SHOW_DIST):
@@ -3197,10 +3207,12 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                           'sector': sec, 'star': meta['star'],
                           'close': round(close, 2), 'tag': tag,
                           'pattern': pattern, 'platform': pf,
+                          'histPct': hist_pct,
+                          'distHigh250': round(dist_high250, 1),
                           'distMain': main_lv['distPct'],
                           'sectorFit': fit_txt, 'advice': advice,
                           'daily': d_lv, 'weekly': w_lv})
-        items.sort(key=lambda x: ({'VCP收缩型': 0, '杯柄型': 1, '底部平台型': 2}.get(x['pattern'], 3),
+        items.sort(key=lambda x: ({'VCP收缩型': 0, '杯柄型': 1, '底部整理': 2}.get(x['pattern'], 3),
                                   x['distMain']))
         eff_d = f'{eff[:4]}-{eff[4:6]}-{eff[6:]}'
         data['vcpStocks'] = {
@@ -3208,8 +3220,8 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'mvDate': mc.get('mvDate'), 'scanned': len(targets),
             'items': items[:15],
             'note': '池=上证50∪中证500∪沪深300∪中证1000成分（周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
-                    '形态三类（2026-09-08 口径）：VCP收缩型=≥3次排浪递减收缩+量能递减（日线或周线级别，递减容差25%，枢轴=最近收缩高点），优先级最高、不被平台类覆盖；'
-                    '杯柄型=底部抬升≥10%后做柄（平台上沿=枢轴）；底部平台型=底部区域规律窄幅缩量平台；平台共同要件=10~50日窄幅(振幅≤14%)+缩量+分段振幅规律收缩；'
+                    '形态三类（2026-09-08 v2 口径）：VCP收缩型=≥3次排浪递减收缩+量能递减（日线或周线级别，递减容差25%，枢轴=最近收缩高点），优先级最高、不被平台类覆盖；'
+                    '杯柄型=底部抬升≥10%后做柄且个股一年分位>30%（平台上沿=枢轴）；底部整理=一年分位≤30%或距250日高点回撤≥20%的规律窄幅缩量平台（含原底部平台型，整体仍处历史底部不算杯柄）；平台共同要件=10~50日窄幅(振幅≤14%)+缩量+分段振幅规律收缩；'
                     '只展示距枢轴<8%的成型/临近成型个股，收缩型优先；建议=水温×板块合适度，仅供关注优先级参考',
         }
         print(f"  vcpStocks: scanned {len(targets)}, formed {len(items)} "

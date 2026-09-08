@@ -395,7 +395,9 @@ export interface FundData {
       star?: boolean;
       close: number;
       tag: string;
-      pattern?: '杯柄型' | '底部平台型' | '收缩型' | 'VCP收缩型';
+      pattern?: '杯柄型' | '底部平台型' | '底部整理' | '收缩型' | 'VCP收缩型';
+      histPct?: number | null;
+      distHigh250?: number;
       distMain?: number;
       sectorFit?: string;
       advice?: string;

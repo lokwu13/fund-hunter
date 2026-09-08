@@ -358,7 +358,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
               <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
                 <Activity className="w-4 h-4 text-violet-500" />
                 <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-violet-500 text-white">第3步·形态确认</Badge>
-                VCP 形态精扫 · 杯柄/底部平台
+                VCP 形态精扫 · 收缩/杯柄/底部整理
               </h3>
               <Badge variant="outline" className="text-[10px] bg-violet-50 text-violet-700 border-violet-200">
                 {data.vcpStocks ? `${data.vcpStocks.trade_date} · 池${data.vcpStocks.poolSize}只 · 点击看明细` : '点击看明细'}
@@ -374,7 +374,8 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                     </span>
                     <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${
                       it.pattern === '杯柄型' ? 'bg-violet-500 text-white' :
-                      it.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-teal-500 text-white'
+                      it.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' :
+                      it.pattern === '底部整理' ? 'bg-slate-500 text-white' : 'bg-teal-500 text-white'
                     }`}>{it.pattern}</Badge>
                     <span className={`text-xs font-bold flex-shrink-0 ${
                       (it.distMain ?? 99) <= 3 ? 'text-red-500' : 'text-amber-600'
@@ -384,7 +385,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-400 px-2">今日无成型形态（VCP/杯柄/底部平台无合乎要求的入围）</p>
+              <p className="text-xs text-slate-400 px-2">今日无成型形态（VCP/杯柄/底部整理无合乎要求的入围）</p>
             )}
             {/* ---- 宽基 VCP 分区（9 大宽基同口径监测，成型未突破也展示盯突破） ---- */}
             {broadVcpItems.length > 0 && (
@@ -418,7 +419,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
               </div>
             )}
             <p className="text-[10px] text-slate-400 mt-2">
-              建议=水温×板块合适度，仅关注优先级参考，不构成操作建议 · VCP收缩型=≥3次递减收缩+量能递减（橙色徽章，优先级最高）
+              建议=水温×板块合适度，仅关注优先级参考，不构成操作建议 · VCP收缩型=≥3次递减收缩+量能递减（橙色徽章，优先级最高）· 底部整理=历史低位（一年分位≤30%或距250日高点回撤≥20%）的窄幅缩量平台，杯柄型需一年分位&gt;30%
             </p>
           </CardContent>
         </Card>
