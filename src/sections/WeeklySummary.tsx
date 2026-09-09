@@ -69,7 +69,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
       <div className="mt-1">
         <Badge
           className={`text-[9px] h-4 px-1.5 ${netCls(overall)} text-white border-0`}
-          title={`近120日对抗净胜：对大盘 ${ni > 0 ? '+' : ''}${ni}（胜${rs.vsIndex.win}/负${rs.vsIndex.lose}）· 对板块 ${ns != null ? (ns > 0 ? '+' : '') + ns : '—'}${rs.vsSector ? `（胜${rs.vsSector.win}/负${rs.vsSector.lose}）` : ''}；强对抗日=基准跌>0.3%且个股超额≥+1.5pct，弱对抗日反之`}
+          title={`近120日对抗净胜：对大盘 ${ni > 0 ? '+' : ''}${ni}（胜${rs.vsIndex.win}/负${rs.vsIndex.lose}/剔除消息驱动${rs.vsIndex.excluded ?? 0}）· 对板块 ${ns != null ? (ns > 0 ? '+' : '') + ns : '—'}${rs.vsSector ? `（胜${rs.vsSector.win}/负${rs.vsSector.lose}/剔除${rs.vsSector.excluded ?? 0}）` : ''}；强对抗日=基准跌>0.3%且个股超额≥+1.5pct，剔除跳空≥+1.5%或公告日；弱对抗日反之不过滤`}
         >
           ⚔对抗{ni > 0 ? '+' : ''}{ni}/{ns != null ? (ns > 0 ? '+' : '') + ns : '—'}
         </Badge>

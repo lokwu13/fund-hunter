@@ -429,8 +429,8 @@ export interface FundData {
       industry?: string;
       sectorName?: string | null;
       daysUsed?: number;
-      vsIndex: { win: number; lose: number; net: number; win20: number; lose20: number; net20: number };
-      vsSector?: { win: number; lose: number; net: number; win20: number; lose20: number; net20: number } | null;
+      vsIndex: { win: number; lose: number; net: number; win20: number; lose20: number; net20: number; excluded?: number };
+      vsSector?: { win: number; lose: number; net: number; win20: number; lose20: number; net20: number; excluded?: number } | null;
     }>;
   };
   eciSubsectors?: {

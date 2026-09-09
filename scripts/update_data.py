@@ -3233,9 +3233,12 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
 # ── 个股半年对抗统计（2026-09-09 用户指令）──
 STOCK_RS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              'cache', 'stock_rs_cache.json')
+STOCK_RS_ANN_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                 'cache', 'stock_rs_ann_cache.json')
 STOCK_RS_WINDOW = 120       # 近120个交易日（约半年）
 STOCK_RS_BASE_TH = 0.3      # 基准涨/跌判定阈值 %
 STOCK_RS_EXCESS_TH = 1.5    # 个股超额阈值 pct
+STOCK_RS_GAP_TH = 1.5       # 开盘跳空≥+1.5% 的强对抗日剔除（隔夜消息定价签名，2026-09-09 用户指令）
 # tushare 二级行业 → 东财行业板块名（push2 clist m:90+t:2，板块代码运行时动态解析，
 # 2026-09-08 实测清单对齐；两个一级近似已在此标注并在前端 note 披露）
 STOCK_RS_INDUSTRY_MAP = {
@@ -3296,9 +3299,13 @@ def _em_kline_pct(secid, lmt=300):
     return out
 
 
-def _rs_hit(bucket, base_pct, excess):
-    """单日判定：强对抗 +1 / 弱对抗 -1 / 不计 0。"""
-    if base_pct < -STOCK_RS_BASE_TH and excess >= STOCK_RS_EXCESS_TH:
+def _rs_hit(bucket, base_pct, excess, excl=False):
+    """单日判定：强对抗 +1 / 弱对抗 -1 / 不计 0。excl=True 的消息面驱动强对抗日剔除并计数。"""
+    strong = base_pct < -STOCK_RS_BASE_TH and excess >= STOCK_RS_EXCESS_TH
+    if strong and excl:
+        bucket['excluded'] += 1
+        bucket['days'].append(0)
+    elif strong:
         bucket['win'] += 1
         bucket['days'].append(1)
     elif base_pct > STOCK_RS_BASE_TH and excess <= -STOCK_RS_EXCESS_TH:
@@ -3312,7 +3319,120 @@ def _rs_pack(bk):
     d20 = bk['days'][-20:]
     return {'win': bk['win'], 'lose': bk['lose'], 'net': bk['win'] - bk['lose'],
             'win20': sum(1 for x in d20 if x > 0), 'lose20': sum(1 for x in d20 if x < 0),
-            'net20': sum(d20)}
+            'net20': sum(d20), 'excluded': bk['excluded']}
+
+
+def _cninfo_org_id(session, code):
+    """巨潮 topSearch 取 orgId（hisAnnouncement 的 stock 参数需要 code,orgId 格式）。"""
+    time.sleep(API_DELAY)
+    r = session.post('http://www.cninfo.com.cn/new/information/topSearch/query',
+                     data={'keyWord': code, 'maxNum': 10}, timeout=15)
+    for it in r.json():
+        if it.get('code') == code:
+            return it.get('orgId', '')
+    return ''
+
+
+def _rs_ann_backfill(pro, trade_date, need_start):
+    """消息面过滤数据维护：公告日期（巨潮，每股列表）+ 开盘价（tushare daily）。
+
+    返回 (ann_map, open_map)：ann_map {ts_code: set(YYYYMMDD)}，open_map {ts_code: {date: open}}。
+    断点续传入 stock_rs_ann_cache.json（每股落盘）。成本：公告首跑≈每股 1 topSearch + 1~3 页查询，
+    之后每晚每股 1 次（增量窗口=最近公告日-3天起，orgId 缓存）；开盘价首跑每股 1 次，
+    之后每晚全市场批量 1 次。合计每晚 ≈17 次（<30 阈值）。
+    """
+    cache = _load_json_cache(STOCK_RS_ANN_PATH, {})
+    orgs = cache.setdefault('orgIds', {})
+    anns = cache.setdefault('anns', {})
+    opens = cache.setdefault('opens', {})
+    session = requests.Session()
+    session.headers.update({'User-Agent': UA_BROWSER,
+                            'Referer': 'http://www.cninfo.com.cn/new/commonUrl?url=disclosure/list/notice',
+                            'X-Requested-With': 'XMLHttpRequest'})
+    ann_calls = 0
+    q_end = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
+    for tc in STOCKS:
+        code = tc.split('.')[0]
+        have = set(anns.get(tc, []))
+        if have and max(have) >= (datetime.strptime(trade_date, '%Y%m%d')
+                                  - timedelta(days=3)).strftime('%Y%m%d'):
+            continue   # 近3天已覆盖（公告会补发/改期，保留 3 天回溯重叠）
+        q_start = ((datetime.strptime(max(have), '%Y%m%d') - timedelta(days=3)).strftime('%Y-%m-%d')
+                   if have else f"{need_start[:4]}-{need_start[4:6]}-{need_start[6:]}")
+        try:
+            if not orgs.get(tc):
+                orgs[tc] = _cninfo_org_id(session, code)
+                ann_calls += 1
+            column = 'sse' if tc.endswith('.SH') else 'szse'
+            new_dates = set()
+            for page in range(1, 9):
+                time.sleep(API_DELAY)
+                ann_calls += 1
+                r = session.post('http://www.cninfo.com.cn/new/hisAnnouncement/query', data={
+                    'pageNum': page, 'pageSize': 30, 'column': column, 'tabName': 'fulltext',
+                    'plate': '', 'stock': f"{code},{orgs[tc]}" if orgs[tc] else code,
+                    'searchkey': '', 'secid': '', 'category': '', 'trade': '',
+                    'seDate': f'{q_start}~{q_end}', 'sortName': '', 'sortType': '',
+                    'isHLtitle': 'true'}, timeout=15)
+                lst = (r.json().get('announcements') or [])
+                if not lst:
+                    break
+                for a in lst:
+                    ts_ms = a.get('announcementTime', 0)
+                    if ts_ms:
+                        new_dates.add((datetime.utcfromtimestamp(ts_ms / 1000)
+                                       + timedelta(hours=8)).strftime('%Y%m%d'))
+                if len(lst) < 30:
+                    break
+            anns[tc] = sorted(have | new_dates)
+            _save_json_cache(STOCK_RS_ANN_PATH, cache)   # 每股落盘，中断可续
+        except Exception as e:
+            print(f'  Warning: stockRS anns {tc} failed: {str(e)[:60]}')
+    # 开盘价：全部个股都在 7 天新鲜度内 → 每日全市场批量 1 次；否则逐股回补（首跑）
+    stale = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=7)).strftime('%Y%m%d')
+    open_calls = 0
+    all_fresh = all(opens.get(tc) and max(opens[tc]) >= stale for tc in STOCKS)
+    if all_fresh:
+        try:
+            time.sleep(API_DELAY)
+            open_calls += 1
+            df = pro.daily(trade_date=trade_date, fields='ts_code,trade_date,open')
+            if df is not None and len(df):
+                for _, r in df.iterrows():
+                    tc = str(r['ts_code'])
+                    if tc in STOCKS:
+                        opens.setdefault(tc, {})[str(r['trade_date'])] = float(r['open'])
+        except Exception as e:
+            print(f'  Warning: stockRS opens batch failed: {str(e)[:60]}')
+    else:
+        for tc in STOCKS:
+            od = opens.setdefault(tc, {})
+            if od and max(od) >= stale:
+                continue
+            try:
+                time.sleep(API_DELAY)
+                open_calls += 1
+                df = pro.daily(ts_code=tc,
+                               start_date=(datetime.strptime(trade_date, '%Y%m%d')
+                                           - timedelta(days=200)).strftime('%Y%m%d'),
+                               end_date=trade_date, fields='trade_date,open')
+                if df is not None and len(df):
+                    for _, r in df.iterrows():
+                        od[str(r['trade_date'])] = float(r['open'])
+            except Exception as e:
+                print(f'  Warning: stockRS opens {tc} failed: {str(e)[:60]}')
+    # 裁剪：公告日期/开盘价各保留最近 200 个
+    for tc in list(anns.keys()):
+        if len(anns[tc]) > 200:
+            anns[tc] = anns[tc][-200:]
+    for tc in list(opens.keys()):
+        if len(opens[tc]) > 200:
+            for k in sorted(opens[tc].keys())[:-200]:
+                opens[tc].pop(k, None)
+    _save_json_cache(STOCK_RS_ANN_PATH, cache)
+    print(f'  stockRS ann/open cache: anns {sum(len(v) for v in anns.values())} dates, '
+          f'cninfo calls {ann_calls}, open calls {open_calls}')
+    return {tc: set(v) for tc, v in anns.items()}, opens
 
 
 def fetch_stock_rs(pro, trade_date, data):
@@ -3355,6 +3475,11 @@ def fetch_stock_rs(pro, trade_date, data):
         all_dates = [r[0] for r in ref]
         need_dates = set(all_dates[-(STOCK_RS_WINDOW + 2):])
 
+        # 消息面过滤数据（2026-09-09 用户指令：强对抗日必须是盘面自身打出来的强度，
+        # 公告/隔夜消息推动的强势日剔除；弱对抗侧用户未提，暂不过滤）：
+        # ①开盘跳空≥+1.5% ②当日或前一交易日有公告（巨潮口径）
+        ann_map, open_map = _rs_ann_backfill(pro, trade_date, min(need_dates))
+
         cache = _load_json_cache(STOCK_RS_PATH, {})
         idx_days = cache.setdefault('index', {})
         boards = cache.setdefault('boards', {})
@@ -3362,13 +3487,15 @@ def fetch_stock_rs(pro, trade_date, data):
 
         # 大盘=上证综指（东财 secid=1.000001 优先；东财被限流时回退 tushare index_daily，
         # 2026-09-09 本地实测东财共享出口 IP 会被瞬断，Actions 环境正常）
-        src_idx = 'eastmoney'
+        # 来源随缓存持久化（cache['indexSrc']），避免"本期未取数"时误标来源
+        src_idx = cache.get('indexSrc') or 'eastmoney'
         if not need_dates.issubset(idx_days.keys()):
             try:
                 idx_days.update(_em_kline_pct('1.000001',
                                               lmt=300 if len(idx_days) < STOCK_RS_WINDOW else 10))
                 calls += 1
                 time.sleep(1)   # 东财限频：每次调用间隔 1s（瞬时高频会断 IP）
+                cache['indexSrc'] = src_idx = 'eastmoney'
             except Exception as e:
                 print(f'  Warning: stockRS EM index failed ({str(e)[:50]}), fallback tushare index_daily')
                 time.sleep(API_DELAY)
@@ -3378,7 +3505,7 @@ def fetch_stock_rs(pro, trade_date, data):
                                      end_date=trade_date)
                 for _, r in di.iterrows():
                     idx_days[str(r['trade_date'])] = float(r['pct_chg'])
-                src_idx = 'tushare'
+                cache['indexSrc'] = src_idx = 'tushare'
 
         # 行业板块：映射 + 日K回补（缓存已有的日期不重抓，断点续传；东财失败逐板块降级合成指数）
         board_names = sorted({STOCK_RS_INDUSTRY_MAP.get(s['industry'])
@@ -3456,21 +3583,30 @@ def fetch_stock_rs(pro, trade_date, data):
             if len(seq) < 30:
                 skipped.append(s['name'])
                 continue
-            vi = {'win': 0, 'lose': 0, 'days': []}
-            vs = {'win': 0, 'lose': 0, 'days': []}
+            vi = {'win': 0, 'lose': 0, 'excluded': 0, 'days': []}
+            vs = {'win': 0, 'lose': 0, 'excluded': 0, 'days': []}
             bdays, sec_name, sec_src = _sector_days(s['industry'])
             if sec_src:
                 sec_src_used.add(sec_src)
+            ann_set = ann_map.get(code) or set()
+            od = open_map.get(code) or {}
             for a, b in zip(seq, seq[1:]):
                 if closes[a] <= 0:
                     continue
                 pct = (closes[b] / closes[a] - 1) * 100
+                # 消息面驱动日：开盘跳空≥+1.5%（隔夜消息定价签名）或 当日/前一交易日有公告
+                news_excl = False
+                op = od.get(b)
+                if op and (op / closes[a] - 1) * 100 >= STOCK_RS_GAP_TH:
+                    news_excl = True
+                elif b in ann_set or a in ann_set:
+                    news_excl = True
                 ip = idx_days.get(b)
                 if ip is not None:
-                    _rs_hit(vi, ip, pct - ip)
+                    _rs_hit(vi, ip, pct - ip, news_excl)
                 sp = bdays.get(b)
                 if sp is not None:
-                    _rs_hit(vs, sp, pct - sp)
+                    _rs_hit(vs, sp, pct - sp, news_excl)
             items.append({'code': code, 'name': s['name'], 'group': s['group'],
                           'industry': s['industry'], 'sectorName': sec_name,
                           'sectorSrc': sec_src,
@@ -3490,6 +3626,9 @@ def fetch_stock_rs(pro, trade_date, data):
             'unmappedBoards': unmapped_boards,
             'note': ('口径：日线近似"日内对抗"——强对抗日=基准跌超0.3%且个股超额≥+1.5pct，'
                      '弱对抗日=基准涨超0.3%且个股超额≤-1.5pct（超额=个股当日涨跌幅-基准当日涨跌幅）；'
+                     '强对抗日剔除消息面驱动（2026-09-09 用户口径：强度必须是盘面自身打出来的）——'
+                     '开盘跳空≥+1.5%（隔夜消息定价签名）或当日/前一交易日有公告（巨潮资讯口径）的强对抗日不计入，'
+                     '剔除天数见"剔除"列；弱对抗侧暂不过滤；'
                      '基准=上证综指+所属行业板块（东财行业板块优先，限流时降级为Tushare等权合成指数，'
                      '名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、'
                      '旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；'

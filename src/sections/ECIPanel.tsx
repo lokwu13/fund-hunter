@@ -1049,6 +1049,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                     <th className="text-center font-medium">对大盘 胜/负/净</th>
                     <th className="text-center font-medium">对板块 胜/负/净</th>
                     <th className="text-center font-medium">近20日净（大盘/板块）</th>
+                    <th className="text-center font-medium" title="消息面驱动强对抗日已剔除：开盘跳空≥+1.5% 或 当日/前一交易日有公告（巨潮口径）；弱对抗侧不过滤">剔除</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1079,6 +1080,12 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                           {it.vsSector
                             ? <span className={`font-bold ${netCls(it.vsSector.net20)}`}>{fmtNet(it.vsSector.net20)}</span>
                             : <span className="text-slate-300">—</span>}
+                        </td>
+                        <td className="text-center text-slate-500"
+                            title="被剔除的消息面驱动强对抗日（跳空≥+1.5% 或 当日/前一交易日有公告）">
+                          {it.vsIndex.excluded ?? 0}
+                          <span className="text-slate-300 mx-0.5">/</span>
+                          {it.vsSector ? (it.vsSector.excluded ?? 0) : '—'}
                         </td>
                       </tr>
                     );
