@@ -5,7 +5,7 @@ import {
   TrendingUp, TrendingDown, Minus, Zap,
   Activity, Waves, Target, Gauge, ArrowRight, Lightbulb,
   SortDesc, Filter, Star, AlertTriangle, CheckCircle2,
-  Crown, Trophy, TrendingDown as TrendDown, Radar, Sprout
+  Crown, Trophy, TrendingDown as TrendDown, Radar, Sprout, Swords
 } from 'lucide-react';
 import type { FundData } from '@/hooks/useFundData';
 import {
@@ -1020,6 +1020,80 @@ export default function ECIPanel({ data }: ECIPanelProps) {
           </CardContent>
         </Card>
       )}
+
+      {/* 个股对抗统计（近120个交易日，日线口径近似日内对抗；永远渲染+空态） */}
+      <Card className="border-amber-200 shadow-sm">
+        <CardHeader className="pb-2">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <CardTitle className="text-sm font-bold flex items-center gap-2">
+              <Swords className="w-4 h-4 text-amber-500" />
+              个股对抗统计
+              <span className="text-[10px] font-normal text-slate-400">
+                近{data.stockRS?.window ?? 120}个交易日 · 持仓+观察股 vs 上证综指/所属行业板块
+              </span>
+            </CardTitle>
+            {data.stockRS?.trade_date && (
+              <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">
+                {data.stockRS.trade_date}
+              </Badge>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent>
+          {data.stockRS && data.stockRS.items && data.stockRS.items.length > 0 ? (
+            <div className="overflow-x-auto max-h-80 overflow-y-auto">
+              <table className="w-full text-xs min-w-[560px]">
+                <thead className="sticky top-0 bg-white z-10">
+                  <tr className="text-slate-500 border-b border-slate-200">
+                    <th className="text-left py-1.5 font-medium">个股</th>
+                    <th className="text-center font-medium">对大盘 胜/负/净</th>
+                    <th className="text-center font-medium">对板块 胜/负/净</th>
+                    <th className="text-center font-medium">近20日净（大盘/板块）</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.stockRS.items.map((it) => {
+                    const netCls = (n: number) => n > 0 ? 'text-emerald-600' : n < 0 ? 'text-red-500' : 'text-slate-400';
+                    const fmtNet = (n: number) => `${n > 0 ? '+' : ''}${n}`;
+                    return (
+                      <tr key={it.code}
+                          className={`border-b border-slate-50 hover:bg-amber-50/40 ${it.group === 'hold' ? 'font-semibold bg-rose-50/30' : ''}`}>
+                        <td className="py-1.5 text-slate-700">
+                          {it.group === 'hold' && <Star className="w-3 h-3 text-pink-500 inline mr-0.5 -mt-0.5" />}
+                          {it.name}
+                          <span className="text-[9px] text-slate-400 ml-1">{it.sectorName || it.industry}</span>
+                        </td>
+                        <td className="text-center">
+                          {it.vsIndex.win}/{it.vsIndex.lose}/
+                          <span className={`font-bold ${netCls(it.vsIndex.net)}`}>{fmtNet(it.vsIndex.net)}</span>
+                        </td>
+                        <td className="text-center">
+                          {it.vsSector
+                            ? (<>{it.vsSector.win}/{it.vsSector.lose}/
+                                <span className={`font-bold ${netCls(it.vsSector.net)}`}>{fmtNet(it.vsSector.net)}</span></>)
+                            : <span className="text-slate-300">—</span>}
+                        </td>
+                        <td className="text-center">
+                          <span className={`font-bold ${netCls(it.vsIndex.net20)}`}>{fmtNet(it.vsIndex.net20)}</span>
+                          <span className="text-slate-300 mx-0.5">/</span>
+                          {it.vsSector
+                            ? <span className={`font-bold ${netCls(it.vsSector.net20)}`}>{fmtNet(it.vsSector.net20)}</span>
+                            : <span className="text-slate-300">—</span>}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-xs text-slate-400 py-3 text-center">对抗统计数据积累中（首日板块日K回补后展示）</p>
+          )}
+          {data.stockRS?.note && (
+            <p className="text-[10px] text-slate-400 mt-1.5">{data.stockRS.note}</p>
+          )}
+        </CardContent>
+      </Card>
       <Card className="border-cyan-200 bg-gradient-to-r from-cyan-50 to-blue-50">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-bold flex items-center gap-2 text-cyan-800">

@@ -56,6 +56,27 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
     return null;
   };
 
+  // 个股对抗统计徽标：近120日 对大盘净胜/对板块净胜（净胜=强对抗次数-弱对抗次数，正绿负红）
+  const rsMap = new Map((data.stockRS?.items || []).map((r) => [r.code, r]));
+  const rsBadge = (code?: string) => {
+    const rs = code ? rsMap.get(code) : undefined;
+    if (!rs) return null;
+    const ni = rs.vsIndex.net;
+    const ns = rs.vsSector?.net;
+    const netCls = (n: number) => n > 0 ? 'bg-emerald-500' : n < 0 ? 'bg-red-400' : 'bg-slate-300';
+    const overall = ni + (ns ?? 0);
+    return (
+      <div className="mt-1">
+        <Badge
+          className={`text-[9px] h-4 px-1.5 ${netCls(overall)} text-white border-0`}
+          title={`近120日对抗净胜：对大盘 ${ni > 0 ? '+' : ''}${ni}（胜${rs.vsIndex.win}/负${rs.vsIndex.lose}）· 对板块 ${ns != null ? (ns > 0 ? '+' : '') + ns : '—'}${rs.vsSector ? `（胜${rs.vsSector.win}/负${rs.vsSector.lose}）` : ''}；强对抗日=基准跌>0.3%且个股超额≥+1.5pct，弱对抗日反之`}
+        >
+          ⚔对抗{ni > 0 ? '+' : ''}{ni}/{ns != null ? (ns > 0 ? '+' : '') + ns : '—'}
+        </Badge>
+      </div>
+    );
+  };
+
   const pctClass = (v?: number) =>
     (v ?? 0) >= 0 ? 'text-red-500' : 'text-green-500';
   const fmtPct = (v?: number) => `${(v ?? 0) >= 0 ? '+' : ''}${(v ?? 0).toFixed(2)}%`;
@@ -522,6 +543,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                       </div>
                     </div>
                     {marginBadge(s.code)}
+                    {rsBadge(s.code)}
                   </div>
                 ))}
               </div>
@@ -552,6 +574,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                       </div>
                     </div>
                     {marginBadge(s.code)}
+                    {rsBadge(s.code)}
                   </div>
                 ))}
               </div>

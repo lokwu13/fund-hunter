@@ -3230,6 +3230,279 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         print(f"  Warning: fetch_vcp_stocks failed (keep old vcpStocks): {e}")
 
 
+# ── 个股半年对抗统计（2026-09-09 用户指令）──
+STOCK_RS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'cache', 'stock_rs_cache.json')
+STOCK_RS_WINDOW = 120       # 近120个交易日（约半年）
+STOCK_RS_BASE_TH = 0.3      # 基准涨/跌判定阈值 %
+STOCK_RS_EXCESS_TH = 1.5    # 个股超额阈值 pct
+# tushare 二级行业 → 东财行业板块名（push2 clist m:90+t:2，板块代码运行时动态解析，
+# 2026-09-08 实测清单对齐；两个一级近似已在此标注并在前端 note 披露）
+STOCK_RS_INDUSTRY_MAP = {
+    '化学制药': '化学制药',
+    '医疗保健': '医疗器械',    # 心脉/南微/迈瑞/联影均为器械股
+    '机场': '航空机场',
+    '化工原料': '化学原料',
+    '电气设备': '电网设备',
+    '食品': '食品饮料',
+    '红黄酒': '食品饮料',      # 东财新版行业板块无酒类二级，归入食品饮料一级（近似）
+    '旅游服务': '社会服务',    # 东财新版无旅游酒店二级，归入社会服务一级（近似）
+    '特种钢': '钢铁',
+}
+_EM_HEADERS = {'User-Agent': 'Mozilla/5.0', 'Referer': 'https://quote.eastmoney.com/'}
+
+
+# 东财限频对策（2026-09-09 实测）：瞬时高频会被单个边缘节点瞬断 IP，换编号子域即恢复。
+# 每次调用在多宿主间轮换 + 失败退避重试；调用间隔 1s。
+_EM_KLINE_HOSTS = ['https://push2his.eastmoney.com', 'https://83.push2his.eastmoney.com',
+                   'https://91.push2his.eastmoney.com', 'https://39.push2his.eastmoney.com']
+_EM_CLIST_HOSTS = ['https://push2.eastmoney.com', 'https://83.push2.eastmoney.com',
+                   'https://91.push2.eastmoney.com']
+
+
+def _em_get_json(hosts, path, params, tries=4):
+    """东财 HTTP GET：多宿主轮换 + 退避重试（5/10/15/20s）。"""
+    last = None
+    for t in range(tries):
+        try:
+            r = requests.get(hosts[t % len(hosts)] + path, params=params,
+                             headers=_EM_HEADERS, timeout=20)
+            return r.json() or {}
+        except Exception as e:
+            last = e
+            if t < tries - 1:
+                time.sleep(5 * (t + 1))
+    raise last
+
+
+def _em_board_list():
+    """东财行业板块清单 {板块名: BK代码}（push2 clist，m:90+t:2=行业板块）。"""
+    diff = ((_em_get_json(_EM_CLIST_HOSTS, '/api/qt/clist/get',
+                          {'pn': 1, 'pz': 300, 'po': 1, 'np': 1, 'fltt': 2, 'invt': 2,
+                           'fs': 'm:90+t:2', 'fields': 'f12,f14'}).get('data') or {}).get('diff') or [])
+    return {x['f14']: x['f12'] for x in diff}
+
+
+def _em_kline_pct(secid, lmt=300):
+    """东财 push2his 日K → {YYYYMMDD: 涨跌幅%}（secid：指数 1.000001 / 板块 90.BKxxxx）。"""
+    out = {}
+    for k in (((_em_get_json(_EM_KLINE_HOSTS, '/api/qt/stock/kline/get',
+                             {'secid': secid, 'klt': 101, 'fqt': 0, 'lmt': lmt,
+                              'end': '20500101', 'iscca': 1,
+                              'fields1': 'f1,f2,f3,f7', 'fields2': 'f51,f59'})
+                .get('data') or {}).get('klines') or [])):
+        p = k.split(',')
+        out[p[0].replace('-', '')] = float(p[1])
+    return out
+
+
+def _rs_hit(bucket, base_pct, excess):
+    """单日判定：强对抗 +1 / 弱对抗 -1 / 不计 0。"""
+    if base_pct < -STOCK_RS_BASE_TH and excess >= STOCK_RS_EXCESS_TH:
+        bucket['win'] += 1
+        bucket['days'].append(1)
+    elif base_pct > STOCK_RS_BASE_TH and excess <= -STOCK_RS_EXCESS_TH:
+        bucket['lose'] += 1
+        bucket['days'].append(-1)
+    else:
+        bucket['days'].append(0)
+
+
+def _rs_pack(bk):
+    d20 = bk['days'][-20:]
+    return {'win': bk['win'], 'lose': bk['lose'], 'net': bk['win'] - bk['lose'],
+            'win20': sum(1 for x in d20 if x > 0), 'lose20': sum(1 for x in d20 if x < 0),
+            'net20': sum(d20)}
+
+
+def fetch_stock_rs(pro, trade_date, data):
+    """个股半年对抗统计：STOCKS 全部个股 vs 上证综指 / 所属东财行业板块。
+
+    判定（日线口径近似"日内对抗"）：
+    - 强对抗日：基准跌（pct<-0.3%）且个股超额（个股pct-基准pct）≥+1.5pct → 记+1
+    - 弱对抗日：基准涨（pct>+0.3%）且个股超额≤-1.5pct → 记-1
+    窗口=近120个交易日（约半年），近20日为子项。
+    行情源：个股=vcp_cache 日线缓存（零新增调用）；大盘/板块=东财 push2his
+    （首日回补300日≈板块数+2 次 HTTP，之后每晚增量 lmt=10，断点续传入 stock_rs_cache）。
+    """
+    try:
+        import vcp_preview as vcp
+        vc = vcp.load_cache()
+        stock_daily = vc.get('stock_daily') or {}
+        # 缺历史/过期的个股回补（与 fetch_vcp_stocks 同口径；首日预计全部已齐、零回补）
+        stale = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=7)).strftime('%Y%m%d')
+        for code in STOCKS:
+            rows = stock_daily.get(code) or []
+            if len(rows) < STOCK_RS_WINDOW + 10 or rows[-1][0] < stale:
+                try:
+                    time.sleep(API_DELAY)
+                    df = pro.daily(ts_code=code,
+                                   start_date=(datetime.strptime(trade_date, '%Y%m%d')
+                                               - timedelta(days=vcp.BACK_CAL_DAYS)).strftime('%Y%m%d'),
+                                   end_date=trade_date)
+                    if df is not None and len(df):
+                        rows = [[str(r['trade_date']), float(r['close']), float(r['high']),
+                                 float(r['low']), float(r['vol'])] for _, r in df.iterrows()]
+                        rows.sort()
+                        vc.setdefault('stock_daily', {})[code] = rows[-300:]
+                        stock_daily = vc['stock_daily']
+                except Exception as e:
+                    print(f'  Warning: stockRS backfill {code} failed: {str(e)[:60]}')
+        vcp.save_cache(vc)
+
+        # 交易日序列：任取一只历史最完整的个股（A股统一历）
+        ref = max((r for r in stock_daily.values() if r), key=len)
+        all_dates = [r[0] for r in ref]
+        need_dates = set(all_dates[-(STOCK_RS_WINDOW + 2):])
+
+        cache = _load_json_cache(STOCK_RS_PATH, {})
+        idx_days = cache.setdefault('index', {})
+        boards = cache.setdefault('boards', {})
+        calls = 0
+
+        # 大盘=上证综指（东财 secid=1.000001 优先；东财被限流时回退 tushare index_daily，
+        # 2026-09-09 本地实测东财共享出口 IP 会被瞬断，Actions 环境正常）
+        src_idx = 'eastmoney'
+        if not need_dates.issubset(idx_days.keys()):
+            try:
+                idx_days.update(_em_kline_pct('1.000001',
+                                              lmt=300 if len(idx_days) < STOCK_RS_WINDOW else 10))
+                calls += 1
+                time.sleep(1)   # 东财限频：每次调用间隔 1s（瞬时高频会断 IP）
+            except Exception as e:
+                print(f'  Warning: stockRS EM index failed ({str(e)[:50]}), fallback tushare index_daily')
+                time.sleep(API_DELAY)
+                di = pro.index_daily(ts_code='000001.SH',
+                                     start_date=(datetime.strptime(trade_date, '%Y%m%d')
+                                                 - timedelta(days=200)).strftime('%Y%m%d'),
+                                     end_date=trade_date)
+                for _, r in di.iterrows():
+                    idx_days[str(r['trade_date'])] = float(r['pct_chg'])
+                src_idx = 'tushare'
+
+        # 行业板块：映射 + 日K回补（缓存已有的日期不重抓，断点续传；东财失败逐板块降级合成指数）
+        board_names = sorted({STOCK_RS_INDUSTRY_MAP.get(s['industry'])
+                              for s in STOCKS.values()} - {None})
+        bl = cache.get('boardList') or {}
+        try:
+            bl_age = (datetime.strptime(trade_date, '%Y%m%d')
+                      - datetime.strptime(cache.get('boardListDate', '20000101'), '%Y%m%d')).days
+        except Exception:
+            bl_age = 99
+        if not bl or bl_age > 7:
+            try:
+                bl = _em_board_list()
+                calls += 1
+                time.sleep(1)
+                cache['boardList'] = bl
+                cache['boardListDate'] = trade_date
+            except Exception as e:
+                print(f'  Warning: stockRS EM board list failed ({str(e)[:50]}), 全部板块走合成指数')
+                bl = cache.get('boardList') or {}
+        unmapped_boards = []
+        em_failed_boards = set()
+        for bn in board_names:
+            bcode = bl.get(bn)
+            if not bcode:
+                unmapped_boards.append(bn)
+                em_failed_boards.add(bn)
+                continue
+            b = boards.setdefault(bn, {'code': bcode, 'days': {}})
+            b['code'] = bcode
+            if not need_dates.issubset(b['days'].keys()):
+                try:
+                    b['days'].update(_em_kline_pct(f'90.{bcode}',
+                                                   lmt=300 if len(b['days']) < STOCK_RS_WINDOW else 10))
+                    calls += 1
+                    time.sleep(1)
+                except Exception as e:
+                    print(f'  Warning: stockRS EM kline {bn} failed ({str(e)[:50]}), 该股走合成指数')
+                    em_failed_boards.add(bn)
+        # 兜底基准：sector_history 等权合成指数（tushare 行业名精确匹配，零调用，本地常驻）
+        syn = cache.setdefault('boardsSyn', {})
+        hist = _load_sector_history()
+        for ind in sorted({s['industry'] for s in STOCKS.values()}):
+            sd = syn.setdefault(ind, {})
+            for dt, _n, ret, _a in _history_series(hist, ind):
+                sd[dt] = ret
+            if len(sd) > 260:
+                for k in sorted(sd.keys())[:-260]:
+                    sd.pop(k, None)
+        # 裁剪缓存：指数/板块各保留最近 260 个交易日
+        for days in [idx_days] + [b['days'] for b in boards.values()]:
+            if len(days) > 260:
+                for k in sorted(days.keys())[:-260]:
+                    days.pop(k, None)
+        _save_json_cache(STOCK_RS_PATH, cache)
+
+        def _sector_days(ind):
+            """个股行业基准序列：东财板块优先（覆盖≥80%窗口），否则等权合成指数。返回 (days, 名称, 来源)。"""
+            bn = STOCK_RS_INDUSTRY_MAP.get(ind)
+            if bn and bn not in em_failed_boards:
+                emd = (boards.get(bn) or {}).get('days') or {}
+                if emd and len(need_dates & set(emd.keys())) >= len(need_dates) * 0.8:
+                    return emd, bn, 'eastmoney'
+            sd = syn.get(ind) or {}
+            return (sd, f'{ind}(合成)', 'tushare合成') if sd else ({}, None, None)
+
+        # ── 逐股统计 ──
+        items = []
+        skipped = []
+        sec_src_used = set()
+        for code, s in STOCKS.items():
+            rows = stock_daily.get(code) or []
+            closes = {r[0]: r[1] for r in rows}
+            seq = [d for d in all_dates if d in closes and d in idx_days][-(STOCK_RS_WINDOW + 1):]
+            if len(seq) < 30:
+                skipped.append(s['name'])
+                continue
+            vi = {'win': 0, 'lose': 0, 'days': []}
+            vs = {'win': 0, 'lose': 0, 'days': []}
+            bdays, sec_name, sec_src = _sector_days(s['industry'])
+            if sec_src:
+                sec_src_used.add(sec_src)
+            for a, b in zip(seq, seq[1:]):
+                if closes[a] <= 0:
+                    continue
+                pct = (closes[b] / closes[a] - 1) * 100
+                ip = idx_days.get(b)
+                if ip is not None:
+                    _rs_hit(vi, ip, pct - ip)
+                sp = bdays.get(b)
+                if sp is not None:
+                    _rs_hit(vs, sp, pct - sp)
+            items.append({'code': code, 'name': s['name'], 'group': s['group'],
+                          'industry': s['industry'], 'sectorName': sec_name,
+                          'sectorSrc': sec_src,
+                          'vsIndex': _rs_pack(vi),
+                          'vsSector': _rs_pack(vs) if bdays else None,
+                          'daysUsed': len(seq) - 1})
+        items.sort(key=lambda x: (0 if x['group'] == 'hold' else 1,
+                                  -(x['vsIndex']['net'] + (x['vsSector'] or {'net': 0})['net'])))
+        d = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
+        src_txt = f"大盘={'东财' if src_idx == 'eastmoney' else 'tushare'}，板块={'东财行业板块' if sec_src_used == {'eastmoney'} else '含tushare合成指数降级（标注（合成））'}"
+        data['stockRS'] = {
+            'trade_date': d, 'window': STOCK_RS_WINDOW, 'baseIndex': '上证综指',
+            'indexSrc': src_idx,
+            'items': items,
+            'unmapped': sorted({s['industry'] for s in STOCKS.values()
+                                if s['industry'] not in STOCK_RS_INDUSTRY_MAP}),
+            'unmappedBoards': unmapped_boards,
+            'note': ('口径：日线近似"日内对抗"——强对抗日=基准跌超0.3%且个股超额≥+1.5pct，'
+                     '弱对抗日=基准涨超0.3%且个股超额≤-1.5pct（超额=个股当日涨跌幅-基准当日涨跌幅）；'
+                     '基准=上证综指+所属行业板块（东财行业板块优先，限流时降级为Tushare等权合成指数，'
+                     '名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、'
+                     '旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；'
+                     '窗口=近120个交易日（约半年），近20日为子项；净胜=强对抗次数-弱对抗次数；'
+                     f'本期数据源：{src_txt}'),
+        }
+        print(f"  stockRS: {len(items)} stocks × {STOCK_RS_WINDOW}d window, EM HTTP calls: {calls}, "
+              f"sources: idx={src_idx}, sec={sorted(sec_src_used)}"
+              + (f", skipped: {skipped}" if skipped else ''))
+    except Exception as e:
+        print(f"  Warning: fetch_stock_rs failed (keep old stockRS): {e}")
+
+
 def update_bottom_freshness(bottom, hist):
     """B. 积聚新鲜度：bottomWatch 命中板块的首触日+连续命中交易日数（轻量持久化）。
 
@@ -4348,6 +4621,13 @@ def main():
     print("\n[16b/17] Building stock-level VCP scan (vcpStocks)...")
     _today_map = watch_ctx[3] if watch_ctx else {}
     fetch_vcp_stocks(pro, trade_date, data, _today_map)
+
+    # ── 16b2. 个股半年对抗统计（持仓+观察股 vs 上证综指/所属行业板块）──
+    print("\n[16b2/17] Building stock RS battle stats (stockRS)...")
+    try:
+        fetch_stock_rs(pro, trade_date, data)
+    except Exception as e:
+        print(f"  Warning: stockRS failed: {e}")
 
     # ── 16c. 总览并联双轴（趋势轴∥短线轴）+ 宽基趋势/VCP + 第4步排雷 ──
     print("\n[16c/17] Building dual axes (trend/short) + broad watch + mine watch...")

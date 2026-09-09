@@ -415,6 +415,24 @@ export interface FundData {
       } | null;
     }>;
   };
+  stockRS?: {
+    trade_date: string;
+    window: number;
+    baseIndex?: string;
+    note?: string;
+    unmapped?: string[];
+    unmappedBoards?: string[];
+    items: Array<{
+      code: string;
+      name: string;
+      group: 'hold' | 'watch';
+      industry?: string;
+      sectorName?: string | null;
+      daysUsed?: number;
+      vsIndex: { win: number; lose: number; net: number; win20: number; lose20: number; net20: number };
+      vsSector?: { win: number; lose: number; net: number; win20: number; lose20: number; net20: number } | null;
+    }>;
+  };
   eciSubsectors?: {
     trade_date: string;
     items: Array<{
