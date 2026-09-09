@@ -1046,16 +1046,14 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                 <thead className="sticky top-0 bg-white z-10">
                   <tr className="text-slate-500 border-b border-slate-200">
                     <th className="text-left py-1.5 font-medium">个股</th>
-                    <th className="text-center font-medium">对大盘 胜/负/净</th>
-                    <th className="text-center font-medium">对板块 胜/负/净</th>
-                    <th className="text-center font-medium">近20日净（大盘/板块）</th>
+                    <th className="text-center font-medium" title="强=基准走弱日个股明显跑赢的次数（分开累计，不对冲）">对大盘 强/弱</th>
+                    <th className="text-center font-medium" title="弱=基准走强日个股明显跑输的次数（分开累计，不对冲）">对板块 强/弱</th>
                     <th className="text-center font-medium" title="消息面驱动强对抗日已剔除：开盘跳空≥+1.5% 或 当日/前一交易日有公告（巨潮口径）；弱对抗侧不过滤">剔除</th>
+                    <th className="text-center font-medium" title="近20日强/弱（大盘｜板块）">近20日 强/弱</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.stockRS.items.map((it) => {
-                    const netCls = (n: number) => n > 0 ? 'text-emerald-600' : n < 0 ? 'text-red-500' : 'text-slate-400';
-                    const fmtNet = (n: number) => `${n > 0 ? '+' : ''}${n}`;
                     return (
                       <tr key={it.code}
                           className={`border-b border-slate-50 hover:bg-amber-50/40 ${it.group === 'hold' ? 'font-semibold bg-rose-50/30' : ''}`}>
@@ -1065,20 +1063,15 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                           <span className="text-[9px] text-slate-400 ml-1">{it.sectorName || it.industry}</span>
                         </td>
                         <td className="text-center">
-                          {it.vsIndex.win}/{it.vsIndex.lose}/
-                          <span className={`font-bold ${netCls(it.vsIndex.net)}`}>{fmtNet(it.vsIndex.net)}</span>
-                        </td>
-                        <td className="text-center">
-                          {it.vsSector
-                            ? (<>{it.vsSector.win}/{it.vsSector.lose}/
-                                <span className={`font-bold ${netCls(it.vsSector.net)}`}>{fmtNet(it.vsSector.net)}</span></>)
-                            : <span className="text-slate-300">—</span>}
-                        </td>
-                        <td className="text-center">
-                          <span className={`font-bold ${netCls(it.vsIndex.net20)}`}>{fmtNet(it.vsIndex.net20)}</span>
+                          <span className="font-bold text-emerald-600">强{it.vsIndex.win}</span>
                           <span className="text-slate-300 mx-0.5">/</span>
+                          <span className="font-bold text-red-500">弱{it.vsIndex.lose}</span>
+                        </td>
+                        <td className="text-center">
                           {it.vsSector
-                            ? <span className={`font-bold ${netCls(it.vsSector.net20)}`}>{fmtNet(it.vsSector.net20)}</span>
+                            ? (<><span className="font-bold text-emerald-600">强{it.vsSector.win}</span>
+                                <span className="text-slate-300 mx-0.5">/</span>
+                                <span className="font-bold text-red-500">弱{it.vsSector.lose}</span></>)
                             : <span className="text-slate-300">—</span>}
                         </td>
                         <td className="text-center text-slate-500"
@@ -1086,6 +1079,19 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                           {it.vsIndex.excluded ?? 0}
                           <span className="text-slate-300 mx-0.5">/</span>
                           {it.vsSector ? (it.vsSector.excluded ?? 0) : '—'}
+                        </td>
+                        <td className="text-center">
+                          <span className="font-semibold text-emerald-600">强{it.vsIndex.win20}</span>
+                          <span className="text-slate-300 mx-0.5">/</span>
+                          <span className="font-semibold text-red-500">弱{it.vsIndex.lose20}</span>
+                          {it.vsSector && (
+                            <>
+                              <span className="text-slate-300 mx-1">｜</span>
+                              <span className="font-semibold text-emerald-600">强{it.vsSector.win20}</span>
+                              <span className="text-slate-300 mx-0.5">/</span>
+                              <span className="font-semibold text-red-500">弱{it.vsSector.lose20}</span>
+                            </>
+                          )}
                         </td>
                       </tr>
                     );

@@ -3613,8 +3613,11 @@ def fetch_stock_rs(pro, trade_date, data):
                           'vsIndex': _rs_pack(vi),
                           'vsSector': _rs_pack(vs) if bdays else None,
                           'daysUsed': len(seq) - 1})
-        items.sort(key=lambda x: (0 if x['group'] == 'hold' else 1,
-                                  -(x['vsIndex']['net'] + (x['vsSector'] or {'net': 0})['net'])))
+        # 排序（2026-09-09 v3 用户口径）：强对抗次数（双基准合计）降序，强的排前；
+        # 次键=弱对抗次数升序（弱的少更优），不再按净胜/持仓分组
+        items.sort(key=lambda x: (-(x['vsIndex']['win'] + (x['vsSector'] or {'win': 0})['win']),
+                                  x['vsIndex']['lose'] + (x['vsSector'] or {'lose': 0})['lose'],
+                                  x['code']))
         d = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
         src_txt = f"大盘={'东财' if src_idx == 'eastmoney' else 'tushare'}，板块={'东财行业板块' if sec_src_used == {'eastmoney'} else '含tushare合成指数降级（标注（合成））'}"
         data['stockRS'] = {
@@ -3632,7 +3635,9 @@ def fetch_stock_rs(pro, trade_date, data):
                      '基准=上证综指+所属行业板块（东财行业板块优先，限流时降级为Tushare等权合成指数，'
                      '名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、'
                      '旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；'
-                     '窗口=近120个交易日（约半年），近20日为子项；净胜=强对抗次数-弱对抗次数；'
+                     '窗口=近120个交易日（约半年），近20日为子项；'
+                     '强/弱分开累计不对冲（2026-09-09 v3 用户口径）：强=基准走弱日个股明显跑赢的次数，'
+                     '弱=基准走强日个股明显跑输的次数，两个计数独立累计展示，不做净胜对冲；'
                      f'本期数据源：{src_txt}'),
         }
         print(f"  stockRS: {len(items)} stocks × {STOCK_RS_WINDOW}d window, EM HTTP calls: {calls}, "
