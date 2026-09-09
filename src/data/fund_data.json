@@ -9009,7 +9009,15 @@
       "stockName": "中国中免",
       "group": "watch",
       "industry": "旅游服务",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-09-05",
+          "title": "H股公告-月报表",
+          "content": "H股公告-月报表",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-09-05/1225548637.PDF"
+        }
+      ]
     },
     {
       "stockCode": "603259.SH",
@@ -13948,7 +13956,7 @@
           ]
         },
         {
-          "name": "航海装备Ⅱ",
+          "name": "航海装备Ⅲ",
           "pctChange": 4.67,
           "totalMvY": 5975.0,
           "upNum": 10,
@@ -13974,7 +13982,7 @@
           ]
         },
         {
-          "name": "航海装备Ⅲ",
+          "name": "航海装备Ⅱ",
           "pctChange": 4.67,
           "totalMvY": 5975.0,
           "upNum": 10,
