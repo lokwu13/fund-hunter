@@ -7842,10 +7842,10 @@
     {
       "code": "070002.OF",
       "name": "嘉实增长",
-      "nav": 19.724,
-      "accumNav": 20.415,
-      "date": "20260910",
-      "change": -0.192
+      "nav": 19.6443,
+      "accumNav": 20.3353,
+      "date": "20260911",
+      "change": -0.08
     },
     {
       "code": "519732.OF",
@@ -7858,10 +7858,10 @@
     {
       "code": "001410.OF",
       "name": "信达澳银新能源产业",
-      "nav": 6.487,
-      "accumNav": 6.549,
-      "date": "20260910",
-      "change": -0.026
+      "nav": 6.424,
+      "accumNav": 6.486,
+      "date": "20260911",
+      "change": -0.063
     },
     {
       "code": "003494.OF",
@@ -9355,90 +9355,90 @@
       {
         "name": "华泰柏瑞300ETF",
         "code": "510300.SH",
-        "share": 231.91,
-        "prevShare": 231.85,
-        "shareChg": 0.05,
-        "avgPrice": 4.617,
-        "netFlow": 0.25,
-        "shareChg5d": 0.7,
-        "netFlow5d": 3.27
+        "share": 233.99,
+        "prevShare": 231.91,
+        "shareChg": 2.08,
+        "avgPrice": 4.561,
+        "netFlow": 9.48,
+        "shareChg5d": 0.22,
+        "netFlow5d": 0.85
       },
       {
         "name": "易方达300ETF",
         "code": "510310.SH",
-        "share": 113.78,
-        "prevShare": 113.85,
-        "shareChg": -0.07,
-        "avgPrice": 4.485,
-        "netFlow": -0.32,
-        "shareChg5d": 0.81,
-        "netFlow5d": 3.65
+        "share": 113.48,
+        "prevShare": 113.78,
+        "shareChg": -0.3,
+        "avgPrice": 4.428,
+        "netFlow": -1.32,
+        "shareChg5d": -0.05,
+        "netFlow5d": -0.22
       },
       {
         "name": "华夏300ETF",
         "code": "510330.SH",
-        "share": 83.62,
-        "prevShare": 83.72,
-        "shareChg": -0.1,
-        "avgPrice": 4.814,
-        "netFlow": -0.48,
-        "shareChg5d": 0.06,
-        "netFlow5d": 0.31
+        "share": 83.41,
+        "prevShare": 83.62,
+        "shareChg": -0.22,
+        "avgPrice": 4.754,
+        "netFlow": -1.03,
+        "shareChg5d": -0.44,
+        "netFlow5d": -2.11
       },
       {
         "name": "华夏上证50ETF",
         "code": "510050.SH",
-        "share": 67.18,
-        "prevShare": 68.47,
-        "shareChg": -1.29,
-        "avgPrice": 3.013,
-        "netFlow": -3.88,
-        "shareChg5d": 1.58,
-        "netFlow5d": 4.85
+        "share": 70.31,
+        "prevShare": 67.18,
+        "shareChg": 3.13,
+        "avgPrice": 2.972,
+        "netFlow": 9.31,
+        "shareChg5d": 2.21,
+        "netFlow5d": 6.53
       },
       {
         "name": "华夏科创50ETF",
         "code": "588000.SH",
-        "share": 547.59,
-        "prevShare": 542.46,
-        "shareChg": 5.13,
-        "avgPrice": 1.661,
-        "netFlow": 8.52,
-        "shareChg5d": 25.02,
-        "netFlow5d": 42.05
+        "share": 560.73,
+        "prevShare": 547.59,
+        "shareChg": 13.14,
+        "avgPrice": 1.624,
+        "netFlow": 21.34,
+        "shareChg5d": 19.77,
+        "netFlow5d": 32.35
       },
       {
         "name": "易方达科创50ETF",
         "code": "588080.SH",
-        "share": 259.22,
-        "prevShare": 258.17,
-        "shareChg": 1.05,
-        "avgPrice": 1.611,
-        "netFlow": 1.69,
-        "shareChg5d": 6.96,
-        "netFlow5d": 11.36
+        "share": 265.13,
+        "prevShare": 259.22,
+        "shareChg": 5.91,
+        "avgPrice": 1.577,
+        "netFlow": 9.32,
+        "shareChg5d": 8.88,
+        "netFlow5d": 14.14
       },
       {
         "name": "南方中证500ETF",
         "code": "510500.SH",
-        "share": 54.43,
-        "prevShare": 53.8,
-        "shareChg": 0.63,
-        "avgPrice": 7.746,
-        "netFlow": 4.86,
-        "shareChg5d": 3.84,
-        "netFlow5d": 29.75
+        "share": 52.32,
+        "prevShare": 54.43,
+        "shareChg": -2.11,
+        "avgPrice": 7.554,
+        "netFlow": -15.92,
+        "shareChg5d": 0.13,
+        "netFlow5d": 1.37
       },
       {
         "name": "南方中证1000ETF",
         "code": "512100.SH",
-        "share": 62.45,
-        "prevShare": 62.65,
-        "shareChg": -0.2,
-        "avgPrice": 3.083,
-        "netFlow": -0.62,
-        "shareChg5d": 1.34,
-        "netFlow5d": 4.1
+        "share": 60.87,
+        "prevShare": 62.45,
+        "shareChg": -1.58,
+        "avgPrice": 2.998,
+        "netFlow": -4.74,
+        "shareChg5d": -4.7,
+        "netFlow5d": -14.44
       },
       {
         "name": "易方达创业板ETF",
@@ -9465,13 +9465,13 @@
       {
         "name": "华泰柏瑞A500ETF",
         "code": "563360.SH",
-        "share": 307.76,
-        "prevShare": 307.19,
-        "shareChg": 0.57,
-        "avgPrice": 1.269,
-        "netFlow": 0.72,
-        "shareChg5d": -4.44,
-        "netFlow5d": -5.65
+        "share": 307.97,
+        "prevShare": 307.76,
+        "shareChg": 0.21,
+        "avgPrice": 1.246,
+        "netFlow": 0.26,
+        "shareChg5d": -4.92,
+        "netFlow5d": -6.27
       },
       {
         "name": "南方A500ETF",
@@ -9498,13 +9498,13 @@
       {
         "name": "华夏A500ETF",
         "code": "512050.SH",
-        "share": 162.65,
-        "prevShare": 161.48,
-        "shareChg": 1.17,
-        "avgPrice": 1.197,
-        "netFlow": 1.4,
-        "shareChg5d": 1.08,
-        "netFlow5d": 1.3
+        "share": 161.96,
+        "prevShare": 162.65,
+        "shareChg": -0.69,
+        "avgPrice": 1.175,
+        "netFlow": -0.81,
+        "shareChg5d": -2.82,
+        "netFlow5d": -3.37
       },
       {
         "name": "易方达A500ETF",
@@ -9519,10 +9519,10 @@
       }
     ],
     "total": {
-      "shareChg": 10.76,
-      "netFlow": 19.03,
-      "shareChg5d": 30.25,
-      "netFlow5d": 78.89
+      "shareChg": 23.39,
+      "netFlow": 32.78,
+      "shareChg5d": 11.58,
+      "netFlow5d": 12.73
     }
   },
   "sectorScan": {
@@ -11287,22 +11287,22 @@
     "note": "20日滚动波动率年分位<25% 且 ≥3/5 龙头同时窄幅(振幅比<0.75)+缩量(量比<0.7) = 🟢强共振；2只 = 🟡观察；⚪为分位最低前5名对照。概念指数无成交额时收缩比显示—"
   },
   "etfShareRadar": {
-    "trade_date": "2026-09-10",
+    "trade_date": "2026-09-11",
     "items": [
       {
         "code": "510300.SH",
         "name": "华泰柏瑞300ETF",
         "group": "broad",
         "series": "沪深300系列",
-        "share": 231.91,
-        "close": 4.617,
-        "chg1": 0.05,
-        "chg1Pct": 0.02,
-        "amt1": 0.23,
-        "chg5": 0.7,
-        "chg5Pct": 0.3,
-        "chg20": -32.76,
-        "chg20Pct": -12.38,
+        "share": 233.99,
+        "close": 4.579,
+        "chg1": 2.08,
+        "chg1Pct": 0.9,
+        "amt1": 9.52,
+        "chg5": 0.22,
+        "chg5Pct": 0.09,
+        "chg20": -36.59,
+        "chg20Pct": -13.52,
         "signal": null,
         "trend3": null,
         "alert": false
@@ -11312,15 +11312,15 @@
         "name": "易方达300ETF",
         "group": "broad",
         "series": "沪深300系列",
-        "share": 113.78,
-        "close": 4.486,
-        "chg1": -0.07,
-        "chg1Pct": -0.06,
-        "amt1": -0.31,
-        "chg5": 0.81,
-        "chg5Pct": 0.72,
-        "chg20": -2.85,
-        "chg20Pct": -2.45,
+        "share": 113.48,
+        "close": 4.447,
+        "chg1": -0.3,
+        "chg1Pct": -0.26,
+        "amt1": -1.33,
+        "chg5": -0.05,
+        "chg5Pct": -0.05,
+        "chg20": -4.48,
+        "chg20Pct": -3.8,
         "signal": null,
         "trend3": "趋势性减持",
         "alert": false
@@ -11330,15 +11330,15 @@
         "name": "华夏300ETF",
         "group": "broad",
         "series": "沪深300系列",
-        "share": 83.62,
-        "close": 4.816,
-        "chg1": -0.1,
-        "chg1Pct": -0.12,
-        "amt1": -0.48,
-        "chg5": 0.06,
-        "chg5Pct": 0.08,
-        "chg20": -3.52,
-        "chg20Pct": -4.04,
+        "share": 83.41,
+        "close": 4.772,
+        "chg1": -0.22,
+        "chg1Pct": -0.26,
+        "amt1": -1.05,
+        "chg5": -0.44,
+        "chg5Pct": -0.53,
+        "chg20": -4.45,
+        "chg20Pct": -5.06,
         "signal": null,
         "trend3": "趋势性减持",
         "alert": false
@@ -11348,17 +11348,17 @@
         "name": "嘉实300ETF",
         "group": "broad",
         "series": "沪深300系列",
-        "share": 62.47,
-        "close": 4.822,
-        "chg1": -0.1,
-        "chg1Pct": -0.16,
-        "amt1": -0.48,
-        "chg5": 0.21,
-        "chg5Pct": 0.33,
-        "chg20": -2.71,
-        "chg20Pct": -4.16,
+        "share": 62.44,
+        "close": 4.783,
+        "chg1": -0.04,
+        "chg1Pct": -0.06,
+        "amt1": -0.19,
+        "chg5": 0.08,
+        "chg5Pct": 0.13,
+        "chg20": -2.45,
+        "chg20Pct": -3.77,
         "signal": null,
-        "trend3": null,
+        "trend3": "趋势性减持",
         "alert": false
       },
       {
@@ -11366,51 +11366,51 @@
         "name": "华夏50ETF",
         "group": "broad",
         "series": "上证50",
-        "share": 67.18,
-        "close": 3.016,
-        "chg1": -1.29,
-        "chg1Pct": -1.88,
-        "amt1": -3.89,
-        "chg5": 1.58,
-        "chg5Pct": 2.4,
-        "chg20": -4.96,
-        "chg20Pct": -6.87,
-        "signal": null,
-        "trend3": "趋势性减持",
-        "alert": false
+        "share": 70.31,
+        "close": 2.981,
+        "chg1": 3.13,
+        "chg1Pct": 4.66,
+        "amt1": 9.33,
+        "chg5": 2.2,
+        "chg5Pct": 3.24,
+        "chg20": -6.46,
+        "chg20Pct": -8.42,
+        "signal": "强信号",
+        "trend3": null,
+        "alert": true
       },
       {
         "code": "510500.SH",
         "name": "南方500ETF",
         "group": "broad",
         "series": "中证500系列",
-        "share": 54.43,
-        "close": 7.742,
-        "chg1": 0.63,
-        "chg1Pct": 1.17,
-        "amt1": 4.88,
-        "chg5": 3.84,
-        "chg5Pct": 7.58,
-        "chg20": -7.45,
-        "chg20Pct": -12.04,
-        "signal": null,
+        "share": 52.32,
+        "close": 7.611,
+        "chg1": -2.11,
+        "chg1Pct": -3.87,
+        "amt1": -16.06,
+        "chg5": 0.13,
+        "chg5Pct": 0.25,
+        "chg20": -10.8,
+        "chg20Pct": -17.1,
+        "signal": "强信号",
         "trend3": null,
-        "alert": false
+        "alert": true
       },
       {
         "code": "512500.SH",
         "name": "华夏500ETF",
         "group": "broad",
         "series": "中证500系列",
-        "share": 18.01,
-        "close": 4.383,
-        "chg1": 0.13,
-        "chg1Pct": 0.72,
-        "amt1": 0.57,
-        "chg5": 0.69,
-        "chg5Pct": 3.97,
-        "chg20": -1.76,
-        "chg20Pct": -8.9,
+        "share": 17.58,
+        "close": 4.299,
+        "chg1": -0.42,
+        "chg1Pct": -2.35,
+        "amt1": -1.81,
+        "chg5": 0.08,
+        "chg5Pct": 0.46,
+        "chg20": -2.3,
+        "chg20Pct": -11.58,
         "signal": null,
         "trend3": null,
         "alert": false
@@ -11420,15 +11420,15 @@
         "name": "南方1000ETF",
         "group": "broad",
         "series": "中证1000系列",
-        "share": 62.45,
-        "close": 3.082,
-        "chg1": -0.2,
-        "chg1Pct": -0.32,
-        "amt1": -0.62,
-        "chg5": 1.34,
-        "chg5Pct": 2.19,
-        "chg20": -51.56,
-        "chg20Pct": -45.22,
+        "share": 60.87,
+        "close": 3.014,
+        "chg1": -1.58,
+        "chg1Pct": -2.53,
+        "amt1": -4.76,
+        "chg5": -4.7,
+        "chg5Pct": -7.17,
+        "chg20": -56.54,
+        "chg20Pct": -48.16,
         "signal": null,
         "trend3": "趋势性减持",
         "alert": false
@@ -11438,69 +11438,69 @@
         "name": "华夏1000ETF",
         "group": "broad",
         "series": "中证1000系列",
-        "share": 23.16,
-        "close": 3.162,
-        "chg1": -1.17,
-        "chg1Pct": -4.81,
-        "amt1": -3.7,
-        "chg5": 4.2,
-        "chg5Pct": 22.15,
-        "chg20": -31.23,
-        "chg20Pct": -57.41,
-        "signal": "强信号",
+        "share": 23.46,
+        "close": 3.092,
+        "chg1": 0.3,
+        "chg1Pct": 1.3,
+        "amt1": 0.93,
+        "chg5": 3.81,
+        "chg5Pct": 19.39,
+        "chg20": -20.79,
+        "chg20Pct": -46.98,
+        "signal": null,
         "trend3": null,
-        "alert": true
+        "alert": false
       },
       {
         "code": "588000.SH",
         "name": "华夏科创50ETF",
         "group": "broad",
         "series": "科创50系列",
-        "share": 547.59,
-        "close": 1.659,
-        "chg1": 5.13,
-        "chg1Pct": 0.95,
-        "amt1": 8.51,
-        "chg5": 25.02,
-        "chg5Pct": 4.79,
-        "chg20": 33.24,
-        "chg20Pct": 6.46,
-        "signal": null,
+        "share": 560.73,
+        "close": 1.639,
+        "chg1": 13.14,
+        "chg1Pct": 2.4,
+        "amt1": 21.54,
+        "chg5": 19.77,
+        "chg5Pct": 3.65,
+        "chg20": 22.32,
+        "chg20Pct": 4.15,
+        "signal": "强信号",
         "trend3": "趋势性增持",
-        "alert": false
+        "alert": true
       },
       {
         "code": "588080.SH",
         "name": "易方达科创50ETF",
         "group": "broad",
         "series": "科创50系列",
-        "share": 259.22,
-        "close": 1.609,
-        "chg1": 1.05,
-        "chg1Pct": 0.41,
-        "amt1": 1.69,
-        "chg5": 6.96,
-        "chg5Pct": 2.76,
-        "chg20": 16.71,
-        "chg20Pct": 6.89,
-        "signal": null,
+        "share": 265.13,
+        "close": 1.593,
+        "chg1": 5.91,
+        "chg1Pct": 2.28,
+        "amt1": 9.41,
+        "chg5": 8.88,
+        "chg5Pct": 3.47,
+        "chg20": 14.82,
+        "chg20Pct": 5.92,
+        "signal": "关注",
         "trend3": "趋势性增持",
-        "alert": false
+        "alert": true
       },
       {
         "code": "510180.SH",
         "name": "华安180ETF",
         "group": "broad",
         "series": "上证180",
-        "share": 44.2,
-        "close": 3.951,
-        "chg1": 0.01,
-        "chg1Pct": 0.01,
-        "amt1": 0.04,
-        "chg5": 0.05,
-        "chg5Pct": 0.1,
-        "chg20": -0.04,
-        "chg20Pct": -0.09,
+        "share": 44.23,
+        "close": 3.9,
+        "chg1": 0.02,
+        "chg1Pct": 0.06,
+        "amt1": 0.08,
+        "chg5": 0.03,
+        "chg5Pct": 0.07,
+        "chg20": -0.06,
+        "chg20Pct": -0.15,
         "signal": null,
         "trend3": null,
         "alert": false
@@ -11510,106 +11510,106 @@
         "name": "易方达创业板ETF",
         "group": "broad",
         "series": "创业板",
-        "share": 193.56,
-        "close": 3.358,
-        "chg1": -0.08,
-        "chg1Pct": -0.04,
-        "amt1": -0.27,
-        "chg5": -1.24,
-        "chg5Pct": -0.64,
-        "chg20": 3.78,
-        "chg20Pct": 1.99,
+        "share": 194.48,
+        "close": 3.341,
+        "chg1": 0.92,
+        "chg1Pct": 0.48,
+        "amt1": 3.07,
+        "chg5": -3.8,
+        "chg5Pct": -1.92,
+        "chg20": 6.8,
+        "chg20Pct": 3.62,
         "signal": null,
         "trend3": null,
         "alert": false
       }
     ],
-    "alertCount": 1,
+    "alertCount": 4,
     "note": "份额变化×当日收盘价折算金额；单日|>2%|且|>5亿|=关注，|>3%|且|>1亿|或|>20亿|=强信号"
   },
   "etfRotation": {
-    "trade_date": "2026-09-10",
+    "trade_date": "2026-09-11",
     "items": [
       {
         "cat": "债券",
-        "todayNet": 24.6,
-        "net5d": 175.7,
+        "todayNet": 30.7,
+        "net5d": 178.2,
         "count": 52
       },
       {
+        "cat": "其他",
+        "todayNet": 54.2,
+        "net5d": 83.9,
+        "count": 456
+      },
+      {
         "cat": "科技",
-        "todayNet": 13.7,
-        "net5d": 81.7,
+        "todayNet": 65.9,
+        "net5d": 69.2,
         "count": 301
       },
       {
-        "cat": "宽基",
-        "todayNet": -8.3,
-        "net5d": 58.3,
-        "count": 315
-      },
-      {
-        "cat": "其他",
-        "todayNet": 20.9,
-        "net5d": 45.0,
-        "count": 455
-      },
-      {
-        "cat": "商品",
-        "todayNet": 4.9,
-        "net5d": 18.5,
-        "count": 15
-      },
-      {
         "cat": "港股海外",
-        "todayNet": 18.1,
-        "net5d": 15.1,
+        "todayNet": 19.2,
+        "net5d": 44.3,
         "count": 254
       },
       {
-        "cat": "医药",
-        "todayNet": 0.7,
-        "net5d": 7.7,
-        "count": 51
+        "cat": "商品",
+        "todayNet": 9.8,
+        "net5d": 22.4,
+        "count": 15
       },
       {
         "cat": "金融地产",
-        "todayNet": -2.9,
-        "net5d": 4.2,
+        "todayNet": 7.5,
+        "net5d": 21.6,
         "count": 47
+      },
+      {
+        "cat": "医药",
+        "todayNet": -2.6,
+        "net5d": 4.0,
+        "count": 51
       },
       {
         "cat": "新能源",
         "todayNet": 0.3,
-        "net5d": -0.6,
+        "net5d": 0.5,
         "count": 67
       },
       {
         "cat": "消费",
-        "todayNet": 0.4,
-        "net5d": -2.0,
+        "todayNet": -0.8,
+        "net5d": -1.3,
         "count": 74
       },
       {
         "cat": "红利",
-        "todayNet": -4.8,
-        "net5d": -25.5,
+        "todayNet": 6.8,
+        "net5d": -6.4,
         "count": 87
+      },
+      {
+        "cat": "宽基",
+        "todayNet": 6.6,
+        "net5d": -24.4,
+        "count": 315
       }
     ],
     "inflowTop3": [
       "债券",
-      "科技",
-      "宽基"
+      "其他",
+      "科技"
     ],
     "outflowTop3": [
+      "宽基",
       "红利",
-      "消费",
-      "新能源"
+      "消费"
     ],
-    "totalToday": 67.6,
-    "total5d": 378.1,
-    "moneyToday": 724.7,
+    "totalToday": 197.6,
+    "total5d": 392.0,
+    "moneyToday": 507.6,
     "note": "份额变化×当日收盘价估算（不含货币ETF），5日净额按分类汇总；新发/退市ETF会造成少量误差"
   },
   "indexVol": {
@@ -11726,9 +11726,9 @@
     ],
     "note": "HV20/HV60为年化历史波动率；HV20>HV60×1.2升温，<HV60×0.85降温；低位=HV20近一年分位<25%"
   },
-  "nationalTeamComment": "全市场ETF（不含货币）昨日净申购约68亿元（份额变化×收盘价口径）。华夏1000ETF单日份额-1.17亿份（约-3.7亿元），大额资金流出信号；未见跨公司共振，暂属个别产品资金行为。近5日份额口径资金主要流入债券、科技、宽基类，流出红利、消费、新能源类。位置层处于低位且份额未流出：沪深300、中证500、中证1000、科创50、中证A500、上证综指、深证成指，列为趋势候选。沪深300形成杯柄型（50日，振幅12.8%），未突破·观察、距枢轴11.6%，盯510300突破确认。上证50形成底部平台型（48日，振幅7.5%），未突破·观察、距枢轴5.5%，盯510050突破确认。科创50系列ETF合计净流入10.2亿 → 短期利多科创50/硬科技。中证500系列ETF合计净流入5.5亿 → 短期利多中证500/中盘股。沪深300波动率HV20为15.4%（近一年39%分位），上证50波动处低位。",
+  "nationalTeamComment": "全市场ETF（不含货币）昨日净申购约198亿元（份额变化×收盘价口径）。华夏50ETF单日份额+3.13亿份（约+9.3亿元），大额资金流入信号，且3只核心宽基同日同向增持、呈共振，大资金情绪信号明确。近5日份额口径资金主要流入债券、其他、科技类，流出宽基、红利、消费类。位置层处于低位且份额未流出：沪深300、中证500、中证1000、科创50、中证A500、上证综指、深证成指，列为趋势候选。沪深300形成杯柄型（50日，振幅12.8%），未突破·观察、距枢轴11.6%，盯510300突破确认。上证50形成底部平台型（48日，振幅7.5%），未突破·观察、距枢轴5.5%，盯510050突破确认。科创50系列ETF合计净流入30.9亿 → 短期利多科创50/硬科技。中证500系列ETF合计净流出17.9亿 → 短期利空中证500/中盘股。沪深300波动率HV20为15.4%（近一年39%分位），上证50波动处低位。",
   "ntRotation": {
-    "trade_date": "2026-09-10",
+    "trade_date": "2026-09-11",
     "groups": [
       {
         "key": "broad",
@@ -11740,54 +11740,54 @@
               {
                 "code": "510300.SH",
                 "name": "华泰柏瑞300ETF",
-                "share": 231.91,
-                "chg1": 0.05,
-                "chg1Pct": 0.02,
-                "amt1": 0.23,
-                "chg5Pct": 0.3,
+                "share": 233.99,
+                "chg1": 2.08,
+                "chg1Pct": 0.9,
+                "amt1": 9.52,
+                "chg5Pct": 0.09,
                 "signal": null,
                 "trend3": null
               },
               {
                 "code": "510310.SH",
                 "name": "易方达300ETF",
-                "share": 113.78,
-                "chg1": -0.07,
-                "chg1Pct": -0.06,
-                "amt1": -0.31,
-                "chg5Pct": 0.72,
+                "share": 113.48,
+                "chg1": -0.3,
+                "chg1Pct": -0.26,
+                "amt1": -1.33,
+                "chg5Pct": -0.05,
                 "signal": null,
                 "trend3": "趋势性减持"
               },
               {
                 "code": "510330.SH",
                 "name": "华夏300ETF",
-                "share": 83.62,
-                "chg1": -0.1,
-                "chg1Pct": -0.12,
-                "amt1": -0.48,
-                "chg5Pct": 0.08,
+                "share": 83.41,
+                "chg1": -0.22,
+                "chg1Pct": -0.26,
+                "amt1": -1.05,
+                "chg5Pct": -0.53,
                 "signal": null,
                 "trend3": "趋势性减持"
               },
               {
                 "code": "159919.SZ",
                 "name": "嘉实300ETF",
-                "share": 62.47,
-                "chg1": -0.1,
-                "chg1Pct": -0.16,
-                "amt1": -0.48,
-                "chg5Pct": 0.33,
+                "share": 62.44,
+                "chg1": -0.04,
+                "chg1Pct": -0.06,
+                "amt1": -0.19,
+                "chg5Pct": 0.13,
                 "signal": null,
-                "trend3": null
+                "trend3": "趋势性减持"
               }
             ],
             "total": {
-              "share": 491.78,
-              "chg1": -0.22,
-              "chg1Pct": -0.05,
-              "amt1": -1.04,
-              "chg5Pct": 0.36
+              "share": 493.32,
+              "chg1": 1.52,
+              "chg1Pct": 0.32,
+              "amt1": 6.95,
+              "chg5Pct": -0.04
             }
           },
           {
@@ -11796,13 +11796,13 @@
               {
                 "code": "510050.SH",
                 "name": "华夏50ETF",
-                "share": 67.18,
-                "chg1": -1.29,
-                "chg1Pct": -1.88,
-                "amt1": -3.89,
-                "chg5Pct": 2.4,
-                "signal": null,
-                "trend3": "趋势性减持"
+                "share": 70.31,
+                "chg1": 3.13,
+                "chg1Pct": 4.66,
+                "amt1": 9.33,
+                "chg5Pct": 3.24,
+                "signal": "强信号",
+                "trend3": null
               }
             ],
             "total": null
@@ -11813,32 +11813,32 @@
               {
                 "code": "510500.SH",
                 "name": "南方500ETF",
-                "share": 54.43,
-                "chg1": 0.63,
-                "chg1Pct": 1.17,
-                "amt1": 4.88,
-                "chg5Pct": 7.58,
-                "signal": null,
+                "share": 52.32,
+                "chg1": -2.11,
+                "chg1Pct": -3.87,
+                "amt1": -16.06,
+                "chg5Pct": 0.25,
+                "signal": "强信号",
                 "trend3": null
               },
               {
                 "code": "512500.SH",
                 "name": "华夏500ETF",
-                "share": 18.01,
-                "chg1": 0.13,
-                "chg1Pct": 0.72,
-                "amt1": 0.57,
-                "chg5Pct": 3.97,
+                "share": 17.58,
+                "chg1": -0.42,
+                "chg1Pct": -2.35,
+                "amt1": -1.81,
+                "chg5Pct": 0.46,
                 "signal": null,
                 "trend3": null
               }
             ],
             "total": {
-              "share": 72.44,
-              "chg1": 0.76,
-              "chg1Pct": 1.06,
-              "amt1": 5.45,
-              "chg5Pct": 6.68
+              "share": 69.9,
+              "chg1": -2.53,
+              "chg1Pct": -3.49,
+              "amt1": -17.87,
+              "chg5Pct": 0.3
             }
           },
           {
@@ -11847,32 +11847,32 @@
               {
                 "code": "512100.SH",
                 "name": "南方1000ETF",
-                "share": 62.45,
-                "chg1": -0.2,
-                "chg1Pct": -0.32,
-                "amt1": -0.62,
-                "chg5Pct": 2.19,
+                "share": 60.87,
+                "chg1": -1.58,
+                "chg1Pct": -2.53,
+                "amt1": -4.76,
+                "chg5Pct": -7.17,
                 "signal": null,
                 "trend3": "趋势性减持"
               },
               {
                 "code": "159845.SZ",
                 "name": "华夏1000ETF",
-                "share": 23.16,
-                "chg1": -1.17,
-                "chg1Pct": -4.81,
-                "amt1": -3.7,
-                "chg5Pct": 22.15,
-                "signal": "强信号",
+                "share": 23.46,
+                "chg1": 0.3,
+                "chg1Pct": 1.3,
+                "amt1": 0.93,
+                "chg5Pct": 19.39,
+                "signal": null,
                 "trend3": null
               }
             ],
             "total": {
-              "share": 85.61,
-              "chg1": -1.37,
-              "chg1Pct": -1.53,
-              "amt1": -4.32,
-              "chg5Pct": 7.59
+              "share": 84.33,
+              "chg1": -1.28,
+              "chg1Pct": -1.46,
+              "amt1": -3.83,
+              "chg5Pct": 0.22
             }
           },
           {
@@ -11881,32 +11881,32 @@
               {
                 "code": "588000.SH",
                 "name": "华夏科创50ETF",
-                "share": 547.59,
-                "chg1": 5.13,
-                "chg1Pct": 0.95,
-                "amt1": 8.51,
-                "chg5Pct": 4.79,
-                "signal": null,
+                "share": 560.73,
+                "chg1": 13.14,
+                "chg1Pct": 2.4,
+                "amt1": 21.54,
+                "chg5Pct": 3.65,
+                "signal": "强信号",
                 "trend3": "趋势性增持"
               },
               {
                 "code": "588080.SH",
                 "name": "易方达科创50ETF",
-                "share": 259.22,
-                "chg1": 1.05,
-                "chg1Pct": 0.41,
-                "amt1": 1.69,
-                "chg5Pct": 2.76,
-                "signal": null,
+                "share": 265.13,
+                "chg1": 5.91,
+                "chg1Pct": 2.28,
+                "amt1": 9.41,
+                "chg5Pct": 3.47,
+                "signal": "关注",
                 "trend3": "趋势性增持"
               }
             ],
             "total": {
-              "share": 806.81,
-              "chg1": 6.18,
-              "chg1Pct": 0.78,
-              "amt1": 10.2,
-              "chg5Pct": 4.14
+              "share": 825.86,
+              "chg1": 19.05,
+              "chg1Pct": 2.36,
+              "amt1": 30.95,
+              "chg5Pct": 3.59
             }
           },
           {
@@ -11915,11 +11915,11 @@
               {
                 "code": "510180.SH",
                 "name": "华安180ETF",
-                "share": 44.2,
-                "chg1": 0.01,
-                "chg1Pct": 0.01,
-                "amt1": 0.04,
-                "chg5Pct": 0.1,
+                "share": 44.23,
+                "chg1": 0.02,
+                "chg1Pct": 0.06,
+                "amt1": 0.08,
+                "chg5Pct": 0.07,
                 "signal": null,
                 "trend3": null
               }
@@ -11932,11 +11932,11 @@
               {
                 "code": "159915.SZ",
                 "name": "易方达创业板ETF",
-                "share": 193.56,
-                "chg1": -0.08,
-                "chg1Pct": -0.04,
-                "amt1": -0.27,
-                "chg5Pct": -0.64,
+                "share": 194.48,
+                "chg1": 0.92,
+                "chg1Pct": 0.48,
+                "amt1": 3.07,
+                "chg5Pct": -1.92,
                 "signal": null,
                 "trend3": null
               }
@@ -11947,10 +11947,14 @@
       }
     ],
     "resonance": {
-      "hit": false,
-      "count": 1,
-      "direction": null,
-      "names": []
+      "hit": true,
+      "count": 3,
+      "direction": "增持",
+      "names": [
+        "华夏50ETF",
+        "华夏科创50ETF",
+        "易方达科创50ETF"
+      ]
     },
     "note": "信号口径：单日份额|>2%|且金额|>5亿|=关注，|>3%|且|>1亿|或|>20亿|=强信号；≥3只核心宽基同向异动=共振·大资金情绪信号；连续3日同向=趋势性增/减仓"
   },
@@ -12791,7 +12795,7 @@
           "share5Pct": 0.3,
           "share20Pct": -12.38,
           "shareNote": "份额5日+0.3%",
-          "hvPct1y": 37.2,
+          "hvPct1y": 39.2,
           "status": "✅趋势候选"
         },
         {
@@ -12806,7 +12810,7 @@
           "share5Pct": 2.4,
           "share20Pct": -6.87,
           "shareNote": "份额5日+2.4%",
-          "hvPct1y": 5.2,
+          "hvPct1y": 7.6,
           "status": "观察"
         },
         {
@@ -12821,7 +12825,7 @@
           "share5Pct": 7.58,
           "share20Pct": -12.04,
           "shareNote": "份额5日+7.6%",
-          "hvPct1y": 66.0,
+          "hvPct1y": 61.6,
           "status": "✅趋势候选"
         },
         {
@@ -12836,7 +12840,7 @@
           "share5Pct": 2.19,
           "share20Pct": -45.22,
           "shareNote": "份额5日+2.2%",
-          "hvPct1y": 74.8,
+          "hvPct1y": 70.0,
           "status": "✅趋势候选"
         },
         {
@@ -12851,7 +12855,7 @@
           "share5Pct": 4.79,
           "share20Pct": 6.46,
           "shareNote": "份额5日+4.8%",
-          "hvPct1y": 52.4,
+          "hvPct1y": 50.8,
           "status": "✅趋势候选"
         },
         {
@@ -12866,7 +12870,7 @@
           "share5Pct": -0.64,
           "share20Pct": 1.99,
           "shareNote": "份额5日-0.6%",
-          "hvPct1y": 62.8,
+          "hvPct1y": 54.4,
           "status": "低位观察（份额流出）"
         },
         {
@@ -12896,7 +12900,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 39.6,
+          "hvPct1y": 46.0,
           "status": "✅趋势候选"
         },
         {
@@ -12911,7 +12915,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 68.0,
+          "hvPct1y": 61.2,
           "status": "✅趋势候选"
         }
       ],
@@ -13023,7 +13027,7 @@
         "share5Pct": 0.3,
         "share20Pct": -12.38,
         "shareNote": "份额5日+0.3%",
-        "hvPct1y": 37.2,
+        "hvPct1y": 39.2,
         "status": "✅趋势候选"
       },
       {
@@ -13038,7 +13042,7 @@
         "share5Pct": 2.4,
         "share20Pct": -6.87,
         "shareNote": "份额5日+2.4%",
-        "hvPct1y": 5.2,
+        "hvPct1y": 7.6,
         "status": "观察"
       },
       {
@@ -13053,7 +13057,7 @@
         "share5Pct": 7.58,
         "share20Pct": -12.04,
         "shareNote": "份额5日+7.6%",
-        "hvPct1y": 66.0,
+        "hvPct1y": 61.6,
         "status": "✅趋势候选"
       },
       {
@@ -13068,7 +13072,7 @@
         "share5Pct": 2.19,
         "share20Pct": -45.22,
         "shareNote": "份额5日+2.2%",
-        "hvPct1y": 74.8,
+        "hvPct1y": 70.0,
         "status": "✅趋势候选"
       },
       {
@@ -13083,7 +13087,7 @@
         "share5Pct": 4.79,
         "share20Pct": 6.46,
         "shareNote": "份额5日+4.8%",
-        "hvPct1y": 52.4,
+        "hvPct1y": 50.8,
         "status": "✅趋势候选"
       },
       {
@@ -13098,7 +13102,7 @@
         "share5Pct": -0.64,
         "share20Pct": 1.99,
         "shareNote": "份额5日-0.6%",
-        "hvPct1y": 62.8,
+        "hvPct1y": 54.4,
         "status": "低位观察（份额流出）"
       },
       {
@@ -13128,7 +13132,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 39.6,
+        "hvPct1y": 46.0,
         "status": "✅趋势候选"
       },
       {
@@ -13143,7 +13147,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 68.0,
+        "hvPct1y": 61.2,
         "status": "✅趋势候选"
       }
     ],
@@ -13286,6 +13290,23 @@
         "list": "20240628"
       },
       {
+        "code": "561300",
+        "tsCode": "561300.SH",
+        "name": "国泰沪深300增强策略ETF",
+        "idx": "沪深300",
+        "scale": 5.87,
+        "fee": 0.6,
+        "share5Pct": 5.72,
+        "premiumPct": 0.15,
+        "r1m": -1.08,
+        "i1m": -3.3,
+        "ex1m": 2.22,
+        "rytd": 6.21,
+        "iytd": -2.59,
+        "exytd": 8.79,
+        "list": "20211210"
+      },
+      {
         "code": "159680",
         "tsCode": "159680.SZ",
         "name": "招商中证1000增强策略ETF",
@@ -13301,6 +13322,74 @@
         "iytd": -2.21,
         "exytd": 8.25,
         "list": "20221130"
+      },
+      {
+        "code": "512370",
+        "tsCode": "512370.SH",
+        "name": "华夏中证A500增强策略ETF",
+        "idx": "中证A500",
+        "scale": 3.51,
+        "fee": 0.6,
+        "share5Pct": 0.0,
+        "premiumPct": 0.35,
+        "r1m": -2.81,
+        "i1m": -4.19,
+        "ex1m": 1.38,
+        "rytd": 5.03,
+        "iytd": -1.69,
+        "exytd": 6.72,
+        "list": "20250818"
+      },
+      {
+        "code": "562070",
+        "tsCode": "562070.SH",
+        "name": "华宝沪深300增强策略ETF",
+        "idx": "沪深300",
+        "scale": 5.77,
+        "fee": 0.9,
+        "share5Pct": 0.54,
+        "premiumPct": 0.06,
+        "r1m": -1.96,
+        "i1m": -3.3,
+        "ex1m": 1.34,
+        "rytd": 3.4,
+        "iytd": -2.59,
+        "exytd": 5.99,
+        "list": "20251225"
+      },
+      {
+        "code": "588460",
+        "tsCode": "588460.SH",
+        "name": "鹏华上证科创板50成份增强策略ETF",
+        "idx": "科创50",
+        "scale": 13.1,
+        "fee": 1.1,
+        "share5Pct": 2.74,
+        "premiumPct": -0.05,
+        "r1m": -7.88,
+        "i1m": -9.57,
+        "ex1m": 1.68,
+        "rytd": 21.36,
+        "iytd": 15.56,
+        "exytd": 5.8,
+        "list": "20230105"
+      },
+      {
+        "code": "561550",
+        "tsCode": "561550.SH",
+        "name": "华泰柏瑞中证500增强策略ETF",
+        "idx": "中证500",
+        "scale": 18.5,
+        "fee": 0.8,
+        "share5Pct": 1.12,
+        "premiumPct": 0.07,
+        "r1m": -4.77,
+        "i1m": -4.87,
+        "ex1m": 0.09,
+        "rytd": 6.44,
+        "iytd": 1.54,
+        "exytd": 4.9,
+        "list": "20211210"
       },
       {
         "code": "159676",
@@ -13335,14 +13424,48 @@
         "iytd": 0.34,
         "exytd": 3.8,
         "list": "20250902"
+      },
+      {
+        "code": "561090",
+        "tsCode": "561090.SH",
+        "name": "华安中证A500增强策略ETF",
+        "idx": "中证A500",
+        "scale": 2.5,
+        "fee": 0.6,
+        "share5Pct": 0.0,
+        "premiumPct": -0.35,
+        "r1m": -4.78,
+        "i1m": -4.19,
+        "ex1m": -0.59,
+        "rytd": 1.54,
+        "iytd": -1.69,
+        "exytd": 3.23,
+        "list": "20250702"
+      },
+      {
+        "code": "561990",
+        "tsCode": "561990.SH",
+        "name": "招商沪深300增强策略ETF",
+        "idx": "沪深300",
+        "scale": 3.39,
+        "fee": 0.6,
+        "share5Pct": -0.88,
+        "premiumPct": -0.04,
+        "r1m": -1.75,
+        "i1m": -3.3,
+        "ex1m": 1.54,
+        "rytd": -4.6,
+        "iytd": -2.59,
+        "exytd": -2.01,
+        "list": "20211210"
       }
     ],
     "stats": {
-      "total": 4,
-      "pass5": 2,
-      "medianYtd": 8.25,
-      "posYtd": 4,
-      "validYtd": 4
+      "total": 11,
+      "pass5": 6,
+      "medianYtd": 5.8,
+      "posYtd": 10,
+      "validYtd": 11
     },
     "note": "超额=复权净值涨幅−跟踪指数涨幅（未含指数股息，全收益口径超额会再低1-3点/年）；近1月=21个交易日，YTD基准=上年末；规模=份额×收盘（≥5亿=达标）；净值T+1披露，折溢价=当日收盘/最新单位净值−1（存在口径时差，仅供参考）"
   },
@@ -13350,7 +13473,7 @@
     "trade_date": "2026-09-11",
     "window": 120,
     "baseIndex": "上证综指",
-    "indexSrc": "eastmoney",
+    "indexSrc": "tushare",
     "items": [
       {
         "code": "000895.SZ",
@@ -13360,12 +13483,12 @@
         "sectorName": "食品(合成)",
         "sectorSrc": "tushare合成",
         "vsIndex": {
-          "win": 14,
+          "win": 15,
           "lose": 18,
-          "net": -4,
-          "win20": 1,
+          "net": -3,
+          "win20": 2,
           "lose20": 2,
-          "net20": -1,
+          "net20": 0,
           "excluded": 1
         },
         "vsSector": {
@@ -13393,7 +13516,7 @@
           "win20": 1,
           "lose20": 4,
           "net20": -3,
-          "excluded": 2
+          "excluded": 3
         },
         "vsSector": {
           "win": 11,
@@ -13403,6 +13526,33 @@
           "lose20": 1,
           "net20": 1,
           "excluded": 5
+        },
+        "daysUsed": 120
+      },
+      {
+        "code": "300760.SZ",
+        "name": "迈瑞医疗",
+        "group": "watch",
+        "industry": "医疗保健",
+        "sectorName": "医疗保健(合成)",
+        "sectorSrc": "tushare合成",
+        "vsIndex": {
+          "win": 9,
+          "lose": 12,
+          "net": -3,
+          "win20": 2,
+          "lose20": 1,
+          "net20": 1,
+          "excluded": 1
+        },
+        "vsSector": {
+          "win": 14,
+          "lose": 17,
+          "net": -3,
+          "win20": 3,
+          "lose20": 0,
+          "net20": 3,
+          "excluded": 4
         },
         "daysUsed": 120
       },
@@ -13429,33 +13579,6 @@
           "win20": 1,
           "lose20": 1,
           "net20": 0,
-          "excluded": 4
-        },
-        "daysUsed": 120
-      },
-      {
-        "code": "300760.SZ",
-        "name": "迈瑞医疗",
-        "group": "watch",
-        "industry": "医疗保健",
-        "sectorName": "医疗保健(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 8,
-          "lose": 12,
-          "net": -4,
-          "win20": 1,
-          "lose20": 1,
-          "net20": 0,
-          "excluded": 1
-        },
-        "vsSector": {
-          "win": 14,
-          "lose": 17,
-          "net": -3,
-          "win20": 3,
-          "lose20": 0,
-          "net20": 3,
           "excluded": 4
         },
         "daysUsed": 120
@@ -13492,8 +13615,8 @@
         "name": "药明康德",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
         "vsIndex": {
           "win": 6,
           "lose": 10,
@@ -13508,9 +13631,9 @@
           "lose": 13,
           "net": 1,
           "win20": 2,
-          "lose20": 1,
-          "net20": 1,
-          "excluded": 9
+          "lose20": 2,
+          "net20": 0,
+          "excluded": 8
         },
         "daysUsed": 120
       },
@@ -13569,6 +13692,33 @@
         "daysUsed": 120
       },
       {
+        "code": "600309.SH",
+        "name": "万华化学",
+        "group": "watch",
+        "industry": "化工原料",
+        "sectorName": "化工原料(合成)",
+        "sectorSrc": "tushare合成",
+        "vsIndex": {
+          "win": 5,
+          "lose": 12,
+          "net": -7,
+          "win20": 0,
+          "lose20": 1,
+          "net20": -1,
+          "excluded": 3
+        },
+        "vsSector": {
+          "win": 12,
+          "lose": 22,
+          "net": -10,
+          "win20": 1,
+          "lose20": 3,
+          "net20": -2,
+          "excluded": 6
+        },
+        "daysUsed": 120
+      },
+      {
         "code": "600298.SH",
         "name": "安琪酵母",
         "group": "watch",
@@ -13623,33 +13773,6 @@
         "daysUsed": 120
       },
       {
-        "code": "600309.SH",
-        "name": "万华化学",
-        "group": "watch",
-        "industry": "化工原料",
-        "sectorName": "化学原料",
-        "sectorSrc": "eastmoney",
-        "vsIndex": {
-          "win": 5,
-          "lose": 12,
-          "net": -7,
-          "win20": 0,
-          "lose20": 1,
-          "net20": -1,
-          "excluded": 3
-        },
-        "vsSector": {
-          "win": 10,
-          "lose": 13,
-          "net": -3,
-          "win20": 1,
-          "lose20": 2,
-          "net20": -1,
-          "excluded": 7
-        },
-        "daysUsed": 120
-      },
-      {
         "code": "601888.SH",
         "name": "中国中免",
         "group": "watch",
@@ -13657,12 +13780,12 @@
         "sectorName": "旅游服务(合成)",
         "sectorSrc": "tushare合成",
         "vsIndex": {
-          "win": 3,
+          "win": 4,
           "lose": 11,
-          "net": -8,
-          "win20": 0,
+          "net": -7,
+          "win20": 1,
           "lose20": 2,
-          "net20": -2,
+          "net20": -1,
           "excluded": 7
         },
         "vsSector": {
@@ -13677,12 +13800,39 @@
         "daysUsed": 120
       },
       {
+        "code": "002568.SZ",
+        "name": "百润股份",
+        "group": "watch",
+        "industry": "红黄酒",
+        "sectorName": "红黄酒(合成)",
+        "sectorSrc": "tushare合成",
+        "vsIndex": {
+          "win": 6,
+          "lose": 17,
+          "net": -11,
+          "win20": 1,
+          "lose20": 3,
+          "net20": -2,
+          "excluded": 6
+        },
+        "vsSector": {
+          "win": 4,
+          "lose": 15,
+          "net": -11,
+          "win20": 0,
+          "lose20": 4,
+          "net20": -4,
+          "excluded": 5
+        },
+        "daysUsed": 120
+      },
+      {
         "code": "600521.SH",
         "name": "华海药业",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
         "vsIndex": {
           "win": 3,
           "lose": 13,
@@ -13694,38 +13844,11 @@
         },
         "vsSector": {
           "win": 6,
-          "lose": 9,
-          "net": -3,
+          "lose": 8,
+          "net": -2,
           "win20": 0,
           "lose20": 2,
           "net20": -2,
-          "excluded": 5
-        },
-        "daysUsed": 120
-      },
-      {
-        "code": "002568.SZ",
-        "name": "百润股份",
-        "group": "watch",
-        "industry": "红黄酒",
-        "sectorName": "红黄酒(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 5,
-          "lose": 17,
-          "net": -12,
-          "win20": 0,
-          "lose20": 3,
-          "net20": -3,
-          "excluded": 6
-        },
-        "vsSector": {
-          "win": 4,
-          "lose": 15,
-          "net": -11,
-          "win20": 0,
-          "lose20": 4,
-          "net20": -4,
           "excluded": 5
         },
         "daysUsed": 120
@@ -13762,8 +13885,8 @@
         "name": "恒瑞医药",
         "group": "hold",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
         "vsIndex": {
           "win": 0,
           "lose": 12,
@@ -13780,13 +13903,13 @@
           "win20": 1,
           "lose20": 3,
           "net20": -2,
-          "excluded": 12
+          "excluded": 10
         },
         "daysUsed": 120
       }
     ],
     "unmapped": [],
     "unmappedBoards": [],
-    "note": "口径：日线近似\"日内对抗\"——强对抗日=基准跌超0.3%且个股超额≥+1.5pct，弱对抗日=基准涨超0.3%且个股超额≤-1.5pct（超额=个股当日涨跌幅-基准当日涨跌幅）；强对抗日剔除消息面驱动（2026-09-09 用户口径：强度必须是盘面自身打出来的）——开盘跳空≥+1.5%（隔夜消息定价签名）或当日/前一交易日有公告（巨潮资讯口径）的强对抗日不计入，剔除天数见\"剔除\"列；弱对抗侧暂不过滤；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级为Tushare等权合成指数，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年），近20日为子项；强/弱分开累计不对冲（2026-09-09 v3 用户口径）：强=基准走弱日个股明显跑赢的次数，弱=基准走强日个股明显跑输的次数，两个计数独立累计展示，不做净胜对冲；本期数据源：大盘=东财，板块=含tushare合成指数降级（标注（合成））"
+    "note": "口径：日线近似\"日内对抗\"——强对抗日=基准跌超0.3%且个股超额≥+1.5pct，弱对抗日=基准涨超0.3%且个股超额≤-1.5pct（超额=个股当日涨跌幅-基准当日涨跌幅）；强对抗日剔除消息面驱动（2026-09-09 用户口径：强度必须是盘面自身打出来的）——开盘跳空≥+1.5%（隔夜消息定价签名）或当日/前一交易日有公告（巨潮资讯口径）的强对抗日不计入，剔除天数见\"剔除\"列；弱对抗侧暂不过滤；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级为Tushare等权合成指数，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年），近20日为子项；强/弱分开累计不对冲（2026-09-09 v3 用户口径）：强=基准走弱日个股明显跑赢的次数，弱=基准走强日个股明显跑输的次数，两个计数独立累计展示，不做净胜对冲；本期数据源：大盘=tushare，板块=含tushare合成指数降级（标注（合成））"
   }
 }
