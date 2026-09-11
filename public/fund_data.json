@@ -13480,8 +13480,8 @@
         "name": "双汇发展",
         "group": "watch",
         "industry": "食品",
-        "sectorName": "食品(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "食品饮料",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 15,
           "lose": 18,
@@ -13492,12 +13492,12 @@
           "excluded": 1
         },
         "vsSector": {
-          "win": 16,
-          "lose": 17,
-          "net": -1,
+          "win": 15,
+          "lose": 13,
+          "net": 2,
           "win20": 3,
-          "lose20": 5,
-          "net20": -2,
+          "lose20": 4,
+          "net20": -1,
           "excluded": 1
         },
         "daysUsed": 120
@@ -13638,33 +13638,6 @@
         "daysUsed": 120
       },
       {
-        "code": "002216.SZ",
-        "name": "三全食品",
-        "group": "watch",
-        "industry": "食品",
-        "sectorName": "食品(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 8,
-          "lose": 15,
-          "net": -7,
-          "win20": 0,
-          "lose20": 2,
-          "net20": -2,
-          "excluded": 3
-        },
-        "vsSector": {
-          "win": 10,
-          "lose": 14,
-          "net": -4,
-          "win20": 2,
-          "lose20": 3,
-          "net20": -1,
-          "excluded": 4
-        },
-        "daysUsed": 120
-      },
-      {
         "code": "688016.SH",
         "name": "心脉医疗",
         "group": "hold",
@@ -13723,8 +13696,8 @@
         "name": "安琪酵母",
         "group": "watch",
         "industry": "食品",
-        "sectorName": "食品(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "食品饮料",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 8,
           "lose": 10,
@@ -13736,11 +13709,11 @@
         },
         "vsSector": {
           "win": 8,
-          "lose": 16,
-          "net": -8,
+          "lose": 9,
+          "net": -1,
           "win20": 1,
-          "lose20": 5,
-          "net20": -4,
+          "lose20": 4,
+          "net20": -3,
           "excluded": 8
         },
         "daysUsed": 120
@@ -13750,8 +13723,8 @@
         "name": "中信特钢",
         "group": "watch",
         "industry": "特种钢",
-        "sectorName": "特种钢(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "钢铁",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 8,
           "lose": 14,
@@ -13763,12 +13736,39 @@
         },
         "vsSector": {
           "win": 7,
-          "lose": 10,
-          "net": -3,
+          "lose": 8,
+          "net": -1,
           "win20": 0,
           "lose20": 1,
           "net20": -1,
-          "excluded": 7
+          "excluded": 5
+        },
+        "daysUsed": 120
+      },
+      {
+        "code": "002216.SZ",
+        "name": "三全食品",
+        "group": "watch",
+        "industry": "食品",
+        "sectorName": "食品饮料",
+        "sectorSrc": "eastmoney",
+        "vsIndex": {
+          "win": 8,
+          "lose": 15,
+          "net": -7,
+          "win20": 0,
+          "lose20": 2,
+          "net20": -2,
+          "excluded": 3
+        },
+        "vsSector": {
+          "win": 6,
+          "lose": 12,
+          "net": -6,
+          "win20": 0,
+          "lose20": 3,
+          "net20": -3,
+          "excluded": 3
         },
         "daysUsed": 120
       },
@@ -13796,33 +13796,6 @@
           "lose20": 4,
           "net20": -2,
           "excluded": 3
-        },
-        "daysUsed": 120
-      },
-      {
-        "code": "002568.SZ",
-        "name": "百润股份",
-        "group": "watch",
-        "industry": "红黄酒",
-        "sectorName": "红黄酒(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 6,
-          "lose": 17,
-          "net": -11,
-          "win20": 1,
-          "lose20": 3,
-          "net20": -2,
-          "excluded": 6
-        },
-        "vsSector": {
-          "win": 4,
-          "lose": 15,
-          "net": -11,
-          "win20": 0,
-          "lose20": 4,
-          "net20": -4,
-          "excluded": 5
         },
         "daysUsed": 120
       },
@@ -13877,6 +13850,33 @@
           "lose20": 0,
           "net20": 0,
           "excluded": 1
+        },
+        "daysUsed": 120
+      },
+      {
+        "code": "002568.SZ",
+        "name": "百润股份",
+        "group": "watch",
+        "industry": "红黄酒",
+        "sectorName": "食品饮料",
+        "sectorSrc": "eastmoney",
+        "vsIndex": {
+          "win": 6,
+          "lose": 17,
+          "net": -11,
+          "win20": 1,
+          "lose20": 3,
+          "net20": -2,
+          "excluded": 6
+        },
+        "vsSector": {
+          "win": 1,
+          "lose": 10,
+          "net": -9,
+          "win20": 0,
+          "lose20": 3,
+          "net20": -3,
+          "excluded": 5
         },
         "daysUsed": 120
       },
