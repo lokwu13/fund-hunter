@@ -13858,8 +13858,8 @@
         "name": "上海机场",
         "group": "hold",
         "industry": "机场",
-        "sectorName": "机场(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "航空机场",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 6,
           "lose": 10,
@@ -13870,13 +13870,13 @@
           "excluded": 2
         },
         "vsSector": {
-          "win": 0,
-          "lose": 1,
-          "net": -1,
+          "win": 2,
+          "lose": 9,
+          "net": -7,
           "win20": 0,
           "lose20": 0,
           "net20": 0,
-          "excluded": 0
+          "excluded": 1
         },
         "daysUsed": 120
       },
