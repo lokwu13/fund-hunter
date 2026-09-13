@@ -52,6 +52,7 @@ STOCKS = {
     '688271.SH': {'name': '联影医疗', 'industry': '医疗保健', 'group': 'watch', 'watchPrice': 0},
     '600521.SH': {'name': '华海药业', 'industry': '化学制药', 'group': 'watch', 'watchPrice': 0},
     '000708.SZ': {'name': '中信特钢', 'industry': '特种钢',   'group': 'watch', 'watchPrice': 0},
+    '600031.SH': {'name': '三一重工', 'industry': '工程机械', 'group': 'watch', 'watchPrice': 0},
 }
 
 # 用户 ETF 账户（行情走 fund_daily，与 nationalETF 的 daily 不同）
@@ -3251,6 +3252,7 @@ STOCK_RS_INDUSTRY_MAP = {
     '红黄酒': '食品饮料',      # 东财新版行业板块无酒类二级，归入食品饮料一级（近似）
     '旅游服务': '社会服务',    # 东财新版无旅游酒店二级，归入社会服务一级（近似）
     '特种钢': '钢铁',
+    '工程机械': '工程机械',  # 东财行业板块清单精确存在（2026-09-13 探针验证）
 }
 _EM_HEADERS = {'User-Agent': 'Mozilla/5.0', 'Referer': 'https://quote.eastmoney.com/'}
 

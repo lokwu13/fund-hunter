@@ -136,76 +136,6 @@
   ],
   "stocks": [
     {
-      "code": "000708.SZ",
-      "name": "中信特钢",
-      "industry": "特种钢",
-      "group": "watch",
-      "close": 13.47,
-      "pctChg": -0.22,
-      "vol": 22.64,
-      "watchPrice": 0
-    },
-    {
-      "code": "000895.SZ",
-      "name": "双汇发展",
-      "industry": "食品",
-      "group": "watch",
-      "close": 23.54,
-      "pctChg": -1.01,
-      "vol": 9.96,
-      "watchPrice": 0
-    },
-    {
-      "code": "002216.SZ",
-      "name": "三全食品",
-      "industry": "食品",
-      "group": "watch",
-      "close": 11.54,
-      "pctChg": -2.62,
-      "vol": 5.69,
-      "watchPrice": 0
-    },
-    {
-      "code": "002568.SZ",
-      "name": "百润股份",
-      "industry": "红黄酒",
-      "group": "watch",
-      "close": 17.15,
-      "pctChg": -3.6,
-      "vol": 9.73,
-      "watchPrice": 0
-    },
-    {
-      "code": "300760.SZ",
-      "name": "迈瑞医疗",
-      "industry": "医疗保健",
-      "group": "watch",
-      "close": 162.73,
-      "pctChg": -1.79,
-      "vol": 7.32,
-      "watchPrice": 0
-    },
-    {
-      "code": "600009.SH",
-      "name": "上海机场",
-      "industry": "机场",
-      "group": "hold",
-      "close": 23.28,
-      "pctChg": -1.02,
-      "vol": 7.29,
-      "watchPrice": 0
-    },
-    {
-      "code": "600276.SH",
-      "name": "恒瑞医药",
-      "industry": "化学制药",
-      "group": "hold",
-      "close": 42.67,
-      "pctChg": -0.61,
-      "vol": 80.26,
-      "watchPrice": 0
-    },
-    {
       "code": "600298.SH",
       "name": "安琪酵母",
       "industry": "食品",
@@ -216,63 +146,13 @@
       "watchPrice": 0
     },
     {
-      "code": "600309.SH",
-      "name": "万华化学",
-      "industry": "化工原料",
-      "group": "watch",
-      "close": 74.5,
-      "pctChg": -2.41,
-      "vol": 33.67,
-      "watchPrice": 0
-    },
-    {
-      "code": "600406.SH",
-      "name": "国电南瑞",
-      "industry": "电气设备",
-      "group": "watch",
-      "close": 22.29,
-      "pctChg": -0.89,
-      "vol": 28.31,
-      "watchPrice": 0
-    },
-    {
-      "code": "600521.SH",
-      "name": "华海药业",
-      "industry": "化学制药",
-      "group": "watch",
-      "close": 15.37,
-      "pctChg": -1.09,
-      "vol": 15.77,
-      "watchPrice": 0
-    },
-    {
-      "code": "601888.SH",
-      "name": "中国中免",
-      "industry": "旅游服务",
-      "group": "watch",
-      "close": 51.67,
-      "pctChg": -1.73,
-      "vol": 21.06,
-      "watchPrice": 0
-    },
-    {
-      "code": "603259.SH",
-      "name": "药明康德",
-      "industry": "化学制药",
-      "group": "watch",
-      "close": 151.24,
-      "pctChg": -2.11,
-      "vol": 30.36,
-      "watchPrice": 0
-    },
-    {
-      "code": "688016.SH",
-      "name": "心脉医疗",
+      "code": "688271.SH",
+      "name": "联影医疗",
       "industry": "医疗保健",
-      "group": "hold",
-      "close": 83.14,
-      "pctChg": -2.1,
-      "vol": 1.35,
+      "group": "watch",
+      "close": 103.11,
+      "pctChg": 0.73,
+      "vol": 4.38,
       "watchPrice": 0
     },
     {
@@ -286,13 +166,143 @@
       "watchPrice": 0
     },
     {
-      "code": "688271.SH",
-      "name": "联影医疗",
+      "code": "688016.SH",
+      "name": "心脉医疗",
+      "industry": "医疗保健",
+      "group": "hold",
+      "close": 83.14,
+      "pctChg": -2.1,
+      "vol": 1.35,
+      "watchPrice": 0
+    },
+    {
+      "code": "603259.SH",
+      "name": "药明康德",
+      "industry": "化学制药",
+      "group": "watch",
+      "close": 151.24,
+      "pctChg": -2.11,
+      "vol": 30.36,
+      "watchPrice": 0
+    },
+    {
+      "code": "601888.SH",
+      "name": "中国中免",
+      "industry": "旅游服务",
+      "group": "watch",
+      "close": 51.67,
+      "pctChg": -1.73,
+      "vol": 21.06,
+      "watchPrice": 0
+    },
+    {
+      "code": "600521.SH",
+      "name": "华海药业",
+      "industry": "化学制药",
+      "group": "watch",
+      "close": 15.37,
+      "pctChg": -1.09,
+      "vol": 15.77,
+      "watchPrice": 0
+    },
+    {
+      "code": "600406.SH",
+      "name": "国电南瑞",
+      "industry": "电气设备",
+      "group": "watch",
+      "close": 22.29,
+      "pctChg": -0.89,
+      "vol": 28.31,
+      "watchPrice": 0
+    },
+    {
+      "code": "600309.SH",
+      "name": "万华化学",
+      "industry": "化工原料",
+      "group": "watch",
+      "close": 74.5,
+      "pctChg": -2.41,
+      "vol": 33.67,
+      "watchPrice": 0
+    },
+    {
+      "code": "000708.SZ",
+      "name": "中信特钢",
+      "industry": "特种钢",
+      "group": "watch",
+      "close": 13.47,
+      "pctChg": -0.22,
+      "vol": 22.64,
+      "watchPrice": 0
+    },
+    {
+      "code": "600276.SH",
+      "name": "恒瑞医药",
+      "industry": "化学制药",
+      "group": "hold",
+      "close": 42.67,
+      "pctChg": -0.61,
+      "vol": 80.26,
+      "watchPrice": 0
+    },
+    {
+      "code": "600031.SH",
+      "name": "三一重工",
+      "industry": "工程机械",
+      "group": "watch",
+      "close": 19.78,
+      "pctChg": -1.15,
+      "vol": 32.06,
+      "watchPrice": 0
+    },
+    {
+      "code": "600009.SH",
+      "name": "上海机场",
+      "industry": "机场",
+      "group": "hold",
+      "close": 23.28,
+      "pctChg": -1.02,
+      "vol": 7.29,
+      "watchPrice": 0
+    },
+    {
+      "code": "300760.SZ",
+      "name": "迈瑞医疗",
       "industry": "医疗保健",
       "group": "watch",
-      "close": 103.11,
-      "pctChg": 0.73,
-      "vol": 4.38,
+      "close": 162.73,
+      "pctChg": -1.79,
+      "vol": 7.32,
+      "watchPrice": 0
+    },
+    {
+      "code": "002568.SZ",
+      "name": "百润股份",
+      "industry": "红黄酒",
+      "group": "watch",
+      "close": 17.15,
+      "pctChg": -3.6,
+      "vol": 9.73,
+      "watchPrice": 0
+    },
+    {
+      "code": "002216.SZ",
+      "name": "三全食品",
+      "industry": "食品",
+      "group": "watch",
+      "close": 11.54,
+      "pctChg": -2.62,
+      "vol": 5.69,
+      "watchPrice": 0
+    },
+    {
+      "code": "000895.SZ",
+      "name": "双汇发展",
+      "industry": "食品",
+      "group": "watch",
+      "close": 23.54,
+      "pctChg": -1.01,
+      "vol": 9.96,
       "watchPrice": 0
     }
   ],
@@ -9131,6 +9141,13 @@
           "url": "http://static.cninfo.com.cn/finalpage/2026-09-10/1225555339.PDF"
         }
       ]
+    },
+    {
+      "stockCode": "600031.SH",
+      "stockName": "三一重工",
+      "group": "watch",
+      "industry": "工程机械",
+      "items": []
     }
   ],
   "nationalTeamNews": {
@@ -9661,45 +9678,19 @@
     ]
   },
   "marginWatch": {
-    "trade_date": "2026-09-10",
+    "trade_date": "2026-09-11",
     "threshold": 3.0,
     "items": [
-      {
-        "code": "688016.SH",
-        "name": "心脉医疗",
-        "group": "hold",
-        "rzye": 5.14,
-        "inc3d": 0.05,
-        "incPct": 0.05,
-        "inc5d": 0.02,
-        "inc5dPct": 0.02,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "603259.SH",
-        "name": "药明康德",
-        "group": "watch",
-        "rzye": 50.17,
-        "inc3d": 2.06,
-        "incPct": 0.05,
-        "inc5d": 1.66,
-        "inc5dPct": 0.04,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
       {
         "code": "688029.SH",
         "name": "南微医学",
         "group": "hold",
-        "rzye": 4.63,
-        "inc3d": 0.06,
-        "incPct": 0.04,
-        "inc5d": 0.03,
-        "inc5dPct": 0.02,
-        "consecutiveUpDays": 1,
+        "rzye": 4.64,
+        "inc3d": 0.11,
+        "incPct": 0.08,
+        "inc5d": 0.09,
+        "inc5dPct": 0.07,
+        "consecutiveUpDays": 2,
         "triggered": false,
         "level": null
       },
@@ -9730,66 +9721,14 @@
         "level": null
       },
       {
-        "code": "688271.SH",
-        "name": "联影医疗",
+        "code": "600031.SH",
+        "name": "三一重工",
         "group": "watch",
-        "rzye": 12.75,
-        "inc3d": 0.28,
+        "rzye": 13.59,
+        "inc3d": 0.42,
         "incPct": 0.03,
-        "inc5d": 0.06,
-        "inc5dPct": 0.01,
-        "consecutiveUpDays": 4,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "600276.SH",
-        "name": "恒瑞医药",
-        "group": "hold",
-        "rzye": 60.54,
-        "inc3d": 0.43,
-        "incPct": 0.02,
-        "inc5d": 0.3,
-        "inc5dPct": 0.01,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "600009.SH",
-        "name": "上海机场",
-        "group": "hold",
-        "rzye": 16.47,
-        "inc3d": 0.14,
-        "incPct": 0.02,
-        "inc5d": 0.59,
-        "inc5dPct": 0.1,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "600309.SH",
-        "name": "万华化学",
-        "group": "watch",
-        "rzye": 30.13,
-        "inc3d": 0.38,
-        "incPct": 0.02,
-        "inc5d": -0.97,
-        "inc5dPct": -0.04,
-        "consecutiveUpDays": 1,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "600298.SH",
-        "name": "安琪酵母",
-        "group": "watch",
-        "rzye": 4.18,
-        "inc3d": 0.08,
-        "incPct": 0.02,
-        "inc5d": 0.05,
-        "inc5dPct": 0.01,
+        "inc5d": 0.32,
+        "inc5dPct": 0.02,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -9808,14 +9747,40 @@
         "level": null
       },
       {
-        "code": "600406.SH",
-        "name": "国电南瑞",
+        "code": "600009.SH",
+        "name": "上海机场",
+        "group": "hold",
+        "rzye": 16.45,
+        "inc3d": 0.01,
+        "incPct": 0.0,
+        "inc5d": 0.29,
+        "inc5dPct": 0.05,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600309.SH",
+        "name": "万华化学",
         "group": "watch",
-        "rzye": 27.43,
-        "inc3d": -0.09,
+        "rzye": 30.01,
+        "inc3d": -0.06,
         "incPct": -0.0,
-        "inc5d": -0.17,
-        "inc5dPct": -0.01,
+        "inc5d": -0.83,
+        "inc5dPct": -0.04,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "688271.SH",
+        "name": "联影医疗",
+        "group": "watch",
+        "rzye": 12.59,
+        "inc3d": -0.0,
+        "incPct": -0.0,
+        "inc5d": 0.2,
+        "inc5dPct": 0.02,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -9834,15 +9799,54 @@
         "level": null
       },
       {
+        "code": "688016.SH",
+        "name": "心脉医疗",
+        "group": "hold",
+        "rzye": 5.11,
+        "inc3d": -0.01,
+        "incPct": -0.01,
+        "inc5d": 0.08,
+        "inc5dPct": 0.08,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600298.SH",
+        "name": "安琪酵母",
+        "group": "watch",
+        "rzye": 4.17,
+        "inc3d": -0.06,
+        "incPct": -0.02,
+        "inc5d": 0.06,
+        "inc5dPct": 0.02,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
         "code": "601888.SH",
         "name": "中国中免",
         "group": "watch",
-        "rzye": 35.87,
-        "inc3d": -0.12,
-        "incPct": -0.01,
-        "inc5d": 0.13,
-        "inc5dPct": 0.01,
-        "consecutiveUpDays": 2,
+        "rzye": 35.26,
+        "inc3d": -0.23,
+        "incPct": -0.02,
+        "inc5d": -0.18,
+        "inc5dPct": -0.02,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600406.SH",
+        "name": "国电南瑞",
+        "group": "watch",
+        "rzye": 27.21,
+        "inc3d": -0.53,
+        "incPct": -0.03,
+        "inc5d": -0.32,
+        "inc5dPct": -0.02,
+        "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
       },
@@ -9863,12 +9867,38 @@
         "code": "600521.SH",
         "name": "华海药业",
         "group": "watch",
-        "rzye": 8.55,
+        "rzye": 8.52,
         "inc3d": -0.06,
         "incPct": -0.03,
-        "inc5d": -0.45,
-        "inc5dPct": -0.19,
-        "consecutiveUpDays": 1,
+        "inc5d": -0.38,
+        "inc5dPct": -0.17,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600276.SH",
+        "name": "恒瑞医药",
+        "group": "hold",
+        "rzye": 59.72,
+        "inc3d": -1.03,
+        "incPct": -0.04,
+        "inc5d": -0.32,
+        "inc5dPct": -0.01,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "603259.SH",
+        "name": "药明康德",
+        "group": "watch",
+        "rzye": 47.8,
+        "inc3d": -3.13,
+        "incPct": -0.08,
+        "inc5d": -0.54,
+        "inc5dPct": -0.01,
+        "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
       }
@@ -11963,7 +11993,7 @@
     "poolSize": 689,
     "poolRaw": 1800,
     "mvDate": "20260911",
-    "scanned": 29,
+    "scanned": 30,
     "items": [
       {
         "code": "600019.SH",
@@ -12081,6 +12111,65 @@
           "pivot": 24.95,
           "distPct": 7.2,
           "formed": false
+        }
+      },
+      {
+        "code": "600031.SH",
+        "name": "三一重工",
+        "sector": "工程机械",
+        "star": true,
+        "close": 19.78,
+        "tag": "周线✅",
+        "pattern": "VCP收缩型",
+        "platform": {
+          "type": "杯柄型",
+          "days": 36,
+          "amplitude": 13.8,
+          "riseFromLow": 14.9,
+          "volRatio": 0.69,
+          "segAmps": [
+            13.8,
+            11.1,
+            10.2
+          ],
+          "pivot": 20.84,
+          "distPct": 5.4,
+          "formed": true
+        },
+        "histPct": 30.4,
+        "distHigh250": -17.5,
+        "distMain": 3.9,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "VCP收缩型·距枢轴3.9%｜水温中性·谨慎关注｜板块不配合⚠️",
+        "daily": {
+          "contractions": [
+            4.9,
+            10.7,
+            3.9,
+            4.9
+          ],
+          "count": 4,
+          "decreasing": false,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 20.46,
+          "distPct": 3.4,
+          "formed": false
+        },
+        "weekly": {
+          "contractions": [
+            16.6,
+            9.4,
+            10.7,
+            3.9
+          ],
+          "count": 4,
+          "decreasing": true,
+          "volTrend": "递减",
+          "rightShrink": true,
+          "pivot": 20.56,
+          "distPct": 3.9,
+          "formed": true
         }
       },
       {
@@ -13473,7 +13562,7 @@
     "trade_date": "2026-09-11",
     "window": 120,
     "baseIndex": "上证综指",
-    "indexSrc": "tushare",
+    "indexSrc": "eastmoney",
     "items": [
       {
         "code": "000895.SZ",
@@ -13483,12 +13572,12 @@
         "sectorName": "食品(合成)",
         "sectorSrc": "tushare合成",
         "vsIndex": {
-          "win": 15,
+          "win": 14,
           "lose": 18,
-          "net": -3,
-          "win20": 2,
+          "net": -4,
+          "win20": 1,
           "lose20": 2,
-          "net20": 0,
+          "net20": -1,
           "excluded": 1
         },
         "vsSector": {
@@ -13516,7 +13605,7 @@
           "win20": 1,
           "lose20": 4,
           "net20": -3,
-          "excluded": 3
+          "excluded": 2
         },
         "vsSector": {
           "win": 11,
@@ -13526,33 +13615,6 @@
           "lose20": 1,
           "net20": 1,
           "excluded": 5
-        },
-        "daysUsed": 120
-      },
-      {
-        "code": "300760.SZ",
-        "name": "迈瑞医疗",
-        "group": "watch",
-        "industry": "医疗保健",
-        "sectorName": "医疗保健(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 9,
-          "lose": 12,
-          "net": -3,
-          "win20": 2,
-          "lose20": 1,
-          "net20": 1,
-          "excluded": 1
-        },
-        "vsSector": {
-          "win": 14,
-          "lose": 17,
-          "net": -3,
-          "win20": 3,
-          "lose20": 0,
-          "net20": 3,
-          "excluded": 4
         },
         "daysUsed": 120
       },
@@ -13584,12 +13646,39 @@
         "daysUsed": 120
       },
       {
+        "code": "300760.SZ",
+        "name": "迈瑞医疗",
+        "group": "watch",
+        "industry": "医疗保健",
+        "sectorName": "医疗保健(合成)",
+        "sectorSrc": "tushare合成",
+        "vsIndex": {
+          "win": 8,
+          "lose": 12,
+          "net": -4,
+          "win20": 1,
+          "lose20": 1,
+          "net20": 0,
+          "excluded": 1
+        },
+        "vsSector": {
+          "win": 14,
+          "lose": 17,
+          "net": -3,
+          "win20": 3,
+          "lose20": 0,
+          "net20": 3,
+          "excluded": 4
+        },
+        "daysUsed": 120
+      },
+      {
         "code": "600406.SH",
         "name": "国电南瑞",
         "group": "watch",
         "industry": "电气设备",
-        "sectorName": "电气设备(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "电网设备",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 9,
           "lose": 7,
@@ -13601,12 +13690,12 @@
         },
         "vsSector": {
           "win": 12,
-          "lose": 17,
-          "net": -5,
-          "win20": 0,
-          "lose20": 1,
-          "net20": -1,
-          "excluded": 3
+          "lose": 15,
+          "net": -3,
+          "win20": 1,
+          "lose20": 3,
+          "net20": -2,
+          "excluded": 5
         },
         "daysUsed": 120
       },
@@ -13615,8 +13704,8 @@
         "name": "药明康德",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "化学制药",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 6,
           "lose": 10,
@@ -13631,9 +13720,9 @@
           "lose": 13,
           "net": 1,
           "win20": 2,
-          "lose20": 2,
-          "net20": 0,
-          "excluded": 8
+          "lose20": 1,
+          "net20": 1,
+          "excluded": 9
         },
         "daysUsed": 120
       },
@@ -13692,33 +13781,6 @@
         "daysUsed": 120
       },
       {
-        "code": "600309.SH",
-        "name": "万华化学",
-        "group": "watch",
-        "industry": "化工原料",
-        "sectorName": "化工原料(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 5,
-          "lose": 12,
-          "net": -7,
-          "win20": 0,
-          "lose20": 1,
-          "net20": -1,
-          "excluded": 3
-        },
-        "vsSector": {
-          "win": 12,
-          "lose": 22,
-          "net": -10,
-          "win20": 1,
-          "lose20": 3,
-          "net20": -2,
-          "excluded": 6
-        },
-        "daysUsed": 120
-      },
-      {
         "code": "600298.SH",
         "name": "安琪酵母",
         "group": "watch",
@@ -13750,8 +13812,8 @@
         "name": "中信特钢",
         "group": "watch",
         "industry": "特种钢",
-        "sectorName": "特种钢(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "钢铁",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 8,
           "lose": 14,
@@ -13763,12 +13825,66 @@
         },
         "vsSector": {
           "win": 7,
-          "lose": 10,
-          "net": -3,
+          "lose": 8,
+          "net": -1,
           "win20": 0,
           "lose20": 1,
           "net20": -1,
+          "excluded": 5
+        },
+        "daysUsed": 120
+      },
+      {
+        "code": "600309.SH",
+        "name": "万华化学",
+        "group": "watch",
+        "industry": "化工原料",
+        "sectorName": "化学原料",
+        "sectorSrc": "eastmoney",
+        "vsIndex": {
+          "win": 5,
+          "lose": 12,
+          "net": -7,
+          "win20": 0,
+          "lose20": 1,
+          "net20": -1,
+          "excluded": 3
+        },
+        "vsSector": {
+          "win": 10,
+          "lose": 13,
+          "net": -3,
+          "win20": 1,
+          "lose20": 2,
+          "net20": -1,
           "excluded": 7
+        },
+        "daysUsed": 120
+      },
+      {
+        "code": "600031.SH",
+        "name": "三一重工",
+        "group": "watch",
+        "industry": "工程机械",
+        "sectorName": "工程机械(合成)",
+        "sectorSrc": "tushare合成",
+        "vsIndex": {
+          "win": 3,
+          "lose": 9,
+          "net": -6,
+          "win20": 0,
+          "lose20": 0,
+          "net20": 0,
+          "excluded": 7
+        },
+        "vsSector": {
+          "win": 8,
+          "lose": 13,
+          "net": -5,
+          "win20": 0,
+          "lose20": 0,
+          "net20": 0,
+          "excluded": 4
         },
         "daysUsed": 120
       },
@@ -13780,12 +13896,12 @@
         "sectorName": "旅游服务(合成)",
         "sectorSrc": "tushare合成",
         "vsIndex": {
-          "win": 4,
+          "win": 3,
           "lose": 11,
-          "net": -7,
-          "win20": 1,
+          "net": -8,
+          "win20": 0,
           "lose20": 2,
-          "net20": -1,
+          "net20": -2,
           "excluded": 7
         },
         "vsSector": {
@@ -13800,39 +13916,12 @@
         "daysUsed": 120
       },
       {
-        "code": "002568.SZ",
-        "name": "百润股份",
-        "group": "watch",
-        "industry": "红黄酒",
-        "sectorName": "红黄酒(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 6,
-          "lose": 17,
-          "net": -11,
-          "win20": 1,
-          "lose20": 3,
-          "net20": -2,
-          "excluded": 6
-        },
-        "vsSector": {
-          "win": 4,
-          "lose": 15,
-          "net": -11,
-          "win20": 0,
-          "lose20": 4,
-          "net20": -4,
-          "excluded": 5
-        },
-        "daysUsed": 120
-      },
-      {
         "code": "600521.SH",
         "name": "华海药业",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "化学制药",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 3,
           "lose": 13,
@@ -13844,11 +13933,38 @@
         },
         "vsSector": {
           "win": 6,
-          "lose": 8,
-          "net": -2,
+          "lose": 9,
+          "net": -3,
           "win20": 0,
           "lose20": 2,
           "net20": -2,
+          "excluded": 5
+        },
+        "daysUsed": 120
+      },
+      {
+        "code": "002568.SZ",
+        "name": "百润股份",
+        "group": "watch",
+        "industry": "红黄酒",
+        "sectorName": "红黄酒(合成)",
+        "sectorSrc": "tushare合成",
+        "vsIndex": {
+          "win": 5,
+          "lose": 17,
+          "net": -12,
+          "win20": 0,
+          "lose20": 3,
+          "net20": -3,
+          "excluded": 6
+        },
+        "vsSector": {
+          "win": 4,
+          "lose": 15,
+          "net": -11,
+          "win20": 0,
+          "lose20": 4,
+          "net20": -4,
           "excluded": 5
         },
         "daysUsed": 120
@@ -13885,8 +14001,8 @@
         "name": "恒瑞医药",
         "group": "hold",
         "industry": "化学制药",
-        "sectorName": "化学制药(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "化学制药",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 0,
           "lose": 12,
@@ -13903,13 +14019,13 @@
           "win20": 1,
           "lose20": 3,
           "net20": -2,
-          "excluded": 10
+          "excluded": 12
         },
         "daysUsed": 120
       }
     ],
     "unmapped": [],
     "unmappedBoards": [],
-    "note": "口径：日线近似\"日内对抗\"——强对抗日=基准跌超0.3%且个股超额≥+1.5pct，弱对抗日=基准涨超0.3%且个股超额≤-1.5pct（超额=个股当日涨跌幅-基准当日涨跌幅）；强对抗日剔除消息面驱动（2026-09-09 用户口径：强度必须是盘面自身打出来的）——开盘跳空≥+1.5%（隔夜消息定价签名）或当日/前一交易日有公告（巨潮资讯口径）的强对抗日不计入，剔除天数见\"剔除\"列；弱对抗侧暂不过滤；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级为Tushare等权合成指数，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年），近20日为子项；强/弱分开累计不对冲（2026-09-09 v3 用户口径）：强=基准走弱日个股明显跑赢的次数，弱=基准走强日个股明显跑输的次数，两个计数独立累计展示，不做净胜对冲；本期数据源：大盘=tushare，板块=含tushare合成指数降级（标注（合成））"
+    "note": "口径：日线近似\"日内对抗\"——强对抗日=基准跌超0.3%且个股超额≥+1.5pct，弱对抗日=基准涨超0.3%且个股超额≤-1.5pct（超额=个股当日涨跌幅-基准当日涨跌幅）；强对抗日剔除消息面驱动（2026-09-09 用户口径：强度必须是盘面自身打出来的）——开盘跳空≥+1.5%（隔夜消息定价签名）或当日/前一交易日有公告（巨潮资讯口径）的强对抗日不计入，剔除天数见\"剔除\"列；弱对抗侧暂不过滤；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级为Tushare等权合成指数，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年），近20日为子项；强/弱分开累计不对冲（2026-09-09 v3 用户口径）：强=基准走弱日个股明显跑赢的次数，弱=基准走强日个股明显跑输的次数，两个计数独立累计展示，不做净胜对冲；本期数据源：大盘=东财，板块=含tushare合成指数降级（标注（合成））"
   }
 }
