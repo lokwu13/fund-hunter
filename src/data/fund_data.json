@@ -14026,8 +14026,8 @@
         "name": "三一重工",
         "group": "watch",
         "industry": "工程机械",
-        "sectorName": "工程机械",
-        "sectorSrc": "eastmoney",
+        "sectorName": "工程机械(合成)",
+        "sectorSrc": "tushare合成",
         "vsIndex": {
           "win": 3,
           "lose": 9,
@@ -14038,13 +14038,13 @@
           "excluded": 7
         },
         "vsSector": {
-          "win": 9,
+          "win": 8,
           "lose": 13,
-          "net": -4,
-          "win20": 1,
+          "net": -5,
+          "win20": 0,
           "lose20": 0,
-          "net20": 1,
-          "excluded": 7
+          "net20": 0,
+          "excluded": 4
         },
         "daysUsed": 120
       },
