@@ -14288,8 +14288,8 @@
         "name": "药明康德",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
         "vsIndex": {
           "win": 6,
           "lose": 10,
@@ -14300,12 +14300,12 @@
           "excluded": 5
         },
         "vsSector": {
-          "win": 14,
+          "win": 13,
           "lose": 13,
-          "net": 1,
-          "win20": 2,
-          "lose20": 1,
-          "net20": 1,
+          "net": 0,
+          "win20": 1,
+          "lose20": 2,
+          "net20": -1,
           "excluded": 9
         },
         "daysUsed": 120
@@ -14504,8 +14504,8 @@
         "name": "华海药业",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
         "vsIndex": {
           "win": 3,
           "lose": 13,
@@ -14517,8 +14517,8 @@
         },
         "vsSector": {
           "win": 6,
-          "lose": 9,
-          "net": -3,
+          "lose": 8,
+          "net": -2,
           "win20": 0,
           "lose20": 2,
           "net20": -2,
@@ -14585,8 +14585,8 @@
         "name": "恒瑞医药",
         "group": "hold",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
         "vsIndex": {
           "win": 0,
           "lose": 12,
@@ -14603,7 +14603,7 @@
           "win20": 0,
           "lose20": 3,
           "net20": -3,
-          "excluded": 14
+          "excluded": 12
         },
         "daysUsed": 120
       }
