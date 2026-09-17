@@ -4447,7 +4447,16 @@ def _build_nt_comment(data):
 # 指增 ETF 跟踪（宽基栏目第六卡，2026-09-04 样表验收后上线）
 # ══════════════════════════════════════════════════════════════
 ZIZENG_BASIC_CACHE = 'scripts/cache/zizeng_basic_cache.json'
+ZIZENG_INDEX_BASIC_CACHE = 'scripts/cache/zizeng_index_basic.json'  # 板块指增跟踪指数代码名录（index_basic 周更）
 ZIZENG_MIN_SCALE = 2.0  # 亿；≥5 亿前端打"达标"徽标
+
+# 宽基（规模类）指数关键字：命中即从板块指增口径剔除（2026-09-17 用户口径：只保留行业/主题/策略指增）
+ZIZENG_BROAD_KEYWORDS = [
+    '上证科创板综合价格', '上证科创板综合', '上证科创板50成份', '上证科创板100',
+    'MSCI中国A50互联互通', '创业板综合', '创业板指数',
+    '中证A500', '中证A50', '中证1000', '中证2000', '中证800', '中证500', '中证小盘500',
+    '沪深300', '上证50', '上证综合', '科创创业50', '中证A100', '巨潮100',
+]
 
 # benchmark 关键字 → 指数代码（按关键字长度降序匹配，避免 中证A50 误中 中证A500）
 ZIZENG_INDEX_MAP = [
@@ -4474,16 +4483,78 @@ def _zizeng_map_index(benchmark):
     return None
 
 
+def _zizeng_is_broad(benchmark):
+    """宽基（规模类）判定：benchmark 命中宽基关键字清单。MSCI A50 等 map 值为 None 的也算宽基。"""
+    bm = benchmark or ''
+    return any(kw in bm for kw in ZIZENG_BROAD_KEYWORDS)
+
+
+def _zizeng_index_basic(pro, trade_date):
+    """指数名录（CSI/SSE/SZSE 三市场 index_basic），周五刷新，缓存复用；失败回退旧缓存。"""
+    basic = None
+    try:
+        with open(ZIZENG_INDEX_BASIC_CACHE, encoding='utf-8') as f:
+            basic = json.load(f)
+    except Exception:
+        basic = None
+    if basic is None or datetime.strptime(trade_date, '%Y%m%d').weekday() == 4:
+        items = []
+        for mk in ['CSI', 'SSE', 'SZSE']:
+            try:
+                time.sleep(API_DELAY)
+                ib = pro.index_basic(market=mk, fields='ts_code,name,category')
+                if ib is not None and len(ib):
+                    items.extend(ib.to_dict('records'))
+            except Exception as e:
+                print(f"  Warning: zizeng index_basic {mk} failed: {e}")
+        if items:
+            basic = {'fetched': trade_date, 'items': items}
+            os.makedirs(os.path.dirname(ZIZENG_INDEX_BASIC_CACHE), exist_ok=True)
+            with open(ZIZENG_INDEX_BASIC_CACHE, 'w', encoding='utf-8') as f:
+                json.dump(basic, f, ensure_ascii=False)
+    return (basic or {}).get('items') or []
+
+
+def _zizeng_match_sector_index(ib_items, benchmark):
+    """板块/主题/策略 benchmark → 指数 ts_code。
+
+    benchmark 形如 '中证医药主题指数收益率×95%+活期存款…'：截取'收益率'/'×'前为核心名，
+    去掉尾部'指数'后在名录中找 名称相等 / 名称+指数相等 / 互为包含 的最长匹配。
+    解析不到返回 None（该只剔除并计数披露）。
+    """
+    bm = benchmark or ''
+    for sep in ['收益率', '×']:
+        if sep in bm:
+            bm = bm.split(sep)[0]
+    core = bm.strip()
+    if core.endswith('指数'):
+        core = core[:-2]
+    if not core or not ib_items:
+        return None
+    best, best_len = None, 0
+    for r in ib_items:
+        nm = str(r.get('name') or '').strip()
+        if not nm:
+            continue
+        if nm == core or nm + '指数' == core or core in nm or nm in core:
+            if len(nm) > best_len:
+                best, best_len = r['ts_code'], len(nm)
+    return best
+
+
 def build_zizeng_etf(pro, trade_date, data):
-    """指增 ETF 超额收益跟踪（样表口径，2026-09-04 验收）。
+    """板块指增 ETF 超额收益跟踪（2026-09-17 用户口径改：只保留行业/主题/策略指增，宽基全移出）。
 
     - 候选：fund_basic 名称含"增强"且 invest_type=增强指数型 的场内 ETF（fund_basic 周五周更，缓存复用）；
-      规模 = 份额(fund_share) × 收盘(fund_daily) ≥ 2 亿；跟踪指数可映射。
+      宽基（规模类）指数关键字命中即剔除；板块指增的跟踪指数经 index_basic 名录（周五周更缓存）解析代码；
+      规模 = 份额(fund_share) × 收盘(fund_daily) ≥ 2 亿。当前全市场板块指增 ETF 为 0 只（空态展示，
+      名单周更，新上市板块指增自动入选）。
     - 超额 = 复权净值(adj_nav)涨幅 − 跟踪指数涨幅，近1月(21个交易日)/YTD 双档；
       YTD 基准 = 上一年最后一个净值日/交易日。
     - 份额变化：复用 fetch_nt_upgrade 的 etf cache snapshots（12 天全市场快照），零新增调用。
     - 折溢价 = 当日收盘 / 最新单位净值 - 1（净值 T+1 披露，输出带 nav_date 供前端注明）。
-    每晚调用 ≈25 次：fund_basic 1(仅周五) + fund_daily 1 + index_daily ≈指数种数 + fund_nav ≈入选只数。
+    每晚调用 ≈25 次：fund_basic 1(仅周五) + index_basic 3(仅周五且有板块候选时) + fund_daily 1
+      + index_daily ≈指数种数 + fund_nav ≈入选只数。
     """
     y0 = str(int(trade_date[:4]) - 1)
     nav_start, ytd_base = f'{y0}1210', f'{y0}1231'
@@ -4510,9 +4581,22 @@ def build_zizeng_etf(pro, trade_date, data):
         print("  Warning: zizeng basic unavailable, skip")
         return
     fb = pd.DataFrame(basic['items'])
+    # 只要场内 ETF：fund_basic(market='E') 含 LOF，名称带 (LOF) 的一律剔除
+    # （板块指增 LOF 存在，如 501089 消费红利/161035 医药主题，但非 ETF 且份额不可得，不计入）
     cand = fb[fb['name'].str.contains('增强', na=False)
-              & (fb['invest_type'] == '增强指数型')].copy()
-    cand['idx_code'] = cand['benchmark'].map(_zizeng_map_index)
+              & (fb['invest_type'] == '增强指数型')
+              & ~fb['name'].str.contains('LOF', na=False)].copy()
+    # 2026-09-17 用户口径：剔除宽基（规模类），只保留行业/主题/策略指增
+    cand['broad'] = cand['benchmark'].map(_zizeng_is_broad)
+    broad_n = int(cand['broad'].sum())
+    sector = cand[~cand['broad']].copy()
+    # 板块指增跟踪指数代码：index_basic 名录解析（周五周更缓存；无候选时零调用）
+    if len(sector):
+        ib_items = _zizeng_index_basic(pro, trade_date)
+        sector['idx_code'] = sector['benchmark'].map(
+            lambda b: _zizeng_match_sector_index(ib_items, b))
+    else:
+        sector['idx_code'] = pd.Series(dtype=object)
 
     # ── 2. 份额（复用 etf cache 全市场快照）+ 收盘（同一日期配对）──
     cache = _etf_cache_load()
@@ -4533,11 +4617,27 @@ def build_zizeng_etf(pro, trade_date, data):
     except Exception as e:
         print(f"  Warning: zizeng fund_daily failed: {e}")
 
-    cand['scale'] = cand['ts_code'].map(
+    sector['scale'] = sector['ts_code'].map(
         lambda c: round(share_now.get(c, 0) * close_now.get(c, 0), 2))
-    pool = cand[(cand['scale'] >= ZIZENG_MIN_SCALE) & cand['idx_code'].notna()].copy()
+    unresolved = sector[sector['idx_code'].isna()] if len(sector) else sector
+    pool = sector[(sector['scale'] >= ZIZENG_MIN_SCALE) & sector['idx_code'].notna()].copy()
     if not len(pool):
-        print("  Warning: zizeng pool empty, skip")
+        # 板块指增当前为 0 只（2026-09-17 实测）：空态落盘，绝不保留旧宽基数据
+        data['zizengETF'] = {
+            'trade_date': f"{sd[:4]}-{sd[4:6]}-{sd[6:]}",
+            'nav_date': None,
+            'items': [],
+            'stats': {'total': 0, 'pass5': 0, 'medianYtd': None, 'posYtd': 0, 'validYtd': 0,
+                      'candidates': len(cand), 'broad': broad_n,
+                      'sectorPool': len(sector), 'unresolved': len(unresolved)},
+            'note': ('口径（2026-09-17 用户指令改）：只跟踪行业/主题/策略指数的增强指数型场内 ETF（板块指增），'
+                     '宽基指增（沪深300/中证500/中证1000/中证2000/中证A500/上证50/科创/创业板等规模指数）已全部移出，'
+                     '指数增强 LOF 非 ETF 亦不计入；'
+                     '规模=份额×收盘，入选门槛≥2亿（≥5亿=达标）；超额=复权净值涨幅−跟踪指数涨幅'
+                     '（未含指数股息，全收益口径超额会再低1-3点/年），近1月=21个交易日，YTD基准=上年末；'
+                     '净值T+1披露；基金名单每周五刷新，新上市的板块指增 ETF 将自动入选'),
+        }
+        print(f"  zizengETF: 板块指增 0 只（候选 {len(cand)} 只均为宽基，已移出），空态展示")
         return
 
     # ── 3. 跟踪指数行情（每只指数 1 次）──
@@ -4558,6 +4658,7 @@ def build_zizeng_etf(pro, trade_date, data):
             print(f"  Warning: zizeng index {ic} failed: {e}")
 
     # ── 4. 逐只基金复权净值（T+1 披露，记录 nav_date）──
+    idx_name_map = {r['ts_code']: str(r.get('name') or '') for r in (ib_items if len(sector) else [])}
     items, nav_dates = [], []
     for _, f in pool.iterrows():
         try:
@@ -4586,7 +4687,7 @@ def build_zizeng_etf(pro, trade_date, data):
         fee = round(float(f['m_fee'] or 0) + float(f['c_fee'] or 0), 2)
         items.append({
             'code': f['ts_code'].split('.')[0], 'tsCode': f['ts_code'], 'name': f['name'],
-            'idx': ZIZENG_INDEX_NAME.get(f['idx_code'], f['idx_code']),
+            'idx': idx_name_map.get(f['idx_code']) or ZIZENG_INDEX_NAME.get(f['idx_code'], f['idx_code']),
             'scale': f['scale'], 'fee': fee, 'share5Pct': share5, 'premiumPct': prem,
             'r1m': round(r1m * 100, 2) if r1m is not None else None,
             'i1m': round(ir['r1m'] * 100, 2) if ir.get('r1m') is not None else None,
@@ -4607,10 +4708,15 @@ def build_zizeng_etf(pro, trade_date, data):
         'nav_date': f"{max(nav_dates)[:4]}-{max(nav_dates)[4:6]}-{max(nav_dates)[6:]}" if nav_dates else None,
         'items': items,
         'stats': {'total': len(items), 'pass5': sum(1 for r in items if r['scale'] >= 5),
-                  'medianYtd': med, 'posYtd': sum(1 for v in valid if v > 0), 'validYtd': len(valid)},
-        'note': ('超额=复权净值涨幅−跟踪指数涨幅（未含指数股息，全收益口径超额会再低1-3点/年）；'
+                  'medianYtd': med, 'posYtd': sum(1 for v in valid if v > 0), 'validYtd': len(valid),
+                  'candidates': len(cand), 'broad': broad_n,
+                  'sectorPool': len(sector), 'unresolved': len(unresolved)},
+        'note': ('口径（2026-09-17 用户指令改）：只跟踪行业/主题/策略指数的增强指数型场内 ETF（板块指增），'
+                 f"宽基指增已全部移出（本周剔除 {broad_n} 只，宽基关键字或指数名录判定）；"
+                 '超额=复权净值涨幅−跟踪指数涨幅（未含指数股息，全收益口径超额会再低1-3点/年）；'
                  '近1月=21个交易日，YTD基准=上年末；规模=份额×收盘（≥5亿=达标）；'
-                 '净值T+1披露，折溢价=当日收盘/最新单位净值−1（存在口径时差，仅供参考）'),
+                 '净值T+1披露，折溢价=当日收盘/最新单位净值−1（存在口径时差，仅供参考）；'
+                 '基金名单每周五刷新，新上市的板块指增 ETF 将自动入选'),
     }
     print(f"  zizengETF: {len(items)} 只（≥5亿 {data['zizengETF']['stats']['pass5']}），"
           f"YTD超额中位 {med}%，净值日 {data['zizengETF']['nav_date']}")

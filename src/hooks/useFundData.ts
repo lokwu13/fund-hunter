@@ -712,7 +712,8 @@ export interface FundData {
     trade_date: string;
     nav_date?: string | null;
     note?: string;
-    stats?: { total: number; pass5: number; medianYtd: number | null; posYtd: number; validYtd: number };
+    stats?: { total: number; pass5: number; medianYtd: number | null; posYtd: number; validYtd: number;
+              candidates?: number; broad?: number; sectorPool?: number; unresolved?: number };
     items: Array<{
       code: string; tsCode: string; name: string; idx: string;
       scale: number; fee: number; share5Pct: number | null; premiumPct: number | null;

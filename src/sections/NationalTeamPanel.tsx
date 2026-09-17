@@ -436,13 +436,13 @@ export default function NationalTeamPanel() {
         </Card>
       )}
 
-      {/* ====== 指增 ETF 跟踪（超额收益，样表口径 2026-09-04 验收） ====== */}
+      {/* ====== 板块指增 ETF 跟踪（行业/主题/策略口径 2026-09-17 改版） ====== */}
       <Card>
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <CardTitle className="text-base font-bold flex items-center gap-2">
               <Sigma className="w-5 h-5 text-red-600" />
-              指增 ETF 跟踪{data.zizengETF?.nav_date ? `（净值日期 ${data.zizengETF.nav_date}）` : ''}
+              板块指增 ETF 跟踪{data.zizengETF?.nav_date ? `（净值日期 ${data.zizengETF.nav_date}）` : ''}
             </CardTitle>
             {data.zizengETF?.stats && (
               <Badge className="bg-slate-100 text-slate-600 text-xs">
@@ -450,7 +450,7 @@ export default function NationalTeamPanel() {
               </Badge>
             )}
           </div>
-          <CardDescription>{data.zizengETF?.note ?? '指增 ETF 超额收益跟踪（规模≥2亿，超额=复权净值−跟踪指数）'}</CardDescription>
+          <CardDescription>{data.zizengETF?.note ?? '板块指增 ETF 超额收益跟踪（行业/主题/策略指数，规模≥2亿，超额=复权净值−跟踪指数）'}</CardDescription>
         </CardHeader>
         <CardContent>
           {data.zizengETF && data.zizengETF.items.length > 0 ? (
@@ -513,7 +513,7 @@ export default function NationalTeamPanel() {
             </>
           ) : (
             <div className="text-sm text-slate-400 text-center py-8">
-              指增 ETF 数据暂未生成（每晚随数据更新产出；净值为 T+1 披露口径）
+              当前全市场无跟踪行业/主题/策略指数的指增 ETF（现有指增 ETF 均为宽基口径，已全部移出）；名单每周五刷新，新上市板块指增 ETF 将自动入选
             </div>
           )}
         </CardContent>
@@ -540,8 +540,8 @@ export default function NationalTeamPanel() {
               <p>HV20/HV60 历史波动率与 PE TTM 分位，每日更新</p>
             </div>
             <div>
-              <p className="font-semibold mb-1">指增 ETF 跟踪</p>
-              <p>规模≥2亿指增 ETF 的超额收益/份额/折溢价；基金名单每周五刷新，净值 T+1 披露</p>
+              <p className="font-semibold mb-1">板块指增 ETF 跟踪</p>
+              <p>行业/主题/策略指数增强型 ETF 的超额收益/份额/折溢价（宽基指增不含）；名单每周五刷新，净值 T+1 披露</p>
             </div>
           </div>
           <p className="text-xs text-slate-400 mt-3">数据来源：Tushare（指数日线 / ETF 份额 / 指数估值） · 口径详见各卡片说明</p>
