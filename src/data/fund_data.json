@@ -13847,39 +13847,12 @@
         "daysUsed": 120
       },
       {
-        "code": "688029.SH",
-        "name": "南微医学",
-        "group": "hold",
-        "industry": "医疗保健",
-        "sectorName": "医疗保健(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 8,
-          "lose": 9,
-          "net": -1,
-          "win20": 1,
-          "lose20": 1,
-          "net20": 0,
-          "excluded": 2
-        },
-        "vsSector": {
-          "win": 16,
-          "lose": 15,
-          "net": 1,
-          "win20": 2,
-          "lose20": 2,
-          "net20": 0,
-          "excluded": 4
-        },
-        "daysUsed": 120
-      },
-      {
         "code": "688271.SH",
         "name": "联影医疗",
         "group": "watch",
         "industry": "医疗保健",
-        "sectorName": "医疗保健(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "医疗器械",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 12,
           "lose": 11,
@@ -13890,13 +13863,13 @@
           "excluded": 3
         },
         "vsSector": {
-          "win": 11,
-          "lose": 18,
-          "net": -7,
+          "win": 12,
+          "lose": 16,
+          "net": -4,
           "win20": 2,
           "lose20": 2,
           "net20": 0,
-          "excluded": 5
+          "excluded": 4
         },
         "daysUsed": 120
       },
@@ -13905,8 +13878,8 @@
         "name": "迈瑞医疗",
         "group": "watch",
         "industry": "医疗保健",
-        "sectorName": "医疗保健(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "医疗器械",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 9,
           "lose": 13,
@@ -13917,12 +13890,39 @@
           "excluded": 1
         },
         "vsSector": {
-          "win": 14,
-          "lose": 19,
-          "net": -5,
+          "win": 15,
+          "lose": 18,
+          "net": -3,
           "win20": 4,
           "lose20": 2,
           "net20": 2,
+          "excluded": 4
+        },
+        "daysUsed": 120
+      },
+      {
+        "code": "688029.SH",
+        "name": "南微医学",
+        "group": "hold",
+        "industry": "医疗保健",
+        "sectorName": "医疗器械",
+        "sectorSrc": "eastmoney",
+        "vsIndex": {
+          "win": 8,
+          "lose": 9,
+          "net": -1,
+          "win20": 1,
+          "lose20": 1,
+          "net20": 0,
+          "excluded": 2
+        },
+        "vsSector": {
+          "win": 15,
+          "lose": 14,
+          "net": 1,
+          "win20": 2,
+          "lose20": 2,
+          "net20": 0,
           "excluded": 4
         },
         "daysUsed": 120
@@ -13986,8 +13986,8 @@
         "name": "心脉医疗",
         "group": "hold",
         "industry": "医疗保健",
-        "sectorName": "医疗保健(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "医疗器械",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 6,
           "lose": 11,
@@ -13998,13 +13998,13 @@
           "excluded": 0
         },
         "vsSector": {
-          "win": 12,
-          "lose": 12,
-          "net": 0,
+          "win": 11,
+          "lose": 10,
+          "net": 1,
           "win20": 1,
           "lose20": 1,
           "net20": 0,
-          "excluded": 1
+          "excluded": 2
         },
         "daysUsed": 120
       },
@@ -14063,33 +14063,6 @@
         "daysUsed": 120
       },
       {
-        "code": "600309.SH",
-        "name": "万华化学",
-        "group": "watch",
-        "industry": "化工原料",
-        "sectorName": "化工原料(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 5,
-          "lose": 13,
-          "net": -8,
-          "win20": 0,
-          "lose20": 2,
-          "net20": -2,
-          "excluded": 2
-        },
-        "vsSector": {
-          "win": 12,
-          "lose": 24,
-          "net": -12,
-          "win20": 1,
-          "lose20": 4,
-          "net20": -3,
-          "excluded": 5
-        },
-        "daysUsed": 120
-      },
-      {
         "code": "000708.SZ",
         "name": "中信特钢",
         "group": "watch",
@@ -14112,6 +14085,33 @@
           "win20": 0,
           "lose20": 1,
           "net20": -1,
+          "excluded": 6
+        },
+        "daysUsed": 120
+      },
+      {
+        "code": "600309.SH",
+        "name": "万华化学",
+        "group": "watch",
+        "industry": "化工原料",
+        "sectorName": "化学原料",
+        "sectorSrc": "eastmoney",
+        "vsIndex": {
+          "win": 5,
+          "lose": 13,
+          "net": -8,
+          "win20": 0,
+          "lose20": 2,
+          "net20": -2,
+          "excluded": 2
+        },
+        "vsSector": {
+          "win": 10,
+          "lose": 14,
+          "net": -4,
+          "win20": 1,
+          "lose20": 4,
+          "net20": -3,
           "excluded": 6
         },
         "daysUsed": 120
@@ -14148,8 +14148,8 @@
         "name": "三一重工",
         "group": "watch",
         "industry": "工程机械",
-        "sectorName": "工程机械",
-        "sectorSrc": "eastmoney",
+        "sectorName": "工程机械(合成)",
+        "sectorSrc": "tushare合成",
         "vsIndex": {
           "win": 3,
           "lose": 10,
@@ -14160,13 +14160,13 @@
           "excluded": 7
         },
         "vsSector": {
-          "win": 9,
+          "win": 8,
           "lose": 13,
-          "net": -4,
-          "win20": 1,
+          "net": -5,
+          "win20": 0,
           "lose20": 0,
-          "net20": 1,
-          "excluded": 7
+          "net20": 0,
+          "excluded": 4
         },
         "daysUsed": 120
       },
