@@ -14501,10 +14501,10 @@
           "distHigh60": -10.3,
           "ret20": -1.3,
           "tier": "低位",
-          "share5Pct": 1.12,
-          "share20Pct": 0.76,
-          "shareNote": "份额5日+1.1%",
-          "hvPct1y": 5.2,
+          "share5Pct": 1.33,
+          "share20Pct": -0.4,
+          "shareNote": "份额5日+1.3%",
+          "hvPct1y": 2.8,
           "status": "✅趋势候选"
         },
         {
@@ -14516,10 +14516,10 @@
           "distHigh60": -4.2,
           "ret20": 0.3,
           "tier": "半路",
-          "share5Pct": 13.21,
-          "share20Pct": 8.66,
-          "shareNote": "份额5日+13.2%",
-          "hvPct1y": 4.4,
+          "share5Pct": 9.12,
+          "share20Pct": 2.24,
+          "shareNote": "份额5日+9.1%",
+          "hvPct1y": 7.6,
           "status": "观察"
         },
         {
@@ -14531,10 +14531,10 @@
           "distHigh60": -13.1,
           "ret20": 3.2,
           "tier": "低位",
-          "share5Pct": 9.37,
-          "share20Pct": 13.3,
-          "shareNote": "份额5日+9.4%",
-          "hvPct1y": 18.8,
+          "share5Pct": 5.88,
+          "share20Pct": 13.81,
+          "shareNote": "份额5日+5.9%",
+          "hvPct1y": 12.8,
           "status": "✅趋势候选"
         },
         {
@@ -14546,10 +14546,10 @@
           "distHigh60": -12.5,
           "ret20": 6.7,
           "tier": "半路",
-          "share5Pct": 4.93,
-          "share20Pct": -2.8,
-          "shareNote": "份额5日+4.9%",
-          "hvPct1y": 30.4,
+          "share5Pct": 7.03,
+          "share20Pct": -2.14,
+          "shareNote": "份额5日+7.0%",
+          "hvPct1y": 26.8,
           "status": "观察"
         },
         {
@@ -14561,10 +14561,10 @@
           "distHigh60": -24.9,
           "ret20": 2.5,
           "tier": "低位",
-          "share5Pct": -1.92,
-          "share20Pct": 10.51,
-          "shareNote": "份额5日-1.9%",
-          "hvPct1y": 40.8,
+          "share5Pct": -2.32,
+          "share20Pct": 8.31,
+          "shareNote": "份额5日-2.3%",
+          "hvPct1y": 34.4,
           "status": "低位观察（份额流出）"
         },
         {
@@ -14576,10 +14576,10 @@
           "distHigh60": -22.2,
           "ret20": -2.6,
           "tier": "低位",
-          "share5Pct": 2.81,
-          "share20Pct": 10.1,
-          "shareNote": "份额5日+2.8%",
-          "hvPct1y": 25.6,
+          "share5Pct": 0.9,
+          "share20Pct": 11.91,
+          "shareNote": "份额5日+0.9%",
+          "hvPct1y": 11.6,
           "status": "✅趋势候选"
         },
         {
@@ -14594,7 +14594,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 7.6,
+          "hvPct1y": 5.2,
           "status": "✅趋势候选"
         },
         {
@@ -14609,7 +14609,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 11.2,
+          "hvPct1y": 12.4,
           "status": "✅趋势候选"
         },
         {
@@ -14624,7 +14624,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 13.2,
+          "hvPct1y": 5.6,
           "status": "✅趋势候选"
         }
       ],
@@ -14843,10 +14843,10 @@
         "distHigh60": -10.3,
         "ret20": -1.3,
         "tier": "低位",
-        "share5Pct": 1.12,
-        "share20Pct": 0.76,
-        "shareNote": "份额5日+1.1%",
-        "hvPct1y": 5.2,
+        "share5Pct": 1.33,
+        "share20Pct": -0.4,
+        "shareNote": "份额5日+1.3%",
+        "hvPct1y": 2.8,
         "status": "✅趋势候选"
       },
       {
@@ -14858,10 +14858,10 @@
         "distHigh60": -4.2,
         "ret20": 0.3,
         "tier": "半路",
-        "share5Pct": 13.21,
-        "share20Pct": 8.66,
-        "shareNote": "份额5日+13.2%",
-        "hvPct1y": 4.4,
+        "share5Pct": 9.12,
+        "share20Pct": 2.24,
+        "shareNote": "份额5日+9.1%",
+        "hvPct1y": 7.6,
         "status": "观察"
       },
       {
@@ -14873,10 +14873,10 @@
         "distHigh60": -13.1,
         "ret20": 3.2,
         "tier": "低位",
-        "share5Pct": 9.37,
-        "share20Pct": 13.3,
-        "shareNote": "份额5日+9.4%",
-        "hvPct1y": 18.8,
+        "share5Pct": 5.88,
+        "share20Pct": 13.81,
+        "shareNote": "份额5日+5.9%",
+        "hvPct1y": 12.8,
         "status": "✅趋势候选"
       },
       {
@@ -14888,10 +14888,10 @@
         "distHigh60": -12.5,
         "ret20": 6.7,
         "tier": "半路",
-        "share5Pct": 4.93,
-        "share20Pct": -2.8,
-        "shareNote": "份额5日+4.9%",
-        "hvPct1y": 30.4,
+        "share5Pct": 7.03,
+        "share20Pct": -2.14,
+        "shareNote": "份额5日+7.0%",
+        "hvPct1y": 26.8,
         "status": "观察"
       },
       {
@@ -14903,10 +14903,10 @@
         "distHigh60": -24.9,
         "ret20": 2.5,
         "tier": "低位",
-        "share5Pct": -1.92,
-        "share20Pct": 10.51,
-        "shareNote": "份额5日-1.9%",
-        "hvPct1y": 40.8,
+        "share5Pct": -2.32,
+        "share20Pct": 8.31,
+        "shareNote": "份额5日-2.3%",
+        "hvPct1y": 34.4,
         "status": "低位观察（份额流出）"
       },
       {
@@ -14918,10 +14918,10 @@
         "distHigh60": -22.2,
         "ret20": -2.6,
         "tier": "低位",
-        "share5Pct": 2.81,
-        "share20Pct": 10.1,
-        "shareNote": "份额5日+2.8%",
-        "hvPct1y": 25.6,
+        "share5Pct": 0.9,
+        "share20Pct": 11.91,
+        "shareNote": "份额5日+0.9%",
+        "hvPct1y": 11.6,
         "status": "✅趋势候选"
       },
       {
@@ -14936,7 +14936,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 7.6,
+        "hvPct1y": 5.2,
         "status": "✅趋势候选"
       },
       {
@@ -14951,7 +14951,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 11.2,
+        "hvPct1y": 12.4,
         "status": "✅趋势候选"
       },
       {
@@ -14966,7 +14966,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 13.2,
+        "hvPct1y": 5.6,
         "status": "✅趋势候选"
       }
     ],
