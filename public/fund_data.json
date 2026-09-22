@@ -12314,7 +12314,7 @@
     ],
     "note": "HV20/HV60为年化历史波动率；HV20>HV60×1.2升温，<HV60×0.85降温；低位=HV20近一年分位<25%"
   },
-  "nationalTeamComment": "全市场ETF（不含货币）昨日净申购约41亿元（份额变化×收盘价口径）。华夏50ETF单日份额-2.13亿份（约-6.4亿元），大额资金流出信号；未见跨公司共振，暂属个别产品资金行为。近5日份额口径资金主要流入债券、商品、宽基类，流出科技、其他、港股海外类。位置层处于低位且份额未流出：沪深300、中证500、创业板指、中证A500、上证综指、深证成指，列为趋势候选。沪深300形成杯柄型（50日，振幅12.4%），未突破·观察、距枢轴10.7%，盯510300突破确认。上证50形成底部平台型（48日，振幅7.5%），临近买点、距枢轴4.4%，盯510050突破确认。科创50系列ETF合计净流出18.4亿 → 短期利空科创50/硬科技。沪深300系列ETF合计净流入10.1亿 → 短期利多沪深300/大盘蓝筹。沪深300波动率HV20为10.7%（近一年3%分位），沪深300、中证500、上证50、创业板指、中证A500、上证综指、深证成指波动处低位。",
+  "nationalTeamComment": "全市场ETF（不含货币）昨日净申购约41亿元（份额变化×收盘价口径）。华夏50ETF单日份额-2.13亿份（约-6.4亿元），大额资金流出信号；未见跨公司共振，暂属个别产品资金行为。近5日份额口径资金主要流入债券、商品、宽基类，流出科技、其他、港股海外类。位置层处于低位且份额未流出：沪深300、中证500、中证A500、上证综指、深证成指，列为趋势候选。沪深300形成杯柄型（50日，振幅12.4%），未突破·观察、距枢轴10.7%，盯510300突破确认。上证50形成底部平台型（48日，振幅7.5%），临近买点、距枢轴4.4%，盯510050突破确认。科创50系列ETF合计净流出18.4亿 → 短期利空科创50/硬科技。沪深300系列ETF合计净流入10.1亿 → 短期利多沪深300/大盘蓝筹。沪深300波动率HV20为10.7%（近一年3%分位），沪深300、中证500、上证50、创业板指、中证A500、上证综指、深证成指波动处低位。",
   "ntRotation": {
     "trade_date": "2026-09-22",
     "groups": [
@@ -13648,10 +13648,10 @@
           "distHigh60": -10.2,
           "ret20": -1.2,
           "tier": "低位",
-          "share5Pct": 1.33,
-          "share20Pct": -0.4,
-          "shareNote": "份额5日+1.3%",
-          "hvPct1y": 2.8,
+          "share5Pct": 0.83,
+          "share20Pct": -1.31,
+          "shareNote": "份额5日+0.8%",
+          "hvPct1y": 3.2,
           "status": "✅趋势候选"
         },
         {
@@ -13663,10 +13663,10 @@
           "distHigh60": -3.8,
           "ret20": 0.7,
           "tier": "半路",
-          "share5Pct": 9.12,
-          "share20Pct": 2.24,
-          "shareNote": "份额5日+9.1%",
-          "hvPct1y": 7.6,
+          "share5Pct": 3.98,
+          "share20Pct": -2.06,
+          "shareNote": "份额5日+4.0%",
+          "hvPct1y": 8.8,
           "status": "观察"
         },
         {
@@ -13678,10 +13678,10 @@
           "distHigh60": -13.3,
           "ret20": 2.9,
           "tier": "低位",
-          "share5Pct": 5.88,
-          "share20Pct": 13.81,
-          "shareNote": "份额5日+5.9%",
-          "hvPct1y": 12.8,
+          "share5Pct": 3.79,
+          "share20Pct": 10.48,
+          "shareNote": "份额5日+3.8%",
+          "hvPct1y": 14.0,
           "status": "✅趋势候选"
         },
         {
@@ -13693,10 +13693,10 @@
           "distHigh60": -12.6,
           "ret20": 6.6,
           "tier": "半路",
-          "share5Pct": 7.03,
-          "share20Pct": -2.14,
-          "shareNote": "份额5日+7.0%",
-          "hvPct1y": 26.8,
+          "share5Pct": 11.64,
+          "share20Pct": -4.97,
+          "shareNote": "份额5日+11.6%",
+          "hvPct1y": 27.2,
           "status": "观察"
         },
         {
@@ -13708,10 +13708,10 @@
           "distHigh60": -24.6,
           "ret20": 3.0,
           "tier": "低位",
-          "share5Pct": -2.32,
-          "share20Pct": 8.31,
+          "share5Pct": -2.28,
+          "share20Pct": 5.02,
           "shareNote": "份额5日-2.3%",
-          "hvPct1y": 34.4,
+          "hvPct1y": 34.8,
           "status": "低位观察（份额流出）"
         },
         {
@@ -13723,11 +13723,11 @@
           "distHigh60": -22.2,
           "ret20": -2.6,
           "tier": "低位",
-          "share5Pct": 0.9,
-          "share20Pct": 11.91,
-          "shareNote": "份额5日+0.9%",
-          "hvPct1y": 11.6,
-          "status": "✅趋势候选"
+          "share5Pct": -0.75,
+          "share20Pct": 7.17,
+          "shareNote": "份额5日-0.8%",
+          "hvPct1y": 11.2,
+          "status": "低位观察（份额流出）"
         },
         {
           "indexCode": "000510.SH",
@@ -13741,7 +13741,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 5.2,
+          "hvPct1y": 4.0,
           "status": "✅趋势候选"
         },
         {
@@ -13756,7 +13756,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 12.4,
+          "hvPct1y": 12.8,
           "status": "✅趋势候选"
         },
         {
@@ -13993,10 +13993,10 @@
         "distHigh60": -10.2,
         "ret20": -1.2,
         "tier": "低位",
-        "share5Pct": 1.33,
-        "share20Pct": -0.4,
-        "shareNote": "份额5日+1.3%",
-        "hvPct1y": 2.8,
+        "share5Pct": 0.83,
+        "share20Pct": -1.31,
+        "shareNote": "份额5日+0.8%",
+        "hvPct1y": 3.2,
         "status": "✅趋势候选"
       },
       {
@@ -14008,10 +14008,10 @@
         "distHigh60": -3.8,
         "ret20": 0.7,
         "tier": "半路",
-        "share5Pct": 9.12,
-        "share20Pct": 2.24,
-        "shareNote": "份额5日+9.1%",
-        "hvPct1y": 7.6,
+        "share5Pct": 3.98,
+        "share20Pct": -2.06,
+        "shareNote": "份额5日+4.0%",
+        "hvPct1y": 8.8,
         "status": "观察"
       },
       {
@@ -14023,10 +14023,10 @@
         "distHigh60": -13.3,
         "ret20": 2.9,
         "tier": "低位",
-        "share5Pct": 5.88,
-        "share20Pct": 13.81,
-        "shareNote": "份额5日+5.9%",
-        "hvPct1y": 12.8,
+        "share5Pct": 3.79,
+        "share20Pct": 10.48,
+        "shareNote": "份额5日+3.8%",
+        "hvPct1y": 14.0,
         "status": "✅趋势候选"
       },
       {
@@ -14038,10 +14038,10 @@
         "distHigh60": -12.6,
         "ret20": 6.6,
         "tier": "半路",
-        "share5Pct": 7.03,
-        "share20Pct": -2.14,
-        "shareNote": "份额5日+7.0%",
-        "hvPct1y": 26.8,
+        "share5Pct": 11.64,
+        "share20Pct": -4.97,
+        "shareNote": "份额5日+11.6%",
+        "hvPct1y": 27.2,
         "status": "观察"
       },
       {
@@ -14053,10 +14053,10 @@
         "distHigh60": -24.6,
         "ret20": 3.0,
         "tier": "低位",
-        "share5Pct": -2.32,
-        "share20Pct": 8.31,
+        "share5Pct": -2.28,
+        "share20Pct": 5.02,
         "shareNote": "份额5日-2.3%",
-        "hvPct1y": 34.4,
+        "hvPct1y": 34.8,
         "status": "低位观察（份额流出）"
       },
       {
@@ -14068,11 +14068,11 @@
         "distHigh60": -22.2,
         "ret20": -2.6,
         "tier": "低位",
-        "share5Pct": 0.9,
-        "share20Pct": 11.91,
-        "shareNote": "份额5日+0.9%",
-        "hvPct1y": 11.6,
-        "status": "✅趋势候选"
+        "share5Pct": -0.75,
+        "share20Pct": 7.17,
+        "shareNote": "份额5日-0.8%",
+        "hvPct1y": 11.2,
+        "status": "低位观察（份额流出）"
       },
       {
         "indexCode": "000510.SH",
@@ -14086,7 +14086,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 5.2,
+        "hvPct1y": 4.0,
         "status": "✅趋势候选"
       },
       {
@@ -14101,7 +14101,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 12.4,
+        "hvPct1y": 12.8,
         "status": "✅趋势候选"
       },
       {
@@ -14464,8 +14464,8 @@
         "name": "药明康德",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "化学制药",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 5,
           "lose": 10,
@@ -14480,9 +14480,9 @@
           "lose": 13,
           "net": -1,
           "win20": 1,
-          "lose20": 1,
-          "net20": 0,
-          "excluded": 9
+          "lose20": 0,
+          "net20": 1,
+          "excluded": 10
         },
         "daysUsed": 120
       },
@@ -14514,33 +14514,6 @@
         "daysUsed": 120
       },
       {
-        "code": "600309.SH",
-        "name": "万华化学",
-        "group": "watch",
-        "industry": "化工原料",
-        "sectorName": "化工原料(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 5,
-          "lose": 14,
-          "net": -9,
-          "win20": 0,
-          "lose20": 3,
-          "net20": -3,
-          "excluded": 2
-        },
-        "vsSector": {
-          "win": 12,
-          "lose": 25,
-          "net": -13,
-          "win20": 1,
-          "lose20": 4,
-          "net20": -3,
-          "excluded": 5
-        },
-        "daysUsed": 120
-      },
-      {
         "code": "000708.SZ",
         "name": "中信特钢",
         "group": "watch",
@@ -14564,6 +14537,33 @@
           "lose20": 1,
           "net20": -1,
           "excluded": 6
+        },
+        "daysUsed": 120
+      },
+      {
+        "code": "600309.SH",
+        "name": "万华化学",
+        "group": "watch",
+        "industry": "化工原料",
+        "sectorName": "化学原料",
+        "sectorSrc": "eastmoney",
+        "vsIndex": {
+          "win": 5,
+          "lose": 14,
+          "net": -9,
+          "win20": 0,
+          "lose20": 3,
+          "net20": -3,
+          "excluded": 2
+        },
+        "vsSector": {
+          "win": 10,
+          "lose": 15,
+          "net": -5,
+          "win20": 1,
+          "lose20": 3,
+          "net20": -2,
+          "excluded": 4
         },
         "daysUsed": 120
       },
@@ -14626,8 +14626,8 @@
         "name": "华海药业",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "化学制药",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 3,
           "lose": 14,
@@ -14642,8 +14642,8 @@
           "lose": 10,
           "net": -4,
           "win20": 0,
-          "lose20": 3,
-          "net20": -3,
+          "lose20": 2,
+          "net20": -2,
           "excluded": 5
         },
         "daysUsed": 120
@@ -14707,8 +14707,8 @@
         "name": "恒瑞医药",
         "group": "hold",
         "industry": "化学制药",
-        "sectorName": "化学制药(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "化学制药",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 0,
           "lose": 12,
@@ -14725,7 +14725,7 @@
           "win20": 0,
           "lose20": 2,
           "net20": -2,
-          "excluded": 11
+          "excluded": 13
         },
         "daysUsed": 120
       }
