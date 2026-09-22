@@ -14464,8 +14464,8 @@
         "name": "药明康德",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
         "vsIndex": {
           "win": 5,
           "lose": 10,
@@ -14480,9 +14480,9 @@
           "lose": 13,
           "net": -1,
           "win20": 1,
-          "lose20": 0,
-          "net20": 1,
-          "excluded": 10
+          "lose20": 1,
+          "net20": 0,
+          "excluded": 9
         },
         "daysUsed": 120
       },
@@ -14599,8 +14599,8 @@
         "name": "三一重工",
         "group": "watch",
         "industry": "工程机械",
-        "sectorName": "工程机械(合成)",
-        "sectorSrc": "tushare合成",
+        "sectorName": "工程机械",
+        "sectorSrc": "eastmoney",
         "vsIndex": {
           "win": 3,
           "lose": 12,
@@ -14611,13 +14611,13 @@
           "excluded": 7
         },
         "vsSector": {
-          "win": 8,
+          "win": 9,
           "lose": 15,
-          "net": -7,
-          "win20": 0,
+          "net": -6,
+          "win20": 1,
           "lose20": 2,
-          "net20": -2,
-          "excluded": 4
+          "net20": -1,
+          "excluded": 7
         },
         "daysUsed": 120
       },
@@ -14653,8 +14653,8 @@
         "name": "华海药业",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
         "vsIndex": {
           "win": 3,
           "lose": 14,
@@ -14669,8 +14669,8 @@
           "lose": 10,
           "net": -4,
           "win20": 0,
-          "lose20": 2,
-          "net20": -2,
+          "lose20": 3,
+          "net20": -3,
           "excluded": 5
         },
         "daysUsed": 120
@@ -14707,8 +14707,8 @@
         "name": "恒瑞医药",
         "group": "hold",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
         "vsIndex": {
           "win": 0,
           "lose": 12,
@@ -14725,7 +14725,7 @@
           "win20": 0,
           "lose20": 2,
           "net20": -2,
-          "excluded": 13
+          "excluded": 11
         },
         "daysUsed": 120
       }
