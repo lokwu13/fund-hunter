@@ -13470,10 +13470,10 @@
           "distHigh60": -10.7,
           "ret20": -1.8,
           "tier": "低位",
-          "share5Pct": 0.83,
-          "share20Pct": -1.31,
-          "shareNote": "份额5日+0.8%",
-          "hvPct1y": 3.2,
+          "share5Pct": 0.89,
+          "share20Pct": 0.64,
+          "shareNote": "份额5日+0.9%",
+          "hvPct1y": 0.4,
           "status": "✅趋势候选"
         },
         {
@@ -13485,10 +13485,10 @@
           "distHigh60": -4.3,
           "ret20": 0.2,
           "tier": "半路",
-          "share5Pct": 3.98,
-          "share20Pct": -2.06,
-          "shareNote": "份额5日+4.0%",
-          "hvPct1y": 8.8,
+          "share5Pct": -2.79,
+          "share20Pct": 1.84,
+          "shareNote": "份额5日-2.8%",
+          "hvPct1y": 4.8,
           "status": "观察"
         },
         {
@@ -13500,10 +13500,10 @@
           "distHigh60": -13.7,
           "ret20": 2.4,
           "tier": "低位",
-          "share5Pct": 3.79,
-          "share20Pct": 10.48,
-          "shareNote": "份额5日+3.8%",
-          "hvPct1y": 14.0,
+          "share5Pct": 1.08,
+          "share20Pct": 11.44,
+          "shareNote": "份额5日+1.1%",
+          "hvPct1y": 13.2,
           "status": "✅趋势候选"
         },
         {
@@ -13515,10 +13515,10 @@
           "distHigh60": -12.7,
           "ret20": 6.4,
           "tier": "半路",
-          "share5Pct": 11.64,
-          "share20Pct": -4.97,
-          "shareNote": "份额5日+11.6%",
-          "hvPct1y": 27.2,
+          "share5Pct": 0.34,
+          "share20Pct": -2.29,
+          "shareNote": "份额5日+0.3%",
+          "hvPct1y": 27.6,
           "status": "观察"
         },
         {
@@ -13530,10 +13530,10 @@
           "distHigh60": -24.8,
           "ret20": 2.8,
           "tier": "低位",
-          "share5Pct": -2.28,
-          "share20Pct": 5.02,
-          "shareNote": "份额5日-2.3%",
-          "hvPct1y": 34.8,
+          "share5Pct": -1.97,
+          "share20Pct": 6.45,
+          "shareNote": "份额5日-2.0%",
+          "hvPct1y": 34.4,
           "status": "低位观察（份额流出）"
         },
         {
@@ -13545,10 +13545,10 @@
           "distHigh60": -22.7,
           "ret20": -3.1,
           "tier": "低位",
-          "share5Pct": -0.75,
-          "share20Pct": 7.17,
-          "shareNote": "份额5日-0.8%",
-          "hvPct1y": 11.2,
+          "share5Pct": -3.34,
+          "share20Pct": 3.28,
+          "shareNote": "份额5日-3.3%",
+          "hvPct1y": 11.6,
           "status": "低位观察（份额流出）"
         },
         {
@@ -13578,7 +13578,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 12.8,
+          "hvPct1y": 12.0,
           "status": "✅趋势候选"
         },
         {
@@ -13593,7 +13593,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 5.6,
+          "hvPct1y": 5.2,
           "status": "✅趋势候选"
         }
       ],
@@ -13690,10 +13690,10 @@
         "distHigh60": -10.7,
         "ret20": -1.8,
         "tier": "低位",
-        "share5Pct": 0.83,
-        "share20Pct": -1.31,
-        "shareNote": "份额5日+0.8%",
-        "hvPct1y": 3.2,
+        "share5Pct": 0.89,
+        "share20Pct": 0.64,
+        "shareNote": "份额5日+0.9%",
+        "hvPct1y": 0.4,
         "status": "✅趋势候选"
       },
       {
@@ -13705,10 +13705,10 @@
         "distHigh60": -4.3,
         "ret20": 0.2,
         "tier": "半路",
-        "share5Pct": 3.98,
-        "share20Pct": -2.06,
-        "shareNote": "份额5日+4.0%",
-        "hvPct1y": 8.8,
+        "share5Pct": -2.79,
+        "share20Pct": 1.84,
+        "shareNote": "份额5日-2.8%",
+        "hvPct1y": 4.8,
         "status": "观察"
       },
       {
@@ -13720,10 +13720,10 @@
         "distHigh60": -13.7,
         "ret20": 2.4,
         "tier": "低位",
-        "share5Pct": 3.79,
-        "share20Pct": 10.48,
-        "shareNote": "份额5日+3.8%",
-        "hvPct1y": 14.0,
+        "share5Pct": 1.08,
+        "share20Pct": 11.44,
+        "shareNote": "份额5日+1.1%",
+        "hvPct1y": 13.2,
         "status": "✅趋势候选"
       },
       {
@@ -13735,10 +13735,10 @@
         "distHigh60": -12.7,
         "ret20": 6.4,
         "tier": "半路",
-        "share5Pct": 11.64,
-        "share20Pct": -4.97,
-        "shareNote": "份额5日+11.6%",
-        "hvPct1y": 27.2,
+        "share5Pct": 0.34,
+        "share20Pct": -2.29,
+        "shareNote": "份额5日+0.3%",
+        "hvPct1y": 27.6,
         "status": "观察"
       },
       {
@@ -13750,10 +13750,10 @@
         "distHigh60": -24.8,
         "ret20": 2.8,
         "tier": "低位",
-        "share5Pct": -2.28,
-        "share20Pct": 5.02,
-        "shareNote": "份额5日-2.3%",
-        "hvPct1y": 34.8,
+        "share5Pct": -1.97,
+        "share20Pct": 6.45,
+        "shareNote": "份额5日-2.0%",
+        "hvPct1y": 34.4,
         "status": "低位观察（份额流出）"
       },
       {
@@ -13765,10 +13765,10 @@
         "distHigh60": -22.7,
         "ret20": -3.1,
         "tier": "低位",
-        "share5Pct": -0.75,
-        "share20Pct": 7.17,
-        "shareNote": "份额5日-0.8%",
-        "hvPct1y": 11.2,
+        "share5Pct": -3.34,
+        "share20Pct": 3.28,
+        "shareNote": "份额5日-3.3%",
+        "hvPct1y": 11.6,
         "status": "低位观察（份额流出）"
       },
       {
@@ -13798,7 +13798,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 12.8,
+        "hvPct1y": 12.0,
         "status": "✅趋势候选"
       },
       {
@@ -13813,7 +13813,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 5.6,
+        "hvPct1y": 5.2,
         "status": "✅趋势候选"
       }
     ],
@@ -13965,7 +13965,7 @@
     "trade_date": "2026-09-23",
     "window": 120,
     "baseIndex": "上证综指",
-    "indexSrc": "tushare",
+    "indexSrc": "eastmoney",
     "items": [
       {
         "code": "000895.SZ",
@@ -13975,12 +13975,12 @@
         "sectorName": "食品(合成)",
         "sectorSrc": "tushare合成",
         "vsIndex": {
-          "win": 15,
+          "win": 14,
           "lose": 18,
-          "net": -3,
-          "win20": 1,
+          "net": -4,
+          "win20": 0,
           "lose20": 2,
-          "net20": -1,
+          "net20": -2,
           "excluded": 1
         },
         "vsSector": {
@@ -14022,33 +14022,6 @@
         "daysUsed": 120
       },
       {
-        "code": "300760.SZ",
-        "name": "迈瑞医疗",
-        "group": "watch",
-        "industry": "医疗保健",
-        "sectorName": "医疗保健(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 9,
-          "lose": 12,
-          "net": -3,
-          "win20": 1,
-          "lose20": 1,
-          "net20": 0,
-          "excluded": 1
-        },
-        "vsSector": {
-          "win": 13,
-          "lose": 21,
-          "net": -8,
-          "win20": 3,
-          "lose20": 5,
-          "net20": -2,
-          "excluded": 4
-        },
-        "daysUsed": 120
-      },
-      {
         "code": "688271.SH",
         "name": "联影医疗",
         "group": "watch",
@@ -14062,7 +14035,7 @@
           "win20": 1,
           "lose20": 2,
           "net20": -1,
-          "excluded": 3
+          "excluded": 2
         },
         "vsSector": {
           "win": 10,
@@ -14072,6 +14045,33 @@
           "lose20": 3,
           "net20": -2,
           "excluded": 5
+        },
+        "daysUsed": 120
+      },
+      {
+        "code": "300760.SZ",
+        "name": "迈瑞医疗",
+        "group": "watch",
+        "industry": "医疗保健",
+        "sectorName": "医疗保健(合成)",
+        "sectorSrc": "tushare合成",
+        "vsIndex": {
+          "win": 8,
+          "lose": 12,
+          "net": -4,
+          "win20": 0,
+          "lose20": 1,
+          "net20": -1,
+          "excluded": 1
+        },
+        "vsSector": {
+          "win": 13,
+          "lose": 21,
+          "net": -8,
+          "win20": 3,
+          "lose20": 5,
+          "net20": -2,
+          "excluded": 4
         },
         "daysUsed": 120
       },
@@ -14272,12 +14272,12 @@
         "sectorName": "旅游服务(合成)",
         "sectorSrc": "tushare合成",
         "vsIndex": {
-          "win": 4,
+          "win": 3,
           "lose": 11,
-          "net": -7,
-          "win20": 1,
+          "net": -8,
+          "win20": 0,
           "lose20": 1,
-          "net20": 0,
+          "net20": -1,
           "excluded": 6
         },
         "vsSector": {
@@ -14319,33 +14319,6 @@
         "daysUsed": 120
       },
       {
-        "code": "002568.SZ",
-        "name": "百润股份",
-        "group": "watch",
-        "industry": "红黄酒",
-        "sectorName": "红黄酒(合成)",
-        "sectorSrc": "tushare合成",
-        "vsIndex": {
-          "win": 6,
-          "lose": 16,
-          "net": -10,
-          "win20": 1,
-          "lose20": 1,
-          "net20": 0,
-          "excluded": 7
-        },
-        "vsSector": {
-          "win": 4,
-          "lose": 18,
-          "net": -14,
-          "win20": 0,
-          "lose20": 4,
-          "net20": -4,
-          "excluded": 6
-        },
-        "daysUsed": 120
-      },
-      {
         "code": "600521.SH",
         "name": "华海药业",
         "group": "watch",
@@ -14369,6 +14342,33 @@
           "lose20": 3,
           "net20": -3,
           "excluded": 5
+        },
+        "daysUsed": 120
+      },
+      {
+        "code": "002568.SZ",
+        "name": "百润股份",
+        "group": "watch",
+        "industry": "红黄酒",
+        "sectorName": "红黄酒(合成)",
+        "sectorSrc": "tushare合成",
+        "vsIndex": {
+          "win": 5,
+          "lose": 16,
+          "net": -11,
+          "win20": 0,
+          "lose20": 1,
+          "net20": -1,
+          "excluded": 7
+        },
+        "vsSector": {
+          "win": 4,
+          "lose": 18,
+          "net": -14,
+          "win20": 0,
+          "lose20": 4,
+          "net20": -4,
+          "excluded": 6
         },
         "daysUsed": 120
       },
@@ -14429,6 +14429,6 @@
     ],
     "unmapped": [],
     "unmappedBoards": [],
-    "note": "口径：日线近似\"日内对抗\"——强对抗日=基准跌超0.3%且个股超额≥+1.5pct，弱对抗日=基准涨超0.3%且个股超额≤-1.5pct（超额=个股当日涨跌幅-基准当日涨跌幅）；强对抗日剔除消息面驱动（2026-09-09 用户口径：强度必须是盘面自身打出来的）——开盘跳空≥+1.5%（隔夜消息定价签名）或当日/前一交易日有公告（巨潮资讯口径）的强对抗日不计入，剔除天数见\"剔除\"列；弱对抗侧暂不过滤；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级为Tushare等权合成指数，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年），近20日为子项；强/弱分开累计不对冲（2026-09-09 v3 用户口径）：强=基准走弱日个股明显跑赢的次数，弱=基准走强日个股明显跑输的次数，两个计数独立累计展示，不做净胜对冲；本期数据源：大盘=tushare，板块=含tushare合成指数降级（标注（合成））"
+    "note": "口径：日线近似\"日内对抗\"——强对抗日=基准跌超0.3%且个股超额≥+1.5pct，弱对抗日=基准涨超0.3%且个股超额≤-1.5pct（超额=个股当日涨跌幅-基准当日涨跌幅）；强对抗日剔除消息面驱动（2026-09-09 用户口径：强度必须是盘面自身打出来的）——开盘跳空≥+1.5%（隔夜消息定价签名）或当日/前一交易日有公告（巨潮资讯口径）的强对抗日不计入，剔除天数见\"剔除\"列；弱对抗侧暂不过滤；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级为Tushare等权合成指数，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年），近20日为子项；强/弱分开累计不对冲（2026-09-09 v3 用户口径）：强=基准走弱日个股明显跑赢的次数，弱=基准走强日个股明显跑输的次数，两个计数独立累计展示，不做净胜对冲；本期数据源：大盘=东财，板块=含tushare合成指数降级（标注（合成））"
   }
 }
