@@ -1,7 +1,7 @@
 {
   "updateTime": "2026-09-24 收盘 (Tushare自动)",
   "week": "2026.09.21 - 09.25",
-  "marketStatus": "正常交易",
+  "marketStatus": "数据至 09月24日 收盘",
   "indices": {
     "shIndex": {
       "name": "上证指数",
@@ -314,10 +314,10 @@
     "note": "北向成交总额（亿元）；官方2024-08起停披净买入，仅披露成交额"
   },
   "southbound": {
-    "today": 44.23,
-    "week": 187.73,
-    "month": 509.34,
-    "updateTime": "2026-09-23"
+    "today": 30.98,
+    "week": 193.68,
+    "month": 524.57,
+    "updateTime": "2026-09-24"
   },
   "foreignSummary": {
     "totalBuys": 0,
@@ -450,72 +450,72 @@
   "leverage_concentration_top10": [
     {
       "rank": 1,
-      "code": "001335.SZ",
-      "name": "信凯科技",
-      "ratio": "17.36%",
+      "code": "603063.SH",
+      "name": "禾望电气",
+      "ratio": "15.60%",
       "concept": "—"
     },
     {
       "rank": 2,
-      "code": "600802.SH",
-      "name": "福建水泥",
-      "ratio": "15.69%",
+      "code": "603391.SH",
+      "name": "力聚热能",
+      "ratio": "14.66%",
       "concept": "—"
     },
     {
       "rank": 3,
-      "code": "603063.SH",
-      "name": "禾望电气",
-      "ratio": "15.19%",
+      "code": "603668.SH",
+      "name": "天马科技",
+      "ratio": "14.37%",
       "concept": "—"
     },
     {
       "rank": 4,
-      "code": "603391.SH",
-      "name": "力聚热能",
-      "ratio": "14.46%",
+      "code": "600802.SH",
+      "name": "福建水泥",
+      "ratio": "14.25%",
       "concept": "—"
     },
     {
       "rank": 5,
-      "code": "603668.SH",
-      "name": "天马科技",
-      "ratio": "14.30%",
+      "code": "688576.SH",
+      "name": "西山科技",
+      "ratio": "13.95%",
       "concept": "—"
     },
     {
       "rank": 6,
-      "code": "688576.SH",
-      "name": "西山科技",
-      "ratio": "13.65%",
+      "code": "688693.SH",
+      "name": "锴威特",
+      "ratio": "13.66%",
       "concept": "—"
     },
     {
       "rank": 7,
-      "code": "688693.SH",
-      "name": "锴威特",
-      "ratio": "13.43%",
+      "code": "688648.SH",
+      "name": "中邮科技",
+      "ratio": "13.08%",
       "concept": "—"
     },
     {
       "rank": 8,
-      "code": "688648.SH",
-      "name": "中邮科技",
-      "ratio": "13.05%",
+      "code": "688807.SH",
+      "name": "优迅股份",
+      "ratio": "11.62%",
       "concept": "—"
     },
     {
       "rank": 9,
-      "code": "002355.SZ",
-      "name": "兴民智通",
-      "ratio": "12.76%",
+      "code": "688826.SH",
+      "name": "频准激光",
+      "ratio": "11.26%",
       "concept": "—"
     },
     {
       "rank": 10,
-      "code": "002675.SZ",
-      "name": "东诚药业",
-      "ratio": "12.74%",
+      "code": "603516.SH",
+      "name": "淳中科技",
+      "ratio": "11.13%",
       "concept": "—"
     }
   ],
@@ -858,82 +858,82 @@
   },
   "southbound_concentration_top10": [
     {
-      "name": "綠色動力環保",
-      "code": "01330.HK",
-      "ratio": "71.67%",
-      "vol": 289833020,
-      "concept": "—",
-      "sector": "—"
-    },
-    {
       "name": "大眾公用",
       "code": "01635.HK",
-      "ratio": "71.18%",
-      "vol": 379907000,
+      "ratio": "71.44%",
+      "vol": 381304000,
       "concept": "—",
       "sector": "—"
     },
     {
-      "name": "龍蟠科技",
-      "code": "02465.HK",
-      "ratio": "70.53%",
-      "vol": 95232888,
+      "name": "綠色動力環保",
+      "code": "01330.HK",
+      "ratio": "71.44%",
+      "vol": 288922020,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "中國電信",
       "code": "00728.HK",
-      "ratio": "70.50%",
-      "vol": 9785650817,
+      "ratio": "70.62%",
+      "vol": 9802146817,
+      "concept": "—",
+      "sector": "—"
+    },
+    {
+      "name": "龍蟠科技",
+      "code": "02465.HK",
+      "ratio": "70.35%",
+      "vol": 94990388,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "中國神華",
       "code": "01088.HK",
-      "ratio": "69.36%",
-      "vol": 2342746828,
+      "ratio": "69.46%",
+      "vol": 2346150328,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "凱盛新能",
       "code": "01108.HK",
-      "ratio": "69.25%",
-      "vol": 173132000,
+      "ratio": "69.41%",
+      "vol": 173550000,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "天津創業環保股份",
       "code": "01065.HK",
-      "ratio": "68.30%",
-      "vol": 232250100,
+      "ratio": "68.50%",
+      "vol": 232940100,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "廣汽集團",
       "code": "02238.HK",
-      "ratio": "65.57%",
-      "vol": 1845014145,
+      "ratio": "65.63%",
+      "vol": 1846766145,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "弘業期貨",
       "code": "03678.HK",
-      "ratio": "65.35%",
-      "vol": 163197000,
+      "ratio": "64.91%",
+      "vol": 162126000,
       "concept": "—",
       "sector": "—"
     },
     {
       "name": "劍橋科技",
       "code": "06166.HK",
-      "ratio": "63.28%",
-      "vol": 58644710,
+      "ratio": "64.65%",
+      "vol": 59917560,
       "concept": "—",
       "sector": "—"
     }
@@ -1432,7 +1432,7 @@
     "leverage_concentration_top10": {
       "source": "Tushare margin_detail + daily_basic",
       "freq": "日更",
-      "lastUpdate": "2026-09-23",
+      "lastUpdate": "2026-09-24",
       "note": "融资余额占流通市值比，T+1口径每日更新"
     },
     "medicalSectorFunds": {
@@ -1444,7 +1444,7 @@
     "southbound_concentration_top10": {
       "source": "Tushare hk_hold（港交所CCASS港股通持股）",
       "freq": "日更",
-      "lastUpdate": "2026-09-23",
+      "lastUpdate": "2026-09-24",
       "note": "港股通持股占港股总股本比例，交易日盘后更新；名称为港交所登记繁体原名"
     },
     "foreign_concentration_top10": {
@@ -1492,7 +1492,7 @@
     "marginTrading": {
       "source": "Tushare margin（沪深北交易所两融汇总）",
       "freq": "日更",
-      "lastUpdate": "2026-09-23",
+      "lastUpdate": "2026-09-24",
       "note": "T+1口径：交易日当晚更新前一交易日数据"
     },
     "privateFund_inflow": {
@@ -7666,18 +7666,12 @@
       "comment": "DR007（1.42%）贴近7天逆回购政策利率（1.40%），资金面整体均衡；本月公开市场净投放2000亿元，央行持续呵护流动性。"
     },
     "marginTrading": {
-      "updateTime": "2026-09-23",
-      "trend": "上升",
-      "totalBalance": 26550.0,
-      "finBalance": 26253.13,
-      "secBalance": 296.95,
+      "updateTime": "2026-09-24",
+      "trend": "下降",
+      "totalBalance": 13505.0,
+      "finBalance": 13318.42,
+      "secBalance": 186.64,
       "daily": [
-        {
-          "date": "07-30",
-          "total": 26065,
-          "fin": 25845.22,
-          "sec": 220.06
-        },
         {
           "date": "07-31",
           "total": 26113,
@@ -7911,9 +7905,15 @@
           "total": 26550,
           "fin": 26253.13,
           "sec": 296.95
+        },
+        {
+          "date": "09-24",
+          "total": 13505,
+          "fin": 13318.42,
+          "sec": 186.64
         }
       ],
-      "comment": "截至9月23日两融余额26550亿，较前日减少约13亿。融资余额26253亿，融券余额297亿。杠杆资金持续回流，市场风险偏好回升。水温🟡平（较前日减少约13亿；DR007 1.42%高于政策利率1.40%；本月公开市场净投放2000亿；10Y收益率近1月-1bp）。结论：当前杠杆资金环境中性，股票市场做多需谨慎。",
+      "comment": "截至9月24日两融余额13505亿，较前日减少约13045亿，连续2日下降。融资余额13318亿，融券余额187亿。杠杆资金持续离场，市场风险偏好下降。水温🟡平（两融连续2日下降；较前日减少约13045亿；DR007 1.42%高于政策利率1.40%；本月公开市场净投放2000亿；10Y收益率近1月-1bp）。结论：当前杠杆资金环境中性，股票市场做多需谨慎。",
       "temp": "🟡平",
       "verdict": "中性（谨慎）"
     }
@@ -9813,7 +9813,7 @@
     ]
   },
   "marginWatch": {
-    "trade_date": "2026-09-23",
+    "trade_date": "2026-09-24",
     "threshold": 3.0,
     "items": [
       {
@@ -9830,15 +9830,15 @@
         "level": null
       },
       {
-        "code": "600031.SH",
-        "name": "三一重工",
+        "code": "600521.SH",
+        "name": "华海药业",
         "group": "watch",
-        "rzye": 15.1,
-        "inc3d": 1.18,
+        "rzye": 8.38,
+        "inc3d": 0.18,
         "incPct": 0.08,
-        "inc5d": 1.07,
-        "inc5dPct": 0.07,
-        "consecutiveUpDays": 4,
+        "inc5d": 0.28,
+        "inc5dPct": 0.12,
+        "consecutiveUpDays": 1,
         "triggered": false,
         "level": null
       },
@@ -9846,38 +9846,12 @@
         "code": "600309.SH",
         "name": "万华化学",
         "group": "watch",
-        "rzye": 32.13,
-        "inc3d": 1.24,
-        "incPct": 0.06,
-        "inc5d": 0.98,
-        "inc5dPct": 0.04,
-        "consecutiveUpDays": 1,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "600521.SH",
-        "name": "华海药业",
-        "group": "watch",
-        "rzye": 8.23,
-        "inc3d": 0.12,
-        "incPct": 0.05,
-        "inc5d": 0.1,
-        "inc5dPct": 0.04,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
-        "code": "600298.SH",
-        "name": "安琪酵母",
-        "group": "watch",
-        "rzye": 4.34,
-        "inc3d": 0.13,
-        "incPct": 0.04,
-        "inc5d": 0.15,
-        "inc5dPct": 0.04,
-        "consecutiveUpDays": 3,
+        "rzye": 32.38,
+        "inc3d": 0.59,
+        "incPct": 0.03,
+        "inc5d": 1.84,
+        "inc5dPct": 0.08,
+        "consecutiveUpDays": 2,
         "triggered": false,
         "level": null
       },
@@ -9895,19 +9869,6 @@
         "level": null
       },
       {
-        "code": "603259.SH",
-        "name": "药明康德",
-        "group": "watch",
-        "rzye": 51.69,
-        "inc3d": 1.1,
-        "incPct": 0.03,
-        "inc5d": 3.03,
-        "inc5dPct": 0.07,
-        "consecutiveUpDays": 0,
-        "triggered": false,
-        "level": null
-      },
-      {
         "code": "300760.SZ",
         "name": "迈瑞医疗",
         "group": "watch",
@@ -9921,14 +9882,14 @@
         "level": null
       },
       {
-        "code": "600276.SH",
-        "name": "恒瑞医药",
-        "group": "hold",
-        "rzye": 56.77,
-        "inc3d": 0.6,
-        "incPct": 0.02,
-        "inc5d": -0.11,
-        "inc5dPct": -0.0,
+        "code": "600031.SH",
+        "name": "三一重工",
+        "group": "watch",
+        "rzye": 14.89,
+        "inc3d": 0.41,
+        "incPct": 0.03,
+        "inc5d": 1.13,
+        "inc5dPct": 0.08,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -9947,19 +9908,6 @@
         "level": null
       },
       {
-        "code": "688271.SH",
-        "name": "联影医疗",
-        "group": "watch",
-        "rzye": 12.79,
-        "inc3d": 0.07,
-        "incPct": 0.01,
-        "inc5d": 0.15,
-        "inc5dPct": 0.02,
-        "consecutiveUpDays": 3,
-        "triggered": false,
-        "level": null
-      },
-      {
         "code": "000708.SZ",
         "name": "中信特钢",
         "group": "watch",
@@ -9973,15 +9921,15 @@
         "level": null
       },
       {
-        "code": "600406.SH",
-        "name": "国电南瑞",
-        "group": "watch",
-        "rzye": 26.71,
-        "inc3d": 0.04,
+        "code": "600276.SH",
+        "name": "恒瑞医药",
+        "group": "hold",
+        "rzye": 56.35,
+        "inc3d": 0.08,
         "incPct": 0.0,
-        "inc5d": -0.09,
+        "inc5d": -0.35,
         "inc5dPct": -0.01,
-        "consecutiveUpDays": 1,
+        "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
       },
@@ -9989,12 +9937,12 @@
         "code": "688029.SH",
         "name": "南微医学",
         "group": "hold",
-        "rzye": 4.51,
-        "inc3d": -0.03,
-        "incPct": -0.02,
-        "inc5d": -0.03,
-        "inc5dPct": -0.02,
-        "consecutiveUpDays": 0,
+        "rzye": 4.52,
+        "inc3d": 0.0,
+        "incPct": 0.0,
+        "inc5d": -0.01,
+        "inc5dPct": -0.01,
+        "consecutiveUpDays": 1,
         "triggered": false,
         "level": null
       },
@@ -10003,10 +9951,36 @@
         "name": "上海机场",
         "group": "hold",
         "rzye": 15.61,
-        "inc3d": -0.09,
-        "incPct": -0.02,
-        "inc5d": -0.96,
-        "inc5dPct": -0.17,
+        "inc3d": -0.02,
+        "incPct": -0.0,
+        "inc5d": -0.12,
+        "inc5dPct": -0.02,
+        "consecutiveUpDays": 1,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600298.SH",
+        "name": "安琪酵母",
+        "group": "watch",
+        "rzye": 4.29,
+        "inc3d": -0.01,
+        "incPct": -0.0,
+        "inc5d": 0.06,
+        "inc5dPct": 0.02,
+        "consecutiveUpDays": 0,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "600406.SH",
+        "name": "国电南瑞",
+        "group": "watch",
+        "rzye": 26.47,
+        "inc3d": -0.25,
+        "incPct": -0.01,
+        "inc5d": -0.21,
+        "inc5dPct": -0.01,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -10015,11 +9989,24 @@
         "code": "601888.SH",
         "name": "中国中免",
         "group": "watch",
-        "rzye": 35.15,
-        "inc3d": -0.19,
-        "incPct": -0.02,
-        "inc5d": -0.11,
-        "inc5dPct": -0.01,
+        "rzye": 35.2,
+        "inc3d": -0.08,
+        "incPct": -0.01,
+        "inc5d": -0.02,
+        "inc5dPct": -0.0,
+        "consecutiveUpDays": 1,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "688271.SH",
+        "name": "联影医疗",
+        "group": "watch",
+        "rzye": 12.52,
+        "inc3d": -0.22,
+        "incPct": -0.03,
+        "inc5d": -0.25,
+        "inc5dPct": -0.03,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
@@ -10029,10 +10016,23 @@
         "name": "心脉医疗",
         "group": "hold",
         "rzye": 4.86,
-        "inc3d": -0.1,
+        "inc3d": -0.07,
+        "incPct": -0.07,
+        "inc5d": -0.15,
+        "inc5dPct": -0.14,
+        "consecutiveUpDays": 1,
+        "triggered": false,
+        "level": null
+      },
+      {
+        "code": "603259.SH",
+        "name": "药明康德",
+        "group": "watch",
+        "rzye": 48.78,
+        "inc3d": -3.81,
         "incPct": -0.09,
-        "inc5d": -0.14,
-        "inc5dPct": -0.13,
+        "inc5d": -0.11,
+        "inc5dPct": -0.0,
         "consecutiveUpDays": 0,
         "triggered": false,
         "level": null
