@@ -63,14 +63,14 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
     if (!rs) return null;
     const n = rs.reverseCount ?? 0;
     const flow = (rs.reverseDays || []).map((dd: any) =>
-      `${dd.date} ${dd.pct >= 0 ? '+' : ''}${dd.pct}%（${dd.base}${dd.basePct}%）${dd.big ? `⭐放量${dd.volX}倍` : ''}${dd.ann ? '*' : ''}`
+      `${dd.date} ${dd.pct >= 0 ? '+' : ''}${dd.pct}%（${dd.idxPct !== undefined && dd.secPct !== undefined ? `大盘${dd.idxPct}%/板块${dd.secPct}%` : `${dd.base}${dd.basePct}%`}）${dd.big ? `⭐放量${dd.volX}倍` : ''}${dd.ann ? '*' : ''}`
     ).join('｜');
     const cls = n >= 8 ? 'bg-emerald-500' : n >= 4 ? 'bg-teal-500' : n > 0 ? 'bg-slate-400' : 'bg-slate-300';
     return (
       <div className="mt-1">
         <Badge
           className={`text-[9px] h-4 px-1.5 ${cls} text-white border-0`}
-          title={`近120日逆行${n}天（大盘或板块跌≥1%而个股上涨/跌幅<基准一半）：${flow || '无逆行日'}；⭐=大涨≥3%且放量≥2倍20日均量，*=公告日备注不剔除`}
+          title={`近120日逆行${n}天（上证跌+板块跌+个股收红/平手，三条件缺一不可，收绿不算）：${flow || '无逆行日'}；⭐=大涨≥3%且放量≥2倍20日均量，*=公告日备注不剔除`}
         >
           ⚔逆行{n}天
         </Badge>

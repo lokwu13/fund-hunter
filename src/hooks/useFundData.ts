@@ -443,6 +443,7 @@ export interface FundData {
       reverseCount?: number;
       reverseDays?: Array<{
         date: string; pct: number; basePct: number; base: string;
+        idxPct?: number; secPct?: number;
         volX?: number | null; big: boolean; ann: boolean;
       }>;
     }>;

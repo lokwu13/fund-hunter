@@ -1074,7 +1074,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
         </Card>
       )}
 
-      {/* 个股逆行日流水（近120个交易日：大盘或板块跌≥1%而个股上涨/跌幅<基准一半；2026-09-26 改版④，永远渲染+空态） */}
+      {/* 个股逆行日流水（近120个交易日：上证跌+板块跌+个股收红/平手 三条件交集；2026-09-26 口径收紧，永远渲染+空态） */}
       <Card className="border-amber-200 shadow-sm">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between flex-wrap gap-2">
@@ -1099,15 +1099,19 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                 <thead className="sticky top-0 bg-white z-10">
                   <tr className="text-slate-500 border-b border-slate-200">
                     <th className="text-left py-1.5 font-medium">个股</th>
-                    <th className="text-center font-medium" title="近120日中大盘或所属板块跌≥1%而个股上涨或跌幅<基准跌幅一半的天数">逆行天数</th>
-                    <th className="text-left font-medium" title="逐日流水（最新在前）：日期+个股涨幅（基准跌幅）；⭐=大涨≥3%且放量≥2倍20日均量；*=公告日（备注不剔除）">逆行日流水（悬浮看全部）</th>
+                    <th className="text-center font-medium" title="近120日中 上证跌 且 所属板块跌 且 个股收红/平手（三条件缺一不可，收绿不算）的天数">逆行天数</th>
+                    <th className="text-left font-medium" title="逐日流水（最新在前）：日期+个股涨幅（大盘/板块跌幅）；⭐=大涨≥3%且放量≥2倍20日均量；*=公告日（备注不剔除）">逆行日流水（悬浮看全部）</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.stockRS.items.map((it) => {
-                    const flow = (it.reverseDays || []) as Array<{date: string; pct: number; basePct: number; base: string; volX?: number | null; big: boolean; ann: boolean}>;
+                    const flow = (it.reverseDays || []) as Array<{date: string; pct: number; basePct: number; base: string; idxPct?: number; secPct?: number; volX?: number | null; big: boolean; ann: boolean}>;
+                    const baseTxt = (d: {basePct: number; base: string; idxPct?: number; secPct?: number}) =>
+                      d.idxPct !== undefined && d.secPct !== undefined
+                        ? `大盘${d.idxPct}%/板块${d.secPct}%`
+                        : `${d.base}${d.basePct}%`;
                     const flowText = flow.map(d =>
-                      `${d.date} ${d.pct >= 0 ? '+' : ''}${d.pct}%（${d.base}${d.basePct}%）${d.big ? `⭐放量${d.volX}倍` : ''}${d.ann ? '*' : ''}`
+                      `${d.date} ${d.pct >= 0 ? '+' : ''}${d.pct}%（${baseTxt(d)}）${d.big ? `⭐放量${d.volX}倍` : ''}${d.ann ? '*' : ''}`
                     ).join('｜');
                     return (
                       <tr key={it.code}
@@ -1127,7 +1131,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                             <span key={i} className={dd.big ? 'font-bold text-red-600' : ''}>
                               {i > 0 && <span className="text-slate-300">｜</span>}
                               {dd.date} {dd.pct >= 0 ? '+' : ''}{dd.pct}%
-                              <span className="text-slate-400">（{dd.base}{dd.basePct}%）</span>
+                              <span className="text-slate-400">（{baseTxt(dd)}）</span>
                               {dd.big && `⭐`}
                               {dd.ann && <span className="text-slate-400">*</span>}
                             </span>

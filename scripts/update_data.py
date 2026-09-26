@@ -3878,7 +3878,10 @@ def fetch_stock_rs(pro, trade_date, data):
             return (sd, f'{ind}(合成)', 'tushare合成') if sd else ({}, None, None)
 
         # ── 逐股逆行日流水（2026-09-26 月底大改版④：废除"强X/弱Y/剔除"表）──
-        # 逆行日 = 大盘（上证）或所属板块跌≥1%，而个股上涨或跌幅<基准跌幅一半；
+        # 逆行日（2026-09-26 用户正式指令·三条件交集，缺一不可）：
+        #   上证当日跌（pct<0）且 所属板块当日跌（pct<0）且 个股收红或平手（pct≥0）；
+        #   废除旧"或"逻辑与"抗跌（跌幅<基准一半）"类别——收绿一律不算；
+        #   基准跌幅不设幅度下限（只要下跌即算）。
         # 大涨（≥3%）且放量（≥2倍20日均量）的加粗标⭐；公告日打*号备注、不剔除。
         items = []
         skipped = []
@@ -3900,18 +3903,19 @@ def fetch_stock_rs(pro, trade_date, data):
                 if closes[a] <= 0:
                     continue
                 pct = (closes[b] / closes[a] - 1) * 100
-                hit_base, base_pct = None, None
-                for bn_, bp in (('板块', bdays.get(b)), ('大盘', idx_days.get(b))):
-                    if bp is not None and bp <= -1.0 and (pct > 0 or pct > bp / 2):
-                        if base_pct is None or bp < base_pct:
-                            hit_base, base_pct = bn_, bp
-                if hit_base is None:
+                idx_pct, sec_pct = idx_days.get(b), bdays.get(b)
+                # 三条件交集：大盘跌 + 板块跌 + 个股收红/平手
+                if idx_pct is None or sec_pct is None:
                     continue
+                if not (idx_pct < 0 and sec_pct < 0 and pct >= 0):
+                    continue
+                hit_base, base_pct = ('板块', sec_pct) if sec_pct <= idx_pct else ('大盘', idx_pct)
                 prior = [vols[d2] for d2 in seq[max(0, i + 1 - 20):i + 1] if d2 in vols]
                 vol_x = (vols.get(b, 0) / (sum(prior) / len(prior))) if prior and sum(prior) > 0 else None
                 big = bool(pct >= 3.0 and vol_x is not None and vol_x >= 2.0)
                 rev.append({'date': f'{b[4:6]}/{b[6:]}', 'pct': round(pct, 1),
                             'basePct': round(base_pct, 1), 'base': hit_base,
+                            'idxPct': round(idx_pct, 1), 'secPct': round(sec_pct, 1),
                             'volX': round(vol_x, 1) if vol_x is not None else None,
                             'big': big, 'ann': bool(b in ann_set or a in ann_set)})
             items.append({'code': code, 'name': s['name'], 'group': s['group'],
@@ -3931,9 +3935,10 @@ def fetch_stock_rs(pro, trade_date, data):
             'unmapped': sorted({s['industry'] for s in STOCKS.values()
                                 if s['industry'] not in STOCK_RS_INDUSTRY_MAP}),
             'unmappedBoards': unmapped_boards,
-            'note': ('逆行日流水（2026-09-26 改版口径，替代原强/弱对抗计数）：'
-                     '逆行日=大盘（上证综指）或所属板块跌≥1%，而个股上涨或跌幅<基准跌幅一半；'
-                     '逐日列出 日期+个股涨幅+基准跌幅；大涨≥3%且放量≥2倍20日均量加粗标⭐；'
+            'note': ('逆行日流水（2026-09-26 三条件交集口径，用户正式指令）：'
+                     '逆行日=上证当日跌 且 所属板块当日跌 且 个股收红或平手（pct≥0），三者缺一不可；'
+                     '收绿一律不算（原"抗跌"类别已废除）；基准跌幅不设幅度下限；'
+                     '逐日列出 日期+个股涨幅+大盘/板块跌幅；大涨≥3%且放量≥2倍20日均量加粗标⭐；'
                      '公告日打*号备注（不剔除，消息面强势如实展示由读者自判）；'
                      '基准=上证综指+所属行业板块（东财行业板块优先，限流时降级Tushare等权合成，'
                      '名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、'
