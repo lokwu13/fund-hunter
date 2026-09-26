@@ -388,6 +388,7 @@ export interface FundData {
     mvDate?: string | null;
     scanned?: number;
     note?: string;
+    droppedByTrendTemplate?: string[];
     items: Array<{
       code: string;
       name: string;
@@ -396,6 +397,14 @@ export interface FundData {
       close: number;
       tag: string;
       pattern?: '杯柄型' | '底部平台型' | '底部整理' | '收缩型' | 'VCP收缩型';
+      stage?: string;
+      trendTemplate?: { pass: boolean; evidence: Array<{ item: string; ok: boolean; val: string }> } | null;
+      buyPoint?: { pivot: number; distanceToPivotPct: number; invalidation?: number | null; volConfirm?: number | null; breakoutConfirm?: string } | null;
+      cupHandle?: {
+        days: number; totalDays: number; cupDepth: number; depthOk: boolean; depthMax: number;
+        upperHalf: boolean; longOk: boolean; pivot: number; distPct: number;
+        invalidation?: number; volConfirm?: number; formed: boolean;
+      } | null;
       histPct?: number | null;
       distHigh250?: number;
       distMain?: number;
@@ -406,12 +415,14 @@ export interface FundData {
         volRatio: number; segAmps?: number[]; pivot: number; distPct: number; formed: boolean;
       } | null;
       daily?: {
-        contractions: number[]; count: number; decreasing: boolean;
-        volTrend: string; rightShrink: boolean; pivot: number; distPct: number; formed: boolean;
+        contractions: number[]; contractionsOk?: boolean[]; count: number; decreasing: boolean;
+        volTrend: string; volFirst?: number; volLast?: number;
+        pivot: number; distPct: number; invalidation?: number; volConfirm?: number; formed: boolean;
       } | null;
       weekly?: {
-        contractions: number[]; count: number; decreasing: boolean;
-        volTrend: string; rightShrink: boolean; pivot: number; distPct: number; formed: boolean;
+        contractions: number[]; contractionsOk?: boolean[]; count: number; decreasing: boolean;
+        volTrend: string; volFirst?: number; volLast?: number;
+        pivot: number; distPct: number; invalidation?: number; volConfirm?: number; formed: boolean;
       } | null;
     }>;
   };
@@ -429,8 +440,11 @@ export interface FundData {
       industry?: string;
       sectorName?: string | null;
       daysUsed?: number;
-      vsIndex: { win: number; lose: number; net: number; win20: number; lose20: number; net20: number; excluded?: number };
-      vsSector?: { win: number; lose: number; net: number; win20: number; lose20: number; net20: number; excluded?: number } | null;
+      reverseCount?: number;
+      reverseDays?: Array<{
+        date: string; pct: number; basePct: number; base: string;
+        volX?: number | null; big: boolean; ann: boolean;
+      }>;
     }>;
   };
   eciSubsectors?: {
@@ -705,9 +719,18 @@ export interface FundData {
       indexCode: string; indexName: string; etfCode: string; etfName: string;
       pattern: string | null; days?: number; pivot?: number; distPct?: number;
       amplitude?: number; volRatio?: number | null; state: string;
+      etfClose?: number; volConfirm?: number; invalidation?: number;
+      breakoutConfirm?: string | null; top3?: boolean;
     }>;
   };
   broadVcpDigest?: string;
+  longWindow?: {
+    window: 'open' | 'half' | 'closed';
+    temp?: string; verdict?: string;
+    broadStates?: Record<string, string>;
+    nearPivot?: boolean; allHigh?: boolean;
+    reason?: string; note?: string;
+  };
   zizengETF?: {
     trade_date: string;
     nav_date?: string | null;

@@ -56,21 +56,23 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
     return null;
   };
 
-  // 个股对抗统计徽标：近120日 强/弱次数分开累计（不对冲，2026-09-09 v3 用户口径）
+  // 个股逆行日流水徽标：近120日逆行天数（2026-09-26 改版④口径）
   const rsMap = new Map((data.stockRS?.items || []).map((r) => [r.code, r]));
   const rsBadge = (code?: string) => {
     const rs = code ? rsMap.get(code) : undefined;
     if (!rs) return null;
-    const w = rs.vsIndex.win + (rs.vsSector?.win ?? 0);
-    const l = rs.vsIndex.lose + (rs.vsSector?.lose ?? 0);
-    const cls = w > l ? 'bg-emerald-500' : l > w ? 'bg-red-400' : 'bg-slate-300';
+    const n = rs.reverseCount ?? 0;
+    const flow = (rs.reverseDays || []).map((dd: any) =>
+      `${dd.date} ${dd.pct >= 0 ? '+' : ''}${dd.pct}%（${dd.base}${dd.basePct}%）${dd.big ? `⭐放量${dd.volX}倍` : ''}${dd.ann ? '*' : ''}`
+    ).join('｜');
+    const cls = n >= 8 ? 'bg-emerald-500' : n >= 4 ? 'bg-teal-500' : n > 0 ? 'bg-slate-400' : 'bg-slate-300';
     return (
       <div className="mt-1">
         <Badge
           className={`text-[9px] h-4 px-1.5 ${cls} text-white border-0`}
-          title={`近120日对抗（强/弱分开累计不对冲）：对大盘 强${rs.vsIndex.win}/弱${rs.vsIndex.lose}（剔除消息驱动${rs.vsIndex.excluded ?? 0}）· 对板块 ${rs.vsSector ? `强${rs.vsSector.win}/弱${rs.vsSector.lose}（剔除${rs.vsSector.excluded ?? 0}）` : '—'}；强=基准走弱日个股明显跑赢（跌>0.3%且超额≥+1.5pct，剔除跳空≥+1.5%或公告日），弱=基准走强日个股明显跑输`}
+          title={`近120日逆行${n}天（大盘或板块跌≥1%而个股上涨/跌幅<基准一半）：${flow || '无逆行日'}；⭐=大涨≥3%且放量≥2倍20日均量，*=公告日备注不剔除`}
         >
-          ⚔强{w}·弱{l}
+          ⚔逆行{n}天
         </Badge>
       </div>
     );
@@ -157,6 +159,17 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
             <div className="flex items-center gap-2 mb-2.5">
               <Crosshair className="w-4 h-4 text-emerald-600" />
               <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-emerald-600 text-white">第0步·水温</Badge>
+              {data.longWindow && (
+                <Badge
+                  className={`text-[10px] h-[18px] px-1.5 border-0 ${
+                    data.longWindow.window === 'open' ? 'bg-red-500 text-white' :
+                    data.longWindow.window === 'closed' ? 'bg-slate-500 text-white' : 'bg-amber-400 text-white'
+                  }`}
+                  title={data.longWindow.reason + '（层级服从：水温>宽基>板块>个股）'}
+                >
+                  做多窗口{data.longWindow.window === 'open' ? '·开' : data.longWindow.window === 'closed' ? '·关' : '·半窗'}
+                </Badge>
+              )}
               <h3 className="text-sm font-bold text-slate-800">每日评语速览</h3>
               <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">点击跳转来源栏目</Badge>
             </div>
@@ -439,7 +452,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
               </div>
             )}
             <p className="text-[10px] text-slate-400 mt-2">
-              建议=水温×板块合适度，仅关注优先级参考，不构成操作建议 · VCP收缩型=≥3次递减收缩+量能递减（橙色徽章，优先级最高）· 底部整理=历史低位（一年分位≤30%或距250日高点回撤≥20%）的窄幅缩量平台，杯柄型需一年分位&gt;30%
+              建议=水温×板块合适度，仅关注优先级参考，不构成操作建议 · VCP收缩型=≥3次严格递减收缩（容差10%）+末次收缩均量&lt;首次（橙色徽章，优先级最高），趋势模板（Stage 2）前置 · 底部整理=Stage 1 基底（未过趋势模板）的窄幅缩量平台，杯柄型需杯深12~33%+柄在杯体上半部
             </p>
           </CardContent>
         </Card>

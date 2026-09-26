@@ -1290,6 +1290,100 @@ def _broad_idx_bars(pro, trade_date):
     return cache
 
 
+BROAD_ETF_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                    'cache', 'broad_etf_cache.json')
+# 2026-09-26 用户拍板：50/300/500 置顶（只做不高估的 500/300/50 标的，直接买宽基 ETF）
+BROAD_TOP3 = ['000016.SH', '000300.SH', '000905.SH']
+
+
+def _broad_etf_bars(pro, trade_date):
+    """9 只宽基代表 ETF 日线 OHLCV 缓存（fund_daily，[date, close, high, low, vol]，≤300 条滚动）。
+    每晚 fund_daily(trade_date) 批量 1 次过滤 9 只；首次/缺历史逐只回补（≤9 次，一次性）。
+    2026-09-26 月底大改版②：宽基买点直接对 ETF 行情算（枢轴价=ETF 价格，可直接下单口径）。"""
+    cache = _load_json_cache(BROAD_ETF_CACHE_PATH, {})
+    codes = [ec for _, _, ec, _ in BROAD_ETF_MAP]
+    try:
+        time.sleep(API_DELAY)
+        snap = pro.fund_daily(trade_date=trade_date)
+        if snap is not None and len(snap):
+            for _, r in snap.iterrows():
+                tc = r['ts_code']
+                if tc not in codes:
+                    continue
+                rows = cache.setdefault(tc, [])
+                if not rows or rows[-1][0] != trade_date:
+                    rows.append([trade_date, round(float(r['close']), 4),
+                                 round(float(r['high']), 4), round(float(r['low']), 4),
+                                 round(float(r['vol']), 1)])
+    except Exception as e:
+        print(f"  Warning: broad etf daily batch failed: {e}")
+    for tc in codes:
+        rows = cache.get(tc, [])
+        if len(rows) < 120:
+            try:
+                time.sleep(API_DELAY)
+                start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=600)).strftime('%Y%m%d')
+                df = pro.fund_daily(ts_code=tc, start_date=start, end_date=trade_date)
+                if df is not None and len(df):
+                    have = {r[0] for r in rows}
+                    for _, r in df.sort_values('trade_date').iterrows():
+                        if r['trade_date'] not in have:
+                            rows.append([r['trade_date'], round(float(r['close']), 4),
+                                         round(float(r['high']), 4), round(float(r['low']), 4),
+                                         round(float(r['vol']), 1)])
+                    rows.sort(key=lambda x: x[0])
+                    cache[tc] = rows
+            except Exception as e:
+                print(f"  Warning: broad etf backfill failed for {tc}: {e}")
+        cache[tc] = cache.get(tc, [])[-300:]
+    _save_json_cache(BROAD_ETF_CACHE_PATH, cache)
+    return cache
+
+
+def _etf_form_state(ebars, tier):
+    """宽基 ETF 形态五档（2026-09-26 用户口径）：
+    高位发散 / 突破确认（收盘>枢轴且量≥50日均量×1.4）/ 临近枢轴（距枢轴≤3%）/
+    构筑基底（平台成型，距枢轴 3~8%）/ 低波蓄势（未成型但近20日振幅≤8%且缩量）。
+    返回 dict（state/pivot/distPct/volConfirm/invalidation/pattern/days）。"""
+    if len(ebars) < 60:
+        return {'state': '无形态', 'pattern': None}
+    bars = [[r[0], r[2], r[3], r[1], r[4]] for r in ebars]  # (date, high, low, close, vol)
+    close = ebars[-1][1]
+    vol50 = sum(r[4] for r in ebars[-50:]) / 50
+    last_vol = ebars[-1][4]
+    v = _vcp_platform(bars)
+    if tier == '高位':
+        st = {'state': '高位发散', 'pattern': None}
+    elif v and v['formed']:
+        n = v['days']
+        plat_lo = min(b[2] for b in bars[-n:])
+        dist = v['distPct']
+        if dist < -5:
+            state = '高位发散'
+        elif dist < 0:
+            state = '突破确认' if last_vol >= vol50 * BREAKOUT_VOL_X else '突破待确认（未放量）'
+        elif dist <= 3:
+            state = '临近枢轴'
+        else:
+            state = '构筑基底'
+        st = {'state': state, 'pattern': v['type'], 'days': v['days'],
+              'pivot': v['pivot'], 'distPct': dist,
+              'amplitude': v['amplitude'], 'volRatio': v.get('volRatio'),
+              'volConfirm': round(vol50 * BREAKOUT_VOL_X, 0),
+              'invalidation': round(plat_lo, 4)}
+    else:
+        recent = ebars[-20:]
+        amp20 = (max(r[2] for r in recent) - min(r[3] for r in recent)) / min(r[3] for r in recent) * 100
+        vol10 = sum(r[4] for r in ebars[-10:]) / 10
+        if amp20 <= 8 and vol10 < vol50:
+            st = {'state': '低波蓄势', 'pattern': None,
+                  'amp20': round(amp20, 1), 'volRatio': round(vol10 / vol50, 2) if vol50 else None}
+        else:
+            st = {'state': '无形态', 'pattern': None}
+    st['etfClose'] = close
+    return st
+
+
 def build_broad_watch(pro, trade_date, data):
     """宽基 ETF 趋势评估（趋势轴宽基组）+ 宽基 VCP 三档监测（第3步宽基分区+速览提示）。
 
@@ -1304,10 +1398,14 @@ def build_broad_watch(pro, trade_date, data):
     """
     d = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
     cache = _broad_idx_bars(pro, trade_date)
+    etf_cache = _broad_etf_bars(pro, trade_date)   # 2026-09-26 改版②：买点直接对 ETF 行情算
     radar = {i['code']: i for i in (data.get('etfShareRadar') or {}).get('items', [])}
     vol_map = {i['code']: i for i in (data.get('indexVol') or {}).get('items', [])}
     trend_items, vcp_items = [], []
-    for ic, iname, ec, ename in BROAD_ETF_MAP:
+    # 展示顺序：上证50/沪深300/中证500 置顶，其余宽基排后（2026-09-26 用户拍板）
+    ordered = sorted(BROAD_ETF_MAP,
+                     key=lambda m: (BROAD_TOP3.index(m[0]) if m[0] in BROAD_TOP3 else 99))
+    for ic, iname, ec, ename in ordered:
         rows = cache.get(ic, [])
         if len(rows) < 25:
             continue
@@ -1341,23 +1439,19 @@ def build_broad_watch(pro, trade_date, data):
                             'close': close, 'distHigh60': dist_high, 'ret20': ret20,
                             'tier': tier, 'share5Pct': share5, 'share20Pct': share20,
                             'shareNote': share_txt, 'hvPct1y': hv, 'status': status})
-        # ── VCP 形态（同一批 bars，复用个股口径）──
-        bars = [[r[0], r[2], r[3], r[1], r[4]] for r in rows]  # [date, high, low, close, vol]
-        v = _vcp_platform(bars)
-        if v:
-            if v['distPct'] < 0:
-                state = '已突破'
-            elif v['distPct'] < 5:
-                state = '临近买点'
-            else:
-                state = '未突破·观察'
-            vcp_items.append({'indexCode': ic, 'indexName': iname, 'etfCode': ec, 'etfName': ename,
-                              'pattern': v['type'], 'days': v['days'], 'pivot': v['pivot'],
-                              'distPct': v['distPct'], 'amplitude': v['amplitude'],
-                              'volRatio': v.get('volRatio'), 'state': state})
-        else:
-            vcp_items.append({'indexCode': ic, 'indexName': iname, 'etfCode': ec, 'etfName': ename,
-                              'pattern': None, 'state': '无形态'})
+        # ── 形态阶段 + ETF 买点（2026-09-26 改版②：枢轴/失效位直接对 ETF 日线算）──
+        eb = etf_cache.get(ec, [])
+        st = _etf_form_state(eb, tier)
+        vcp_items.append({'indexCode': ic, 'indexName': iname, 'etfCode': ec, 'etfName': ename,
+                          'pattern': st.get('pattern'), 'days': st.get('days'),
+                          'pivot': st.get('pivot'), 'distPct': st.get('distPct'),
+                          'amplitude': st.get('amplitude'), 'volRatio': st.get('volRatio'),
+                          'state': st['state'], 'etfClose': st.get('etfClose'),
+                          'volConfirm': st.get('volConfirm'), 'invalidation': st.get('invalidation'),
+                          'breakoutConfirm': (f"收盘>{st['pivot']} 且成交量≥50日均量×1.4"
+                                              f"（≈{st['volConfirm']:.0f}手）"
+                                              if st.get('pivot') and st.get('volConfirm') else None),
+                          'top3': ic in BROAD_TOP3})
     data['broadTrend'] = {
         'trade_date': d, 'items': trend_items,
         'note': ('位置层口径同板块扫描（高位=距60日高点>-3%或近20日>10%；低位=距高点≤-5%且20日≤5%）；'
@@ -1365,21 +1459,68 @@ def build_broad_watch(pro, trade_date, data):
                  '波动=HV20近一年分位（indexVol）')}
     data['broadVcp'] = {
         'trade_date': d, 'items': vcp_items,
-        'note': ('宽基 VCP 与个股同口径（10~50日窄幅≤14%+缩量+分段收缩）；'
-                 '未突破·观察=成型但距枢轴≥5%（盯突破）；临近买点=距枢轴<5%；已突破=收盘站上枢轴')}
-    watch = [i for i in vcp_items if i.get('state') in ('未突破·观察', '临近买点')]
+        'note': ('宽基形态五档（2026-09-26 改版，上证50/沪深300/中证500置顶）：高位发散/突破确认（收盘>枢轴且量≥50日均量×1.4）/'
+                 '临近枢轴（距枢轴≤3%）/构筑基底（平台成型距枢轴3~8%）/低波蓄势（近20日振幅≤8%且缩量）；'
+                 '枢轴价/失效位直接对跟踪 ETF 日线计算（fund_daily），为可直接下单口径；'
+                 '突破确认与失效位为形态参数，非操作建议')}
+    watch = [i for i in vcp_items if i.get('state') in ('低波蓄势', '构筑基底', '临近枢轴', '突破确认', '突破待确认（未放量）')]
     if watch:
         data['broadVcpDigest'] = '宽基形态：' + '；'.join(
-            f"{i['indexName']} {i['pattern']} {i['state']}"
-            + (f"（盯 {i['etfCode'].split('.')[0]} 突破确认，距枢轴{i['distPct']}%）" if i['state'] == '未突破·观察'
-               else f"（距枢轴{i['distPct']}%）")
+            f"{i['indexName']} {i['state']}"
+            + (f"（盯 {i['etfCode'].split('.')[0]} 突破 {i['pivot']}，距枢轴{i['distPct']}%）"
+               if i.get('distPct') is not None else '')
             for i in watch[:3])
     else:
         data.pop('broadVcpDigest', None)
     print(f"  broadWatch: 趋势 {len(trend_items)} 只"
           f"（✅{sum(1 for i in trend_items if i['status'] == '✅趋势候选')}），"
-          f"VCP 成型 {sum(1 for i in vcp_items if i.get('pattern'))} 只"
-          + (f"（{'、'.join(i['indexName'] + i['state'] for i in watch)}）" if watch else ''))
+          f"形态五档 "
+          + '、'.join(f"{i['indexName']}:{i['state']}" for i in vcp_items[:4]))
+
+
+def build_long_window(data):
+    """做多窗口判定（2026-09-26 月底大改版③，层级服从门控大级别）。
+
+    规则（优先级 水温>宽基）：
+    - closed：水温🔴冷，或 上证50/沪深300/中证500 全部处于 高位发散/破位；
+    - open：水温🟢暖 且三只中至少一只处于 临近枢轴/突破确认；
+    - half：其余情形。
+    window=closed 时板块能投名单/个股 VCP 榜照常计算但前端标灰降级（信号仅观察）；
+    half 时正常展示+顶部"半窗"提示；open 时全量高亮。
+    """
+    temp = ((data.get('bondData') or {}).get('marginTrading') or {}).get('temp') or ''
+    verdict = ((data.get('bondData') or {}).get('marginTrading') or {}).get('verdict') or ''
+    items = (data.get('broadVcp') or {}).get('items') or []
+    top = {i['indexCode']: i for i in items if i.get('indexCode') in BROAD_TOP3}
+    states = {c: (top.get(c) or {}).get('state', '无数据') for c in BROAD_TOP3}
+    names = {'000016.SH': '上证50', '000300.SH': '沪深300', '000905.SH': '中证500'}
+    near = any(s in ('临近枢轴', '突破确认') for s in states.values())
+    all_high = bool(states) and all(s in ('高位发散', '破位', '无数据') for s in states.values())
+    if '冷' in temp or all_high:
+        w = 'closed'
+    elif '暖' in temp and near:
+        w = 'open'
+    else:
+        w = 'half'
+    reason_parts = [f"水温{temp or '—'}（{verdict or '—'}）",
+                    '宽基形态：' + '，'.join(f"{names[c]}{states[c]}" for c in BROAD_TOP3)]
+    if w == 'closed':
+        reason_parts.append('大级别无做多窗口，下级信号降级为观察')
+    elif w == 'open':
+        reason_parts.append('水温偏暖且宽基临近/突破，做多窗口打开')
+    else:
+        reason_parts.append('半窗：谨慎关注，仓位与信号强度自行降档')
+    data['longWindow'] = {
+        'window': w, 'temp': temp, 'verdict': verdict,
+        'broadStates': {names[c]: states[c] for c in BROAD_TOP3},
+        'nearPivot': bool(near), 'allHigh': bool(all_high),
+        'reason': '；'.join(reason_parts),
+        'note': ('层级服从（2026-09-26 用户拍板）：水温>宽基>板块>个股；'
+                 'closed=水温🔴冷或50/300/500全部高位发散/破位；open=水温🟢暖且至少一只临近枢轴/突破确认；其余half；'
+                 'closed 时板块/个股信号照常计算但标灰降级"窗口未开，信号仅观察"，half 挂半窗提示，open 全量高亮'),
+    }
+    print(f"  longWindow: {w}（水温{temp or '—'}；"
+          f"{'，'.join(names[c] + states[c] for c in BROAD_TOP3)}）")
 
 
 def build_dual_axes(pro, trade_date, data, today_map):
@@ -3038,6 +3179,136 @@ def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10):
     return best
 
 
+# ══════════ Minervini 精修（2026-09-26 月底大改版①，用户拍板口径） ══════════
+MINERVINI_VCP_TOL = 1.10    # 收缩严格递减容差：每次收缩必须小于前一次（允许 ≤前次×1.10），且末次<首次
+MINERVINI_MIN_CONTR = 3     # VCP 收缩次数下限
+CUP_DEPTH_MIN, CUP_DEPTH_MAX = 12.0, 33.0   # 杯深 %（大盘弱势期放宽至 40）
+CUP_DEPTH_MAX_WEAK = 40.0
+CUP_MIN_TOTAL_DAYS = 25     # 杯+柄总时长 ≥5 周（25 交易日）
+BREAKOUT_VOL_X = 1.4        # 突破确认：成交量 ≥ 50 日均量 ×1.4
+
+
+def _trend_template(rows):
+    """Minervini 趋势模板（Stage 2 资格审查）。rows=[date,close,high,low,vol] 升序。
+    52 周≈250 交易日（vcp 缓存 300 日窗口内近似）。返回 {'pass': bool, 'evidence': [...]}。"""
+    closes = [r[1] for r in rows]
+    if len(closes) < 220:
+        return {'pass': False, 'evidence': [{'item': '历史≥220日', 'ok': False, 'val': f'仅{len(closes)}日'}]}
+
+    def ma(n, off=0):
+        seg = closes[len(closes) - n - off: len(closes) - off if off else len(closes)]
+        return sum(seg) / len(seg) if len(seg) == n else None
+
+    c = closes[-1]
+    ma50, ma150, ma200 = ma(50), ma(150), ma(200)
+    ma200_1m = ma(200, 20)
+    win = closes[-250:]
+    lo52, hi52 = min(win), max(win)
+    checks = [
+        ('现价>150日线', ma150 is not None and c > ma150,
+         f'{c:.2f} vs MA150 {ma150:.2f}' if ma150 else '—'),
+        ('现价>200日线', ma200 is not None and c > ma200,
+         f'{c:.2f} vs MA200 {ma200:.2f}' if ma200 else '—'),
+        ('200日线上行≥1个月', ma200 is not None and ma200_1m is not None and ma200 > ma200_1m,
+         f'MA200 {ma200_1m:.2f}→{ma200:.2f}' if ma200 and ma200_1m else '—'),
+        ('50日线>150日线', ma50 is not None and ma150 is not None and ma50 > ma150,
+         f'{ma50:.2f} vs {ma150:.2f}' if ma50 and ma150 else '—'),
+        ('150日线>200日线', ma150 is not None and ma200 is not None and ma150 > ma200,
+         f'{ma150:.2f} vs {ma200:.2f}' if ma150 and ma200 else '—'),
+        ('距52周低点≥+25%', c >= lo52 * 1.25,
+         f'低点{lo52:.2f}→现价{c:.2f}（{(c / lo52 - 1) * 100:+.0f}%）'),
+        ('距52周高点≤25%', c >= hi52 * 0.75,
+         f'高点{hi52:.2f}→现价{c:.2f}（{(c / hi52 - 1) * 100:+.0f}%）'),
+    ]
+    return {'pass': bool(all(ok for _, ok, _ in checks)),
+            'evidence': [{'item': n, 'ok': bool(ok), 'val': v} for n, ok, v in checks]}
+
+
+def _vcp_level_strict(bars, win, k):
+    """Minervini 严格 VCP（2026-09-26 口径）：
+    收缩序列 ≥3 次、每次收缩必须小于前一次（容差10%，逐项标 ok）、
+    末次收缩均量 < 首次收缩均量（量能递减强制）；
+    枢轴=末次收缩高点；失效位=末次收缩低点；放量确认线=50日均量×1.4。
+    """
+    bars = bars[-win:]
+    if len(bars) < 12:
+        return None
+    sh = _vcp_swing_highs(bars, k)
+    if len(sh) < MINERVINI_MIN_CONTR + 1:
+        return None
+    sh = sh[-(MINERVINI_MIN_CONTR + 3):]
+    depths, seg_vols, seg_lows = [], [], []
+    for a, b in zip(sh, sh[1:]):
+        hi = bars[a][1]
+        lo = min(x[2] for x in bars[a:b + 1])
+        if hi <= 0:
+            return None
+        depths.append((hi - lo) / hi * 100)
+        seg_lows.append(lo)
+        seg_vols.append(sum(x[4] for x in bars[a:b + 1]) / (b - a + 1))
+    if len(depths) < MINERVINI_MIN_CONTR:
+        return None
+    marks = [True] + [depths[i] <= depths[i - 1] * MINERVINI_VCP_TOL
+                      for i in range(1, len(depths))]
+    dec_strict = bool(all(marks) and depths[-1] < depths[0])
+    vol_ok = bool(seg_vols[0] > 0 and seg_vols[-1] < seg_vols[0])
+    pivot = bars[sh[-1]][1]
+    close = bars[-1][3]
+    dist = (pivot / close - 1) * 100 if close > 0 else 999
+    vol50 = sum(x[4] for x in bars[-50:]) / min(50, len(bars))
+    return {'contractions': [round(x, 1) for x in depths],
+            'contractionsOk': marks,
+            'count': len(depths), 'decreasing': dec_strict,
+            'volTrend': '递减' if vol_ok else '未递减',
+            'volFirst': round(seg_vols[0], 1), 'volLast': round(seg_vols[-1], 1),
+            'pivot': round(pivot, 2), 'distPct': round(dist, 1),
+            'invalidation': round(seg_lows[-1], 2),
+            'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
+            'formed': bool(dec_strict and vol_ok)}
+
+
+def _cup_handle_strict(bars, market_weak=False):
+    """Minervini 杯柄精修（2026-09-26 口径）：
+    柄=现有平台判定（10~50日窄幅≤14%+缩量+分段收缩，缩量阴跌/窄幅）；
+    杯体=柄前 120 日内摆动高点→其后最低点；杯深 12~33%（大盘弱势期放宽 40%）；
+    柄部必须处于杯体上半部；杯+柄总时长 ≥25 交易日。
+    枢轴=柄部高点；失效位=柄部低点；放量确认线=50日均量×1.4。
+    """
+    pf = _vcp_platform(bars)
+    if not (pf and pf['formed']):
+        return None
+    n = pf['days']
+    handle = bars[-n:]
+    handle_hi = max(b[1] for b in handle)
+    handle_lo = min(b[2] for b in handle)
+    cup = bars[-(n + 120):-n]
+    if len(cup) < 15:
+        return None
+    hi_pos = max(range(len(cup)), key=lambda i: cup[i][1])
+    cup_hi = cup[hi_pos][1]
+    cup_lo = min(b[2] for b in cup[hi_pos:])
+    if cup_hi <= 0:
+        return None
+    depth = (cup_hi - cup_lo) / cup_hi * 100
+    depth_max = CUP_DEPTH_MAX_WEAK if market_weak else CUP_DEPTH_MAX
+    depth_ok = bool(CUP_DEPTH_MIN <= depth <= depth_max)
+    upper_half = bool(handle_lo >= cup_lo + (cup_hi - cup_lo) * 0.5)
+    total_days = (len(cup) - hi_pos) + n
+    long_ok = bool(total_days >= CUP_MIN_TOTAL_DAYS)
+    close = bars[-1][3]
+    dist = (handle_hi / close - 1) * 100 if close > 0 else 999
+    vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
+    return {'type': '杯柄型', 'days': n, 'totalDays': total_days,
+            'cupDepth': round(depth, 1), 'depthOk': depth_ok,
+            'depthMax': depth_max, 'upperHalf': upper_half, 'longOk': long_ok,
+            'amplitude': pf['amplitude'], 'volRatio': pf.get('volRatio'),
+            'segAmps': pf['segAmps'],
+            'pivot': round(handle_hi, 2), 'distPct': round(dist, 1),
+            'invalidation': round(handle_lo, 2),
+            'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
+            'formed': bool(depth_ok and upper_half and long_ok)}
+
+
 def _resample_weekly(rows):
     """日线 rows [date, close, high, low, vol] → 周线 bars [(week, high, low, close, vol)]。"""
     weeks = {}
@@ -3157,12 +3428,15 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             if s.get('status') == '高潮风险':
                 bad_sectors.add(s['sector'])
 
-        # ── 形态判定：VCP收缩型优先（≥3次递减收缩+量能递减，任一日/周级别命中即定，
-        #    不被平台类覆盖）；收缩<3 次才走平台判定。平台类加个股一年分位门槛
-        #    （2026-09-08 v2 用户裁决：南微医学这类"刚脱离前低10%但整体仍在历史底部"
-        #    不算杯柄）：histPct≤30% 或 距250日高点回撤≥20% → 「底部整理」；
-        #    仅 histPct>30% 且抬升≥10% 才保留「杯柄型」。原「底部平台型」并入「底部整理」──
+        # ── 形态判定（2026-09-26 Minervini 精修口径，月底大改版①）──
+        # 趋势模板前置：VCP收缩型/杯柄型强制要求 Stage 2（不过则打回——能落底部整理则降级，
+        # 否则剔除并记录 dropped_tt 供对照验证）；底部整理类保留并标注 Stage 1 基底分层。
+        # VCP 收缩：严格递减（每次<前次，容差10%，逐项标红）≥3次 + 末次收缩均量<首次（量能递减强制）；
+        # 杯柄：杯深12~33%（大盘弱势期放宽40%）+柄在杯体上半部+杯柄总时长≥25交易日；
+        # 每只入围股输出买点参数（精确枢轴/突破放量确认条件/失效位/距枢轴%）——形态参数，非操作建议。
+        market_weak = ('冷' in temp) or ('平' in temp)   # 大盘弱势期杯深上限放宽至 40%
         items = []
+        dropped_tt = []
         for code, meta in targets.items():
             rows = stock_daily.get(code) or []
             if len(rows) < 60:
@@ -3173,22 +3447,33 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             hist_pct = _pct_rank100(closes250, rows[-1][1])
             dist_high250 = (rows[-1][1] / max(closes250) - 1) * 100
             hist_low = (hist_pct is not None and hist_pct <= 30) or dist_high250 <= -20
+            tt = _trend_template(rows)
             pf = _vcp_platform(bars)
-            d_lv = _vcp_level(bars, VCP_DAILY_WIN, VCP_DAILY_K)
-            w_lv = _vcp_level(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K)
-            d_ok = bool(d_lv and d_lv['formed'])
-            w_ok = bool(w_lv and w_lv['formed'])
-            d_c3 = bool(d_ok and d_lv['count'] >= VCP_CONTRACT_MIN)
-            w_c3 = bool(w_ok and w_lv['count'] >= VCP_CONTRACT_MIN)
+            d_lv = _vcp_level_strict(bars, VCP_DAILY_WIN, VCP_DAILY_K)
+            w_lv = _vcp_level_strict(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K)
+            d_c3 = bool(d_lv and d_lv['formed'])
+            w_c3 = bool(w_lv and w_lv['formed'])
+            ch = _cup_handle_strict(bars, market_weak)
+            raw, main_lv = None, None
             if d_c3 or w_c3:
-                main_lv = d_lv if d_c3 else w_lv      # 枢轴=最近收缩高点（_vcp_level 口径）
-                pattern = 'VCP收缩型'
-            elif pf and pf['formed']:
-                main_lv = pf
-                # 杯柄型需历史位置配合：分位≤30% 或回撤≥20% 的一律「底部整理」
-                pattern = '杯柄型' if (pf['type'] == '杯柄型' and not hist_low) else '底部整理'
+                raw, main_lv = 'VCP收缩型', (d_lv if d_c3 else w_lv)
+            elif ch and ch['formed'] and not hist_low:
+                raw, main_lv = '杯柄型', ch
+            if raw and not tt['pass']:
+                dropped_tt.append(f"{info.get(code, {}).get('name', code)}:{raw}")
+                raw, main_lv = None, None        # 趋势模板强制拦截
+            if raw is None:
+                if pf and pf['formed']:
+                    pattern = '底部整理'           # Stage 1 基底分层保留展示
+                    plat = bars[-pf['days']:]
+                    vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
+                    main_lv = dict(pf)
+                    main_lv['invalidation'] = round(min(b[2] for b in plat), 2)
+                    main_lv['volConfirm'] = round(vol50 * BREAKOUT_VOL_X, 1)
+                else:
+                    continue
             else:
-                continue
+                pattern = raw
             if not (-5 <= main_lv['distPct'] <= VCP_SHOW_DIST):
                 continue   # 只展示成型或临近成型（距枢轴 <8%）
             sec = meta['sector']
@@ -3198,16 +3483,29 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 fit_txt = '板块配合✅'
             else:
                 fit_txt = '板块中性'
+            stage = 'Stage 2' if tt['pass'] else 'Stage 1 基底（未过趋势模板）'
             advice = (f"{pattern}·距枢轴{main_lv['distPct']}%｜{water_txt}｜{fit_txt}"
                       if water_txt else f"{pattern}·距枢轴{main_lv['distPct']}%｜{fit_txt}")
             close = rows[-1][1]
+            d_ok = bool(d_lv and d_lv['formed'])
+            w_ok = bool(w_lv and w_lv['formed'])
             tag = ('日线✅+周线✅' if d_ok and w_ok else
                    ('日线✅' if d_ok else ('周线✅' if w_ok else '—')))
+            buy_point = {'pivot': main_lv['pivot'],
+                         'distanceToPivotPct': main_lv['distPct'],
+                         'invalidation': main_lv.get('invalidation'),
+                         'volConfirm': main_lv.get('volConfirm'),
+                         'breakoutConfirm': (f"收盘>{main_lv['pivot']} 且成交量≥50日均量×1.4"
+                                             + (f"（≈{main_lv['volConfirm']:.0f}手）"
+                                                if main_lv.get('volConfirm') else ''))}
             items.append({'code': code,
                           'name': info.get(code, {}).get('name', code),
                           'sector': sec, 'star': meta['star'],
                           'close': round(close, 2), 'tag': tag,
                           'pattern': pattern, 'platform': pf,
+                          'cupHandle': ch if pattern == '杯柄型' else None,
+                          'trendTemplate': tt, 'stage': stage,
+                          'buyPoint': buy_point,
                           'histPct': hist_pct,
                           'distHigh250': round(dist_high250, 1),
                           'distMain': main_lv['distPct'],
@@ -3220,13 +3518,18 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'trade_date': eff_d, 'poolSize': len(pool), 'poolRaw': len(pool_raw),
             'mvDate': mc.get('mvDate'), 'scanned': len(targets),
             'items': items[:15],
+            'droppedByTrendTemplate': dropped_tt,
             'note': '池=上证50∪中证500∪沪深300∪中证1000成分（周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
-                    '形态三类（2026-09-08 v2 口径）：VCP收缩型=≥3次排浪递减收缩+量能递减（日线或周线级别，递减容差25%，枢轴=最近收缩高点），优先级最高、不被平台类覆盖；'
-                    '杯柄型=底部抬升≥10%后做柄且个股一年分位>30%（平台上沿=枢轴）；底部整理=一年分位≤30%或距250日高点回撤≥20%的规律窄幅缩量平台（含原底部平台型，整体仍处历史底部不算杯柄）；平台共同要件=10~50日窄幅(振幅≤14%)+缩量+分段振幅规律收缩；'
-                    '只展示距枢轴<8%的成型/临近成型个股，收缩型优先；建议=水温×板块合适度，仅供关注优先级参考',
+                    '形态口径（2026-09-26 Minervini 精修）：趋势模板前置——VCP收缩型/杯柄型强制 Stage 2（现价>150/200日线、200日线上行≥1月、50>150>200日线、距52周低点≥+25%、距52周高点≤25%），不过则打回或降级；'
+                    'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%，不达标项标红）+末次收缩均量<首次（量能递减强制），枢轴=末次收缩高点；'
+                    '杯柄型=杯深12~33%（大盘弱势期放宽40%）+柄在杯体上半部+杯柄≥25交易日，枢轴=柄部高点；'
+                    '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日振幅≤14%+缩量+分段收缩），单独分层展示；'
+                    '买点参数：枢轴价/突破确认（收盘>枢轴且量≥50日均量×1.4）/失效位（末次收缩低点或柄部低点）/距枢轴%——形态参数，非操作建议；'
+                    '只展示距枢轴<8%的成型/临近成型个股；建议=水温×板块合适度，仅供关注优先级参考',
         }
         print(f"  vcpStocks: scanned {len(targets)}, formed {len(items)} "
-              f"({[i['name'] + ':' + i['pattern'] for i in items[:5]]})")
+              f"({[i['name'] + ':' + i['pattern'] for i in items[:5]]})"
+              + (f", 趋势模板拦截 {len(dropped_tt)}: {dropped_tt[:6]}" if dropped_tt else ''))
     except Exception as e:
         print(f"  Warning: fetch_vcp_stocks failed (keep old vcpStocks): {e}")
 
@@ -3574,52 +3877,51 @@ def fetch_stock_rs(pro, trade_date, data):
             sd = syn.get(ind) or {}
             return (sd, f'{ind}(合成)', 'tushare合成') if sd else ({}, None, None)
 
-        # ── 逐股统计 ──
+        # ── 逐股逆行日流水（2026-09-26 月底大改版④：废除"强X/弱Y/剔除"表）──
+        # 逆行日 = 大盘（上证）或所属板块跌≥1%，而个股上涨或跌幅<基准跌幅一半；
+        # 大涨（≥3%）且放量（≥2倍20日均量）的加粗标⭐；公告日打*号备注、不剔除。
         items = []
         skipped = []
         sec_src_used = set()
         for code, s in STOCKS.items():
             rows = stock_daily.get(code) or []
             closes = {r[0]: r[1] for r in rows}
+            vols = {r[0]: r[4] for r in rows}
             seq = [d for d in all_dates if d in closes and d in idx_days][-(STOCK_RS_WINDOW + 1):]
             if len(seq) < 30:
                 skipped.append(s['name'])
                 continue
-            vi = {'win': 0, 'lose': 0, 'excluded': 0, 'days': []}
-            vs = {'win': 0, 'lose': 0, 'excluded': 0, 'days': []}
             bdays, sec_name, sec_src = _sector_days(s['industry'])
             if sec_src:
                 sec_src_used.add(sec_src)
             ann_set = ann_map.get(code) or set()
-            od = open_map.get(code) or {}
-            for a, b in zip(seq, seq[1:]):
+            rev = []
+            for i, (a, b) in enumerate(zip(seq, seq[1:])):
                 if closes[a] <= 0:
                     continue
                 pct = (closes[b] / closes[a] - 1) * 100
-                # 消息面驱动日：开盘跳空≥+1.5%（隔夜消息定价签名）或 当日/前一交易日有公告
-                news_excl = False
-                op = od.get(b)
-                if op and (op / closes[a] - 1) * 100 >= STOCK_RS_GAP_TH:
-                    news_excl = True
-                elif b in ann_set or a in ann_set:
-                    news_excl = True
-                ip = idx_days.get(b)
-                if ip is not None:
-                    _rs_hit(vi, ip, pct - ip, news_excl)
-                sp = bdays.get(b)
-                if sp is not None:
-                    _rs_hit(vs, sp, pct - sp, news_excl)
+                hit_base, base_pct = None, None
+                for bn_, bp in (('板块', bdays.get(b)), ('大盘', idx_days.get(b))):
+                    if bp is not None and bp <= -1.0 and (pct > 0 or pct > bp / 2):
+                        if base_pct is None or bp < base_pct:
+                            hit_base, base_pct = bn_, bp
+                if hit_base is None:
+                    continue
+                prior = [vols[d2] for d2 in seq[max(0, i + 1 - 20):i + 1] if d2 in vols]
+                vol_x = (vols.get(b, 0) / (sum(prior) / len(prior))) if prior and sum(prior) > 0 else None
+                big = bool(pct >= 3.0 and vol_x is not None and vol_x >= 2.0)
+                rev.append({'date': f'{b[4:6]}/{b[6:]}', 'pct': round(pct, 1),
+                            'basePct': round(base_pct, 1), 'base': hit_base,
+                            'volX': round(vol_x, 1) if vol_x is not None else None,
+                            'big': big, 'ann': bool(b in ann_set or a in ann_set)})
             items.append({'code': code, 'name': s['name'], 'group': s['group'],
                           'industry': s['industry'], 'sectorName': sec_name,
                           'sectorSrc': sec_src,
-                          'vsIndex': _rs_pack(vi),
-                          'vsSector': _rs_pack(vs) if bdays else None,
+                          'reverseCount': len(rev),
+                          'reverseDays': rev[::-1],   # 最新在前
                           'daysUsed': len(seq) - 1})
-        # 排序（2026-09-09 v3 用户口径）：强对抗次数（双基准合计）降序，强的排前；
-        # 次键=弱对抗次数升序（弱的少更优），不再按净胜/持仓分组
-        items.sort(key=lambda x: (-(x['vsIndex']['win'] + (x['vsSector'] or {'win': 0})['win']),
-                                  x['vsIndex']['lose'] + (x['vsSector'] or {'lose': 0})['lose'],
-                                  x['code']))
+        # 排序（2026-09-26 用户口径）：逆行天数降序
+        items.sort(key=lambda x: (-x['reverseCount'], x['code']))
         d = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
         src_txt = f"大盘={'东财' if src_idx == 'eastmoney' else 'tushare'}，板块={'东财行业板块' if sec_src_used == {'eastmoney'} else '含tushare合成指数降级（标注（合成））'}"
         data['stockRS'] = {
@@ -3629,22 +3931,20 @@ def fetch_stock_rs(pro, trade_date, data):
             'unmapped': sorted({s['industry'] for s in STOCKS.values()
                                 if s['industry'] not in STOCK_RS_INDUSTRY_MAP}),
             'unmappedBoards': unmapped_boards,
-            'note': ('口径：日线近似"日内对抗"——强对抗日=基准跌超0.3%且个股超额≥+1.5pct，'
-                     '弱对抗日=基准涨超0.3%且个股超额≤-1.5pct（超额=个股当日涨跌幅-基准当日涨跌幅）；'
-                     '强对抗日剔除消息面驱动（2026-09-09 用户口径：强度必须是盘面自身打出来的）——'
-                     '开盘跳空≥+1.5%（隔夜消息定价签名）或当日/前一交易日有公告（巨潮资讯口径）的强对抗日不计入，'
-                     '剔除天数见"剔除"列；弱对抗侧暂不过滤；'
-                     '基准=上证综指+所属行业板块（东财行业板块优先，限流时降级为Tushare等权合成指数，'
+            'note': ('逆行日流水（2026-09-26 改版口径，替代原强/弱对抗计数）：'
+                     '逆行日=大盘（上证综指）或所属板块跌≥1%，而个股上涨或跌幅<基准跌幅一半；'
+                     '逐日列出 日期+个股涨幅+基准跌幅；大涨≥3%且放量≥2倍20日均量加粗标⭐；'
+                     '公告日打*号备注（不剔除，消息面强势如实展示由读者自判）；'
+                     '基准=上证综指+所属行业板块（东财行业板块优先，限流时降级Tushare等权合成，'
                      '名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、'
                      '旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；'
-                     '窗口=近120个交易日（约半年），近20日为子项；'
-                     '强/弱分开累计不对冲（2026-09-09 v3 用户口径）：强=基准走弱日个股明显跑赢的次数，'
-                     '弱=基准走强日个股明显跑输的次数，两个计数独立累计展示，不做净胜对冲；'
+                     '窗口=近120个交易日（约半年）；'
                      f'本期数据源：{src_txt}'),
         }
-        print(f"  stockRS: {len(items)} stocks × {STOCK_RS_WINDOW}d window, EM HTTP calls: {calls}, "
+        print(f"  stockRS(逆行流水): {len(items)} stocks × {STOCK_RS_WINDOW}d, EM HTTP calls: {calls}, "
               f"sources: idx={src_idx}, sec={sorted(sec_src_used)}"
-              + (f", skipped: {skipped}" if skipped else ''))
+              + (f", skipped: {skipped}" if skipped else '')
+              + f", top: {[(i['name'], i['reverseCount']) for i in items[:3]]}")
     except Exception as e:
         print(f"  Warning: fetch_stock_rs failed (keep old stockRS): {e}")
 
@@ -4905,6 +5205,12 @@ def main():
         build_zizeng_etf(pro, trade_date, data)
     except Exception as e:
         print(f"  Warning: zizengETF failed: {e}")
+
+    # ── 17c. 做多窗口判定（大级别门控：水温×宽基形态，改版③）──
+    try:
+        build_long_window(data)
+    except Exception as e:
+        print(f"  Warning: longWindow failed: {e}")
 
     # ── Metadata ──
     # updateTime 以数据实际最新日期为准（盘中/早间运行时各板块数据仍是前一交易日）

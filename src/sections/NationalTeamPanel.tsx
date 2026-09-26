@@ -26,9 +26,12 @@ export default function NationalTeamPanel() {
   };
 
   const vcpBadge = (state?: string) => {
-    if (state === '已突破') return <Badge className="bg-emerald-600 text-white text-[10px]">已突破</Badge>;
-    if (state === '临近买点') return <Badge className="bg-amber-500 text-white text-[10px]">临近买点</Badge>;
-    if (state === '未突破·观察') return <Badge className="bg-blue-100 text-blue-700 text-[10px]">未突破·观察</Badge>;
+    if (state === '突破确认') return <Badge className="bg-emerald-600 text-white text-[10px]">突破确认</Badge>;
+    if (state === '突破待确认（未放量）') return <Badge className="bg-emerald-100 text-emerald-700 text-[10px]">突破待确认</Badge>;
+    if (state === '临近枢轴') return <Badge className="bg-amber-500 text-white text-[10px]">临近枢轴</Badge>;
+    if (state === '构筑基底') return <Badge className="bg-blue-100 text-blue-700 text-[10px]">构筑基底</Badge>;
+    if (state === '低波蓄势') return <Badge className="bg-teal-100 text-teal-700 text-[10px]">低波蓄势</Badge>;
+    if (state === '高位发散') return <span className="text-slate-400 text-[10px]">高位发散</span>;
     return <span className="text-slate-300">无形态</span>;
   };
 
@@ -123,54 +126,63 @@ export default function NationalTeamPanel() {
         </Card>
       )}
 
-      {/* ====== 宽基形态监测（VCP 三档） ====== */}
+      {/* ====== 宽基形态监测（形态五档 + ETF 买点落地，50/300/500 置顶） ====== */}
       {vcpItems.length > 0 && (
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base font-bold flex items-center gap-2">
               <Shapes className="w-5 h-5 text-red-600" />
-              宽基形态监测（截至 {data.broadVcp?.trade_date}）
+              宽基形态监测 · ETF 买点（截至 {data.broadVcp?.trade_date}）
             </CardTitle>
             <CardDescription>{data.broadVcp?.note}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <Table className="min-w-[760px]">
+              <Table className="min-w-[900px]">
                 <TableHeader>
                   <TableRow className="bg-red-50">
                     <TableHead className="text-xs">指数</TableHead>
-                    <TableHead className="text-xs">形态</TableHead>
-                    <TableHead className="text-xs text-right">天数</TableHead>
+                    <TableHead className="text-xs text-center">形态阶段</TableHead>
+                    <TableHead className="text-xs">跟踪ETF</TableHead>
+                    <TableHead className="text-xs text-right">ETF现价</TableHead>
                     <TableHead className="text-xs text-right">枢轴价</TableHead>
                     <TableHead className="text-xs text-right">距枢轴</TableHead>
-                    <TableHead className="text-xs text-right">振幅</TableHead>
-                    <TableHead className="text-xs text-right">量比</TableHead>
-                    <TableHead className="text-xs text-center">状态</TableHead>
-                    <TableHead className="text-xs">跟踪ETF</TableHead>
+                    <TableHead className="text-xs">突破确认条件</TableHead>
+                    <TableHead className="text-xs text-right">失效位</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {vcpItems.map((v) => (
-                    <TableRow key={v.indexCode} className={v.state === '临近买点' || v.state === '已突破' ? 'bg-amber-50/50' : 'hover:bg-slate-50'}>
-                      <TableCell className="text-xs font-semibold whitespace-nowrap">{v.indexName}</TableCell>
-                      <TableCell className="text-xs">{v.pattern ?? <span className="text-slate-300">—</span>}</TableCell>
-                      <TableCell className="text-xs text-right">{v.days ?? '--'}</TableCell>
-                      <TableCell className="text-xs text-right">{v.pivot != null ? v.pivot.toFixed(2) : '--'}</TableCell>
-                      <TableCell className={`text-xs text-right font-semibold ${(v.distPct ?? 99) < 5 ? 'text-amber-600' : 'text-slate-600'}`}>
-                        {v.distPct != null ? `${v.distPct}%` : '--'}
+                    <TableRow key={v.indexCode} className={v.state === '临近枢轴' || v.state === '突破确认' ? 'bg-amber-50/50' : v.top3 ? '' : 'opacity-75 hover:bg-slate-50'}>
+                      <TableCell className="text-xs font-semibold whitespace-nowrap">
+                        {v.indexName}
+                        {v.top3 && <span className="text-[9px] text-red-400 ml-1">置顶</span>}
                       </TableCell>
-                      <TableCell className="text-xs text-right">{v.amplitude != null ? `${v.amplitude}%` : '--'}</TableCell>
-                      <TableCell className="text-xs text-right">{v.volRatio != null ? v.volRatio.toFixed(2) : '--'}</TableCell>
-                      <TableCell className="text-xs text-center">{vcpBadge(v.state)}</TableCell>
+                      <TableCell className="text-xs text-center">
+                        {vcpBadge(v.state)}
+                        {v.pattern && <p className="text-[9px] text-slate-400 mt-0.5">{v.pattern}{v.days ? `·${v.days}天` : ''}</p>}
+                      </TableCell>
                       <TableCell className="text-xs whitespace-nowrap">
                         {v.etfName}
                         <span className="text-slate-400 ml-1">{v.etfCode.split('.')[0]}</span>
+                      </TableCell>
+                      <TableCell className="text-xs text-right">{v.etfClose != null ? v.etfClose.toFixed(3) : '--'}</TableCell>
+                      <TableCell className="text-xs text-right font-semibold">{v.pivot != null ? v.pivot.toFixed(3) : '--'}</TableCell>
+                      <TableCell className={`text-xs text-right font-bold ${(v.distPct ?? 99) <= 0 ? 'text-emerald-600' : (v.distPct ?? 99) <= 3 ? 'text-red-500' : (v.distPct ?? 99) <= 8 ? 'text-amber-600' : 'text-slate-500'}`}>
+                        {v.distPct != null ? `${v.distPct}%` : '--'}
+                      </TableCell>
+                      <TableCell className="text-[10px] text-slate-500 whitespace-normal max-w-[220px]">
+                        {v.breakoutConfirm ?? <span className="text-slate-300">—（未成型）</span>}
+                      </TableCell>
+                      <TableCell className="text-xs text-right text-slate-500">
+                        {v.invalidation != null ? v.invalidation.toFixed(3) : '--'}
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </div>
+            <p className="text-[10px] text-slate-400 mt-1.5">枢轴/突破确认/失效位为形态参数（对跟踪 ETF 日线直接计算，可直接下单口径），非操作建议。</p>
           </CardContent>
         </Card>
       )}

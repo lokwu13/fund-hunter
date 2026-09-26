@@ -134,13 +134,19 @@ export default function ECIPanel({ data }: ECIPanelProps) {
         </Badge>
       </div>
 
-      {/* 今日能投板块（数据依据：bottomWatch × ECI × 资金节奏 × 扫描榜） */}
+      {/* 今日能投板块（数据依据：bottomWatch × ECI × 资金节奏 × 扫描榜）；层级服从：窗口关闭时标灰降级 */}
       {data.actionableSectors && (
-        <Card id="actionable-eci" className="border-emerald-300 shadow-sm">
+        <Card id="actionable-eci" className={`border-emerald-300 shadow-sm ${data.longWindow?.window === 'closed' ? 'opacity-60 grayscale' : ''}`}>
           <CardContent className="p-3">
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <span className="text-xs font-bold text-emerald-700">🎯 今日能投板块</span>
               <span className="text-[10px] text-slate-400">{data.actionableSectors.trade_date} · 优先级：双确认 &gt; 🔥双档 &gt; 60日档 &gt; 30日档；资金节奏转流出/持续流出与扫描榜高潮风险一票否决</span>
+              {data.longWindow?.window === 'closed' && (
+                <Badge className="bg-slate-500 text-white text-[10px] border-0">窗口未开，信号仅观察</Badge>
+              )}
+              {data.longWindow?.window === 'half' && (
+                <Badge className="bg-amber-400 text-white text-[10px] border-0">半窗·谨慎关注</Badge>
+              )}
               <span className="text-[10px] text-emerald-600/80 w-full">口径关系：能投名单 = 总览第1步趋势轴的输入之一（趋势轴 = 能投 ∪ 底部积聚 ∪ 吸筹⭐观察）</span>
             </div>
             {data.actionableSectors.items.length > 0 ? (
@@ -903,7 +909,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
 
       {/* 个股级 VCP 精扫（A500∪上证50∪沪深300 池） */}
       {data.vcpStocks && (
-        <Card className="border-violet-200 shadow-sm">
+        <Card className={`border-violet-200 shadow-sm ${data.longWindow?.window === 'closed' ? 'opacity-60 grayscale' : ''}`}>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <CardTitle className="text-sm font-bold flex items-center gap-2">
@@ -914,6 +920,15 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                     ? `池${data.vcpStocks.poolRaw}→${data.vcpStocks.poolSize ?? '—'}只(≥250亿) · 精扫${data.vcpStocks.scanned ?? 0}只`
                     : `池${data.vcpStocks.poolSize ?? '—'}只 · 精扫${data.vcpStocks.scanned ?? 0}只`}
                 </span>
+                {data.longWindow?.window === 'closed' && (
+                  <Badge className="bg-slate-500 text-white text-[10px]">窗口未开，信号仅观察</Badge>
+                )}
+                {data.longWindow?.window === 'half' && (
+                  <Badge className="bg-amber-400 text-white text-[10px]">半窗·谨慎关注</Badge>
+                )}
+                {data.longWindow?.window === 'open' && (
+                  <Badge className="bg-emerald-600 text-white text-[10px]">做多窗口打开</Badge>
+                )}
               </CardTitle>
               <Badge variant="outline" className="text-xs bg-violet-50 text-violet-700 border-violet-200">
                 {data.vcpStocks.trade_date}
@@ -929,12 +944,13 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                     <tr className="text-slate-500 border-b border-slate-200">
                       <th className="text-left py-1.5 font-medium">股票</th>
                       <th className="text-left font-medium">板块归属</th>
+                      <th className="text-center font-medium" title="Minervini 趋势模板（Stage 2 资格审查）：现价>150/200日线、200日线上行≥1月、50>150>200日线、距52周低点≥+25%、距52周高点≤25%；VCP收缩型/杯柄型强制，底部整理=Stage 1 基底单独分层">趋势模板</th>
                       <th className="text-center font-medium">形态</th>
-                      <th className="text-left font-medium">日线收缩序列</th>
+                      <th className="text-left font-medium" title="Minervini 严格口径：每次收缩必须小于前一次（容差10%），不达标项标红；末次收缩均量<首次">日线收缩序列</th>
                       <th className="text-left font-medium">周线收缩序列</th>
                       <th className="text-right font-medium">枢轴价</th>
                       <th className="text-right font-medium">现价距枢轴</th>
-                      <th className="text-center font-medium">量能</th>
+                      <th className="text-left font-medium" title="失效位=末次收缩低点/柄部低点；突破确认=收盘>枢轴且量≥50日均量×1.4（形态参数，非操作建议）">买点参数</th>
                       <th className="text-center font-medium">级别</th>
                       <th className="text-left font-medium">综合建议</th>
                     </tr>
@@ -956,20 +972,35 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                           </td>
                           <td className="text-slate-500">{it.sector}</td>
                           <td className="text-center">
+                            {it.trendTemplate ? (
+                              <span
+                                className={`text-[10px] font-bold rounded px-1.5 py-0.5 ${it.trendTemplate.pass ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'}`}
+                                title={(it.trendTemplate.evidence || []).map((e: any) => `${e.ok ? '✅' : '❌'}${e.item}（${e.val}）`).join('\n')}
+                              >{it.trendTemplate.pass ? 'Stage 2 ✅' : '未过'}</span>
+                            ) : <span className="text-slate-300">—</span>}
+                            {it.stage && it.stage.includes('Stage 1') && (
+                              <p className="text-[9px] text-slate-400 mt-0.5">Stage 1 基底</p>
+                            )}
+                          </td>
+                          <td className="text-center">
                             {isPlatform || isContract ? (
                               <div>
                                 <span
                                   className={`text-[10px] font-bold text-white rounded px-1.5 py-0.5 ${
                                     it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : it.pattern === '底部整理' ? 'bg-slate-500' : 'bg-teal-500'
                                   }`}
-                                  title={isPlatform
-                                    ? `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·分段振幅${(it.platform.segAmps || []).join('→')}%·一年分位${it.histPct ?? '—'}%（≤30%或距250日高点回撤≥20%即底部整理，不算杯柄）`
-                                    : `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}·枢轴=最近收缩高点`}
+                                  title={isContract
+                                    ? `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}（首${lv?.volFirst ?? '—'}→末${lv?.volLast ?? '—'}）·枢轴=末次收缩高点`
+                                    : it.cupHandle
+                                    ? `杯深${it.cupHandle.cupDepth}%（${it.cupHandle.depthOk ? '达标' : '不达标'}${it.cupHandle.depthMax > 33 ? '·弱势市放宽40%' : ''}）·柄在杯体上半部${it.cupHandle.upperHalf ? '✅' : '❌'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点`
+                                    : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·分段振幅${(it.platform.segAmps || []).join('→')}%·一年分位${it.histPct ?? '—'}%`}
                                 >{it.pattern}</span>
                                 <p className="text-[9px] text-violet-400 mt-0.5">
-                                  {isPlatform
-                                    ? `平台${it.platform.days}天·振幅${it.platform.amplitude}%`
-                                    : `收缩${lv?.count ?? 0}次·量能${lv?.volTrend ?? '—'}`}
+                                  {isContract
+                                    ? `收缩${lv?.count ?? 0}次·量能${lv?.volTrend ?? '—'}`
+                                    : it.cupHandle
+                                    ? `杯深${it.cupHandle.cupDepth}%·柄${it.cupHandle.days}天`
+                                    : `平台${it.platform.days}天·振幅${it.platform.amplitude}%`}
                                 </p>
                               </div>
                             ) : (
@@ -978,15 +1009,29 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                           </td>
                           <td className="font-mono text-[11px]">
                             {it.daily ? (
-                              <span className={it.daily.decreasing ? 'text-violet-700 font-semibold' : 'text-slate-400'}>
-                                {it.daily.contractions.join('%→')}%
+                              <span title={`递减${it.daily.decreasing ? '✅（严格容差10%）' : '❌（标红项未达标）'}·量能${it.daily.volTrend ?? ''}`}>
+                                {(it.daily.contractions || []).map((c: number, i: number) => (
+                                  <span key={i}>
+                                    {i > 0 && <span className="text-slate-300">→</span>}
+                                    <span className={(it.daily.contractionsOk?.[i] ?? true) ? (it.daily.decreasing ? 'text-violet-700 font-semibold' : 'text-slate-500') : 'text-red-500 font-bold line-through'}>
+                                      {c}%
+                                    </span>
+                                  </span>
+                                ))}
                               </span>
                             ) : <span className="text-slate-300">—</span>}
                           </td>
                           <td className="font-mono text-[11px]">
                             {it.weekly ? (
-                              <span className={it.weekly.decreasing ? 'text-violet-700 font-semibold' : 'text-slate-400'}>
-                                {it.weekly.contractions.join('%→')}%
+                              <span>
+                                {(it.weekly.contractions || []).map((c: number, i: number) => (
+                                  <span key={i}>
+                                    {i > 0 && <span className="text-slate-300">→</span>}
+                                    <span className={(it.weekly.contractionsOk?.[i] ?? true) ? (it.weekly.decreasing ? 'text-violet-700 font-semibold' : 'text-slate-500') : 'text-red-500 font-bold line-through'}>
+                                      {c}%
+                                    </span>
+                                  </span>
+                                ))}
                               </span>
                             ) : <span className="text-slate-300">—</span>}
                           </td>
@@ -994,7 +1039,15 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                           <td className={`text-right font-bold ${(pv?.distPct ?? 99) <= 3 ? 'text-red-500' : (pv?.distPct ?? 99) <= 8 ? 'text-amber-600' : 'text-slate-500'}`}>
                             {pv?.distPct}%
                           </td>
-                          <td className="text-center text-slate-500">{isPlatform ? `量比${it.platform.volRatio}` : lv?.volTrend}</td>
+                          <td className="text-left text-[10px] text-slate-500 leading-snug min-w-[170px]">
+                            {it.buyPoint ? (
+                              <>
+                                <p>失效位 <b className="text-slate-600">{it.buyPoint.invalidation ?? '—'}</b></p>
+                                <p className="text-slate-400">{it.buyPoint.breakoutConfirm}</p>
+                                <p className="text-[9px] text-slate-300">形态参数，非操作建议</p>
+                              </>
+                            ) : <span className="text-slate-300">—</span>}
+                          </td>
                           <td className="text-center">
                             <span className={`text-[10px] font-bold ${it.tag.includes('+') ? 'text-red-500' : 'text-violet-600'}`}>{it.tag}</span>
                           </td>
@@ -1021,13 +1074,13 @@ export default function ECIPanel({ data }: ECIPanelProps) {
         </Card>
       )}
 
-      {/* 个股对抗统计（近120个交易日，日线口径近似日内对抗；永远渲染+空态） */}
+      {/* 个股逆行日流水（近120个交易日：大盘或板块跌≥1%而个股上涨/跌幅<基准一半；2026-09-26 改版④，永远渲染+空态） */}
       <Card className="border-amber-200 shadow-sm">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <CardTitle className="text-sm font-bold flex items-center gap-2">
               <Swords className="w-4 h-4 text-amber-500" />
-              个股对抗统计
+              个股逆行日流水
               <span className="text-[10px] font-normal text-slate-400">
                 近{data.stockRS?.window ?? 120}个交易日 · 持仓+观察股 vs 上证综指/所属行业板块
               </span>
@@ -1041,57 +1094,45 @@ export default function ECIPanel({ data }: ECIPanelProps) {
         </CardHeader>
         <CardContent>
           {data.stockRS && data.stockRS.items && data.stockRS.items.length > 0 ? (
-            <div className="overflow-x-auto max-h-80 overflow-y-auto">
-              <table className="w-full text-xs min-w-[560px]">
+            <div className="overflow-x-auto max-h-96 overflow-y-auto">
+              <table className="w-full text-xs min-w-[640px]">
                 <thead className="sticky top-0 bg-white z-10">
                   <tr className="text-slate-500 border-b border-slate-200">
                     <th className="text-left py-1.5 font-medium">个股</th>
-                    <th className="text-center font-medium" title="强=基准走弱日个股明显跑赢的次数（分开累计，不对冲）">对大盘 强/弱</th>
-                    <th className="text-center font-medium" title="弱=基准走强日个股明显跑输的次数（分开累计，不对冲）">对板块 强/弱</th>
-                    <th className="text-center font-medium" title="消息面驱动强对抗日已剔除：开盘跳空≥+1.5% 或 当日/前一交易日有公告（巨潮口径）；弱对抗侧不过滤">剔除</th>
-                    <th className="text-center font-medium" title="近20日强/弱（大盘｜板块）">近20日 强/弱</th>
+                    <th className="text-center font-medium" title="近120日中大盘或所属板块跌≥1%而个股上涨或跌幅<基准跌幅一半的天数">逆行天数</th>
+                    <th className="text-left font-medium" title="逐日流水（最新在前）：日期+个股涨幅（基准跌幅）；⭐=大涨≥3%且放量≥2倍20日均量；*=公告日（备注不剔除）">逆行日流水（悬浮看全部）</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.stockRS.items.map((it) => {
+                    const flow = (it.reverseDays || []) as Array<{date: string; pct: number; basePct: number; base: string; volX?: number | null; big: boolean; ann: boolean}>;
+                    const flowText = flow.map(d =>
+                      `${d.date} ${d.pct >= 0 ? '+' : ''}${d.pct}%（${d.base}${d.basePct}%）${d.big ? `⭐放量${d.volX}倍` : ''}${d.ann ? '*' : ''}`
+                    ).join('｜');
                     return (
                       <tr key={it.code}
                           className={`border-b border-slate-50 hover:bg-amber-50/40 ${it.group === 'hold' ? 'font-semibold bg-rose-50/30' : ''}`}>
-                        <td className="py-1.5 text-slate-700">
+                        <td className="py-1.5 text-slate-700 whitespace-nowrap">
                           {it.group === 'hold' && <Star className="w-3 h-3 text-pink-500 inline mr-0.5 -mt-0.5" />}
                           {it.name}
                           <span className="text-[9px] text-slate-400 ml-1">{it.sectorName || it.industry}</span>
                         </td>
                         <td className="text-center">
-                          <span className="font-bold text-emerald-600">强{it.vsIndex.win}</span>
-                          <span className="text-slate-300 mx-0.5">/</span>
-                          <span className="font-bold text-red-500">弱{it.vsIndex.lose}</span>
+                          <span className={`font-bold ${(it.reverseCount ?? 0) >= 8 ? 'text-red-500' : (it.reverseCount ?? 0) >= 4 ? 'text-amber-600' : 'text-slate-500'}`}>
+                            逆行{it.reverseCount ?? 0}天
+                          </span>
                         </td>
-                        <td className="text-center">
-                          {it.vsSector
-                            ? (<><span className="font-bold text-emerald-600">强{it.vsSector.win}</span>
-                                <span className="text-slate-300 mx-0.5">/</span>
-                                <span className="font-bold text-red-500">弱{it.vsSector.lose}</span></>)
-                            : <span className="text-slate-300">—</span>}
-                        </td>
-                        <td className="text-center text-slate-500"
-                            title="被剔除的消息面驱动强对抗日（跳空≥+1.5% 或 当日/前一交易日有公告）">
-                          {it.vsIndex.excluded ?? 0}
-                          <span className="text-slate-300 mx-0.5">/</span>
-                          {it.vsSector ? (it.vsSector.excluded ?? 0) : '—'}
-                        </td>
-                        <td className="text-center">
-                          <span className="font-semibold text-emerald-600">强{it.vsIndex.win20}</span>
-                          <span className="text-slate-300 mx-0.5">/</span>
-                          <span className="font-semibold text-red-500">弱{it.vsIndex.lose20}</span>
-                          {it.vsSector && (
-                            <>
-                              <span className="text-slate-300 mx-1">｜</span>
-                              <span className="font-semibold text-emerald-600">强{it.vsSector.win20}</span>
-                              <span className="text-slate-300 mx-0.5">/</span>
-                              <span className="font-semibold text-red-500">弱{it.vsSector.lose20}</span>
-                            </>
-                          )}
+                        <td className="text-left text-[11px] text-slate-600 leading-relaxed" title={flowText || '近120日无逆行日'}>
+                          {flow.length > 0 ? flow.slice(0, 8).map((dd, i) => (
+                            <span key={i} className={dd.big ? 'font-bold text-red-600' : ''}>
+                              {i > 0 && <span className="text-slate-300">｜</span>}
+                              {dd.date} {dd.pct >= 0 ? '+' : ''}{dd.pct}%
+                              <span className="text-slate-400">（{dd.base}{dd.basePct}%）</span>
+                              {dd.big && `⭐`}
+                              {dd.ann && <span className="text-slate-400">*</span>}
+                            </span>
+                          )) : <span className="text-slate-300">—</span>}
+                          {flow.length > 8 && <span className="text-slate-300"> ｜…共{flow.length}天</span>}
                         </td>
                       </tr>
                     );
@@ -1100,7 +1141,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
               </table>
             </div>
           ) : (
-            <p className="text-xs text-slate-400 py-3 text-center">对抗统计数据积累中（首日板块日K回补后展示）</p>
+            <p className="text-xs text-slate-400 py-3 text-center">逆行流水数据积累中（首日板块日K回补后展示）</p>
           )}
           {data.stockRS?.note && (
             <p className="text-[10px] text-slate-400 mt-1.5">{data.stockRS.note}</p>
