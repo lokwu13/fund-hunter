@@ -741,10 +741,16 @@ export interface FundData {
     note?: string;
     lifecycleAll?: Record<string, string>;
     lifecycleL1?: Record<string, string>;
+    sectorPattern?: Record<string, {
+      patterns: string[]; pattern: string | null; volRatio: number;
+      shrinkExtreme: boolean; pct1y: number | null; qualified: boolean; evidence: string;
+    }>;
     steps: Array<{
       n: number; key: string; title: string; lamp: string;
       conclusion: string; guide: string; reason?: string;
       collapsed?: Record<string, number>;
+      dropped?: Array<any>;
+      excluded?: number;
       rows?: Array<any>;
     }>;
   };

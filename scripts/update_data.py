@@ -1542,6 +1542,58 @@ def build_long_window(data):
           f"{('；' + bond_note) if bond_note else ''}）")
 
 
+# ══════════ 板块形态判定（2026-09-27 第2-3步共振双轨改版，用户正式指令）══════════
+SECTOR_VOL_SHRINK_MAX = 0.7   # 量能萎缩极致（自定阈值并注明）：近10日均成交额/近60日均成交额 ≤ 0.7
+
+
+def _sector_pattern(hist, name):
+    """板块等权合成指数的形态检测（与个股同族口径，复用 sector_history 沉淀，零新增 API）。
+
+    价格=行业等权日收益复利净值（sector_history 无日内高低价，high/low 以收盘近似——
+    形态为收盘口径近似，阈值沿用个股 Minervini 精修）；量能=行业成交额合计（amt 字段）。
+    形态族：VCP收缩（≥3次严格递减收缩+末次收缩均量<首次）/ 杯柄（个股同口径）/
+    底部（一年价格分位≤30%）；外加要件：量能萎缩极致（10日/60日均额 ≤0.7）。
+    qualified = 任一形态命中 且 缩量极致。历史不足 80 日返回 None。
+    """
+    rows = _history_series(hist, name)
+    if len(rows) < 80:
+        return None
+    level, closes, amts = 1.0, [], []
+    for _, _, ret, amt in rows:
+        level *= (1 + ret / 100.0)
+        closes.append(level)
+        amts.append(amt)
+    vol10 = sum(amts[-10:]) / 10
+    vol60 = sum(amts[-60:]) / 60
+    vol_ratio = vol10 / vol60 if vol60 > 0 else 1.0
+    shrink = vol_ratio <= SECTOR_VOL_SHRINK_MAX
+    pct1y = _pct_rank100(closes[-250:], closes[-1])
+    bottom = pct1y is not None and pct1y <= 30
+    bars = [(rows[i][0], closes[i], closes[i], closes[i], amts[i]) for i in range(len(rows))]
+    vcp = _vcp_level_strict(bars, VCP_DAILY_WIN, VCP_DAILY_K)
+    cup = _cup_handle_strict(bars)
+    patterns = []
+    if vcp and vcp['formed']:
+        patterns.append('VCP收缩')
+    if cup and cup['formed']:
+        patterns.append('杯柄')
+    if bottom:
+        patterns.append('底部')
+    ev = []
+    if vcp and vcp['formed']:
+        ev.append(f"VCP {vcp['count']}次收缩{vcp['contractions']}·距枢轴{vcp['distPct']}%")
+    if cup and cup['formed']:
+        ev.append(f"杯柄·杯深{cup['cupDepth']}%·柄{cup['days']}日")
+    if bottom:
+        ev.append(f"一年分位{pct1y}%")
+    ev.append(f"量能比10/60={vol_ratio:.2f}{'≤0.7✓' if shrink else '>0.7✗'}")
+    return {'patterns': patterns,
+            'pattern': '+'.join(patterns) if patterns else None,
+            'volRatio': round(vol_ratio, 2), 'shrinkExtreme': bool(shrink),
+            'pct1y': pct1y, 'qualified': bool(patterns and shrink),
+            'evidence': '；'.join(ev)}
+
+
 def build_funnel(data):
     """总览五步漏斗结论汇总（2026-09-27 用户正式指令：0窗口→1宽基→2板块→3个股→4排雷）。
 
@@ -1552,7 +1604,7 @@ def build_funnel(data):
       积聚期=bottomWatch 命中；启动期=sectorScan 启动确认；高潮期=scan 高潮/双头风险；
       退潮期=近5日净流出 且 一年价格分位≥70%；主升期=近20日涨>10% 且 近5日净流入；
       其余=半路。优先级：积聚>启动>高潮>退潮>主升>半路。
-    第2步入选=积聚期∪启动期（形态低位+资金持续流入双条件已由原信号保证）。
+    第2步入选=（积聚期∪启动期）且 板块形态达标（VCP/底部/杯柄任一+缩量极致，2026-09-27 升级）。
     """
     hist = _load_sector_history()
     flows = {i['name']: i for i in (data.get('sectorFlows') or {}).get('items') or []}
@@ -1653,13 +1705,30 @@ def build_funnel(data):
     concl1 = ('当前可关注：' + '；'.join(focus[:3])) if focus else '七只宽基均无可关注形态，空仓等待'
     guide1 = '本步回答：买哪类宽基/什么风格？' + concl1 + '。选好风格后进第2步圈板块'
 
-    # ── 第2步 圈板块（生命周期分级；入选=积聚期∪启动期，其余折叠）──
+    # ── 第2步 圈板块（生命周期分级 + 板块形态双达标，2026-09-27 用户正式指令升级）──
+    # 入选 = 资金持续流入（积聚期∪启动期，现有口径）且 板块自身形态达标
+    #       （VCP收缩/底部/杯柄 任一命中 + 量能萎缩极致10/60≤0.7）。两条都要。
     all_sectors = sorted(set(list(flows.keys()) + list(bw_map.keys()) + list(scan_map.keys())))
     lc_map = {n: _lifecycle(n) for n in all_sectors}
+    sp_map = {}
+    for n in all_sectors:
+        sp = _sector_pattern(hist, n)
+        if sp:
+            sp_map[n] = sp
     step2_rows = []
+    dropped2 = []   # 积聚/启动但形态未达标（如实展示哪条卡掉）
     for n in all_sectors:
         lc = lc_map[n]
         if lc not in ('积聚期', '启动期'):
+            continue
+        sp = sp_map.get(n)
+        if not (sp and sp['qualified']):
+            why = ('历史不足80日' if sp is None
+                   else '板块形态未命中（VCP/底部/杯柄均无）' if not sp['patterns']
+                   else f"量能萎缩未达极致（10/60={sp['volRatio']}>0.7）")
+            dropped2.append({'sector': n, 'lifecycle': lc, 'why': why,
+                             'pattern': (sp or {}).get('pattern'),
+                             'volRatio': (sp or {}).get('volRatio')})
             continue
         bw, sc = bw_map.get(n), scan_map.get(n)
         leaders = []
@@ -1677,7 +1746,9 @@ def build_funnel(data):
         elif sc:
             reason = f"{sc.get('status')}：连续净流入{sc.get('consecutiveDays')}天，近5日{sc.get('netInflow5d')}亿"
         step2_rows.append({'sector': n, 'lifecycle': lc, 'reason': reason, 'leaders': leaders,
-                           'dual': bool(bw and bw.get('both'))})
+                           'dual': bool(bw and bw.get('both')),
+                           'pattern': sp['pattern'], 'volRatio': sp['volRatio'],
+                           'patternEvidence': sp['evidence']})
     collapsed = {}
     for n, lc in lc_map.items():
         if lc not in ('积聚期', '启动期'):
@@ -1691,27 +1762,62 @@ def build_funnel(data):
             continue
         if _l1 not in lc_l1 or _lc_prio.index(_lc) < _lc_prio.index(lc_l1[_l1]):
             lc_l1[_l1] = _lc
-    lamp2 = '🟢' if step2_rows else ('🟡' if collapsed.get('主升期') else '🔴')
-    concl2 = (f"入选{len(step2_rows)}个：" + '、'.join(f"{r['sector']}（{r['lifecycle']}）" for r in step2_rows)) \
-        if step2_rows else '今日无入选（无积聚期/启动期板块）'
-    guide2 = '本步回答：主线板块是哪几个？' + concl2 + '。' + ('带着板块去第3步看个股形态' if step2_rows else '第3步个股信号降级参考')
+    lamp2 = '🟢' if step2_rows else ('🟡' if collapsed.get('主升期') or dropped2 else '🔴')
+    concl2 = (f"入选{len(step2_rows)}个：" + '、'.join(f"{r['sector']}（{r['lifecycle']}·{r['pattern']}）" for r in step2_rows)) \
+        if step2_rows else (
+            f"今日无入选：{len(dropped2)}个资金流入板块被形态条件卡掉（"
+            + '、'.join(f"{d['sector']}·{d['why']}" for d in dropped2[:3])
+            + ('…' if len(dropped2) > 3 else '') + '）' if dropped2 else '今日无入选（无积聚期/启动期板块）')
+    guide2 = '本步回答：主线板块是哪几个？' + concl2 + '。' + ('带着板块去第3步看个股形态（共振轨优先）' if step2_rows else '第3步共振轨为空，只能看⭐优中选优轨')
 
-    # ── 第3步 个股形态（叠加第2步共振）──
+    # ── 第3步 个股形态（双轨制，2026-09-27 用户正式指令；两轨都不沾不进榜）──
+    # 🔗共振轨（置顶）：个股属于第2步入选板块（形态+资金双达标）；
+    # ⭐优中选优轨：板块不同步但 ①个股在池内（上证50∪中证500∪沪深300∪科创50∪创业板50）
+    #   ②形态达标（Minervini 口径 VCP收缩型/杯柄型，Stage 2 过趋势模板；底部整理不算达标）
+    #   ③聪明钱持续流入（自定口径：近10个缓存交易日主力净流入为正天数≥6，
+    #     数据=MINE_MF 全市场 moneyflow 10日滚动缓存，零新增调用）。三条缺一不入。
     sel_sectors = {r['sector'] for r in step2_rows}
+    mf_cache = _load_json_cache(MINE_MF_CACHE_PATH, {})
+    mf_days = sorted(mf_cache)[-10:]
+
+    def _smart_money_days(code):
+        return sum(1 for d in mf_days if (mf_cache[d].get(code) or 0) > 0)
+
     step3_rows = []
+    step3_excluded = 0
     for it in (data.get('vcpStocks') or {}).get('items') or []:
         bp = it.get('buyPoint') or {}
+        reson = bool(it.get('sector') and it['sector'] in sel_sectors)
+        sm_days = _smart_money_days(it['code'])
+        cherry = (bool(it.get('inPool'))
+                  and it.get('pattern') in ('VCP收缩型', '杯柄型')
+                  and sm_days >= 6)
+        if reson:
+            track = 'reson'
+        elif cherry:
+            track = 'cherry'
+        else:
+            step3_excluded += 1
+            continue
         step3_rows.append({'code': it['code'], 'name': it['name'], 'pattern': it.get('pattern'),
                            'stage': it.get('stage'), 'sector': it.get('sector'),
                            'pivot': bp.get('pivot'), 'distPct': bp.get('distanceToPivotPct') if bp.get('distanceToPivotPct') is not None else it.get('distMain'),
                            'invalidation': bp.get('invalidation'),
-                           'reson': bool(it.get('sector') and it['sector'] in sel_sectors),
+                           'track': track, 'smartMoneyPosDays': sm_days,
+                           'inPool': bool(it.get('inPool')),
+                           'reson': reson,
                            'mine': it['code'] in mine_codes, 'star': bool(it.get('star'))})
+    step3_rows.sort(key=lambda r: (0 if r['track'] == 'reson' else 1,
+                                   r['distPct'] if r['distPct'] is not None else 99))
+    n_reson = sum(1 for r in step3_rows if r['track'] == 'reson')
+    n_cherry = len(step3_rows) - n_reson
     lamp3 = ('🟢' if any(r['distPct'] is not None and r['distPct'] <= 3 for r in step3_rows)
              else '🟡' if step3_rows else '🔴')
-    concl3 = (f"{len(step3_rows)}只成型：" + '、'.join(f"{r['name']}（{r['pattern']}·距枢轴{r['distPct']}%）" for r in step3_rows[:4])
-              + ('…' if len(step3_rows) > 4 else '')) if step3_rows else '今日无成型形态'
-    guide3 = '本步回答：具体买哪只、什么价？' + concl3 + '。' + ('🔗=属于第2步入选板块，共振优先；最后过第4步排雷' if step3_rows else '可翻第4步确认持仓无雷')
+    concl3 = (f"🔗共振{n_reson}只 + ⭐精选{n_cherry}只：" + '、'.join(
+              f"{'🔗' if r['track'] == 'reson' else '⭐'}{r['name']}（{r['pattern']}·距枢轴{r['distPct']}%）"
+              for r in step3_rows[:4]) + ('…' if len(step3_rows) > 4 else '')) \
+        if step3_rows else '今日双轨皆空（无共振也无精选）'
+    guide3 = '本步回答：具体买哪只、什么价？' + concl3 + '。' + ('🔗=第2步入选板块共振（赢面优先）；⭐=池内形态达标+聪明钱流入的优中选优；最后过第4步排雷' if step3_rows else '可翻第4步确认持仓无雷')
 
     # ── 第4步 排雷（范围=第2步龙头∪第3步入围∪持仓观察股）──
     scope = {l['code'] for r in step2_rows for l in r['leaders'] if l.get('code')} \
@@ -1732,6 +1838,7 @@ def build_funnel(data):
         'trade_date': (data.get('sectorFlows') or {}).get('trade_date') or '',
         'path': path, 'window': w,
         'lifecycleAll': lc_map, 'lifecycleL1': lc_l1,
+        'sectorPattern': sp_map,
         'steps': [
             {'n': 0, 'key': 'window', 'title': '做多窗口', 'lamp': lamp0,
              'conclusion': concl0, 'guide': guide0, 'reason': lw.get('reason')},
@@ -1739,22 +1846,32 @@ def build_funnel(data):
              'conclusion': concl1, 'guide': guide1, 'rows': step1_rows},
             {'n': 2, 'key': 'sector', 'title': '圈板块', 'lamp': lamp2,
              'conclusion': concl2, 'guide': guide2, 'rows': step2_rows,
-             'collapsed': collapsed},
+             'collapsed': collapsed, 'dropped': dropped2},
             {'n': 3, 'key': 'vcp', 'title': '个股形态', 'lamp': lamp3,
-             'conclusion': concl3, 'guide': guide3, 'rows': step3_rows},
+             'conclusion': concl3, 'guide': guide3, 'rows': step3_rows,
+             'excluded': step3_excluded},
             {'n': 4, 'key': 'mine', 'title': '排雷', 'lamp': lamp4,
              'conclusion': concl4, 'guide': guide4, 'rows': mw_items},
         ],
-        'note': ('五步漏斗（2026-09-27 用户正式指令）：0窗口（水温×债券相互关系）→1宽基四态'
+        'note': ('五步漏斗（2026-09-27 第二波修订，用户正式指令）：0窗口（水温×债券相互关系）→1宽基四态'
                  '（阶段底部=一年分位≤30%/窄幅波动=低波/多头排列=50>150>200日线/高位）→2板块生命周期'
                  '（积聚=bottomWatch命中，启动=scan启动确认，主升=20日涨>10%且流入，高潮=高潮风险，'
-                 '退潮=流出+一年分位≥70%；默认只展开积聚+启动）→3个股形态（🔗=与第2步入选板块共振）'
+                 '退潮=流出+一年分位≥70%）；第2步入选=积聚∪启动 且 板块自身形态达标'
+                 '（VCP收缩/底部/杯柄任一+量能萎缩极致10日/60日均额≤0.7，收盘口径近似，两条都要；'
+                 '被卡掉的积聚/启动板块在 dropped 字段如实列出）。'
+                 '→3个股形态双轨：🔗共振轨=属于第2步入选板块（置顶，赢面优先）；'
+                 '⭐优中选优轨=板块不同步但 池内（上证50∪中证500∪沪深300∪科创50∪创业板50，2026-09-27换池去掉中证1000）'
+                 '∩形态达标（VCP收缩型/杯柄型，Stage2过趋势模板）∩聪明钱持续流入（近10缓存日主力净流入为正≥6天），'
+                 '三条缺一不入；两轨都不沾不进第3步榜。'
                  '→4排雷（范围=第2步龙头∪第3步入围∪持仓观察股）。'
                  '状态灯🟢可看/🟡谨慎/🔴停；窗口🔴时下级全部降级为观察。'),
     }
     print(f"  funnel: {path}")
     print(f"  funnel 生命周期分布: "
           f"{ {lc: sum(1 for v in lc_map.values() if v == lc) for lc in ['积聚期','启动期','主升期','高潮期','退潮期','半路'] if lc in lc_map.values()} }")
+    print(f"  funnel 板块形态: 达标{sum(1 for s in sp_map.values() if s['qualified'])}个/"
+          f"{len(sp_map)}个有数据；第2步入选{len(step2_rows)}，形态卡掉{len(dropped2)}"
+          f"（{[d['sector'] for d in dropped2]}）；第3步 共振{n_reson}/精选{n_cherry}/剔除{step3_excluded}")
 
 
 def build_dual_axes(pro, trade_date, data, today_map):
@@ -3214,7 +3331,9 @@ VCP_MEMBERS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 'cache', 'index_members.json')
 VCP_FRESHNESS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                   'cache', 'bottomwatch_first_seen.json')
-VCP_POOL_INDICES = ['000016.SH', '000905.SH', '000300.SH', '000852.SH']  # 上证50∪中证500∪沪深300∪中证1000（2026-08-19 用户口径，去掉中证A500）
+VCP_POOL_INDICES = ['000016.SH', '000905.SH', '000300.SH', '000688.SH', '399673.SZ']
+# 上证50∪中证500∪沪深300∪科创50∪创业板50（2026-09-27 用户正式口径：去掉中证1000，加入科创50/创业板50；
+# 此前为 2026-08-19 口径 上证50∪中证500∪沪深300∪中证1000）。周五刷新调用 4→5 次。
 VCP_MIN_MV = 2_500_000                    # 全池总市值下限 250 亿（daily_basic total_mv，万元）
 VCP_DAILY_WIN, VCP_DAILY_K = 60, 2      # 日线级：近60交易日窗口，摆动高点±2日确认
 VCP_WEEK_WIN, VCP_WEEK_K = 40, 1        # 周线级：近40周窗口，摆动高点±1周确认
@@ -3242,9 +3361,11 @@ def _save_json_cache(path, obj):
 
 
 def ensure_index_members(pro, trade_date):
-    """上证50∪中证500∪沪深300∪中证1000 成分股池：index_weight 取最新月度权重，每周五刷新。
+    """上证50∪中证500∪沪深300∪科创50∪创业板50 成分股池：index_weight 取最新月度权重，每周五刷新。
 
     刷新时一并取 daily_basic 总市值快照（1 次调用），供全池 ≥250 亿市值过滤。
+    （2026-09-27 换池：去中证1000、加科创50/创业板50，周五刷新 4→5 次调用；
+    缓存键不匹配时立即强制刷新，不必等周五。）
     """
     c = _load_json_cache(VCP_MEMBERS_PATH, {})
     friday = datetime.strptime(trade_date, '%Y%m%d').weekday() == 4
@@ -3562,7 +3683,7 @@ def _resample_weekly(rows):
 
 
 def fetch_vcp_stocks(pro, trade_date, data, today_map):
-    """个股级 VCP 精扫：A500∪SZ50∪HS300 成分池 ∩（持仓观察股 ∪ 积聚板块龙头 ∪ vcpWatch信号板块龙头）。
+    """个股级 VCP 精扫：上证50∪中证500∪沪深300∪科创50∪创业板50 成分池 ∩（持仓观察股 ∪ 积聚板块龙头 ∪ vcpWatch信号板块龙头）。
 
     个股日线历史复用 vcp_cache.stock_daily（300 交易日，含周线重采样所需长度）；
     缺历史的票一次性回补 420 日历日后并入缓存，次日起随 vcpWatch 批量日更零成本。
@@ -3735,6 +3856,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             items.append({'code': code,
                           'name': info.get(code, {}).get('name', code),
                           'sector': sec, 'star': meta['star'],
+                          'inPool': bool(meta.get('inPool')),
                           'close': round(close, 2), 'tag': tag,
                           'pattern': pattern, 'platform': pf,
                           'cupHandle': ch if pattern == '杯柄型' else None,
@@ -3753,7 +3875,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'mvDate': mc.get('mvDate'), 'scanned': len(targets),
             'items': items[:15],
             'droppedByTrendTemplate': dropped_tt,
-            'note': '池=上证50∪中证500∪沪深300∪中证1000成分（周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
+            'note': '池=上证50∪中证500∪沪深300∪科创50∪创业板50成分（index_weight周五刷新；2026-09-27用户口径：去中证1000、加科创50/创业板50）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
                     '形态口径（2026-09-26 Minervini 精修）：趋势模板前置——VCP收缩型/杯柄型强制 Stage 2（现价>150/200日线、200日线上行≥1月、50>150>200日线、距52周低点≥+25%、距52周高点≤25%），不过则打回或降级；'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%，不达标项标红）+末次收缩均量<首次（量能递减强制），枢轴=末次收缩高点；'
                     '杯柄型=杯深12~33%（大盘弱势期放宽40%）+柄在杯体上半部+杯柄≥25交易日，枢轴=柄部高点；'

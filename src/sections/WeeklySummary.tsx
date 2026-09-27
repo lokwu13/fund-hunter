@@ -245,6 +245,11 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                 r.lifecycle === '积聚期' ? 'bg-teal-500 text-white' : 'bg-orange-500 text-white'
                               }`}>{r.lifecycle}</Badge>
                               {r.dual && <Badge className="text-[9px] h-4 px-1 border-0 bg-red-500 text-white flex-shrink-0">🔥双档共振</Badge>}
+                              {r.pattern && (
+                                <Badge className="text-[9px] h-4 px-1 border-0 bg-indigo-500 text-white flex-shrink-0" title={r.patternEvidence}>
+                                  {r.pattern}·缩量{(r.volRatio ?? 0).toFixed(2)}
+                                </Badge>
+                              )}
                               <span className="text-[11px] text-slate-500 flex-1 min-w-[120px]">{r.reason}</span>
                               <span className="text-[11px] text-slate-600 flex-shrink-0">
                                 双龙头：{(r.leaders || []).length > 0
@@ -254,7 +259,12 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                             </div>
                           ))}
                           {(!st.rows || st.rows.length === 0) && (
-                            <p className="text-xs text-slate-400 px-2">今日无合乎要求的入围（无积聚期/启动期板块）</p>
+                            <p className="text-xs text-slate-400 px-2">今日无入选（资金流入且板块形态双达标的板块为空）</p>
+                          )}
+                          {(st.dropped || []).length > 0 && (
+                            <p className="text-[10px] text-amber-600 px-2">
+                              ⚠ 资金流入但形态卡掉：{(st.dropped || []).map((d: any) => `${d.sector}（${d.why}）`).join('；')}
+                            </p>
                           )}
                           {st.collapsed && Object.keys(st.collapsed).length > 0 && (
                             <p className="text-[10px] text-slate-400 px-2 pt-1 border-t border-slate-100">
@@ -289,30 +299,51 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                         </div>
                       )}
 
-                      {/* 第3步：个股形态（🔗=与第2步入选板块共振） */}
-                      {st.key === 'vcp' && (
-                        <div className="space-y-1">
-                          {(st.rows || []).map((r) => (
-                            <div key={r.code} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${r.reson ? 'bg-violet-50/70 border border-violet-200' : 'hover:bg-violet-50/50'}`}>
-                              <span className="text-xs font-semibold text-slate-800 flex-shrink-0">
-                                {r.star && <span className="text-pink-500 mr-0.5">★</span>}
-                                {r.mine && '⛔'}
-                                {r.name}
-                              </span>
-                              <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${
-                                r.pattern === '杯柄型' ? 'bg-violet-500 text-white' :
-                                r.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-slate-500 text-white'
-                              }`}>{r.pattern}</Badge>
-                              {r.reson && <Badge className="text-[9px] h-4 px-1 border-0 bg-violet-600 text-white flex-shrink-0">🔗共振·{r.sector}</Badge>}
-                              <span className={`text-xs font-bold flex-shrink-0 ${(r.distPct ?? 99) <= 3 ? 'text-red-500' : 'text-amber-600'}`}>距枢轴{r.distPct}%</span>
-                              <span className="text-[10px] text-slate-500">枢轴{r.pivot} · 失效{r.invalidation}</span>
+                      {/* 第3步：个股形态双轨（🔗共振优先 / ⭐优中选优；两轨不沾不进榜） */}
+                      {st.key === 'vcp' && (() => {
+                        const rows = st.rows || [];
+                        const reson = rows.filter((r: any) => r.track === 'reson');
+                        const cherry = rows.filter((r: any) => r.track === 'cherry');
+                        const renderRow = (r: any) => (
+                          <div key={r.code} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${r.track === 'reson' ? 'bg-violet-50/70 border border-violet-200' : 'hover:bg-amber-50/50'}`}>
+                            <span className="text-xs font-semibold text-slate-800 flex-shrink-0">
+                              {r.star && <span className="text-pink-500 mr-0.5">★</span>}
+                              {r.mine && '⛔'}
+                              {r.name}
+                            </span>
+                            <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${
+                              r.pattern === '杯柄型' ? 'bg-violet-500 text-white' :
+                              r.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-slate-500 text-white'
+                            }`}>{r.pattern}</Badge>
+                            {r.track === 'reson' ? (
+                              <Badge className="text-[9px] h-4 px-1 border-0 bg-violet-600 text-white flex-shrink-0">🔗共振·{r.sector}</Badge>
+                            ) : (
+                              <Badge className="text-[9px] h-4 px-1 border-0 bg-amber-500 text-white flex-shrink-0"
+                                     title="池内（上证50/沪深300/中证500/科创50/创业板50）+形态达标（VCP/杯柄）+聪明钱持续流入">
+                                ⭐精选·主力流入{r.smartMoneyPosDays}/10日
+                              </Badge>
+                            )}
+                            <span className={`text-xs font-bold flex-shrink-0 ${(r.distPct ?? 99) <= 3 ? 'text-red-500' : 'text-amber-600'}`}>距枢轴{r.distPct}%</span>
+                            <span className="text-[10px] text-slate-500">枢轴{r.pivot} · 失效{r.invalidation}</span>
+                          </div>
+                        );
+                        return (
+                          <div className="space-y-2">
+                            <div className="space-y-1">
+                              <p className="text-[10px] font-semibold text-violet-700 px-2">🔗 板块共振轨（第2步入选板块的个股，赢面优先）</p>
+                              {reson.length > 0 ? reson.map(renderRow) : (
+                                <p className="text-xs text-slate-400 px-2">今日无共振个股（入选板块内个股形态未成型）</p>
+                              )}
                             </div>
-                          ))}
-                          {(!st.rows || st.rows.length === 0) && (
-                            <p className="text-xs text-slate-400 px-2">今日无成型形态（VCP/杯柄/底部整理无合乎要求的入围）</p>
-                          )}
-                        </div>
-                      )}
+                            <div className="space-y-1 pt-1.5 border-t border-amber-100">
+                              <p className="text-[10px] font-semibold text-amber-700 px-2">⭐ 优中选优轨（板块不同步但池内+形态达标+聪明钱流入，缺一不入）</p>
+                              {cherry.length > 0 ? cherry.map(renderRow) : (
+                                <p className="text-xs text-slate-400 px-2">今日无精选个股</p>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })()}
 
                       {/* 第4步：排雷 */}
                       {st.key === 'mine' && (
