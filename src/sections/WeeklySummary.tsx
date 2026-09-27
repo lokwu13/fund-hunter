@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Activity, Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart, ChevronRight, Crosshair } from 'lucide-react';
+import { Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from 'lucide-react';
 import { useFundData } from '@/hooks/useFundData';
 
 const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
@@ -102,28 +102,11 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
 
   // 五路资金态度条（fundSources）已于 2026-09-27 按用户指令删除
 
-  // ====== 每日评语速览：聚合四大栏目结论 ======
-  const mt = data.bondData?.marginTrading;
-  const mtComment = mt?.comment || '';
-  const mtTail = mtComment.includes('水温')
-    ? mtComment.slice(mtComment.lastIndexOf('水温'))
-    : '';
-  const ntText = (data.nationalTeamComment || '').split('。').filter(Boolean)[0];
-  const dualNote = data.bottomWatch?.dualConfirmNote || '';
-  const act = data.actionableSectors;
-  // 并联双轴：永远渲染（2026-08-29 紧急修复——数据键缺失/为空时卡片不许塌陷）
+  // ====== 五步漏斗（2026-09-27 重构：速览/双轴/VCP/排雷四卡已并入漏斗；此处仅保留漏斗仍用的变量） ======
+  const mw = data.mineWatch;
   const axes = data.dualAxes;
-  const axesDate = axes?.trade_date || '';
-  const trendSectors = axes?.trend?.sectors ?? [];
   const shortSectors = axes?.short?.sectors ?? [];
   const shortConcepts = axes?.short?.concepts ?? [];
-  const vcpItems = data.vcpStocks?.items ?? [];
-  const mw = data.mineWatch;
-  const broadEtfs = axes?.trend?.broadEtfs ?? [];
-  const broadVcpItems = data.broadVcp?.items ?? [];
-  const broadDigest = data.broadVcpDigest || '';
-  const lowVolText = data.lowVolDigest || '';
-  const hasDigest = mtTail || ntText || sectors.length > 0 || dualNote || lowVolText || broadDigest;
 
   return (
     <div className="space-y-4">
@@ -146,352 +129,222 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
         </div>
       </div>
 
-      {/* ====== 每日评语速览（聚合四大栏目结论，点击跳来源） ====== */}
-      {hasDigest && (
-        <Card className="border-emerald-300 bg-gradient-to-r from-emerald-50/60 via-white to-teal-50/60 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2.5">
-              <Crosshair className="w-4 h-4 text-emerald-600" />
-              <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-emerald-600 text-white">第0步·水温</Badge>
-              {data.longWindow && (
-                <Badge
-                  className={`text-[10px] h-[18px] px-1.5 border-0 ${
-                    data.longWindow.window === 'open' ? 'bg-red-500 text-white' :
-                    data.longWindow.window === 'closed' ? 'bg-slate-500 text-white' : 'bg-amber-400 text-white'
-                  }`}
-                  title={data.longWindow.reason + '（层级服从：水温>宽基>板块>个股）'}
-                >
-                  做多窗口{data.longWindow.window === 'open' ? '·开' : data.longWindow.window === 'closed' ? '·关' : '·半窗'}
-                </Badge>
-              )}
-              <h3 className="text-sm font-bold text-slate-800">每日评语速览</h3>
-              <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200">点击跳转来源栏目</Badge>
-            </div>
-            <div className="space-y-1.5">
-              {mtTail && (
-                <button
-                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-emerald-50 transition-colors"
-                  onClick={() => onNavigate?.('bonds', 'bond-margin')}
-                >
-                  <Badge className={`text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 ${
-                    mt?.temp?.includes('暖') ? 'bg-red-500 text-white' :
-                    mt?.temp?.includes('冷') ? 'bg-blue-500 text-white' : 'bg-amber-400 text-white'
-                  }`}>债券水温{mt?.temp ? ` ${mt.temp}` : ''}</Badge>
-                  <span className="text-xs text-slate-600 leading-snug flex-1">{mtTail}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
-                </button>
-              )}
-              {ntText && (
-                <button
-                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-red-50 transition-colors"
-                  onClick={() => onNavigate?.('national', 'nt-comment')}
-                >
-                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-red-600 text-white">宽基短评</Badge>
-                  <span className="text-xs text-slate-600 leading-snug flex-1">{ntText}。</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
-                </button>
-              )}
-              {sectors.length > 0 && (
-                <button
-                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-indigo-50 transition-colors"
-                  onClick={() => onNavigate?.('sectors', 'sector-commentary')}
-                >
-                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-indigo-500 text-white">板块短评</Badge>
-                  <span className="text-xs text-slate-600 leading-snug flex-1">
-                    {sectors.slice(0, 3).map(s => `${s.name}：${s.comment}`).join('；')}
-                    {sectors.length > 3 ? ` 等${sectors.length}条` : ''}
-                  </span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
-                </button>
-              )}
-              {dualNote && (
-                <button
-                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-teal-50 transition-colors"
-                  onClick={() => onNavigate?.('tools', 'bottom-watch')}
-                >
-                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-teal-500 text-white">双确认</Badge>
-                  <span className="text-xs text-slate-600 leading-snug flex-1">{dualNote}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
-                </button>
-              )}
-              {lowVolText && (
-                <button
-                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-cyan-50 transition-colors"
-                  onClick={() => onNavigate?.('national', 'index-vol')}
-                >
-                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-cyan-600 text-white">宽基低波</Badge>
-                  <span className="text-xs text-slate-600 leading-snug flex-1">{lowVolText}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
-                </button>
-              )}
-              {broadDigest && (
-                <button
-                  className="w-full flex items-start gap-2 text-left rounded-lg px-2.5 py-1.5 hover:bg-violet-50 transition-colors"
-                  onClick={() => onNavigate?.('tools')}
-                >
-                  <Badge className="text-[10px] h-[18px] px-1.5 mt-0.5 flex-shrink-0 border-0 bg-violet-600 text-white">宽基形态</Badge>
-                  <span className="text-xs text-slate-600 leading-snug flex-1">{broadDigest}</span>
-                  <ChevronRight className="w-3.5 h-3.5 text-slate-300 mt-0.5 flex-shrink-0" />
-                </button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* ====== 并联双轴：趋势轴（周线/日线）∥ 短线轴（60分钟/日线）——永远渲染，无入围显示空态 ====== */}
-      {(
-        <div>
-          <p className="text-[10px] text-slate-400 mb-1.5 pl-1">两轴并联·互为补充（非先后顺序）{axesDate ? ` · ${axesDate}` : ''} · 排雷覆盖两轴全部标的</p>
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* ---- 趋势轴 ---- */}
-            <Card
-              className="border-orange-200 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => onNavigate?.('tools', 'bottom-watch')}
-            >
+      {/* ====== 五步漏斗（2026-09-27 用户正式指令重构：0窗口→1宽基→2板块→3个股→4排雷） ====== */}
+      {(() => {
+        const fn = data.funnel;
+        const lampColor = (l?: string) =>
+          l === '🟢' ? 'bg-emerald-500' : l === '🔴' ? 'bg-red-500' : 'bg-amber-400';
+        const lampBorder = (l?: string) =>
+          l === '🟢' ? 'border-emerald-300' : l === '🔴' ? 'border-red-300' : 'border-amber-300';
+        const winClosed = fn?.window === 'closed';
+        if (!fn || !fn.steps) {
+          return (
+            <Card className="border-slate-200 shadow-sm">
               <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-orange-500 text-white">第1步·趋势轴</Badge>
-                  <h3 className="text-sm font-bold text-slate-800">周线/日线级机会</h3>
-                  <span className="text-[10px] text-slate-400">
-                    {trendSectors.length > 0
-                      ? `${trendSectors.length} 板块 · ${trendSectors.reduce((n, s) => n + (s.leaders || []).length, 0)} 龙头`
-                      : '今日无合乎要求的入围'}
+                <p className="text-xs text-slate-400">五步漏斗数据积累中（等待晚间数据任务生成 funnel 块）</p>
+              </CardContent>
+            </Card>
+          );
+        }
+        const navFor = (key: string) =>
+          key === 'window' ? () => onNavigate?.('bonds', 'bond-margin')
+          : key === 'broad' ? () => onNavigate?.('national')
+          : key === 'sector' ? () => onNavigate?.('tools', 'bottom-watch')
+          : key === 'vcp' ? () => onNavigate?.('tools')
+          : undefined;
+        return (
+          <div>
+            {/* 当日路径总结（点击跳对应步骤） */}
+            <div className="mb-3 rounded-lg border border-indigo-200 bg-gradient-to-r from-indigo-50/70 via-white to-emerald-50/60 px-3 py-2 shadow-sm">
+              <p className="text-[10px] text-slate-400 mb-1">当日路径 · 点击跳步骤 · {fn.trade_date}</p>
+              <div className="flex items-center gap-1 flex-wrap">
+                {fn.steps.map((st, i) => (
+                  <span key={st.key} className="flex items-center gap-1">
+                    {i > 0 && <span className="text-slate-300 text-xs">→</span>}
+                    <button
+                      className={`text-[11px] font-semibold rounded-full px-2 py-0.5 border ${lampBorder(st.lamp)} bg-white hover:bg-indigo-50 transition-colors`}
+                      onClick={() => document.getElementById(`funnel-step-${st.n}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                    >
+                      {st.lamp} {st.title}
+                    </button>
                   </span>
-                </div>
-                {act && act.items.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-2">
-                    {act.items.map((it) => (
-                      <div key={it.sector} className="rounded-lg border border-orange-200 bg-orange-50/60 px-2 py-1">
-                        <span className="text-[11px] font-semibold text-orange-700">能投·{it.subSector || it.sector}</span>
-                      </div>
-                    ))}
+                ))}
+              </div>
+              <p className="text-[11px] text-slate-600 mt-1 font-medium">{fn.path}</p>
+            </div>
+
+            {/* 五步卡片（编号圆点+竖线串联） */}
+            <div className="space-y-3">
+              {fn.steps.map((st) => (
+                <div key={st.key} id={`funnel-step-${st.n}`} className="relative pl-10 scroll-mt-20">
+                  {st.n < 4 && <div className="absolute left-[19px] top-9 -bottom-3 w-0.5 bg-slate-200" />}
+                  <div className={`absolute left-2 top-3 w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold text-white shadow-sm ${lampColor(st.lamp)}`}>
+                    {st.n}
                   </div>
-                )}
-                <div className="space-y-1.5">
-                  {trendSectors.length > 0 ? (
-                    trendSectors.map((s) => (
-                      <div key={s.sector} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${s.fromActionable ? 'bg-orange-50/70 border border-orange-200' : 'hover:bg-orange-50/50'}`}>
-                        <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{s.sector}</span>
-                        {s.fromActionable && (
-                          <Badge className="text-[9px] h-4 px-1 border-0 bg-orange-500 text-white flex-shrink-0">能投名单</Badge>
+                  <Card
+                    className={`${lampBorder(st.lamp)} shadow-sm ${winClosed && st.n > 0 ? 'opacity-60 grayscale' : ''} ${navFor(st.key) ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}
+                    onClick={navFor(st.key)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                        <span className="text-base leading-none">{st.lamp}</span>
+                        <Badge className={`text-[10px] h-[18px] px-1.5 border-0 text-white ${lampColor(st.lamp)}`}>第{st.n}步</Badge>
+                        <h3 className="text-sm font-bold text-slate-800">{st.title}</h3>
+                        <span className="text-xs font-semibold text-slate-600">{st.conclusion}</span>
+                        {winClosed && st.n > 0 && (
+                          <Badge className="text-[9px] h-4 px-1.5 border-0 bg-slate-400 text-white">窗口未开·信号仅观察</Badge>
                         )}
-                        <Badge variant="outline" className="text-[9px] h-4 px-1 border-orange-200 text-orange-600 flex-shrink-0">{s.source}</Badge>
-                        <span className="text-[11px] text-slate-500">
-                          {(s.leaders || []).map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')}
-                        </span>
                       </div>
-                    ))
-                  ) : (
-                    <p className="text-xs text-slate-400 px-2">今日无合乎要求的入围（能投名单、底部积聚、吸筹观察均为空）</p>
-                  )}
-                </div>
-                {/* ---- 宽基 ETF 组（指数位置层 × 份额资金 × 波动率） ---- */}
-                {broadEtfs.length > 0 && (
-                  <div className="mt-2 pt-2 border-t border-orange-100">
-                    <p className="text-[10px] font-semibold text-orange-700 pl-2 mb-1">宽基 ETF（指数位置×份额资金×波动率）</p>
-                    <div className="space-y-1">
-                      {broadEtfs.map((b) => (
-                        <div key={b.indexCode} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${b.status === '高位·仅展示' ? 'opacity-50' : b.status === '✅趋势候选' ? 'bg-emerald-50/70 border border-emerald-200' : 'hover:bg-orange-50/50'}`}>
-                          <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{b.indexName}</span>
-                          <span className="text-[10px] text-slate-400 flex-shrink-0">{b.etfCode.split('.')[0]}</span>
-                          <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 ${
-                            b.status === '✅趋势候选' ? 'bg-emerald-500 text-white' :
-                            b.status === '高位·仅展示' ? 'bg-slate-400 text-white' :
-                            b.tier === '低位' ? 'bg-amber-500 text-white' : 'bg-sky-500 text-white'
-                          }`}>{b.status}</Badge>
-                          <span className="text-[10px] text-slate-500">
-                            距60日高{b.distHigh60}% · 20日{b.ret20 != null ? `${b.ret20 >= 0 ? '+' : ''}${b.ret20}%` : '—'} · {b.shareNote}{b.hvPct1y != null ? ` · 波动分位${b.hvPct1y}%` : ''}
-                          </span>
+                      <p className="text-[11px] text-slate-400 mb-2">{st.guide}</p>
+
+                      {/* 第0步：窗口判定依据 */}
+                      {st.key === 'window' && (
+                        <p className="text-[11px] text-slate-500 bg-slate-50 rounded-lg px-2.5 py-1.5">{st.reason}</p>
+                      )}
+
+                      {/* 第1步：宽基四态 + ETF 买点 */}
+                      {st.key === 'broad' && (
+                        <div className="space-y-1">
+                          {(st.rows || []).map((r) => (
+                            <div key={r.indexCode} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-indigo-50/50">
+                              <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{r.indexName}</span>
+                              <span className="text-[10px] text-slate-400 flex-shrink-0">{(r.etfCode || '').split('.')[0]}</span>
+                              <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 ${
+                                r.label4 === '阶段底部' ? 'bg-emerald-500 text-white' :
+                                r.label4 === '多头排列' ? 'bg-red-500 text-white' :
+                                r.label4 === '窄幅波动' ? 'bg-sky-500 text-white' :
+                                r.label4 === '高位' ? 'bg-slate-500 text-white' : 'bg-slate-300 text-white'
+                              }`}>{r.label4}</Badge>
+                              <Badge variant="outline" className="text-[9px] h-4 px-1 border-indigo-200 text-indigo-600 flex-shrink-0">{r.state}</Badge>
+                              <span className="text-[10px] text-slate-500">
+                                {r.pct1y != null ? `一年分位${r.pct1y}%` : ''}{r.maAlign ? ` · ${r.maAlign}` : ''}
+                                {r.pivot != null ? ` · 枢轴${r.pivot} · 距${r.distPct}% · 失效${r.invalidation}` : ''}
+                              </span>
+                            </div>
+                          ))}
+                          {(!st.rows || st.rows.length === 0) && (
+                            <p className="text-xs text-slate-400 px-2">今日无合乎要求的入围</p>
+                          )}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {trendSectors.some((s) => (s.leaders || []).some((l) => l.mine)) && (
-                  <p className="text-[10px] text-red-500 mt-1.5 pl-2">⛔ = 排雷命中，详见下方第4步·排雷</p>
-                )}
-                {axes?.trend?.note && <p className="text-[10px] text-slate-400 mt-2">{axes.trend.note}</p>}
-              </CardContent>
-            </Card>
-
-            {/* ---- 短线轴 ---- */}
-            <Card
-              className="border-rose-200 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => onNavigate?.('tools', 'bottom-watch')}
-            >
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-rose-500 text-white">第2步·短线轴</Badge>
-                  <h3 className="text-sm font-bold text-slate-800">60分钟/日线级机会</h3>
-                  <span className="text-[10px] text-slate-400">
-                    {shortConcepts.length > 0 || shortSectors.length > 0
-                      ? `${shortConcepts.length} 概念 · ${shortSectors.length} 强势板块 · ${[...shortSectors, ...shortConcepts].reduce((n, g) => n + (g.leaders || []).length, 0)} 龙头`
-                      : '今日无合乎要求的入围'}
-                  </span>
-                </div>
-                <div className="space-y-1.5">
-                  {shortSectors.length > 0 && (
-                    <p className="text-[10px] font-semibold text-rose-700 pl-2">短线强势板块（启动确认·已排除高潮/双头/高位）</p>
-                  )}
-                  {shortSectors.map((s) => (
-                    <div key={s.sector} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-rose-50/60">
-                      <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{s.sector}</span>
-                      <Badge variant="outline" className="text-[9px] h-4 px-1 border-rose-200 text-rose-600 flex-shrink-0">{s.status}</Badge>
-                      {s.trendOverlap && (
-                        <Badge variant="outline" className="text-[9px] h-4 px-1 border-orange-200 text-orange-600 flex-shrink-0">兼趋势轴</Badge>
                       )}
-                      <span className="text-[10px] text-slate-400 flex-shrink-0">5日{s.pct5d != null ? `${s.pct5d >= 0 ? '+' : ''}${s.pct5d}%` : ''}</span>
-                      <span className="text-[11px] text-slate-500">
-                        {(s.leaders || []).map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')}
-                      </span>
-                    </div>
-                  ))}
-                  {shortConcepts.length > 0 && (
-                    <p className="text-[10px] font-semibold text-rose-700 pt-1 pl-2">题材活跃概念（与能投名单独立，需自行甄别）</p>
-                  )}
-                  {shortConcepts.map((c) => (
-                    <div key={c.name} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-rose-50/60">
-                      <span className="text-xs font-semibold text-rose-800 flex-shrink-0">{c.name}</span>
-                      <span className="text-[11px] font-bold text-red-500 flex-shrink-0">+{c.pctChange}%</span>
-                      <span className="text-[10px] text-slate-400 flex-shrink-0">市值{c.totalMvY}亿·{c.upNum}家涨</span>
-                      <span className="text-[11px] text-slate-500">
-                        {(c.leaders || []).map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')}
-                      </span>
-                    </div>
-                  ))}
-                  {shortSectors.length === 0 && shortConcepts.length === 0 && (
-                    <p className="text-xs text-slate-400 px-2">今日无合乎要求的入围（无启动确认板块与活跃概念）</p>
-                  )}
+
+                      {/* 第2步：板块生命周期分级（默认只展开积聚期+启动期） */}
+                      {st.key === 'sector' && (
+                        <div className="space-y-1">
+                          {(st.rows || []).map((r) => (
+                            <div key={r.sector} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-orange-50/60">
+                              <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{r.sector}</span>
+                              <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 ${
+                                r.lifecycle === '积聚期' ? 'bg-teal-500 text-white' : 'bg-orange-500 text-white'
+                              }`}>{r.lifecycle}</Badge>
+                              {r.dual && <Badge className="text-[9px] h-4 px-1 border-0 bg-red-500 text-white flex-shrink-0">🔥双档共振</Badge>}
+                              <span className="text-[11px] text-slate-500 flex-1 min-w-[120px]">{r.reason}</span>
+                              <span className="text-[11px] text-slate-600 flex-shrink-0">
+                                双龙头：{(r.leaders || []).length > 0
+                                  ? r.leaders.map((l: any) => `${l.mine ? '⛔' : ''}${l.name}${(l.pctChg ?? 0) >= 0 ? '+' : ''}${l.pctChg}%`).join('、')
+                                  : '暂无（待数据）'}
+                              </span>
+                            </div>
+                          ))}
+                          {(!st.rows || st.rows.length === 0) && (
+                            <p className="text-xs text-slate-400 px-2">今日无合乎要求的入围（无积聚期/启动期板块）</p>
+                          )}
+                          {st.collapsed && Object.keys(st.collapsed).length > 0 && (
+                            <p className="text-[10px] text-slate-400 px-2 pt-1 border-t border-slate-100">
+                              其余板块（折叠）：{Object.entries(st.collapsed).map(([k, v]) => `${k}${v}`).join(' · ')}（生命周期：积聚/启动/主升/高潮/退潮/半路，仅展开积聚+启动）
+                            </p>
+                          )}
+                          {/* 短线题材轴（保留自原并联双轴短线轴，与主线独立） */}
+                          {(shortSectors.length > 0 || shortConcepts.length > 0) && (
+                            <div className="mt-2 pt-2 border-t border-rose-100">
+                              <p className="text-[10px] font-semibold text-rose-600 px-2 mb-1">短线题材（与主线独立，需自行甄别）</p>
+                              {shortSectors.map((s) => (
+                                <div key={s.sector} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-rose-50/60">
+                                  <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{s.sector}</span>
+                                  <Badge variant="outline" className="text-[9px] h-4 px-1 border-rose-200 text-rose-600 flex-shrink-0">{s.status}</Badge>
+                                  <span className="text-[11px] text-slate-500">
+                                    {(s.leaders || []).map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')}
+                                  </span>
+                                </div>
+                              ))}
+                              {shortConcepts.map((c) => (
+                                <div key={c.name} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-rose-50/60">
+                                  <span className="text-xs font-semibold text-rose-800 flex-shrink-0">{c.name}</span>
+                                  <span className="text-[11px] font-bold text-red-500 flex-shrink-0">+{c.pctChange}%</span>
+                                  <span className="text-[10px] text-slate-400 flex-shrink-0">市值{c.totalMvY}亿·{c.upNum}家涨</span>
+                                  <span className="text-[11px] text-slate-500">
+                                    {(c.leaders || []).map((l) => `${l.mine ? '⛔' : ''}${l.name}${l.pctChg >= 0 ? '+' : ''}${l.pctChg}%`).join('、')}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* 第3步：个股形态（🔗=与第2步入选板块共振） */}
+                      {st.key === 'vcp' && (
+                        <div className="space-y-1">
+                          {(st.rows || []).map((r) => (
+                            <div key={r.code} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${r.reson ? 'bg-violet-50/70 border border-violet-200' : 'hover:bg-violet-50/50'}`}>
+                              <span className="text-xs font-semibold text-slate-800 flex-shrink-0">
+                                {r.star && <span className="text-pink-500 mr-0.5">★</span>}
+                                {r.mine && '⛔'}
+                                {r.name}
+                              </span>
+                              <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${
+                                r.pattern === '杯柄型' ? 'bg-violet-500 text-white' :
+                                r.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-slate-500 text-white'
+                              }`}>{r.pattern}</Badge>
+                              {r.reson && <Badge className="text-[9px] h-4 px-1 border-0 bg-violet-600 text-white flex-shrink-0">🔗共振·{r.sector}</Badge>}
+                              <span className={`text-xs font-bold flex-shrink-0 ${(r.distPct ?? 99) <= 3 ? 'text-red-500' : 'text-amber-600'}`}>距枢轴{r.distPct}%</span>
+                              <span className="text-[10px] text-slate-500">枢轴{r.pivot} · 失效{r.invalidation}</span>
+                            </div>
+                          ))}
+                          {(!st.rows || st.rows.length === 0) && (
+                            <p className="text-xs text-slate-400 px-2">今日无成型形态（VCP/杯柄/底部整理无合乎要求的入围）</p>
+                          )}
+                        </div>
+                      )}
+
+                      {/* 第4步：排雷 */}
+                      {st.key === 'mine' && (
+                        <div className="space-y-1.5">
+                          {(st.rows || []).length > 0 ? (
+                            (st.rows || []).map((m) => (
+                              <div key={m.code} className="flex items-start gap-2 rounded-lg border border-red-200 bg-white/80 px-2.5 py-1.5">
+                                <span className="text-xs font-bold text-red-700 flex-shrink-0 mt-0.5">⛔{m.name}</span>
+                                <span className="flex gap-1 flex-shrink-0 mt-0.5">
+                                  {(m.types || []).map((t: any) => (
+                                    <Badge key={t} className={`text-[9px] h-4 px-1 border-0 ${
+                                      t === '资金' ? 'bg-orange-500 text-white' :
+                                      t === '消息' ? 'bg-rose-500 text-white' : 'bg-purple-500 text-white'
+                                    }`}>{t}</Badge>
+                                  ))}
+                                </span>
+                                <span className="text-[11px] text-slate-600 leading-snug flex-1">
+                                  {(m.details || []).map((dd: any) => `${dd.detail}${dd.date ? `（${dd.date}）` : ''}`).join('；')}
+                                </span>
+                                <span className="text-[9px] text-slate-400 flex-shrink-0 mt-0.5">{m.src}</span>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-xs text-emerald-600 font-medium px-2">✅ 入围标的今日无雷（命中才上榜，不凑数）</p>
+                          )}
+                          {mw?.thresholds && <p className="text-[10px] text-slate-400">{mw.thresholds}</p>}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
                 </div>
-                {[...shortSectors, ...shortConcepts].some((g) => (g.leaders || []).some((l) => l.mine)) && (
-                  <p className="text-[10px] text-red-500 mt-1.5 pl-2">⛔ = 排雷命中，详见下方第4步·排雷</p>
-                )}
-                {axes?.short?.note && <p className="text-[10px] text-slate-400 mt-2">{axes.short.note}</p>}
-              </CardContent>
-            </Card>
+              ))}
+            </div>
+            {fn.note && <p className="text-[10px] text-slate-400 mt-2 pl-10">{fn.note}</p>}
           </div>
-        </div>
-      )}
+        );
+      })()}
 
-      {/* ====== VCP 形态精扫（永远渲染，无命中显示空态） ====== */}
-      {(
-        <Card
-          className="border-violet-300 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-          onClick={() => onNavigate?.('tools')}
-        >
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
-              <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-violet-500" />
-                <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-violet-500 text-white">第3步·形态确认</Badge>
-                VCP 形态精扫 · 收缩/杯柄/底部整理
-              </h3>
-              <Badge variant="outline" className="text-[10px] bg-violet-50 text-violet-700 border-violet-200">
-                {data.vcpStocks ? `${data.vcpStocks.trade_date} · 池${data.vcpStocks.poolSize}只 · 点击看明细` : '点击看明细'}
-              </Badge>
-            </div>
-            {vcpItems.length > 0 ? (
-              <div className="space-y-1">
-                {vcpItems.slice(0, 6).map((it) => (
-                  <div key={it.code} className="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-violet-50/60">
-                    <span className="text-xs font-semibold text-slate-800 flex-shrink-0">
-                      {it.star && <span className="text-pink-500 mr-0.5">★</span>}
-                      {it.name}
-                    </span>
-                    <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${
-                      it.pattern === '杯柄型' ? 'bg-violet-500 text-white' :
-                      it.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' :
-                      it.pattern === '底部整理' ? 'bg-slate-500 text-white' : 'bg-teal-500 text-white'
-                    }`}>{it.pattern}</Badge>
-                    <span className={`text-xs font-bold flex-shrink-0 ${
-                      (it.distMain ?? 99) <= 3 ? 'text-red-500' : 'text-amber-600'
-                    }`}>距枢轴{it.distMain}%</span>
-                    <span className="text-[11px] text-slate-500 truncate flex-1">{it.advice}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-xs text-slate-400 px-2">今日无成型形态（VCP/杯柄/底部整理无合乎要求的入围）</p>
-            )}
-            {/* ---- 宽基 VCP 分区（9 大宽基同口径监测，成型未突破也展示盯突破） ---- */}
-            {broadVcpItems.length > 0 && (
-              <div className="mt-2 pt-2 border-t border-violet-100">
-                <p className="text-[10px] font-semibold text-violet-700 pl-2 mb-1">宽基（指数×代表ETF，形态成型未突破也盯）</p>
-                <div className="space-y-1">
-                  {broadVcpItems.map((b) => (
-                    <div key={b.indexCode} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${b.state === '无形态' ? 'opacity-50' : 'hover:bg-violet-50/60'}`}>
-                      <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{b.indexName}</span>
-                      <span className="text-[10px] text-slate-400 flex-shrink-0">{b.etfCode.split('.')[0]}</span>
-                      {b.pattern ? (
-                        <>
-                          <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${
-                            b.pattern === '杯柄型' ? 'bg-violet-500 text-white' : 'bg-teal-500 text-white'
-                          }`}>{b.pattern}</Badge>
-                          <Badge variant="outline" className={`text-[9px] h-4 px-1 flex-shrink-0 ${
-                            b.state === '已突破' ? 'border-red-300 text-red-600' :
-                            b.state === '临近买点' ? 'border-amber-300 text-amber-600' :
-                            'border-violet-300 text-violet-600'
-                          }`}>{b.state === '未突破·观察' ? '未突破·盯突破' : b.state}</Badge>
-                          <span className="text-[10px] text-slate-500">
-                            {b.days}日平台 · 枢轴{b.pivot} · 距枢轴{b.distPct}%
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-[10px] text-slate-400">无形态</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            <p className="text-[10px] text-slate-400 mt-2">
-              建议=水温×板块合适度，仅关注优先级参考，不构成操作建议 · VCP收缩型=≥3次严格递减收缩（容差10%）+末次收缩均量&lt;首次（橙色徽章，优先级最高），趋势模板（Stage 2）前置 · 底部整理=Stage 1 基底（未过趋势模板）的窄幅缩量平台，杯柄型需杯深12~33%+柄在杯体上半部
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* ====== 第4步·排雷（永远渲染，无雷/无数据都明示） ====== */}
-      {(
-        <Card className="border-red-300 bg-gradient-to-r from-red-50/70 via-white to-red-50/40 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <Badge className="text-[10px] h-[18px] px-1.5 border-0 bg-red-600 text-white">第4步·排雷</Badge>
-              <h3 className="text-sm font-bold text-red-800">入围标的排雷</h3>
-              <span className="text-[10px] text-slate-400">
-                {mw ? `${mw.trade_date} · 已扫 ${mw.checked} 只（趋势轴∪短线轴全部龙头∪VCP∪自选）` : '数据未生成'}
-              </span>
-            </div>
-            {!mw ? (
-              <p className="text-xs text-slate-400">排雷数据未生成（等待晚间数据任务）</p>
-            ) : (mw.items || []).length > 0 ? (
-              <div className="space-y-1.5">
-                {mw.items.map((m) => (
-                  <div key={m.code} className="flex items-start gap-2 rounded-lg border border-red-200 bg-white/80 px-2.5 py-1.5">
-                    <span className="text-xs font-bold text-red-700 flex-shrink-0 mt-0.5">⛔{m.name}</span>
-                    <span className="flex gap-1 flex-shrink-0 mt-0.5">
-                      {(m.types || []).map((t) => (
-                        <Badge key={t} className={`text-[9px] h-4 px-1 border-0 ${
-                          t === '资金' ? 'bg-orange-500 text-white' :
-                          t === '消息' ? 'bg-rose-500 text-white' : 'bg-purple-500 text-white'
-                        }`}>{t}</Badge>
-                      ))}
-                    </span>
-                    <span className="text-[11px] text-slate-600 leading-snug flex-1">
-                      {(m.details || []).map((d) => `${d.detail}${d.date ? `（${d.date}）` : ''}`).join('；')}
-                    </span>
-                    <span className="text-[9px] text-slate-400 flex-shrink-0 mt-0.5">{m.src}</span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-xs text-emerald-600 font-medium">✅ 入围标的今日无雷（已扫 {mw.checked} 只，命中才上榜，不凑数）</p>
-            )}
-            {mw?.thresholds && <p className="text-[10px] text-slate-400 mt-2">{mw.thresholds}</p>}
-          </CardContent>
-        </Card>
-      )}
+      {/* 细分指数点评 */}
 
       {/* 细分指数点评 */}
       {sectors.length > 0 && (

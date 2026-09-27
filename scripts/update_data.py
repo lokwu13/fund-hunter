@@ -1485,6 +1485,9 @@ def build_long_window(data):
     - closed：水温🔴冷，或 上证50/沪深300/中证500 全部处于 高位发散/破位；
     - open：水温🟢暖 且三只中至少一只处于 临近枢轴/突破确认；
     - half：其余情形。
+    债券相互关系（2026-09-27 用户拍板纳入）：10Y 收益率近 1 月变动 ≥+10bp
+    =资金趋紧，窗口降一档（open→half、half→closed）；≤-10bp=趋松仅作加分备注，
+    不主动升档（升档仍需水温+宽基自身满足）。
     window=closed 时板块能投名单/个股 VCP 榜照常计算但前端标灰降级（信号仅观察）；
     half 时正常展示+顶部"半窗"提示；open 时全量高亮。
     """
@@ -1502,8 +1505,21 @@ def build_long_window(data):
         w = 'open'
     else:
         w = 'half'
+    # 债券相互关系：收益率快速上行=资金紧，降一档；快速下行=资金松，仅备注
+    y10_1m = (((data.get('bondData') or {}).get('stats') or {}).get('1m_change') or {}).get('y10')
+    bond_note = ''
+    if y10_1m is not None and y10_1m >= 10:
+        if w == 'open':
+            w = 'half'
+        elif w == 'half':
+            w = 'closed'
+        bond_note = f'10Y收益率近1月{y10_1m:+.0f}bp快速上行=资金趋紧，窗口降一档'
+    elif y10_1m is not None and y10_1m <= -10:
+        bond_note = f'10Y收益率近1月{y10_1m:+.0f}bp下行=资金面偏松（加分备注，不主动升档）'
     reason_parts = [f"水温{temp or '—'}（{verdict or '—'}）",
                     '宽基形态：' + '，'.join(f"{names[c]}{states[c]}" for c in BROAD_TOP3)]
+    if bond_note:
+        reason_parts.append(bond_note)
     if w == 'closed':
         reason_parts.append('大级别无做多窗口，下级信号降级为观察')
     elif w == 'open':
@@ -1514,13 +1530,221 @@ def build_long_window(data):
         'window': w, 'temp': temp, 'verdict': verdict,
         'broadStates': {names[c]: states[c] for c in BROAD_TOP3},
         'nearPivot': bool(near), 'allHigh': bool(all_high),
+        'bondY10_1m': y10_1m, 'bondNote': bond_note,
         'reason': '；'.join(reason_parts),
         'note': ('层级服从（2026-09-26 用户拍板）：水温>宽基>板块>个股；'
                  'closed=水温🔴冷或50/300/500全部高位发散/破位；open=水温🟢暖且至少一只临近枢轴/突破确认；其余half；'
+                 '债券规则（2026-09-27）：10Y收益率近1月≥+10bp=资金紧、窗口降一档，≤-10bp=偏松仅备注不升档；'
                  'closed 时板块/个股信号照常计算但标灰降级"窗口未开，信号仅观察"，half 挂半窗提示，open 全量高亮'),
     }
     print(f"  longWindow: {w}（水温{temp or '—'}；"
-          f"{'，'.join(names[c] + states[c] for c in BROAD_TOP3)}）")
+          f"{'，'.join(names[c] + states[c] for c in BROAD_TOP3)}"
+          f"{('；' + bond_note) if bond_note else ''}）")
+
+
+def build_funnel(data):
+    """总览五步漏斗结论汇总（2026-09-27 用户正式指令：0窗口→1宽基→2板块→3个股→4排雷）。
+
+    纯汇总层：只读既有块（longWindow/broadTrend/broadVcp/bottomWatch/sectorScan/
+    sectorFlows/vcpStocks/mineWatch/dualAxes/actionableSectors）+ 本地缓存
+    （宽基指数日线、sector_history），零新增 API 调用。
+    板块生命周期（2026-09-27 用户拍板规则）：
+      积聚期=bottomWatch 命中；启动期=sectorScan 启动确认；高潮期=scan 高潮/双头风险；
+      退潮期=近5日净流出 且 一年价格分位≥70%；主升期=近20日涨>10% 且 近5日净流入；
+      其余=半路。优先级：积聚>启动>高潮>退潮>主升>半路。
+    第2步入选=积聚期∪启动期（形态低位+资金持续流入双条件已由原信号保证）。
+    """
+    hist = _load_sector_history()
+    flows = {i['name']: i for i in (data.get('sectorFlows') or {}).get('items') or []}
+    bw_map = {i['sector']: i for i in (data.get('bottomWatch') or {}).get('items') or []}
+    scan_map = {i['sector']: i for i in (data.get('sectorScan') or {}).get('items') or []}
+    mine_codes = {m['code'] for m in (data.get('mineWatch') or {}).get('items') or []}
+
+    def _sector_stats(name):
+        """sector_history 逐日序列 → (ret20%, 一年价格分位%)（复利近似）。"""
+        rows = _history_series(hist, name)
+        if len(rows) < 30:
+            return None, None
+        rets = [r[2] for r in rows]
+        level, levels = 1.0, []
+        for r in rets[-250:]:
+            level *= (1 + r / 100.0)
+            levels.append(level)
+        ret20 = round((levels[-1] / levels[-21] - 1) * 100, 1) if len(levels) >= 21 else None
+        pct1y = _pct_rank100(levels, levels[-1])
+        return ret20, pct1y
+
+    def _lifecycle(name):
+        if name in bw_map:
+            return '积聚期'
+        st = (scan_map.get(name) or {}).get('status') or ''
+        if '启动' in st:
+            return '启动期'
+        if '高潮' in st or '双头' in st:
+            return '高潮期'
+        fl = flows.get(name) or {}
+        ret20, pct1y = _sector_stats(name)
+        if (fl.get('net5') or 0) < 0 and pct1y is not None and pct1y >= 70:
+            return '退潮期'
+        if ret20 is not None and ret20 > 10 and (fl.get('net5') or 0) > 0:
+            return '主升期'
+        return '半路'
+
+    # ── 第0步 做多窗口 ──
+    lw = data.get('longWindow') or {}
+    w = lw.get('window') or 'half'
+    lamp0 = {'open': '🟢', 'half': '🟡', 'closed': '🔴'}[w]
+    concl0 = {'open': '窗口打开：水温偏暖+宽基临近买点，可以做多',
+              'half': '半窗：只看不动，仓位与信号降档',
+              'closed': '窗口关闭：今天到此为止'}[w]
+    guide0 = ('本步回答：今天能不能做多？' + concl0 +
+              ('。下级全部标灰"窗口未开"，无需往下翻' if w == 'closed'
+               else '。可以继续看第1步，但只观察不动手' if w == 'half'
+               else '。继续第1步定风格'))
+
+    # ── 第1步 宽基定风格（四态标签 + ETF 买点）──
+    idx_cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {})
+    bt_map = {i['indexCode']: i for i in (data.get('broadTrend') or {}).get('items') or []}
+    bv_map = {i['indexCode']: i for i in (data.get('broadVcp') or {}).get('items') or []}
+    step1_rows = []
+    focus = []
+    for ic, iname, ec, ename in BROAD_ETF_MAP:
+        if ic in ('000001.SH', '399001.SZ'):
+            continue  # 上证/深证综指仅展示于趋势层，不进风格判定（用户口径：50/300/500/1000/A500/创业板/科创50）
+        rows = idx_cache.get(ic) or []
+        closes = [r[1] for r in rows]
+        label4, pct1y, ma_align = '无数据', None, ''
+        if len(closes) >= 200:
+            close = closes[-1]
+            pct1y = _pct_rank100(closes[-250:], close)
+            ma50 = sum(closes[-50:]) / 50
+            ma150 = sum(closes[-150:]) / 150
+            ma200 = sum(closes[-200:]) / 200
+            bull = ma50 > ma150 > ma200
+            bt = bt_map.get(ic) or {}
+            low_vol = (bt.get('hvPct1y') is not None and bt['hvPct1y'] <= 20)
+            if pct1y is not None and pct1y <= 30:
+                label4 = '阶段底部'
+            elif bull:
+                label4 = '多头排列'
+            elif low_vol:
+                label4 = '窄幅波动'
+            elif pct1y is not None and pct1y >= 80:
+                label4 = '高位'
+            else:
+                label4 = '半路'
+            ma_align = f"50/150/200={'多头' if bull else '非多头'}"
+        bv = bv_map.get(ic) or {}
+        row = {'indexCode': ic, 'indexName': iname, 'etfCode': ec, 'etfName': ename,
+               'etfClose': bv.get('etfClose'), 'label4': label4, 'pct1y': pct1y,
+               'maAlign': ma_align, 'state': bv.get('state') or '无数据',
+               'pivot': bv.get('pivot'), 'distPct': bv.get('distPct'),
+               'invalidation': bv.get('invalidation'),
+               'volConfirm': bv.get('volConfirm')}
+        step1_rows.append(row)
+        if row['state'] in ('临近枢轴', '突破确认', '突破待确认'):
+            focus.append(f"{iname}（{row['state']}，盯 {ec.split('.')[0]} 突破 {row['pivot']}）")
+        elif row['state'] in ('构筑基底', '低波蓄势') and row['distPct'] is not None and row['distPct'] <= 8:
+            focus.append(f"{iname}（{row['state']}，距枢轴{row['distPct']}%）")
+        elif label4 == '阶段底部':
+            focus.append(f"{iname}（一年分位{pct1y}%，阶段底部）")
+    lamp1 = ('🟢' if any(r['state'] in ('临近枢轴', '突破确认') for r in step1_rows)
+             else '🔴' if step1_rows and all(r['label4'] == '高位' for r in step1_rows) else '🟡')
+    concl1 = ('当前可关注：' + '；'.join(focus[:3])) if focus else '七只宽基均无可关注形态，空仓等待'
+    guide1 = '本步回答：买哪类宽基/什么风格？' + concl1 + '。选好风格后进第2步圈板块'
+
+    # ── 第2步 圈板块（生命周期分级；入选=积聚期∪启动期，其余折叠）──
+    all_sectors = sorted(set(list(flows.keys()) + list(bw_map.keys()) + list(scan_map.keys())))
+    lc_map = {n: _lifecycle(n) for n in all_sectors}
+    step2_rows = []
+    for n in all_sectors:
+        lc = lc_map[n]
+        if lc not in ('积聚期', '启动期'):
+            continue
+        bw, sc = bw_map.get(n), scan_map.get(n)
+        leaders = []
+        if bw and bw.get('leaders'):
+            leaders = [{'name': l['name'], 'code': l.get('code'), 'pctChg': l.get('pctChg'),
+                        'mine': bool(l.get('code') and l['code'] in mine_codes)} for l in bw['leaders'][:2]]
+        elif sc and sc.get('stocks'):
+            leaders = [{'name': s['name'], 'code': s.get('code'), 'pctChg': s.get('pctChg'),
+                        'mine': bool(s.get('code') and s['code'] in mine_codes)}
+                       for s in sorted(sc['stocks'], key=lambda x: -(x.get('netInflow') or 0))[:2]]
+        reason = ''
+        if bw:
+            reason = (f"底部积聚：30日流入{bw.get('inflow30d')}亿/60日{bw.get('inflow60d')}亿，"
+                      f"价格低位（分位{round((bw.get('pricePosition') or 0) * 100)}%）")
+        elif sc:
+            reason = f"{sc.get('status')}：连续净流入{sc.get('consecutiveDays')}天，近5日{sc.get('netInflow5d')}亿"
+        step2_rows.append({'sector': n, 'lifecycle': lc, 'reason': reason, 'leaders': leaders,
+                           'dual': bool(bw and bw.get('both'))})
+    collapsed = {}
+    for n, lc in lc_map.items():
+        if lc not in ('积聚期', '启动期'):
+            collapsed[lc] = collapsed.get(lc, 0) + 1
+    lamp2 = '🟢' if step2_rows else ('🟡' if collapsed.get('主升期') else '🔴')
+    concl2 = (f"入选{len(step2_rows)}个：" + '、'.join(f"{r['sector']}（{r['lifecycle']}）" for r in step2_rows)) \
+        if step2_rows else '今日无入选（无积聚期/启动期板块）'
+    guide2 = '本步回答：主线板块是哪几个？' + concl2 + '。' + ('带着板块去第3步看个股形态' if step2_rows else '第3步个股信号降级参考')
+
+    # ── 第3步 个股形态（叠加第2步共振）──
+    sel_sectors = {r['sector'] for r in step2_rows}
+    step3_rows = []
+    for it in (data.get('vcpStocks') or {}).get('items') or []:
+        bp = it.get('buyPoint') or {}
+        step3_rows.append({'code': it['code'], 'name': it['name'], 'pattern': it.get('pattern'),
+                           'stage': it.get('stage'), 'sector': it.get('sector'),
+                           'pivot': bp.get('pivot'), 'distPct': bp.get('distanceToPivotPct') if bp.get('distanceToPivotPct') is not None else it.get('distMain'),
+                           'invalidation': bp.get('invalidation'),
+                           'reson': bool(it.get('sector') and it['sector'] in sel_sectors),
+                           'mine': it['code'] in mine_codes, 'star': bool(it.get('star'))})
+    lamp3 = ('🟢' if any(r['distPct'] is not None and r['distPct'] <= 3 for r in step3_rows)
+             else '🟡' if step3_rows else '🔴')
+    concl3 = (f"{len(step3_rows)}只成型：" + '、'.join(f"{r['name']}（{r['pattern']}·距枢轴{r['distPct']}%）" for r in step3_rows[:4])
+              + ('…' if len(step3_rows) > 4 else '')) if step3_rows else '今日无成型形态'
+    guide3 = '本步回答：具体买哪只、什么价？' + concl3 + '。' + ('🔗=属于第2步入选板块，共振优先；最后过第4步排雷' if step3_rows else '可翻第4步确认持仓无雷')
+
+    # ── 第4步 排雷（范围=第2步龙头∪第3步入围∪持仓观察股）──
+    scope = {l['code'] for r in step2_rows for l in r['leaders'] if l.get('code')} \
+        | {r['code'] for r in step3_rows} | set(STOCKS.keys())
+    mw_items = [m for m in (data.get('mineWatch') or {}).get('items') or [] if m.get('code') in scope]
+    lamp4 = '🔴' if mw_items else '🟢'
+    concl4 = (f"⛔{len(mw_items)}只有雷：" + '、'.join(m['name'] for m in mw_items[:5])
+              + ('…' if len(mw_items) > 5 else '')) if mw_items else '✅ 入围标的今日无雷'
+    guide4 = '本步回答：入围的有没有雷？' + concl4 + ('。有雷标的一票否决，不碰' if mw_items else '。可以放心按前面步骤执行')
+
+    # ── 当日路径总结 ──
+    w_txt = {'open': '窗口开', 'half': '窗口半开', 'closed': '窗口关'}[w]
+    broad_txt = '、'.join(f"{r['indexName']}{r['state']}" for r in step1_rows[:3] if r['state'] != '无数据') or '无形态'
+    path = (f"{w_txt} → 宽基：{broad_txt} → 板块：{len(step2_rows)}个入选 → "
+            f"个股：{len(step3_rows)}只成型 → 排雷：{len(mw_items)}只")
+
+    data['funnel'] = {
+        'trade_date': (data.get('sectorFlows') or {}).get('trade_date') or '',
+        'path': path, 'window': w,
+        'steps': [
+            {'n': 0, 'key': 'window', 'title': '做多窗口', 'lamp': lamp0,
+             'conclusion': concl0, 'guide': guide0, 'reason': lw.get('reason')},
+            {'n': 1, 'key': 'broad', 'title': '宽基定风格', 'lamp': lamp1,
+             'conclusion': concl1, 'guide': guide1, 'rows': step1_rows},
+            {'n': 2, 'key': 'sector', 'title': '圈板块', 'lamp': lamp2,
+             'conclusion': concl2, 'guide': guide2, 'rows': step2_rows,
+             'collapsed': collapsed},
+            {'n': 3, 'key': 'vcp', 'title': '个股形态', 'lamp': lamp3,
+             'conclusion': concl3, 'guide': guide3, 'rows': step3_rows},
+            {'n': 4, 'key': 'mine', 'title': '排雷', 'lamp': lamp4,
+             'conclusion': concl4, 'guide': guide4, 'rows': mw_items},
+        ],
+        'note': ('五步漏斗（2026-09-27 用户正式指令）：0窗口（水温×债券相互关系）→1宽基四态'
+                 '（阶段底部=一年分位≤30%/窄幅波动=低波/多头排列=50>150>200日线/高位）→2板块生命周期'
+                 '（积聚=bottomWatch命中，启动=scan启动确认，主升=20日涨>10%且流入，高潮=高潮风险，'
+                 '退潮=流出+一年分位≥70%；默认只展开积聚+启动）→3个股形态（🔗=与第2步入选板块共振）'
+                 '→4排雷（范围=第2步龙头∪第3步入围∪持仓观察股）。'
+                 '状态灯🟢可看/🟡谨慎/🔴停；窗口🔴时下级全部降级为观察。'),
+    }
+    print(f"  funnel: {path}")
+    print(f"  funnel 生命周期分布: "
+          f"{ {lc: sum(1 for v in lc_map.values() if v == lc) for lc in ['积聚期','启动期','主升期','高潮期','退潮期','半路'] if lc in lc_map.values()} }")
 
 
 def build_dual_axes(pro, trade_date, data, today_map):
@@ -5216,6 +5440,12 @@ def main():
         build_long_window(data)
     except Exception as e:
         print(f"  Warning: longWindow failed: {e}")
+
+    # ── 17d. 总览五步漏斗结论汇总（2026-09-27 改版第二波，纯汇总零新增调用）──
+    try:
+        build_funnel(data)
+    except Exception as e:
+        print(f"  Warning: funnel failed: {e}")
 
     # ── Metadata ──
     # updateTime 以数据实际最新日期为准（盘中/早间运行时各板块数据仍是前一交易日）

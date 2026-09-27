@@ -730,7 +730,21 @@ export interface FundData {
     temp?: string; verdict?: string;
     broadStates?: Record<string, string>;
     nearPivot?: boolean; allHigh?: boolean;
+    bondY10_1m?: number | null; bondNote?: string;
     reason?: string; note?: string;
+  };
+  // 五步漏斗（2026-09-27 总览重构，build_funnel 汇总层）
+  funnel?: {
+    trade_date: string;
+    path: string;
+    window: 'open' | 'half' | 'closed';
+    note?: string;
+    steps: Array<{
+      n: number; key: string; title: string; lamp: string;
+      conclusion: string; guide: string; reason?: string;
+      collapsed?: Record<string, number>;
+      rows?: Array<any>;
+    }>;
   };
   zizengETF?: {
     trade_date: string;

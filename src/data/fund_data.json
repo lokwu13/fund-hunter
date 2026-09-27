@@ -16308,7 +16308,347 @@
     },
     "nearPivot": false,
     "allHigh": false,
+    "bondY10_1m": -0.6,
+    "bondNote": "",
     "reason": "水温🟡平（中性（谨慎））；宽基形态：上证50构筑基底，沪深300构筑基底，中证500构筑基底；半窗：谨慎关注，仓位与信号强度自行降档",
-    "note": "层级服从（2026-09-26 用户拍板）：水温>宽基>板块>个股；closed=水温🔴冷或50/300/500全部高位发散/破位；open=水温🟢暖且至少一只临近枢轴/突破确认；其余half；closed 时板块/个股信号照常计算但标灰降级\"窗口未开，信号仅观察\"，half 挂半窗提示，open 全量高亮"
+    "note": "层级服从（2026-09-26 用户拍板）：水温>宽基>板块>个股；closed=水温🔴冷或50/300/500全部高位发散/破位；open=水温🟢暖且至少一只临近枢轴/突破确认；其余half；债券规则（2026-09-27）：10Y收益率近1月≥+10bp=资金紧、窗口降一档，≤-10bp=偏松仅备注不升档；closed 时板块/个股信号照常计算但标灰降级\"窗口未开，信号仅观察\"，half 挂半窗提示，open 全量高亮"
+  },
+  "funnel": {
+    "trade_date": "2026-09-24",
+    "path": "窗口半开 → 宽基：沪深300构筑基底、上证50构筑基底、中证500构筑基底 → 板块：2个入选 → 个股：6只成型 → 排雷：4只",
+    "window": "half",
+    "steps": [
+      {
+        "n": 0,
+        "key": "window",
+        "title": "做多窗口",
+        "lamp": "🟡",
+        "conclusion": "半窗：只看不动，仓位与信号降档",
+        "guide": "本步回答：今天能不能做多？半窗：只看不动，仓位与信号降档。可以继续看第1步，但只观察不动手",
+        "reason": "水温🟡平（中性（谨慎））；宽基形态：上证50构筑基底，沪深300构筑基底，中证500构筑基底；半窗：谨慎关注，仓位与信号强度自行降档"
+      },
+      {
+        "n": 1,
+        "key": "broad",
+        "title": "宽基定风格",
+        "lamp": "🟡",
+        "conclusion": "当前可关注：沪深300（构筑基底，距枢轴6.8%）；上证50（构筑基底，距枢轴5.4%）；中证500（构筑基底，距枢轴7.5%）",
+        "guide": "本步回答：买哪类宽基/什么风格？当前可关注：沪深300（构筑基底，距枢轴6.8%）；上证50（构筑基底，距枢轴5.4%）；中证500（构筑基底，距枢轴7.5%）。选好风格后进第2步圈板块",
+        "rows": [
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "etfCode": "510300.SH",
+            "etfName": "华泰柏瑞沪深300ETF",
+            "etfClose": 4.515,
+            "label4": "阶段底部",
+            "pct1y": 2.8,
+            "maAlign": "50/150/200=非多头",
+            "state": "构筑基底",
+            "pivot": 4.82,
+            "distPct": 6.8,
+            "invalidation": 4.485,
+            "volConfirm": 14069349.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "etfCode": "510050.SH",
+            "etfName": "华夏上证50ETF",
+            "etfClose": 2.959,
+            "label4": "阶段底部",
+            "pct1y": 4.8,
+            "maAlign": "50/150/200=非多头",
+            "state": "构筑基底",
+            "pivot": 3.12,
+            "distPct": 5.4,
+            "invalidation": 2.916,
+            "volConfirm": 8497027.0
+          },
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "etfCode": "510500.SH",
+            "etfName": "南方中证500ETF",
+            "etfClose": 7.65,
+            "label4": "窄幅波动",
+            "pct1y": 42.0,
+            "maAlign": "50/150/200=非多头",
+            "state": "构筑基底",
+            "pivot": 8.22,
+            "distPct": 7.5,
+            "invalidation": 7.22,
+            "volConfirm": 6566630.0
+          },
+          {
+            "indexCode": "000852.SH",
+            "indexName": "中证1000",
+            "etfCode": "512100.SH",
+            "etfName": "南方中证1000ETF",
+            "etfClose": 3.079,
+            "label4": "半路",
+            "pct1y": 41.2,
+            "maAlign": "50/150/200=非多头",
+            "state": "构筑基底",
+            "pivot": 3.23,
+            "distPct": 5.1,
+            "invalidation": 2.849,
+            "volConfirm": 18893150.0
+          },
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "etfCode": "588000.SH",
+            "etfName": "华夏科创50ETF",
+            "etfClose": 1.713,
+            "label4": "多头排列",
+            "pct1y": 69.2,
+            "maAlign": "50/150/200=多头",
+            "state": "无形态",
+            "pivot": null,
+            "distPct": null,
+            "invalidation": null,
+            "volConfirm": null
+          },
+          {
+            "indexCode": "399006.SZ",
+            "indexName": "创业板指",
+            "etfCode": "159915.SZ",
+            "etfName": "易方达创业板ETF",
+            "etfClose": 3.312,
+            "label4": "多头排列",
+            "pct1y": 44.4,
+            "maAlign": "50/150/200=多头",
+            "state": "无形态",
+            "pivot": null,
+            "distPct": null,
+            "invalidation": null,
+            "volConfirm": null
+          },
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "etfCode": "512050.SH",
+            "etfName": "华夏中证A500ETF",
+            "etfClose": 1.172,
+            "label4": "阶段底部",
+            "pct1y": 15.6,
+            "maAlign": "50/150/200=非多头",
+            "state": "构筑基底",
+            "pivot": 1.26,
+            "distPct": 7.4,
+            "invalidation": 1.161,
+            "volConfirm": 17615525.0
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "key": "sector",
+        "title": "圈板块",
+        "lamp": "🟢",
+        "conclusion": "入选2个：乳制品（积聚期）、石油加工（积聚期）",
+        "guide": "本步回答：主线板块是哪几个？入选2个：乳制品（积聚期）、石油加工（积聚期）。带着板块去第3步看个股形态",
+        "rows": [
+          {
+            "sector": "乳制品",
+            "lifecycle": "积聚期",
+            "reason": "底部积聚：30日流入8.84亿/60日21.0亿，价格低位（分位38%）",
+            "leaders": [
+              {
+                "name": "海融科技",
+                "code": "300915.SZ",
+                "pctChg": 1.81,
+                "mine": false
+              },
+              {
+                "name": "伊利股份",
+                "code": "600887.SH",
+                "pctChg": -0.07,
+                "mine": false
+              }
+            ],
+            "dual": true
+          },
+          {
+            "sector": "石油加工",
+            "lifecycle": "积聚期",
+            "reason": "底部积聚：30日流入5.5亿/60日15.4亿，价格低位（分位23%）",
+            "leaders": [
+              {
+                "name": "统一股份",
+                "code": "600506.SH",
+                "pctChg": 6.32,
+                "mine": true
+              }
+            ],
+            "dual": true
+          }
+        ],
+        "collapsed": {
+          "半路": 89,
+          "退潮期": 19
+        }
+      },
+      {
+        "n": 3,
+        "key": "vcp",
+        "title": "个股形态",
+        "lamp": "🟢",
+        "conclusion": "6只成型：伊利股份（底部整理·距枢轴3.0%）、胜宏科技（底部整理·距枢轴5.2%）、中信特钢（底部整理·距枢轴6.7%）、上海机场（底部整理·距枢轴7.0%）…",
+        "guide": "本步回答：具体买哪只、什么价？6只成型：伊利股份（底部整理·距枢轴3.0%）、胜宏科技（底部整理·距枢轴5.2%）、中信特钢（底部整理·距枢轴6.7%）、上海机场（底部整理·距枢轴7.0%）…。🔗=属于第2步入选板块，共振优先；最后过第4步排雷",
+        "rows": [
+          {
+            "code": "600887.SH",
+            "name": "伊利股份",
+            "pattern": "底部整理",
+            "stage": "Stage 1 基底（未过趋势模板）",
+            "sector": "乳制品",
+            "pivot": 27.7,
+            "distPct": 3.0,
+            "invalidation": 25.04,
+            "reson": true,
+            "mine": false,
+            "star": false
+          },
+          {
+            "code": "300476.SZ",
+            "name": "胜宏科技",
+            "pattern": "底部整理",
+            "stage": "Stage 1 基底（未过趋势模板）",
+            "sector": "AI算力",
+            "pivot": 244.85,
+            "distPct": 5.2,
+            "invalidation": 217.44,
+            "reson": false,
+            "mine": true,
+            "star": false
+          },
+          {
+            "code": "000708.SZ",
+            "name": "中信特钢",
+            "pattern": "底部整理",
+            "stage": "Stage 1 基底（未过趋势模板）",
+            "sector": "特种钢",
+            "pivot": 13.78,
+            "distPct": 6.7,
+            "invalidation": 12.73,
+            "reson": false,
+            "mine": false,
+            "star": true
+          },
+          {
+            "code": "600009.SH",
+            "name": "上海机场",
+            "pattern": "底部整理",
+            "stage": "Stage 1 基底（未过趋势模板）",
+            "sector": "机场",
+            "pivot": 24.03,
+            "distPct": 7.0,
+            "invalidation": 22.36,
+            "reson": false,
+            "mine": false,
+            "star": true
+          },
+          {
+            "code": "300059.SZ",
+            "name": "东方财富",
+            "pattern": "底部整理",
+            "stage": "Stage 1 基底（未过趋势模板）",
+            "sector": "非银金融",
+            "pivot": 19.65,
+            "distPct": 7.5,
+            "invalidation": 18.06,
+            "reson": false,
+            "mine": false,
+            "star": false
+          },
+          {
+            "code": "600030.SH",
+            "name": "中信证券",
+            "pattern": "底部整理",
+            "stage": "Stage 1 基底（未过趋势模板）",
+            "sector": "非银金融",
+            "pivot": 28.33,
+            "distPct": 7.8,
+            "invalidation": 26.08,
+            "reson": false,
+            "mine": false,
+            "star": false
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "key": "mine",
+        "title": "排雷",
+        "lamp": "🔴",
+        "conclusion": "⛔4只有雷：胜宏科技、恒瑞医药、统一股份、药明康德",
+        "guide": "本步回答：入围的有没有雷？⛔4只有雷：胜宏科技、恒瑞医药、统一股份、药明康德。有雷标的一票否决，不碰",
+        "rows": [
+          {
+            "code": "300476.SZ",
+            "name": "胜宏科技",
+            "src": "VCP",
+            "types": [
+              "资金"
+            ],
+            "details": [
+              {
+                "type": "资金",
+                "detail": "近5日主力净流出21.8亿",
+                "date": "20260924"
+              }
+            ]
+          },
+          {
+            "code": "600276.SH",
+            "name": "恒瑞医药",
+            "src": "自选",
+            "types": [
+              "资金"
+            ],
+            "details": [
+              {
+                "type": "资金",
+                "detail": "近5日主力净流出3.1亿",
+                "date": "20260924"
+              }
+            ]
+          },
+          {
+            "code": "600506.SH",
+            "name": "统一股份",
+            "src": "板块龙头",
+            "types": [
+              "基本面"
+            ],
+            "details": [
+              {
+                "type": "基本面",
+                "detail": "商誉/归母净资产140.2%",
+                "date": "20260630"
+              }
+            ]
+          },
+          {
+            "code": "603259.SH",
+            "name": "药明康德",
+            "src": "自选",
+            "types": [
+              "资金"
+            ],
+            "details": [
+              {
+                "type": "资金",
+                "detail": "近5日主力净流出5.6亿",
+                "date": "20260924"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "note": "五步漏斗（2026-09-27 用户正式指令）：0窗口（水温×债券相互关系）→1宽基四态（阶段底部=一年分位≤30%/窄幅波动=低波/多头排列=50>150>200日线/高位）→2板块生命周期（积聚=bottomWatch命中，启动=scan启动确认，主升=20日涨>10%且流入，高潮=高潮风险，退潮=流出+一年分位≥70%；默认只展开积聚+启动）→3个股形态（🔗=与第2步入选板块共振）→4排雷（范围=第2步龙头∪第3步入围∪持仓观察股）。状态灯🟢可看/🟡谨慎/🔴停；窗口🔴时下级全部降级为观察。"
   }
 }
