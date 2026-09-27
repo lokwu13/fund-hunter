@@ -138,7 +138,10 @@ function App() {
           </TabsContent>
 
           <TabsContent value="tools" className="space-y-6">
-            <ECIPanel data={data} highlightSector={hlSector} />
+            <ECIPanel data={data} highlightSector={hlSector} onNavigate={(tab, anchor) => {
+              setActiveTab(tab);
+              if (anchor) setTimeout(() => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+            }} />
           </TabsContent>
         </Tabs>
       </main>

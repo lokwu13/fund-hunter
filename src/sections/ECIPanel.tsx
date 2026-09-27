@@ -15,6 +15,7 @@ import {
 interface ECIPanelProps {
   data: FundData;
   highlightSector?: string | null;   // 漏斗联动：总览第2步 chips 跳入时高亮该板块行（2026-09-27）
+  onNavigate?: (tab: string, anchor?: string) => void;  // 跨栏目互跳（聪明钱超额榜→基金栏目）
 }
 
 const TREND_ICONS: Record<string, typeof TrendingUp> = {
@@ -71,7 +72,7 @@ const SCAN_STATUS_COLORS: Record<string, string> = {
   '无信号': 'bg-slate-200 text-slate-500',
 };
 
-export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
+export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanelProps) {
   const eciData = data.eciData;
   const [sortBy, setSortBy] = useState<'eci' | 'trend'>('eci');
   const [filterLevel, setFilterLevel] = useState<'all' | 'high' | 'mid' | 'low'>('all');
@@ -91,6 +92,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
   const funnelBadges = (name?: string) => {
     if (!name) return null;
     const lc = lcAll[name] || lcL1[name];
+    const sm = (fnHook?.smartMoney?.byL2 || {})[name];
     return (
       <>
         {step2Sel.has(name) && (
@@ -99,6 +101,13 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
         {lc && lc !== '半路' && (
           <Badge className={`ml-1 text-[9px] h-4 px-1 border-0 text-white ${LC_CLS[lc] || 'bg-slate-300'}`}
                  title="板块生命周期（与总览第2步同口径）">{lc}</Badge>
+        )}
+        {sm && (
+          <Badge className={`ml-1 text-[9px] h-4 px-1 border-0 text-white ${
+            sm.verdict === '✅有效' ? 'bg-emerald-600' : sm.verdict === '❌无效' ? 'bg-rose-600' : 'bg-slate-400'
+          }`} title={`聪明钱超额（${sm.l1}主动基金，T+1净值口径）：YTD超额中位 ${sm.exytdMed ?? '—'}%`}>
+            {sm.verdict === '✅有效' ? '✅聪明钱' : sm.verdict === '❌无效' ? '❌聪明钱' : '聪明钱中性'}
+          </Badge>
         )}
       </>
     );
@@ -169,6 +178,8 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
         <span className="text-sm font-bold">① 第2步 · 圈板块工具</span>
         <span className="text-orange-700/80">今日能投 / 扫描榜 / 底部观察池 / ECI 统计与筛选——配合总览第2步「圈板块」使用</span>
         <a href="#eci-quadrant" className="text-orange-600 underline decoration-dotted">ECI 四象限图在「板块」栏目 ↗</a>
+        <button type="button" onClick={() => onNavigate?.('public', 'smart-money')}
+                className="text-orange-600 underline decoration-dotted hover:text-orange-800">聪明钱超额榜在「基金」栏目 ↗</button>
       </div>
 
       {/* 今日能投板块（数据依据：bottomWatch × ECI × 资金节奏 × 扫描榜）；层级服从：窗口关闭时标灰降级 */}

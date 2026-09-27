@@ -250,6 +250,15 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                   {r.pattern}·缩量{(r.volRatio ?? 0).toFixed(2)}
                                 </Badge>
                               )}
+                              {r.smart && (
+                                <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 text-white ${
+                                  r.smart.verdict === '✅有效' ? 'bg-emerald-600' :
+                                  r.smart.verdict === '❌无效' ? 'bg-rose-600' : 'bg-slate-400'
+                                }`} title={`聪明钱超额（${r.smart.l1}主动基金${r.smart.proxy ? '代理' : ''}，T+1净值）：YTD超额中位 ${r.smart.exytdMed ?? '—'}%`}>
+                                  {r.smart.verdict === '✅有效' ? '✅聪明钱' : r.smart.verdict === '❌无效' ? '❌主动资金未验证' : '聪明钱中性'}
+                                  {r.smart.proxy && `·${r.smart.l1}代理`}
+                                </Badge>
+                              )}
                               <span className="text-[11px] text-slate-500 flex-1 min-w-[120px]">{r.reason}</span>
                               <span className="text-[11px] text-slate-600 flex-shrink-0">
                                 双龙头：{(r.leaders || []).length > 0

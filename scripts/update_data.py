@@ -11,6 +11,7 @@ import os
 import sys
 import json
 import time
+import statistics
 import requests
 import tushare as ts
 
@@ -1594,6 +1595,282 @@ def _sector_pattern(hist, name):
             'evidence': '；'.join(ev)}
 
 
+# ══════════ 板块聪明钱超额榜（2026-09-27 大改版收官，用户批准并入第2步）══════════
+# 名单=三十六节样表策展 45 只主动基金（A 类），家电无合适标的空档保留；覆盖 12 个一级板块。
+SMART_NAV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                              'cache', 'smart_money_nav.json')
+SMART_META_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               'cache', 'smart_money_meta.json')
+SMART_MONEY_NAV_BACKFILL = '20251201'   # 首次回补起点（须覆盖 YTD 基期=上年末）
+SMART_MONEY_FUNDS = {
+    '医药生物': [
+        ('003095.OF', '中欧医疗健康混合-A', 134.1),
+        ('001717.OF', '工银瑞信前沿医疗股票-A', 73.5),
+        ('004851.OF', '广发医疗保健股票-A', 35.6),
+        ('006113.OF', '汇添富创新医药主题混合-A', 92.3),
+        ('005176.OF', '富国精准医疗灵活配置混合-A', 28.2),
+    ],
+    '食品饮料': [
+        ('013289.OF', '工银瑞信食品饮料行业混合-A', 0.4),
+        ('110022.OF', '易方达消费行业股票', 102.6),
+        ('000083.OF', '汇添富消费行业混合', 63.1),
+        ('519915.OF', '富国消费主题混合-A', 22.8),
+        ('001044.OF', '嘉实新消费股票-A', 11.1),
+    ],
+    '电子': [
+        ('012650.OF', '博时半导体主题混合-A', 9.1),
+        ('013339.OF', '创金合信芯片产业股票-A', 1.9),
+        ('016500.OF', '华夏半导体龙头混合-A', 4.7),
+        ('014319.OF', '德邦半导体产业混合-A', 6.7),
+        ('017746.OF', '建信电子行业股票-A', 3.8),
+    ],
+    '电力设备': [
+        ('012445.OF', '华富新能源股票-A', 8.8),
+        ('013103.OF', '博时新能源主题混合-A', 1.2),
+        ('012354.OF', '南方新能源产业趋势混合-A', 4.2),
+        ('013395.OF', '华夏新能源车龙头混合-A', 2.7),
+        ('014141.OF', '大成新能源混合-A', 0.2),
+    ],
+    '国防军工': [
+        ('014686.OF', '招商核心装备混合-A', 0.3),
+        ('001475.OF', '易方达国防军工混合-A', 64.1),
+        ('004698.OF', '博时军工主题股票-A', 14.8),
+        ('005609.OF', '富国军工主题混合-A', 21.7),
+    ],
+    '有色金属': [
+        ('021642.OF', '富国资源精选混合-A', 5.0),
+        ('023036.OF', '中欧资源精选混合-A', 9.0),
+        ('023834.OF', '广发资源智选股票-A', 2.5),
+        ('024895.OF', '泰康资源精选股票-A', 1.0),
+    ],
+    '机械设备': [
+        ('016847.OF', '中欧高端装备股票-A', 1.9),
+        ('014606.OF', '招商高端装备混合-A', 0.7),
+        ('018611.OF', '鹏华高端装备一年持有期混合-A', 0.8),
+        ('020057.OF', '银河高端装备混合-A', 0.1),
+    ],
+    '非银金融': [
+        ('012244.OF', '广发金融地产精选股票-A', 0.2),
+        ('013490.OF', '同泰金融精选股票-A', 0.3),
+        ('000251.OF', '工银瑞信金融地产行业混合-A', 9.2),
+    ],
+    '银行': [
+        ('015887.OF', '国投瑞银行业睿选混合-A', 0.6),
+        ('001054.OF', '工银瑞信新金融股票-A', 10.5),
+        ('004871.OF', '中银金融地产混合-A', 0.4),
+    ],
+    '家用电器': [],   # 空档如实保留：全市场无合适主动家电基金（样表结论）
+    '农林牧渔': [
+        ('016725.OF', '农银汇理品质农业股票-A', 0.1),
+        ('021830.OF', '国寿安保农业产业股票-A', 0.1),
+        ('022521.OF', '中欧农业产业混合-A', 0.7),
+        ('005106.OF', '银华农业产业股票-A', 4.4),
+    ],
+    '社会服务': [
+        ('013132.OF', '创金合信文娱媒体股票-A', 2.0),
+        ('001628.OF', '招商体育文化休闲股票-A', 1.6),
+        ('001714.OF', '工银瑞信文体产业股票-A', 23.3),
+    ],
+}
+# L1 → 东财行业板块候选名（push2 clist m:90+t:2 动态解析；无干净对应板的板块不列，直接走合成降级）
+SMART_MONEY_EM_BOARD = {
+    '食品饮料': ['食品饮料'], '银行': ['银行'], '有色金属': ['有色金属'],
+    '家用电器': ['家电行业', '家用电器'], '农林牧渔': ['农牧饲渔', '农林牧渔'],
+}
+
+
+def _series_ret(series, sessions=None, ytd_base=None):
+    """升序 [(date, val)] 序列的区间收益 %。sessions=向前N个交易点；ytd_base=上年末基期日。"""
+    rows = [(d, v) for d, v in series if v]
+    if len(rows) < 2:
+        return None
+    ev = rows[-1][1]
+    if ytd_base:
+        base = [r for r in rows if r[0] <= ytd_base]
+        if not base:
+            return None
+        bv = base[-1][1]
+    else:
+        if len(rows) <= sessions:
+            return None
+        bv = rows[-1 - sessions][1]
+    if bv <= 0:
+        return None
+    return round((ev / bv - 1) * 100, 2)
+
+
+def fetch_sector_smart_money(pro, trade_date, data):
+    """板块聪明钱超额榜：12 板块 × 45 只主动基金，超额=复权净值区间收益 − 板块基准。
+
+    调用量：每晚 fund_nav 增量 45 次；周五加 fund_basic 分页(≤5)+fund_share×45（周更）。
+    基准：东财行业板块指数日K优先（SMART_MONEY_EM_BOARD 候选名动态解析），
+    封禁/无对应板降级 sector_history L1 成交额加权合成，逐板块注明 benchSrc。
+    判定（YTD 超额）：中位>0 且 跑赢占比≥60% → ✅有效；中位<0 且 ≤40% → ❌无效；其余中性。
+    窗口：近1月=21 交易点 / 近3月=63 / YTD=上年末基期。T+1 净值口径。
+    """
+    try:
+        nav_cache = _load_json_cache(SMART_NAV_PATH, {})
+        meta = _load_json_cache(SMART_META_PATH, {})
+        all_funds = [(tc, nm, sec) for sec, fs in SMART_MONEY_FUNDS.items() for tc, nm, _ in fs]
+
+        # ── 1. 元数据周更（周五或缓存缺失：fund_basic 分页 ≤5 次 + fund_share 逐只 45 次）──
+        friday = datetime.strptime(trade_date, '%Y%m%d').weekday() == 4
+        if friday or not meta.get('funds'):
+            fm = meta.setdefault('funds', {})
+            try:
+                frames = []
+                for off in range(0, 25000, 5000):
+                    time.sleep(API_DELAY)
+                    fb = pro.fund_basic(market='O', status='L', limit=5000, offset=off)
+                    if fb is None or not len(fb):
+                        break
+                    frames.append(fb)
+                if frames:
+                    fbx = pd.concat(frames).drop_duplicates('ts_code').set_index('ts_code')
+                    for tc, _, _ in all_funds:
+                        if tc in fbx.index:
+                            r = fbx.loc[tc]
+                            fm.setdefault(tc, {})['name'] = str(r.get('name') or '')
+                            mgmt = r.get('management')
+                            if pd.notna(mgmt):
+                                fm[tc]['mgmt'] = str(mgmt)
+                    print(f'  smartMoney fund_basic: {len(fbx)} funds scanned')
+            except Exception as e:
+                print(f'  Warning: smartMoney fund_basic failed: {e}')
+            share_start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=40)).strftime('%Y%m%d')
+            for tc, _, _ in all_funds:
+                try:
+                    time.sleep(API_DELAY)
+                    sh = pro.fund_share(ts_code=tc, start_date=share_start, end_date=trade_date)
+                    if sh is not None and len(sh):
+                        last = sh.sort_values('trade_date').iloc[-1]
+                        fm.setdefault(tc, {})['share'] = round(float(last['fd_share']) / 1e4, 2)  # 万份→亿份
+                        fm[tc]['shareDate'] = str(last['trade_date'])
+                except Exception as e:
+                    print(f'  Warning: smartMoney fund_share {tc} failed: {str(e)[:50]}')
+            meta['updated'] = trade_date
+            _save_json_cache(SMART_META_PATH, meta)
+            print(f'  smartMoney meta refreshed (Friday): {len(meta.get("funds") or {})} funds')
+
+        # ── 2. 净值增量（每晚 45 次 fund_nav；首次全量回补自 20251201）──
+        fetched = 0
+        for tc, _, _ in all_funds:
+            rows = nav_cache.get(tc) or []
+            start = SMART_MONEY_NAV_BACKFILL if not rows else \
+                (datetime.strptime(rows[-1][0], '%Y%m%d') + timedelta(days=1)).strftime('%Y%m%d')
+            if start > trade_date:
+                continue
+            try:
+                time.sleep(API_DELAY)
+                df = pro.fund_nav(ts_code=tc, start_date=start, end_date=trade_date)
+                if df is None or not len(df):
+                    continue
+                fetched += 1
+                for _, r in df.iterrows():
+                    if pd.notna(r.get('adj_nav')):
+                        rows.append([str(r['nav_date']), round(float(r['adj_nav']), 4)])
+                dd = {r[0]: r[1] for r in rows}
+                nav_cache[tc] = [list(x) for x in sorted(dd.items())[-220:]]
+            except Exception as e:
+                print(f'  Warning: smartMoney nav {tc} failed: {str(e)[:50]}')
+        _save_json_cache(SMART_NAV_PATH, nav_cache)
+        print(f'  smartMoney nav updated: {fetched} funds fetched, cache {len(nav_cache)}')
+
+        # ── 3. 板块基准（东财优先，降级 L1 成交额加权合成）──
+        hist = _load_sector_history()
+        l1s = _l1_series(hist)
+        boards, board_broken = None, False
+        bench = {}
+        for l1 in SMART_MONEY_FUNDS:
+            series, src = None, None
+            if not board_broken:
+                for cand in SMART_MONEY_EM_BOARD.get(l1, []):
+                    try:
+                        if boards is None:
+                            boards = _em_board_list()
+                        bk = boards.get(cand)
+                        if not bk:
+                            continue
+                        pct = _em_kline_pct(f'90.{bk}')
+                        if pct:
+                            level, out = 1.0, []
+                            for d in sorted(pct):
+                                level *= 1 + pct[d] / 100.0
+                                out.append((d, level))
+                            series, src = out, f'东财板块指数·{cand}'
+                            break
+                    except Exception:
+                        board_broken = True   # IP 封禁/网络问题：本晚全部降级合成
+                        break
+            if series is None:
+                level, out = 1.0, []
+                for d, _, ret, _a in (l1s.get(l1) or []):
+                    level *= 1 + ret / 100.0
+                    out.append((d, level))
+                series, src = out, '等权合成·sector_history'
+            bench[l1] = {'series': series, 'src': src}
+
+        # ── 4. 收益 / 超额 / 板块级判定 ──
+        ytd_base = f'{int(trade_date[:4]) - 1}1231'
+        meta_funds = meta.get('funds') or {}
+        sectors_out, latest_nav = [], '00000000'
+        for l1, funds in SMART_MONEY_FUNDS.items():
+            bs, bsrc = bench[l1]['series'], bench[l1]['src']
+            b1, b3, bytd = _series_ret(bs, 21), _series_ret(bs, 63), _series_ret(bs, ytd_base=ytd_base)
+            fund_rows = []
+            for tc, nm, scale0 in funds:
+                rows = nav_cache.get(tc) or []
+                if rows:
+                    latest_nav = max(latest_nav, rows[-1][0])
+                r1, r3, rytd = _series_ret(rows, 21), _series_ret(rows, 63), _series_ret(rows, ytd_base=ytd_base)
+                mfr = meta_funds.get(tc) or {}
+                share = mfr.get('share')
+                fund_rows.append({
+                    'ts_code': tc, 'name': mfr.get('name') or nm,
+                    'scale': round(share * rows[-1][1], 1) if share and rows else scale0,
+                    'navDate': rows[-1][0] if rows else None,
+                    'r1m': r1, 'r3m': r3, 'rytd': rytd,
+                    'ex1m': round(r1 - b1, 2) if r1 is not None and b1 is not None else None,
+                    'ex3m': round(r3 - b3, 2) if r3 is not None and b3 is not None else None,
+                    'exytd': round(rytd - bytd, 2) if rytd is not None and bytd is not None else None,
+                })
+            exs = [f['exytd'] for f in fund_rows if f['exytd'] is not None]
+            if not fund_rows:
+                verdict, med, win_pct = '无样本', None, None
+            elif not exs:
+                verdict, med, win_pct = '数据积累中', None, None
+            else:
+                med = round(statistics.median(exs), 2)
+                win_pct = round(sum(1 for v in exs if v > 0) / len(exs) * 100)
+                verdict = ('✅有效' if med > 0 and win_pct >= 60
+                           else '❌无效' if med < 0 and win_pct <= 40 else '中性')
+            ex1s = [f['ex1m'] for f in fund_rows if f['ex1m'] is not None]
+            ex3s = [f['ex3m'] for f in fund_rows if f['ex3m'] is not None]
+            sectors_out.append({
+                'sector': l1, 'nFunds': len(fund_rows), 'benchSrc': bsrc,
+                'ex1mMed': round(statistics.median(ex1s), 2) if ex1s else None,
+                'ex3mMed': round(statistics.median(ex3s), 2) if ex3s else None,
+                'exytdMed': med, 'winYtdPct': win_pct, 'verdict': verdict,
+                'funds': fund_rows,
+            })
+        data['sectorSmartMoney'] = {
+            'trade_date': f'{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}',
+            'nav_date': f'{latest_nav[:4]}-{latest_nav[4:6]}-{latest_nav[6:]}' if latest_nav > '00000000' else None,
+            'ytdBase': ytd_base,
+            'sectors': sectors_out,
+            'note': ('聪明钱超额榜（2026-09-27 样表产品化）：45 只主动基金 × 12 板块（名单为策展样本，'
+                     '家电无合适标的空档保留）；超额=复权净值区间收益−板块基准'
+                     '（近1月=21交易点/近3月=63/YTD=上年末基期），T+1 净值口径（判定滞后一天）；'
+                     '判定：YTD超额中位>0 且 跑赢占比≥60% → ✅有效；中位<0 且 ≤40% → ❌无效；其余中性；'
+                     '基准东财板块指数优先、封禁降级等权合成，逐板块见 benchSrc。'),
+        }
+        print('  smartMoney: ' + '；'.join(
+            f"{s['sector']}{s['verdict']}(YTD中位{s['exytdMed']}%/赢{s['winYtdPct']}%·{s['benchSrc'][:4]})"
+            for s in sectors_out if s['nFunds'] > 0))
+    except Exception as e:
+        print(f"  Warning: fetch_sector_smart_money failed (keep old): {e}")
+
+
 def build_funnel(data):
     """总览五步漏斗结论汇总（2026-09-27 用户正式指令：0窗口→1宽基→2板块→3个股→4排雷）。
 
@@ -1715,6 +1992,13 @@ def build_funnel(data):
         sp = _sector_pattern(hist, n)
         if sp:
             sp_map[n] = sp
+    # ── 聪明钱超额并入第2步（2026-09-27 用户批准）：L1 判定 → L2 解析（代理注明）──
+    sm_l1 = {s['sector']: s for s in (data.get('sectorSmartMoney') or {}).get('sectors') or []}
+    smart_l2 = {}
+    for _l2, _l1 in SECTOR_TO_L1.items():
+        _s = sm_l1.get(_l1)
+        if _s and _s.get('verdict') not in (None, '无样本', '数据积累中'):
+            smart_l2[_l2] = {'verdict': _s['verdict'], 'exytdMed': _s.get('exytdMed'), 'l1': _l1}
     step2_rows = []
     dropped2 = []   # 积聚/启动但形态未达标（如实展示哪条卡掉）
     for n in all_sectors:
@@ -1748,7 +2032,8 @@ def build_funnel(data):
         step2_rows.append({'sector': n, 'lifecycle': lc, 'reason': reason, 'leaders': leaders,
                            'dual': bool(bw and bw.get('both')),
                            'pattern': sp['pattern'], 'volRatio': sp['volRatio'],
-                           'patternEvidence': sp['evidence']})
+                           'patternEvidence': sp['evidence'],
+                           'smart': dict(smart_l2[n], proxy=(n != smart_l2[n]['l1'])) if n in smart_l2 else None})
     collapsed = {}
     for n, lc in lc_map.items():
         if lc not in ('积聚期', '启动期'):
@@ -1763,11 +2048,14 @@ def build_funnel(data):
         if _l1 not in lc_l1 or _lc_prio.index(_lc) < _lc_prio.index(lc_l1[_l1]):
             lc_l1[_l1] = _lc
     lamp2 = '🟢' if step2_rows else ('🟡' if collapsed.get('主升期') or dropped2 else '🔴')
+    sm_bad = [r['sector'] for r in step2_rows if (r.get('smart') or {}).get('verdict') == '❌无效']
     concl2 = (f"入选{len(step2_rows)}个：" + '、'.join(f"{r['sector']}（{r['lifecycle']}·{r['pattern']}）" for r in step2_rows)) \
         if step2_rows else (
             f"今日无入选：{len(dropped2)}个资金流入板块被形态条件卡掉（"
             + '、'.join(f"{d['sector']}·{d['why']}" for d in dropped2[:3])
             + ('…' if len(dropped2) > 3 else '') + '）' if dropped2 else '今日无入选（无积聚期/启动期板块）')
+    if sm_bad:
+        concl2 += '；⚠主动资金未验证：' + '、'.join(sm_bad)
     guide2 = '本步回答：主线板块是哪几个？' + concl2 + '。' + ('带着板块去第3步看个股形态（共振轨优先）' if step2_rows else '第3步共振轨为空，只能看⭐优中选优轨')
 
     # ── 第3步 个股形态（双轨制，2026-09-27 用户正式指令；两轨都不沾不进榜）──
@@ -1839,6 +2127,10 @@ def build_funnel(data):
         'path': path, 'window': w,
         'lifecycleAll': lc_map, 'lifecycleL1': lc_l1,
         'sectorPattern': sp_map,
+        'smartMoney': {'byL2': smart_l2,
+                       'byL1': {k: {'verdict': v['verdict'], 'exytdMed': v.get('exytdMed'),
+                                    'winYtdPct': v.get('winYtdPct'), 'benchSrc': v.get('benchSrc')}
+                                for k, v in sm_l1.items()}},
         'steps': [
             {'n': 0, 'key': 'window', 'title': '做多窗口', 'lamp': lamp0,
              'conclusion': concl0, 'guide': guide0, 'reason': lw.get('reason')},
@@ -5572,6 +5864,12 @@ def main():
         build_long_window(data)
     except Exception as e:
         print(f"  Warning: longWindow failed: {e}")
+
+    # ── 17c2. 板块聪明钱超额榜（45只主动基金×12板块；每晚净值增量45次，周五+份额周更）──
+    try:
+        fetch_sector_smart_money(pro, trade_date, data)
+    except Exception as e:
+        print(f"  Warning: sectorSmartMoney failed: {e}")
 
     # ── 17d. 总览五步漏斗结论汇总（2026-09-27 改版第二波，纯汇总零新增调用）──
     try:

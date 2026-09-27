@@ -745,6 +745,10 @@ export interface FundData {
       patterns: string[]; pattern: string | null; volRatio: number;
       shrinkExtreme: boolean; pct1y: number | null; qualified: boolean; evidence: string;
     }>;
+    smartMoney?: {
+      byL2?: Record<string, { verdict: string; exytdMed: number | null; l1: string }>;
+      byL1?: Record<string, { verdict: string; exytdMed: number | null; winYtdPct: number | null; benchSrc?: string }>;
+    };
     steps: Array<{
       n: number; key: string; title: string; lamp: string;
       conclusion: string; guide: string; reason?: string;
@@ -752,6 +756,23 @@ export interface FundData {
       dropped?: Array<any>;
       excluded?: number;
       rows?: Array<any>;
+    }>;
+  };
+  // 板块聪明钱超额榜（2026-09-27 样表产品化：45只主动基金×12板块，并入漏斗第2步）
+  sectorSmartMoney?: {
+    trade_date: string;
+    nav_date?: string | null;
+    ytdBase?: string;
+    note?: string;
+    sectors: Array<{
+      sector: string; nFunds: number; benchSrc: string;
+      ex1mMed: number | null; ex3mMed: number | null; exytdMed: number | null;
+      winYtdPct: number | null; verdict: string;
+      funds: Array<{
+        ts_code: string; name: string; scale?: number | null; navDate?: string | null;
+        r1m: number | null; r3m: number | null; rytd: number | null;
+        ex1m: number | null; ex3m: number | null; exytd: number | null;
+      }>;
     }>;
   };
   zizengETF?: {

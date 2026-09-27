@@ -30,9 +30,74 @@ const subSectorChanges = [
 export default function PublicFundPanel() {
   const { data } = useFundData();
   const [activeTab, setActiveTab] = useState('public');
+  const [openSmart, setOpenSmart] = useState<string | null>(null);
+  const sm = data.sectorSmartMoney;
+
+  const smVerdictCls = (v: string) =>
+    v === '✅有效' ? 'bg-emerald-600 text-white' :
+    v === '❌无效' ? 'bg-rose-600 text-white' :
+    v === '中性' ? 'bg-slate-400 text-white' : 'bg-slate-200 text-slate-500';
+  const exTxt = (v: number | null) =>
+    v == null ? <span className="text-slate-300">—</span> :
+      <span className={`font-semibold ${v >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>{v >= 0 ? '+' : ''}{v}%</span>;
 
   return (
     <div className="space-y-6">
+      {/* ====== 板块聪明钱超额榜（45只主动基金×12板块，并入总览第2步验证） ====== */}
+      {sm && (
+        <Card id="smart-money" className="shadow-sm border-emerald-200">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Activity className="w-4 h-4 text-emerald-600" />
+                板块聪明钱超额榜
+                <span className="text-[10px] font-normal text-slate-400">
+                  主动基金超额=YTD超额中位判定 · 净值 {sm.nav_date || sm.trade_date}（T+1口径）
+                </span>
+              </CardTitle>
+              <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
+                {sm.sectors.filter(s => s.verdict === '✅有效').length}✅ / {sm.sectors.filter(s => s.verdict === '❌无效').length}❌ / {sm.sectors.filter(s => s.verdict === '中性').length}中性
+              </Badge>
+            </div>
+            <p className="text-[10px] text-slate-400 mt-1">
+              判定：YTD超额中位&gt;0 且 跑赢占比≥60% → ✅有效；中位&lt;0 且 ≤40% → ❌无效；其余中性。基准东财板块指数优先、封禁降级等权合成（逐板块注明）。点击板块行展开基金明细。
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-1.5">
+            {sm.sectors.map((s) => (
+              <div key={s.sector} className="rounded-lg border border-slate-100">
+                <button type="button" onClick={() => setOpenSmart(openSmart === s.sector ? null : s.sector)}
+                        className="w-full flex items-center gap-2 flex-wrap px-3 py-2 text-left hover:bg-emerald-50/40 rounded-lg">
+                  <span className="text-xs font-bold text-slate-800 w-16 flex-shrink-0">{s.sector}</span>
+                  <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${smVerdictCls(s.verdict)}`}>{s.verdict}</Badge>
+                  <span className="text-[10px] text-slate-400 flex-shrink-0">{s.nFunds}只</span>
+                  <span className="text-[11px] flex-shrink-0">1月 {exTxt(s.ex1mMed)}</span>
+                  <span className="text-[11px] flex-shrink-0">3月 {exTxt(s.ex3mMed)}</span>
+                  <span className="text-[11px] flex-shrink-0">YTD {exTxt(s.exytdMed)}</span>
+                  <span className="text-[10px] text-slate-500 flex-shrink-0">跑赢{s.winYtdPct ?? '—'}%</span>
+                  <span className="text-[9px] text-slate-300 ml-auto flex-shrink-0">{s.benchSrc} {openSmart === s.sector ? '▲' : '▼'}</span>
+                </button>
+                {openSmart === s.sector && s.funds.length > 0 && (
+                  <div className="px-3 pb-2 space-y-1">
+                    {s.funds.map((f) => (
+                      <div key={f.ts_code} className="flex items-center gap-2 flex-wrap text-[11px] border-t border-slate-50 pt-1">
+                        <span className="text-slate-700 font-medium min-w-[180px]">{f.name}</span>
+                        <span className="text-slate-400">{f.scale != null ? `${f.scale}亿` : ''}</span>
+                        <span>1月 {exTxt(f.ex1m)}</span>
+                        <span>3月 {exTxt(f.ex3m)}</span>
+                        <span>YTD {exTxt(f.exytd)}</span>
+                      </div>
+                    ))}
+                    {s.funds.length === 0 && <p className="text-[10px] text-slate-400 pt-1">该板块暂无合适主动基金样本（空档保留）</p>}
+                  </div>
+                )}
+              </div>
+            ))}
+            {sm.note && <p className="text-[10px] text-slate-400 pt-1">{sm.note}</p>}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Overview */}
       <div className="grid grid-cols-4 gap-4">
         <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
