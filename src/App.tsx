@@ -27,6 +27,8 @@ import ECIPanel from './sections/ECIPanel';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  // 漏斗联动高亮：总览第2步板块 chips → 工具栏对应行高亮（2026-09-27）
+  const [hlSector, setHlSector] = useState<string | null>(null);
   const { data, isLoading, error, lastUpdate, refresh } = useFundData();
 
   return (
@@ -106,8 +108,9 @@ function App() {
           </TabsList>
 
           <TabsContent value="dashboard" className="space-y-6">
-            <WeeklySummary onNavigate={(tab, anchor) => {
+            <WeeklySummary onNavigate={(tab, anchor, highlight) => {
               setActiveTab(tab);
+              setHlSector(highlight || null);
               if (anchor) setTimeout(() => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
             }} />
             <SectorHeatmap />
@@ -135,7 +138,7 @@ function App() {
           </TabsContent>
 
           <TabsContent value="tools" className="space-y-6">
-            <ECIPanel data={data} />
+            <ECIPanel data={data} highlightSector={hlSector} />
           </TabsContent>
         </Tabs>
       </main>

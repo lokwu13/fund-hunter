@@ -739,6 +739,8 @@ export interface FundData {
     path: string;
     window: 'open' | 'half' | 'closed';
     note?: string;
+    lifecycleAll?: Record<string, string>;
+    lifecycleL1?: Record<string, string>;
     steps: Array<{
       n: number; key: string; title: string; lamp: string;
       conclusion: string; guide: string; reason?: string;

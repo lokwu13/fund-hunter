@@ -131,6 +131,7 @@ export default function BondsPanel() {
 
   return (
     <div className="space-y-6">
+      <p className="text-[10px] text-slate-400 -mb-3">📌 本栏服务总览漏斗「第0步 · 水温与做多窗口」：利率/流动性/两融决定仓位上限</p>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

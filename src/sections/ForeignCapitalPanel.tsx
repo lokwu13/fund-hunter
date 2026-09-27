@@ -31,6 +31,7 @@ export default function ForeignCapitalPanel() {
 
   return (
     <div className="space-y-6">
+      <p className="text-[10px] text-slate-400 -mb-3">📌 本栏服务总览漏斗「第2步验证 · 北向态度」：外资流向佐证/证伪板块选择</p>
       {/* Northbound & Southbound Summary */}
       <div className="grid grid-cols-2 gap-4">
         <Card className="bg-gradient-to-br from-violet-50 to-violet-100 border-violet-200">

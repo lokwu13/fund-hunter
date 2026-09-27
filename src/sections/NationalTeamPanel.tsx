@@ -37,6 +37,7 @@ export default function NationalTeamPanel() {
 
   return (
     <div className="space-y-6">
+      <p className="text-[10px] text-slate-400 -mb-3">📌 本栏服务总览漏斗「第1步 · 宽基定风格」：指数趋势/形态/波动率决定做哪类宽基</p>
       {/* ====== 宽基市场短评 ====== */}
       {data.nationalTeamComment && (
         <Card id="nt-comment" className="bg-gradient-to-r from-red-50 to-orange-50 border-red-200">

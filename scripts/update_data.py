@@ -1682,6 +1682,15 @@ def build_funnel(data):
     for n, lc in lc_map.items():
         if lc not in ('积聚期', '启动期'):
             collapsed[lc] = collapsed.get(lc, 0) + 1
+    # 生命周期全量映射（2026-09-27 工具/板块栏目联动用）：L2 全量 + 归并 L1（取成员最高优先级）
+    _lc_prio = ['积聚期', '启动期', '主升期', '高潮期', '退潮期', '半路']
+    lc_l1 = {}
+    for _l2, _lc in lc_map.items():
+        _l1 = SECTOR_TO_L1.get(_l2)
+        if not _l1:
+            continue
+        if _l1 not in lc_l1 or _lc_prio.index(_lc) < _lc_prio.index(lc_l1[_l1]):
+            lc_l1[_l1] = _lc
     lamp2 = '🟢' if step2_rows else ('🟡' if collapsed.get('主升期') else '🔴')
     concl2 = (f"入选{len(step2_rows)}个：" + '、'.join(f"{r['sector']}（{r['lifecycle']}）" for r in step2_rows)) \
         if step2_rows else '今日无入选（无积聚期/启动期板块）'
@@ -1722,6 +1731,7 @@ def build_funnel(data):
     data['funnel'] = {
         'trade_date': (data.get('sectorFlows') or {}).get('trade_date') or '',
         'path': path, 'window': w,
+        'lifecycleAll': lc_map, 'lifecycleL1': lc_l1,
         'steps': [
             {'n': 0, 'key': 'window', 'title': '做多窗口', 'lamp': lamp0,
              'conclusion': concl0, 'guide': guide0, 'reason': lw.get('reason')},

@@ -9,7 +9,7 @@ const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', 
 const DEFENSIVE_SECTORS = new Set(['中证医药', '中证消费', '中证公用', '中证能源']);
 
 interface WeeklySummaryProps {
-  onNavigate?: (tab: string, anchor?: string) => void;
+  onNavigate?: (tab: string, anchor?: string, highlight?: string) => void;
 }
 
 export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
@@ -233,7 +233,14 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                         <div className="space-y-1">
                           {(st.rows || []).map((r) => (
                             <div key={r.sector} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-orange-50/60">
-                              <span className="text-xs font-semibold text-slate-800 flex-shrink-0">{r.sector}</span>
+                              <button
+                                className="text-xs font-semibold text-orange-700 flex-shrink-0 underline decoration-dotted underline-offset-2 hover:text-orange-900"
+                                title="跳工具栏对应卡片并高亮该板块"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onNavigate?.('tools', r.lifecycle === '积聚期' ? 'bottom-watch' : 'sector-scan', r.sector);
+                                }}
+                              >{r.sector}</button>
                               <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 ${
                                 r.lifecycle === '积聚期' ? 'bg-teal-500 text-white' : 'bg-orange-500 text-white'
                               }`}>{r.lifecycle}</Badge>

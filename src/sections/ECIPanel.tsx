@@ -14,6 +14,7 @@ import {
 
 interface ECIPanelProps {
   data: FundData;
+  highlightSector?: string | null;   // 漏斗联动：总览第2步 chips 跳入时高亮该板块行（2026-09-27）
 }
 
 const TREND_ICONS: Record<string, typeof TrendingUp> = {
@@ -70,11 +71,40 @@ const SCAN_STATUS_COLORS: Record<string, string> = {
   '无信号': 'bg-slate-200 text-slate-500',
 };
 
-export default function ECIPanel({ data }: ECIPanelProps) {
+export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
   const eciData = data.eciData;
   const [sortBy, setSortBy] = useState<'eci' | 'trend'>('eci');
   const [filterLevel, setFilterLevel] = useState<'all' | 'high' | 'mid' | 'low'>('all');
   const [openVcp, setOpenVcp] = useState<string | null>(null);
+
+  // ── 漏斗联动（2026-09-27 工具栏目漏斗化）：生命周期徽章 + 第2步入选徽章 + 行高亮 ──
+  const fnHook = data.funnel;
+  const lcAll = fnHook?.lifecycleAll || {};
+  const lcL1 = fnHook?.lifecycleL1 || {};
+  const step2Sel = new Set<string>(
+    (((fnHook?.steps || []).find((s) => s.key === 'sector')?.rows) || []).map((r: any) => r.sector)
+  );
+  const LC_CLS: Record<string, string> = {
+    '积聚期': 'bg-teal-500', '启动期': 'bg-orange-500', '主升期': 'bg-red-500',
+    '高潮期': 'bg-purple-500', '退潮期': 'bg-slate-400', '半路': 'bg-slate-300',
+  };
+  const funnelBadges = (name?: string) => {
+    if (!name) return null;
+    const lc = lcAll[name] || lcL1[name];
+    return (
+      <>
+        {step2Sel.has(name) && (
+          <Badge className="ml-1 text-[9px] h-4 px-1 border-0 bg-orange-500 text-white" title="总览漏斗第2步入选板块">←第2步入选</Badge>
+        )}
+        {lc && lc !== '半路' && (
+          <Badge className={`ml-1 text-[9px] h-4 px-1 border-0 text-white ${LC_CLS[lc] || 'bg-slate-300'}`}
+                 title="板块生命周期（与总览第2步同口径）">{lc}</Badge>
+        )}
+      </>
+    );
+  };
+  const hlRow = (name?: string) =>
+    name && highlightSector === name ? ' ring-2 ring-orange-400 bg-orange-50/70' : '';
 
   if (!eciData || !eciData.sectors || eciData.sectors.length === 0) {
     return (
@@ -134,6 +164,13 @@ export default function ECIPanel({ data }: ECIPanelProps) {
         </Badge>
       </div>
 
+      {/* ===== ① 第2步 · 圈板块工具（配合总览漏斗第2步，行内徽章与总览口径同源） ===== */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-dashed border-orange-300 bg-orange-50/40 px-3 py-2 text-xs text-orange-800">
+        <span className="text-sm font-bold">① 第2步 · 圈板块工具</span>
+        <span className="text-orange-700/80">今日能投 / 扫描榜 / 底部观察池 / ECI 统计与筛选——配合总览第2步「圈板块」使用</span>
+        <a href="#eci-quadrant" className="text-orange-600 underline decoration-dotted">ECI 四象限图在「板块」栏目 ↗</a>
+      </div>
+
       {/* 今日能投板块（数据依据：bottomWatch × ECI × 资金节奏 × 扫描榜）；层级服从：窗口关闭时标灰降级 */}
       {data.actionableSectors && (
         <Card id="actionable-eci" className={`border-emerald-300 shadow-sm ${data.longWindow?.window === 'closed' ? 'opacity-60 grayscale' : ''}`}>
@@ -175,7 +212,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
 
       {/* 板块资金扫描榜 */}
       {data.sectorScan && data.sectorScan.items && data.sectorScan.items.length > 0 && (
-        <Card className="border-indigo-200 shadow-sm">
+        <Card id="sector-scan" className="border-indigo-200 shadow-sm">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <CardTitle className="text-sm font-bold flex items-center gap-2">
@@ -208,10 +245,10 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                 </thead>
                 <tbody>
                   {data.sectorScan.items.map((it: any) => (
-                    <tr key={it.sector} className={`border-b border-slate-50 hover:bg-slate-50/60 ${it.tier === 'high' ? 'opacity-50' : ''}`}>
+                    <tr key={it.sector} className={`border-b border-slate-50 hover:bg-slate-50/60 ${it.tier === 'high' ? 'opacity-50' : ''}${hlRow(it.sector)}`}>
                       <td className="py-1.5 font-medium text-slate-700">
                         {it.tier === 'core' && <span title="⭐低位核心信号（距60日高点回撤≥3%且近20日涨幅≤10%）">⭐</span>}
-                        {it.sector}
+                        {it.sector}{funnelBadges(it.sector)}
                         {it.histLow && <span className="ml-1 text-[9px] text-green-600" title={`🟢历史低位：一年分位 ${it.histPct}%（≤30%）或距250日高点 ${it.distHigh250}%（回撤≥20%）`}>🟢历史低位</span>}
                         {it.lowVol && <span className="ml-1 text-[9px] text-indigo-500" title="缩量：近5日均额/前5日均额<0.8">缩量</span>}
                       </td>
@@ -338,9 +375,9 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                       </thead>
                       <tbody>
                         {g.items.map((it: any) => (
-                          <tr key={it.sector} className="border-b border-slate-50 hover:bg-slate-50/60 align-top">
+                          <tr key={it.sector} className={`border-b border-slate-50 hover:bg-slate-50/60 align-top${hlRow(it.sector)}`}>
                             <td className="py-1.5 font-medium text-slate-700">
-                              {it.sector}
+                              {it.sector}{funnelBadges(it.sector)}
                               {it.dualConfirm && (
                                 <span className="ml-1 text-[9px] bg-amber-100 text-amber-700 rounded px-1 font-bold">双确认</span>
                               )}
@@ -551,7 +588,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
               <div key={s.sector} className="rounded-lg border border-red-100 bg-red-50/50 p-3">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-slate-800">{s.sector}</span>
+                    <span className="font-bold text-slate-800">{s.sector}</span>{funnelBadges(s.sector)}
                     <Badge className="text-[10px] bg-red-500 text-white border-0">ECI {s.eci}</Badge>
                     <Badge className="text-[10px] bg-red-100 text-red-600 border-0">
                       {s.trend}
@@ -627,7 +664,7 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-lg font-bold text-slate-400 w-7">{i + 1}</span>
-                    <span className="font-bold text-slate-800 text-base">{s.sector}</span>
+                    <span className="font-bold text-slate-800 text-base">{s.sector}</span>{funnelBadges(s.sector)}
                     {isMyHolding && (
                       <Badge className="text-[10px] bg-pink-500 text-white border-0">
                         <Star className="w-2.5 h-2.5 mr-0.5" />持仓
@@ -734,14 +771,14 @@ export default function ECIPanel({ data }: ECIPanelProps) {
                 {data.eciSubsectors.items.map((p: any) => (
                   <div key={p.parent} className="rounded-lg border border-violet-100 bg-violet-50/40 p-3">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-bold text-slate-800">{p.parent}</span>
+                      <span className="font-bold text-slate-800">{p.parent}</span>{funnelBadges(p.parent)}
                       <Badge className="text-[10px] bg-violet-500 text-white border-0">ECI {p.parentEci}</Badge>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                       {p.subs.map((sub: any) => (
                         <div key={sub.name} className="bg-white rounded-lg border border-slate-200 p-2.5">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs font-bold text-slate-700">{sub.name}</span>
+                            <span className="text-xs font-bold text-slate-700">{sub.name}</span>{funnelBadges(sub.name)}
                             <span className="text-xs font-bold text-violet-600">{sub.eci}</span>
                           </div>
                           <div className="flex justify-between text-[10px] text-slate-500 mb-1">
@@ -906,6 +943,12 @@ export default function ECIPanel({ data }: ECIPanelProps) {
           </CardContent>
         </Card>
       )}
+
+      {/* ===== ② 第3步 · 个股形态工具（服务第3步「看形态」选股与第4步跟踪） ===== */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-dashed border-violet-300 bg-violet-50/40 px-3 py-2 text-xs text-violet-800">
+        <span className="text-sm font-bold">② 第3步 · 个股形态工具</span>
+        <span className="text-violet-700/80">个股 VCP 精扫 / 逆行流水——从第2步圈定的板块里挑形态过硬的个股</span>
+      </div>
 
       {/* 个股级 VCP 精扫（A500∪上证50∪沪深300 池） */}
       {data.vcpStocks && (
@@ -1152,6 +1195,51 @@ export default function ECIPanel({ data }: ECIPanelProps) {
           )}
         </CardContent>
       </Card>
+      {/* ===== ③ 全层 · 资金监控（融资异动覆盖持仓+观察股，服务第0步水温佐证与第3/4步个股验证） ===== */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-dashed border-rose-300 bg-rose-50/40 px-3 py-2 text-xs text-rose-800">
+        <span className="text-sm font-bold">③ 全层 · 资金监控</span>
+        <span className="text-rose-700/80">融资异动 + ECI 总策略——贯穿第0步水温、第3步选股、第4步跟踪验证</span>
+      </div>
+
+      {/* 融资异动监控（观察池+持仓） */}
+      <Card className="border-rose-200 shadow-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-bold flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-rose-500" />
+            融资异动监控（观察池 + 持仓）
+            {data.marginWatch && (
+              <span className="text-[10px] font-normal text-slate-400">
+                {data.marginWatch.trade_date} · 共 {data.marginWatch.items.length} 只 · 阈值 {data.marginWatch.threshold}
+              </span>
+            )}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {data.marginWatch && data.marginWatch.items.length > 0 ? (
+            <div className="space-y-1">
+              {data.marginWatch.items.map((it: any) => (
+                <div key={it.code} className="flex items-center gap-2 text-xs flex-wrap">
+                  {it.level === 'alert' || it.triggered
+                    ? <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-red-500" />
+                    : it.level === 'watch'
+                      ? <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-amber-400" />
+                      : <span className="inline-block h-2 w-2 shrink-0 rounded-full bg-slate-200" />}
+                  <span className="font-medium text-slate-700">{it.name}</span>
+                  <span className="text-[10px] text-slate-400">{it.group}</span>
+                  {it.level === 'alert' || it.triggered
+                    ? <span className="text-red-600">🔥 融资3日 +{it.inc3d}亿 · 占流通 {it.incPct}%</span>
+                    : it.level === 'watch'
+                      ? <span className="text-amber-600">⚠ 连续{it.consecutiveUpDays}日 · 5日 +{it.inc5d}亿（{it.inc5dPct}%）</span>
+                      : <span className="text-slate-400">3日 {it.inc3d >= 0 ? '+' : ''}{it.inc3d}亿 · 5日 {it.inc5d != null ? `${it.inc5d >= 0 ? '+' : ''}${it.inc5d}亿` : '—'}</span>}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-slate-400">✅ 无融资异常</p>
+          )}
+        </CardContent>
+      </Card>
+
       <Card className="border-cyan-200 bg-gradient-to-r from-cyan-50 to-blue-50">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-bold flex items-center gap-2 text-cyan-800">

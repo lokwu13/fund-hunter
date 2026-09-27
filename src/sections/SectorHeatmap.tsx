@@ -286,6 +286,64 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
         </Card>
       )}
 
+      {/* ====== 板块页专属：板块生命周期分布与分组（与总览漏斗第2步同口径） ====== */}
+      {detailed && data.funnel?.lifecycleAll && (() => {
+        const lcAll = data.funnel.lifecycleAll;
+        const order = ['积聚期', '启动期', '主升期', '高潮期', '退潮期', '半路'];
+        const barColor: Record<string, string> = {
+          '积聚期': 'bg-teal-500', '启动期': 'bg-orange-500', '主升期': 'bg-red-500',
+          '高潮期': 'bg-purple-500', '退潮期': 'bg-slate-400', '半路': 'bg-slate-300',
+        };
+        const chipCls: Record<string, string> = {
+          '积聚期': 'bg-teal-50 text-teal-700 border-teal-200',
+          '启动期': 'bg-orange-50 text-orange-700 border-orange-200',
+          '主升期': 'bg-red-50 text-red-700 border-red-200',
+          '高潮期': 'bg-purple-50 text-purple-700 border-purple-200',
+          '退潮期': 'bg-slate-100 text-slate-600 border-slate-300',
+          '半路': 'bg-slate-50 text-slate-500 border-slate-200',
+        };
+        const byStage: Record<string, string[]> = {};
+        order.forEach(o => { byStage[o] = []; });
+        Object.entries(lcAll).forEach(([sec, st]) => {
+          (byStage[st] = byStage[st] || []).push(sec);
+        });
+        const total = Object.keys(lcAll).length || 1;
+        const rest = ['主升期', '高潮期', '退潮期', '半路']
+          .map(o => `${o}${(byStage[o] || []).length}`).join(' / ');
+        return (
+          <Card id="lifecycle-map" className="shadow-sm border-orange-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Activity className="w-4 h-4 text-orange-500" />
+                板块生命周期分布
+                <span className="text-[10px] font-normal text-slate-400">与总览第2步同口径 · {Object.keys(lcAll).length} 个细分板块</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2.5">
+              <div className="flex h-3 rounded-full overflow-hidden border border-slate-200">
+                {order.filter(o => (byStage[o] || []).length > 0).map(o => (
+                  <div key={o} className={barColor[o]} style={{ width: `${((byStage[o].length / total) * 100).toFixed(1)}%` }} title={`${o} ${byStage[o].length}个`} />
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {order.map(o => (
+                  <Badge key={o} variant="outline" className={`text-[10px] ${chipCls[o]}`}>{o} {(byStage[o] || []).length}</Badge>
+                ))}
+              </div>
+              {(['积聚期', '启动期'] as const).map(o => (byStage[o] || []).length > 0 && (
+                <div key={o} className="flex flex-wrap items-center gap-1">
+                  <span className={`text-[11px] font-bold mr-1 ${o === '积聚期' ? 'text-teal-700' : 'text-orange-700'}`}>{o}（{byStage[o].length}）：</span>
+                  {byStage[o].map(sec => (
+                    <Badge key={sec} variant="outline" className={`text-[10px] ${chipCls[o]}`}>{sec}</Badge>
+                  ))}
+                </div>
+              ))}
+              <p className="text-[10px] text-slate-400">其余阶段（折叠）：{rest} · 明细见总览第2步「圈板块」</p>
+            </CardContent>
+          </Card>
+        );
+      })()}
+
       {/* ====== 板块页专属：细分指数短评（速览跳转锚点） ====== */}
       {detailed && data.sectorCommentary && data.sectorCommentary.length > 0 && (
         <Card id="sector-commentary" className="shadow-sm border-indigo-200">
@@ -343,7 +401,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
         };
         const corner = 'absolute text-[10px] font-semibold pointer-events-none px-1.5 py-0.5 rounded bg-white/80 border';
         return (
-          <Card className="shadow-sm border-cyan-200">
+          <Card id="eci-quadrant" className="shadow-sm border-cyan-200">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <CardTitle className="text-sm font-bold flex items-center gap-2">
