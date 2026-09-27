@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { TrendingUp, TrendingDown, Activity, Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart, ChevronRight, Crosshair } from 'lucide-react';
+import { Activity, Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart, ChevronRight, Crosshair } from 'lucide-react';
 import { useFundData } from '@/hooks/useFundData';
 
 const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
@@ -100,13 +100,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
     flat: 'bg-slate-50 border-slate-200',
   };
 
-  const fundSources = [
-    { name: '国家队', status: '稳健', trend: '持平', color: 'red' },
-    { name: '公募基金', status: '加仓医药', trend: '回暖', color: 'blue' },
-    { name: '北向资金', status: '成交额口径', trend: '官方停披净买入', color: 'violet' },
-    { name: '南下资金', status: data.southbound.week > 0 ? '净流入' : '净流出', trend: data.southbound.week > 0 ? '流入' : '放缓', color: 'teal' },
-    { name: '融资融券', status: '增加', trend: '活跃', color: 'orange' },
-  ];
+  // 五路资金态度条（fundSources）已于 2026-09-27 按用户指令删除
 
   // ====== 每日评语速览：聚合四大栏目结论 ======
   const mt = data.bondData?.marginTrading;
@@ -640,46 +634,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
         </div>
       )}
 
-      {/* Fund Source Cards */}
-      <div className="grid grid-cols-5 gap-3">
-        {fundSources.map((fund) => {
-          const statusColors: Record<string, string> = {
-            red: 'from-red-500 to-red-600',
-            blue: 'from-blue-500 to-blue-600',
-            violet: 'from-violet-500 to-violet-600',
-            teal: 'from-teal-500 to-teal-600',
-            orange: 'from-orange-500 to-orange-600',
-          };
-          const bgColors: Record<string, string> = {
-            red: 'bg-red-50 border-red-100',
-            blue: 'bg-blue-50 border-blue-100',
-            violet: 'bg-violet-50 border-violet-100',
-            teal: 'bg-teal-50 border-teal-100',
-            orange: 'bg-orange-50 border-orange-100',
-          };
-          return (
-            <Card key={fund.name} className={`${bgColors[fund.color]} border`}>
-              <CardContent className="p-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${statusColors[fund.color]}`} />
-                  <p className="text-xs font-semibold text-slate-600">{fund.name}</p>
-                </div>
-                <p className="text-sm font-bold text-slate-800">{fund.status}</p>
-                <Badge variant="outline" className="text-xs mt-1">
-                  {fund.trend === '回暖' || fund.trend === '活跃' || fund.trend === '流入' ? (
-                    <TrendingUp className="w-3 h-3 mr-0.5" />
-                  ) : fund.trend === '流出' || fund.trend === '放缓' ? (
-                    <TrendingDown className="w-3 h-3 mr-0.5" />
-                  ) : (
-                    <Activity className="w-3 h-3 mr-0.5" />
-                  )}
-                  {fund.trend}
-                </Badge>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      {/* Fund Source Cards（五路资金态度条）已于 2026-09-27 按用户指令删除；底层数据块 nationalETFWatch/northbound/southbound 等继续取数，其他栏目仍在用 */}
 
       {/* 持仓表现 - 公告/新闻/关联信息 */}
       {data.holdingsNews && data.holdingsNews.length > 0 && (
