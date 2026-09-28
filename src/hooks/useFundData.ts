@@ -272,6 +272,16 @@ export interface FundData {
       trend: string;
       temp?: string;
       verdict?: string;
+      compare?: {
+        skipped?: boolean;
+        note?: string;
+        emDate?: string;
+        emTotal?: number;
+        tushareTotal?: number;
+        diffPct?: number;
+        divergence?: boolean;
+        action?: string;
+      };
       daily: Array<{
         date: string;
         total: number;

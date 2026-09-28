@@ -1493,7 +1493,7 @@
       "source": "Tushare margin（沪深北交易所两融汇总）",
       "freq": "日更",
       "lastUpdate": "2026-09-24",
-      "note": "T+1口径：交易日当晚更新前一交易日数据；异常守卫：单日|Δ|>15%剔除沿用前值（2026-09-28）"
+      "note": "T+1口径：交易日当晚更新前一交易日数据；异常守卫：单日|Δ|>15%剔除沿用前值（2026-09-28）；双源比对=东财RPTA_RZRQ_LSHJ每日对照，偏差>2%标分歧、>15%沿用前值+suspect（2026-09-29）"
     },
     "privateFund_inflow": {
       "source": "私募排排网统计+公开报道手工整理",
@@ -7929,7 +7929,15 @@
       "verdict": "中性（谨慎）",
       "suspect": false,
       "suspectNote": null,
-      "corrections": []
+      "corrections": [],
+      "compare": {
+        "emDate": "2026-09-24",
+        "emTotal": 26373.03,
+        "tushareTotal": 26373,
+        "diffPct": 0.0,
+        "divergence": false,
+        "source": "Tushare margin（主） vs 东财datacenter RPTA_RZRQ_LSHJ（比对）"
+      }
     }
   },
   "hotFundNavs": [

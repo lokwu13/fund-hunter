@@ -488,6 +488,22 @@ export default function BondsPanel() {
               </div>
             </div>
 
+            {/* 双源比对（2026-09-29：Tushare 主源 vs 东财 datacenter 比对源） */}
+            {bd.marginTrading.compare && (
+              bd.marginTrading.compare.skipped ? (
+                <p className="text-[10px] text-slate-400">双源比对：{bd.marginTrading.compare.note}</p>
+              ) : (
+                <p className={`text-[10px] ${bd.marginTrading.compare.divergence ? 'text-rose-600 font-semibold' : 'text-slate-400'}`}>
+                  双源比对：Tushare {Math.round(bd.marginTrading.compare.tushareTotal ?? 0).toLocaleString()}亿
+                  vs 东财 {Math.round(bd.marginTrading.compare.emTotal ?? 0).toLocaleString()}亿
+                  （{bd.marginTrading.compare.emDate}，差 {bd.marginTrading.compare.diffPct}%）
+                  {bd.marginTrading.compare.divergence
+                    ? ` ⚠️分歧${bd.marginTrading.compare.action ? '：' + bd.marginTrading.compare.action : '，待观察'}`
+                    : ' ✓一致'}
+                </p>
+              )
+            )}
+
             {/* 融资融券余额走势图 + 每日变化 */}
             <div>
               <p className="text-xs font-semibold text-slate-700 mb-1">融资融券余额走势（5月中-7月中）</p>

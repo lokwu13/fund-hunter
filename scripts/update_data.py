@@ -3141,8 +3141,38 @@ MARGIN_TRUTH_OVERRIDE = {
                  'src': '交易所口径/Gildata核实（tushare margin 接口异常值13,505亿已剔除）'},
 }
 MARGIN_GUARD_MAX_CHG = 0.15   # 异常守卫：单日总余额变化 |Δ|>15% 即判数据源异常，丢弃该点沿用前值
+MARGIN_DIVERGENCE_PCT = 2.0   # 双源比对（2026-09-29 用户指令）：|东财−Tushare|/Tushare >2% 打分歧标记
 # TODO(备选源)：东财 datacenter 两融汇总接口（datacenter-web.eastmoney.com，RPTA_WEB_RZRQ_GGMX
 # 或沪深汇总报表）作为 tushare 异常时的自动降级；本地 IP 封禁未实测，目前仅做守卫剔除（2026-09-28）。
+# 2026-09-29 更新：RPTA_RZRQ_LSHJ（市场合计历史）本地实测可用，已落地为每日比对源（见下）。
+
+_EM_DC_HEADERS = {'User-Agent': 'Mozilla/5.0', 'Referer': 'https://data.eastmoney.com/'}
+
+
+def _em_margin_totals():
+    """东财 datacenter 两融市场合计（RPTA_RZRQ_LSHJ）→ {YYYYMMDD: {total,fin,sec}}（元→亿）。
+
+    每日比对源（2026-09-29）：仅取最近 5 行供最新交易日比对；任何失败返回 None（优雅跳过，
+    不影响主流程）。实测 2026-09-29：09-24 RZRQYE=26,373.03 亿，与交易所口径/Gildata 一致。
+    """
+    try:
+        r = requests.get('https://datacenter-web.eastmoney.com/api/data/v1/get', params={
+            'reportName': 'RPTA_RZRQ_LSHJ', 'columns': 'DIM_DATE,RZYE,RQYE,RZRQYE',
+            'sortColumns': 'DIM_DATE', 'sortTypes': '-1',
+            'pageSize': 5, 'pageNumber': 1, 'source': 'WEB', 'client': 'WEB',
+        }, headers=_EM_DC_HEADERS, timeout=15)
+        rows = ((r.json().get('result') or {}).get('data')) or []
+        out = {}
+        for x in rows:
+            d = str(x['DIM_DATE'])[:10].replace('-', '')
+            if x.get('RZRQYE'):
+                out[d] = {'total': round(float(x['RZRQYE']) / 1e8, 2),
+                          'fin': round(float(x['RZYE']) / 1e8, 2) if x.get('RZYE') else None,
+                          'sec': round(float(x['RQYE']) / 1e8, 2) if x.get('RQYE') else None}
+        return out or None
+    except Exception as e:
+        print(f'  Warning: EM margin compare unavailable (skip): {str(e)[:60]}')
+        return None
 
 
 def fetch_margin_summary(pro, trade_date, data):
@@ -3191,6 +3221,37 @@ def fetch_margin_summary(pro, trade_date, data):
         suspect = bool(suspect_dates and suspect_dates[-1] == daily[-1]['date'])
         suspect_note = (f"数据源异常守卫：{('、'.join(suspect_dates))} Tushare 两融值单日偏离前日>15%，"
                         f"已丢弃并沿用最后正常值；接口恢复后自动消除。") if suspect_dates else None
+        # ── ③ 东财双源比对（2026-09-29 用户指令：Tushare 为主、东财 RPTA_RZRQ_LSHJ 每日比对）──
+        # 偏差>2% 打 divergence 标记（块内注记两边数值与来源）；>15% 按守卫逻辑沿用前值+suspect；
+        # 东财不可用（IP封禁/接口异常）优雅跳过并注明，绝不影响主流程。
+        em = _em_margin_totals()
+        compare = None
+        if em:
+            em_d = sorted(em)[-1]
+            em_v = em[em_d]
+            cur_t = daily[-1]['total']
+            diff_pct = abs(em_v['total'] - cur_t) / cur_t * 100 if cur_t else 999.0
+            compare = {'emDate': f'{em_d[:4]}-{em_d[4:6]}-{em_d[6:]}',
+                       'emTotal': em_v['total'], 'tushareTotal': cur_t,
+                       'diffPct': round(diff_pct, 2),
+                       'divergence': bool(diff_pct > MARGIN_DIVERGENCE_PCT),
+                       'source': 'Tushare margin（主） vs 东财datacenter RPTA_RZRQ_LSHJ（比对）'}
+            if diff_pct > 15:
+                # 双源严重分歧=数据源异常，按守卫逻辑沿用前日值 + suspect 哨兵
+                daily[-1] = {'date': daily[-1]['date'], 'total': daily[-2]['total'],
+                             'fin': daily[-2]['fin'], 'sec': daily[-2]['sec'], 'suspect': True}
+                suspect = True
+                suspect_note = ((suspect_note or '')
+                                + f"双源严重分歧：Tushare {cur_t:.0f}亿 vs 东财 {em_v['total']:.0f}亿"
+                                  f"（{compare['emDate']}，偏差{diff_pct:.1f}%>15%），已沿用前值并标 suspect。")
+                compare['action'] = '沿用前值+suspect'
+            elif diff_pct > MARGIN_DIVERGENCE_PCT:
+                suspect_note = ((suspect_note or '')
+                                + f"双源分歧：Tushare {cur_t:.0f}亿 vs 东财 {em_v['total']:.0f}亿"
+                                  f"（{compare['emDate']}，偏差{diff_pct:.1f}%>2%），数值保留待观察。")
+        else:
+            compare = {'skipped': True,
+                       'note': '东财比对源不可用（IP封禁/接口异常），本日仅 Tushare 单源'}
         latest, prev = daily[-1], daily[-2]
         td_last = days[-1]
         update_time = f'{td_last[:4]}-{td_last[4:6]}-{td_last[6:]}'
@@ -3275,12 +3336,18 @@ def fetch_margin_summary(pro, trade_date, data):
             'suspect': suspect,
             'suspectNote': suspect_note,
             'corrections': corrections,
+            'compare': compare,
         })
         ds = data.setdefault('dataSources', {}).setdefault('marginTrading', {})
         ds.update({'source': 'Tushare margin（沪深北交易所两融汇总）', 'freq': '日更',
                    'lastUpdate': update_time,
-                   'note': 'T+1口径：交易日当晚更新前一交易日数据；异常守卫：单日|Δ|>15%剔除沿用前值（2026-09-28）'})
-        print(f"  marginTrading: {update_time} 余额{latest['total']:.0f}亿 近5日{d5:+.0f}亿")
+                   'note': 'T+1口径：交易日当晚更新前一交易日数据；异常守卫：单日|Δ|>15%剔除沿用前值（2026-09-28）；双源比对=东财RPTA_RZRQ_LSHJ每日对照，偏差>2%标分歧、>15%沿用前值+suspect（2026-09-29）'})
+        cmp_txt = ''
+        if compare and not compare.get('skipped'):
+            cmp_txt = f" | 比对 Tushare {compare['tushareTotal']:.0f} vs 东财 {compare['emTotal']:.0f}（差{compare['diffPct']}%{' ⚠分歧' if compare['divergence'] else ' ✓一致'}）"
+        elif compare:
+            cmp_txt = ' | 比对：东财不可用，单源'
+        print(f"  marginTrading: {update_time} 余额{latest['total']:.0f}亿 近5日{d5:+.0f}亿{cmp_txt}")
     except Exception as e:
         print(f"  Warning: fetch_margin_summary failed: {e}")
 
