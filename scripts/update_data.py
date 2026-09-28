@@ -3133,11 +3133,26 @@ def fetch_north_south(pro, trade_date):
     return north, south
 
 
+# ── 两融数据事故修正（2026-09-28 用户确认）──
+# tushare margin 接口 2026-09-24 起口径异常：全市场两融余额 09-23 26,550 亿 → 09-24 13,505 亿
+# 断崖腰斩（疑只含单交易所）。以下按交易所口径/Gildata 核实值写死修正，守卫规则兜底未来异常。
+MARGIN_TRUTH_OVERRIDE = {
+    '20260924': {'total': 26373.03, 'fin': 26078.71, 'sec': 294.32,
+                 'src': '交易所口径/Gildata核实（tushare margin 接口异常值13,505亿已剔除）'},
+}
+MARGIN_GUARD_MAX_CHG = 0.15   # 异常守卫：单日总余额变化 |Δ|>15% 即判数据源异常，丢弃该点沿用前值
+# TODO(备选源)：东财 datacenter 两融汇总接口（datacenter-web.eastmoney.com，RPTA_WEB_RZRQ_GGMX
+# 或沪深汇总报表）作为 tushare 异常时的自动降级；本地 IP 封禁未实测，目前仅做守卫剔除（2026-09-28）。
+
+
 def fetch_margin_summary(pro, trade_date, data):
     """全市场两融余额自动日更（Tushare margin，沪深北三所合计）。
 
     T+1 口径：交易日当晚披露前一交易日数据，updateTime 如实标注数据日期。
     daily 滚动保留最近 40 个交易日；totalBalance/finBalance/secBalance/trend/comment 自动重算。
+    异常守卫（2026-09-28）：单日总余额 |Δ|>15% 判数据源异常，丢弃该点沿用最后正常值，
+    块内标 suspect:true + suspectNote；连续异常保持哨兵直到恢复。MARGIN_TRUTH_OVERRIDE
+    内核实值优先于接口原始值（修正记录于 corrections）。
     """
     try:
         start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=120)).strftime('%Y%m%d')
@@ -3155,6 +3170,27 @@ def fetch_margin_summary(pro, trade_date, data):
             'fin': round(float(agg.loc[td, 'rzye']) / 1e8, 2),
             'sec': round(float(agg.loc[td, 'rqye']) / 1e8, 2),
         } for td in days]
+        # ── ① 核实值修正（写死，来源注明）──
+        corrections = []
+        for i, td in enumerate(days):
+            ov = MARGIN_TRUTH_OVERRIDE.get(td)
+            if ov and abs(daily[i]['total'] - ov['total']) > 1:
+                corrections.append({'date': daily[i]['date'], 'from': daily[i]['total'],
+                                    'to': ov['total'], 'src': ov['src']})
+                daily[i] = {'date': daily[i]['date'], 'total': ov['total'],
+                            'fin': ov['fin'], 'sec': ov['sec'], 'corrected': True}
+        # ── ② 异常守卫：|Δ|>15% 丢弃该点、沿用前值、标 suspect ──
+        suspect_dates = []
+        for i in range(1, len(daily)):
+            prev_t = daily[i - 1]['total']
+            if prev_t > 0 and abs(daily[i]['total'] - prev_t) / prev_t > MARGIN_GUARD_MAX_CHG:
+                suspect_dates.append(daily[i]['date'])
+                daily[i] = {'date': daily[i]['date'], 'total': prev_t,
+                            'fin': daily[i - 1]['fin'], 'sec': daily[i - 1]['sec'],
+                            'suspect': True}
+        suspect = bool(suspect_dates and suspect_dates[-1] == daily[-1]['date'])
+        suspect_note = (f"数据源异常守卫：{('、'.join(suspect_dates))} Tushare 两融值单日偏离前日>15%，"
+                        f"已丢弃并沿用最后正常值；接口恢复后自动消除。") if suspect_dates else None
         latest, prev = daily[-1], daily[-2]
         td_last = days[-1]
         update_time = f'{td_last[:4]}-{td_last[4:6]}-{td_last[6:]}'
@@ -3172,18 +3208,24 @@ def fetch_margin_summary(pro, trade_date, data):
                 break
             streak += 1
         d5 = latest['total'] - daily[-6]['total'] if len(daily) >= 6 else chg
-        trend = '上升' if d5 > 0 else ('下降' if d5 < 0 else '持平')
+        # 噪声带（2026-09-28 起注明）：5日变动 ±50亿内（≈余额0.2%）视为持平，避免微噪误判趋势
+        trend = '上升' if d5 > 50 else ('下降' if d5 < -50 else '持平')
         md = f"{int(td_last[4:6])}月{int(td_last[6:])}日"
         c = f"截至{md}两融余额{latest['total']:.0f}亿，较前日{'增加' if chg >= 0 else '减少'}约{abs(chg):.0f}亿"
         if streak >= 2:
             c += f"，连续{streak}日{'上升' if direction > 0 else '下降'}"
         c += f"。融资余额{latest['fin']:.0f}亿，融券余额{latest['sec']:.0f}亿。"
-        if d5 > 0:
+        if trend == '上升':
             c += "杠杆资金持续回流，市场风险偏好回升。"
-        elif d5 < 0:
+        elif trend == '下降':
             c += "杠杆资金持续离场，市场风险偏好下降。"
         else:
             c += "杠杆资金总体观望，市场风险偏好平稳。"
+        if corrections:
+            c += '（' + '；'.join(f"{x['date']}值{x['from']:.0f}亿系接口异常，已按{x['src']}修正为{x['to']:.0f}亿"
+                                 for x in corrections) + '）'
+        if suspect_note:
+            c += f'（{suspect_note}）'
 
         # ── 水温 + 做多结论（A. 结论先行，依据随后）──
         bd = data.get('bondData') or {}
@@ -3230,10 +3272,14 @@ def fetch_margin_summary(pro, trade_date, data):
             'verdict': verdict,
             'daily': daily,
             'comment': c,
+            'suspect': suspect,
+            'suspectNote': suspect_note,
+            'corrections': corrections,
         })
         ds = data.setdefault('dataSources', {}).setdefault('marginTrading', {})
         ds.update({'source': 'Tushare margin（沪深北交易所两融汇总）', 'freq': '日更',
-                   'lastUpdate': update_time, 'note': 'T+1口径：交易日当晚更新前一交易日数据'})
+                   'lastUpdate': update_time,
+                   'note': 'T+1口径：交易日当晚更新前一交易日数据；异常守卫：单日|Δ|>15%剔除沿用前值（2026-09-28）'})
         print(f"  marginTrading: {update_time} 余额{latest['total']:.0f}亿 近5日{d5:+.0f}亿")
     except Exception as e:
         print(f"  Warning: fetch_margin_summary failed: {e}")
