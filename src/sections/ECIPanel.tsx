@@ -221,6 +221,98 @@ export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanel
         </Card>
       )}
 
+      {/* ===== 每日涨幅轮动榜（2026-09-29 用户指令：近15交易日×每日涨幅前10；🔥过热→第2步降权） ===== */}
+      {data.sectorRotation && data.sectorRotation.grid.length > 0 && (() => {
+        const rot = data.sectorRotation;
+        // 同一板块跨列同色系追踪：按上榜热度顺序分配调色板（描边+角标底色）
+        const ROT_PALETTE = ['#dc2626', '#ea580c', '#d97706', '#65a30d', '#0d9488', '#0284c7',
+                             '#4f46e5', '#9333ea', '#db2777', '#57534e', '#16a34a', '#0891b2'];
+        const colorOf: Record<string, string> = {};
+        rot.stats.forEach((s, i) => { colorOf[s.sector] = ROT_PALETTE[i % ROT_PALETTE.length]; });
+        const statOf: Record<string, (typeof rot.stats)[number]> = {};
+        rot.stats.forEach((s) => { statOf[s.sector] = s; });
+        // 涨幅深浅：红色深浅（A股红涨），<=0 的榜首格给灰
+        const cellBg = (ret: number) => ret <= 0
+          ? 'rgba(100,116,139,0.18)'
+          : `rgba(220,38,38,${Math.min(0.88, 0.18 + ret / 7).toFixed(2)})`;
+        const overheatN = rot.stats.filter((s) => s.overheat).length;
+        return (
+          <Card id="sector-rotation" className="border-rose-200 shadow-sm">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <CardTitle className="text-sm font-bold flex items-center gap-2">
+                  <SortDesc className="w-4 h-4 text-rose-500" />
+                  每日涨幅轮动榜
+                  <span className="text-[10px] font-normal text-slate-400">近{rot.days.length}交易日 × 每日行业涨幅前10 · 同色描边=同一板块跨日追踪</span>
+                </CardTitle>
+                <div className="flex items-center gap-1.5">
+                  {overheatN > 0 && (
+                    <Badge className="text-[10px] border-0 bg-rose-600 text-white">🔥过热 {overheatN} 个</Badge>
+                  )}
+                  <Badge variant="outline" className="text-xs bg-rose-50 text-rose-700 border-rose-200">
+                    {rot.trade_date}
+                  </Badge>
+                </div>
+              </div>
+              <p className="text-[11px] text-rose-800 bg-rose-50 rounded-md px-2 py-1.5 mt-1 leading-relaxed">
+                轮动解读：{rot.summary}
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="text-[10px] border-separate" style={{ borderSpacing: '2px', minWidth: '900px' }}>
+                  <thead>
+                    <tr>
+                      <th className="text-slate-400 font-medium text-left px-1 py-0.5 sticky left-0 bg-white z-10">名次</th>
+                      {rot.days.map((d) => (
+                        <th key={d} className="text-slate-500 font-medium px-1 py-0.5 whitespace-nowrap">{d}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.from({ length: 10 }, (_, rankIdx) => (
+                      <tr key={rankIdx}>
+                        <td className="text-slate-400 px-1 py-0.5 sticky left-0 bg-white z-10">{rankIdx + 1}</td>
+                        {rot.grid.map((g) => {
+                          const cell = g.rows[rankIdx];
+                          if (!cell) return <td key={g.date} />;
+                          const st = statOf[cell.sector];
+                          const c = colorOf[cell.sector] || '#64748b';
+                          return (
+                            <td key={g.date}
+                                title={`${g.date} 第${cell.rank}名：${cell.sector} ${cell.ret >= 0 ? '+' : ''}${cell.ret}%${st ? `｜近10日上榜${st.hits10}次·连${st.streak}天·${st.phase}` : ''}`}
+                                className="px-1 py-0.5 rounded-sm whitespace-nowrap text-center font-medium"
+                                style={{
+                                  background: cellBg(cell.ret),
+                                  color: cell.ret >= 2 ? '#fff' : '#7f1d1d',
+                                  borderBottom: `2px solid ${c}`,
+                                }}>
+                              {st?.overheat && '🔥'}{cell.sector} {cell.ret >= 0 ? '+' : ''}{cell.ret}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {/* 轮动热度统计（上榜板块） */}
+              <div className="flex flex-wrap gap-1.5 mt-2.5">
+                {rot.stats.slice(0, 12).map((s) => (
+                  <Badge key={s.sector} variant="outline"
+                         className={`text-[10px] ${s.overheat ? 'border-rose-400 bg-rose-50 text-rose-700 font-semibold' : s.phase === '中段' ? 'border-amber-300 bg-amber-50 text-amber-700' : 'border-slate-200 text-slate-500'}`}
+                         title={`近10日上榜${s.hits10}次 · 当前连续${s.streak}天 · 距上次上榜${s.sinceLast}天 · 近10日累计${s.cum10 != null ? (s.cum10 >= 0 ? '+' : '') + s.cum10 + '%' : '—'}`}>
+                    <span className="inline-block w-1.5 h-1.5 rounded-full mr-1" style={{ background: colorOf[s.sector] }} />
+                    {s.label} {s.sector}（{s.hits10}次{s.streak > 0 ? `/连${s.streak}天` : ''}）
+                  </Badge>
+                ))}
+              </div>
+              <p className="text-[10px] text-slate-400 mt-1.5">{rot.note}</p>
+            </CardContent>
+          </Card>
+        );
+      })()}
+
       {/* 板块资金扫描榜 */}
       {data.sectorScan && data.sectorScan.items && data.sectorScan.items.length > 0 && (
         <Card id="sector-scan" className="border-indigo-200 shadow-sm">

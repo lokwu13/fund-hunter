@@ -259,6 +259,13 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                   {r.smart.proxy && `·${r.smart.l1}代理`}
                                 </Badge>
                               )}
+                              {r.rotation && (
+                                <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 text-white ${
+                                  r.rotation.overheat ? 'bg-rose-600' : r.rotation.phase === '中段' ? 'bg-amber-500' : 'bg-emerald-500'
+                                }`} title={`轮动热度（每日涨幅榜）：近10日上榜${r.rotation.hits10}次·当前连续${r.rotation.streak}天${r.rotation.overheat ? '——轮动上涨已久·追高风险，第2步已沉底降权' : ''}`}>
+                                  {r.rotation.overheat ? '🔥轮动过热·已降权' : r.rotation.phase === '中段' ? '🟠轮动中段' : '🟢轮动启动'}
+                                </Badge>
+                              )}
                               <span className="text-[11px] text-slate-500 flex-1 min-w-[120px]">{r.reason}</span>
                               <span className="text-[11px] text-slate-600 flex-shrink-0">
                                 双龙头：{(r.leaders || []).length > 0

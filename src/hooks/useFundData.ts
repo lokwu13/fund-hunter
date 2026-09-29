@@ -785,6 +785,18 @@ export interface FundData {
       }>;
     }>;
   };
+  // 板块每日涨幅轮动榜（2026-09-29 用户指令：近15交易日×每日涨幅前10 网格 + 过热因子并入漏斗第2步降权）
+  sectorRotation?: {
+    trade_date: string;
+    days: string[];
+    grid: Array<{ date: string; rows: Array<{ rank: number; sector: string; ret: number }> }>;
+    stats: Array<{
+      sector: string; hits10: number; streak: number; sinceLast: number;
+      cum10: number | null; phase: string; overheat: boolean; label: string;
+    }>;
+    summary: string;
+    note?: string;
+  };
   zizengETF?: {
     trade_date: string;
     nav_date?: string | null;

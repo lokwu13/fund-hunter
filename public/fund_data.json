@@ -18161,8 +18161,8 @@
         "key": "broad",
         "title": "宽基定风格",
         "lamp": "🟡",
-        "conclusion": "当前可关注：沪深300（一年分位0.4%，阶段底部）；上证50（一年分位0.8%，阶段底部）；中证1000（一年分位12.4%，阶段底部）",
-        "guide": "本步回答：买哪类宽基/什么风格？当前可关注：沪深300（一年分位0.4%，阶段底部）；上证50（一年分位0.8%，阶段底部）；中证1000（一年分位12.4%，阶段底部）。选好风格后进第2步圈板块",
+        "conclusion": "当前可关注：沪深300（一年分位2.8%，阶段底部）；上证50（一年分位4.8%，阶段底部）；中证A500（一年分位15.6%，阶段底部）",
+        "guide": "本步回答：买哪类宽基/什么风格？当前可关注：沪深300（一年分位2.8%，阶段底部）；上证50（一年分位4.8%，阶段底部）；中证A500（一年分位15.6%，阶段底部）。选好风格后进第2步圈板块",
         "rows": [
           {
             "indexCode": "000300.SH",
@@ -18171,7 +18171,7 @@
             "etfName": "华泰柏瑞沪深300ETF",
             "etfClose": 4.417,
             "label4": "阶段底部",
-            "pct1y": 0.4,
+            "pct1y": 2.8,
             "maAlign": "50/150/200=非多头",
             "state": "低波蓄势",
             "pivot": null,
@@ -18186,7 +18186,7 @@
             "etfName": "华夏上证50ETF",
             "etfClose": 2.922,
             "label4": "阶段底部",
-            "pct1y": 0.8,
+            "pct1y": 4.8,
             "maAlign": "50/150/200=非多头",
             "state": "低波蓄势",
             "pivot": null,
@@ -18201,7 +18201,7 @@
             "etfName": "南方中证500ETF",
             "etfClose": 7.44,
             "label4": "半路",
-            "pct1y": 32.8,
+            "pct1y": 42.0,
             "maAlign": "50/150/200=非多头",
             "state": "构筑基底",
             "pivot": 8.22,
@@ -18215,8 +18215,8 @@
             "etfCode": "512100.SH",
             "etfName": "南方中证1000ETF",
             "etfClose": 2.968,
-            "label4": "阶段底部",
-            "pct1y": 12.4,
+            "label4": "半路",
+            "pct1y": 41.2,
             "maAlign": "50/150/200=非多头",
             "state": "构筑基底",
             "pivot": 3.23,
@@ -18231,7 +18231,7 @@
             "etfName": "华夏科创50ETF",
             "etfClose": 1.643,
             "label4": "多头排列",
-            "pct1y": 66.4,
+            "pct1y": 69.2,
             "maAlign": "50/150/200=多头",
             "state": "无形态",
             "pivot": null,
@@ -18245,8 +18245,8 @@
             "etfCode": "159915.SZ",
             "etfName": "易方达创业板ETF",
             "etfClose": 3.159,
-            "label4": "阶段底部",
-            "pct1y": 22.4,
+            "label4": "多头排列",
+            "pct1y": 44.4,
             "maAlign": "50/150/200=多头",
             "state": "无形态",
             "pivot": null,
@@ -18261,7 +18261,7 @@
             "etfName": "华夏中证A500ETF",
             "etfClose": 1.142,
             "label4": "阶段底部",
-            "pct1y": 5.2,
+            "pct1y": 15.6,
             "maAlign": "50/150/200=非多头",
             "state": "低波蓄势",
             "pivot": null,
@@ -18301,6 +18301,13 @@
             "pattern": "底部",
             "volRatio": 0.68,
             "patternEvidence": "一年分位21.6%；量能比10/60=0.68≤0.7✓",
+            "rotation": {
+              "phase": "启动",
+              "hits10": 1,
+              "streak": 1,
+              "overheat": false,
+              "label": "🟢启动"
+            },
             "smart": {
               "verdict": "❌无效",
               "exytdMed": -7.95,
@@ -18348,7 +18355,7 @@
             "distPct": 2.5,
             "invalidation": 25.04,
             "track": "reson",
-            "smartMoneyPosDays": 5,
+            "smartMoneyPosDays": 4,
             "inPool": true,
             "reson": true,
             "mine": false,
@@ -19075,5 +19082,1636 @@
       }
     ],
     "note": "聪明钱超额榜（2026-09-27 样表产品化）：45 只主动基金 × 12 板块（名单为策展样本，家电无合适标的空档保留）；超额=复权净值区间收益−板块基准（近1月=21交易点/近3月=63/YTD=上年末基期），T+1 净值口径（判定滞后一天）；判定：YTD超额中位>0 且 跑赢占比≥60% → ✅有效；中位<0 且 ≤40% → ❌无效；其余中性；基准东财板块指数优先、封禁降级等权合成，逐板块见 benchSrc。"
+  },
+  "sectorRotation": {
+    "trade_date": "2026-09-28",
+    "days": [
+      "09-07",
+      "09-08",
+      "09-09",
+      "09-10",
+      "09-11",
+      "09-14",
+      "09-15",
+      "09-16",
+      "09-17",
+      "09-18",
+      "09-21",
+      "09-22",
+      "09-23",
+      "09-24",
+      "09-28"
+    ],
+    "grid": [
+      {
+        "date": "09-07",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "种植业",
+            "ret": 5.64
+          },
+          {
+            "rank": 2,
+            "sector": "渔业",
+            "ret": 4.81
+          },
+          {
+            "rank": 3,
+            "sector": "超市连锁",
+            "ret": 4.21
+          },
+          {
+            "rank": 4,
+            "sector": "百货",
+            "ret": 3.82
+          },
+          {
+            "rank": 5,
+            "sector": "元器件",
+            "ret": 3.24
+          },
+          {
+            "rank": 6,
+            "sector": "饲料",
+            "ret": 2.87
+          },
+          {
+            "rank": 7,
+            "sector": "林业",
+            "ret": 2.8
+          },
+          {
+            "rank": 8,
+            "sector": "酒店餐饮",
+            "ret": 2.8
+          },
+          {
+            "rank": 9,
+            "sector": "旅游景点",
+            "ret": 2.78
+          },
+          {
+            "rank": 10,
+            "sector": "矿物制品",
+            "ret": 2.76
+          }
+        ]
+      },
+      {
+        "date": "09-08",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "焦炭加工",
+            "ret": 6.01
+          },
+          {
+            "rank": 2,
+            "sector": "石油贸易",
+            "ret": 5.13
+          },
+          {
+            "rank": 3,
+            "sector": "农药化肥",
+            "ret": 4.4
+          },
+          {
+            "rank": 4,
+            "sector": "石油开采",
+            "ret": 4.28
+          },
+          {
+            "rank": 5,
+            "sector": "出版业",
+            "ret": 4.14
+          },
+          {
+            "rank": 6,
+            "sector": "种植业",
+            "ret": 3.33
+          },
+          {
+            "rank": 7,
+            "sector": "房产服务",
+            "ret": 3.28
+          },
+          {
+            "rank": 8,
+            "sector": "批发业",
+            "ret": 3.25
+          },
+          {
+            "rank": 9,
+            "sector": "铜",
+            "ret": 3.06
+          },
+          {
+            "rank": 10,
+            "sector": "石油加工",
+            "ret": 2.95
+          }
+        ]
+      },
+      {
+        "date": "09-09",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "船舶",
+            "ret": 4.46
+          },
+          {
+            "rank": 2,
+            "sector": "水运",
+            "ret": 3.62
+          },
+          {
+            "rank": 3,
+            "sector": "煤炭开采",
+            "ret": 3.47
+          },
+          {
+            "rank": 4,
+            "sector": "焦炭加工",
+            "ret": 3.13
+          },
+          {
+            "rank": 5,
+            "sector": "渔业",
+            "ret": 2.82
+          },
+          {
+            "rank": 6,
+            "sector": "黄金",
+            "ret": 2.24
+          },
+          {
+            "rank": 7,
+            "sector": "港口",
+            "ret": 2.08
+          },
+          {
+            "rank": 8,
+            "sector": "铜",
+            "ret": 2.01
+          },
+          {
+            "rank": 9,
+            "sector": "水力发电",
+            "ret": 1.68
+          },
+          {
+            "rank": 10,
+            "sector": "火力发电",
+            "ret": 1.67
+          }
+        ]
+      },
+      {
+        "date": "09-10",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "玻璃",
+            "ret": 2.84
+          },
+          {
+            "rank": 2,
+            "sector": "水力发电",
+            "ret": 2.22
+          },
+          {
+            "rank": 3,
+            "sector": "船舶",
+            "ret": 2.19
+          },
+          {
+            "rank": 4,
+            "sector": "银行",
+            "ret": 1.47
+          },
+          {
+            "rank": 5,
+            "sector": "多元金融",
+            "ret": 1.39
+          },
+          {
+            "rank": 6,
+            "sector": "火力发电",
+            "ret": 1.19
+          },
+          {
+            "rank": 7,
+            "sector": "证券",
+            "ret": 0.84
+          },
+          {
+            "rank": 8,
+            "sector": "新型电力",
+            "ret": 0.77
+          },
+          {
+            "rank": 9,
+            "sector": "焦炭加工",
+            "ret": 0.65
+          },
+          {
+            "rank": 10,
+            "sector": "陶瓷",
+            "ret": 0.57
+          }
+        ]
+      },
+      {
+        "date": "09-11",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "玻璃",
+            "ret": 2.31
+          },
+          {
+            "rank": 2,
+            "sector": "通信设备",
+            "ret": 0.27
+          },
+          {
+            "rank": 3,
+            "sector": "影视音像",
+            "ret": 0.04
+          },
+          {
+            "rank": 4,
+            "sector": "水力发电",
+            "ret": -0.01
+          },
+          {
+            "rank": 5,
+            "sector": "电信运营",
+            "ret": -0.12
+          },
+          {
+            "rank": 6,
+            "sector": "新型电力",
+            "ret": -0.26
+          },
+          {
+            "rank": 7,
+            "sector": "航空",
+            "ret": -0.39
+          },
+          {
+            "rank": 8,
+            "sector": "水务",
+            "ret": -0.4
+          },
+          {
+            "rank": 9,
+            "sector": "元器件",
+            "ret": -0.47
+          },
+          {
+            "rank": 10,
+            "sector": "出版业",
+            "ret": -0.66
+          }
+        ]
+      },
+      {
+        "date": "09-14",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "生物制药",
+            "ret": 3.13
+          },
+          {
+            "rank": 2,
+            "sector": "汽车整车",
+            "ret": 2.63
+          },
+          {
+            "rank": 3,
+            "sector": "陶瓷",
+            "ret": 2.59
+          },
+          {
+            "rank": 4,
+            "sector": "摩托车",
+            "ret": 2.58
+          },
+          {
+            "rank": 5,
+            "sector": "矿物制品",
+            "ret": 2.11
+          },
+          {
+            "rank": 6,
+            "sector": "化学制药",
+            "ret": 1.92
+          },
+          {
+            "rank": 7,
+            "sector": "染料涂料",
+            "ret": 1.73
+          },
+          {
+            "rank": 8,
+            "sector": "中成药",
+            "ret": 1.64
+          },
+          {
+            "rank": 9,
+            "sector": "元器件",
+            "ret": 1.62
+          },
+          {
+            "rank": 10,
+            "sector": "医药商业",
+            "ret": 1.51
+          }
+        ]
+      },
+      {
+        "date": "09-15",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "半导体",
+            "ret": 1.21
+          },
+          {
+            "rank": 2,
+            "sector": "石油贸易",
+            "ret": 0.66
+          },
+          {
+            "rank": 3,
+            "sector": "焦炭加工",
+            "ret": 0.55
+          },
+          {
+            "rank": 4,
+            "sector": "红黄酒",
+            "ret": 0.09
+          },
+          {
+            "rank": 5,
+            "sector": "煤炭开采",
+            "ret": -0.19
+          },
+          {
+            "rank": 6,
+            "sector": "矿物制品",
+            "ret": -0.21
+          },
+          {
+            "rank": 7,
+            "sector": "空运",
+            "ret": -0.21
+          },
+          {
+            "rank": 8,
+            "sector": "小金属",
+            "ret": -0.23
+          },
+          {
+            "rank": 9,
+            "sector": "特种钢",
+            "ret": -0.38
+          },
+          {
+            "rank": 10,
+            "sector": "新型电力",
+            "ret": -0.43
+          }
+        ]
+      },
+      {
+        "date": "09-16",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "林业",
+            "ret": 5.97
+          },
+          {
+            "rank": 2,
+            "sector": "半导体",
+            "ret": 4.77
+          },
+          {
+            "rank": 3,
+            "sector": "红黄酒",
+            "ret": 4.39
+          },
+          {
+            "rank": 4,
+            "sector": "黄金",
+            "ret": 3.64
+          },
+          {
+            "rank": 5,
+            "sector": "元器件",
+            "ret": 3.16
+          },
+          {
+            "rank": 6,
+            "sector": "通信设备",
+            "ret": 2.87
+          },
+          {
+            "rank": 7,
+            "sector": "机械基件",
+            "ret": 2.74
+          },
+          {
+            "rank": 8,
+            "sector": "铅锌",
+            "ret": 2.67
+          },
+          {
+            "rank": 9,
+            "sector": "铜",
+            "ret": 2.34
+          },
+          {
+            "rank": 10,
+            "sector": "机床制造",
+            "ret": 2.31
+          }
+        ]
+      },
+      {
+        "date": "09-17",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "种植业",
+            "ret": 5.46
+          },
+          {
+            "rank": 2,
+            "sector": "房产服务",
+            "ret": 3.18
+          },
+          {
+            "rank": 3,
+            "sector": "机械基件",
+            "ret": 2.82
+          },
+          {
+            "rank": 4,
+            "sector": "汽车服务",
+            "ret": 2.78
+          },
+          {
+            "rank": 5,
+            "sector": "农用机械",
+            "ret": 2.49
+          },
+          {
+            "rank": 6,
+            "sector": "水运",
+            "ret": 2.33
+          },
+          {
+            "rank": 7,
+            "sector": "出版业",
+            "ret": 2.01
+          },
+          {
+            "rank": 8,
+            "sector": "生物制药",
+            "ret": 1.72
+          },
+          {
+            "rank": 9,
+            "sector": "汽车整车",
+            "ret": 1.71
+          },
+          {
+            "rank": 10,
+            "sector": "影视音像",
+            "ret": 1.61
+          }
+        ]
+      },
+      {
+        "date": "09-18",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "半导体",
+            "ret": 3.96
+          },
+          {
+            "rank": 2,
+            "sector": "机械基件",
+            "ret": 3.89
+          },
+          {
+            "rank": 3,
+            "sector": "超市连锁",
+            "ret": 3.31
+          },
+          {
+            "rank": 4,
+            "sector": "全国地产",
+            "ret": 3.29
+          },
+          {
+            "rank": 5,
+            "sector": "红黄酒",
+            "ret": 3.04
+          },
+          {
+            "rank": 6,
+            "sector": "石油贸易",
+            "ret": 2.73
+          },
+          {
+            "rank": 7,
+            "sector": "家居用品",
+            "ret": 2.62
+          },
+          {
+            "rank": 8,
+            "sector": "软饮料",
+            "ret": 2.57
+          },
+          {
+            "rank": 9,
+            "sector": "生物制药",
+            "ret": 2.34
+          },
+          {
+            "rank": 10,
+            "sector": "电器仪表",
+            "ret": 2.32
+          }
+        ]
+      },
+      {
+        "date": "09-21",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "全国地产",
+            "ret": 4.87
+          },
+          {
+            "rank": 2,
+            "sector": "生物制药",
+            "ret": 4.82
+          },
+          {
+            "rank": 3,
+            "sector": "化学制药",
+            "ret": 4.78
+          },
+          {
+            "rank": 4,
+            "sector": "房产服务",
+            "ret": 4.03
+          },
+          {
+            "rank": 5,
+            "sector": "饲料",
+            "ret": 3.88
+          },
+          {
+            "rank": 6,
+            "sector": "医疗保健",
+            "ret": 3.74
+          },
+          {
+            "rank": 7,
+            "sector": "渔业",
+            "ret": 3.73
+          },
+          {
+            "rank": 8,
+            "sector": "红黄酒",
+            "ret": 3.72
+          },
+          {
+            "rank": 9,
+            "sector": "船舶",
+            "ret": 3.59
+          },
+          {
+            "rank": 10,
+            "sector": "区域地产",
+            "ret": 3.45
+          }
+        ]
+      },
+      {
+        "date": "09-22",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "纺织机械",
+            "ret": 57.0
+          },
+          {
+            "rank": 2,
+            "sector": "塑料",
+            "ret": 8.36
+          },
+          {
+            "rank": 3,
+            "sector": "出版业",
+            "ret": 3.73
+          },
+          {
+            "rank": 4,
+            "sector": "互联网",
+            "ret": 2.14
+          },
+          {
+            "rank": 5,
+            "sector": "软件服务",
+            "ret": 1.85
+          },
+          {
+            "rank": 6,
+            "sector": "影视音像",
+            "ret": 1.8
+          },
+          {
+            "rank": 7,
+            "sector": "文教休闲",
+            "ret": 1.57
+          },
+          {
+            "rank": 8,
+            "sector": "焦炭加工",
+            "ret": 1.56
+          },
+          {
+            "rank": 9,
+            "sector": "公共交通",
+            "ret": 1.36
+          },
+          {
+            "rank": 10,
+            "sector": "石油贸易",
+            "ret": 1.28
+          }
+        ]
+      },
+      {
+        "date": "09-23",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "专用机械",
+            "ret": 2.33
+          },
+          {
+            "rank": 2,
+            "sector": "房产服务",
+            "ret": 2.16
+          },
+          {
+            "rank": 3,
+            "sector": "电器仪表",
+            "ret": 1.93
+          },
+          {
+            "rank": 4,
+            "sector": "水泥",
+            "ret": 1.61
+          },
+          {
+            "rank": 5,
+            "sector": "半导体",
+            "ret": 1.31
+          },
+          {
+            "rank": 6,
+            "sector": "橡胶",
+            "ret": 1.09
+          },
+          {
+            "rank": 7,
+            "sector": "轻工机械",
+            "ret": 0.92
+          },
+          {
+            "rank": 8,
+            "sector": "矿物制品",
+            "ret": 0.9
+          },
+          {
+            "rank": 9,
+            "sector": "生物制药",
+            "ret": 0.82
+          },
+          {
+            "rank": 10,
+            "sector": "园区开发",
+            "ret": 0.72
+          }
+        ]
+      },
+      {
+        "date": "09-24",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "林业",
+            "ret": 5.83
+          },
+          {
+            "rank": 2,
+            "sector": "焦炭加工",
+            "ret": 2.25
+          },
+          {
+            "rank": 3,
+            "sector": "公路",
+            "ret": 1.4
+          },
+          {
+            "rank": 4,
+            "sector": "铁路",
+            "ret": 1.21
+          },
+          {
+            "rank": 5,
+            "sector": "纺织",
+            "ret": 0.85
+          },
+          {
+            "rank": 6,
+            "sector": "水运",
+            "ret": 0.76
+          },
+          {
+            "rank": 7,
+            "sector": "机场",
+            "ret": 0.73
+          },
+          {
+            "rank": 8,
+            "sector": "港口",
+            "ret": 0.67
+          },
+          {
+            "rank": 9,
+            "sector": "出版业",
+            "ret": 0.6
+          },
+          {
+            "rank": 10,
+            "sector": "医疗保健",
+            "ret": 0.46
+          }
+        ]
+      },
+      {
+        "date": "09-28",
+        "rows": [
+          {
+            "rank": 1,
+            "sector": "红黄酒",
+            "ret": 1.86
+          },
+          {
+            "rank": 2,
+            "sector": "汽车整车",
+            "ret": 1.22
+          },
+          {
+            "rank": 3,
+            "sector": "啤酒",
+            "ret": 0.86
+          },
+          {
+            "rank": 4,
+            "sector": "林业",
+            "ret": 0.73
+          },
+          {
+            "rank": 5,
+            "sector": "商品城",
+            "ret": 0.59
+          },
+          {
+            "rank": 6,
+            "sector": "园区开发",
+            "ret": 0.54
+          },
+          {
+            "rank": 7,
+            "sector": "港口",
+            "ret": 0.28
+          },
+          {
+            "rank": 8,
+            "sector": "石油开采",
+            "ret": 0.1
+          },
+          {
+            "rank": 9,
+            "sector": "乳制品",
+            "ret": 0.06
+          },
+          {
+            "rank": 10,
+            "sector": "房产服务",
+            "ret": -0.06
+          }
+        ]
+      }
+    ],
+    "stats": [
+      {
+        "sector": "红黄酒",
+        "hits10": 5,
+        "streak": 1,
+        "sinceLast": 0,
+        "cum10": 12.76,
+        "phase": "过热",
+        "overheat": true,
+        "label": "🔥轮动过热·追高风险"
+      },
+      {
+        "sector": "生物制药",
+        "hits10": 5,
+        "streak": 0,
+        "sinceLast": 2,
+        "cum10": 10.28,
+        "phase": "过热",
+        "overheat": true,
+        "label": "🔥轮动过热·追高风险"
+      },
+      {
+        "sector": "房产服务",
+        "hits10": 4,
+        "streak": 1,
+        "sinceLast": 0,
+        "cum10": 9.26,
+        "phase": "中段",
+        "overheat": false,
+        "label": "🟠中段"
+      },
+      {
+        "sector": "半导体",
+        "hits10": 4,
+        "streak": 0,
+        "sinceLast": 2,
+        "cum10": 5.3,
+        "phase": "中段",
+        "overheat": false,
+        "label": "🟠中段"
+      },
+      {
+        "sector": "林业",
+        "hits10": 3,
+        "streak": 2,
+        "sinceLast": 0,
+        "cum10": 7.92,
+        "phase": "中段",
+        "overheat": false,
+        "label": "🟠中段"
+      },
+      {
+        "sector": "汽车整车",
+        "hits10": 3,
+        "streak": 1,
+        "sinceLast": 0,
+        "cum10": 0.96,
+        "phase": "中段",
+        "overheat": false,
+        "label": "🟠中段"
+      },
+      {
+        "sector": "出版业",
+        "hits10": 3,
+        "streak": 0,
+        "sinceLast": 1,
+        "cum10": 2.98,
+        "phase": "中段",
+        "overheat": false,
+        "label": "🟠中段"
+      },
+      {
+        "sector": "机械基件",
+        "hits10": 3,
+        "streak": 0,
+        "sinceLast": 5,
+        "cum10": 7.37,
+        "phase": "中段",
+        "overheat": false,
+        "label": "🟠中段"
+      },
+      {
+        "sector": "焦炭加工",
+        "hits10": 3,
+        "streak": 0,
+        "sinceLast": 1,
+        "cum10": -3.07,
+        "phase": "中段",
+        "overheat": false,
+        "label": "🟠中段"
+      },
+      {
+        "sector": "石油贸易",
+        "hits10": 3,
+        "streak": 0,
+        "sinceLast": 3,
+        "cum10": -1.16,
+        "phase": "中段",
+        "overheat": false,
+        "label": "🟠中段"
+      },
+      {
+        "sector": "矿物制品",
+        "hits10": 3,
+        "streak": 0,
+        "sinceLast": 2,
+        "cum10": 1.19,
+        "phase": "中段",
+        "overheat": false,
+        "label": "🟠中段"
+      },
+      {
+        "sector": "港口",
+        "hits10": 2,
+        "streak": 2,
+        "sinceLast": 0,
+        "cum10": -2.02,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "园区开发",
+        "hits10": 2,
+        "streak": 1,
+        "sinceLast": 0,
+        "cum10": 2.87,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "元器件",
+        "hits10": 2,
+        "streak": 0,
+        "sinceLast": 7,
+        "cum10": 0.57,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "全国地产",
+        "hits10": 2,
+        "streak": 0,
+        "sinceLast": 4,
+        "cum10": 3.08,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "化学制药",
+        "hits10": 2,
+        "streak": 0,
+        "sinceLast": 4,
+        "cum10": 5.3,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "医疗保健",
+        "hits10": 2,
+        "streak": 0,
+        "sinceLast": 1,
+        "cum10": 8.07,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "影视音像",
+        "hits10": 2,
+        "streak": 0,
+        "sinceLast": 3,
+        "cum10": -1.21,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "水运",
+        "hits10": 2,
+        "streak": 0,
+        "sinceLast": 1,
+        "cum10": -2.29,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "电器仪表",
+        "hits10": 2,
+        "streak": 0,
+        "sinceLast": 2,
+        "cum10": 3.67,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "乳制品",
+        "hits10": 1,
+        "streak": 1,
+        "sinceLast": 0,
+        "cum10": -0.47,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "商品城",
+        "hits10": 1,
+        "streak": 1,
+        "sinceLast": 0,
+        "cum10": -0.18,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "啤酒",
+        "hits10": 1,
+        "streak": 1,
+        "sinceLast": 0,
+        "cum10": -0.51,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "石油开采",
+        "hits10": 1,
+        "streak": 1,
+        "sinceLast": 0,
+        "cum10": -3.57,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "专用机械",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 2,
+        "cum10": 2.35,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "中成药",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 9,
+        "cum10": 1.22,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "互联网",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 3,
+        "cum10": -1.56,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "公共交通",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 3,
+        "cum10": -1.91,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "公路",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 1,
+        "cum10": -3.67,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "农用机械",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 6,
+        "cum10": -2.49,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "区域地产",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 4,
+        "cum10": 1.35,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "医药商业",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 9,
+        "cum10": 1.91,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "塑料",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 3,
+        "cum10": 9.69,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "家居用品",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 5,
+        "cum10": 3.56,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "小金属",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 8,
+        "cum10": -3.42,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "摩托车",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 9,
+        "cum10": 0.04,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "文教休闲",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 3,
+        "cum10": 2.15,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "新型电力",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 8,
+        "cum10": -4.98,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "机场",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 1,
+        "cum10": -0.69,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "机床制造",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 7,
+        "cum10": 1.08,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "染料涂料",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 9,
+        "cum10": 2.47,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "橡胶",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 2,
+        "cum10": -0.3,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "水泥",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 2,
+        "cum10": 0.03,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "汽车服务",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 6,
+        "cum10": -1.74,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "渔业",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 4,
+        "cum10": -4.96,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "煤炭开采",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 8,
+        "cum10": -1.27,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "特种钢",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 8,
+        "cum10": -2.94,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "种植业",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 6,
+        "cum10": -10.59,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "空运",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 8,
+        "cum10": -3.28,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "纺织",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 1,
+        "cum10": 2.57,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "纺织机械",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 3,
+        "cum10": 49.14,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "船舶",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 4,
+        "cum10": -5.31,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "超市连锁",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 5,
+        "cum10": -7.83,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "软件服务",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 3,
+        "cum10": 1.02,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "软饮料",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 5,
+        "cum10": -1.89,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "轻工机械",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 2,
+        "cum10": 1.4,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "通信设备",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 7,
+        "cum10": -3.69,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "铁路",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 1,
+        "cum10": 2.01,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "铅锌",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 7,
+        "cum10": -8.59,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "铜",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 7,
+        "cum10": -8.78,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "陶瓷",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 9,
+        "cum10": 1.14,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "饲料",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 4,
+        "cum10": -3.39,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "黄金",
+        "hits10": 1,
+        "streak": 0,
+        "sinceLast": 7,
+        "cum10": -15.48,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "农药化肥",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 13,
+        "cum10": -4.21,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "多元金融",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 11,
+        "cum10": -2.1,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "批发业",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 13,
+        "cum10": -3.78,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "旅游景点",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 14,
+        "cum10": -7.43,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "水力发电",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 10,
+        "cum10": -3.1,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "水务",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 10,
+        "cum10": -2.54,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "火力发电",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 11,
+        "cum10": -5.15,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "玻璃",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 10,
+        "cum10": -3.32,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "电信运营",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 10,
+        "cum10": -2.22,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "百货",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 14,
+        "cum10": -4.38,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "石油加工",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 13,
+        "cum10": -1.05,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "航空",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 10,
+        "cum10": -5.18,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "证券",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 11,
+        "cum10": -2.48,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "酒店餐饮",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 14,
+        "cum10": -7.43,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      },
+      {
+        "sector": "银行",
+        "hits10": 0,
+        "streak": 0,
+        "sinceLast": 11,
+        "cum10": -2.13,
+        "phase": "启动",
+        "overheat": false,
+        "label": "🟢启动"
+      }
+    ],
+    "summary": "当前连续上榜：林业（连2天）、港口（连2天）；🔥过热警示：红黄酒（10日上榜5次/连1天）、生物制药（10日上榜5次/连0天）——轮动上涨已久，谨防滞涨回落",
+    "note": "每日涨幅轮动榜（2026-09-29 用户指令）：sector_history 沉淀等权日收益，近15交易日×每日涨幅前10；热度口径（可调）：近10日上榜≥5次 或 连续≥3天=🔥过热、3-4次=🟠中段、其余=🟢启动；过热板块在漏斗第2步一票降权（排序沉底+警示，不否决）。"
   }
 }

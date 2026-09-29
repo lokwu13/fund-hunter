@@ -1871,6 +1871,107 @@ def fetch_sector_smart_money(pro, trade_date, data):
         print(f"  Warning: fetch_sector_smart_money failed (keep old): {e}")
 
 
+# ── 板块每日涨幅轮动榜（2026-09-29 用户正式指令）──
+# 阈值口径（初版自定，可调）：近10日上榜≥5次 或 当前连续上榜≥3天 = 🔥过热（惩罚）；
+# 上榜3-4次/10日 = 🟠中段（中性）；其余（首次/隔日上榜）= 🟢启动。
+ROTATION_DAYS = 15            # 轮动榜网格列数（近15个交易日）
+ROTATION_TOPN = 10            # 每日涨幅前10
+ROTATION_STAT_WINDOW = 10     # 上榜次数统计窗口
+ROTATION_OVERHEAT_HITS = 5    # ≥5次/10日 = 过热
+ROTATION_OVERHEAT_STREAK = 3  # 连续≥3天 = 过热
+ROTATION_MID_HITS = 3         # 3-4次/10日 = 中段
+
+
+def build_sector_rotation(data):
+    """每日涨幅轮动榜：近15交易日×每日涨幅前10 网格 + 轮动热度判定（过热因子供漏斗第2步降权）。
+
+    数据全部来自 sector_history 沉淀（110 个 L2 板块等权日收益），零新增 API 调用。
+    过热口径：轮动上涨已久的板块后面容易滞涨回落，要惩罚（用户原话）——
+    近10日上榜≥5次 或 当前连续上榜≥3天 判 🔥过热；积聚期板块通常不在涨幅榜上，天然规避过热。
+    """
+    try:
+        hist = _load_sector_history()
+        days_map = (hist or {}).get('days') or {}
+        all_days = sorted(days_map)
+        if len(all_days) < ROTATION_DAYS:
+            print('  rotation: 历史不足15日，跳过')
+            return
+        last15 = all_days[-ROTATION_DAYS:]
+        topsets = {}   # date -> [(sector, ret)] 涨幅前10
+        grid = []
+        for d in last15:
+            secs = (days_map[d].get('sectors') or {})
+            ranked = sorted(((n, v.get('ret')) for n, v in secs.items() if v.get('ret') is not None),
+                            key=lambda x: -x[1])[:ROTATION_TOPN]
+            topsets[d] = ranked
+            grid.append({'date': f'{d[4:6]}-{d[6:]}',
+                         'rows': [{'rank': i + 1, 'sector': n, 'ret': round(r, 2)}
+                                  for i, (n, r) in enumerate(ranked)]})
+        last10 = set(last15[-ROTATION_STAT_WINDOW:])
+        hit_days = {}
+        for d in last15:
+            for n, _r in topsets[d]:
+                hit_days.setdefault(n, []).append(d)
+
+        def _on_board(d, name):
+            return any(nn == name for nn, _ in topsets[d])
+
+        stats = []
+        for n, ds in hit_days.items():
+            hits10 = sum(1 for d in ds if d in last10)
+            streak = 0
+            for d in reversed(last15):
+                if _on_board(d, n):
+                    streak += 1
+                else:
+                    break
+            since = 0
+            for d in reversed(last15):
+                if _on_board(d, n):
+                    break
+                since += 1
+            rows = _history_series(hist, n)
+            cum10 = None
+            if len(rows) >= 10:
+                lvl = 1.0
+                for r in [x[2] for x in rows[-10:]]:
+                    lvl *= (1 + r / 100.0)
+                cum10 = round((lvl - 1) * 100, 2)
+            overheat = hits10 >= ROTATION_OVERHEAT_HITS or streak >= ROTATION_OVERHEAT_STREAK
+            phase = '过热' if overheat else ('中段' if hits10 >= ROTATION_MID_HITS else '启动')
+            stats.append({'sector': n, 'hits10': hits10, 'streak': streak, 'sinceLast': since,
+                          'cum10': cum10, 'phase': phase, 'overheat': overheat,
+                          'label': ('🔥轮动过热·追高风险' if overheat
+                                    else '🟠中段' if phase == '中段' else '🟢启动')})
+        stats.sort(key=lambda s: (-s['hits10'], -s['streak'], s['sector']))
+        # 轮动解读：当前连续霸榜板块 + 过热警示
+        hot = [s for s in stats if s['streak'] >= 2]
+        hot.sort(key=lambda s: (-s['streak'], -s['hits10']))
+        ovh = [s for s in stats if s['overheat']]
+        parts = []
+        if hot:
+            parts.append('当前连续上榜：' + '、'.join(f"{s['sector']}（连{s['streak']}天）" for s in hot[:4]))
+        if ovh:
+            parts.append('🔥过热警示：' + '、'.join(f"{s['sector']}（10日上榜{s['hits10']}次/连{s['streak']}天）"
+                                                  for s in ovh[:6]) + '——轮动上涨已久，谨防滞涨回落')
+        summary = '；'.join(parts) if parts else '近15日无连续上榜板块，轮动分散'
+        latest_d = last15[-1]
+        data['sectorRotation'] = {
+            'trade_date': f'{latest_d[:4]}-{latest_d[4:6]}-{latest_d[6:]}',
+            'days': [g['date'] for g in grid],
+            'grid': grid,
+            'stats': stats,
+            'summary': summary,
+            'note': ('每日涨幅轮动榜（2026-09-29 用户指令）：sector_history 沉淀等权日收益，近15交易日×每日涨幅前10；'
+                     f'热度口径（可调）：近10日上榜≥{ROTATION_OVERHEAT_HITS}次 或 连续≥{ROTATION_OVERHEAT_STREAK}天=🔥过热、'
+                     f'{ROTATION_MID_HITS}-4次=🟠中段、其余=🟢启动；过热板块在漏斗第2步一票降权（排序沉底+警示，不否决）。'),
+        }
+        print(f"  rotation: 15日网格 ✓ 上榜板块{len(stats)}个，过热{len(ovh)}个"
+              + (('（' + '、'.join(s['sector'] for s in ovh[:5]) + '）') if ovh else ''))
+    except Exception as e:
+        print(f"  Warning: build_sector_rotation failed (keep old): {e}")
+
+
 def build_funnel(data):
     """总览五步漏斗结论汇总（2026-09-27 用户正式指令：0窗口→1宽基→2板块→3个股→4排雷）。
 
@@ -1999,6 +2100,8 @@ def build_funnel(data):
         _s = sm_l1.get(_l1)
         if _s and _s.get('verdict') not in (None, '无样本', '数据积累中'):
             smart_l2[_l2] = {'verdict': _s['verdict'], 'exytdMed': _s.get('exytdMed'), 'l1': _l1}
+    # ── 轮动过热因子并入第2步（2026-09-29 用户正式指令）：🔥过热一票降权（排序沉底+警示，不否决）──
+    rot_map = {s['sector']: s for s in (data.get('sectorRotation') or {}).get('stats') or []}
     step2_rows = []
     dropped2 = []   # 积聚/启动但形态未达标（如实展示哪条卡掉）
     for n in all_sectors:
@@ -2033,7 +2136,12 @@ def build_funnel(data):
                            'dual': bool(bw and bw.get('both')),
                            'pattern': sp['pattern'], 'volRatio': sp['volRatio'],
                            'patternEvidence': sp['evidence'],
+                           'rotation': ({'phase': rot_map[n]['phase'], 'hits10': rot_map[n]['hits10'],
+                                         'streak': rot_map[n]['streak'], 'overheat': rot_map[n]['overheat'],
+                                         'label': rot_map[n]['label']} if n in rot_map else None),
                            'smart': dict(smart_l2[n], proxy=(n != smart_l2[n]['l1'])) if n in smart_l2 else None})
+    # 轮动过热一票降权：排序沉底（其余保持原名序），不否决（2026-09-29 用户口径）
+    step2_rows.sort(key=lambda r: (1 if (r.get('rotation') or {}).get('overheat') else 0, r['sector']))
     collapsed = {}
     for n, lc in lc_map.items():
         if lc not in ('积聚期', '启动期'):
@@ -2056,6 +2164,11 @@ def build_funnel(data):
             + ('…' if len(dropped2) > 3 else '') + '）' if dropped2 else '今日无入选（无积聚期/启动期板块）')
     if sm_bad:
         concl2 += '；⚠主动资金未验证：' + '、'.join(sm_bad)
+    rot_hot2 = [r['sector'] for r in step2_rows if (r.get('rotation') or {}).get('overheat')]
+    if rot_hot2:
+        concl2 += ('；🔥轮动过热（已沉底降权，追高风险）：'
+                   + '、'.join(f"{r['sector']}（10日上榜{r['rotation']['hits10']}次/连{r['rotation']['streak']}天）"
+                               for r in step2_rows if (r.get('rotation') or {}).get('overheat')))
     guide2 = '本步回答：主线板块是哪几个？' + concl2 + '。' + ('带着板块去第3步看个股形态（共振轨优先）' if step2_rows else '第3步共振轨为空，只能看⭐优中选优轨')
 
     # ── 第3步 个股形态（双轨制，2026-09-27 用户正式指令；两轨都不沾不进榜）──
@@ -5983,6 +6096,12 @@ def main():
         fetch_sector_smart_money(pro, trade_date, data)
     except Exception as e:
         print(f"  Warning: sectorSmartMoney failed: {e}")
+
+    # ── 17c3. 板块每日涨幅轮动榜（sector_history 零新增调用；🔥过热因子供漏斗第2步降权）──
+    try:
+        build_sector_rotation(data)
+    except Exception as e:
+        print(f"  Warning: sectorRotation failed: {e}")
 
     # ── 17d. 总览五步漏斗结论汇总（2026-09-27 改版第二波，纯汇总零新增调用）──
     try:
