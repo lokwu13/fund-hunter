@@ -77,6 +77,7 @@ export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanel
   const [sortBy, setSortBy] = useState<'eci' | 'trend'>('eci');
   const [filterLevel, setFilterLevel] = useState<'all' | 'high' | 'mid' | 'low'>('all');
   const [openVcp, setOpenVcp] = useState<string | null>(null);
+  const [rotTab, setRotTab] = useState<'tushare' | 'em'>('tushare');  // 轮动榜口径切换（2026-09-29 双轨）
 
   // ── 漏斗联动（2026-09-27 工具栏目漏斗化）：生命周期徽章 + 第2步入选徽章 + 行高亮 ──
   const fnHook = data.funnel;
@@ -221,7 +222,7 @@ export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanel
         </Card>
       )}
 
-      {/* ===== 每日涨幅轮动榜（2026-09-29 用户指令：近15交易日×每日涨幅前10；🔥过热→第2步降权） ===== */}
+      {/* ===== 每日涨幅轮动榜（2026-09-29 用户指令：近15交易日×每日涨幅前10；🔥过热→第2步降权；东财双轨口径切换） ===== */}
       {data.sectorRotation && data.sectorRotation.grid.length > 0 && (() => {
         const rot = data.sectorRotation;
         // 同一板块跨列同色系追踪：按上榜热度顺序分配调色板（描边+角标底色）
@@ -236,6 +237,19 @@ export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanel
           ? 'rgba(100,116,139,0.18)'
           : `rgba(220,38,38,${Math.min(0.88, 0.18 + ret / 7).toFixed(2)})`;
         const overheatN = rot.stats.filter((s) => s.overheat).length;
+        // ── 东财双轨（2026-09-29 用户批准）：em 可用则可切 tab；不可用灰态说明 ──
+        const em = rot.em;
+        const emOk = !!(em && em.available && em.grid.length > 0);
+        const isEm = rotTab === 'em' && emOk;
+        const view = isEm ? { days: em!.days, grid: em!.grid } : { days: rot.days, grid: rot.grid };
+        // 东财口径的同色追踪：按上榜顺序（网格首次出现）分配调色板
+        const emColorOf: Record<string, string> = {};
+        if (isEm) {
+          let ci = 0;
+          for (const g of view.grid) for (const r of g.rows) {
+            if (!(r.sector in emColorOf)) { emColorOf[r.sector] = ROT_PALETTE[ci % ROT_PALETTE.length]; ci++; }
+          }
+        }
         return (
           <Card id="sector-rotation" className="border-rose-200 shadow-sm">
             <CardHeader className="pb-2">
@@ -243,7 +257,7 @@ export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanel
                 <CardTitle className="text-sm font-bold flex items-center gap-2">
                   <SortDesc className="w-4 h-4 text-rose-500" />
                   每日涨幅轮动榜
-                  <span className="text-[10px] font-normal text-slate-400">近{rot.days.length}交易日 × 每日行业涨幅前10 · 同色描边=同一板块跨日追踪</span>
+                  <span className="text-[10px] font-normal text-slate-400">近{view.days.length}交易日 × 每日行业涨幅前10 · 同色描边=同一板块跨日追踪</span>
                 </CardTitle>
                 <div className="flex items-center gap-1.5">
                   {overheatN > 0 && (
@@ -254,9 +268,31 @@ export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanel
                   </Badge>
                 </div>
               </div>
-              <p className="text-[11px] text-rose-800 bg-rose-50 rounded-md px-2 py-1.5 mt-1 leading-relaxed">
-                轮动解读：{rot.summary}
-              </p>
+              {/* 口径切换 tab（东财快照自 2026-09-29 起积累，首日列少如实展示） */}
+              <div className="flex items-center gap-1 mt-1.5">
+                <button type="button" onClick={() => setRotTab('tushare')}
+                        className={`text-[10px] px-2 py-0.5 rounded-full border ${!isEm ? 'bg-rose-600 text-white border-rose-600' : 'text-slate-500 border-slate-200 hover:border-rose-300'}`}>
+                  Tushare口径（L2等权·250日历史）
+                </button>
+                <button type="button" onClick={() => emOk && setRotTab('em')}
+                        title={em?.note}
+                        className={`text-[10px] px-2 py-0.5 rounded-full border ${isEm ? 'bg-orange-500 text-white border-orange-500' : emOk ? 'text-slate-500 border-slate-200 hover:border-orange-300' : 'text-slate-300 border-slate-100 cursor-not-allowed'}`}>
+                  东财口径{emOk ? `（快照${em!.snapshotDays}天·积累中）` : '（待补·快照积累中）'}
+                </button>
+                {isEm && (
+                  <span className="text-[9px] text-orange-600/80">东财无历史回补，仅作对照；过热判定以 Tushare 口径为准</span>
+                )}
+              </div>
+              {!isEm && (
+                <p className="text-[11px] text-rose-800 bg-rose-50 rounded-md px-2 py-1.5 mt-1 leading-relaxed">
+                  轮动解读：{rot.summary}
+                </p>
+              )}
+              {isEm && (
+                <p className="text-[11px] text-orange-800 bg-orange-50 rounded-md px-2 py-1.5 mt-1 leading-relaxed">
+                  {em!.note}
+                </p>
+              )}
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -264,7 +300,7 @@ export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanel
                   <thead>
                     <tr>
                       <th className="text-slate-400 font-medium text-left px-1 py-0.5 sticky left-0 bg-white z-10">名次</th>
-                      {rot.days.map((d) => (
+                      {view.days.map((d) => (
                         <th key={d} className="text-slate-500 font-medium px-1 py-0.5 whitespace-nowrap">{d}</th>
                       ))}
                     </tr>
@@ -273,14 +309,14 @@ export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanel
                     {Array.from({ length: 10 }, (_, rankIdx) => (
                       <tr key={rankIdx}>
                         <td className="text-slate-400 px-1 py-0.5 sticky left-0 bg-white z-10">{rankIdx + 1}</td>
-                        {rot.grid.map((g) => {
+                        {view.grid.map((g) => {
                           const cell = g.rows[rankIdx];
                           if (!cell) return <td key={g.date} />;
-                          const st = statOf[cell.sector];
-                          const c = colorOf[cell.sector] || '#64748b';
+                          const st = isEm ? undefined : statOf[cell.sector];
+                          const c = (isEm ? emColorOf[cell.sector] : colorOf[cell.sector]) || '#64748b';
                           return (
                             <td key={g.date}
-                                title={`${g.date} 第${cell.rank}名：${cell.sector} ${cell.ret >= 0 ? '+' : ''}${cell.ret}%${st ? `｜近10日上榜${st.hits10}次·连${st.streak}天·${st.phase}` : ''}`}
+                                title={`${g.date} 第${cell.rank}名：${cell.sector} ${cell.ret >= 0 ? '+' : ''}${cell.ret}%${st ? `｜近10日上榜${st.hits10}次·连${st.streak}天·${st.phase}` : ''}${isEm ? '｜东财口径' : ''}`}
                                 className="px-1 py-0.5 rounded-sm whitespace-nowrap text-center font-medium"
                                 style={{
                                   background: cellBg(cell.ret),
@@ -296,18 +332,20 @@ export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanel
                   </tbody>
                 </table>
               </div>
-              {/* 轮动热度统计（上榜板块） */}
-              <div className="flex flex-wrap gap-1.5 mt-2.5">
-                {rot.stats.slice(0, 12).map((s) => (
-                  <Badge key={s.sector} variant="outline"
-                         className={`text-[10px] ${s.overheat ? 'border-rose-400 bg-rose-50 text-rose-700 font-semibold' : s.phase === '中段' ? 'border-amber-300 bg-amber-50 text-amber-700' : 'border-slate-200 text-slate-500'}`}
-                         title={`近10日上榜${s.hits10}次 · 当前连续${s.streak}天 · 距上次上榜${s.sinceLast}天 · 近10日累计${s.cum10 != null ? (s.cum10 >= 0 ? '+' : '') + s.cum10 + '%' : '—'}`}>
-                    <span className="inline-block w-1.5 h-1.5 rounded-full mr-1" style={{ background: colorOf[s.sector] }} />
-                    {s.label} {s.sector}（{s.hits10}次{s.streak > 0 ? `/连${s.streak}天` : ''}）
-                  </Badge>
-                ))}
-              </div>
-              <p className="text-[10px] text-slate-400 mt-1.5">{rot.note}</p>
+              {/* 轮动热度统计（上榜板块，Tushare 口径） */}
+              {!isEm && (
+                <div className="flex flex-wrap gap-1.5 mt-2.5">
+                  {rot.stats.slice(0, 12).map((s) => (
+                    <Badge key={s.sector} variant="outline"
+                           className={`text-[10px] ${s.overheat ? 'border-rose-400 bg-rose-50 text-rose-700 font-semibold' : s.phase === '中段' ? 'border-amber-300 bg-amber-50 text-amber-700' : 'border-slate-200 text-slate-500'}`}
+                           title={`近10日上榜${s.hits10}次 · 当前连续${s.streak}天 · 距上次上榜${s.sinceLast}天 · 近10日累计${s.cum10 != null ? (s.cum10 >= 0 ? '+' : '') + s.cum10 + '%' : '—'}`}>
+                      <span className="inline-block w-1.5 h-1.5 rounded-full mr-1" style={{ background: colorOf[s.sector] }} />
+                      {s.label} {s.sector}（{s.hits10}次{s.streak > 0 ? `/连${s.streak}天` : ''}）
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              <p className="text-[10px] text-slate-400 mt-1.5">{isEm ? em!.note : rot.note}</p>
             </CardContent>
           </Card>
         );

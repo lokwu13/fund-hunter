@@ -1872,14 +1872,51 @@ def fetch_sector_smart_money(pro, trade_date, data):
 
 
 # ── 板块每日涨幅轮动榜（2026-09-29 用户正式指令）──
-# 阈值口径（初版自定，可调）：近10日上榜≥5次 或 当前连续上榜≥3天 = 🔥过热（惩罚）；
-# 上榜3-4次/10日 = 🟠中段（中性）；其余（首次/隔日上榜）= 🟢启动。
+# 阈值口径（2026-09-29 用户批准下调，可调）：近10日上榜≥4次 或 当前连续上榜≥3天 = 🔥过热（惩罚）；
+# 上榜3次/10日 = 🟠中段（中性）；其余（首次/隔日上榜）= 🟢启动。
 ROTATION_DAYS = 15            # 轮动榜网格列数（近15个交易日）
 ROTATION_TOPN = 10            # 每日涨幅前10
 ROTATION_STAT_WINDOW = 10     # 上榜次数统计窗口
-ROTATION_OVERHEAT_HITS = 5    # ≥5次/10日 = 过热
+ROTATION_OVERHEAT_HITS = 4    # ≥4次/10日 = 过热（2026-09-29 用户批准自 5 下调，房产服务类高频上榜纳入惩罚）
 ROTATION_OVERHEAT_STREAK = 3  # 连续≥3天 = 过热
-ROTATION_MID_HITS = 3         # 3-4次/10日 = 中段
+ROTATION_MID_HITS = 3         # 3次/10日 = 中段
+
+# 东财行业板块涨幅榜快照缓存（第二口径，2026-09-29 用户批准双轨）：
+# 东财只有当日快照无历史回补——每晚积累一列，随 workflow 提交回写延续。
+EM_BOARD_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache', 'em_board_snapshot.json')
+_EM_BOARD_HEADERS = {'User-Agent': 'Mozilla/5.0', 'Referer': 'https://quote.eastmoney.com/'}
+
+
+def update_em_board_snapshot(trade_date):
+    """东财行业板块当日涨幅榜快照（push2 clist，m:90+t:2 行业板块，按涨跌幅降序前30）入缓存。
+
+    本地 IP 封禁是已知问题：失败返回 None 优雅跳过（不影响主流程），Actions 可通就走 Actions 积累。
+    首日只有 1 列，如实展示。
+    """
+    try:
+        r = requests.get('https://push2.eastmoney.com/api/qt/clist/get', params={
+            'pn': 1, 'pz': 30, 'po': 1, 'np': 1, 'fltt': 2, 'invt': 2,
+            'fid': 'f3', 'fs': 'm:90 t:2', 'fields': 'f12,f14,f3',
+        }, headers=_EM_BOARD_HEADERS, timeout=15)
+        diff = ((r.json().get('data') or {}).get('diff')) or []
+        rows = [{'code': x.get('f12'), 'name': x.get('f14'),
+                 'ret': round(float(x['f3']), 2)} for x in diff
+                if x.get('f14') and x.get('f3') not in (None, '-')]
+        if not rows:
+            print('  Warning: EM board snapshot empty (skip)')
+            return None
+        cache = _load_json_cache(EM_BOARD_CACHE_PATH, {})
+        days = cache.setdefault('days', {})
+        days[trade_date] = rows
+        for d in sorted(days)[:-40]:   # 滚动保留最近 40 个快照日
+            del days[d]
+        with open(EM_BOARD_CACHE_PATH, 'w', encoding='utf-8') as f:
+            json.dump(cache, f, ensure_ascii=False)
+        print(f'  emBoard: {trade_date} 快照 {len(rows)} 板块入缓存（榜首 {rows[0]["name"]} {rows[0]["ret"]:+.2f}%），累计 {len(days)} 天')
+        return len(rows)
+    except Exception as e:
+        print(f'  Warning: EM board snapshot failed (skip, 东财IP封禁则待Actions积累): {str(e)[:60]}')
+        return None
 
 
 def build_sector_rotation(data):
@@ -1887,7 +1924,10 @@ def build_sector_rotation(data):
 
     数据全部来自 sector_history 沉淀（110 个 L2 板块等权日收益），零新增 API 调用。
     过热口径：轮动上涨已久的板块后面容易滞涨回落，要惩罚（用户原话）——
-    近10日上榜≥5次 或 当前连续上榜≥3天 判 🔥过热；积聚期板块通常不在涨幅榜上，天然规避过热。
+    近10日上榜≥4次（2026-09-29 用户批准自5下调）或 当前连续上榜≥3天 判 🔥过热；
+    积聚期板块通常不在涨幅榜上，天然规避过热。
+    东财双轨（2026-09-29 用户批准）：em 子块给东财行业板块口径网格（当日快照积累，无历史回补）；
+    过热因子仅按 Tushare 口径计算（缓存深、口径稳），东财口径只做展示对照。
     """
     try:
         hist = _load_sector_history()
@@ -1956,15 +1996,34 @@ def build_sector_rotation(data):
                                                   for s in ovh[:6]) + '——轮动上涨已久，谨防滞涨回落')
         summary = '；'.join(parts) if parts else '近15日无连续上榜板块，轮动分散'
         latest_d = last15[-1]
+        # ── 东财第二口径网格（当日快照积累，无历史回补；首日可能只有 1-2 列，如实展示）──
+        em_cache = _load_json_cache(EM_BOARD_CACHE_PATH, {})
+        em_days_map = (em_cache or {}).get('days') or {}
+        em_keys = sorted(em_days_map)[-ROTATION_DAYS:]
+        if em_keys:
+            em_grid = [{'date': f'{d[4:6]}-{d[6:]}',
+                        'rows': [{'rank': i + 1, 'sector': x['name'], 'ret': x['ret']}
+                                 for i, x in enumerate(em_days_map[d][:ROTATION_TOPN])]}
+                       for d in em_keys]
+            em_block = {'available': True, 'snapshotDays': len(em_days_map),
+                        'days': [g['date'] for g in em_grid], 'grid': em_grid,
+                        'note': ('东财行业板块口径（push2 当日快照前10，约496个行业板块）；'
+                                 '东财无历史回补，自 2026-09-29 起每晚积累一列，列数随天数增长；'
+                                 '与 Tushare L2 等权口径成分/加权不同，仅作对照，过热判定仍以 Tushare 口径为准。')}
+        else:
+            em_block = {'available': False, 'snapshotDays': 0, 'days': [], 'grid': [],
+                        'note': ('东财口径待补：东财行业板块榜只有当日快照、无历史回补，'
+                                 '自 2026-09-29 起每晚积累（本地 IP 封禁时由 Actions  runner 抓取）；当前快照 0 天。')}
         data['sectorRotation'] = {
             'trade_date': f'{latest_d[:4]}-{latest_d[4:6]}-{latest_d[6:]}',
             'days': [g['date'] for g in grid],
             'grid': grid,
             'stats': stats,
             'summary': summary,
+            'em': em_block,
             'note': ('每日涨幅轮动榜（2026-09-29 用户指令）：sector_history 沉淀等权日收益，近15交易日×每日涨幅前10；'
-                     f'热度口径（可调）：近10日上榜≥{ROTATION_OVERHEAT_HITS}次 或 连续≥{ROTATION_OVERHEAT_STREAK}天=🔥过热、'
-                     f'{ROTATION_MID_HITS}-4次=🟠中段、其余=🟢启动；过热板块在漏斗第2步一票降权（排序沉底+警示，不否决）。'),
+                     f'热度口径（2026-09-29 用户批准下调，可调）：近10日上榜≥{ROTATION_OVERHEAT_HITS}次 或 连续≥{ROTATION_OVERHEAT_STREAK}天=🔥过热、'
+                     f'{ROTATION_MID_HITS}次=🟠中段、其余=🟢启动；过热板块在漏斗第2步一票降权（排序沉底+警示，不否决）。'),
         }
         print(f"  rotation: 15日网格 ✓ 上榜板块{len(stats)}个，过热{len(ovh)}个"
               + (('（' + '、'.join(s['sector'] for s in ovh[:5]) + '）') if ovh else ''))
@@ -6098,6 +6157,10 @@ def main():
         print(f"  Warning: sectorSmartMoney failed: {e}")
 
     # ── 17c3. 板块每日涨幅轮动榜（sector_history 零新增调用；🔥过热因子供漏斗第2步降权）──
+    try:
+        update_em_board_snapshot(trade_date)   # 东财第二口径当日快照（失败优雅跳过，Actions 积累）
+    except Exception as e:
+        print(f"  Warning: emBoardSnapshot failed: {e}")
     try:
         build_sector_rotation(data)
     except Exception as e:

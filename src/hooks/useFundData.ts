@@ -795,6 +795,13 @@ export interface FundData {
       cum10: number | null; phase: string; overheat: boolean; label: string;
     }>;
     summary: string;
+    em?: {
+      available: boolean;
+      snapshotDays: number;
+      days: string[];
+      grid: Array<{ date: string; rows: Array<{ rank: number; sector: string; ret: number }> }>;
+      note: string;
+    };
     note?: string;
   };
   zizengETF?: {
