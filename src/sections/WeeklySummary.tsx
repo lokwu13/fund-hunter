@@ -287,6 +287,26 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                               其余板块（折叠）：{Object.entries(st.collapsed).map(([k, v]) => `${k}${v}`).join(' · ')}（生命周期：积聚/启动/主升/高潮/退潮/半路，仅展开积聚+启动）
                             </p>
                           )}
+                          {/* 聪明钱超额榜一行摘要（2026-09-29 用户指令：整表移至板块栏目，总览只留精简摘要） */}
+                          {data.sectorSmartMoney && (() => {
+                            const sms = data.sectorSmartMoney.sectors;
+                            const good = sms.filter((s) => s.verdict === '✅有效').map((s) => s.sector);
+                            const bad = sms.filter((s) => s.verdict === '❌无效').length;
+                            const mid = sms.filter((s) => s.verdict === '中性').length;
+                            const na = sms.length - good.length - bad - mid;
+                            return (
+                              <p className="text-[10px] text-emerald-700 px-2 pt-1 border-t border-emerald-100">
+                                聪明钱：{good.length > 0 ? `${good.join('、')}✅有效` : '无✅有效板块'}，
+                                其余 ❌无效{bad}·中性{mid}{na > 0 ? `·无样本${na}` : ''}
+                                <button type="button"
+                                        className="ml-1 underline decoration-dotted text-emerald-600 hover:text-emerald-800"
+                                        title="跳转板块栏目「板块聪明钱超额榜」完整表格"
+                                        onClick={(e) => { e.stopPropagation(); onNavigate?.('tools', 'smart-money'); }}>
+                                  详见板块栏目 ↗
+                                </button>
+                              </p>
+                            );
+                          })()}
                           {/* 短线题材轴（保留自原并联双轴短线轴，与主线独立） */}
                           {(shortSectors.length > 0 || shortConcepts.length > 0) && (
                             <div className="mt-2 pt-2 border-t border-rose-100">

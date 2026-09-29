@@ -15,7 +15,7 @@ import {
 interface ECIPanelProps {
   data: FundData;
   highlightSector?: string | null;   // 漏斗联动：总览第2步 chips 跳入时高亮该板块行（2026-09-27）
-  onNavigate?: (tab: string, anchor?: string) => void;  // 跨栏目互跳（聪明钱超额榜→基金栏目）
+  onNavigate?: (tab: string, anchor?: string) => void;  // 跨栏目互跳（预留；聪明钱超额榜 2026-09-29 已迁入本栏目，改锚点直达）
 }
 
 const TREND_ICONS: Record<string, typeof TrendingUp> = {
@@ -72,12 +72,21 @@ const SCAN_STATUS_COLORS: Record<string, string> = {
   '无信号': 'bg-slate-200 text-slate-500',
 };
 
-export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanelProps) {
+export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
   const eciData = data.eciData;
   const [sortBy, setSortBy] = useState<'eci' | 'trend'>('eci');
   const [filterLevel, setFilterLevel] = useState<'all' | 'high' | 'mid' | 'low'>('all');
   const [openVcp, setOpenVcp] = useState<string | null>(null);
   const [rotTab, setRotTab] = useState<'tushare' | 'em'>('tushare');  // 轮动榜口径切换（2026-09-29 双轨）
+  const [openSmart, setOpenSmart] = useState<string | null>(null);   // 聪明钱超额榜板块明细展开（2026-09-29 自基金栏目迁入）
+  const sm = data.sectorSmartMoney;
+  const smVerdictCls = (v: string) =>
+    v === '✅有效' ? 'bg-emerald-600 text-white' :
+    v === '❌无效' ? 'bg-rose-600 text-white' :
+    v === '中性' ? 'bg-slate-400 text-white' : 'bg-slate-200 text-slate-500';
+  const smExTxt = (v: number | null) =>
+    v == null ? <span className="text-slate-300">—</span> :
+      <span className={`font-semibold ${v >= 0 ? 'text-red-500' : 'text-emerald-600'}`}>{v >= 0 ? '+' : ''}{v}%</span>;
 
   // ── 漏斗联动（2026-09-27 工具栏目漏斗化）：生命周期徽章 + 第2步入选徽章 + 行高亮 ──
   const fnHook = data.funnel;
@@ -179,8 +188,7 @@ export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanel
         <span className="text-sm font-bold">① 第2步 · 圈板块工具</span>
         <span className="text-orange-700/80">今日能投 / 扫描榜 / 底部观察池 / ECI 统计与筛选——配合总览第2步「圈板块」使用</span>
         <a href="#eci-quadrant" className="text-orange-600 underline decoration-dotted">ECI 四象限图在「板块」栏目 ↗</a>
-        <button type="button" onClick={() => onNavigate?.('public', 'smart-money')}
-                className="text-orange-600 underline decoration-dotted hover:text-orange-800">聪明钱超额榜在「基金」栏目 ↗</button>
+        <a href="#smart-money" className="text-orange-600 underline decoration-dotted hover:text-orange-800">聪明钱超额榜见本栏目下方 ↓</a>
       </div>
 
       {/* 今日能投板块（数据依据：bottomWatch × ECI × 资金节奏 × 扫描榜）；层级服从：窗口关闭时标灰降级 */}
@@ -350,6 +358,61 @@ export default function ECIPanel({ data, highlightSector, onNavigate }: ECIPanel
           </Card>
         );
       })()}
+
+      {/* ===== 板块聪明钱超额榜（2026-09-29 用户指令：自基金栏目迁入板块栏目，服从第2步选板块逻辑；总览只留一行摘要） ===== */}
+      {sm && (
+        <Card id="smart-money" className="shadow-sm border-emerald-200">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Activity className="w-4 h-4 text-emerald-600" />
+                板块聪明钱超额榜
+                <span className="text-[10px] font-normal text-slate-400">
+                  主动基金超额=YTD超额中位判定 · 净值 {sm.nav_date || sm.trade_date}（T+1口径）
+                </span>
+              </CardTitle>
+              <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
+                {sm.sectors.filter(s => s.verdict === '✅有效').length}✅ / {sm.sectors.filter(s => s.verdict === '❌无效').length}❌ / {sm.sectors.filter(s => s.verdict === '中性').length}中性
+              </Badge>
+            </div>
+            <p className="text-[10px] text-slate-400 mt-1">
+              判定：YTD超额中位&gt;0 且 跑赢占比≥60% → ✅有效；中位&lt;0 且 ≤40% → ❌无效；其余中性。基准东财板块指数优先、封禁降级等权合成（逐板块注明）。点击板块行展开基金明细。
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-1.5">
+            {sm.sectors.map((s) => (
+              <div key={s.sector} className="rounded-lg border border-slate-100">
+                <button type="button" onClick={() => setOpenSmart(openSmart === s.sector ? null : s.sector)}
+                        className="w-full flex items-center gap-2 flex-wrap px-3 py-2 text-left hover:bg-emerald-50/40 rounded-lg">
+                  <span className="text-xs font-bold text-slate-800 w-16 flex-shrink-0">{s.sector}</span>
+                  <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${smVerdictCls(s.verdict)}`}>{s.verdict}</Badge>
+                  <span className="text-[10px] text-slate-400 flex-shrink-0">{s.nFunds}只</span>
+                  <span className="text-[11px] flex-shrink-0">1月 {smExTxt(s.ex1mMed)}</span>
+                  <span className="text-[11px] flex-shrink-0">3月 {smExTxt(s.ex3mMed)}</span>
+                  <span className="text-[11px] flex-shrink-0">YTD {smExTxt(s.exytdMed)}</span>
+                  <span className="text-[10px] text-slate-500 flex-shrink-0">跑赢{s.winYtdPct ?? '—'}%</span>
+                  <span className="text-[9px] text-slate-300 ml-auto flex-shrink-0">{s.benchSrc} {openSmart === s.sector ? '▲' : '▼'}</span>
+                </button>
+                {openSmart === s.sector && s.funds.length > 0 && (
+                  <div className="px-3 pb-2 space-y-1">
+                    {s.funds.map((f) => (
+                      <div key={f.ts_code} className="flex items-center gap-2 flex-wrap text-[11px] border-t border-slate-50 pt-1">
+                        <span className="text-slate-700 font-medium min-w-[180px]">{f.name}</span>
+                        <span className="text-slate-400">{f.scale != null ? `${f.scale}亿` : ''}</span>
+                        <span>1月 {smExTxt(f.ex1m)}</span>
+                        <span>3月 {smExTxt(f.ex3m)}</span>
+                        <span>YTD {smExTxt(f.exytd)}</span>
+                      </div>
+                    ))}
+                    {s.funds.length === 0 && <p className="text-[10px] text-slate-400 pt-1">该板块暂无合适主动基金样本（空档保留）</p>}
+                  </div>
+                )}
+              </div>
+            ))}
+            {sm.note && <p className="text-[10px] text-slate-400 pt-1">{sm.note}</p>}
+          </CardContent>
+        </Card>
+      )}
 
       {/* 板块资金扫描榜 */}
       {data.sectorScan && data.sectorScan.items && data.sectorScan.items.length > 0 && (
