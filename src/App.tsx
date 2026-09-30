@@ -15,7 +15,6 @@ import SectorHeatmap from './sections/SectorHeatmap';
 import NationalTeamPanel from './sections/NationalTeamPanel';
 import PublicFundPanel from './sections/PublicFundPanel';
 import ForeignCapitalPanel from './sections/ForeignCapitalPanel';
-import FundFlowTable from './sections/FundFlowTable';
 import BondsPanel from './sections/BondsPanel';
 import ECIPanel from './sections/ECIPanel';
 // import NationalTeamPanel from './sections/NationalTeamPanel';
@@ -126,7 +125,8 @@ function App() {
 
           <TabsContent value="foreign" className="space-y-6">
             <ForeignCapitalPanel />
-            <FundFlowTable detailed />
+            {/* FundFlowTable（五张统计卡+近三月外资变动筛选表）已于 2026-09-30 应用户指令下线：
+                数据源=北向实时流向 2024-08 停披后为永久死数据；后端无对应取数，纯前端遗留渲染 */}
           </TabsContent>
 
           <TabsContent value="sectors" className="space-y-6">
