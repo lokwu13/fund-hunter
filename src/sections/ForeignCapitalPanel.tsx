@@ -232,7 +232,18 @@ export default function ForeignCapitalPanel() {
                               {it.direction}{it.pos === 'S' && '(S)'}
                             </span>
                           </td>
-                          <td className="text-right text-slate-600">{fmtShares(it.shares)}</td>
+                          <td className="text-right text-slate-600">
+                            {fmtShares(it.shares)}
+                            {it.pctOfHolding != null && (
+                              <span className={`block text-[9px] ${it.pctOfHolding >= 0 ? 'text-red-400' : 'text-emerald-500'}`}>
+                                持仓{it.pctOfHolding >= 0 ? '+' : ''}{it.pctOfHolding}%
+                                {it.pctOfTotal != null && <span className="text-slate-300"> · 股本{it.pctOfTotal}%</span>}
+                              </span>
+                            )}
+                            {it.pctOfHolding == null && it.holdingNote && (
+                              <span className="block text-[9px] text-slate-400">{it.holdingNote}</span>
+                            )}
+                          </td>
                           <td className="text-right text-slate-700 font-semibold">
                             {it.resultPct != null ? `${it.resultPct}%` : '—'}
                             {it.resultShares != null && <span className="text-[9px] text-slate-400 ml-1">{fmtShares(it.resultShares)}</span>}

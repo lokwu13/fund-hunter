@@ -4171,6 +4171,30 @@ def fetch_di_foreign(pro, trade_date, data, backfill_days=None):
                 it['corpCn'] = None
                 it['stockCode'] = None
                 unmatched += 1
+            # ── 涉及股数占该机构持仓比例（2026-09-30 用户指令）──
+            # DI 列表页无"变动前持股"字段（详情 Form 才有，逐条抓太贵）→ 按方向反推：
+            # 增持 before=resultShares-shares；减持 before=resultShares+shares；
+            # 新进无分母→标签'新进建仓'；清仓→'清仓退出'；性质变化/淡仓/借贷池非买卖→None。
+            # 反推口径：假设涉及股数全部计入好仓变动（11x/12x 成立），近似值。
+            sh, rs = it.get('shares'), it.get('resultShares')
+            d = it.get('direction')
+            it['pctOfHolding'] = None
+            it['pctOfTotal'] = None
+            it['holdingNote'] = None
+            if d == '新进':
+                it['holdingNote'] = '新进建仓'
+            elif d == '清仓退出':
+                it['holdingNote'] = '清仓退出'
+            elif d in ('增持', '减持') and sh and rs is not None:
+                before = (rs - sh) if d == '增持' else (rs + sh)
+                if before > 0:
+                    p = round(sh / before * 100, 2)
+                    it['pctOfHolding'] = p if d == '增持' else -p
+            # 占总股本比例（便宜顺算：总股本=resultShares/resultPct）
+            if sh and rs and it.get('resultPct'):
+                total_sh = rs / (it['resultPct'] / 100.0)
+                if total_sh > 0:
+                    it['pctOfTotal'] = round(sh / total_sh * 100, 3)
         top_inst = sorted(({'name': k, **v} for k, v in inst_stat.items()),
                           key=lambda x: -x['n'])[:8]
         data['diForeign'] = {

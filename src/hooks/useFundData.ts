@@ -833,6 +833,7 @@ export interface FundData {
       code: string; direction: string; pos?: string;
       shares: number | null; price: string | null;
       resultShares: number | null; resultPct: number | null;
+      pctOfHolding?: number | null; pctOfTotal?: number | null; holdingNote?: string | null;
       url: string;
     }>;
     topInst: Array<{ name: string; n: number; up: number; down: number }>;
