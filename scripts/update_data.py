@@ -151,6 +151,7 @@ def fetch_stocks_batch(pro, trade_date):
                     'pctChg': round(float(row['pct_chg']), 2),
                     'vol': round(float(row['vol']) / 10000, 2),
                     'watchPrice': info['watchPrice'],
+                    'auto': info.get('auto'),   # 第三步自动收录标记（2026-09-30，非自动收录为 None）
                 })
     except Exception as e:
         print(f"  Warning: Failed to fetch stocks: {e}")
@@ -2029,6 +2030,95 @@ def build_sector_rotation(data):
               + (('（' + '、'.join(s['sector'] for s in ovh[:5]) + '）') if ovh else ''))
     except Exception as e:
         print(f"  Warning: build_sector_rotation failed (keep old): {e}")
+
+
+# ── 第三步入选历史 + 自动收录观察股（2026-09-30 用户正式指令）──
+# "如果个股曾经入选第三步相对长一段时间，记录出来作为备选观察形态。入选超过5个交易日就放入我的观察股，后续都这样处理。"
+# 每日记录第3步（共振轨+优中选优轨）入选名单入 step3_history.json（随 workflow 提交回写延续）；
+# 累计入选≥STEP3_AUTO_WATCH_DAYS 个交易日的个股自动并入 STOCKS（cache 驱动、group=watch、打 auto 标记）；
+# 一旦收录常驻（用户自行决定剔除），掉出第三步后前端灰态提示。09-30 一次性回填自 git 历史（第三步 09-27 才有）。
+STEP3_HISTORY_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache', 'step3_history.json')
+STEP3_AUTO_WATCH_DAYS = 5     # 累计入选≥5个交易日 → 自动收录观察股（可调）
+STEP3_HISTORY_KEEP = 120      # 日名单滚动保留天数
+
+
+def _step3_day_counts(hist):
+    """step3_history days 映射 → {code: 累计入选交易日数}。"""
+    cnt = {}
+    for _d, codes in (hist.get('days') or {}).items():
+        for c in codes:
+            cnt[c] = cnt.get(c, 0) + 1
+    return cnt
+
+
+def apply_step3_auto_watch():
+    """累计入选≥5日的个股自动并入 STOCKS 观察股（动态 cache 驱动，STOCKS dict 单点配置不变）。
+
+    在 main 取数前调用，使新收录股当晚即获得行情/公告/排雷/RS 等全部下游处理。
+    已在 STOCKS 的（用户手动持仓/观察）不改 group、不打标。返回新收录名单。"""
+    hist = _load_json_cache(STEP3_HISTORY_PATH, {})
+    cnt = _step3_day_counts(hist)
+    meta = hist.get('stocks') or {}
+    added = []
+    for c, n in cnt.items():
+        if n >= STEP3_AUTO_WATCH_DAYS and c not in STOCKS:
+            m = meta.get(c) or {}
+            first = str(m.get('first') or '')
+            STOCKS[c] = {'name': m.get('name') or c, 'industry': m.get('sector') or '',
+                         'group': 'watch', 'watchPrice': 0,
+                         'auto': {'source': 'step3', 'days': n,
+                                  'since': f'{first[4:6]}-{first[6:]}' if len(first) == 8 else first}}
+            added.append((c, STOCKS[c]['name'], n))
+    if added:
+        print('  step3AutoWatch 新收录: ' + '、'.join(f'{n}({c}·{d}日)' for c, n, d in added))
+    return added
+
+
+def update_step3_history(data):
+    """每日记录第3步入选名单（以 funnel 数据日期为键），并回写累计天数到第3步行（前端展示用）。"""
+    try:
+        funnel = data.get('funnel') or {}
+        steps = funnel.get('steps') or []
+        s3 = next((s for s in steps if s.get('key') == 'vcp'), None)
+        if s3 is None:
+            return
+        td = str(funnel.get('trade_date') or '').replace('-', '')
+        rows = s3.get('rows') or []
+        hist = _load_json_cache(STEP3_HISTORY_PATH, {})
+        days = hist.setdefault('days', {})
+        meta = hist.setdefault('stocks', {})
+        if td and rows:
+            days[td] = sorted({r['code'] for r in rows if r.get('code')})
+        for dd in sorted(days)[:-STEP3_HISTORY_KEEP]:
+            del days[dd]
+        # 元数据与累计统计
+        for r in rows:
+            c = r.get('code')
+            if not c:
+                continue
+            m = meta.setdefault(c, {'name': r.get('name'), 'sector': r.get('sector')})
+            m['name'] = m.get('name') or r.get('name')
+            m['sector'] = m.get('sector') or r.get('sector')
+        cnt = _step3_day_counts(hist)
+        for c, m in meta.items():
+            m['days'] = cnt.get(c, 0)
+            hits = [d for d, codes in days.items() if c in codes]
+            if hits:
+                m['first'], m['last'] = hits[0], hits[-1]
+        hist['note'] = ('第三步入选历史（2026-09-30 用户指令）：每日记录共振轨+优中选优轨入选名单；'
+                        f'累计≥{STEP3_AUTO_WATCH_DAYS}交易日自动收录观察股（常驻，掉出仅灰态提示）；'
+                        '09-30 一次性回填自 git 历史（第三步 2026-09-27 大改版才有，此前无记录）。')
+        _save_json_cache(STEP3_HISTORY_PATH, hist)
+        # 回写 rows：累计入选天数（selDays）+ 是否已达收录线
+        for r in rows:
+            n = cnt.get(r.get('code'), 0)
+            r['selDays'] = n
+            r['selQualified'] = n >= STEP3_AUTO_WATCH_DAYS
+        if td and rows:
+            print(f"  step3History: {td} 记录 {len(days[td])} 只（"
+                  + '、'.join(f"{r['name']}{cnt.get(r['code'], 0)}日" for r in rows) + '）')
+    except Exception as e:
+        print(f"  Warning: update_step3_history failed (keep old): {e}")
 
 
 def build_funnel(data):
@@ -5978,6 +6068,9 @@ def main():
 
     data = load_existing_data()
 
+    # ── 0. 第三步自动收录观察股（2026-09-30 用户指令：累计入选≥5日 cache 驱动并入 STOCKS）──
+    apply_step3_auto_watch()
+
     # ── 1. Indices (batch) ──
     print("\n[1/17] Fetching indices (batch)...")
     indices = fetch_indices_batch(pro, trade_date)
@@ -6171,6 +6264,9 @@ def main():
         build_funnel(data)
     except Exception as e:
         print(f"  Warning: funnel failed: {e}")
+
+    # ── 17e. 第三步入选历史记录（每日名单入 cache + selDays 回写漏斗行；2026-09-30 用户指令）──
+    update_step3_history(data)
 
     # ── Metadata ──
     # updateTime 以数据实际最新日期为准（盘中/早间运行时各板块数据仍是前一交易日）

@@ -19,6 +19,10 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
   const myStocks = data.stocks || [];
   const holdStocks = myStocks.filter((s) => s.group === 'hold');
   const watchStocks = myStocks.filter((s) => s.group === 'watch');
+  // 当前第3步入围 codes（2026-09-30：自动收录股掉出第三步时灰态提示用）
+  const step3Codes = new Set<string>(
+    ((((data.funnel?.steps) || []).find((s) => s.key === 'vcp')?.rows) || []).map((r: any) => r.code)
+  );
   const myETFs = data.myETF || [];
   const sectors = data.sectorCommentary || [];
 
@@ -361,6 +365,13 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                             )}
                             <span className={`text-xs font-bold flex-shrink-0 ${(r.distPct ?? 99) <= 3 ? 'text-red-500' : 'text-amber-600'}`}>距枢轴{r.distPct}%</span>
                             <span className="text-[10px] text-slate-500">枢轴{r.pivot} · 失效{r.invalidation}</span>
+                            {r.selDays != null && (
+                              <Badge variant="outline"
+                                     className={`text-[9px] h-4 px-1 flex-shrink-0 ${r.selQualified ? 'border-violet-400 bg-violet-50 text-violet-700 font-semibold' : 'border-slate-200 text-slate-400'}`}
+                                     title={`第三步累计入选${r.selDays}个交易日（含今日）；累计≥5日自动收录观察股${r.selQualified ? '——已达标收录' : ''}`}>
+                                {r.selQualified ? '🤖' : ''}累计入选{r.selDays}日{r.selQualified ? '·已收录' : ''}
+                              </Badge>
+                            )}
                           </div>
                         );
                         return (
@@ -499,6 +510,20 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                         </Badge>
                       )}
                     </div>
+                    {/* 第三步自动收录标记（2026-09-30 用户指令：常驻，掉出仅灰态提示） */}
+                    {s.auto && (
+                      step3Codes.has(s.code) ? (
+                        <Badge className="mt-0.5 text-[9px] h-4 px-1 border-0 bg-violet-500 text-white"
+                               title={`自动收录：第三步累计入选${s.auto.days}个交易日（≥5日达标），${s.auto.since}起收录；入选期间保持关注`}>
+                          🤖第三步入选{s.auto.days}日·{s.auto.since}收录
+                        </Badge>
+                      ) : (
+                        <Badge className="mt-0.5 text-[9px] h-4 px-1 border-0 bg-slate-300 text-slate-600"
+                               title={`自动收录：第三步累计入选${s.auto.days}个交易日，${s.auto.since}起收录；当前已掉出第三步（常驻观察，剔除需手动决定）`}>
+                          🤖第三步入选{s.auto.days}日收录·已掉出第三步
+                        </Badge>
+                      )
+                    )}
                     <div className="flex items-end justify-between mt-0.5">
                       <span className="text-[10px] text-slate-400">{s.code}</span>
                       <div className="text-right leading-tight">

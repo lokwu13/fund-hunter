@@ -39,6 +39,8 @@ export interface StockItem {
   pctChg?: number;
   vol?: number;
   watchPrice?: number;
+  /** 第三步入选≥5日自动收录标记（2026-09-30 用户指令；手动配置股无此字段） */
+  auto?: { source: string; days: number; since: string } | null;
 }
 
 export interface MyETFItem {
