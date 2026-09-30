@@ -3843,6 +3843,286 @@ def fetch_ccass_foreign(pro, trade_date, data, backfill_dates=None):
         print(f"  Warning: ccassForeign display failed: {e}")
 
 
+# ── DI 权益披露：外资大机构增减仓（2026-09-30 用户指令：雪球爬港交所公告→考证后改披露易直连）──
+# 数据源考证结论（2026-09-30 本机实测）：
+#   雪球港股公告 f10 接口 404、notice/hk/list 403（openresty 封 IP），不可用；
+#   披露易 DI 门户 di.hkex.com.hk 可机查：GET NSSrchDate.aspx 取 VIEWSTATE（含 __EVENTVALIDATION）
+#   → POST cmdSearchSS（大股东申报）+ 日期下拉 → NSNoticeSSDateList.aspx 分页列表（50 条/页，
+#   pg=N GET 翻页），字段含 申报号/事件日/上市公司/申报人/代码/涉及股数/价格/变动后持股/变动后比例；
+#   详情页 NSForm2.aspx?fn=<ref> 有股票代码（lblDStockCode）。服务器慢（~9s/次），需 4s 间隔+退避。
+#   代码语义（官方 NSStdCode.aspx）：前两位 10=首次≥5%(新进)、11=增持、12=减持、13=权益性质变化
+#   （1311/1313=借出、1312/1314=召回借券，非买卖）、14=淡仓增、15=淡仓减、16=借贷池、17=其他
+#   （1704=清仓退出）。后缀 (L)=好仓/(S)=淡仓。
+# 口径免责：仅持股跨越 5% 整数关口才强制申报（非全量持仓变动），申报滞后≤3 个交易日；
+#   13xx 为借券/质押等性质变化并非买卖。Actions 出口 IP 可达性未实测，失败只标缺失不断流。
+DI_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache', 'di_notices.json')
+DI_BASE = 'https://di.hkex.com.hk/di'
+DI_REQ_GAP = 4.0            # di.hkex 请求间隔（实测服务器慢+会断连）
+DI_WINDOW_DAYS = 7          # nightly 回看窗口（周末/漏跑兜底，按申报号去重）
+DI_DISPLAY_DAYS = 30        # 前端展示窗口
+DI_MAX_PAGES = 60           # 单次分页上限（防失控）
+DI_CACHE_KEEP_DAYS = 90     # 缓存滚动保留天数（展示窗口 30 天，多留余量防膨胀：实测 ~80 条/交易日）
+
+# 外资大机构白名单：(规范名, [匹配式])；英文用 \b 词边界正则，中文用子串。名单可调。
+DI_FOREIGN_INSTITUTIONS = [
+    ('BlackRock 贝莱德',       [r'\bblackrock\b', '贝莱德']),
+    ('Vanguard 先锋领航',      [r'\bvanguard\b', '先锋领航', '先锋集团']),
+    ('JPMorgan 摩根大通',      [r'\bjpmorgan\b', r'j\.?\s*p\.?\s*morgan', '摩根大通']),
+    ('Morgan Stanley 摩根士丹利', [r'\bmorgan stanley\b', '摩根士丹利', '大摩']),
+    ('Norges Bank 挪威央行',   [r'\bnorges bank\b', '挪威央行']),
+    ('GIC 新加坡政府投资',     [r'\bgic\b', '新加坡政府投资']),
+    ('Temasek 淡马锡',         [r'\btemasek\b', '淡马锡']),
+    ('Capital Group 资本集团', [r'\bcapital group\b', '资本集团']),
+    ('Fidelity 富达',          [r'\bfmr\b', r'\bfil limited\b', r'\bfidelity\b', '富达']),
+    ('State Street 道富',      [r'\bstate street\b', '道富']),
+    ('Goldman Sachs 高盛',     [r'\bgoldman sachs\b', '高盛']),
+    ('UBS 瑞银',               [r'\bubs\b', '瑞银']),
+    ('Citigroup 花旗',         [r'\bcitigroup\b', r'\bcitibank\b', r'\bciticorp\b', '花旗']),
+    ('HSBC 汇丰',              [r'\bhsbc\b', r'hongkong and shanghai banking', '汇丰']),
+    ('Schroders 施罗德',       [r'\bschroder', '施罗德']),
+    ('Allianz 安联',           [r'\ballianz\b', '安联']),
+    ('T. Rowe Price 普信',     [r't\.?\s*rowe\s*price', '普信']),
+    ('Invesco 景顺',           [r'\binvesco\b', '景顺']),
+    ('Amundi 东方汇理',        [r'\bamundi\b', '东方汇理']),
+    ('Wellington 威灵顿',      [r'\bwellington\b', '威灵顿']),
+    ('Baillie Gifford 柏基',   [r'\bbaillie gifford\b', '柏基']),
+    ('Macquarie 麦格理',       [r'\bmacquarie\b', '麦格理']),
+    ('Nomura 野村',            [r'\bnomura\b', '野村']),
+    ('Daiwa 大和',             [r'\bdaiwa\b', '大和证券']),
+    ('Mizuho 瑞穗',            [r'\bmizuho\b', '瑞穗']),
+    ('Mitsubishi UFJ 三菱UFJ', [r'\bmitsubishi\b', '三菱']),
+    ('Sumitomo Mitsui 三井住友', [r'\bsumitomo\b', '三井住友']),
+    ('Northern Trust 北方信托', [r'\bnorthern trust\b', '北方信托']),
+    ('Legal & General 励正',   [r'\blegal\s*&\s*general\b', r'\blegal and general\b', '励正']),
+    ('Pictet 百达',            [r'\bpictet\b', '百达']),
+    ('BNP Paribas 法巴',       [r'\bbnp paribas\b', '法国巴黎银行']),
+    ('Deutsche Bank 德银',     [r'\bdeutsche bank\b', '德意志银行']),
+    ('Barclays 巴克莱',        [r'\bbarclays\b', '巴克莱']),
+    ('Standard Chartered 渣打', [r'\bstandard chartered\b', '渣打']),
+    ('Manulife 宏利',          [r'\bmanulife\b', '宏利']),
+    ('Prudential 保诚',        [r'\bprudential\b', '保诚']),
+    ('abrdn 安本',             [r'\babrdn\b', r'\baberdeen\b', '安本']),
+    ('Franklin Templeton 富兰克林', [r'\bfranklin\b', '富兰克林']),
+    ('Qatar Investment 卡塔尔', [r'\bqatar\b', '卡塔尔投资']),
+    ('ADIA 阿布扎比投资局',    [r'\babu dhabi\b', '阿布扎比']),
+]
+# 申报代码前两位 → 方向（官方 NSStdCode 语义）
+DI_DIRECTION_MAP = {'10': '新进', '11': '增持', '12': '减持', '13': '性质变化',
+                    '14': '淡仓增', '15': '淡仓减', '16': '借贷池', '17': '其他'}
+
+
+def _di_match_institution(holder_name):
+    """申报人名匹配外资白名单 → 规范名；不匹配返回 None。"""
+    low = holder_name.lower()
+    for canon, keys in DI_FOREIGN_INSTITUTIONS:
+        for k in keys:
+            if k.startswith('\\') or '\\b' in k or '\\s' in k or '.' in k:
+                if re.search(k, low):
+                    return canon
+            elif k.lower() in low:
+                return canon
+    return None
+
+
+def _di_direction(code_str):
+    """'1201(L)' → (方向, 好仓/淡仓)。"""
+    m = re.match(r'(\d{4,5})\s*\(([LS])\)', code_str)
+    if not m:
+        return '其他', ''
+    num, pos = m.group(1), m.group(2)
+    if num == '1704':
+        return '清仓退出', pos
+    return DI_DIRECTION_MAP.get(num[:2], '其他'), pos
+
+
+def _di_session():
+    s = requests.Session()
+    s.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                                    'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'})
+    return s
+
+
+def _di_req(fn, tries=3):
+    """di.hkex 请求带退避（服务器慢，偶发断连/超时）。"""
+    for k in range(tries):
+        try:
+            return fn()
+        except Exception as e:
+            print(f'    di retry{k}: {type(e).__name__} {str(e)[:50]}')
+            time.sleep(12 * (k + 1))
+    return None
+
+
+def _di_search_form(s):
+    """GET 按日期搜索表单 → (vs, vsg, ev)；失败 None。"""
+    r = _di_req(lambda: s.get(f'{DI_BASE}/NSSrchDate.aspx?src=MAIN&lang=EN&g_lang=en',
+                              timeout=(20, 60)))
+    if r is None or r.status_code != 200:
+        return None
+    h = r.text
+    vs = re.search(r'__VIEWSTATE" value="([^"]*)"', h)
+    vg = re.search(r'__VIEWSTATEGENERATOR" value="([^"]*)"', h)
+    ev = re.search(r'__EVENTVALIDATION" value="([^"]*)"', h)
+    return (vs.group(1), vg.group(1), ev.group(1)) if vs and vg and ev else None
+
+
+def _di_parse_list(html):
+    """解析大股东申报列表页 → [row dict]（不过滤白名单）。"""
+    rows = []
+    for tr in re.findall(r'<tr[^>]*>[\s\S]*?</tr>', html):
+        cells = re.findall(r'<td[^>]*>([\s\S]*?)</td>', tr)
+        if len(cells) < 9:
+            continue
+        clean = [re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', c)).replace('&nbsp;', '').strip()
+                 for c in cells]
+        ref = clean[0]
+        if not re.match(r'^[A-Z]{2}\d{8}[A-Z]\d{5}$', ref):
+            continue
+        dm = re.match(r'(\d{2})/(\d{2})/(\d{4})', clean[1])
+        if not dm:
+            continue
+        iso = f'{dm.group(3)}-{dm.group(2)}-{dm.group(1)}'
+        direction, pos = _di_direction(clean[4])
+
+        def _num(x):
+            m2 = re.match(r'([\d,]+)', x)   # '5,515,000(L)' → 5515000；空/&nbsp; → None
+            return int(m2.group(1).replace(',', '')) if m2 else None
+
+        pm = re.search(r'([\d.]+)%?', clean[8])
+        rows.append({
+            'ref': ref, 'date': iso, 'corp': clean[2], 'holder': clean[3],
+            'code': clean[4], 'direction': direction, 'pos': pos,
+            'shares': _num(clean[5]),
+            'price': clean[6] or None,
+            'resultShares': _num(clean[7]),
+            'resultPct': float(pm.group(1)) if pm else None,
+            'url': f'{DI_BASE}/NSForm2.aspx?fn={ref}&lang=EN',
+        })
+    return rows
+
+
+def fetch_di_foreign(pro, trade_date, data, backfill_days=None):
+    """外资大机构权益披露（大股东申报）增量抓取 + 展示块。
+
+    nightly：搜 [trade_date-7d, trade_date] 窗口，按申报号去重增量入 di_notices.json；
+    backfill_days（一次性本地回填）：搜 [trade_date-Nd, trade_date]。
+    分页早停：整页申报号全部已在缓存→停止翻页（窗口内旧页重复扫描）。
+    展示块 data['diForeign']=近 30 天白名单申报（日期倒序，封顶 80 条）+ 机构活跃度榜。
+    """
+    notices_cache = _load_json_cache(DI_CACHE_PATH, {})
+    notices = notices_cache.setdefault('notices', {})
+
+    end_dt = datetime.strptime(trade_date, '%Y%m%d')
+    days = backfill_days if backfill_days else DI_WINDOW_DAYS
+    start_dt = end_dt - timedelta(days=days - 1)
+
+    fetched, dup_stop = 0, False
+    s = _di_session()
+    form = _di_search_form(s)
+    if not form:
+        print('  di: 搜索表单获取失败（di.hkex 不可达），本期跳过')
+    else:
+        payload = {
+            '__EVENTTARGET': '', '__EVENTARGUMENT': '',
+            '__VIEWSTATE': form[0], '__VIEWSTATEGENERATOR': form[1], '__EVENTVALIDATION': form[2],
+            'reCaptchaSS': '', 'reCaptchaDir': '', 'reCaptchaAllForm': '',
+            'ddlStartDateDD': start_dt.strftime('%d'), 'ddlStartDateMM': start_dt.strftime('%m'),
+            'ddlStartDateYYYY': start_dt.strftime('%Y'),
+            'ddlEndDateDD': end_dt.strftime('%d'), 'ddlEndDateMM': end_dt.strftime('%m'),
+            'ddlEndDateYYYY': end_dt.strftime('%Y'),
+            'cmdSearchSS': 'Search Substantial Shareholder Notice',
+        }
+        time.sleep(DI_REQ_GAP)
+        r = _di_req(lambda: s.post(f'{DI_BASE}/NSSrchDate.aspx?src=MAIN&lang=EN&g_lang=en',
+                                   data=payload, timeout=(20, 120),
+                                   headers={'Referer': f'{DI_BASE}/NSSrchDate.aspx?src=MAIN&lang=EN&g_lang=en'}))
+        if r is None or 'NSNoticeSSDateList' not in r.url:
+            print('  di: 搜索 POST 失败，本期跳过')
+        else:
+            list_url = r.url.replace('&', '&')  # 结果页 URL（含 scsd/sced），翻页加 &pg=N
+            html = r.text
+            # 总记录数 → 计算总页数（非末页也可能 <50 行：部分行结构不符被解析跳过，
+            # 不能用 len<50 判末页，2026-09-30 回补时曾因此截断漏数据）
+            tm = re.search(r'Total records[^0-9]*(\d+)', re.sub(r'<[^>]+>', ' ', html))
+            total_rec = int(tm.group(1)) if tm else 0
+            max_pg = min(DI_MAX_PAGES, (total_rec + 49) // 50) if total_rec else DI_MAX_PAGES
+            for pg in range(1, max_pg + 1):
+                if pg > 1:
+                    time.sleep(DI_REQ_GAP)
+                    sep = '&' if '?' in list_url else '?'
+                    rr = _di_req(lambda pg=pg: s.get(f'{list_url}{sep}pg={pg}', timeout=(20, 90)))
+                    if rr is None or rr.status_code != 200:
+                        break
+                    html = rr.text
+                rows = _di_parse_list(html)
+                if not rows:
+                    break
+                new_on_page = 0
+                for row in rows:
+                    if row['ref'] in notices:
+                        continue
+                    inst = _di_match_institution(row['holder'])
+                    if not inst:
+                        continue
+                    row['inst'] = inst
+                    notices[row['ref']] = row
+                    fetched += 1
+                    new_on_page += 1
+                if all(row['ref'] in notices for row in rows):
+                    dup_stop = True   # 整页都是旧数据 → 提前停止
+                    break
+                if new_on_page:
+                    _save_json_cache(DI_CACHE_PATH, notices_cache)   # 逐页落盘（服务器慢，防中断丢失）
+            notices_cache['note'] = ('港交所权益披露（披露易 DI，大股东 Form 1/2 申报，2026-09-30 上线）：'
+                                     '外资大机构白名单命中才入缓存；direction 由官方申报代码映射'
+                                     '（10=新进 11=增持 12=减持 13=性质变化[借券/质押等非买卖] '
+                                     '14/15=淡仓增减 1704=清仓）。口径：仅持股跨越 5% 整数关口才强制申报，'
+                                     '滞后≤3 个交易日，非全量持仓变动。')
+            _save_json_cache(DI_CACHE_PATH, notices_cache)
+            print(f'  di: 窗口 {start_dt:%Y-%m-%d}~{end_dt:%Y-%m-%d} 新增 {fetched} 条'
+                  + ('（早停去重）' if dup_stop else ''))
+
+    # 滚动裁剪旧缓存
+    cutoff = (end_dt - timedelta(days=DI_CACHE_KEEP_DAYS)).strftime('%Y-%m-%d')
+    stale = [k for k, v in notices.items() if (v.get('date') or '') < cutoff]
+    for k in stale:
+        notices.pop(k, None)
+    if stale:
+        _save_json_cache(DI_CACHE_PATH, notices_cache)
+
+    # ── 展示块：近 30 天白名单申报（无论本期是否抓到都重建）──
+    try:
+        win_start = (end_dt - timedelta(days=DI_DISPLAY_DAYS - 1)).strftime('%Y-%m-%d')
+        win_items = sorted((v for v in notices.values() if (v.get('date') or '') >= win_start),
+                           key=lambda x: (x['date'], x['ref']), reverse=True)
+        inst_stat = {}
+        for it in win_items:   # 统计用窗口全量（不受列表封顶影响）
+            st = inst_stat.setdefault(it.get('inst') or it['holder'], {'n': 0, 'up': 0, 'down': 0})
+            st['n'] += 1
+            if it['direction'] in ('新进', '增持'):
+                st['up'] += 1
+            elif it['direction'] in ('减持', '清仓退出'):
+                st['down'] += 1
+        items = win_items[:80]   # 前端列表封顶 80 条
+        top_inst = sorted(({'name': k, **v} for k, v in inst_stat.items()),
+                          key=lambda x: -x['n'])[:8]
+        data['diForeign'] = {
+            'asOf': end_dt.strftime('%Y-%m-%d'),
+            'windowDays': DI_DISPLAY_DAYS,
+            'items': items,
+            'topInst': top_inst,
+            'total': len(win_items),
+            'missing': not items,
+            'note': ('港交所权益披露（大股东申报）：仅持股跨越 5% 整数关口才强制申报，非全量持仓变动；'
+                     '申报滞后≤3 个交易日；「性质变化」多为借券/质押等非买卖操作；'
+                     '淡仓(S)=做空方向。机构名单为主流外资白名单，不代表全部外资。'),
+        }
+        print(f"  diForeign: 近{DI_DISPLAY_DAYS}天 {len(win_items)} 条（展示 {len(items)}）"
+              + (f"，最活跃 {top_inst[0]['name']}×{top_inst[0]['n']}" if top_inst else ''))
+    except Exception as e:
+        print(f"  Warning: diForeign display failed: {e}")
+
+
 def fetch_leverage_concentration(pro, trade_date, data):
     """杠杆资金控盘集中度 TOP10（margin_detail 融资余额 / daily_basic 流通市值，T+1）。"""
     try:
@@ -6370,6 +6650,12 @@ def main():
         fetch_ccass_foreign(pro, trade_date, data)
     except Exception as e:
         print(f"  Warning: ccassForeign failed (keep old): {e}")
+
+    # ── 10d. 外资机构权益披露增减仓（披露易 DI 大股东申报；每日增量，失败只标缺失不断流）──
+    try:
+        fetch_di_foreign(pro, trade_date, data)
+    except Exception as e:
+        print(f"  Warning: diForeign failed (keep old): {e}")
 
     # ── 11. Sector index commentary (细分指数每日点评) ──
     print("\n[11/17] Fetching sector index commentary...")

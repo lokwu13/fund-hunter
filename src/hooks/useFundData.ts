@@ -820,6 +820,22 @@ export interface FundData {
     topUp: Array<any>;
     topDown: Array<any>;
   };
+  // 外资机构权益披露增减仓（2026-09-30 用户指令：披露易 DI 大股东申报机查，每日增量）
+  diForeign?: {
+    asOf: string | null;
+    windowDays: number;
+    total: number;
+    missing?: boolean;
+    note?: string;
+    items: Array<{
+      ref: string; date: string; corp: string; holder: string; inst?: string;
+      code: string; direction: string; pos?: string;
+      shares: number | null; price: string | null;
+      resultShares: number | null; resultPct: number | null;
+      url: string;
+    }>;
+    topInst: Array<{ name: string; n: number; up: number; down: number }>;
+  };
   zizengETF?: {
     trade_date: string;
     nav_date?: string | null;
