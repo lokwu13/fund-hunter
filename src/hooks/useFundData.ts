@@ -829,12 +829,14 @@ export interface FundData {
     note?: string;
     items: Array<{
       ref: string; date: string; corp: string; holder: string; inst?: string;
+      corpCn?: string | null; stockCode?: string | null;
       code: string; direction: string; pos?: string;
       shares: number | null; price: string | null;
       resultShares: number | null; resultPct: number | null;
       url: string;
     }>;
     topInst: Array<{ name: string; n: number; up: number; down: number }>;
+    unmatched?: number;
   };
   zizengETF?: {
     trade_date: string;

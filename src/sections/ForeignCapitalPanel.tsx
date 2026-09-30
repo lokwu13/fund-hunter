@@ -220,7 +220,13 @@ export default function ForeignCapitalPanel() {
                         <tr key={it.ref} className="border-b border-slate-50 hover:bg-slate-50/60">
                           <td className="py-1.5 text-slate-500 whitespace-nowrap">{it.date.slice(5)}</td>
                           <td className="text-slate-700 font-medium whitespace-nowrap">{it.inst ?? it.holder}</td>
-                          <td className="text-slate-600 max-w-[180px] truncate" title={it.corp}>{it.corp}</td>
+                          <td className="text-slate-600 max-w-[180px] truncate" title={it.corp}>
+                            {it.corpCn ? (
+                              <span className="font-medium text-slate-700">{it.corpCn}
+                                <span className="text-[9px] text-slate-400 ml-1">{it.stockCode}</span>
+                              </span>
+                            ) : it.corp}
+                          </td>
                           <td className="whitespace-nowrap">
                             <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${diDirCls(it.direction)}`}>
                               {it.direction}{it.pos === 'S' && '(S)'}

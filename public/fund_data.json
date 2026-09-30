@@ -20963,13 +20963,15 @@
         "resultShares": 80985400,
         "resultPct": 16.99,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00356&lang=EN",
-        "inst": "Schroders 施罗德"
+        "inst": "Schroders 施罗德",
+        "corpCn": "三花智控",
+        "stockCode": "02050"
       },
       {
         "ref": "CS20260930E00359",
         "date": "2026-09-25",
         "corp": "ZTO Express (Cayman) Inc. - W",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "1402(S)",
         "direction": "淡仓增",
         "pos": "S",
@@ -20978,13 +20980,15 @@
         "resultShares": 42614929,
         "resultPct": 7.64,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00359&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "中通快递-W",
+        "stockCode": "02057"
       },
       {
         "ref": "CS20260930E00358",
         "date": "2026-09-25",
         "corp": "Zhongji InnoLight Co., Ltd. - H Shares",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "15015(S)",
         "direction": "淡仓减",
         "pos": "S",
@@ -20993,13 +20997,15 @@
         "resultShares": 9126673,
         "resultPct": 14.56,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00358&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "中际旭创",
+        "stockCode": "03308"
       },
       {
         "ref": "CS20260930E00357",
         "date": "2026-09-25",
         "corp": "Yunnan Jinxun Resources Co., Ltd. - H Shares",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "16022(L)",
         "direction": "借贷池",
         "pos": "L",
@@ -21008,13 +21014,15 @@
         "resultShares": 2461614,
         "resultPct": 5.82,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00357&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "金浔资源",
+        "stockCode": "03636"
       },
       {
         "ref": "CS20260930E00354",
         "date": "2026-09-25",
         "corp": "Wuxi Lead Intelligent Equipment Co., Ltd. - H Shares",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "15015(S)",
         "direction": "淡仓减",
         "pos": "S",
@@ -21023,13 +21031,15 @@
         "resultShares": 13012007,
         "resultPct": 12.04,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00354&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "先导智能",
+        "stockCode": "00470"
       },
       {
         "ref": "CS20260930E00353",
         "date": "2026-09-25",
         "corp": "Newborn Town Inc.",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "1004(L)1403(S)",
         "direction": "新进",
         "pos": "L",
@@ -21038,13 +21048,15 @@
         "resultShares": 78846822,
         "resultPct": 5.63,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00353&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "赤子城科技",
+        "stockCode": "09911"
       },
       {
         "ref": "CS20260930E00352",
         "date": "2026-09-25",
         "corp": "MMG Ltd.",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "1004(L)1403(S)",
         "direction": "新进",
         "pos": "L",
@@ -21053,13 +21065,15 @@
         "resultShares": 665560266,
         "resultPct": 5.18,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00352&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "五矿资源",
+        "stockCode": "01208"
       },
       {
         "ref": "CS20260930E00351",
         "date": "2026-09-25",
         "corp": "KE Holdings Inc. - W",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "10035(L)1403(S)",
         "direction": "新进",
         "pos": "L",
@@ -21068,13 +21082,15 @@
         "resultShares": 170929886,
         "resultPct": 5.17,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00351&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "贝壳-W",
+        "stockCode": "02423"
       },
       {
         "ref": "CS20260930E00350",
         "date": "2026-09-25",
         "corp": "Huatai Securities Co., Ltd. - H Shares",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "1104(L)",
         "direction": "增持",
         "pos": "L",
@@ -21083,13 +21099,15 @@
         "resultShares": 122493287,
         "resultPct": 7.12,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00350&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "HTSC",
+        "stockCode": "06886"
       },
       {
         "ref": "CS20260930E00349",
         "date": "2026-09-25",
         "corp": "Haier Smart Home Co., Ltd. - H Shares",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "1403(S)",
         "direction": "淡仓增",
         "pos": "S",
@@ -21098,13 +21116,15 @@
         "resultShares": 166873607,
         "resultPct": 5.84,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00349&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "海尔智家",
+        "stockCode": "06690"
       },
       {
         "ref": "CS20260930E00348",
         "date": "2026-09-25",
-        "corp": "Goldwind Science &amp; Technology Co., Ltd. - H Shares",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "corp": "Goldwind Science & Technology Co., Ltd. - H Shares",
+        "holder": "JPMorgan Chase & Co.",
         "code": "15015(S)",
         "direction": "淡仓减",
         "pos": "S",
@@ -21113,13 +21133,15 @@
         "resultShares": 90544730,
         "resultPct": 11.7,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00348&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "金风科技",
+        "stockCode": "02208"
       },
       {
         "ref": "CS20260930E00347",
         "date": "2026-09-25",
         "corp": "Fuyao Glass Industry Group Co., Ltd. - H Shares",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "16021(L)",
         "direction": "借贷池",
         "pos": "L",
@@ -21128,13 +21150,15 @@
         "resultShares": 97870854,
         "resultPct": 16.13,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00347&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "福耀玻璃",
+        "stockCode": "03606"
       },
       {
         "ref": "CS20260930E00346",
         "date": "2026-09-25",
         "corp": "Flat Glass Group Co., Ltd. - H Shares",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "1201(L)",
         "direction": "减持",
         "pos": "L",
@@ -21143,13 +21167,15 @@
         "resultShares": 79385051,
         "resultPct": 17.97,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00346&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "福莱特玻璃",
+        "stockCode": "06865"
       },
       {
         "ref": "CS20260930E00345",
         "date": "2026-09-25",
         "corp": "CSSC (Hong Kong) Shipping Co. Ltd.",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "1205(L)",
         "direction": "减持",
         "pos": "L",
@@ -21158,7 +21184,9 @@
         "resultShares": 461014975,
         "resultPct": 7.43,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00345&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "中国船舶租赁",
+        "stockCode": "03877"
       },
       {
         "ref": "CS20260930E00329",
@@ -21173,7 +21201,9 @@
         "resultShares": 33703749,
         "resultPct": 6.62,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00329&lang=EN",
-        "inst": "Fidelity 富达"
+        "inst": "Fidelity 富达",
+        "corpCn": "泉峰控股",
+        "stockCode": "02285"
       },
       {
         "ref": "CS20260930E00328",
@@ -21188,7 +21218,9 @@
         "resultShares": 55811143,
         "resultPct": 9.94,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00328&lang=EN",
-        "inst": "Fidelity 富达"
+        "inst": "Fidelity 富达",
+        "corpCn": "药明康德",
+        "stockCode": "02359"
       },
       {
         "ref": "CS20260930E00311",
@@ -21203,7 +21235,9 @@
         "resultShares": 537798093,
         "resultPct": 8.98,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00311&lang=EN",
-        "inst": "BNP Paribas 法巴"
+        "inst": "BNP Paribas 法巴",
+        "corpCn": "紫金矿业",
+        "stockCode": "02899"
       },
       {
         "ref": "CS20260930E00296",
@@ -21218,7 +21252,9 @@
         "resultShares": 4569193,
         "resultPct": 6.03,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00296&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "澜起科技",
+        "stockCode": "06809"
       },
       {
         "ref": "CS20260930E00295",
@@ -21233,7 +21269,9 @@
         "resultShares": 15193935,
         "resultPct": 5.03,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00295&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "蓝思科技",
+        "stockCode": "06613"
       },
       {
         "ref": "CS20260930E00294",
@@ -21248,7 +21286,9 @@
         "resultShares": 66454069,
         "resultPct": 4.9,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00294&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "壁仞科技",
+        "stockCode": "06082"
       },
       {
         "ref": "CS20260930E00293",
@@ -21263,7 +21303,9 @@
         "resultShares": 13619901,
         "resultPct": 6.23,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00293&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "宁德时代",
+        "stockCode": "03750"
       },
       {
         "ref": "CS20260930E00292",
@@ -21278,7 +21320,9 @@
         "resultShares": 2497663,
         "resultPct": 3.98,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00292&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "中际旭创",
+        "stockCode": "03308"
       },
       {
         "ref": "CS20260930E00291",
@@ -21293,7 +21337,9 @@
         "resultShares": 975400,
         "resultPct": 4.85,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00291&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "纳芯微",
+        "stockCode": "02676"
       },
       {
         "ref": "CS20260930E00290",
@@ -21308,7 +21354,9 @@
         "resultShares": 88337831,
         "resultPct": 8.48,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00290&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "禾赛-W",
+        "stockCode": "02525"
       },
       {
         "ref": "CS20260930E00289",
@@ -21323,7 +21371,9 @@
         "resultShares": 11627819,
         "resultPct": 5.12,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00289&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "晶合集成",
+        "stockCode": "02249"
       },
       {
         "ref": "CS20260930E00288",
@@ -21338,7 +21388,9 @@
         "resultShares": 47469161,
         "resultPct": 5.72,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00288&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "BOSS直聘-W",
+        "stockCode": "02076"
       },
       {
         "ref": "CS20260930E00280",
@@ -21353,7 +21405,9 @@
         "resultShares": 25729952,
         "resultPct": 7.58,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00280&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "哔哩哔哩-W",
+        "stockCode": "09626"
       },
       {
         "ref": "CS20260930E00279",
@@ -21368,7 +21422,9 @@
         "resultShares": 14434011,
         "resultPct": 6.61,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00279&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "宁德时代",
+        "stockCode": "03750"
       },
       {
         "ref": "CS20260930E00278",
@@ -21383,7 +21439,9 @@
         "resultShares": 93786270,
         "resultPct": 9.0,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00278&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "禾赛-W",
+        "stockCode": "02525"
       },
       {
         "ref": "CS20260930E00277",
@@ -21398,7 +21456,9 @@
         "resultShares": 18177797,
         "resultPct": 5.14,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00277&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "小马智行-W",
+        "stockCode": "02026"
       },
       {
         "ref": "CS20260930E00276",
@@ -21413,7 +21473,9 @@
         "resultShares": 134388285,
         "resultPct": 6.21,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00276&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "平安好医生",
+        "stockCode": "01833"
       },
       {
         "ref": "CS20260930E00275",
@@ -21428,7 +21490,9 @@
         "resultShares": 114371295,
         "resultPct": 8.82,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00275&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "中远海能",
+        "stockCode": "01138"
       },
       {
         "ref": "CS20260930E00274",
@@ -21443,7 +21507,9 @@
         "resultShares": 10008306,
         "resultPct": 9.26,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00274&lang=EN",
-        "inst": "Morgan Stanley 摩根士丹利"
+        "inst": "Morgan Stanley 摩根士丹利",
+        "corpCn": "先导智能",
+        "stockCode": "00470"
       },
       {
         "ref": "CS20260930E00219",
@@ -21458,7 +21524,9 @@
         "resultShares": 660100,
         "resultPct": 2.66,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00219&lang=EN",
-        "inst": "Barclays 巴克莱"
+        "inst": "Barclays 巴克莱",
+        "corpCn": "普源精电",
+        "stockCode": "00537"
       },
       {
         "ref": "CS20260930E00063",
@@ -21473,7 +21541,9 @@
         "resultShares": 51067056,
         "resultPct": 6.76,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00063&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "中兴通讯",
+        "stockCode": "00763"
       },
       {
         "ref": "CS20260930E00062",
@@ -21488,7 +21558,9 @@
         "resultShares": 23342340,
         "resultPct": 5.05,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00062&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "时代电气",
+        "stockCode": "03898"
       },
       {
         "ref": "CS20260930E00061",
@@ -21503,7 +21575,9 @@
         "resultShares": 95744816,
         "resultPct": 6.1,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00061&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "小鹏集团-W",
+        "stockCode": "09868"
       },
       {
         "ref": "CS20260930E00060",
@@ -21518,7 +21592,9 @@
         "resultShares": 515164873,
         "resultPct": 6.92,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00060&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "中国平安-R",
+        "stockCode": "82318"
       },
       {
         "ref": "CS20260930E00059",
@@ -21533,12 +21609,14 @@
         "resultShares": 34950576,
         "resultPct": 5.37,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00059&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "美的集团",
+        "stockCode": "00300"
       },
       {
         "ref": "CS20260930E00058",
         "date": "2026-09-25",
-        "corp": "Goldwind Science &amp; Technology Co., Ltd. - H Shares",
+        "corp": "Goldwind Science & Technology Co., Ltd. - H Shares",
         "holder": "BlackRock, Inc.",
         "code": "1313(L)",
         "direction": "性质变化",
@@ -21548,7 +21626,9 @@
         "resultShares": 95369040,
         "resultPct": 12.33,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00058&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "金风科技",
+        "stockCode": "02208"
       },
       {
         "ref": "CS20260930E00057",
@@ -21563,7 +21643,9 @@
         "resultShares": 284427447,
         "resultPct": 8.09,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00057&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "金蝶国际",
+        "stockCode": "00268"
       },
       {
         "ref": "CS20260930E00056",
@@ -21578,7 +21660,9 @@
         "resultShares": 40460573,
         "resultPct": 8.38,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00056&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "赣锋锂业",
+        "stockCode": "01772"
       },
       {
         "ref": "CS20260930E00055",
@@ -21593,7 +21677,9 @@
         "resultShares": 219077976,
         "resultPct": 5.01,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00055&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "中国中车",
+        "stockCode": "01766"
       },
       {
         "ref": "CS20260930E00054",
@@ -21608,7 +21694,9 @@
         "resultShares": 99127707,
         "resultPct": 7.65,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00054&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "中远海能",
+        "stockCode": "01138"
       },
       {
         "ref": "CS20260930E00053",
@@ -21623,7 +21711,9 @@
         "resultShares": 13489801,
         "resultPct": 6.18,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00053&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "宁德时代",
+        "stockCode": "03750"
       },
       {
         "ref": "CS20260930E00052",
@@ -21638,7 +21728,9 @@
         "resultShares": 249871717,
         "resultPct": 5.35,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00052&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "中国铁塔",
+        "stockCode": "00788"
       },
       {
         "ref": "CS20260930E00051",
@@ -21653,7 +21745,9 @@
         "resultShares": 186232495,
         "resultPct": 5.51,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00051&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "中国神华",
+        "stockCode": "01088"
       },
       {
         "ref": "CS20260930E00050",
@@ -21668,7 +21762,9 @@
         "resultShares": 239241068,
         "resultPct": 7.21,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00050&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "龙源电力",
+        "stockCode": "00916"
       },
       {
         "ref": "CS20260930E00049",
@@ -21683,7 +21779,9 @@
         "resultShares": 28872000,
         "resultPct": 5.32,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00049&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "安徽皖通高速公路",
+        "stockCode": "00995"
       },
       {
         "ref": "CS20260930E00048",
@@ -21698,7 +21796,9 @@
         "resultShares": 66988718,
         "resultPct": 5.15,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00048&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "海螺水泥",
+        "stockCode": "00914"
       },
       {
         "ref": "CS20260930E00047",
@@ -21713,7 +21813,9 @@
         "resultShares": 95350408,
         "resultPct": 6.14,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00047&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "中联重科",
+        "stockCode": "01157"
       },
       {
         "ref": "CS20260930E00046",
@@ -21728,7 +21830,9 @@
         "resultShares": 20674753,
         "resultPct": 6.09,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00046&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "百胜中国",
+        "stockCode": "09987"
       },
       {
         "ref": "CS20260930E00045",
@@ -21743,7 +21847,9 @@
         "resultShares": 29205545,
         "resultPct": 6.93,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00045&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "长飞光纤光缆",
+        "stockCode": "06869"
       },
       {
         "ref": "CS20260930E00044",
@@ -21758,7 +21864,9 @@
         "resultShares": 95744816,
         "resultPct": 6.1,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00044&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "小鹏集团-W",
+        "stockCode": "09868"
       },
       {
         "ref": "CS20260930E00043",
@@ -21773,7 +21881,9 @@
         "resultShares": 33447418,
         "resultPct": 6.06,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00043&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "复星医药",
+        "stockCode": "02196"
       },
       {
         "ref": "CS20260930E00042",
@@ -21788,7 +21898,9 @@
         "resultShares": 63241822,
         "resultPct": 6.35,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00042&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "山东黄金",
+        "stockCode": "01787"
       },
       {
         "ref": "CS20260930E00041",
@@ -21803,7 +21915,9 @@
         "resultShares": 6251685,
         "resultPct": 5.76,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00041&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "赛力斯",
+        "stockCode": "09927"
       },
       {
         "ref": "CS20260930E00040",
@@ -21818,7 +21932,9 @@
         "resultShares": 284427447,
         "resultPct": 8.09,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00040&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "金蝶国际",
+        "stockCode": "00268"
       },
       {
         "ref": "CS20260930E00039",
@@ -21833,7 +21949,9 @@
         "resultShares": 4449696233,
         "resultPct": 5.13,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00039&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "工商银行",
+        "stockCode": "01398"
       },
       {
         "ref": "CS20260930E00038",
@@ -21848,7 +21966,9 @@
         "resultShares": 34354733,
         "resultPct": 5.09,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00038&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "哈尔滨电气",
+        "stockCode": "01133"
       },
       {
         "ref": "CS20260930E00037",
@@ -21863,7 +21983,9 @@
         "resultShares": 40460573,
         "resultPct": 8.38,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00037&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "赣锋锂业",
+        "stockCode": "01772"
       },
       {
         "ref": "CS20260930E00036",
@@ -21878,7 +22000,9 @@
         "resultShares": 190608015,
         "resultPct": 7.03,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00036&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "中远海控",
+        "stockCode": "01919"
       },
       {
         "ref": "CS20260930E00035",
@@ -21893,7 +22017,9 @@
         "resultShares": 17351239,
         "resultPct": 5.02,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260930E00035&lang=EN",
-        "inst": "BlackRock 贝莱德"
+        "inst": "BlackRock 贝莱德",
+        "corpCn": "哔哩哔哩-W",
+        "stockCode": "09626"
       },
       {
         "ref": "CS20260929E00279",
@@ -21908,7 +22034,9 @@
         "resultShares": 20356200,
         "resultPct": 6.99,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00279&lang=EN",
-        "inst": "GIC 新加坡政府投资"
+        "inst": "GIC 新加坡政府投资",
+        "corpCn": "海天味业",
+        "stockCode": "03288"
       },
       {
         "ref": "CS20260928E00341",
@@ -21923,13 +22051,15 @@
         "resultShares": 24690926,
         "resultPct": 7.15,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260928E00341&lang=EN",
-        "inst": "Norges Bank 挪威央行"
+        "inst": "Norges Bank 挪威央行",
+        "corpCn": "哔哩哔哩-W",
+        "stockCode": "09626"
       },
       {
         "ref": "CS20260929E00400",
         "date": "2026-09-24",
         "corp": "Continental Aerospace Technologies Holding Ltd.",
-        "holder": "JPMorgan Chase &amp; Co.",
+        "holder": "JPMorgan Chase & Co.",
         "code": "1201(L)",
         "direction": "减持",
         "pos": "L",
@@ -21938,7 +22068,9 @@
         "resultShares": 835540575,
         "resultPct": 8.98,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00400&lang=EN",
-        "inst": "JPMorgan 摩根大通"
+        "inst": "JPMorgan 摩根大通",
+        "corpCn": "大陆航空科技控股",
+        "stockCode": "00232"
       },
       {
         "ref": "CS20260929E00399",
@@ -21953,12 +22085,14 @@
         "resultShares": 63326510,
         "resultPct": 9.72,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00399&lang=EN",
-        "inst": "HSBC 汇丰"
+        "inst": "HSBC 汇丰",
+        "corpCn": "美的集团",
+        "stockCode": "00300"
       },
       {
         "ref": "CS20260929E00398",
         "date": "2026-09-24",
-        "corp": "Shenzhen Zhaowei Machinery &amp; Electronics Co., Ltd. - H Shares",
+        "corp": "Shenzhen Zhaowei Machinery & Electronics Co., Ltd. - H Shares",
         "holder": "HSBC Holdings plc",
         "code": "1316(L)1502(S)",
         "direction": "性质变化",
@@ -21968,7 +22102,9 @@
         "resultShares": 2455095,
         "resultPct": 9.17,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00398&lang=EN",
-        "inst": "HSBC 汇丰"
+        "inst": "HSBC 汇丰",
+        "corpCn": "兆威机电",
+        "stockCode": "02692"
       },
       {
         "ref": "CS20260929E00397",
@@ -21983,7 +22119,9 @@
         "resultShares": 142678677,
         "resultPct": 11.42,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00397&lang=EN",
-        "inst": "HSBC 汇丰"
+        "inst": "HSBC 汇丰",
+        "corpCn": "环球新材国际",
+        "stockCode": "06616"
       },
       {
         "ref": "CS20260929E00395",
@@ -21998,7 +22136,9 @@
         "resultShares": 5204925,
         "resultPct": 2.6,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00395&lang=EN",
-        "inst": "Barclays 巴克莱"
+        "inst": "Barclays 巴克莱",
+        "corpCn": "东江环保",
+        "stockCode": "00895"
       },
       {
         "ref": "CS20260929E00391",
@@ -22013,7 +22153,9 @@
         "resultShares": 931550,
         "resultPct": 2.08,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00391&lang=EN",
-        "inst": "Barclays 巴克莱"
+        "inst": "Barclays 巴克莱",
+        "corpCn": "亿华通",
+        "stockCode": "02402"
       },
       {
         "ref": "CS20260929E00357",
@@ -22028,7 +22170,9 @@
         "resultShares": 1285200,
         "resultPct": 5.18,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00357&lang=EN",
-        "inst": "Barclays 巴克莱"
+        "inst": "Barclays 巴克莱",
+        "corpCn": "普源精电",
+        "stockCode": "00537"
       },
       {
         "ref": "CS20260929E00344",
@@ -22043,7 +22187,9 @@
         "resultShares": 2775691,
         "resultPct": 5.05,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00344&lang=EN",
-        "inst": "Citigroup 花旗"
+        "inst": "Citigroup 花旗",
+        "corpCn": "天岳先进",
+        "stockCode": "02631"
       },
       {
         "ref": "CS20260929E00315",
@@ -22058,7 +22204,9 @@
         "resultShares": 196746754,
         "resultPct": 5.0,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00315&lang=EN",
-        "inst": "UBS 瑞银"
+        "inst": "UBS 瑞银",
+        "corpCn": "洛阳钼业",
+        "stockCode": "03993"
       },
       {
         "ref": "CS20260929E00314",
@@ -22073,7 +22221,9 @@
         "resultShares": 6123020,
         "resultPct": 5.98,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00314&lang=EN",
-        "inst": "UBS 瑞银"
+        "inst": "UBS 瑞银",
+        "corpCn": "大金重工",
+        "stockCode": "01081"
       },
       {
         "ref": "CS20260929E00313",
@@ -22088,7 +22238,9 @@
         "resultShares": 6118639,
         "resultPct": 13.3,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00313&lang=EN",
-        "inst": "UBS 瑞银"
+        "inst": "UBS 瑞银",
+        "corpCn": "广合科技",
+        "stockCode": "01989"
       },
       {
         "ref": "CS20260929E00311",
@@ -22103,7 +22255,9 @@
         "resultShares": 156995620,
         "resultPct": 9.13,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00311&lang=EN",
-        "inst": "UBS 瑞银"
+        "inst": "UBS 瑞银",
+        "corpCn": "HTSC",
+        "stockCode": "06886"
       },
       {
         "ref": "CS20260929E00310",
@@ -22118,7 +22272,9 @@
         "resultShares": 14258328,
         "resultPct": 5.91,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00310&lang=EN",
-        "inst": "UBS 瑞银"
+        "inst": "UBS 瑞银",
+        "corpCn": "金力永磁",
+        "stockCode": "06680"
       },
       {
         "ref": "CS20260929E00309",
@@ -22133,7 +22289,9 @@
         "resultShares": 13252427,
         "resultPct": 5.13,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00309&lang=EN",
-        "inst": "UBS 瑞银"
+        "inst": "UBS 瑞银",
+        "corpCn": "恒瑞医药",
+        "stockCode": "01276"
       },
       {
         "ref": "CS20260929E00308",
@@ -22148,7 +22306,9 @@
         "resultShares": 12740498,
         "resultPct": 11.79,
         "url": "https://di.hkex.com.hk/di/NSForm2.aspx?fn=CS20260929E00308&lang=EN",
-        "inst": "UBS 瑞银"
+        "inst": "UBS 瑞银",
+        "corpCn": "先导智能",
+        "stockCode": "00470"
       }
     ],
     "topInst": [
@@ -22202,6 +22362,7 @@
       }
     ],
     "total": 1690,
+    "unmatched": 0,
     "missing": false,
     "note": "港交所权益披露（大股东申报）：仅持股跨越 5% 整数关口才强制申报，非全量持仓变动；申报滞后≤3 个交易日；「性质变化」多为借券/质押等非买卖操作；淡仓(S)=做空方向。机构名单为主流外资白名单，不代表全部外资。"
   }

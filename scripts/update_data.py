@@ -3935,6 +3935,60 @@ def _di_direction(code_str):
     return DI_DIRECTION_MAP.get(num[:2], '其他'), pos
 
 
+# ── 港股英文名→中文简称映射（2026-09-30 用户指令：权益披露卡片标的中文化）──
+# Tushare hk_basic 一次性全量拉取（enname+name），规范化英文名做 key 落 hk_names.json 持久缓存
+# （随 workflow 回写，>30 天自动刷新，1 次调用）。翻译在展示块构建时进行——缓存里查不到的
+# 标的保留英文名并计数，映射表日后补全后 nightly 自动补译（不改 notices 历史缓存）。
+HK_NAMES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache', 'hk_names.json')
+HK_NAMES_REFRESH_DAYS = 30
+
+
+def _hk_norm_name(s):
+    """港股公司英文名规范化（双向同规则，DI 列表名 ↔ hk_basic enname）。"""
+    from html import unescape as _unesc
+    s = _unesc(s or '').upper()
+    s = re.sub(r"(\s*-\s*(?:H SHARES|SW|W2?|SB|B|S|P))\s*$", '', s)   # 类别后缀
+    s = re.sub(r"(\s*-\s*(?:H SHARES|SW|W2?|SB|B|S|P))\s*$", '', s)   # 双重后缀（如 "- B - H Shares"）
+    s = re.sub(r"['\u2019]", '', s)
+    s = re.sub(r'\bCOMPANY\b', 'CO', s)
+    s = re.sub(r'\bLIMITED\b', 'LTD', s)
+    s = re.sub(r'\bINTERNATIONAL\b', 'INTL', s)
+    s = re.sub(r'\bCORPORATION\b', 'CORP', s)
+    s = re.sub(r'\bHOLDINGS\b', 'HLDG', s)
+    return re.sub(r'[^A-Z0-9]', '', s)
+
+
+def _hk_names_map(pro):
+    """加载/刷新港股名称映射 → {normKey: {code, cn}}；失败返回现有缓存或 {}。"""
+    cache = _load_json_cache(HK_NAMES_PATH, {})
+    mp = cache.get('map') or {}
+    refreshed = cache.get('refreshedAt') or ''
+    stale = True
+    if refreshed:
+        try:
+            stale = (datetime.now() - datetime.strptime(refreshed, '%Y-%m-%d')).days > HK_NAMES_REFRESH_DAYS
+        except ValueError:
+            stale = True
+    if (not mp or stale) and pro is not None:
+        try:
+            time.sleep(API_DELAY)
+            df = pro.hk_basic(list_status='L', fields='ts_code,name,enname')
+            new_mp = {}
+            for _, r in df.iterrows():
+                k = _hk_norm_name(r.get('enname'))
+                if k and r.get('name'):
+                    new_mp[k] = {'code': str(r['ts_code'])[:5], 'cn': r['name']}
+            if len(new_mp) > 1000:
+                cache = {'map': new_mp, 'refreshedAt': datetime.now().strftime('%Y-%m-%d'),
+                         'note': 'Tushare hk_basic 英文名→中文简称映射（key=规范化英文名），权益披露标的中文化用'}
+                _save_json_cache(HK_NAMES_PATH, cache)
+                print(f'  hk_names: 映射表刷新 {len(new_mp)} 条')
+                return new_mp
+        except Exception as e:
+            print(f'  Warning: hk_basic 刷新失败（用旧缓存）: {e}')
+    return mp
+
+
 def _di_session():
     s = requests.Session()
     s.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
@@ -3968,13 +4022,14 @@ def _di_search_form(s):
 
 def _di_parse_list(html):
     """解析大股东申报列表页 → [row dict]（不过滤白名单）。"""
+    from html import unescape as _unesc
     rows = []
     for tr in re.findall(r'<tr[^>]*>[\s\S]*?</tr>', html):
         cells = re.findall(r'<td[^>]*>([\s\S]*?)</td>', tr)
         if len(cells) < 9:
             continue
-        clean = [re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', c)).replace('&nbsp;', '').strip()
-                 for c in cells]
+        clean = [_unesc(re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', c))).replace('\xa0', '').strip()
+                 for c in cells]   # 2026-09-30 修复：HTML 实体（&#39;/&amp;）要反转义，否则英文名匹配失败
         ref = clean[0]
         if not re.match(r'^[A-Z]{2}\d{8}[A-Z]\d{5}$', ref):
             continue
@@ -4104,6 +4159,18 @@ def fetch_di_foreign(pro, trade_date, data, backfill_days=None):
             elif it['direction'] in ('减持', '清仓退出'):
                 st['down'] += 1
         items = win_items[:80]   # 前端列表封顶 80 条
+        # ── 标的中文化：英文名→中文简称(代码)（hk_names 映射，展示时翻译自动补译；查不到保留英文）──
+        hk_mp = _hk_names_map(pro)
+        unmatched = 0
+        for it in items:
+            hit = hk_mp.get(_hk_norm_name(it.get('corp')))
+            if hit:
+                it['corpCn'] = hit['cn']
+                it['stockCode'] = hit['code']
+            else:
+                it['corpCn'] = None
+                it['stockCode'] = None
+                unmatched += 1
         top_inst = sorted(({'name': k, **v} for k, v in inst_stat.items()),
                           key=lambda x: -x['n'])[:8]
         data['diForeign'] = {
@@ -4112,6 +4179,7 @@ def fetch_di_foreign(pro, trade_date, data, backfill_days=None):
             'items': items,
             'topInst': top_inst,
             'total': len(win_items),
+            'unmatched': unmatched,
             'missing': not items,
             'note': ('港交所权益披露（大股东申报）：仅持股跨越 5% 整数关口才强制申报，非全量持仓变动；'
                      '申报滞后≤3 个交易日；「性质变化」多为借券/质押等非买卖操作；'
