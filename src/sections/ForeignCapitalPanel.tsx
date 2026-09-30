@@ -29,6 +29,16 @@ export default function ForeignCapitalPanel() {
     ...divergenceData.map(d => d.southInflow)
   );
 
+  // ── CCASS 外资托管持股月末快照（2026-09-30 用户指令：港交所月底月初公布的外资加减仓）──
+  const cf = data.ccassForeign;
+  const fmtShares = (v?: number | null) => {
+    if (v == null) return '—';
+    const sign = v < 0 ? '-' : '';
+    const a = Math.abs(v);
+    return a >= 1e8 ? `${sign}${(a / 1e8).toFixed(2)}亿股` : `${sign}${(a / 1e4).toFixed(0)}万股`;
+  };
+  const chgCls = (v?: number | null) => v == null ? 'text-slate-300' : v >= 0 ? 'text-red-500' : 'text-emerald-600';
+
   return (
     <div className="space-y-6">
       <p className="text-[10px] text-slate-400 -mb-3">📌 本栏服务总览漏斗「第2步验证 · 北向态度」：外资流向佐证/证伪板块选择</p>
@@ -65,6 +75,87 @@ export default function ForeignCapitalPanel() {
           </CardContent>
         </Card>
       </div>
+
+      {/* ====== CCASS 外资托管持股月末快照（港交所 SDW，月底/月初双触发；2026-09-30 用户指令） ====== */}
+      {cf && (
+        <Card id="ccass-foreign" className="border-indigo-200 shadow-sm">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Globe className="w-4 h-4 text-indigo-500" />
+                外资托管持股动向（CCASS 月末快照）
+                <span className="text-[10px] font-normal text-slate-400">20 只港股蓝筹 · 外资托管行合计持股量环比</span>
+              </CardTitle>
+              <Badge variant="outline" className="text-xs bg-indigo-50 text-indigo-700 border-indigo-200">
+                {cf.asOf ?? '待积累'}{cf.prevAsOf ? ` vs ${cf.prevAsOf}` : ''}
+              </Badge>
+            </div>
+            <p className="text-[10px] text-amber-600 bg-amber-50 rounded px-2 py-1 mt-1 leading-relaxed">
+              口径免责：CCASS 托管行持股≠纯外资最终持仓（nominee 混合账户含该行全部客户），仅作参考口径；港股通内资（中国结算）单列对照。
+            </p>
+          </CardHeader>
+          <CardContent>
+            {cf.missing && (
+              <p className="text-[10px] text-slate-400 mb-2">⚠ 本月快照缺失（SDW 不可达，下月初自动重试），以下为最近可得快照。</p>
+            )}
+            {cf.items.length === 0 ? (
+              <p className="text-[11px] text-slate-400">CCASS 快照积累中（首次月末触发后展示）</p>
+            ) : (
+              <>
+                {/* 增持/减仓 top5 */}
+                {cf.prevAsOf && (
+                  <div className="grid grid-cols-2 gap-3 mb-3">
+                    <div className="rounded-lg border border-red-100 bg-red-50/40 p-2">
+                      <p className="text-[10px] font-semibold text-red-600 mb-1">📈 外资增持 Top5（股数）</p>
+                      {cf.topUp.map((i) => (
+                        <div key={i.code} className="flex items-center justify-between text-[11px] py-0.5">
+                          <span className="text-slate-700">{i.name} <span className="text-slate-400 text-[9px]">{i.code}</span></span>
+                          <span className="font-semibold text-red-500">+{fmtShares(i.chg)}{i.chgPct != null && <span className="text-[9px] text-slate-400 ml-1">{i.chgPct >= 0 ? '+' : ''}{i.chgPct}%</span>}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="rounded-lg border border-emerald-100 bg-emerald-50/40 p-2">
+                      <p className="text-[10px] font-semibold text-emerald-700 mb-1">📉 外资减持 Top5（股数）</p>
+                      {cf.topDown.map((i) => (
+                        <div key={i.code} className="flex items-center justify-between text-[11px] py-0.5">
+                          <span className="text-slate-700">{i.name} <span className="text-slate-400 text-[9px]">{i.code}</span></span>
+                          <span className="font-semibold text-emerald-600">{fmtShares(i.chg)}{i.chgPct != null && <span className="text-[9px] text-slate-400 ml-1">{i.chgPct >= 0 ? '+' : ''}{i.chgPct}%</span>}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {/* 全量表 */}
+                <div className="overflow-x-auto max-h-72 overflow-y-auto">
+                  <table className="w-full text-[11px] min-w-[560px]">
+                    <thead className="sticky top-0 bg-white z-10">
+                      <tr className="text-slate-500 border-b border-slate-200">
+                        <th className="text-left py-1.5 font-medium">标的</th>
+                        <th className="text-right font-medium">外资托管持股</th>
+                        <th className="text-right font-medium">环比变动</th>
+                        <th className="text-right font-medium">环比%</th>
+                        <th className="text-right font-medium">港股通对照</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {cf.items.map((i) => (
+                        <tr key={i.code} className="border-b border-slate-50 hover:bg-slate-50/60">
+                          <td className="py-1.5 font-medium text-slate-700">{i.name} <span className="text-slate-400 text-[9px]">{i.code}</span></td>
+                          <td className="text-right text-slate-600">{fmtShares(i.foreign)}</td>
+                          <td className={`text-right font-semibold ${chgCls(i.chg)}`}>{i.chg == null ? '—' : `${i.chg >= 0 ? '+' : ''}${fmtShares(i.chg)}`}</td>
+                          <td className={`text-right ${chgCls(i.chgPct)}`}>{i.chgPct == null ? '—' : `${i.chgPct >= 0 ? '+' : ''}${i.chgPct}%`}</td>
+                          <td className="text-right text-slate-500">{fmtShares(i.south)}{i.southChg != null && <span className={`text-[9px] ml-1 ${chgCls(i.southChg)}`}>({i.southChg >= 0 ? '+' : ''}{fmtShares(i.southChg)})</span>}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+            <p className="text-[10px] text-slate-400 mt-1.5">{cf.note}</p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* ====== 内外资分歧个股双向对比图 ====== */}
       <Card>

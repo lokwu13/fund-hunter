@@ -14,6 +14,9 @@ import time
 import statistics
 import requests
 import tushare as ts
+import re
+import urllib.request
+import urllib.parse
 
 # Delay between API calls to avoid IP rate limits
 API_DELAY = float(os.environ.get('API_DELAY', '1.5'))  # seconds（本地调试可用环境变量调低）
@@ -3643,6 +3646,203 @@ def fetch_southbound_concentration(pro, trade_date, data):
         print(f"  Warning: fetch_southbound_concentration failed: {e}")
 
 
+# ── CCASS 外资托管持股快照（2026-09-30 用户正式指令：外资栏目加港交所月底月初公布的外资加减仓动向）──
+# 数据源考证结论（2026-09-30 本机实测）：
+#   HKEX SDW（www3.hkexnews.hk/sdw/search/searchsdw.aspx）可机查——GET 取 __VIEWSTATE 后 POST 表单
+#   （无需 __EVENTVALIDATION），返回全部 CCASS 参与者（托管行/券商）持股明细；历史≥12 个月可回补
+#   （实测 2025/12/31、2026/03/31、2026/08/31 均通）；需 ~4s 间隔+退避，快速连发会被断连。
+#   Tushare 无 CCASS 托管行接口（hk_hold=港股通内资南向，勿混）；akshare 无 CCASS 接口。
+# 口径免责：CCASS 托管行持股≠纯外资最终持仓（nominee 混合账户，含该行全部客户），仅作参考口径。
+CCASS_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache', 'ccass_history.json')
+CCASS_SDW_URL = 'https://www3.hkexnews.hk/sdw/search/searchsdw.aspx'
+CCASS_REQ_GAP = 4.0           # SDW 请求间隔（实测限流）
+# 港股大市值蓝筹 20 只（配置化可改）
+CCASS_STOCKS = [
+    ('00700', '腾讯控股'), ('03690', '美团-W'), ('00005', '汇丰控股'), ('01299', '友邦保险'),
+    ('00941', '中国移动'), ('00388', '香港交易所'), ('09988', '阿里巴巴-W'), ('01398', '工商银行'),
+    ('00939', '建设银行'), ('02318', '中国平安'), ('01810', '小米集团-W'), ('01211', '比亚迪股份'),
+    ('00857', '中国石油股份'), ('00883', '中国海洋石油'), ('02628', '中国人寿'), ('01088', '中国神华'),
+    ('09618', '京东集团-SW'), ('09999', '网易-S'), ('09888', '百度集团-SW'), ('09633', '农夫山泉'),
+]
+# 外资托管行/券商名称关键词（大写包含匹配，覆盖主流外资行；名单可调）
+CCASS_FOREIGN_KEYS = [
+    'HONGKONG AND SHANGHAI BANKING', 'HSBC', 'CITIBANK', 'STANDARD CHARTERED',
+    'JPMORGAN', 'J.P. MORGAN', 'MORGAN STANLEY', 'MERRILL LYNCH', 'UBS', 'GOLDMAN SACHS',
+    'DEUTSCHE BANK', 'BNP PARIBAS', 'CREDIT SUISSE', 'NOMURA', 'BARCLAYS', 'MACQUARIE',
+    'STATE STREET', 'INTERACTIVE BROKERS', 'BANK OF NEW YORK', 'CACEIS', 'CLEARSTREAM',
+]
+CCASS_SOUTHBOND_KEY = 'CHINA SECURITIES DEPOSITORY'   # 中国结算=港股通内资（对照项，不计入外资）
+
+
+def _sdw_http(data=None, tries=3):
+    """SDW GET/POST（gzip 兼容、限流退避）。失败返回 None。
+    注意：GET 不得带 Content-Type/Referer，否则被 WAF 重定向到门户首页（2026-09-30 实测）。"""
+    import ssl as _ssl
+    ctx = _ssl.create_default_context(); ctx.check_hostname = False; ctx.verify_mode = _ssl.CERT_NONE
+    for k in range(tries):
+        try:
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+            if data is not None:
+                headers['Content-Type'] = 'application/x-www-form-urlencoded'
+                headers['Referer'] = CCASS_SDW_URL
+            req = urllib.request.Request(CCASS_SDW_URL, data=data, headers=headers)
+            with urllib.request.urlopen(req, timeout=40, context=ctx) as r:
+                raw = r.read()
+                if r.headers.get('Content-Encoding') == 'gzip':
+                    import gzip as _gz, io as _io
+                    raw = _gz.GzipFile(fileobj=_io.BytesIO(raw)).read()
+                return raw.decode('utf-8', errors='ignore')
+        except Exception as e:
+            print(f'    sdw retry{k}: {type(e).__name__} {str(e)[:50]}')
+            time.sleep(12 * (k + 1))
+    return None
+
+
+def _ccass_query(code5, date_dash, form):
+    """查某股某日 CCASS 参与者持股 → (foreign, south, n_participants)；失败/非交易日返回 None。
+    form=(vs, vg) 可跨查询复用；返回 None 时调用方应刷新表单重试一次。"""
+    import urllib.parse
+    payload = {
+        '__EVENTTARGET': '', '__EVENTARGUMENT': '', '__VIEWSTATE': form[0], '__VIEWSTATEGENERATOR': form[1],
+        'today': datetime.now().strftime('%Y%m%d'), 'sortBy': 'shareholding', 'sortDirection': 'desc',
+        'alertMsg': '', 'txtShareholdingDate': date_dash, 'txtStockCode': code5,
+        'txtStockName': '', 'txtParticipantID': '', 'txtParticipantName': '',
+        'txtShareholdingName': '', 'btnSearch': 'Search',
+    }
+    h = _sdw_http(data=urllib.parse.urlencode(payload).encode())
+    if not h:
+        return None
+    trs = re.findall(r'<tr>\s*<td class="col-participant-id">([\s\S]*?)</tr>', h)
+    rows = []
+    for t in trs:
+        m = re.search(r'col-participant-name[\s\S]*?mobile-list-body">([^<]*)</div>', t)
+        s = re.search(r'col-shareholding [\s\S]*?mobile-list-body">([^<]*)</div>', t)
+        if m and s:
+            try:
+                rows.append((m.group(1).strip(), int(s.group(1).replace(',', ''))))
+            except ValueError:
+                pass
+    if not rows:
+        return None   # 非交易日/日期超限/被限流
+    foreign = sum(s for n, s in rows if any(k in n.upper() for k in CCASS_FOREIGN_KEYS))
+    south = sum(s for n, s in rows if CCASS_SOUTHBOND_KEY in n.upper())
+    return {'foreign': foreign, 'south': south, 'nPart': len(rows)}
+
+
+def _ccass_get_form():
+    h = _sdw_http()
+    if not h:
+        return None
+    vs = re.search(r'__VIEWSTATE[^>]*value="([^"]*)"', h)
+    vg = re.search(r'__VIEWSTATEGENERATOR[^>]*value="([^"]*)"', h)
+    return (vs.group(1), vg.group(1)) if vs and vg else None
+
+
+def fetch_ccass_foreign(pro, trade_date, data, backfill_dates=None):
+    """CCASS 外资托管持股月末快照（月底/月初双触发 + 首次回补）。
+
+    触发：trade_date 为当月最后一个交易日→快照=当日；为当月第一个交易日→快照=上月末（兜底月末失败）。
+    backfill_dates（一次性本地回填用）：给定 ['2025-12-31', ...] 直接抓这些日期。
+    快照数据入 ccass_history.json 滚动持久（随 workflow 回写）；SDW 不可达→本月快照缺失标注，
+    绝不影响 nightly 主流程。展示块 data['ccassForeign']=最新月末 vs 上月末 环比。
+    """
+    cache = _load_json_cache(CCASS_CACHE_PATH, {})
+    snaps = cache.setdefault('snapshots', {})
+
+    def _hk_trade_dates(ym):
+        """A股历近似当月起止（港股历差异由 SDW 空结果兜底）。"""
+        try:
+            cal = pro.trade_cal(exchange='SSE', start_date=f'{ym}01',
+                                end_date=f'{ym}31', is_open='1')
+            return sorted(cal['cal_date'].tolist())
+        except Exception:
+            return []
+
+    targets = []
+    if backfill_dates:
+        targets = [d for d in backfill_dates if len(snaps.get(d) or {}) < len(CCASS_STOCKS)]
+    else:
+        days_cur = _hk_trade_dates(trade_date[:6])
+        if days_cur:
+            if trade_date == days_cur[-1]:      # 月末交易日
+                targets = [f'{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}']
+            elif trade_date == days_cur[0]:     # 月初交易日→补上月末
+                prev = (datetime.strptime(trade_date, '%Y%m%d').replace(day=1) - timedelta(days=1))
+                pd_days = _hk_trade_dates(prev.strftime('%Y%m'))
+                if pd_days:
+                    t = pd_days[-1]
+                    t_iso = f'{t[:4]}-{t[4:6]}-{t[6:]}'
+                    targets = [t_iso] if len(snaps.get(t_iso) or {}) < len(CCASS_STOCKS) else []
+        targets = [t for t in targets if len(snaps.get(t) or {}) < len(CCASS_STOCKS)]
+
+    fetched, failed = 0, 0
+    if targets:
+        form = _ccass_get_form()
+        for tgt in targets:
+            dd = tgt.replace('-', '/')
+            snap = snaps.setdefault(tgt, {})   # 部分完成可续：只补缺的股票
+            for code5, name in CCASS_STOCKS:
+                if code5 in snap:
+                    continue
+                time.sleep(CCASS_REQ_GAP)
+                r = _ccass_query(code5, dd, form) if form else None
+                if r is None and form:   # 可能是 viewstate 过期：刷新表单重试一次
+                    form = _ccass_get_form() or form
+                    time.sleep(CCASS_REQ_GAP)
+                    r = _ccass_query(code5, dd, form)
+                if r is None:
+                    failed += 1
+                    continue
+                r['name'] = name
+                snap[code5] = r
+                fetched += 1
+                _save_json_cache(CCASS_CACHE_PATH, cache)   # 逐股落盘（SDW 慢，防超时中断丢失）
+            if snap:
+                print(f'  ccass: {tgt} 快照 {len(snap)}/{len(CCASS_STOCKS)} 只入缓存')
+            else:
+                print(f'  ccass: {tgt} 全部失败（SDW 不可达/非交易日），本月快照缺失')
+        cache['note'] = ('CCASS 托管持股快照（HKEX SDW 机查，2026-09-30 上线）：每月最后/第一个交易日双触发；'
+                         'foreign=外资托管行合计（汇丰/花旗/渣打/摩根大通/摩根士丹利/美林/瑞银/高盛等关键词匹配），'
+                         'south=中国结算（港股通内资，对照项）。口径免责：托管行持股≠纯外资最终持仓'
+                         '（nominee 混合账户含该行全部客户），仅作参考口径。')
+        _save_json_cache(CCASS_CACHE_PATH, cache)
+
+    # ── 展示块：最新月末 vs 上月末 环比（无论本月是否触发都重建）──
+    try:
+        dates = sorted(snaps)
+        if not dates:
+            data['ccassForeign'] = {'asOf': None, 'items': [], 'topUp': [], 'topDown': [],
+                                    'missing': True,
+                                    'note': 'CCASS 快照缓存为空（SDW 不可达待积累）'}
+            return
+        latest, prev = dates[-1], dates[-2] if len(dates) >= 2 else None
+        items = []
+        for code5, name in CCASS_STOCKS:
+            cur = snaps[latest].get(code5)
+            if not cur:
+                continue
+            pv = (snaps.get(prev) or {}).get(code5) if prev else None
+            chg = cur['foreign'] - pv['foreign'] if pv else None
+            chg_pct = round(chg / pv['foreign'] * 100, 2) if pv and pv['foreign'] else None
+            items.append({'code': code5, 'name': name,
+                          'foreign': cur['foreign'], 'south': cur['south'],
+                          'chg': chg, 'chgPct': chg_pct,
+                          'southChg': (cur['south'] - pv['south']) if pv else None})
+        ranked = sorted((i for i in items if i['chg'] is not None), key=lambda x: -x['chg'])
+        data['ccassForeign'] = {
+            'asOf': latest, 'prevAsOf': prev,
+            'items': items,
+            'topUp': ranked[:5], 'topDown': ranked[-5:][::-1] if ranked else [],
+            'missing': bool(targets and fetched == 0),
+            'note': ('外资托管行合计持股（HKEX CCASS/SDW 月末快照）；环比=最新月末 vs 上月末。'
+                     '口径免责：托管行持股≠纯外资最终持仓（nominee 混合账户），港股通内资单列对照，仅作参考。'),
+        }
+        print(f"  ccassForeign: asOf {latest}（vs {prev}），{len(items)} 只"
+              + (f"，增持居首 {ranked[0]['name']}" if ranked else ''))
+    except Exception as e:
+        print(f"  Warning: ccassForeign display failed: {e}")
+
+
 def fetch_leverage_concentration(pro, trade_date, data):
     """杠杆资金控盘集中度 TOP10（margin_detail 融资余额 / daily_basic 流通市值，T+1）。"""
     try:
@@ -6164,6 +6364,12 @@ def main():
     fetch_margin_summary(pro, trade_date, data)
     fetch_southbound_concentration(pro, trade_date, data)
     fetch_leverage_concentration(pro, trade_date, data)
+
+    # ── 10c. CCASS 外资托管持股月末快照（HKEX SDW；月底/月初双触发，SDW 失败只标缺失不断流）──
+    try:
+        fetch_ccass_foreign(pro, trade_date, data)
+    except Exception as e:
+        print(f"  Warning: ccassForeign failed (keep old): {e}")
 
     # ── 11. Sector index commentary (细分指数每日点评) ──
     print("\n[11/17] Fetching sector index commentary...")

@@ -806,6 +806,20 @@ export interface FundData {
     };
     note?: string;
   };
+  // CCASS 外资托管持股月末快照（2026-09-30 用户指令：港交所 SDW 机查，月底/月初双触发）
+  ccassForeign?: {
+    asOf: string | null;
+    prevAsOf?: string | null;
+    missing?: boolean;
+    note?: string;
+    items: Array<{
+      code: string; name: string;
+      foreign: number; south: number;
+      chg: number | null; chgPct: number | null; southChg: number | null;
+    }>;
+    topUp: Array<any>;
+    topDown: Array<any>;
+  };
   zizengETF?: {
     trade_date: string;
     nav_date?: string | null;
