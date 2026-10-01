@@ -4755,10 +4755,33 @@ BREAKOUT_VOL_X = 1.4        # 突破确认：成交量 ≥ 50 日均量 ×1.4
 # ── 杯柄·下跌反转分支（2026-10-01 晚 09987 百胜中国标准杯柄校准）──
 CUP_HANDLE_AMP_MAX = 0.08   # 标准柄：右侧横盘振幅 ≤8%（v2 沿用）
 CUP_REV_AMP_MAX = 0.12      # 下跌反转柄：振幅 ≤12%（09987 用户标注 28 日柄实测 11.2%）
-CUP_REV_PRE_DIST = -20.0    # 前置下跌趋势确认①：杯沿距其前 250 日高点 ≤-20%（09987 -42.5%）
+CUP_REV_PRE_DIST = -15.0    # 前置下跌趋势确认①：杯沿距其前 250 日高点 ≤-15%
+                            # （09987 -42.5%；2026-10-01 晚任务B 由 -20 放宽至 -15——
+                            #  中国石油 depth 20.1% 超标准分支 18 上限，靠 preDist -17.1+r120 -12.4% 归入反转分支保留）
 CUP_REV_PRE_RET = -5.0      # 前置下跌趋势确认②：杯沿前 60 或 120 日收益 ≤-5%（09987 -15.3%/-13.3%）
 CUP_REV_DD_MIN = 0.95       # 下跌反转分支双底容差 5%（09987 二底 -4.8%；标准分支沿用 4%）
 CUP_BRK_VOL_X = 1.5         # 柄末端后突破确认：单日量 ≥ 柄均量 ×1.5（09987 突破日 3.05x）
+CUP_DEPTH_MAX_STD = 18.0    # 任务B（2026-10-01 晚用户批准）：标准分支杯深上限 22→18
+                            # （杀华电国际 21.8/中国广核 21.7/宁波港 21.8/申能 20.5 类深坑伪杯柄；
+                            #  反转分支沿用 CUP_DEPTH_MAX=22 保 09987 21.9/万华 21.1/中石油 20.1）
+CUP_PCT_MAX = 82.0          # 任务B：杯柄分位上限 85→82 两分支统一（杀国电电力 83.2/福能 84.4）。
+                            # ⚠️调和记录：用户原口径 70 会误杀钦定案例海油工程 80.4/中国石化 75.6，
+                            # 取 82=六案例最高分位 80.4 留 1.6pt 余量，上报用户定夺是否再压
+CUP_SHOW_DIST = 5.0         # 任务B：杯柄只展示临近成型 ≤5%（七案例 distPct 0.2~4.2 含长安 4.2；
+                            # 皖通高速 5.3/中国广核 5.7 出局）
+
+# ── 长平台整理（任务D 2026-10-01 晚，用户口径：标的大+K线长时间走平+波动窄+跨度大）──
+# 标定案例：海光信息 2024-05-07~09-09（90日 幅20.8% 漂移-3.6% 末段量0.74x）
+#           海光信息 2025-06-10~08-12（46日 幅12.1% 漂移-2.2% 末段量1.31x）
+#           中微公司 2025-05-15~07-22（48日 幅14.9% 漂移+2.6% 末段量1.39x）
+# ⚠️实测修正：用户口述「量能持续萎缩」仅段①成立（0.74x），段②/③末段放量 1.3x（启动前兆）
+# →量能门定为末 1/3 均量 ≤ 首 1/3×1.4（不强制缩量），已如实上报
+LP_MIN_DAYS, LP_MAX_DAYS = 45, 120   # 跨度 45~120 交易日（现行平台路径 10~50 日接不住段①的 90 日）
+LP_MAX_AMP = 0.21        # 区间振幅 ≤21%（案例 max 20.8%）
+LP_MAX_DRIFT = 0.06      # 期末/期初收盘漂移 |≤6%|（案例 -3.6%/-2.2%/+2.6%）=「走平」量化
+LP_VOL_EXP_MAX = 1.4     # 末 1/3 均量 ≤ 首 1/3 ×1.4
+LP_MIN_MV = 800.0        # 流通/总市值 ≥800 亿（「标的大」量化；海光 1776~3227 亿、中微 1161 亿）
+LP_PCT_LO, LP_PCT_HI = 40.0, 80.0   # 一年分位 40~80（案例 50.9/65.0/67.4）
 
 
 def _trend_template(rows):
@@ -4889,8 +4912,8 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
             dist_high250 = (close / max(win) - 1) * 100
         if hist_pct is None:
             hist_pct = _pct_rank100(win, close)
-    if hist_pct is None or not (25 <= hist_pct <= 85):
-        return None                     # 分位 25~85：已脱离前低区域 + 非高位
+    if hist_pct is None or not (25 <= hist_pct <= CUP_PCT_MAX):
+        return None                     # 分位 25~82：已脱离前低区域 + 非高位（任务B 上限 85→82）
     vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
     for n in range(20, 9, -1):          # 杯柄 10~20 日（右侧横盘≥2 周），取最长
         handle = bars[-n:]
@@ -4936,6 +4959,8 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
             continue                    # 柄右侧窄幅横盘：标准 ≤8%，下跌反转分支 ≤12%
         body = cup[hi_pos:]             # 杯身=杯沿之后（含杯底与右侧回升段）
         depth = (cup_hi - cup_lo) / cup_hi * 100
+        if not rev_branch and depth > CUP_DEPTH_MAX_STD:
+            continue                    # 任务B：标准分支杯深 ≤18%（反转分支沿用 ≤22%）
         # 双底验证：杯身 1~2 个坑，标准分支第二坑最低可低于第一坑 4%（五案例 -3.3%~+4.8%），
         # 下跌反转分支放宽至 5%（09987 -4.8%）；更深=单边阴跌创新低，非杯身
         half = len(body) // 2
@@ -4992,6 +5017,58 @@ def _cup_breakout_check(post_bars, pivot, h_vol):
     for b in post_bars:
         if b[3] >= pivot and b[4] >= h_vol * CUP_BRK_VOL_X:
             return {'date': b[0], 'close': b[3], 'volX': round(b[4] / h_vol, 2)}
+    return None
+
+
+def _long_platform(bars, circ_mv=None, hist_pct=None):
+    """长平台整理（任务D 2026-10-01 晚，用户口径：标的大+K线长时间走平+波动窄+跨度大）。
+    三段标定案例：海光信息 2024-05-07~09-09（90日 幅20.8% 漂移-3.6%）/
+    海光信息 2025-06-10~08-12（46日 幅12.1% 漂移-2.2%）/中微公司 2025-05-15~07-22
+    （48日 幅14.9% 漂移+2.6%）。门槛：跨度 45~120 交易日、区间振幅 ≤21%、
+    期末/期初漂移 |≤6%|（走平）、末 1/3 均量 ≤ 首 1/3×1.4（实测两段末段放量 1.3x
+    =启动前兆，不强制缩量）、市值 ≥800 亿、一年分位 40~80。取满足条件的最长窗口。
+    枢轴=窗口高点；失效位=窗口低点。bars: (date, high, low, close, vol) 升序。"""
+    if len(bars) < LP_MIN_DAYS + 10:
+        return None
+    closes = [b[3] for b in bars]
+    close = closes[-1]
+    if close <= 0:
+        return None
+    if circ_mv is not None and circ_mv < LP_MIN_MV:
+        return None                     # 标的大：市值 ≥800 亿
+    if hist_pct is None:
+        hist_pct = _pct_rank100(closes[-250:], close)
+    if hist_pct is None or not (LP_PCT_LO <= hist_pct <= LP_PCT_HI):
+        return None
+    vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
+    for n in range(min(LP_MAX_DAYS, len(bars)), LP_MIN_DAYS - 1, -1):
+        seg = bars[-n:]
+        hi = max(b[1] for b in seg)
+        lo = min(b[2] for b in seg)
+        if lo <= 0:
+            continue
+        if (hi - lo) / lo > LP_MAX_AMP:
+            continue                    # 波动窄：区间振幅 ≤21%
+        drift = abs(close / seg[0][3] - 1)
+        if drift > LP_MAX_DRIFT:
+            continue                    # 走平：首末收盘漂移 ≤6%
+        t = max(1, n // 3)
+        v_first = sum(b[4] for b in seg[:t]) / t
+        v_last = sum(b[4] for b in seg[-t:]) / t
+        if v_first > 0 and v_last > v_first * LP_VOL_EXP_MAX:
+            continue                    # 量能不失控：末段 ≤ 首段×1.4
+        dist = (hi / close - 1) * 100
+        if dist > VCP_SHOW_DIST_PLAT:
+            continue                    # 枢轴距现价 ≤12%：更早高点的长窗跳过，落到更近的窗口
+                                        # （海光段②：77 日窗 dist 13.7% 跳过 → 46 日标定窗 dist 8% 命中）
+        return {'type': '长平台整理', 'days': n,
+                'amplitude': round((hi - lo) / lo * 100, 1),
+                'drift': round((close / seg[0][3] - 1) * 100, 1),
+                'volRatio': round(v_last / v_first, 2) if v_first > 0 else None,
+                'pivot': round(hi, 2), 'distPct': round(dist, 1),
+                'invalidation': round(lo, 2),
+                'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
+                'formed': True}
     return None
 
 
@@ -5243,15 +5320,24 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 w_c3 = bool(w_lv and w_lv['formed'])
                 ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
                                         hist_pct=hist_pct)
+                lp = _long_platform(bars, circ_mv=(mv.get(code, 0) / 1e4 if mv else None),
+                                    hist_pct=hist_pct)
                 raw, main_lv = None, None
                 if d_c3 or w_c3:
                     raw, main_lv = 'VCP收缩型', (d_lv if d_c3 else w_lv)
                     if not tt['pass']:
                         dropped_tt.append(f"{info.get(code, {}).get('name', code)}:VCP收缩型")
                         raw, main_lv = None, None        # VCP 收缩保留 Stage 2 趋势模板拦截
-                elif ch and ch['formed']:
+                elif (ch and ch['formed']
+                      and not (dist_high250 > -7 and hist_pct is not None and hist_pct > 60)):
                     raw, main_lv = '杯柄型', ch          # 底部反转型（2026-10-01 第三轮重写）：
                                                          # 不再套 Stage 2，前置回撤≥12%+位置门槛在函数内
+                    # 任务B补充（2026-10-01 晚）：杯柄同样适用「贴新高中高位拒」
+                    # （dist250>-7 且 分位>60，同 ext_high 口径——招商公路/上海银行/长沙银行类；
+                    #  六案例 dist250 ≤-7.6 不受影响）
+                elif lp and lp['formed']:
+                    raw, main_lv = '长平台整理', lp        # 任务D（2026-10-01 晚）：大市值长跨度走平，
+                                                         # 先于 ext_high 判定（海光段①分位65/距高-4.1% 系钦定案例）
                 if raw is None:
                     # 极高位门槛（2026-10-01 下午校准）：分位>85 拒（同 VCP/杯柄）；
                     # 或 距一年收盘高点<7% 且 分位>60 = 贴新高的中高位平台拒
@@ -5266,7 +5352,14 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                         pattern = '旗形整理'           # 急涨后缩量旗面（趋势中继，非 Stage 1 基底，不强制趋势模板）
                         main_lv = fl                  # 距枢轴超窗的旗面不硬贴标签，回落平台判定
                     elif pf and pf['formed']:
-                        pattern = '底部整理'           # Stage 1 基底分层保留展示
+                        # 平台路径按位置三分（任务A 2026-10-01 晚用户总裁决）：分位≤40=底部整理、
+                        # 40~60=平台整理、>60=高位平台⚠️（独立成组沉底，高位股绝不进底部整理组）
+                        if hist_pct is not None and hist_pct <= 40:
+                            pattern = '底部整理'       # Stage 1 基底分层保留展示
+                        elif hist_pct is not None and hist_pct <= 60:
+                            pattern = '平台整理'
+                        else:
+                            pattern = '高位平台⚠️'
                         plat = bars[-pf['days']:]
                         vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
                         main_lv = dict(pf)
@@ -5276,7 +5369,12 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                         continue
                 else:
                     pattern = raw
-                dist_limit = VCP_SHOW_DIST_PLAT if pattern == '底部整理' else VCP_SHOW_DIST
+                if pattern in ('底部整理', '平台整理', '高位平台⚠️', '长平台整理'):
+                    dist_limit = VCP_SHOW_DIST_PLAT      # 平台家族放宽至 12%
+                elif pattern == '杯柄型':
+                    dist_limit = CUP_SHOW_DIST           # 任务B：杯柄只展示临近成型 ≤4%（六案例 0.2~2.3）
+                else:
+                    dist_limit = VCP_SHOW_DIST
                 if not (VCP_SHOW_DIST_LO <= main_lv['distPct'] <= dist_limit):
                     continue   # 只展示成型或临近成型（收缩/杯柄距枢轴<8%；底部平台放宽至12%，2026-10-01 校准）
                 sec = meta['sector']
@@ -5318,6 +5416,9 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                               'pattern': pattern, 'platform': pf,
                               'cupHandle': ch if pattern == '杯柄型' else None,
                               'flag': fl if pattern == '旗形整理' else None,
+                              # 长平台共标（2026-10-01 晚）：杯柄/其他形态命中时若长平台也成型，
+                              # 一并挂上供前端「兼长平台」标注（中微段③=杯柄+长平台双命中类）
+                              'longPlat': lp if (lp and lp.get('formed')) else None,
                               'trendTemplate': tt, 'stage': stage,
                               'buyPoint': buy_point,
                               'histPct': hist_pct,
@@ -5332,7 +5433,10 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         # 分组展示（2026-10-01 下午 用户指令）：按形态分四组（VCP收缩/杯柄/底部整理/旗形），
         # 每组各取前 10——组内资金确认(mfDays≥6)优先、再距枢轴升序；底部整理组稳定可见，
         # 不再被杯柄组霸屏截断（伊利股份类排 30 名外被裁的问题根治）
-        pat_order = {'VCP收缩型': 0, '杯柄型': 1, '底部整理': 2, '超窄幅整理': 2, '底部平台型': 2, '旗形整理': 3}
+        # 分组展示（2026-10-01 晚任务A/B/D）：VCP→杯柄→底部整理→长平台（底部组内独立标注）→
+        # 平台整理→旗形→高位平台⚠️沉底独立成组；每组各前 10，组内资金确认优先、再距枢轴升序
+        pat_order = {'VCP收缩型': 0, '杯柄型': 1, '底部整理': 2, '超窄幅整理': 2, '底部平台型': 2,
+                     '长平台整理': 3, '平台整理': 4, '旗形整理': 5, '高位平台⚠️': 6}
         items.sort(key=lambda x: (pat_order.get(x['pattern'], 4),
                                   0 if x.get('mfDays', 0) >= 6 else 1,
                                   x['distMain']))
