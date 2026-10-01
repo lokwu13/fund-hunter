@@ -433,47 +433,7 @@ def fetch_mainforce_flow(pro, trade_date):
     return inflow, outflow
 
 
-def fetch_hot_fund_navs(pro, trade_date, existing):
-    """用 pro.fund_nav 逐只更新 hotFundNavs 的最新净值。
-
-    接口已实测有权限。每只取近 10 日净值，用最新一条更新
-    nav/accumNav/date；change 为最新单位净值相对前一净值日的绝对变动（小数）。
-    取不到数据的基金保留旧值（取到才覆盖）。
-    """
-    if not existing:
-        return existing
-    start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=10)).strftime('%Y%m%d')
-    updated = []
-    for item in existing:
-        code = item.get('code', '')
-        if not code:
-            updated.append(item)
-            continue
-        try:
-            time.sleep(API_DELAY)
-            df = pro.fund_nav(ts_code=code, start_date=start, end_date=trade_date)
-            if df is None or len(df) == 0:
-                updated.append(item)
-                continue
-            df = df.sort_values('nav_date').reset_index(drop=True)
-            last = df.iloc[-1]
-            new_item = dict(item)
-            if pd.notna(last.get('unit_nav')):
-                new_item['nav'] = round(float(last['unit_nav']), 4)
-            if pd.notna(last.get('accum_nav')):
-                new_item['accumNav'] = round(float(last['accum_nav']), 4)
-            new_item['date'] = str(last['nav_date'])
-            if len(df) >= 2:
-                prev = df.iloc[-2]
-                if pd.notna(last.get('unit_nav')) and pd.notna(prev.get('unit_nav')):
-                    new_item['change'] = round(float(last['unit_nav']) - float(prev['unit_nav']), 3)
-            updated.append(new_item)
-        except Exception as e:
-            print(f"  Warning: Failed to fetch fund nav {code}: {e}")
-            updated.append(item)
-    return updated
-
-
+# fetch_hot_fund_navs 已删除（2026-10-01 死字段清理：hotFundNavs 前端无消费，省 fund_nav 调用/日）
 # 宽基 ETF 份额监控池（核心宽基申赎动向名单，16 只）
 NATIONAL_ETF_WATCH = {
     '159919.SZ': '嘉实300ETF',
@@ -1468,15 +1428,7 @@ def build_broad_watch(pro, trade_date, data):
                  '临近枢轴（距枢轴≤3%）/构筑基底（平台成型距枢轴3~8%）/低波蓄势（近20日振幅≤8%且缩量）；'
                  '枢轴价/失效位直接对跟踪 ETF 日线计算（fund_daily），为可直接下单口径；'
                  '突破确认与失效位为形态参数，非操作建议')}
-    watch = [i for i in vcp_items if i.get('state') in ('低波蓄势', '构筑基底', '临近枢轴', '突破确认', '突破待确认（未放量）')]
-    if watch:
-        data['broadVcpDigest'] = '宽基形态：' + '；'.join(
-            f"{i['indexName']} {i['state']}"
-            + (f"（盯 {i['etfCode'].split('.')[0]} 突破 {i['pivot']}，距枢轴{i['distPct']}%）"
-               if i.get('distPct') is not None else '')
-            for i in watch[:3])
-    else:
-        data.pop('broadVcpDigest', None)
+    # broadVcpDigest 字段已删除（2026-10-01 死字段清理：前端无任何渲染消费）
     print(f"  broadWatch: 趋势 {len(trend_items)} 只"
           f"（✅{sum(1 for i in trend_items if i['status'] == '✅趋势候选')}），"
           f"形态五档 "
@@ -4215,48 +4167,7 @@ def fetch_di_foreign(pro, trade_date, data, backfill_days=None):
         print(f"  Warning: diForeign display failed: {e}")
 
 
-def fetch_leverage_concentration(pro, trade_date, data):
-    """杠杆资金控盘集中度 TOP10（margin_detail 融资余额 / daily_basic 流通市值，T+1）。"""
-    try:
-        d = trade_date
-        md = None
-        for _ in range(5):
-            time.sleep(API_DELAY)
-            md = pro.margin_detail(trade_date=d)
-            if md is not None and len(md):
-                break
-            d = (datetime.strptime(d, '%Y%m%d') - timedelta(days=1)).strftime('%Y%m%d')
-        if md is None or not len(md):
-            raise ValueError('margin_detail empty')
-        time.sleep(API_DELAY)
-        db = pro.daily_basic(trade_date=d, fields='ts_code,circ_mv')
-        if db is None or not len(db):
-            raise ValueError('daily_basic empty')
-        mv = dict(zip(db['ts_code'], db['circ_mv'].astype(float)))  # 万元
-        # 个股名称：data['stocks'] 仅覆盖自选观察名单（list），改用 stock_basic 全市场映射
-        time.sleep(API_DELAY)
-        sb = pro.stock_basic(exchange='', list_status='L', fields='ts_code,name')
-        names = dict(zip(sb['ts_code'], sb['name'])) if sb is not None and len(sb) else {}
-        rows = []
-        for _, r in md.iterrows():
-            cap = mv.get(r['ts_code'])
-            if not cap or cap <= 0:
-                continue
-            ratio = float(r['rzye']) / 1e4 / cap * 100  # 元→万元 / 万元
-            rows.append({'code': r['ts_code'], 'name': names.get(r['ts_code'], r['ts_code'].split('.')[0]),
-                         'ratio': f"{ratio:.2f}%", 'concept': '—'})
-        rows.sort(key=lambda x: -float(x['ratio'].rstrip('%')))
-        items = [{'rank': i + 1, **row} for i, row in enumerate(rows[:10])]
-        data['leverage_concentration_top10'] = items
-        ds = data.setdefault('dataSources', {}).setdefault('leverage_concentration_top10', {})
-        ds.update({'source': 'Tushare margin_detail + daily_basic', 'freq': '日更',
-                   'lastUpdate': f'{d[:4]}-{d[4:6]}-{d[6:]}',
-                   'note': '融资余额占流通市值比，T+1口径每日更新'})
-        print(f"  leverage_concentration_top10: as of {d}, top {items[0]['name']} {items[0]['ratio']}")
-    except Exception as e:
-        print(f"  Warning: fetch_leverage_concentration failed: {e}")
-
-
+# fetch_leverage_concentration 已删除（2026-10-01 死字段清理：杠杆控盘卡下线，函数只喂该卡）
 # 中证行业指数系列（细分指数每日点评）
 # 实测（2026-07，当前 token）：000929/000930/000931/000936/000937 及其深市镜像
 # 399929/399930/399931/399936/399937 在 index_daily 均无数据（需更高积分），
@@ -6223,15 +6134,8 @@ def fetch_nt_upgrade(pro, trade_date, data):
             'items': vol_items,
             'note': 'HV20/HV60为年化历史波动率；HV20>HV60×1.2升温，<HV60×0.85降温；低位=HV20近一年分位<25%',
         }
-        # 每日评语速览·宽基低波提示：HV20 近一年分位 <25% 的宽基全部列出；无命中则清除残留字段
+        # 每日评语速览·宽基低波提示：HV20 近一年分位 <25% 的宽基（lowVolDigest 字段 2026-10-01 已删，前端无消费）
         low_hits = [v for v in vol_items if v.get('low')]
-        if low_hits:
-            names = '、'.join(v['name'] for v in low_hits)
-            pcts = '/'.join(f"{v['hvPct1y']:.0f}%" for v in low_hits)
-            data['lowVolDigest'] = (f"宽基低波：{names} 20日波动率处一年低位"
-                                    f"（分位 {pcts}），形态发育友好。")
-        else:
-            data.pop('lowVolDigest', None)
         print(f"  indexVol: {len(vol_items)} indices, low={len(low_hits)}, "
               + ', '.join(f"{v['name']}{v['status']}" for v in vol_items[:3]))
     except Exception as e:
@@ -6701,13 +6605,8 @@ def main():
         data['mainforce_outflow_top10'] = outflow
         print(f"  Outflow #1: {outflow[0]['name']} {outflow[0]['amount']}")
 
-    # ── 7. Hot fund NAVs (fund_nav, 取到才覆盖) ──
-    print("\n[7/17] Fetching hot fund NAVs...")
-    hot_navs = fetch_hot_fund_navs(pro, trade_date, data.get('hotFundNavs', []))
-    if hot_navs:
-        data['hotFundNavs'] = hot_navs
-        dates = {h.get('date', '') for h in hot_navs}
-        print(f"  Updated {len(hot_navs)} fund NAVs, dates: {sorted(dates)}")
+    # ── 7. Hot fund NAVs：已停用并删除字段（2026-10-01 死字段清理：hotFundNavs 前端无渲染消费，
+    #        fetch_hot_fund_navs 函数体一并删除，省 fund_nav 逐只调用/日）──
 
     # ── 8. National ETF watch (宽基ETF份额监控) ──
     print("\n[8/17] Fetching national ETF watch (fund_share)...")

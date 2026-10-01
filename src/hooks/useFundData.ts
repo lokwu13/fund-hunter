@@ -169,17 +169,7 @@ export interface FundData {
     comment: string;
     tone: 'up' | 'down' | 'flat';
   }>;
-  foreignSummary?: {
-    totalBuys: number;
-    totalSells: number;
-    ratingUpgrades: number;
-    ratingDowngrades: number;
-    topInstitution: string;
-    topSector: string;
-    recentHighlight: string;
-  };
   divergence_top10?: DivergenceItem[];
-  top5_national?: Top5Item[];
   top5_publicfund?: Top5Item[];
   top5_foreign?: Top5Item[];
   top5_sector?: Top5Item[];
@@ -189,7 +179,6 @@ export interface FundData {
   concentration_top10?: ConcentrationItem[];
   mainforce_inflow_top10?: Array<{name: string; code: string; concept: string; sector: string}>;
   mainforce_outflow_top10?: Array<{name: string; code: string; concept: string; sector: string}>;
-  combined_sell_top10?: Array<{rank: number; name: string; code: string; sources: string[]; amount: string; concept: string; sector: string}>;
   auction_rebound_weekly?: {
     week: string;
     updateDate: string;
@@ -211,7 +200,6 @@ export interface FundData {
       common_features: string;
     };
   };
-  leverage_concentration_top10?: Array<{rank?: number; name: string; code: string; ratio: string; finBalance?: string; concept?: string; sector?: string}>;
   southbound_concentration_top10?: Array<{name: string; code: string; ratio: string; concept: string; sector: string}>;
   foreign_concentration_top10?: Array<{name: string; code: string; ratio: string; institution: string; concept: string; sector: string}>;
   top10_publicfund?: Array<{rank: number; name: string; code: string; amount: string; concept: string; sector: string; note: string}>;
@@ -548,14 +536,6 @@ export interface FundData {
   }>;
   myETF?: MyETFItem[];
   myETFAlt?: MyETFItem[];
-  hotFundNavs?: Array<{
-    code: string;
-    name: string;
-    nav?: number;
-    accumNav?: number;
-    date?: string;
-    change?: number;
-  }>;
   nationalETFWatch?: {
     trade_date: string;
     items: Array<{
@@ -667,7 +647,6 @@ export interface FundData {
       low: boolean;
     }>;
   };
-  lowVolDigest?: string;
   dualAxes?: {
     trade_date: string;
     trend: {
@@ -736,7 +715,6 @@ export interface FundData {
       breakoutConfirm?: string | null; top3?: boolean;
     }>;
   };
-  broadVcpDigest?: string;
   longWindow?: {
     window: 'open' | 'half' | 'closed';
     temp?: string; verdict?: string;
@@ -897,22 +875,6 @@ export interface FundData {
       url?: string;
     }>;
   }>;
-  nationalTeamNews?: {
-    updateTime: string;
-    sources: string[];
-    teams: Array<{
-      name: string;
-      role: string;
-      totalValue: string;
-      latestAction: string;
-      trend: string;
-      details: Array<{
-        date: string;
-        event: string;
-        source: string;
-      }>;
-    }>;
-  };
 }
 
 interface UseFundDataResult {

@@ -20,7 +20,6 @@ import ECIPanel from './sections/ECIPanel';
 // import NationalTeamPanel from './sections/NationalTeamPanel';
 // import PublicFundPanel from './sections/PublicFundPanel';
 // import ForeignCapitalPanel from './sections/ForeignCapitalPanel';
-// import FundFlowTable from './sections/FundFlowTable';
 // import BondsPanel from './sections/BondsPanel';
 // import ECIPanel from './sections/ECIPanel';
 
