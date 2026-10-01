@@ -1264,6 +1264,12 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     ? `旗面${it.flag.days}天·旗杆+${it.flag.polePct}%·量比${it.flag.volRatio}`
                                     : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·末段量${it.platform.tailRatio ?? '—'}`}
                                 </p>
+                                {(it.histPct ?? 0) > 60 && (
+                                  <span
+                                    className="inline-block text-[9px] font-bold text-amber-700 bg-amber-100 rounded px-1 py-0.5 mt-0.5"
+                                    title={`一年分位 ${it.histPct}%——高位${it.pattern === '旗形整理' ? '旗形' : '平台'}，形态成立但位置偏高，风险自担`}
+                                  >⚠ 高位</span>
+                                )}
                               </div>
                             ) : (
                               <span className="text-[10px] text-violet-600">{it.pattern || '—'}</span>
