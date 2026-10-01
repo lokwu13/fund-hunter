@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -1151,17 +1151,18 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
       {/* ===== ② 第3步 · 个股形态工具（服务第3步「看形态」选股与第4步跟踪） ===== */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-dashed border-violet-300 bg-violet-50/40 px-3 py-2 text-xs text-violet-800">
         <span className="text-sm font-bold">② 第3步 · 个股形态工具</span>
-        <span className="text-violet-700/80">个股 VCP 精扫 / 逆行流水——从第2步圈定的板块里挑形态过硬的个股</span>
+        <span className="text-violet-700/80">形态精扫 / 逆行流水——从第2步圈定的板块里挑形态过硬的个股（VCP收缩/杯柄/平台整理/旗形整理）</span>
       </div>
 
-      {/* 个股级 VCP 精扫（上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 池，2026-10-01 恢复中证1000） */}
+      {/* 形态精扫（原个股 VCP 精扫，2026-10-01 多形态并列：VCP收缩/杯柄/平台整理/旗形整理；上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 池） */}
       {data.vcpStocks && (
         <Card className={`border-violet-200 shadow-sm ${data.longWindow?.window === 'closed' ? 'opacity-60 grayscale' : ''}`}>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <Waves className="w-4 h-4 text-violet-500" />
-                个股 VCP 精扫
+                形态精扫
+                <span className="text-[10px] font-normal text-violet-400">VCP收缩 / 杯柄 / 平台整理 / 旗形整理</span>
                 <span className="text-[10px] font-normal text-slate-400">
                   {data.vcpStocks.poolRaw
                     ? `池${data.vcpStocks.poolRaw}→${data.vcpStocks.poolSize ?? '—'}只(≥250亿) · 精扫${data.vcpStocks.scanned ?? 0}只`
@@ -1203,15 +1204,25 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.vcpStocks.items.map((it: any) => {
+                    {data.vcpStocks.items.map((it: any, idx: number) => {
+                      const grpOf = (p?: string) => p === 'VCP收缩型' ? 'VCP 收缩' : p === '杯柄型' ? '杯柄' : p === '旗形整理' ? '旗形整理' : '平台整理';
+                      const grp = grpOf(it.pattern);
+                      const prevGrp = idx > 0 ? grpOf(data.vcpStocks!.items[idx - 1].pattern) : null;
                       const isPlatform = !!it.platform;
                       const isContract = it.pattern === 'VCP收缩型';
+                      const isFlag = it.pattern === '旗形整理' && !!it.flag;
                       const lv = isContract
                         ? ((it.daily?.formed && it.daily?.count >= 3) ? it.daily : it.weekly)
                         : (it.daily?.formed ? it.daily : it.weekly);
-                      const pv = isPlatform ? it.platform : lv;
+                      const pv = isFlag ? it.flag : (isPlatform ? it.platform : lv);
                       return (
-                        <tr key={it.code} className="border-b border-slate-50 hover:bg-violet-50/40 align-top">
+                        <Fragment key={it.code}>
+                        {grp !== prevGrp && (
+                          <tr className="bg-violet-50/70">
+                            <td colSpan={11} className="py-1 px-1 text-[10px] font-bold text-violet-600 tracking-wide">{grp}</td>
+                          </tr>
+                        )}
+                        <tr className="border-b border-slate-50 hover:bg-violet-50/40 align-top">
                           <td className="py-1.5 font-medium text-slate-700">
                             {it.star && <Star className="w-3 h-3 text-pink-500 inline mr-0.5 -mt-0.5" />}
                             {it.name}
@@ -1230,16 +1241,18 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                             )}
                           </td>
                           <td className="text-center">
-                            {isPlatform || isContract ? (
+                            {isPlatform || isContract || isFlag ? (
                               <div>
                                 <span
                                   className={`text-[10px] font-bold text-white rounded px-1.5 py-0.5 ${
-                                    it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : it.pattern === '底部整理' ? 'bg-slate-500' : 'bg-teal-500'
+                                    it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : it.pattern === '旗形整理' ? 'bg-sky-500' : it.pattern === '底部整理' ? 'bg-slate-500' : 'bg-teal-500'
                                   }`}
                                   title={isContract
                                     ? `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}（首${lv?.volFirst ?? '—'}→末${lv?.volLast ?? '—'}）·枢轴=末次收缩高点`
                                     : it.cupHandle
                                     ? `杯深${it.cupHandle.cupDepth}%（${it.cupHandle.depthOk ? '达标' : '不达标'}${it.cupHandle.depthMax > 33 ? '·弱势市放宽40%' : ''}）·柄在杯体上半部${it.cupHandle.upperHalf ? '✅' : '❌'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点`
+                                    : isFlag
+                                    ? `旗面${it.flag.days}天·振幅${it.flag.amplitude}%·旗杆+${it.flag.polePct}%·量比${it.flag.volRatio}·一年分位${it.histPct ?? '—'}%`
                                     : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·分段振幅${(it.platform.segAmps || []).join('→')}%·一年分位${it.histPct ?? '—'}%`}
                                 >{it.pattern}</span>
                                 <p className="text-[9px] text-violet-400 mt-0.5">
@@ -1247,6 +1260,8 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     ? `收缩${lv?.count ?? 0}次·量能${lv?.volTrend ?? '—'}`
                                     : it.cupHandle
                                     ? `杯深${it.cupHandle.cupDepth}%·柄${it.cupHandle.days}天`
+                                    : isFlag
+                                    ? `旗面${it.flag.days}天·旗杆+${it.flag.polePct}%·量比${it.flag.volRatio}`
                                     : `平台${it.platform.days}天·振幅${it.platform.amplitude}%`}
                                 </p>
                               </div>
@@ -1309,13 +1324,14 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                             )}
                           </td>
                         </tr>
+                        </Fragment>
                       );
                     })}
                   </tbody>
                 </table>
               </div>
             ) : (
-              <p className="text-xs text-slate-400 py-3 text-center">本期精扫无成型或临近成型（距枢轴&lt;8%）个股</p>
+              <p className="text-xs text-slate-400 py-3 text-center">本期形态精扫无成型或临近成型个股</p>
             )}
           </CardContent>
         </Card>

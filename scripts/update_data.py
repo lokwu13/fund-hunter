@@ -2566,7 +2566,7 @@ def _cninfo_anns_for(tc, trade_date, days=7, session=None):
 def build_mine_watch(pro, trade_date, data):
     """第4步·排雷：入围标的重大缺陷扫描（总览红色卡，无雷也要明示）。
 
-    范围：能投/入围板块龙头 + 概念龙头 + VCP 精扫名单 + 自选持仓观察（去重）。
+    范围：能投/入围板块龙头 + 概念龙头 + 形态精扫名单 + 自选持仓观察（去重）。
     三类雷（命中才上榜，不凑数）：
     - 资金面：融资红灯（marginWatch 既有口径直接引用）；近 5 日主力净流出 ≥3 亿
       （moneyflow 每日 1 次全市场调用，缓存 10 天增量累加）；
@@ -4472,7 +4472,7 @@ def fetch_vcp_watch(pro, trade_date, data):
 
 
 # ══════════════════════════════════════════════════════════════════
-# A. 个股级 VCP 精扫（上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 成分池，日线+周线双级别）
+# A. 个股级形态精扫（上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 成分池，日线+周线双级别）
 # B. bottomWatch 积聚新鲜度（首触日+连续命中天数持久化）
 # C. 资金+预期双确认（bottomWatch × ECI 前10 展示层联动）
 # ══════════════════════════════════════════════════════════════════
@@ -4827,6 +4827,57 @@ def _cup_handle_strict(bars, market_weak=False):
             'formed': bool(depth_ok and upper_half and long_ok)}
 
 
+# ══════════ 旗形整理简版检测（2026-10-01 用户指令：形态精扫多形态并列） ══════════
+FLAG_MIN_DAYS, FLAG_MAX_DAYS = 5, 15     # 旗面 5~15 个交易日
+FLAG_POLE_MIN = 0.15                     # 旗杆：旗面前约 12 个交易日收盘区间涨幅 ≥15%
+FLAG_MAX_AMP = 0.09                      # 旗面振幅 ≤9%（窄幅下飘/横盘）
+FLAG_BAND_LO, FLAG_BAND_HI = 0.85, 1.03  # 现价相对旗杆顶部的下飘/上飘容忍带
+
+
+def _flag_pattern(bars):
+    """旗形整理（简版，2026-10-01 用户口径）：旗杆急涨 ≥15%（旗面前约 12 个交易日收盘区间涨幅），
+    随后 5~15 日窄幅下飘/横盘旗面（振幅 ≤9%、现价在旗杆顶部 0.85~1.03 带内）、
+    旗面均量 < 旗杆均量（缩量）。枢轴=旗面高点；失效位=旗面低点；放量确认线=50日均量×1.4。
+    取满足条件的最长旗面。bars: (date, high, low, close, vol) 升序。"""
+    if len(bars) < FLAG_MAX_DAYS + 14:
+        return None
+    close = bars[-1][3]
+    if close <= 0:
+        return None
+    for n in range(FLAG_MAX_DAYS, FLAG_MIN_DAYS - 1, -1):
+        flag = bars[-n:]
+        hi = max(b[1] for b in flag)
+        lo = min(b[2] for b in flag)
+        if lo <= 0:
+            continue
+        amp = (hi - lo) / lo
+        if amp > FLAG_MAX_AMP:
+            continue
+        pole = bars[-(n + 12):-n]
+        if len(pole) < 8:
+            continue
+        pole_ret = flag[0][3] / pole[0][3] - 1
+        if pole_ret < FLAG_POLE_MIN:
+            continue
+        pole_top = max(b[1] for b in pole)
+        if not (pole_top * FLAG_BAND_LO <= close <= pole_top * FLAG_BAND_HI):
+            continue
+        flag_vol = sum(b[4] for b in flag) / n
+        pole_vol = sum(b[4] for b in pole) / len(pole)
+        if not (pole_vol > 0 and flag_vol < pole_vol):
+            continue
+        dist = (hi / close - 1) * 100
+        vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
+        return {'type': '旗形整理', 'days': n, 'amplitude': round(amp * 100, 1),
+                'polePct': round(pole_ret * 100, 1),
+                'volRatio': round(flag_vol / pole_vol, 2),
+                'pivot': round(hi, 2), 'distPct': round(dist, 1),
+                'invalidation': round(lo, 2),
+                'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
+                'formed': True}
+    return None
+
+
 def _resample_weekly(rows):
     """日线 rows [date, close, high, low, vol] → 周线 bars [(week, high, low, close, vol)]。"""
     weeks = {}
@@ -4846,7 +4897,7 @@ def _resample_weekly(rows):
 
 
 def fetch_vcp_stocks(pro, trade_date, data, today_map):
-    """个股级 VCP 精扫：上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 成分池 ∩（持仓观察股 ∪ 积聚板块龙头 ∪ vcpWatch信号板块龙头）。
+    """个股级形态精扫（原个股 VCP 精扫，2026-10-01 改名多形态并列：VCP收缩/杯柄/平台整理/旗形整理）：上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 成分池 ∩（持仓观察股 ∪ 积聚板块龙头 ∪ vcpWatch信号板块龙头）。
 
     个股日线历史复用 vcp_cache.stock_daily（300 交易日，含周线重采样所需长度）；
     缺历史的票一次性回补 420 日历日后并入缓存，次日起随 vcpWatch 批量日更零成本。
@@ -4976,6 +5027,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             hist_low = (hist_pct is not None and hist_pct <= 30) or dist_high250 <= -20
             tt = _trend_template(rows)
             pf = _vcp_platform(bars, dist_gate=(VCP_SHOW_DIST_LO, VCP_SHOW_DIST_PLAT))
+            fl = _flag_pattern(bars)
             d_lv = _vcp_level_strict(bars, VCP_DAILY_WIN, VCP_DAILY_K)
             w_lv = _vcp_level_strict(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K)
             d_c3 = bool(d_lv and d_lv['formed'])
@@ -4990,7 +5042,10 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 dropped_tt.append(f"{info.get(code, {}).get('name', code)}:{raw}")
                 raw, main_lv = None, None        # 趋势模板强制拦截
             if raw is None:
-                if pf and pf['formed']:
+                if fl and fl['formed'] and VCP_SHOW_DIST_LO <= fl['distPct'] <= VCP_SHOW_DIST:
+                    pattern = '旗形整理'           # 急涨后缩量旗面（趋势中继，非 Stage 1 基底，不强制趋势模板）
+                    main_lv = fl                  # 距枢轴超窗的旗面不硬贴标签，回落平台判定
+                elif pf and pf['formed']:
                     pattern = '底部整理'           # Stage 1 基底分层保留展示
                     plat = bars[-pf['days']:]
                     vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
@@ -5036,6 +5091,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                           'close': round(close, 2), 'tag': tag,
                           'pattern': pattern, 'platform': pf,
                           'cupHandle': ch if pattern == '杯柄型' else None,
+                          'flag': fl if pattern == '旗形整理' else None,
                           'trendTemplate': tt, 'stage': stage,
                           'buyPoint': buy_point,
                           'histPct': hist_pct,
@@ -5044,7 +5100,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                           'mfDays': sm_days,
                           'sectorFit': fit_txt, 'advice': advice,
                           'daily': d_lv, 'weekly': w_lv})
-        items.sort(key=lambda x: ({'VCP收缩型': 0, '杯柄型': 1, '底部整理': 2}.get(x['pattern'], 3),
+        items.sort(key=lambda x: ({'VCP收缩型': 0, '杯柄型': 1, '底部整理': 2, '超窄幅整理': 2, '底部平台型': 2, '旗形整理': 3}.get(x['pattern'], 4),
                                   0 if x.get('mfDays', 0) >= 6 else 1,   # 资金确认同形态优先
                                   x['distMain']))
         eff_d = f'{eff[:4]}-{eff[4:6]}-{eff[6:]}'
@@ -5058,6 +5114,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%，不达标项标红）+末次收缩均量<首次（量能递减强制），枢轴=末次收缩高点；'
                     '杯柄型=杯深12~33%（大盘弱势期放宽40%）+柄在杯体上半部+杯柄≥25交易日，枢轴=柄部高点；'
                     '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日振幅≤14%+缩量+分段收缩），单独分层展示；'
+                    '旗形整理=旗杆急涨≥15%（约12个交易日）后5~15日窄幅下飘/横盘旗面（振幅≤9%+缩量，现价在旗杆顶0.85~1.03带内），枢轴=旗面高点，不强制趋势模板（2026-10-01形态精扫多形态并列新增）；'
                     '买点参数：枢轴价/突破确认（收盘>枢轴且量≥50日均量×1.4）/失效位（末次收缩低点或柄部低点）/距枢轴%——形态参数，非操作建议；'
                     '只展示距枢轴<8%的成型/临近成型个股（底部平台型放宽至12%，2026-10-01十二案例校准：平台取距枢轴窗内最长成型段）；'
                     '主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用），advice标注并同形态排序优先；'
@@ -6715,8 +6772,8 @@ def main():
     print("\n[16/17] Building VCP watch (板块-龙头共振)...")
     fetch_vcp_watch(pro, trade_date, data)
 
-    # ── 16b. 个股级 VCP 精扫（A500∪SZ50∪HS300 池，日线+周线双级别）──
-    print("\n[16b/17] Building stock-level VCP scan (vcpStocks)...")
+    # ── 16b. 个股级形态精扫（六指数池，日线+周线双级别，VCP/杯柄/平台/旗形多形态）──
+    print("\n[16b/17] Building stock-level pattern scan (vcpStocks)...")
     _today_map = watch_ctx[3] if watch_ctx else {}
     fetch_vcp_stocks(pro, trade_date, data, _today_map)
 

@@ -396,8 +396,13 @@ export interface FundData {
       star?: boolean;
       close: number;
       tag: string;
-      pattern?: '杯柄型' | '底部平台型' | '底部整理' | '收缩型' | 'VCP收缩型';
+      pattern?: '杯柄型' | '底部平台型' | '底部整理' | '收缩型' | 'VCP收缩型' | '旗形整理';
       stage?: string;
+      mfDays?: number;
+      flag?: {
+        days: number; amplitude: number; polePct: number; volRatio: number;
+        pivot: number; distPct: number; invalidation?: number; volConfirm?: number; formed: boolean;
+      } | null;
       trendTemplate?: { pass: boolean; evidence: Array<{ item: string; ok: boolean; val: string }> } | null;
       buyPoint?: { pivot: number; distanceToPivotPct: number; invalidation?: number | null; volConfirm?: number | null; breakoutConfirm?: string } | null;
       cupHandle?: {
