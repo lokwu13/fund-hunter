@@ -12767,94 +12767,6 @@
         "weekly": null
       },
       {
-        "code": "300498.SZ",
-        "name": "温氏股份",
-        "sector": "农业综合",
-        "star": false,
-        "inPool": true,
-        "close": 15.12,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": null,
-        "cupHandle": {
-          "type": "杯柄型",
-          "days": 18,
-          "totalDays": 82,
-          "cupDepth": 21.0,
-          "depthOk": true,
-          "depthMax": 22.0,
-          "amplitude": 11.3,
-          "tailRatio": 0.73,
-          "volRatio": 0.82,
-          "pivot": 15.49,
-          "distPct": 2.4,
-          "invalidation": 13.92,
-          "volConfirm": 742223.1,
-          "branch": "下跌反转",
-          "preDist": -27.8,
-          "brkNeedVol": 690195.2,
-          "formed": true
-        },
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": true,
-              "val": "15.12 vs MA150 14.89"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "15.12 vs MA200 15.37"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 15.71→15.37"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "14.17 vs 14.89"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "14.89 vs 15.37"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": true,
-              "val": "低点11.72→现价15.12（+29%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点20.06→现价15.12（-25%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 15.49,
-          "distanceToPivotPct": 2.4,
-          "invalidation": 13.92,
-          "volConfirm": 742223.1,
-          "breakoutConfirm": "收盘≥15.49 且单日成交量≥柄均量×1.5（≈690195手）"
-        },
-        "histPct": 33.2,
-        "distHigh250": -24.6,
-        "distMain": 2.4,
-        "mfDays": 5,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴2.4%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入5天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "600312.SH",
         "name": "平高电气",
         "sector": "电气设备",
@@ -12939,6 +12851,94 @@
         "mfDays": 4,
         "sectorFit": "板块不配合⚠️",
         "advice": "杯柄型·距枢轴2.4%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入4天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "300498.SZ",
+        "name": "温氏股份",
+        "sector": "农业综合",
+        "star": false,
+        "inPool": true,
+        "close": 15.12,
+        "tag": "—",
+        "pattern": "杯柄型",
+        "platform": null,
+        "cupHandle": {
+          "type": "杯柄型",
+          "days": 18,
+          "totalDays": 82,
+          "cupDepth": 21.0,
+          "depthOk": true,
+          "depthMax": 22.0,
+          "amplitude": 11.3,
+          "tailRatio": 0.73,
+          "volRatio": 0.82,
+          "pivot": 15.49,
+          "distPct": 2.4,
+          "invalidation": 13.92,
+          "volConfirm": 742223.1,
+          "branch": "下跌反转",
+          "preDist": -27.8,
+          "brkNeedVol": 690195.2,
+          "formed": true
+        },
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": true,
+              "val": "15.12 vs MA150 14.89"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "15.12 vs MA200 15.37"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 15.71→15.37"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "14.17 vs 14.89"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "14.89 vs 15.37"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": true,
+              "val": "低点11.72→现价15.12（+29%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点20.06→现价15.12（-25%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 15.49,
+          "distanceToPivotPct": 2.4,
+          "invalidation": 13.92,
+          "volConfirm": 742223.1,
+          "breakoutConfirm": "收盘≥15.49 且单日成交量≥柄均量×1.5（≈690195手）"
+        },
+        "histPct": 33.2,
+        "distHigh250": -24.6,
+        "distMain": 2.4,
+        "mfDays": 5,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "杯柄型·距枢轴2.4%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入5天",
         "daily": null,
         "weekly": null
       },
@@ -15081,87 +15081,6 @@
         "weekly": null
       },
       {
-        "code": "000333.SZ",
-        "name": "美的集团",
-        "sector": "家用电器",
-        "star": false,
-        "inPool": true,
-        "close": 80.1,
-        "tag": "—",
-        "pattern": "长平台整理",
-        "platform": null,
-        "cupHandle": null,
-        "flag": null,
-        "longPlat": {
-          "type": "长平台整理",
-          "days": 52,
-          "amplitude": 16.3,
-          "drift": 4.0,
-          "volRatio": 0.55,
-          "pivot": 89.5,
-          "distPct": 11.7,
-          "invalidation": 76.98,
-          "volConfirm": 404295.4,
-          "formed": true
-        },
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": false,
-              "val": "80.10 vs MA150 80.63"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "80.10 vs MA200 80.20"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": true,
-              "val": "MA200 79.28→80.20"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": true,
-              "val": "84.47 vs 80.63"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": true,
-              "val": "80.63 vs 80.20"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点71.81→现价80.10（+12%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点88.95→现价80.10（-10%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 89.5,
-          "distanceToPivotPct": 11.7,
-          "invalidation": 76.98,
-          "volConfirm": 404295.4,
-          "breakoutConfirm": "收盘>89.5 且成交量≥50日均量×1.4（≈404295手）"
-        },
-        "histPct": 68.0,
-        "distHigh250": -9.9,
-        "distMain": 11.7,
-        "mfDays": 4,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "长平台整理·距枢轴11.7%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入4天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "000100.SZ",
         "name": "TCL科技",
         "sector": "元器件",
@@ -15239,6 +15158,87 @@
         "mfDays": 1,
         "sectorFit": "板块不配合⚠️",
         "advice": "长平台整理·距枢轴11.7%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入1天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "000333.SZ",
+        "name": "美的集团",
+        "sector": "家用电器",
+        "star": false,
+        "inPool": true,
+        "close": 80.1,
+        "tag": "—",
+        "pattern": "长平台整理",
+        "platform": null,
+        "cupHandle": null,
+        "flag": null,
+        "longPlat": {
+          "type": "长平台整理",
+          "days": 52,
+          "amplitude": 16.3,
+          "drift": 4.0,
+          "volRatio": 0.55,
+          "pivot": 89.5,
+          "distPct": 11.7,
+          "invalidation": 76.98,
+          "volConfirm": 404295.4,
+          "formed": true
+        },
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": false,
+              "val": "80.10 vs MA150 80.63"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "80.10 vs MA200 80.20"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": true,
+              "val": "MA200 79.28→80.20"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": true,
+              "val": "84.47 vs 80.63"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": true,
+              "val": "80.63 vs 80.20"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点71.81→现价80.10（+12%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点88.95→现价80.10（-10%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 89.5,
+          "distanceToPivotPct": 11.7,
+          "invalidation": 76.98,
+          "volConfirm": 404295.4,
+          "breakoutConfirm": "收盘>89.5 且成交量≥50日均量×1.4（≈404295手）"
+        },
+        "histPct": 68.0,
+        "distHigh250": -9.9,
+        "distMain": 11.7,
+        "mfDays": 4,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "长平台整理·距枢轴11.7%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入4天",
         "daily": null,
         "weekly": null
       },
