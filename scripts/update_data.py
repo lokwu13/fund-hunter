@@ -5060,7 +5060,27 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             for l in r.get('leaders', []):
                 if l['code'] in pool:
                     targets.setdefault(l['code'], {'sector': r['name'], 'star': False, 'inPool': True})
-        print(f'  vcpStocks targets: {len(targets)} (pool {len(pool)})')
+        # ── 指数成分全覆盖（2026-10-01 晚 用户指令：精扫池=沪深300+中证500+上证50(中证50)+
+        #    创业板50+科创50+中证1000 全部成分 ∩≥250亿，修复"池内形态达标的非观察股扫不到"
+        #    ——伊利股份类；观察股★不受池限照旧。失败降级回龙头口径并标注，绝不断流）──
+        scan_scope = '指数成分全覆盖'
+        try:
+            # 行业映射：stock_basic 全市场 1 次调用，vcp_cache.stock_industry 周级缓存
+            ind_map = c.get('stock_industry') or {}
+            ind_cut = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=7)).strftime('%Y%m%d')
+            if not ind_map or c.get('stock_industry_date', '') < ind_cut:
+                df_b = pro.stock_basic(exchange='', list_status='L', fields='ts_code,industry')
+                ind_map = dict(zip(df_b['ts_code'], df_b['industry']))
+                c['stock_industry'] = ind_map
+                c['stock_industry_date'] = trade_date
+                vcp.save_cache(c)
+            for code in pool:
+                if code not in targets:
+                    targets[code] = {'sector': ind_map.get(code) or '—', 'star': False, 'inPool': True}
+        except Exception as e:
+            scan_scope = '龙头口径（全覆盖失败降级）'
+            print(f'  Warning: vcpStocks full-pool expand failed, degrade to leaders: {str(e)[:60]}')
+        print(f'  vcpStocks targets: {len(targets)} (pool {len(pool)}, {scan_scope})')
 
         # ── 历史补缺（一次性，并入 vcp 缓存随日更维护）──
         eff = None
@@ -5075,7 +5095,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         if need:
             back_start = (datetime.strptime(eff, '%Y%m%d')
                           - timedelta(days=vcp.BACK_CAL_DAYS)).strftime('%Y%m%d')
-            for code in need:
+            for i, code in enumerate(need):
                 try:
                     time.sleep(API_DELAY)
                     df = pro.daily(ts_code=code, start_date=back_start, end_date=eff)
@@ -5088,6 +5108,10 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     stock_daily = c['stock_daily']
                 except Exception as e:
                     print(f'  Warning: vcpStocks backfill {code} failed: {str(e)[:60]}')
+                # 全覆盖首跑回补量级 ~480 只×1.5s≈12 分钟，每 50 只落盘断点续传（2026-10-01 晚）
+                if (i + 1) % 50 == 0:
+                    vcp.save_cache(c)
+                    print(f'  vcpStocks backfill progress: {i + 1}/{len(need)}')
             vcp.save_cache(c)
             print(f'  vcpStocks backfilled: {len(need)}')
 
@@ -5135,109 +5159,113 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         items = []
         dropped_tt = []
         for code, meta in targets.items():
-            rows = stock_daily.get(code) or []
-            if len(rows) < 60:
-                continue
-            bars = [(r[0], r[2], r[3], r[1], r[4]) for r in rows]  # (date, high, low, close, vol)
-            # 个股一年位置：250 交易日窗口价格分位 + 距250日高点回撤（复用日线缓存，零新增调用）
-            closes250 = [r[1] for r in rows[-250:]]
-            hist_pct = _pct_rank100(closes250, rows[-1][1])
-            dist_high250 = (rows[-1][1] / max(closes250) - 1) * 100
-            hist_low = (hist_pct is not None and hist_pct <= 30) or dist_high250 <= -20
-            tt = _trend_template(rows)
-            pf = _vcp_platform(bars, max_amp=0.105, tail_vol_max=1.2, rise_max=0.20,
-                               trend60_min=-0.10,
-                               dist_gate=(VCP_SHOW_DIST_LO, VCP_SHOW_DIST_PLAT))
-                               # 2026-10-01 第三轮③（用户口径）：量能=大比例缩量强制
-                               # （5段递减对≥60%或末段/均量≤0.85，斜率旁路已删）+
-                               # 末段≤1.2 温和放量上限（由 1.4 收口），超=异常放量拒
-            fl = _flag_pattern(bars)
-            # VCP 收缩三收紧（2026-10-01 第三轮，用户口径）：区间总回撤≤15%、单次收缩≤8%、
-            # 距一年高点<8% 或分位>85 直接拒（参数默认 None，板块侧 vcpPreview 不受影响）
-            d_lv = _vcp_level_strict(bars, VCP_DAILY_WIN, VCP_DAILY_K, max_dd=0.15,
-                                     max_contraction=8.0, dist_high250=dist_high250,
-                                     hist_pct=hist_pct)
-            w_lv = _vcp_level_strict(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K,
-                                     max_dd=0.15, max_contraction=8.0,
-                                     dist_high250=dist_high250, hist_pct=hist_pct)
-            d_c3 = bool(d_lv and d_lv['formed'])
-            w_c3 = bool(w_lv and w_lv['formed'])
-            ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
-                                    hist_pct=hist_pct)
-            raw, main_lv = None, None
-            if d_c3 or w_c3:
-                raw, main_lv = 'VCP收缩型', (d_lv if d_c3 else w_lv)
-                if not tt['pass']:
-                    dropped_tt.append(f"{info.get(code, {}).get('name', code)}:VCP收缩型")
-                    raw, main_lv = None, None        # VCP 收缩保留 Stage 2 趋势模板拦截
-            elif ch and ch['formed']:
-                raw, main_lv = '杯柄型', ch          # 底部反转型（2026-10-01 第三轮重写）：
-                                                     # 不再套 Stage 2，前置回撤≥12%+位置门槛在函数内
-            if raw is None:
-                # 2026-10-01 第三轮：极高位（分位>85 或距一年高点<8%）平台/旗形同样拒——
-                # 与 VCP/杯柄位置门槛同阈值，封堵银行/电力/高速贴新高平台泛滥；
-                # 分位 60~85 仍打「高位」标签照常展示（histPct 前端琥珀徽章）
-                ext_high = (hist_pct is not None and hist_pct > 85) or dist_high250 > -8
-                if ext_high:
+            try:
+                rows = stock_daily.get(code) or []
+                if len(rows) < 60:
                     continue
-                if fl and fl['formed'] and VCP_SHOW_DIST_LO <= fl['distPct'] <= VCP_SHOW_DIST:
-                    pattern = '旗形整理'           # 急涨后缩量旗面（趋势中继，非 Stage 1 基底，不强制趋势模板）
-                    main_lv = fl                  # 距枢轴超窗的旗面不硬贴标签，回落平台判定
-                elif pf and pf['formed']:
-                    pattern = '底部整理'           # Stage 1 基底分层保留展示
-                    plat = bars[-pf['days']:]
-                    vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
-                    main_lv = dict(pf)
-                    main_lv['invalidation'] = round(min(b[2] for b in plat), 2)
-                    main_lv['volConfirm'] = round(vol50 * BREAKOUT_VOL_X, 1)
+                bars = [(r[0], r[2], r[3], r[1], r[4]) for r in rows]  # (date, high, low, close, vol)
+                # 个股一年位置：250 交易日窗口价格分位 + 距250日高点回撤（复用日线缓存，零新增调用）
+                closes250 = [r[1] for r in rows[-250:]]
+                hist_pct = _pct_rank100(closes250, rows[-1][1])
+                dist_high250 = (rows[-1][1] / max(closes250) - 1) * 100
+                hist_low = (hist_pct is not None and hist_pct <= 30) or dist_high250 <= -20
+                tt = _trend_template(rows)
+                pf = _vcp_platform(bars, max_amp=0.105, tail_vol_max=1.2, rise_max=0.20,
+                                   trend60_min=-0.10,
+                                   dist_gate=(VCP_SHOW_DIST_LO, VCP_SHOW_DIST_PLAT))
+                                   # 2026-10-01 第三轮③（用户口径）：量能=大比例缩量强制
+                                   # （5段递减对≥60%或末段/均量≤0.85，斜率旁路已删）+
+                                   # 末段≤1.2 温和放量上限（由 1.4 收口），超=异常放量拒
+                fl = _flag_pattern(bars)
+                # VCP 收缩三收紧（2026-10-01 第三轮，用户口径）：区间总回撤≤15%、单次收缩≤8%、
+                # 距一年高点<8% 或分位>85 直接拒（参数默认 None，板块侧 vcpPreview 不受影响）
+                d_lv = _vcp_level_strict(bars, VCP_DAILY_WIN, VCP_DAILY_K, max_dd=0.15,
+                                         max_contraction=8.0, dist_high250=dist_high250,
+                                         hist_pct=hist_pct)
+                w_lv = _vcp_level_strict(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K,
+                                         max_dd=0.15, max_contraction=8.0,
+                                         dist_high250=dist_high250, hist_pct=hist_pct)
+                d_c3 = bool(d_lv and d_lv['formed'])
+                w_c3 = bool(w_lv and w_lv['formed'])
+                ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
+                                        hist_pct=hist_pct)
+                raw, main_lv = None, None
+                if d_c3 or w_c3:
+                    raw, main_lv = 'VCP收缩型', (d_lv if d_c3 else w_lv)
+                    if not tt['pass']:
+                        dropped_tt.append(f"{info.get(code, {}).get('name', code)}:VCP收缩型")
+                        raw, main_lv = None, None        # VCP 收缩保留 Stage 2 趋势模板拦截
+                elif ch and ch['formed']:
+                    raw, main_lv = '杯柄型', ch          # 底部反转型（2026-10-01 第三轮重写）：
+                                                         # 不再套 Stage 2，前置回撤≥12%+位置门槛在函数内
+                if raw is None:
+                    # 2026-10-01 第三轮：极高位（分位>85 或距一年高点<8%）平台/旗形同样拒——
+                    # 与 VCP/杯柄位置门槛同阈值，封堵银行/电力/高速贴新高平台泛滥；
+                    # 分位 60~85 仍打「高位」标签照常展示（histPct 前端琥珀徽章）
+                    ext_high = (hist_pct is not None and hist_pct > 85) or dist_high250 > -8
+                    if ext_high:
+                        continue
+                    if fl and fl['formed'] and VCP_SHOW_DIST_LO <= fl['distPct'] <= VCP_SHOW_DIST:
+                        pattern = '旗形整理'           # 急涨后缩量旗面（趋势中继，非 Stage 1 基底，不强制趋势模板）
+                        main_lv = fl                  # 距枢轴超窗的旗面不硬贴标签，回落平台判定
+                    elif pf and pf['formed']:
+                        pattern = '底部整理'           # Stage 1 基底分层保留展示
+                        plat = bars[-pf['days']:]
+                        vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
+                        main_lv = dict(pf)
+                        main_lv['invalidation'] = round(min(b[2] for b in plat), 2)
+                        main_lv['volConfirm'] = round(vol50 * BREAKOUT_VOL_X, 1)
+                    else:
+                        continue
                 else:
-                    continue
-            else:
-                pattern = raw
-            dist_limit = VCP_SHOW_DIST_PLAT if pattern == '底部整理' else VCP_SHOW_DIST
-            if not (VCP_SHOW_DIST_LO <= main_lv['distPct'] <= dist_limit):
-                continue   # 只展示成型或临近成型（收缩/杯柄距枢轴<8%；底部平台放宽至12%，2026-10-01 校准）
-            sec = meta['sector']
-            if sec in bad_sectors:
-                fit_txt = '板块不配合⚠️'
-            elif sec in good_sectors:
-                fit_txt = '板块配合✅'
-            else:
-                fit_txt = '板块中性'
-            stage = 'Stage 2' if tt['pass'] else 'Stage 1 基底（未过趋势模板）'
-            sm_days = sum(1 for d in mf_days if (mf_cache.get(d) or {}).get(code, 0) > 0)
-            mf_txt = (f'｜主力10日净流入{sm_days}天✅' if sm_days >= 6
-                      else (f'｜主力10日净流入{sm_days}天' if mf_days else ''))
-            advice = (f"{pattern}·距枢轴{main_lv['distPct']}%｜{water_txt}｜{fit_txt}{mf_txt}"
-                      if water_txt else f"{pattern}·距枢轴{main_lv['distPct']}%｜{fit_txt}{mf_txt}")
-            close = rows[-1][1]
-            d_ok = bool(d_lv and d_lv['formed'])
-            w_ok = bool(w_lv and w_lv['formed'])
-            tag = ('日线✅+周线✅' if d_ok and w_ok else
-                   ('日线✅' if d_ok else ('周线✅' if w_ok else '—')))
-            buy_point = {'pivot': main_lv['pivot'],
-                         'distanceToPivotPct': main_lv['distPct'],
-                         'invalidation': main_lv.get('invalidation'),
-                         'volConfirm': main_lv.get('volConfirm'),
-                         'breakoutConfirm': (f"收盘>{main_lv['pivot']} 且成交量≥50日均量×1.4"
-                                             + (f"（≈{main_lv['volConfirm']:.0f}手）"
-                                                if main_lv.get('volConfirm') else ''))}
-            items.append({'code': code,
-                          'name': info.get(code, {}).get('name', code),
-                          'sector': sec, 'star': meta['star'],
-                          'inPool': bool(meta.get('inPool')),
-                          'close': round(close, 2), 'tag': tag,
-                          'pattern': pattern, 'platform': pf,
-                          'cupHandle': ch if pattern == '杯柄型' else None,
-                          'flag': fl if pattern == '旗形整理' else None,
-                          'trendTemplate': tt, 'stage': stage,
-                          'buyPoint': buy_point,
-                          'histPct': hist_pct,
-                          'distHigh250': round(dist_high250, 1),
-                          'distMain': main_lv['distPct'],
-                          'mfDays': sm_days,
-                          'sectorFit': fit_txt, 'advice': advice,
-                          'daily': d_lv, 'weekly': w_lv})
+                    pattern = raw
+                dist_limit = VCP_SHOW_DIST_PLAT if pattern == '底部整理' else VCP_SHOW_DIST
+                if not (VCP_SHOW_DIST_LO <= main_lv['distPct'] <= dist_limit):
+                    continue   # 只展示成型或临近成型（收缩/杯柄距枢轴<8%；底部平台放宽至12%，2026-10-01 校准）
+                sec = meta['sector']
+                if sec in bad_sectors:
+                    fit_txt = '板块不配合⚠️'
+                elif sec in good_sectors:
+                    fit_txt = '板块配合✅'
+                else:
+                    fit_txt = '板块中性'
+                stage = 'Stage 2' if tt['pass'] else 'Stage 1 基底（未过趋势模板）'
+                sm_days = sum(1 for d in mf_days if (mf_cache.get(d) or {}).get(code, 0) > 0)
+                mf_txt = (f'｜主力10日净流入{sm_days}天✅' if sm_days >= 6
+                          else (f'｜主力10日净流入{sm_days}天' if mf_days else ''))
+                advice = (f"{pattern}·距枢轴{main_lv['distPct']}%｜{water_txt}｜{fit_txt}{mf_txt}"
+                          if water_txt else f"{pattern}·距枢轴{main_lv['distPct']}%｜{fit_txt}{mf_txt}")
+                close = rows[-1][1]
+                d_ok = bool(d_lv and d_lv['formed'])
+                w_ok = bool(w_lv and w_lv['formed'])
+                tag = ('日线✅+周线✅' if d_ok and w_ok else
+                       ('日线✅' if d_ok else ('周线✅' if w_ok else '—')))
+                buy_point = {'pivot': main_lv['pivot'],
+                             'distanceToPivotPct': main_lv['distPct'],
+                             'invalidation': main_lv.get('invalidation'),
+                             'volConfirm': main_lv.get('volConfirm'),
+                             'breakoutConfirm': (f"收盘>{main_lv['pivot']} 且成交量≥50日均量×1.4"
+                                                 + (f"（≈{main_lv['volConfirm']:.0f}手）"
+                                                    if main_lv.get('volConfirm') else ''))}
+                items.append({'code': code,
+                              'name': info.get(code, {}).get('name', code),
+                              'sector': sec, 'star': meta['star'],
+                              'inPool': bool(meta.get('inPool')),
+                              'close': round(close, 2), 'tag': tag,
+                              'pattern': pattern, 'platform': pf,
+                              'cupHandle': ch if pattern == '杯柄型' else None,
+                              'flag': fl if pattern == '旗形整理' else None,
+                              'trendTemplate': tt, 'stage': stage,
+                              'buyPoint': buy_point,
+                              'histPct': hist_pct,
+                              'distHigh250': round(dist_high250, 1),
+                              'distMain': main_lv['distPct'],
+                              'mfDays': sm_days,
+                              'sectorFit': fit_txt, 'advice': advice,
+                              'daily': d_lv, 'weekly': w_lv})
+            except Exception as e:
+                print(f'  Warning: vcpStocks scan {code} failed: {str(e)[:60]}')
+                continue   # 逐股防护：单票失败不拖垮全池扫描（2026-10-01 晚 全覆盖兜底）
         items.sort(key=lambda x: (0 if x.get('mfDays', 0) >= 6 else 1,   # 资金确认组置顶（2026-10-01 用户口径：保持加分但分两组展示）
                                   {'VCP收缩型': 0, '杯柄型': 1, '底部整理': 2, '超窄幅整理': 2, '底部平台型': 2, '旗形整理': 3}.get(x['pattern'], 4),
                                   x['distMain']))
@@ -5245,9 +5273,10 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         data['vcpStocks'] = {
             'trade_date': eff_d, 'poolSize': len(pool), 'poolRaw': len(pool_raw),
             'mvDate': mc.get('mvDate'), 'scanned': len(targets),
-            'items': items[:15],
-            'droppedByTrendTemplate': dropped_tt,
-            'note': '池=上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000成分（index_weight周五刷新；2026-10-01用户口径恢复中证1000）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
+            'items': items[:30],
+            'droppedByTrendTemplate': dropped_tt[:50],
+            'scanScope': scan_scope,
+            'note': f'池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由"积聚/信号板块龙头"扩为指数成分全覆盖，当前口径={scan_scope}）；'
                     '形态口径（2026-10-01 第三轮定稿，用户口径）：'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%）+末次收缩均量<首次+区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85 直接拒）+Stage 2 趋势模板强制拦截；'
                     '杯柄型=底部反转型（不再套 Stage 2）：前置近半年自一年高点回撤≥12%+位置门槛（距一年高点≥8%或分位≤85），杯身=柄前120日内1~2个坑（杯深12~33%，大盘弱势期40%），杯柄=右侧8~20日窄幅横盘（振幅≤8%）且低点不破杯底，量能=坑底缩量+柄均量<杯身均量+柄大比例缩量，杯柄总时长≥25交易日，枢轴=柄部高点；'
