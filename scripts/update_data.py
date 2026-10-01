@@ -4748,10 +4748,9 @@ def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, d
 # ══════════ Minervini 精修（2026-09-26 月底大改版①，用户拍板口径） ══════════
 MINERVINI_VCP_TOL = 1.10    # 收缩严格递减容差：每次收缩必须小于前一次（允许 ≤前次×1.10），且末次<首次
 MINERVINI_MIN_CONTR = 3     # VCP 收缩次数下限
-CUP_DEPTH_MIN, CUP_DEPTH_MAX = 12.0, 15.0   # 杯深 %（2026-10-01 下午 用户口径：上限 33→15，
-                                            # 深坑结构不符「固定窄幅空间横盘」案例精神）
-CUP_DEPTH_MAX_WEAK = 15.0                   # 弱势期放宽同步取消（与常态同口径 15）
-CUP_MIN_TOTAL_DAYS = 25     # 杯+柄总时长 ≥5 周（25 交易日）
+CUP_DEPTH_MIN, CUP_DEPTH_MAX = 10.0, 22.0   # 杯深 %（2026-10-01 下午② 五案例标定 10.8~21.1）
+CUP_MIN_TOTAL_DAYS = 40     # 杯+柄总时长（2026-10-01 下午② 五案例 39~95 交易日，
+                                        # 海油工程 39 日为最短——阈值取 40 覆盖，杯柄仍属大结构）
 BREAKOUT_VOL_X = 1.4        # 突破确认：成交量 ≥ 50 日均量 ×1.4
 
 
@@ -4852,18 +4851,21 @@ def _vcp_level_strict(bars, win, k, max_dd=None, max_contraction=None,
 
 
 def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None):
-    """杯柄·底部反转型（2026-10-01 第三轮重写+下午收紧，用户口径——不再套 Stage 2 趋势模板）：
-    前置：近半年明显下撤——现价自一年高点回撤 ≥12%（dist_high250 缺省时由 bars 内推）；
-    位置门槛：距一年高点 ≥8% 或一年分位 ≤85；另分位 >60 直接拒（杯柄=底部局部反转，
-    高位杯柄无意义——2026-10-01 下午用户口径）；
-    杯身=柄前 120 日内 1~2 个坑（低点相近或第二坑略高均可），杯深 12~15%
-    （下午收紧：上限 33→15，深坑结构不符「固定窄幅空间横盘」案例精神，弱势期放宽同步取消）；
-    杯柄=右侧 10~20 日窄幅横盘（振幅 ≤8%）且低点不破杯身底部（容差 2%）；
-    量能：坑底缩量（坑底±5日均量 < 杯身均量）+ 杯柄均量 < 杯身均量 +
-    杯柄大比例缩量（③：5段递减对≥60% 或末段/均量≤0.85，末段≤1.2 温和放量上限）；
-    杯+柄总时长 ≥25 交易日。枢轴=柄部高点；失效位=柄部低点；放量确认线=50日均量×1.4。
-    取满足条件的最长杯柄。"""
-    if len(bars) < 40:
+    """杯柄·大结构底部反转 v2（2026-10-01 下午② 五案例标定重构——
+    案例：中海油服190507~190816(近似)/海油工程250901~260107/中国石油250120~250603(双底)/
+    中国石化220307~220526(双底)/万华化学250403~250820(圣杯)，
+    结构 54~95 交易日、杯深 10.8~21.1%、时点分位 37~80、突破后 60 日 +4.1~+66.9%）：
+    - 大结构：杯沿→现价 ≥50 交易日（比 VCP 平台案例 10~50 日长一个量级）；
+    - 杯深 10~22%（案例实测区间；上午的 12~15 会杀中国石油 16.9/万华 21.1）；
+    - 位置：一年分位 25~85——现价必须已脱离一年低点区域（「下探前低太近」的量化：
+      伪杯柄分位 1~18 现价钉在前低上拒；五案例时点分位 37~80）。
+      不再要求自一年高点回撤≥12%（中国石化案例仅-7.6%），杯深本身即下撤量度；
+      取消坑底强制缩量（中国石油坑底量比 1.51=恐慌底有效）；
+    - 双底变体：杯身 1~2 个坑，第二坑最深可低于第一坑 4%（案例 -3.3%~+4.8%，坑间距 10~42 日）；
+    - 杯柄=右侧 10~20 日窄幅横盘（振幅 ≤8%）且低点不破杯底（容差 2%）；
+    - 量能：柄均量 ≤ 杯身均量×1.15（万华 1.10 容忍），且（柄③大比例缩量 或 柄均量<杯身均量）；
+    枢轴=柄部高点；失效位=柄部低点；放量确认线=50日均量×1.4。取满足条件的最长杯柄。"""
+    if len(bars) < 70:
         return None
     closes = [b[3] for b in bars]
     close = closes[-1]
@@ -4875,14 +4877,8 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
             dist_high250 = (close / max(win) - 1) * 100
         if hist_pct is None:
             hist_pct = _pct_rank100(win, close)
-    if dist_high250 > -12:
-        return None                     # 前置：近半年明显下撤（自一年高点回撤≥12%）
-    if not (dist_high250 <= -8 or (hist_pct is not None and hist_pct <= 85)):
-        return None                     # 位置门槛：距一年高点≥8% 或分位≤85
-    if hist_pct is not None and hist_pct > 60:
-        return None                     # 位置门槛②（2026-10-01 下午 用户口径）：杯柄=底部局部反转，
-                                        # 分位>60 的高位杯柄无意义，直接拒
-    depth_max = CUP_DEPTH_MAX_WEAK if market_weak else CUP_DEPTH_MAX
+    if hist_pct is None or not (25 <= hist_pct <= 85):
+        return None                     # 分位 25~85：已脱离前低区域 + 非高位
     vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
     for n in range(20, 9, -1):          # 杯柄 10~20 日（右侧横盘≥2 周），取最长
         handle = bars[-n:]
@@ -4894,29 +4890,41 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         if amp > 0.08:
             continue                    # 柄右侧窄幅横盘：振幅 ≤8%
         cup = bars[-(n + 120):-n]
-        if len(cup) < 15:
+        if len(cup) < 40:
             continue
-        hi_pos = max(range(len(cup)), key=lambda i: cup[i][1])
-        cup_hi = cup[hi_pos][1]
-        body = cup[hi_pos:]             # 杯身=杯沿高点之后
-        lo_rel = min(range(len(body)), key=lambda i: body[i][2])
-        cup_lo = body[lo_rel][2]
-        if cup_hi <= 0:
+        lo_pos = min(range(len(cup)), key=lambda i: cup[i][2])
+        cup_lo = cup[lo_pos][2]
+        if cup_lo <= 0:
             continue
+        # 杯沿=杯底之前、使杯深落在 10~22% 区间内的最高高点（万华案例：120 日窗内 2 月
+        # 更早高点 72 给杯深 29.6% 过深，正确杯沿=用户区间起点 4/3 的 66.0 给 21.1%）
+        hi_pos, cup_hi = None, 0
+        for i in range(lo_pos):
+            h = cup[i][1]
+            if h <= cup_hi:
+                continue
+            d = (h - cup_lo) / h * 100
+            if CUP_DEPTH_MIN <= d <= CUP_DEPTH_MAX:
+                hi_pos, cup_hi = i, h
+        if hi_pos is None:
+            continue                    # 无落在杯深区间的杯沿
+        body = cup[hi_pos:]             # 杯身=杯沿之后（含杯底与右侧回升段）
         depth = (cup_hi - cup_lo) / cup_hi * 100
-        if not (CUP_DEPTH_MIN <= depth <= depth_max):
-            continue
-        # 坑形态验证（用户口径：杯身=1~2 个低点相近或第二坑略高的坑）：
-        # 杯身右半最低 < 左半最低×0.97 = 第二坑明显更深/单边阴跌创新低，非杯身，拒
-        # （容差 3%=「相近」的量化；京东方案例第二坑深 8% 据此拒）
+        # 双底验证：杯身 1~2 个坑，第二坑最低可低于第一坑 4%（五案例 -3.3%~+4.8%）；
+        # 更深=单边阴跌创新低，非杯身
         half = len(body) // 2
         if half > 0:
             l1 = min(b[2] for b in body[:half])
             l2 = min(b[2] for b in body[half:])
-            if l2 < l1 * 0.97:
+            if l2 < l1 * 0.96:
                 continue
         if h_lo < cup_lo * 0.98:
             continue                    # 柄低点破杯身底部
+        # 柄底位置（2026-10-01 下午② 五案例标定 17~56%）：<15%=柄贴着杯底做停顿
+        # （华能国际 10% 类，与前低无异）；>80%=已涨离结构（惠泰 119% 类）
+        h_pos = (h_lo - cup_lo) / (cup_hi - cup_lo)
+        if not (0.15 <= h_pos <= 0.80):
+            continue
         total_days = len(body) + n
         if total_days < CUP_MIN_TOTAL_DAYS:
             continue
@@ -4924,22 +4932,18 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         if cup_vol <= 0:
             continue
         h_vol = sum(b[4] for b in handle) / n
-        if h_vol >= cup_vol:
-            continue                    # 柄均量须低于杯身均量
-        bottom = body[max(0, lo_rel - 5): lo_rel + 6]
-        b_vol = sum(b[4] for b in bottom) / len(bottom)
-        if b_vol >= cup_vol:
-            continue                    # 坑底未缩量
-        vol_ok, tail_ratio = _vol_shrink_ok([b[4] for b in handle])
-        if not vol_ok:
-            continue                    # 柄非大比例缩量/异常放量
+        if h_vol > cup_vol * 1.15:
+            continue                    # 柄均量超杯身×1.15=异常放量（万华 1.12 容忍上限）
+        _, tail_ratio = _vol_shrink_ok([b[4] for b in handle])
+        if tail_ratio > 1.2:
+            continue                    # 柄末段超 1.2=异常放量。圣杯型柄部允许温和放量回升
+                                        # （万华柄尾 1.12=突破前吸筹），杯柄不做平台③的强制缩量
         dist = (h_hi / close - 1) * 100
         return {'type': '杯柄型', 'days': n, 'totalDays': total_days,
-                'cupDepth': round(depth, 1), 'depthOk': True, 'depthMax': depth_max,
+                'cupDepth': round(depth, 1), 'depthOk': True, 'depthMax': CUP_DEPTH_MAX,
                 'amplitude': round(amp * 100, 1),
                 'tailRatio': round(tail_ratio, 2),
                 'volRatio': round(h_vol / cup_vol, 2),
-                'bottomVolRatio': round(b_vol / cup_vol, 2),
                 'pivot': round(h_hi, 2), 'distPct': round(dist, 1),
                 'invalidation': round(h_lo, 2),
                 'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
@@ -5301,7 +5305,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'note': f'池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由"积聚/信号板块龙头"扩为指数成分全覆盖，当前口径={scan_scope}）；'
                     '形态口径（2026-10-01 第三轮定稿，用户口径）：'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%）+末次收缩均量<首次+区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85 直接拒）+Stage 2 趋势模板强制拦截；'
-                    '杯柄型=底部反转型（不再套 Stage 2）：前置近半年自一年高点回撤≥12%+位置门槛（距一年高点≥8%或分位≤85，且分位>60直接拒），杯身=柄前120日内1~2个坑（杯深12~15%，2026-10-01下午收紧自33%，弱势期放宽取消），杯柄=右侧10~20日窄幅横盘（振幅≤8%）且低点不破杯底，量能=坑底缩量+柄均量<杯身均量+柄大比例缩量，杯柄总时长≥25交易日，枢轴=柄部高点；'
+                    '杯柄型=大结构底部反转v2（2026-10-01下午②五案例标定：中海油服/海油工程/中国石油/中国石化/万华化学，结构54~95日、杯深10.8~21.1%、时点分位37~80、突破后60日+4~67%）：杯+柄≥40交易日+杯深10~22%（杯沿=杯底前使杯深落在区间的最高高点）+一年分位25~85（现价必须脱离一年低点区域，伪杯柄分位1~18贴前低拒）+双底变体（第二坑最深可低第一坑4%）+柄10~20日振幅≤8%不破杯底+柄底位于杯深15~80%处（案例17~56%，<15%=贴杯底停顿拒）+量能双上限（柄均量≤杯身×1.15、柄末段≤1.2，圣杯型允许柄部温和放量），枢轴=柄部高点；'
                     '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日，振幅≤10.5%+大比例缩量强制（5段递减≥60%或末段/均量≤0.85，末段≤1.2为温和放量上限，超=异常放量拒）+杯柄抬升≤20%+近60日跌幅≥-10%排下跌中继；分位>60打「高位」标签照常展示），单独分层展示；'
                     '旗形整理=旗杆急涨≥15%（约12个交易日）后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+旗面大比例缩量③，现价在旗杆顶0.85~1.03带内，分位>60打「高位」标签），枢轴=旗面高点，不强制趋势模板；'
                     '大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85（强制，斜率旁路已删），允许后期温和放量（末段≤1.2），超出=异常放量拒；'
