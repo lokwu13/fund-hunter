@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
-  TrendingUp, TrendingDown, Zap, Activity, TrendingDown as TrendingDownIcon, Info, ArrowLeftRight
+  TrendingUp, TrendingDown, Zap, Activity, ArrowLeftRight
 } from 'lucide-react';
 import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -664,96 +664,9 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
             </CardContent>
           </Card>
 
-          {/* 减持TOP10 + 杠杆资金TOP10 */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                  <TrendingDownIcon className="w-4 h-4 text-red-600" />
-                  最近一周资金减持最多TOP10（国家队+公募+外资合并）
-                </h3>
-                <Badge variant="outline" className="text-xs">2025.06.16-06.20</Badge>
-              </div>
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-red-50">
-                    <TableHead className="text-xs">排名</TableHead>
-                    <TableHead className="text-xs">个股</TableHead>
-                    <TableHead className="text-xs">资金来源</TableHead>
-                    <TableHead className="text-xs text-right">减持规模</TableHead>
-                    <TableHead className="text-xs">概念</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data.combined_sell_top10?.map((item: any) => (
-                    <TableRow key={item.code} className="hover:bg-slate-50">
-                      <TableCell className="font-bold text-sm">{item.rank}</TableCell>
-                      <TableCell>
-                        <p className="text-sm font-semibold">{item.name}</p>
-                        <p className="text-xs text-slate-400">{item.code}</p>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-1 flex-wrap">
-                          {item.sources.map((s: string) => (
-                            <Badge key={s} variant="outline" className={`text-xs ${
-                              s === '国家队' ? 'bg-red-50 text-red-600' :
-                              s === '公募' ? 'bg-blue-50 text-blue-600' :
-                              s === '外资' ? 'bg-violet-50 text-violet-600' :
-                              'bg-orange-50 text-orange-600'
-                            }`}>{s}</Badge>
-                          ))}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right text-red-600 font-bold text-sm">{item.amount}</TableCell>
-                      <TableCell><Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{item.concept}</Badge></TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-orange-600" />
-                  杠杆资金控盘集中度TOP10
-                </h3>
-                <Badge variant="outline" className="text-xs">2025.06.23</Badge>
-              </div>
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-orange-50">
-                    <TableHead className="text-xs">排名</TableHead>
-                    <TableHead className="text-xs">个股</TableHead>
-                    <TableHead className="text-xs text-right">融资余额占比</TableHead>
-                    <TableHead className="text-xs">概念</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {data.leverage_concentration_top10?.map((item: any, idx: number) => (
-                    <TableRow key={item.code} className="hover:bg-slate-50">
-                      <TableCell className="font-bold text-sm">{idx + 1}</TableCell>
-                      <TableCell>
-                        <p className="text-sm font-semibold">{item.name}</p>
-                        <p className="text-xs text-slate-400">{item.code}</p>
-                      </TableCell>
-                      <TableCell className="text-right text-orange-600 font-bold">{item.ratio}</TableCell>
-                      <TableCell><Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{item.concept}</Badge></TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <div className="mt-3 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 flex items-start gap-2">
-                <Info className="w-3.5 h-3.5 text-slate-400 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-slate-500">
-                  <span className="font-semibold">什么是"非主力资金"？</span>
-                  指通过融资融券加杠杆的散户、大户、游资等资金。融资余额占流通市值比例越高，说明该股被杠杆资金控盘程度越深。
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          {/* 「最近一周资金减持最多TOP10(国家队+公募+外资合并)」与「杠杆资金控盘集中度TOP10」两卡
+              已于 2026-10-01 应用户指令下线：combined_sell_top10 为 2025.06 静态冻结数据（后端无生成），
+              leverage_concentration_top10 后端取数 fetch_leverage_concentration 已同步停用省额度 */}
         </>
       )}
     </div>

@@ -6732,10 +6732,12 @@ def main():
         data['southbound'] = south
         print(f"  Southbound: {south['today']}亿")
 
-    # ── 10b. 两融汇总 / 南向持股集中度 / 杠杆控盘集中度（Tushare 日更）──
+    # ── 10b. 两融汇总 / 南向持股集中度（Tushare 日更）──
     fetch_margin_summary(pro, trade_date, data)
     fetch_southbound_concentration(pro, trade_date, data)
-    fetch_leverage_concentration(pro, trade_date, data)
+    # fetch_leverage_concentration 已停用（2026-10-01 用户指令）：杠杆资金控盘集中度TOP10 卡下线，
+    # 该函数只喂那张卡，停用省 3 次 Tushare 调用/日（margin_detail+daily_basic+stock_basic）。
+    # 函数体保留未删；fund_data.json 存量 leverage_concentration_top10 静态残留无害（前端不再渲染）。
 
     # ── 10c. CCASS 外资托管持股月末快照（HKEX SDW；月底/月初双触发，SDW 失败只标缺失不断流）──
     try:
