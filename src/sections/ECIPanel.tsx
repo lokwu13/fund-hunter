@@ -1154,7 +1154,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
         <span className="text-violet-700/80">个股 VCP 精扫 / 逆行流水——从第2步圈定的板块里挑形态过硬的个股</span>
       </div>
 
-      {/* 个股级 VCP 精扫（上证50∪中证500∪沪深300∪科创50∪创业板50 池，2026-09-27 换池） */}
+      {/* 个股级 VCP 精扫（上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 池，2026-10-01 恢复中证1000） */}
       {data.vcpStocks && (
         <Card className={`border-violet-200 shadow-sm ${data.longWindow?.window === 'closed' ? 'opacity-60 grayscale' : ''}`}>
           <CardHeader className="pb-2">

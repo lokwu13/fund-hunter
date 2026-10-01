@@ -2277,7 +2277,7 @@ def build_funnel(data):
 
     # ── 第3步 个股形态（双轨制，2026-09-27 用户正式指令；两轨都不沾不进榜）──
     # 🔗共振轨（置顶）：个股属于第2步入选板块（形态+资金双达标）；
-    # ⭐优中选优轨：板块不同步但 ①个股在池内（上证50∪中证500∪沪深300∪科创50∪创业板50）
+    # ⭐优中选优轨：板块不同步但 ①个股在池内（上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000）
     #   ②形态达标（Minervini 口径 VCP收缩型/杯柄型，Stage 2 过趋势模板；底部整理不算达标）
     #   ③聪明钱持续流入（自定口径：近10个缓存交易日主力净流入为正天数≥6，
     #     数据=MINE_MF 全市场 moneyflow 10日滚动缓存，零新增调用）。三条缺一不入。
@@ -2369,7 +2369,7 @@ def build_funnel(data):
                  '（VCP收缩/底部/杯柄任一+量能萎缩极致10日/60日均额≤0.7，收盘口径近似，两条都要；'
                  '被卡掉的积聚/启动板块在 dropped 字段如实列出）。'
                  '→3个股形态双轨：🔗共振轨=属于第2步入选板块（置顶，赢面优先）；'
-                 '⭐优中选优轨=板块不同步但 池内（上证50∪中证500∪沪深300∪科创50∪创业板50，2026-09-27换池去掉中证1000）'
+                 '⭐优中选优轨=板块不同步但 池内（上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000，2026-10-01恢复中证1000）'
                  '∩形态达标（VCP收缩型/杯柄型，Stage2过趋势模板）∩聪明钱持续流入（近10缓存日主力净流入为正≥6天），'
                  '三条缺一不入；两轨都不沾不进第3步榜。'
                  '→4排雷（范围=第2步龙头∪第3步入围∪持仓观察股）。'
@@ -4472,7 +4472,7 @@ def fetch_vcp_watch(pro, trade_date, data):
 
 
 # ══════════════════════════════════════════════════════════════════
-# A. 个股级 VCP 精扫（中证A500∪上证50∪沪深300 成分池，日线+周线双级别）
+# A. 个股级 VCP 精扫（上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 成分池，日线+周线双级别）
 # B. bottomWatch 积聚新鲜度（首触日+连续命中天数持久化）
 # C. 资金+预期双确认（bottomWatch × ECI 前10 展示层联动）
 # ══════════════════════════════════════════════════════════════════
@@ -4481,16 +4481,19 @@ VCP_MEMBERS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 'cache', 'index_members.json')
 VCP_FRESHNESS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                   'cache', 'bottomwatch_first_seen.json')
-VCP_POOL_INDICES = ['000016.SH', '000905.SH', '000300.SH', '000688.SH', '399673.SZ']
-# 上证50∪中证500∪沪深300∪科创50∪创业板50（2026-09-27 用户正式口径：去掉中证1000，加入科创50/创业板50；
-# 此前为 2026-08-19 口径 上证50∪中证500∪沪深300∪中证1000）。周五刷新调用 4→5 次。
+VCP_POOL_INDICES = ['000016.SH', '000905.SH', '000300.SH', '000688.SH', '399673.SZ', '000852.SH']
+# 上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000（2026-10-01 用户口径恢复中证1000，六指数池；
+# 2026-09-27 口径曾去掉中证1000、加入科创50/创业板50）。周五刷新调用 5→6 次。
 VCP_MIN_MV = 2_500_000                    # 全池总市值下限 250 亿（daily_basic total_mv，万元）
 VCP_DAILY_WIN, VCP_DAILY_K = 60, 2      # 日线级：近60交易日窗口，摆动高点±2日确认
 VCP_WEEK_WIN, VCP_WEEK_K = 40, 1        # 周线级：近40周窗口，摆动高点±1周确认
 VCP_MIN_CONTRACTIONS = 2                # 最少收缩次数（递减即达标）
 VCP_DECAY_TOL = 1.25                    # 收缩递减容差（后次 ≤ 前次×1.25 且末次<首次）
 VCP_CONTRACT_MIN = 3                    # VCP收缩型正式类别：≥3 次递减收缩（2026-09-08 用户口径，优先级最高）
-VCP_SHOW_DIST = 8.0                     # 只展示距枢轴 <8%（容忍 3% 以内已突破）
+VCP_SHOW_DIST = 8.0                     # 收缩型/杯柄型只展示距枢轴 <8%（容忍 3% 以内已突破）
+VCP_SHOW_DIST_LO = -5.0                 # 距枢轴下限（负值=已突破容忍幅度）
+VCP_SHOW_DIST_PLAT = 12.0               # 底部平台型展示距枢轴放宽至 12%（2026-10-01 十二案例校准：
+                                        # 底部平台枢轴常偏离 8% 以上，中信特钢 11.4%/思源电气 10.7%）
 VCP_SECTOR_LEADERS = 3                  # 每个命中板块取池内龙头数
 
 
@@ -4511,10 +4514,10 @@ def _save_json_cache(path, obj):
 
 
 def ensure_index_members(pro, trade_date):
-    """上证50∪中证500∪沪深300∪科创50∪创业板50 成分股池：index_weight 取最新月度权重，每周五刷新。
+    """上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 成分股池：index_weight 取最新月度权重，每周五刷新。
 
     刷新时一并取 daily_basic 总市值快照（1 次调用），供全池 ≥250 亿市值过滤。
-    （2026-09-27 换池：去中证1000、加科创50/创业板50，周五刷新 4→5 次调用；
+    （2026-10-01 恢复中证1000 六指数池，周五刷新 5→6 次调用；
     缓存键不匹配时立即强制刷新，不必等周五。）
     """
     c = _load_json_cache(VCP_MEMBERS_PATH, {})
@@ -4615,7 +4618,7 @@ def _vcp_level(bars, win, k):
             'formed': bool(formed)}
 
 
-def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10):
+def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, dist_gate=None):
     """平台判定（2026-08-19 用户口径重命名两类，缺一不入选）。
 
     共同要件：平台期 10~50 个交易日窄幅横盘（振幅≤14%）、缩量（平台日均量<前 20 日拉升段）、
@@ -4625,7 +4628,10 @@ def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10):
       → 底部起来后做平台，平台上沿=柄/枢轴（用户认定的高胜率形态）；
     - 底部平台型：抬升不足 10%，平台就在底部区域做规律窄幅缩量波动
       （平台最低价不破前低×0.98），上沿突破即底部确认。
-    取满足条件的最长平台（从 50 日往下试）。
+    选择规则：dist_gate=None 时取满足条件的最长平台（从 50 日往下试，旧行为，宽基/杯柄沿用）；
+    dist_gate=(lo, hi) 时优先取距枢轴落在窗内的最长成型平台，都不在窗内退回最长成型平台
+    （2026-10-01 十二案例校准：中信特钢最长 47 日平台 dist 11.4% 被展示门槛误杀，
+    缩短至 40 日则 dist 7.0% 达标）。
     """
     if len(bars) < min_days + 70:
         return None
@@ -4675,12 +4681,19 @@ def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10):
             continue
         pivot = hi
         dist = (pivot / close - 1) * 100
-        best = {'type': kind, 'days': n, 'amplitude': round(amp * 100, 1),
+        cand = {'type': kind, 'days': n, 'amplitude': round(amp * 100, 1),
                 'riseFromLow': round(rise * 100, 1),
                 'volRatio': round(plat_vol / rally_vol, 2) if rally_vol > 0 else None,
                 'segAmps': [round(a * 100, 1) for a in seg_amps],
                 'pivot': round(pivot, 2), 'distPct': round(dist, 1), 'formed': True}
-        break   # 已取最长平台
+        if dist_gate is None:
+            best = cand
+            break   # 已取最长平台（旧行为）
+        if best is None:
+            best = cand   # 最长成型平台兜底
+        if dist_gate[0] <= dist <= dist_gate[1]:
+            best = cand   # 距枢轴在展示窗内的最长平台，优先采用
+            break
     return best
 
 
@@ -4833,7 +4846,7 @@ def _resample_weekly(rows):
 
 
 def fetch_vcp_stocks(pro, trade_date, data, today_map):
-    """个股级 VCP 精扫：上证50∪中证500∪沪深300∪科创50∪创业板50 成分池 ∩（持仓观察股 ∪ 积聚板块龙头 ∪ vcpWatch信号板块龙头）。
+    """个股级 VCP 精扫：上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 成分池 ∩（持仓观察股 ∪ 积聚板块龙头 ∪ vcpWatch信号板块龙头）。
 
     个股日线历史复用 vcp_cache.stock_daily（300 交易日，含周线重采样所需长度）；
     缺历史的票一次性回补 420 日历日后并入缓存，次日起随 vcpWatch 批量日更零成本。
@@ -4940,6 +4953,15 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         # 杯柄：杯深12~33%（大盘弱势期放宽40%）+柄在杯体上半部+杯柄总时长≥25交易日；
         # 每只入围股输出买点参数（精确枢轴/突破放量确认条件/失效位/距枢轴%）——形态参数，非操作建议。
         market_weak = ('冷' in temp) or ('平' in temp)   # 大盘弱势期杯深上限放宽至 40%
+        # 主力资金确认加分项（2026-10-01 用户口径）：复用 MINE_MF 全市场 moneyflow 10 日滚动缓存
+        # （此处先调一次，16c 步第3/4步命中同一缓存，全天仍只 1 次全市场调用）；
+        # 近 10 个缓存交易日主力净流入为正天数 ≥6 记为资金确认，advice 标注 + 同形态排序优先。
+        try:
+            mf_cache = _ensure_mf_cache(pro, trade_date)
+        except Exception as e:
+            print(f'  Warning: vcpStocks mf cache failed: {e}')
+            mf_cache = {}
+        mf_days = sorted(mf_cache)[-10:]
         items = []
         dropped_tt = []
         for code, meta in targets.items():
@@ -4953,7 +4975,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             dist_high250 = (rows[-1][1] / max(closes250) - 1) * 100
             hist_low = (hist_pct is not None and hist_pct <= 30) or dist_high250 <= -20
             tt = _trend_template(rows)
-            pf = _vcp_platform(bars)
+            pf = _vcp_platform(bars, dist_gate=(VCP_SHOW_DIST_LO, VCP_SHOW_DIST_PLAT))
             d_lv = _vcp_level_strict(bars, VCP_DAILY_WIN, VCP_DAILY_K)
             w_lv = _vcp_level_strict(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K)
             d_c3 = bool(d_lv and d_lv['formed'])
@@ -4979,8 +5001,9 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     continue
             else:
                 pattern = raw
-            if not (-5 <= main_lv['distPct'] <= VCP_SHOW_DIST):
-                continue   # 只展示成型或临近成型（距枢轴 <8%）
+            dist_limit = VCP_SHOW_DIST_PLAT if pattern == '底部整理' else VCP_SHOW_DIST
+            if not (VCP_SHOW_DIST_LO <= main_lv['distPct'] <= dist_limit):
+                continue   # 只展示成型或临近成型（收缩/杯柄距枢轴<8%；底部平台放宽至12%，2026-10-01 校准）
             sec = meta['sector']
             if sec in bad_sectors:
                 fit_txt = '板块不配合⚠️'
@@ -4989,8 +5012,11 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             else:
                 fit_txt = '板块中性'
             stage = 'Stage 2' if tt['pass'] else 'Stage 1 基底（未过趋势模板）'
-            advice = (f"{pattern}·距枢轴{main_lv['distPct']}%｜{water_txt}｜{fit_txt}"
-                      if water_txt else f"{pattern}·距枢轴{main_lv['distPct']}%｜{fit_txt}")
+            sm_days = sum(1 for d in mf_days if (mf_cache.get(d) or {}).get(code, 0) > 0)
+            mf_txt = (f'｜主力10日净流入{sm_days}天✅' if sm_days >= 6
+                      else (f'｜主力10日净流入{sm_days}天' if mf_days else ''))
+            advice = (f"{pattern}·距枢轴{main_lv['distPct']}%｜{water_txt}｜{fit_txt}{mf_txt}"
+                      if water_txt else f"{pattern}·距枢轴{main_lv['distPct']}%｜{fit_txt}{mf_txt}")
             close = rows[-1][1]
             d_ok = bool(d_lv and d_lv['formed'])
             w_ok = bool(w_lv and w_lv['formed'])
@@ -5015,9 +5041,11 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                           'histPct': hist_pct,
                           'distHigh250': round(dist_high250, 1),
                           'distMain': main_lv['distPct'],
+                          'mfDays': sm_days,
                           'sectorFit': fit_txt, 'advice': advice,
                           'daily': d_lv, 'weekly': w_lv})
         items.sort(key=lambda x: ({'VCP收缩型': 0, '杯柄型': 1, '底部整理': 2}.get(x['pattern'], 3),
+                                  0 if x.get('mfDays', 0) >= 6 else 1,   # 资金确认同形态优先
                                   x['distMain']))
         eff_d = f'{eff[:4]}-{eff[4:6]}-{eff[6:]}'
         data['vcpStocks'] = {
@@ -5025,13 +5053,15 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'mvDate': mc.get('mvDate'), 'scanned': len(targets),
             'items': items[:15],
             'droppedByTrendTemplate': dropped_tt,
-            'note': '池=上证50∪中证500∪沪深300∪科创50∪创业板50成分（index_weight周五刷新；2026-09-27用户口径：去中证1000、加科创50/创业板50）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
+            'note': '池=上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000成分（index_weight周五刷新；2026-10-01用户口径恢复中证1000）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=持仓观察股(★点名纳入,不受池限)+积聚板块池内龙头+VCP信号板块龙头；'
                     '形态口径（2026-09-26 Minervini 精修）：趋势模板前置——VCP收缩型/杯柄型强制 Stage 2（现价>150/200日线、200日线上行≥1月、50>150>200日线、距52周低点≥+25%、距52周高点≤25%），不过则打回或降级；'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%，不达标项标红）+末次收缩均量<首次（量能递减强制），枢轴=末次收缩高点；'
                     '杯柄型=杯深12~33%（大盘弱势期放宽40%）+柄在杯体上半部+杯柄≥25交易日，枢轴=柄部高点；'
                     '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日振幅≤14%+缩量+分段收缩），单独分层展示；'
                     '买点参数：枢轴价/突破确认（收盘>枢轴且量≥50日均量×1.4）/失效位（末次收缩低点或柄部低点）/距枢轴%——形态参数，非操作建议；'
-                    '只展示距枢轴<8%的成型/临近成型个股；建议=水温×板块合适度，仅供关注优先级参考',
+                    '只展示距枢轴<8%的成型/临近成型个股（底部平台型放宽至12%，2026-10-01十二案例校准：平台取距枢轴窗内最长成型段）；'
+                    '主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用），advice标注并同形态排序优先；'
+                    '建议=水温×板块合适度×资金确认，仅供关注优先级参考',
         }
         print(f"  vcpStocks: scanned {len(targets)}, formed {len(items)} "
               f"({[i['name'] + ':' + i['pattern'] for i in items[:5]]})"
