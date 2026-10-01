@@ -4752,6 +4752,13 @@ CUP_DEPTH_MIN, CUP_DEPTH_MAX = 10.0, 22.0   # 杯深 %（2026-10-01 下午② �
 CUP_MIN_TOTAL_DAYS = 40     # 杯+柄总时长（2026-10-01 下午② 五案例 39~95 交易日，
                                         # 海油工程 39 日为最短——阈值取 40 覆盖，杯柄仍属大结构）
 BREAKOUT_VOL_X = 1.4        # 突破确认：成交量 ≥ 50 日均量 ×1.4
+# ── 杯柄·下跌反转分支（2026-10-01 晚 09987 百胜中国标准杯柄校准）──
+CUP_HANDLE_AMP_MAX = 0.08   # 标准柄：右侧横盘振幅 ≤8%（v2 沿用）
+CUP_REV_AMP_MAX = 0.12      # 下跌反转柄：振幅 ≤12%（09987 用户标注 28 日柄实测 11.2%）
+CUP_REV_PRE_DIST = -20.0    # 前置下跌趋势确认①：杯沿距其前 250 日高点 ≤-20%（09987 -42.5%）
+CUP_REV_PRE_RET = -5.0      # 前置下跌趋势确认②：杯沿前 60 或 120 日收益 ≤-5%（09987 -15.3%/-13.3%）
+CUP_REV_DD_MIN = 0.95       # 下跌反转分支双底容差 5%（09987 二底 -4.8%；标准分支沿用 4%）
+CUP_BRK_VOL_X = 1.5         # 柄末端后突破确认：单日量 ≥ 柄均量 ×1.5（09987 突破日 3.05x）
 
 
 def _trend_template(rows):
@@ -4864,7 +4871,12 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
     - 双底变体：杯身 1~2 个坑，第二坑最深可低于第一坑 4%（案例 -3.3%~+4.8%，坑间距 10~42 日）；
     - 杯柄=右侧 10~20 日窄幅横盘（振幅 ≤8%）且低点不破杯底（容差 2%）；
     - 量能：柄均量 ≤ 杯身均量×1.15（万华 1.10 容忍），且（柄③大比例缩量 或 柄均量<杯身均量）；
-    枢轴=柄部高点；失效位=柄部低点；放量确认线=50日均量×1.4。取满足条件的最长杯柄。"""
+    枢轴=柄部高点；失效位=柄部低点；放量确认线=50日均量×1.4。取满足条件的最长杯柄。
+    2026-10-01 晚 09987 百胜中国标准杯柄（2024-07-15~08-08 杯身 + 08-09~09-19 柄）校准：
+    新增「前置下跌趋势确认」分支——杯沿距其前 250 日高点 ≥20% 回撤且杯沿前 60/120 日
+    收益 ≤-5%（结束前期下跌趋势反转向上）时，柄振幅放宽至 ≤12%、双底容差 5%；
+    杯深 10~22%、分位 25~85、双底/柄底位置/量能双上限等其余口径沿用 v2 不变。
+    突破确认信号见 _cup_breakout_check（柄末端后放量走高：收≥枢轴+量≥柄均×1.5）。"""
     if len(bars) < 70:
         return None
     closes = [b[3] for b in bars]
@@ -4887,8 +4899,6 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         if h_lo <= 0:
             continue
         amp = (h_hi - h_lo) / h_lo
-        if amp > 0.08:
-            continue                    # 柄右侧窄幅横盘：振幅 ≤8%
         cup = bars[-(n + 120):-n]
         if len(cup) < 40:
             continue
@@ -4908,15 +4918,31 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                 hi_pos, cup_hi = i, h
         if hi_pos is None:
             continue                    # 无落在杯深区间的杯沿
+        # 前置下跌趋势确认（2026-10-01 晚 09987 校准）：杯沿较其前 250 日高点回撤
+        # ≥20% 且杯沿前 60/120 日收益 ≤-5% = 杯身终结了一段真实下跌趋势（反转分支），
+        # 柄振幅放宽至 ≤12%、二底容差 5%（09987 实测 28 日柄幅 11.2%、二底 -4.8%）；
+        # 未确认走标准分支（振幅 ≤8%、二底 4%，五案例包络不变）
+        cup_start = max(0, len(bars) - (n + 120))
+        rim_i = cup_start + hi_pos
+        pre_hi = max(b[1] for b in bars[max(0, rim_i - 250):rim_i + 1])
+        pre_dist = (cup_hi / pre_hi - 1) * 100 if pre_hi > 0 else 0
+        r60 = (closes[rim_i] / closes[rim_i - 60] - 1) * 100 if rim_i >= 60 else 0
+        r120 = (closes[rim_i] / closes[rim_i - 120] - 1) * 100 if rim_i >= 120 else 0
+        rev_branch = (pre_dist <= CUP_REV_PRE_DIST
+                      and (r60 <= CUP_REV_PRE_RET or r120 <= CUP_REV_PRE_RET))
+        amp_max = CUP_REV_AMP_MAX if rev_branch else CUP_HANDLE_AMP_MAX
+        dd_min = CUP_REV_DD_MIN if rev_branch else 0.96
+        if amp > amp_max:
+            continue                    # 柄右侧窄幅横盘：标准 ≤8%，下跌反转分支 ≤12%
         body = cup[hi_pos:]             # 杯身=杯沿之后（含杯底与右侧回升段）
         depth = (cup_hi - cup_lo) / cup_hi * 100
-        # 双底验证：杯身 1~2 个坑，第二坑最低可低于第一坑 4%（五案例 -3.3%~+4.8%）；
-        # 更深=单边阴跌创新低，非杯身
+        # 双底验证：杯身 1~2 个坑，标准分支第二坑最低可低于第一坑 4%（五案例 -3.3%~+4.8%），
+        # 下跌反转分支放宽至 5%（09987 -4.8%）；更深=单边阴跌创新低，非杯身
         half = len(body) // 2
         if half > 0:
             l1 = min(b[2] for b in body[:half])
             l2 = min(b[2] for b in body[half:])
-            if l2 < l1 * 0.96:
+            if l2 < l1 * dd_min:
                 continue
         if h_lo < cup_lo * 0.98:
             continue                    # 柄低点破杯身底部
@@ -4947,7 +4973,25 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                 'pivot': round(h_hi, 2), 'distPct': round(dist, 1),
                 'invalidation': round(h_lo, 2),
                 'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
+                'branch': '下跌反转' if rev_branch else '标准',
+                'preDist': round(pre_dist, 1),
+                'brkNeedVol': round(h_vol * CUP_BRK_VOL_X, 1),
                 'formed': True}
+    return None
+
+
+def _cup_breakout_check(post_bars, pivot, h_vol):
+    """杯柄突破确认信号（2026-10-01 晚 09987 百胜中国校准，用户口径
+    「量能在杯柄末端以后快速放大、价格走高」）：柄末端之后，首个
+    收盘 ≥ 枢轴 且 成交量 ≥ 柄均量×1.5 的交易日即确认。
+    09987：柄末 2024-09-19，09-24 收 284.1 破枢轴 266.5、量 3.05 倍柄均 → 确认，
+    随后两周 +33%。返回 {'date','close','volX'} 或 None。
+    post_bars: (date, high, low, close, vol) 升序。"""
+    if h_vol <= 0:
+        return None
+    for b in post_bars:
+        if b[3] >= pivot and b[4] >= h_vol * CUP_BRK_VOL_X:
+            return {'date': b[0], 'close': b[3], 'volX': round(b[4] / h_vol, 2)}
     return None
 
 
@@ -5253,13 +5297,19 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 w_ok = bool(w_lv and w_lv['formed'])
                 tag = ('日线✅+周线✅' if d_ok and w_ok else
                        ('日线✅' if d_ok else ('周线✅' if w_ok else '—')))
+                brk_txt = (f"收盘>{main_lv['pivot']} 且成交量≥50日均量×1.4"
+                           + (f"（≈{main_lv['volConfirm']:.0f}手）"
+                              if main_lv.get('volConfirm') else ''))
+                if pattern == '杯柄型' and ch and ch.get('formed'):
+                    # 杯柄突破确认信号（2026-10-01 晚 09987 校准）：柄末端后放量走高——
+                    # 收盘≥枢轴 且 单日量≥柄均量×1.5（09987 突破日 3.05x，两周 +33%）
+                    brk_txt = (f"收盘≥{ch['pivot']} 且单日成交量≥柄均量×1.5"
+                               + (f"（≈{ch['brkNeedVol']:.0f}手）" if ch.get('brkNeedVol') else ''))
                 buy_point = {'pivot': main_lv['pivot'],
                              'distanceToPivotPct': main_lv['distPct'],
                              'invalidation': main_lv.get('invalidation'),
                              'volConfirm': main_lv.get('volConfirm'),
-                             'breakoutConfirm': (f"收盘>{main_lv['pivot']} 且成交量≥50日均量×1.4"
-                                                 + (f"（≈{main_lv['volConfirm']:.0f}手）"
-                                                    if main_lv.get('volConfirm') else ''))}
+                             'breakoutConfirm': brk_txt}
                 items.append({'code': code,
                               'name': info.get(code, {}).get('name', code),
                               'sector': sec, 'star': meta['star'],
