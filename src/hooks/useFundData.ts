@@ -407,7 +407,8 @@ export interface FundData {
       buyPoint?: { pivot: number; distanceToPivotPct: number; invalidation?: number | null; volConfirm?: number | null; breakoutConfirm?: string } | null;
       cupHandle?: {
         days: number; totalDays: number; cupDepth: number; depthOk: boolean; depthMax: number;
-        upperHalf: boolean; longOk: boolean; pivot: number; distPct: number;
+        amplitude?: number; volRatio?: number; tailRatio?: number; bottomVolRatio?: number;
+        pivot: number; distPct: number;
         invalidation?: number; volConfirm?: number; formed: boolean;
       } | null;
       histPct?: number | null;

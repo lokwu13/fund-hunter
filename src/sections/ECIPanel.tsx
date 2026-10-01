@@ -1250,7 +1250,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                   title={isContract
                                     ? `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}（首${lv?.volFirst ?? '—'}→末${lv?.volLast ?? '—'}）·枢轴=末次收缩高点`
                                     : it.cupHandle
-                                    ? `杯深${it.cupHandle.cupDepth}%（${it.cupHandle.depthOk ? '达标' : '不达标'}${it.cupHandle.depthMax > 33 ? '·弱势市放宽40%' : ''}）·柄在杯体上半部${it.cupHandle.upperHalf ? '✅' : '❌'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点`
+                                    ? `杯柄·底部反转型：杯深${it.cupHandle.cupDepth}%${it.cupHandle.depthMax > 33 ? '（弱势市放宽40%）' : ''}·柄${it.cupHandle.days}天振幅${it.cupHandle.amplitude ?? '—'}%·坑底量比${it.cupHandle.bottomVolRatio ?? '—'}·柄末段量比${it.cupHandle.tailRatio ?? '—'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点`
                                     : isFlag
                                     ? `旗面${it.flag.days}天·振幅${it.flag.amplitude}%·旗杆+${it.flag.polePct}%·量比${it.flag.volRatio}·一年分位${it.histPct ?? '—'}%`
                                     : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·末段量比${it.platform.tailRatio ?? '—'}·分段振幅${(it.platform.segAmps || []).join('→')}%·一年分位${it.histPct ?? '—'}%`}
