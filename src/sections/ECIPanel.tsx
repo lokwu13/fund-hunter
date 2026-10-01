@@ -1205,9 +1205,9 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                   </thead>
                   <tbody>
                     {data.vcpStocks.items.map((it: any, idx: number) => {
-                      const grpOf = (p?: string) => p === 'VCP收缩型' ? 'VCP 收缩' : p === '杯柄型' ? '杯柄' : p === '旗形整理' ? '旗形整理' : '平台整理';
-                      const grp = grpOf(it.pattern);
-                      const prevGrp = idx > 0 ? grpOf(data.vcpStocks!.items[idx - 1].pattern) : null;
+                      const grpOf = (x: any) => `${(x.mfDays ?? 0) >= 6 ? '✅ 资金确认 · ' : ''}${x.pattern === 'VCP收缩型' ? 'VCP 收缩' : x.pattern === '杯柄型' ? '杯柄' : x.pattern === '旗形整理' ? '旗形整理' : '平台整理'}`;
+                      const grp = grpOf(it);
+                      const prevGrp = idx > 0 ? grpOf(data.vcpStocks!.items[idx - 1]) : null;
                       const isPlatform = !!it.platform;
                       const isContract = it.pattern === 'VCP收缩型';
                       const isFlag = it.pattern === '旗形整理' && !!it.flag;
@@ -1253,7 +1253,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     ? `杯深${it.cupHandle.cupDepth}%（${it.cupHandle.depthOk ? '达标' : '不达标'}${it.cupHandle.depthMax > 33 ? '·弱势市放宽40%' : ''}）·柄在杯体上半部${it.cupHandle.upperHalf ? '✅' : '❌'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点`
                                     : isFlag
                                     ? `旗面${it.flag.days}天·振幅${it.flag.amplitude}%·旗杆+${it.flag.polePct}%·量比${it.flag.volRatio}·一年分位${it.histPct ?? '—'}%`
-                                    : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·分段振幅${(it.platform.segAmps || []).join('→')}%·一年分位${it.histPct ?? '—'}%`}
+                                    : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·末段量比${it.platform.tailRatio ?? '—'}·分段振幅${(it.platform.segAmps || []).join('→')}%·一年分位${it.histPct ?? '—'}%`}
                                 >{it.pattern}</span>
                                 <p className="text-[9px] text-violet-400 mt-0.5">
                                   {isContract
@@ -1262,7 +1262,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     ? `杯深${it.cupHandle.cupDepth}%·柄${it.cupHandle.days}天`
                                     : isFlag
                                     ? `旗面${it.flag.days}天·旗杆+${it.flag.polePct}%·量比${it.flag.volRatio}`
-                                    : `平台${it.platform.days}天·振幅${it.platform.amplitude}%`}
+                                    : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·末段量${it.platform.tailRatio ?? '—'}`}
                                 </p>
                               </div>
                             ) : (

@@ -417,7 +417,7 @@ export interface FundData {
       advice?: string;
       platform?: {
         days: number; amplitude: number; riseFromLow: number;
-        volRatio: number; segAmps?: number[]; pivot: number; distPct: number; formed: boolean;
+        volRatio: number; tailRatio?: number; segAmps?: number[]; pivot: number; distPct: number; formed: boolean;
       } | null;
       daily?: {
         contractions: number[]; contractionsOk?: boolean[]; count: number; decreasing: boolean;

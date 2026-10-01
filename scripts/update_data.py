@@ -4618,11 +4618,17 @@ def _vcp_level(bars, win, k):
             'formed': bool(formed)}
 
 
-def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, dist_gate=None):
+def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, dist_gate=None,
+                  tail_vol_max=None, rise_max=None, trend60_min=None):
     """平台判定（2026-08-19 用户口径重命名两类，缺一不入选）。
 
     共同要件：平台期 10~50 个交易日窄幅横盘（振幅≤14%）、缩量（平台日均量<前 20 日拉升段）、
     规律收缩（平台三等分段振幅递减，容差 1.25 且末段<首段）。
+    2026-10-01 收紧（用户反馈粤高速A/联影一眼假，12 案例口径锚定，默认 None=旧行为，
+    宽基/杯柄调用不受影响；个股精扫调用处启用）：
+    - tail_vol_max：末段量/平台区间均量硬门槛（量能萎缩到阶段极致，案例中位 0.91 下收至 0.85）；
+    - rise_max：杯柄型温和抬升上限（用户⑤「一段温和抬升后的平台整理」抬升段 ≤20%）；
+    - trend60_min：近 60 日涨跌下限（排除下跌中继——粤高速A 60 日 -14% 的 12 天停顿非底部基座）。
     分类：
     - 杯柄型：底部已抬升（平台起点收盘相对前 60 日最低 ≥10%）且平台最低价未跌回前低
       → 底部起来后做平台，平台上沿=柄/枢轴（用户认定的高胜率形态）；
@@ -4656,6 +4662,8 @@ def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, d
             continue
         rise = plat[0][3] / prior_low - 1       # 平台起点相对前低的抬升幅度
         if rise >= min_rise and lo > prior_low:
+            if rise_max is not None and rise > rise_max:
+                continue                        # 抬升超限：非「温和抬升后平台」
             kind = '杯柄型'                      # 底部抬升后做平台（柄）
         elif lo >= prior_low * 0.98:            # 底部区域内窄幅平台（未破位）
             kind = '底部平台型'
@@ -4671,18 +4679,30 @@ def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, d
         # 规律收缩：三等分段振幅递减（容差：后段≤前段×1.25 且末段<首段）
         seg = n // 3
         seg_amps = []
+        seg_vols = []
         for i in range(3):
             part = plat[i * seg:(i + 1) * seg] if i < 2 else plat[i * seg:]
             seg_amps.append((max(b[1] for b in part) - min(b[2] for b in part))
                             / min(b[2] for b in part))
+            seg_vols.append(sum(b[4] for b in part) / len(part))
         reg_shrink = (seg_amps[2] < seg_amps[0]
                       and all(seg_amps[i + 1] <= seg_amps[i] * 1.25 for i in range(2)))
         if not reg_shrink:
             continue
+        # 量能萎缩到阶段极致（2026-10-01 硬门槛）：末段均量/平台区间均量 ≤ tail_vol_max
+        tail_ratio = seg_vols[2] / plat_vol if plat_vol > 0 else 9.0
+        if tail_vol_max is not None and tail_ratio > tail_vol_max:
+            continue
+        # 排除下跌中继（2026-10-01）：近 60 日跌幅超限的停顿非底部基座
+        if trend60_min is not None and len(bars) > 61:
+            t60 = close / bars[-61][3] - 1
+            if t60 < trend60_min:
+                continue
         pivot = hi
         dist = (pivot / close - 1) * 100
         cand = {'type': kind, 'days': n, 'amplitude': round(amp * 100, 1),
                 'riseFromLow': round(rise * 100, 1),
+                'tailRatio': round(tail_ratio, 2),
                 'volRatio': round(plat_vol / rally_vol, 2) if rally_vol > 0 else None,
                 'segAmps': [round(a * 100, 1) for a in seg_amps],
                 'pivot': round(pivot, 2), 'distPct': round(dist, 1), 'formed': True}
@@ -5026,7 +5046,12 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             dist_high250 = (rows[-1][1] / max(closes250) - 1) * 100
             hist_low = (hist_pct is not None and hist_pct <= 30) or dist_high250 <= -20
             tt = _trend_template(rows)
-            pf = _vcp_platform(bars, dist_gate=(VCP_SHOW_DIST_LO, VCP_SHOW_DIST_PLAT))
+            pf = _vcp_platform(bars, max_amp=0.08, tail_vol_max=0.85, rise_max=0.20,
+                               trend60_min=-0.10,
+                               dist_gate=(VCP_SHOW_DIST_LO, VCP_SHOW_DIST_PLAT))
+                               # 2026-10-01 收紧（用户反馈粤高速A/联影一眼假，12案例口径锚定）：
+                               # 振幅14%→8%（向案例中位6%靠）、末段量/区间均量≤0.85 硬门槛、
+                               # 杯柄抬升≤20%、近60日跌幅≥-10%（排下跌中继）
             fl = _flag_pattern(bars)
             d_lv = _vcp_level_strict(bars, VCP_DAILY_WIN, VCP_DAILY_K)
             w_lv = _vcp_level_strict(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K)
@@ -5042,10 +5067,13 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 dropped_tt.append(f"{info.get(code, {}).get('name', code)}:{raw}")
                 raw, main_lv = None, None        # 趋势模板强制拦截
             if raw is None:
-                if fl and fl['formed'] and VCP_SHOW_DIST_LO <= fl['distPct'] <= VCP_SHOW_DIST:
+                # 低位分位门槛（2026-10-01 收紧，案例中位34%）：平台/旗形路径分位>60 直接拒
+                # （宁沪85.6/招商72.4 高位平台一眼假；VCP收缩/杯柄由 Stage 2 趋势模板把关不套用）
+                pos_ok = hist_pct is None or hist_pct <= 60
+                if fl and fl['formed'] and pos_ok and VCP_SHOW_DIST_LO <= fl['distPct'] <= VCP_SHOW_DIST:
                     pattern = '旗形整理'           # 急涨后缩量旗面（趋势中继，非 Stage 1 基底，不强制趋势模板）
                     main_lv = fl                  # 距枢轴超窗的旗面不硬贴标签，回落平台判定
-                elif pf and pf['formed']:
+                elif pf and pf['formed'] and pos_ok:
                     pattern = '底部整理'           # Stage 1 基底分层保留展示
                     plat = bars[-pf['days']:]
                     vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
@@ -5100,8 +5128,8 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                           'mfDays': sm_days,
                           'sectorFit': fit_txt, 'advice': advice,
                           'daily': d_lv, 'weekly': w_lv})
-        items.sort(key=lambda x: ({'VCP收缩型': 0, '杯柄型': 1, '底部整理': 2, '超窄幅整理': 2, '底部平台型': 2, '旗形整理': 3}.get(x['pattern'], 4),
-                                  0 if x.get('mfDays', 0) >= 6 else 1,   # 资金确认同形态优先
+        items.sort(key=lambda x: (0 if x.get('mfDays', 0) >= 6 else 1,   # 资金确认组置顶（2026-10-01 用户口径：保持加分但分两组展示）
+                                  {'VCP收缩型': 0, '杯柄型': 1, '底部整理': 2, '超窄幅整理': 2, '底部平台型': 2, '旗形整理': 3}.get(x['pattern'], 4),
                                   x['distMain']))
         eff_d = f'{eff[:4]}-{eff[4:6]}-{eff[6:]}'
         data['vcpStocks'] = {
@@ -5113,11 +5141,11 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     '形态口径（2026-09-26 Minervini 精修）：趋势模板前置——VCP收缩型/杯柄型强制 Stage 2（现价>150/200日线、200日线上行≥1月、50>150>200日线、距52周低点≥+25%、距52周高点≤25%），不过则打回或降级；'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%，不达标项标红）+末次收缩均量<首次（量能递减强制），枢轴=末次收缩高点；'
                     '杯柄型=杯深12~33%（大盘弱势期放宽40%）+柄在杯体上半部+杯柄≥25交易日，枢轴=柄部高点；'
-                    '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日振幅≤14%+缩量+分段收缩），单独分层展示；'
-                    '旗形整理=旗杆急涨≥15%（约12个交易日）后5~15日窄幅下飘/横盘旗面（振幅≤9%+缩量，现价在旗杆顶0.85~1.03带内），枢轴=旗面高点，不强制趋势模板（2026-10-01形态精扫多形态并列新增）；'
+                    '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日，2026-10-01收紧：振幅≤8%向案例中位6%靠+末段量/区间均量≤0.85极致缩量硬门槛+杯柄抬升≤20%+近60日跌幅≥-10%排下跌中继+一年分位≤60低位），单独分层展示；'
+                    '旗形整理=旗杆急涨≥15%（约12个交易日）后5~15日窄幅下飘/横盘旗面（振幅≤9%+缩量，现价在旗杆顶0.85~1.03带内，一年分位≤60），枢轴=旗面高点，不强制趋势模板（2026-10-01形态精扫多形态并列新增）；'
                     '买点参数：枢轴价/突破确认（收盘>枢轴且量≥50日均量×1.4）/失效位（末次收缩低点或柄部低点）/距枢轴%——形态参数，非操作建议；'
                     '只展示距枢轴<8%的成型/临近成型个股（底部平台型放宽至12%，2026-10-01十二案例校准：平台取距枢轴窗内最长成型段）；'
-                    '主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用），advice标注并同形态排序优先；'
+                    '主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用），advice标注，名单按「资金确认组置顶→形态分组→距枢轴」排序（2026-10-01用户口径：保持加分项不分流硬门槛）；'
                     '建议=水温×板块合适度×资金确认，仅供关注优先级参考',
         }
         print(f"  vcpStocks: scanned {len(targets)}, formed {len(items)} "
