@@ -12767,94 +12767,6 @@
         "weekly": null
       },
       {
-        "code": "600312.SH",
-        "name": "平高电气",
-        "sector": "电气设备",
-        "star": false,
-        "inPool": true,
-        "close": 20.29,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": null,
-        "cupHandle": {
-          "type": "杯柄型",
-          "days": 19,
-          "totalDays": 84,
-          "cupDepth": 21.9,
-          "depthOk": true,
-          "depthMax": 22.0,
-          "amplitude": 11.7,
-          "tailRatio": 0.97,
-          "volRatio": 0.66,
-          "pivot": 20.78,
-          "distPct": 2.4,
-          "invalidation": 18.6,
-          "volConfirm": 309121.5,
-          "branch": "下跌反转",
-          "preDist": -20.0,
-          "brkNeedVol": 234437.1,
-          "formed": true
-        },
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": true,
-              "val": "20.29 vs MA150 20.24"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": true,
-              "val": "20.29 vs MA200 20.13"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": true,
-              "val": "MA200 19.92→20.13"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "19.73 vs 20.24"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": true,
-              "val": "20.24 vs 20.13"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": true,
-              "val": "低点15.43→现价20.29（+31%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点25.04→现价20.29（-19%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 20.78,
-          "distanceToPivotPct": 2.4,
-          "invalidation": 18.6,
-          "volConfirm": 309121.5,
-          "breakoutConfirm": "收盘≥20.78 且单日成交量≥柄均量×1.5（≈234437手）"
-        },
-        "histPct": 65.6,
-        "distHigh250": -19.0,
-        "distMain": 2.4,
-        "mfDays": 4,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴2.4%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入4天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "300498.SZ",
         "name": "温氏股份",
         "sector": "农业综合",
@@ -12939,6 +12851,94 @@
         "mfDays": 5,
         "sectorFit": "板块不配合⚠️",
         "advice": "杯柄型·距枢轴2.4%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入5天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "600312.SH",
+        "name": "平高电气",
+        "sector": "电气设备",
+        "star": false,
+        "inPool": true,
+        "close": 20.29,
+        "tag": "—",
+        "pattern": "杯柄型",
+        "platform": null,
+        "cupHandle": {
+          "type": "杯柄型",
+          "days": 19,
+          "totalDays": 84,
+          "cupDepth": 21.9,
+          "depthOk": true,
+          "depthMax": 22.0,
+          "amplitude": 11.7,
+          "tailRatio": 0.97,
+          "volRatio": 0.66,
+          "pivot": 20.78,
+          "distPct": 2.4,
+          "invalidation": 18.6,
+          "volConfirm": 309121.5,
+          "branch": "下跌反转",
+          "preDist": -20.0,
+          "brkNeedVol": 234437.1,
+          "formed": true
+        },
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": true,
+              "val": "20.29 vs MA150 20.24"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": true,
+              "val": "20.29 vs MA200 20.13"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": true,
+              "val": "MA200 19.92→20.13"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "19.73 vs 20.24"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": true,
+              "val": "20.24 vs 20.13"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": true,
+              "val": "低点15.43→现价20.29（+31%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点25.04→现价20.29（-19%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 20.78,
+          "distanceToPivotPct": 2.4,
+          "invalidation": 18.6,
+          "volConfirm": 309121.5,
+          "breakoutConfirm": "收盘≥20.78 且单日成交量≥柄均量×1.5（≈234437手）"
+        },
+        "histPct": 65.6,
+        "distHigh250": -19.0,
+        "distMain": 2.4,
+        "mfDays": 4,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "杯柄型·距枢轴2.4%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入4天",
         "daily": null,
         "weekly": null
       },
@@ -17052,7 +17052,7 @@
     "trade_date": "2026-09-30",
     "window": 120,
     "baseIndex": "上证综指",
-    "indexSrc": "eastmoney",
+    "indexSrc": "tushare",
     "items": [
       {
         "code": "688029.SH",
@@ -19373,7 +19373,7 @@
     ],
     "unmapped": [],
     "unmappedBoards": [],
-    "note": "逆行日流水（2026-09-26 三条件交集口径，用户正式指令）：逆行日=上证当日跌 且 所属板块当日跌 且 个股收红或平手（pct≥0），三者缺一不可；收绿一律不算（原\"抗跌\"类别已废除）；基准跌幅不设幅度下限；逐日列出 日期+个股涨幅+大盘/板块跌幅；大涨≥3%且放量≥2倍20日均量加粗标⭐；公告日打*号备注（不剔除，消息面强势如实展示由读者自判）；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级Tushare等权合成，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年）；本期数据源：大盘=东财，板块=含tushare合成指数降级（标注（合成））"
+    "note": "逆行日流水（2026-09-26 三条件交集口径，用户正式指令）：逆行日=上证当日跌 且 所属板块当日跌 且 个股收红或平手（pct≥0），三者缺一不可；收绿一律不算（原\"抗跌\"类别已废除）；基准跌幅不设幅度下限；逐日列出 日期+个股涨幅+大盘/板块跌幅；大涨≥3%且放量≥2倍20日均量加粗标⭐；公告日打*号备注（不剔除，消息面强势如实展示由读者自判）；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级Tushare等权合成，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年）；本期数据源：大盘=tushare，板块=含tushare合成指数降级（标注（合成））"
   },
   "longWindow": {
     "window": "half",
