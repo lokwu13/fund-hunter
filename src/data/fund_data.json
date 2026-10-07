@@ -15040,87 +15040,6 @@
         "weekly": null
       },
       {
-        "code": "000100.SZ",
-        "name": "TCL科技",
-        "sector": "元器件",
-        "star": false,
-        "inPool": true,
-        "close": 4.79,
-        "tag": "—",
-        "pattern": "长平台整理",
-        "platform": null,
-        "cupHandle": null,
-        "flag": null,
-        "longPlat": {
-          "type": "长平台整理",
-          "days": 57,
-          "amplitude": 17.1,
-          "drift": -0.4,
-          "volRatio": 0.49,
-          "pivot": 5.35,
-          "distPct": 11.7,
-          "invalidation": 4.57,
-          "volConfirm": 6403222.7,
-          "formed": true
-        },
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": true,
-              "val": "4.79 vs MA150 4.74"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": true,
-              "val": "4.79 vs MA200 4.74"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": true,
-              "val": "MA200 4.68→4.74"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": true,
-              "val": "4.92 vs 4.74"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": true,
-              "val": "4.74 vs 4.74"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点4.05→现价4.79（+18%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点6.12→现价4.79（-22%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 5.35,
-          "distanceToPivotPct": 11.7,
-          "invalidation": 4.57,
-          "volConfirm": 6403222.7,
-          "breakoutConfirm": "收盘>5.35 且成交量≥50日均量×1.4（≈6403223手）"
-        },
-        "histPct": 62.4,
-        "distHigh250": -21.7,
-        "distMain": 11.7,
-        "mfDays": 2,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "长平台整理·距枢轴11.7%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入2天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "000333.SZ",
         "name": "美的集团",
         "sector": "家用电器",
@@ -15198,6 +15117,87 @@
         "mfDays": 4,
         "sectorFit": "板块不配合⚠️",
         "advice": "长平台整理·距枢轴11.7%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入4天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "000100.SZ",
+        "name": "TCL科技",
+        "sector": "元器件",
+        "star": false,
+        "inPool": true,
+        "close": 4.79,
+        "tag": "—",
+        "pattern": "长平台整理",
+        "platform": null,
+        "cupHandle": null,
+        "flag": null,
+        "longPlat": {
+          "type": "长平台整理",
+          "days": 57,
+          "amplitude": 17.1,
+          "drift": -0.4,
+          "volRatio": 0.49,
+          "pivot": 5.35,
+          "distPct": 11.7,
+          "invalidation": 4.57,
+          "volConfirm": 6403222.7,
+          "formed": true
+        },
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": true,
+              "val": "4.79 vs MA150 4.74"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": true,
+              "val": "4.79 vs MA200 4.74"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": true,
+              "val": "MA200 4.68→4.74"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": true,
+              "val": "4.92 vs 4.74"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": true,
+              "val": "4.74 vs 4.74"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点4.05→现价4.79（+18%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点6.12→现价4.79（-22%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 5.35,
+          "distanceToPivotPct": 11.7,
+          "invalidation": 4.57,
+          "volConfirm": 6403222.7,
+          "breakoutConfirm": "收盘>5.35 且成交量≥50日均量×1.4（≈6403223手）"
+        },
+        "histPct": 62.4,
+        "distHigh250": -21.7,
+        "distMain": 11.7,
+        "mfDays": 2,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "长平台整理·距枢轴11.7%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入2天",
         "daily": null,
         "weekly": null
       },
@@ -17110,7 +17110,7 @@
     "trade_date": "2026-07-21",
     "window": 120,
     "baseIndex": "上证综指",
-    "indexSrc": "tushare",
+    "indexSrc": "eastmoney",
     "items": [
       {
         "code": "688029.SH",
@@ -17293,7 +17293,7 @@
             "base": "板块",
             "idxPct": -0.7,
             "secPct": -0.8,
-            "volX": 1.3,
+            "volX": 1.2,
             "big": false,
             "ann": false
           },
@@ -17307,6 +17307,183 @@
             "volX": 0.9,
             "big": false,
             "ann": false
+          }
+        ],
+        "daysUsed": 120
+      },
+      {
+        "code": "300760.SZ",
+        "name": "迈瑞医疗",
+        "group": "watch",
+        "industry": "医疗保健",
+        "sectorName": "医疗保健(合成)",
+        "sectorSrc": "tushare合成",
+        "reverseCount": 15,
+        "reverseDays": [
+          {
+            "date": "09/28",
+            "pct": 2.9,
+            "basePct": -1.7,
+            "base": "大盘",
+            "idxPct": -1.7,
+            "secPct": -1.3,
+            "volX": 1.0,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "09/15",
+            "pct": 0.1,
+            "basePct": -1.5,
+            "base": "板块",
+            "idxPct": -0.5,
+            "secPct": -1.5,
+            "volX": 0.4,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "09/10",
+            "pct": 0.3,
+            "basePct": -1.5,
+            "base": "板块",
+            "idxPct": -0.4,
+            "secPct": -1.5,
+            "volX": 0.7,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "09/04",
+            "pct": 1.3,
+            "basePct": -0.3,
+            "base": "大盘",
+            "idxPct": -0.3,
+            "secPct": -0.0,
+            "volX": 1.0,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "08/28",
+            "pct": 1.4,
+            "basePct": -0.7,
+            "base": "板块",
+            "idxPct": -0.1,
+            "secPct": -0.7,
+            "volX": 0.7,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "08/24",
+            "pct": 2.7,
+            "basePct": -2.4,
+            "base": "板块",
+            "idxPct": -0.6,
+            "secPct": -2.4,
+            "volX": 1.0,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/30",
+            "pct": 4.4,
+            "basePct": -1.3,
+            "base": "板块",
+            "idxPct": -0.6,
+            "secPct": -1.3,
+            "volX": 1.5,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/28",
+            "pct": 1.3,
+            "basePct": -1.2,
+            "base": "大盘",
+            "idxPct": -1.2,
+            "secPct": -0.2,
+            "volX": 0.8,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "06/11",
+            "pct": 2.4,
+            "basePct": -0.8,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -0.8,
+            "volX": 1.1,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "06/10",
+            "pct": 0.8,
+            "basePct": -0.9,
+            "base": "板块",
+            "idxPct": -0.4,
+            "secPct": -0.9,
+            "volX": 0.7,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/29",
+            "pct": 0.7,
+            "basePct": -1.1,
+            "base": "板块",
+            "idxPct": -0.7,
+            "secPct": -1.1,
+            "volX": 1.0,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "05/27",
+            "pct": 0.6,
+            "basePct": -1.8,
+            "base": "板块",
+            "idxPct": -1.2,
+            "secPct": -1.8,
+            "volX": 1.1,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/21",
+            "pct": 2.2,
+            "basePct": -2.0,
+            "base": "大盘",
+            "idxPct": -2.0,
+            "secPct": -2.0,
+            "volX": 1.6,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "04/28",
+            "pct": 2.0,
+            "basePct": -0.9,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -0.9,
+            "volX": 1.6,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "04/23",
+            "pct": 0.9,
+            "basePct": -1.1,
+            "base": "板块",
+            "idxPct": -0.3,
+            "secPct": -1.1,
+            "volX": 1.3,
+            "big": false,
+            "ann": true
           }
         ],
         "daysUsed": 120
@@ -17481,7 +17658,7 @@
             "base": "大盘",
             "idxPct": -0.7,
             "secPct": -0.1,
-            "volX": 0.9,
+            "volX": 0.8,
             "big": false,
             "ann": false
           }
@@ -17636,7 +17813,7 @@
             "base": "板块",
             "idxPct": -0.7,
             "secPct": -2.0,
-            "volX": 1.1,
+            "volX": 1.0,
             "big": false,
             "ann": false
           },
@@ -17647,7 +17824,7 @@
             "base": "大盘",
             "idxPct": -0.8,
             "secPct": -0.8,
-            "volX": 1.4,
+            "volX": 1.2,
             "big": false,
             "ann": false
           },
@@ -17658,173 +17835,7 @@
             "base": "大盘",
             "idxPct": -1.1,
             "secPct": -0.5,
-            "volX": 1.0,
-            "big": false,
-            "ann": true
-          }
-        ],
-        "daysUsed": 120
-      },
-      {
-        "code": "300760.SZ",
-        "name": "迈瑞医疗",
-        "group": "watch",
-        "industry": "医疗保健",
-        "sectorName": "医疗保健(合成)",
-        "sectorSrc": "tushare合成",
-        "reverseCount": 14,
-        "reverseDays": [
-          {
-            "date": "09/15",
-            "pct": 0.1,
-            "basePct": -1.5,
-            "base": "板块",
-            "idxPct": -0.5,
-            "secPct": -1.5,
-            "volX": 0.4,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "09/10",
-            "pct": 0.3,
-            "basePct": -1.5,
-            "base": "板块",
-            "idxPct": -0.4,
-            "secPct": -1.5,
-            "volX": 0.7,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "09/04",
-            "pct": 1.3,
-            "basePct": -0.3,
-            "base": "大盘",
-            "idxPct": -0.3,
-            "secPct": -0.0,
-            "volX": 1.0,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "08/28",
-            "pct": 1.4,
-            "basePct": -0.7,
-            "base": "板块",
-            "idxPct": -0.1,
-            "secPct": -0.7,
-            "volX": 0.7,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "08/24",
-            "pct": 2.7,
-            "basePct": -2.4,
-            "base": "板块",
-            "idxPct": -0.6,
-            "secPct": -2.4,
-            "volX": 1.0,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/30",
-            "pct": 4.4,
-            "basePct": -1.3,
-            "base": "板块",
-            "idxPct": -0.6,
-            "secPct": -1.3,
-            "volX": 1.5,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/28",
-            "pct": 1.3,
-            "basePct": -1.2,
-            "base": "大盘",
-            "idxPct": -1.2,
-            "secPct": -0.2,
             "volX": 0.8,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "06/11",
-            "pct": 2.4,
-            "basePct": -0.8,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -0.8,
-            "volX": 1.1,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "06/10",
-            "pct": 0.8,
-            "basePct": -0.9,
-            "base": "板块",
-            "idxPct": -0.4,
-            "secPct": -0.9,
-            "volX": 0.7,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "05/29",
-            "pct": 0.7,
-            "basePct": -1.1,
-            "base": "板块",
-            "idxPct": -0.7,
-            "secPct": -1.1,
-            "volX": 1.0,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "05/27",
-            "pct": 0.6,
-            "basePct": -1.8,
-            "base": "板块",
-            "idxPct": -1.2,
-            "secPct": -1.8,
-            "volX": 1.1,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "05/21",
-            "pct": 2.2,
-            "basePct": -2.0,
-            "base": "大盘",
-            "idxPct": -2.0,
-            "secPct": -2.0,
-            "volX": 1.6,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "04/28",
-            "pct": 2.0,
-            "basePct": -0.9,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -0.9,
-            "volX": 1.6,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "04/23",
-            "pct": 0.9,
-            "basePct": -1.1,
-            "base": "板块",
-            "idxPct": -0.3,
-            "secPct": -1.1,
-            "volX": 1.3,
             "big": false,
             "ann": true
           }
@@ -17838,8 +17849,19 @@
         "industry": "医疗保健",
         "sectorName": "医疗保健(合成)",
         "sectorSrc": "tushare合成",
-        "reverseCount": 14,
+        "reverseCount": 15,
         "reverseDays": [
+          {
+            "date": "09/28",
+            "pct": 3.4,
+            "basePct": -1.7,
+            "base": "大盘",
+            "idxPct": -1.7,
+            "secPct": -1.3,
+            "volX": 2.2,
+            "big": true,
+            "ann": false
+          },
           {
             "date": "09/11",
             "pct": 0.7,
@@ -17998,169 +18020,25 @@
         "daysUsed": 120
       },
       {
-        "code": "000708.SZ",
-        "name": "中信特钢",
-        "group": "watch",
-        "industry": "特种钢",
-        "sectorName": "特种钢(合成)",
-        "sectorSrc": "tushare合成",
-        "reverseCount": 13,
-        "reverseDays": [
-          {
-            "date": "09/15",
-            "pct": 0.4,
-            "basePct": -0.5,
-            "base": "大盘",
-            "idxPct": -0.5,
-            "secPct": -0.4,
-            "volX": 0.8,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "09/02",
-            "pct": 0.0,
-            "basePct": -1.0,
-            "base": "大盘",
-            "idxPct": -1.0,
-            "secPct": -0.7,
-            "volX": 1.1,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "08/24",
-            "pct": 2.2,
-            "basePct": -0.6,
-            "base": "板块",
-            "idxPct": -0.6,
-            "secPct": -0.6,
-            "volX": 1.2,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "07/13",
-            "pct": 1.1,
-            "basePct": -2.1,
-            "base": "大盘",
-            "idxPct": -2.1,
-            "secPct": -1.8,
-            "volX": 0.9,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/06",
-            "pct": 2.9,
-            "basePct": -0.3,
-            "base": "板块",
-            "idxPct": -0.1,
-            "secPct": -0.3,
-            "volX": 1.0,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/02",
-            "pct": 0.9,
-            "basePct": -2.0,
-            "base": "大盘",
-            "idxPct": -2.0,
-            "secPct": -0.1,
-            "volX": 0.9,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "06/11",
-            "pct": 1.7,
-            "basePct": -0.6,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -0.6,
-            "volX": 1.2,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "06/10",
-            "pct": 0.7,
-            "basePct": -0.4,
-            "base": "大盘",
-            "idxPct": -0.4,
-            "secPct": -0.3,
-            "volX": 1.0,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "05/29",
-            "pct": 0.8,
-            "basePct": -0.7,
-            "base": "大盘",
-            "idxPct": -0.7,
-            "secPct": -0.4,
-            "volX": 1.3,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "04/28",
-            "pct": 0.9,
-            "basePct": -1.3,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -1.3,
-            "volX": 0.9,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "04/09",
-            "pct": 1.4,
-            "basePct": -1.2,
-            "base": "板块",
-            "idxPct": -0.7,
-            "secPct": -1.2,
-            "volX": 1.0,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "04/03",
-            "pct": 1.5,
-            "basePct": -1.7,
-            "base": "板块",
-            "idxPct": -1.0,
-            "secPct": -1.7,
-            "volX": 0.9,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "03/26",
-            "pct": 0.2,
-            "basePct": -1.6,
-            "base": "板块",
-            "idxPct": -1.1,
-            "secPct": -1.6,
-            "volX": 0.7,
-            "big": false,
-            "ann": false
-          }
-        ],
-        "daysUsed": 120
-      },
-      {
         "code": "000895.SZ",
         "name": "双汇发展",
         "group": "watch",
         "industry": "食品",
         "sectorName": "食品(合成)",
         "sectorSrc": "tushare合成",
-        "reverseCount": 13,
+        "reverseCount": 14,
         "reverseDays": [
+          {
+            "date": "09/28",
+            "pct": 1.7,
+            "basePct": -1.7,
+            "base": "大盘",
+            "idxPct": -1.7,
+            "secPct": -0.8,
+            "volX": 1.5,
+            "big": false,
+            "ann": false
+          },
           {
             "date": "08/24",
             "pct": 1.9,
@@ -18289,7 +18167,7 @@
             "base": "大盘",
             "idxPct": -0.7,
             "secPct": -0.1,
-            "volX": 0.8,
+            "volX": 0.7,
             "big": false,
             "ann": false
           },
@@ -18300,9 +18178,164 @@
             "base": "大盘",
             "idxPct": -1.1,
             "secPct": -0.6,
+            "volX": 0.8,
+            "big": false,
+            "ann": true
+          }
+        ],
+        "daysUsed": 120
+      },
+      {
+        "code": "000708.SZ",
+        "name": "中信特钢",
+        "group": "watch",
+        "industry": "特种钢",
+        "sectorName": "特种钢(合成)",
+        "sectorSrc": "tushare合成",
+        "reverseCount": 13,
+        "reverseDays": [
+          {
+            "date": "09/15",
+            "pct": 0.4,
+            "basePct": -0.5,
+            "base": "大盘",
+            "idxPct": -0.5,
+            "secPct": -0.4,
+            "volX": 0.8,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "09/02",
+            "pct": 0.0,
+            "basePct": -1.0,
+            "base": "大盘",
+            "idxPct": -1.0,
+            "secPct": -0.7,
+            "volX": 1.1,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "08/24",
+            "pct": 2.2,
+            "basePct": -0.6,
+            "base": "板块",
+            "idxPct": -0.6,
+            "secPct": -0.6,
+            "volX": 1.2,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "07/13",
+            "pct": 1.1,
+            "basePct": -2.1,
+            "base": "大盘",
+            "idxPct": -2.1,
+            "secPct": -1.8,
+            "volX": 0.9,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/06",
+            "pct": 2.9,
+            "basePct": -0.3,
+            "base": "板块",
+            "idxPct": -0.1,
+            "secPct": -0.3,
+            "volX": 1.0,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/02",
+            "pct": 0.9,
+            "basePct": -2.0,
+            "base": "大盘",
+            "idxPct": -2.0,
+            "secPct": -0.1,
             "volX": 0.9,
             "big": false,
             "ann": true
+          },
+          {
+            "date": "06/11",
+            "pct": 1.7,
+            "basePct": -0.6,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -0.6,
+            "volX": 1.2,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "06/10",
+            "pct": 0.7,
+            "basePct": -0.4,
+            "base": "大盘",
+            "idxPct": -0.4,
+            "secPct": -0.3,
+            "volX": 1.0,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/29",
+            "pct": 0.8,
+            "basePct": -0.7,
+            "base": "大盘",
+            "idxPct": -0.7,
+            "secPct": -0.4,
+            "volX": 1.3,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "04/28",
+            "pct": 0.9,
+            "basePct": -1.3,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -1.3,
+            "volX": 0.9,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "04/09",
+            "pct": 1.4,
+            "basePct": -1.2,
+            "base": "板块",
+            "idxPct": -0.7,
+            "secPct": -1.2,
+            "volX": 1.1,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "04/03",
+            "pct": 1.5,
+            "basePct": -1.7,
+            "base": "板块",
+            "idxPct": -1.0,
+            "secPct": -1.7,
+            "volX": 1.0,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "03/26",
+            "pct": 0.2,
+            "basePct": -1.6,
+            "base": "板块",
+            "idxPct": -1.1,
+            "secPct": -1.6,
+            "volX": 0.7,
+            "big": false,
+            "ann": false
           }
         ],
         "daysUsed": 120
@@ -18433,7 +18466,7 @@
             "base": "大盘",
             "idxPct": -0.7,
             "secPct": -0.1,
-            "volX": 0.9,
+            "volX": 0.8,
             "big": false,
             "ann": true
           },
@@ -18444,7 +18477,7 @@
             "base": "板块",
             "idxPct": -0.8,
             "secPct": -1.4,
-            "volX": 1.2,
+            "volX": 1.1,
             "big": false,
             "ann": false
           },
@@ -18455,9 +18488,153 @@
             "base": "大盘",
             "idxPct": -1.1,
             "secPct": -0.6,
-            "volX": 1.8,
+            "volX": 1.6,
             "big": false,
             "ann": true
+          }
+        ],
+        "daysUsed": 120
+      },
+      {
+        "code": "600406.SH",
+        "name": "国电南瑞",
+        "group": "watch",
+        "industry": "电气设备",
+        "sectorName": "电气设备(合成)",
+        "sectorSrc": "tushare合成",
+        "reverseCount": 12,
+        "reverseDays": [
+          {
+            "date": "09/28",
+            "pct": 1.7,
+            "basePct": -2.4,
+            "base": "板块",
+            "idxPct": -1.7,
+            "secPct": -2.4,
+            "volX": 1.9,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "09/24",
+            "pct": 1.1,
+            "basePct": -1.2,
+            "base": "大盘",
+            "idxPct": -1.2,
+            "secPct": -1.0,
+            "volX": 1.0,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "09/10",
+            "pct": 0.2,
+            "basePct": -1.3,
+            "base": "板块",
+            "idxPct": -0.4,
+            "secPct": -1.3,
+            "volX": 0.6,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "09/04",
+            "pct": 0.5,
+            "basePct": -0.6,
+            "base": "板块",
+            "idxPct": -0.3,
+            "secPct": -0.6,
+            "volX": 0.7,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "08/24",
+            "pct": 0.4,
+            "basePct": -1.0,
+            "base": "板块",
+            "idxPct": -0.6,
+            "secPct": -1.0,
+            "volX": 0.4,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/30",
+            "pct": 1.6,
+            "basePct": -2.2,
+            "base": "板块",
+            "idxPct": -0.6,
+            "secPct": -2.2,
+            "volX": 1.1,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/17",
+            "pct": 0.4,
+            "basePct": -4.0,
+            "base": "板块",
+            "idxPct": -3.0,
+            "secPct": -4.0,
+            "volX": 1.4,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/15",
+            "pct": 0.8,
+            "basePct": -0.5,
+            "base": "板块",
+            "idxPct": -0.3,
+            "secPct": -0.5,
+            "volX": 0.6,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/06",
+            "pct": 1.2,
+            "basePct": -2.4,
+            "base": "板块",
+            "idxPct": -0.1,
+            "secPct": -2.4,
+            "volX": 0.9,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/02",
+            "pct": 0.0,
+            "basePct": -2.0,
+            "base": "大盘",
+            "idxPct": -2.0,
+            "secPct": -1.1,
+            "volX": 0.8,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "06/11",
+            "pct": 0.7,
+            "basePct": -1.8,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -1.8,
+            "volX": 0.6,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/27",
+            "pct": 0.4,
+            "basePct": -1.2,
+            "base": "大盘",
+            "idxPct": -1.2,
+            "secPct": -1.2,
+            "volX": 0.9,
+            "big": false,
+            "ann": false
           }
         ],
         "daysUsed": 120
@@ -18596,139 +18773,6 @@
         "daysUsed": 120
       },
       {
-        "code": "600406.SH",
-        "name": "国电南瑞",
-        "group": "watch",
-        "industry": "电气设备",
-        "sectorName": "电网设备",
-        "sectorSrc": "eastmoney",
-        "reverseCount": 11,
-        "reverseDays": [
-          {
-            "date": "09/24",
-            "pct": 1.1,
-            "basePct": -1.2,
-            "base": "大盘",
-            "idxPct": -1.2,
-            "secPct": -1.1,
-            "volX": 1.0,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "09/10",
-            "pct": 0.2,
-            "basePct": -1.5,
-            "base": "板块",
-            "idxPct": -0.4,
-            "secPct": -1.5,
-            "volX": 0.6,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "09/04",
-            "pct": 0.5,
-            "basePct": -0.3,
-            "base": "大盘",
-            "idxPct": -0.3,
-            "secPct": -0.1,
-            "volX": 0.7,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "08/24",
-            "pct": 0.4,
-            "basePct": -1.0,
-            "base": "板块",
-            "idxPct": -0.6,
-            "secPct": -1.0,
-            "volX": 0.4,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/30",
-            "pct": 1.6,
-            "basePct": -2.6,
-            "base": "板块",
-            "idxPct": -0.6,
-            "secPct": -2.6,
-            "volX": 1.1,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/17",
-            "pct": 0.4,
-            "basePct": -3.2,
-            "base": "板块",
-            "idxPct": -3.0,
-            "secPct": -3.2,
-            "volX": 1.4,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/15",
-            "pct": 0.8,
-            "basePct": -0.6,
-            "base": "板块",
-            "idxPct": -0.3,
-            "secPct": -0.6,
-            "volX": 0.6,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/06",
-            "pct": 1.2,
-            "basePct": -2.4,
-            "base": "板块",
-            "idxPct": -0.1,
-            "secPct": -2.4,
-            "volX": 0.9,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/02",
-            "pct": 0.0,
-            "basePct": -2.0,
-            "base": "大盘",
-            "idxPct": -2.0,
-            "secPct": -1.1,
-            "volX": 0.8,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "06/11",
-            "pct": 0.7,
-            "basePct": -1.9,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -1.9,
-            "volX": 0.6,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "05/27",
-            "pct": 0.4,
-            "basePct": -1.2,
-            "base": "大盘",
-            "idxPct": -1.2,
-            "secPct": -0.5,
-            "volX": 0.9,
-            "big": false,
-            "ann": false
-          }
-        ],
-        "daysUsed": 120
-      },
-      {
         "code": "002568.SZ",
         "name": "百润股份",
         "group": "watch",
@@ -18851,6 +18895,250 @@
         "daysUsed": 120
       },
       {
+        "code": "600031.SH",
+        "name": "三一重工",
+        "group": "watch",
+        "industry": "工程机械",
+        "sectorName": "工程机械(合成)",
+        "sectorSrc": "tushare合成",
+        "reverseCount": 10,
+        "reverseDays": [
+          {
+            "date": "09/14",
+            "pct": 0.7,
+            "basePct": -0.2,
+            "base": "板块",
+            "idxPct": -0.1,
+            "secPct": -0.2,
+            "volX": 0.7,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "09/04",
+            "pct": 0.3,
+            "basePct": -0.3,
+            "base": "大盘",
+            "idxPct": -0.3,
+            "secPct": -0.1,
+            "volX": 0.7,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "08/28",
+            "pct": 0.2,
+            "basePct": -0.1,
+            "base": "大盘",
+            "idxPct": -0.1,
+            "secPct": -0.1,
+            "volX": 0.7,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/30",
+            "pct": 2.1,
+            "basePct": -1.0,
+            "base": "板块",
+            "idxPct": -0.6,
+            "secPct": -1.0,
+            "volX": 1.1,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/07",
+            "pct": 2.9,
+            "basePct": -1.8,
+            "base": "板块",
+            "idxPct": -1.3,
+            "secPct": -1.8,
+            "volX": 1.5,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/06",
+            "pct": 1.8,
+            "basePct": -1.6,
+            "base": "板块",
+            "idxPct": -0.1,
+            "secPct": -1.6,
+            "volX": 0.9,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "06/04",
+            "pct": 1.0,
+            "basePct": -0.8,
+            "base": "板块",
+            "idxPct": -0.6,
+            "secPct": -0.8,
+            "volX": 0.9,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "05/29",
+            "pct": 0.2,
+            "basePct": -1.9,
+            "base": "板块",
+            "idxPct": -0.7,
+            "secPct": -1.9,
+            "volX": 1.2,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/26",
+            "pct": 0.3,
+            "basePct": -1.9,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -1.9,
+            "volX": 1.1,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/20",
+            "pct": 0.5,
+            "basePct": -1.2,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -1.2,
+            "volX": 0.7,
+            "big": false,
+            "ann": false
+          }
+        ],
+        "daysUsed": 120
+      },
+      {
+        "code": "600521.SH",
+        "name": "华海药业",
+        "group": "watch",
+        "industry": "化学制药",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
+        "reverseCount": 10,
+        "reverseDays": [
+          {
+            "date": "09/28",
+            "pct": 0.2,
+            "basePct": -1.7,
+            "base": "大盘",
+            "idxPct": -1.7,
+            "secPct": -0.4,
+            "volX": 0.6,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "07/30",
+            "pct": 0.3,
+            "basePct": -1.9,
+            "base": "板块",
+            "idxPct": -0.6,
+            "secPct": -1.9,
+            "volX": 0.7,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "07/13",
+            "pct": 0.0,
+            "basePct": -2.1,
+            "base": "大盘",
+            "idxPct": -2.1,
+            "secPct": -0.6,
+            "volX": 1.5,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/08",
+            "pct": 1.4,
+            "basePct": -1.5,
+            "base": "板块",
+            "idxPct": -0.5,
+            "secPct": -1.5,
+            "volX": 2.1,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/26",
+            "pct": 1.9,
+            "basePct": -1.4,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -1.4,
+            "volX": 1.1,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/21",
+            "pct": 2.2,
+            "basePct": -2.0,
+            "base": "大盘",
+            "idxPct": -2.0,
+            "secPct": -1.8,
+            "volX": 2.5,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "05/20",
+            "pct": 1.5,
+            "basePct": -0.8,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -0.8,
+            "volX": 1.0,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/08",
+            "pct": 0.4,
+            "basePct": -0.0,
+            "base": "板块",
+            "idxPct": -0.0,
+            "secPct": -0.0,
+            "volX": 0.8,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "04/28",
+            "pct": 0.1,
+            "basePct": -0.3,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -0.3,
+            "volX": 0.5,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "04/17",
+            "pct": 3.6,
+            "basePct": -1.5,
+            "base": "板块",
+            "idxPct": -0.1,
+            "secPct": -1.5,
+            "volX": 2.2,
+            "big": true,
+            "ann": false
+          }
+        ],
+        "daysUsed": 120
+      },
+      {
         "code": "600276.SH",
         "name": "恒瑞医药",
         "group": "hold",
@@ -18957,217 +19245,6 @@
             "volX": 1.5,
             "big": false,
             "ann": true
-          }
-        ],
-        "daysUsed": 120
-      },
-      {
-        "code": "600521.SH",
-        "name": "华海药业",
-        "group": "watch",
-        "industry": "化学制药",
-        "sectorName": "化学制药(合成)",
-        "sectorSrc": "tushare合成",
-        "reverseCount": 9,
-        "reverseDays": [
-          {
-            "date": "07/30",
-            "pct": 0.3,
-            "basePct": -1.9,
-            "base": "板块",
-            "idxPct": -0.6,
-            "secPct": -1.9,
-            "volX": 0.7,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "07/13",
-            "pct": 0.0,
-            "basePct": -2.1,
-            "base": "大盘",
-            "idxPct": -2.1,
-            "secPct": -0.6,
-            "volX": 1.5,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/08",
-            "pct": 1.4,
-            "basePct": -1.5,
-            "base": "板块",
-            "idxPct": -0.5,
-            "secPct": -1.5,
-            "volX": 2.1,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "05/26",
-            "pct": 1.9,
-            "basePct": -1.4,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -1.4,
-            "volX": 1.1,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "05/21",
-            "pct": 2.2,
-            "basePct": -2.0,
-            "base": "大盘",
-            "idxPct": -2.0,
-            "secPct": -1.8,
-            "volX": 2.5,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "05/20",
-            "pct": 1.5,
-            "basePct": -0.8,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -0.8,
-            "volX": 1.0,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "05/08",
-            "pct": 0.4,
-            "basePct": -0.0,
-            "base": "板块",
-            "idxPct": -0.0,
-            "secPct": -0.0,
-            "volX": 0.8,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "04/28",
-            "pct": 0.1,
-            "basePct": -0.3,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -0.3,
-            "volX": 0.5,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "04/17",
-            "pct": 3.6,
-            "basePct": -1.5,
-            "base": "板块",
-            "idxPct": -0.1,
-            "secPct": -1.5,
-            "volX": 2.3,
-            "big": true,
-            "ann": false
-          }
-        ],
-        "daysUsed": 120
-      },
-      {
-        "code": "600031.SH",
-        "name": "三一重工",
-        "group": "watch",
-        "industry": "工程机械",
-        "sectorName": "工程机械",
-        "sectorSrc": "eastmoney",
-        "reverseCount": 8,
-        "reverseDays": [
-          {
-            "date": "08/28",
-            "pct": 0.2,
-            "basePct": -0.1,
-            "base": "大盘",
-            "idxPct": -0.1,
-            "secPct": -0.0,
-            "volX": 0.7,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/30",
-            "pct": 2.1,
-            "basePct": -0.7,
-            "base": "板块",
-            "idxPct": -0.6,
-            "secPct": -0.7,
-            "volX": 1.1,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/07",
-            "pct": 2.9,
-            "basePct": -1.3,
-            "base": "板块",
-            "idxPct": -1.3,
-            "secPct": -1.3,
-            "volX": 1.5,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/06",
-            "pct": 1.8,
-            "basePct": -1.5,
-            "base": "板块",
-            "idxPct": -0.1,
-            "secPct": -1.5,
-            "volX": 0.9,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "06/04",
-            "pct": 1.0,
-            "basePct": -0.6,
-            "base": "大盘",
-            "idxPct": -0.6,
-            "secPct": -0.6,
-            "volX": 0.9,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "05/29",
-            "pct": 0.2,
-            "basePct": -1.6,
-            "base": "板块",
-            "idxPct": -0.7,
-            "secPct": -1.6,
-            "volX": 1.2,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "05/26",
-            "pct": 0.3,
-            "basePct": -1.3,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -1.3,
-            "volX": 1.1,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "05/20",
-            "pct": 0.5,
-            "basePct": -0.8,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -0.8,
-            "volX": 0.7,
-            "big": false,
-            "ann": false
           }
         ],
         "daysUsed": 120
@@ -19354,7 +19431,7 @@
     ],
     "unmapped": [],
     "unmappedBoards": [],
-    "note": "逆行日流水（2026-09-26 三条件交集口径，用户正式指令）：逆行日=上证当日跌 且 所属板块当日跌 且 个股收红或平手（pct≥0），三者缺一不可；收绿一律不算（原\"抗跌\"类别已废除）；基准跌幅不设幅度下限；逐日列出 日期+个股涨幅+大盘/板块跌幅；大涨≥3%且放量≥2倍20日均量加粗标⭐；公告日打*号备注（不剔除，消息面强势如实展示由读者自判）；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级Tushare等权合成，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年）；本期数据源：大盘=tushare，板块=含tushare合成指数降级（标注（合成））"
+    "note": "逆行日流水（2026-09-26 三条件交集口径，用户正式指令）：逆行日=上证当日跌 且 所属板块当日跌 且 个股收红或平手（pct≥0），三者缺一不可；收绿一律不算（原\"抗跌\"类别已废除）；基准跌幅不设幅度下限；逐日列出 日期+个股涨幅+大盘/板块跌幅；大涨≥3%且放量≥2倍20日均量加粗标⭐；公告日打*号备注（不剔除，消息面强势如实展示由读者自判）；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级Tushare等权合成，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年）；本期数据源：大盘=东财，板块=含tushare合成指数降级（标注（合成））"
   },
   "longWindow": {
     "window": "half",
