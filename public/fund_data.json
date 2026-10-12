@@ -12170,6 +12170,105 @@
         "weekly": null
       },
       {
+        "code": "000651.SZ",
+        "name": "格力电器",
+        "sector": "家用电器",
+        "star": false,
+        "inPool": true,
+        "close": 39.59,
+        "tag": "—",
+        "pattern": "杯柄型",
+        "platform": null,
+        "cupHandle": {
+          "type": "杯柄型",
+          "days": 20,
+          "totalDays": 97,
+          "cupDepth": 11.3,
+          "depthOk": true,
+          "depthMax": 22.0,
+          "amplitude": 4.3,
+          "tailRatio": 1.01,
+          "volRatio": 0.61,
+          "pivot": 39.6,
+          "distPct": 0.0,
+          "invalidation": 37.97,
+          "volConfirm": 614392.3,
+          "branch": "标准",
+          "preDist": -15.7,
+          "brkNeedVol": 462737.3,
+          "formed": true
+        },
+        "flag": null,
+        "longPlat": {
+          "type": "长平台整理",
+          "days": 120,
+          "amplitude": 17.1,
+          "drift": 4.3,
+          "volRatio": 1.09,
+          "pivot": 42.48,
+          "distPct": 7.3,
+          "invalidation": 36.27,
+          "volConfirm": 614392.3,
+          "formed": true
+        },
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": true,
+              "val": "39.59 vs MA150 38.71"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": true,
+              "val": "39.59 vs MA200 39.12"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 39.29→39.12"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": true,
+              "val": "39.70 vs 38.71"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "38.71 vs 39.12"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点36.72→现价39.59（+8%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点42.47→现价39.59（-7%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 39.6,
+          "distanceToPivotPct": 0.0,
+          "invalidation": 37.97,
+          "volConfirm": 614392.3,
+          "breakoutConfirm": "收盘≥39.6 且单日成交量≥柄均量×1.5（≈462737手）"
+        },
+        "histPct": 50.0,
+        "distHigh250": -6.8,
+        "distMain": 0.0,
+        "mfDays": 4,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "杯柄型·距枢轴0.0%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入4天",
+        "daily": null,
+        "weekly": null
+      },
+      {
         "code": "601288.SH",
         "name": "农业银行",
         "sector": "银行",
@@ -12269,105 +12368,6 @@
         "mfDays": 4,
         "sectorFit": "板块中性",
         "advice": "杯柄型·距枢轴0.0%｜水温中性·谨慎关注｜板块中性｜主力10日净流入4天",
-        "daily": null,
-        "weekly": null
-      },
-      {
-        "code": "000651.SZ",
-        "name": "格力电器",
-        "sector": "家用电器",
-        "star": false,
-        "inPool": true,
-        "close": 39.59,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": null,
-        "cupHandle": {
-          "type": "杯柄型",
-          "days": 20,
-          "totalDays": 97,
-          "cupDepth": 11.3,
-          "depthOk": true,
-          "depthMax": 22.0,
-          "amplitude": 4.3,
-          "tailRatio": 1.01,
-          "volRatio": 0.61,
-          "pivot": 39.6,
-          "distPct": 0.0,
-          "invalidation": 37.97,
-          "volConfirm": 614392.3,
-          "branch": "标准",
-          "preDist": -15.7,
-          "brkNeedVol": 462737.3,
-          "formed": true
-        },
-        "flag": null,
-        "longPlat": {
-          "type": "长平台整理",
-          "days": 120,
-          "amplitude": 17.1,
-          "drift": 4.3,
-          "volRatio": 1.09,
-          "pivot": 42.48,
-          "distPct": 7.3,
-          "invalidation": 36.27,
-          "volConfirm": 614392.3,
-          "formed": true
-        },
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": true,
-              "val": "39.59 vs MA150 38.71"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": true,
-              "val": "39.59 vs MA200 39.12"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 39.29→39.12"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": true,
-              "val": "39.70 vs 38.71"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "38.71 vs 39.12"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点36.72→现价39.59（+8%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点42.47→现价39.59（-7%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 39.6,
-          "distanceToPivotPct": 0.0,
-          "invalidation": 37.97,
-          "volConfirm": 614392.3,
-          "breakoutConfirm": "收盘≥39.6 且单日成交量≥柄均量×1.5（≈462737手）"
-        },
-        "histPct": 50.0,
-        "distHigh250": -6.8,
-        "distMain": 0.0,
-        "mfDays": 4,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴0.0%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入4天",
         "daily": null,
         "weekly": null
       },
@@ -13435,91 +13435,6 @@
         "weekly": null
       },
       {
-        "code": "600436.SH",
-        "name": "片仔癀",
-        "sector": "中成药",
-        "star": false,
-        "inPool": true,
-        "close": 120.7,
-        "tag": "—",
-        "pattern": "底部整理",
-        "platform": {
-          "type": "杯柄型",
-          "days": 19,
-          "amplitude": 7.5,
-          "riseFromLow": 16.4,
-          "tailRatio": 1.0,
-          "volRatio": 0.5,
-          "segAmps": [
-            5.7,
-            5.0,
-            5.1
-          ],
-          "pivot": 123.7,
-          "distPct": 2.5,
-          "formed": true
-        },
-        "cupHandle": null,
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": false,
-              "val": "120.70 vs MA150 132.84"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "120.70 vs MA200 141.60"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 147.14→141.60"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "126.35 vs 132.84"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "132.84 vs 141.60"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点108.00→现价120.70（+12%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": false,
-              "val": "高点197.95→现价120.70（-39%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 123.7,
-          "distanceToPivotPct": 2.5,
-          "invalidation": 115.12,
-          "volConfirm": 53333.4,
-          "breakoutConfirm": "收盘>123.7 且成交量≥50日均量×1.4（≈53333手）"
-        },
-        "histPct": 15.6,
-        "distHigh250": -39.0,
-        "distMain": 2.5,
-        "mfDays": 4,
-        "sectorFit": "板块中性",
-        "advice": "底部整理·距枢轴2.5%｜水温中性·谨慎关注｜板块中性｜主力10日净流入4天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "000538.SZ",
         "name": "云南白药",
         "sector": "中成药",
@@ -13627,6 +13542,91 @@
           "volConfirm": 123358.0,
           "formed": false
         },
+        "weekly": null
+      },
+      {
+        "code": "600436.SH",
+        "name": "片仔癀",
+        "sector": "中成药",
+        "star": false,
+        "inPool": true,
+        "close": 120.7,
+        "tag": "—",
+        "pattern": "底部整理",
+        "platform": {
+          "type": "杯柄型",
+          "days": 19,
+          "amplitude": 7.5,
+          "riseFromLow": 16.4,
+          "tailRatio": 1.0,
+          "volRatio": 0.5,
+          "segAmps": [
+            5.7,
+            5.0,
+            5.1
+          ],
+          "pivot": 123.7,
+          "distPct": 2.5,
+          "formed": true
+        },
+        "cupHandle": null,
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": false,
+              "val": "120.70 vs MA150 132.84"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "120.70 vs MA200 141.60"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 147.14→141.60"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "126.35 vs 132.84"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "132.84 vs 141.60"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点108.00→现价120.70（+12%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": false,
+              "val": "高点197.95→现价120.70（-39%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 123.7,
+          "distanceToPivotPct": 2.5,
+          "invalidation": 115.12,
+          "volConfirm": 53333.4,
+          "breakoutConfirm": "收盘>123.7 且成交量≥50日均量×1.4（≈53333手）"
+        },
+        "histPct": 15.6,
+        "distHigh250": -39.0,
+        "distMain": 2.5,
+        "mfDays": 4,
+        "sectorFit": "板块中性",
+        "advice": "底部整理·距枢轴2.5%｜水温中性·谨慎关注｜板块中性｜主力10日净流入4天",
+        "daily": null,
         "weekly": null
       },
       {
@@ -15519,10 +15519,10 @@
           "distHigh60": -6.4,
           "ret20": -3.6,
           "tier": "低位",
-          "share5Pct": -0.63,
-          "share20Pct": 8.56,
-          "shareNote": "份额5日-0.6%",
-          "hvPct1y": 10.8,
+          "share5Pct": -3.31,
+          "share20Pct": 4.53,
+          "shareNote": "份额5日-3.3%",
+          "hvPct1y": 12.8,
           "status": "低位观察（份额流出）"
         },
         {
@@ -15534,10 +15534,10 @@
           "distHigh60": -15.3,
           "ret20": -7.9,
           "tier": "低位",
-          "share5Pct": 2.04,
-          "share20Pct": 5.5,
-          "shareNote": "份额5日+2.0%",
-          "hvPct1y": 19.2,
+          "share5Pct": 1.46,
+          "share20Pct": 4.93,
+          "shareNote": "份额5日+1.5%",
+          "hvPct1y": 20.8,
           "status": "✅趋势候选"
         },
         {
@@ -15549,10 +15549,10 @@
           "distHigh60": -21.5,
           "ret20": -9.2,
           "tier": "低位",
-          "share5Pct": 4.24,
-          "share20Pct": 13.06,
-          "shareNote": "份额5日+4.2%",
-          "hvPct1y": 27.2,
+          "share5Pct": 2.88,
+          "share20Pct": 8.78,
+          "shareNote": "份额5日+2.9%",
+          "hvPct1y": 31.6,
           "status": "✅趋势候选"
         },
         {
@@ -15564,10 +15564,10 @@
           "distHigh60": -20.9,
           "ret20": -6.3,
           "tier": "低位",
-          "share5Pct": 22.16,
-          "share20Pct": 29.0,
-          "shareNote": "份额5日+22.2%",
-          "hvPct1y": 49.2,
+          "share5Pct": 14.54,
+          "share20Pct": 23.0,
+          "shareNote": "份额5日+14.5%",
+          "hvPct1y": 55.2,
           "status": "✅趋势候选"
         },
         {
@@ -15579,10 +15579,10 @@
           "distHigh60": -35.4,
           "ret20": -15.8,
           "tier": "低位",
-          "share5Pct": 14.4,
-          "share20Pct": 20.52,
-          "shareNote": "份额5日+14.4%",
-          "hvPct1y": 47.6,
+          "share5Pct": 12.16,
+          "share20Pct": 16.89,
+          "shareNote": "份额5日+12.2%",
+          "hvPct1y": 48.0,
           "status": "✅趋势候选"
         },
         {
@@ -15594,10 +15594,10 @@
           "distHigh60": -32.2,
           "ret20": -16.2,
           "tier": "低位",
-          "share5Pct": 8.45,
-          "share20Pct": 9.38,
-          "shareNote": "份额5日+8.4%",
-          "hvPct1y": 43.6,
+          "share5Pct": 10.31,
+          "share20Pct": 11.06,
+          "shareNote": "份额5日+10.3%",
+          "hvPct1y": 49.2,
           "status": "✅趋势候选"
         },
         {
@@ -15612,7 +15612,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 22.0,
+          "hvPct1y": 25.6,
           "status": "✅趋势候选"
         },
         {
@@ -15627,7 +15627,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 21.6,
+          "hvPct1y": 22.0,
           "status": "✅趋势候选"
         },
         {
@@ -15642,7 +15642,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 34.8,
+          "hvPct1y": 38.8,
           "status": "✅趋势候选"
         }
       ],
@@ -15768,10 +15768,10 @@
         "distHigh60": -6.4,
         "ret20": -3.6,
         "tier": "低位",
-        "share5Pct": -0.63,
-        "share20Pct": 8.56,
-        "shareNote": "份额5日-0.6%",
-        "hvPct1y": 10.8,
+        "share5Pct": -3.31,
+        "share20Pct": 4.53,
+        "shareNote": "份额5日-3.3%",
+        "hvPct1y": 12.8,
         "status": "低位观察（份额流出）"
       },
       {
@@ -15783,10 +15783,10 @@
         "distHigh60": -15.3,
         "ret20": -7.9,
         "tier": "低位",
-        "share5Pct": 2.04,
-        "share20Pct": 5.5,
-        "shareNote": "份额5日+2.0%",
-        "hvPct1y": 19.2,
+        "share5Pct": 1.46,
+        "share20Pct": 4.93,
+        "shareNote": "份额5日+1.5%",
+        "hvPct1y": 20.8,
         "status": "✅趋势候选"
       },
       {
@@ -15798,10 +15798,10 @@
         "distHigh60": -21.5,
         "ret20": -9.2,
         "tier": "低位",
-        "share5Pct": 4.24,
-        "share20Pct": 13.06,
-        "shareNote": "份额5日+4.2%",
-        "hvPct1y": 27.2,
+        "share5Pct": 2.88,
+        "share20Pct": 8.78,
+        "shareNote": "份额5日+2.9%",
+        "hvPct1y": 31.6,
         "status": "✅趋势候选"
       },
       {
@@ -15813,10 +15813,10 @@
         "distHigh60": -20.9,
         "ret20": -6.3,
         "tier": "低位",
-        "share5Pct": 22.16,
-        "share20Pct": 29.0,
-        "shareNote": "份额5日+22.2%",
-        "hvPct1y": 49.2,
+        "share5Pct": 14.54,
+        "share20Pct": 23.0,
+        "shareNote": "份额5日+14.5%",
+        "hvPct1y": 55.2,
         "status": "✅趋势候选"
       },
       {
@@ -15828,10 +15828,10 @@
         "distHigh60": -35.4,
         "ret20": -15.8,
         "tier": "低位",
-        "share5Pct": 14.4,
-        "share20Pct": 20.52,
-        "shareNote": "份额5日+14.4%",
-        "hvPct1y": 47.6,
+        "share5Pct": 12.16,
+        "share20Pct": 16.89,
+        "shareNote": "份额5日+12.2%",
+        "hvPct1y": 48.0,
         "status": "✅趋势候选"
       },
       {
@@ -15843,10 +15843,10 @@
         "distHigh60": -32.2,
         "ret20": -16.2,
         "tier": "低位",
-        "share5Pct": 8.45,
-        "share20Pct": 9.38,
-        "shareNote": "份额5日+8.4%",
-        "hvPct1y": 43.6,
+        "share5Pct": 10.31,
+        "share20Pct": 11.06,
+        "shareNote": "份额5日+10.3%",
+        "hvPct1y": 49.2,
         "status": "✅趋势候选"
       },
       {
@@ -15861,7 +15861,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 22.0,
+        "hvPct1y": 25.6,
         "status": "✅趋势候选"
       },
       {
@@ -15876,7 +15876,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 21.6,
+        "hvPct1y": 22.0,
         "status": "✅趋势候选"
       },
       {
@@ -15891,7 +15891,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 34.8,
+        "hvPct1y": 38.8,
         "status": "✅趋势候选"
       }
     ],
@@ -16086,7 +16086,7 @@
     "trade_date": "2026-10-12",
     "window": 120,
     "baseIndex": "上证综指",
-    "indexSrc": "eastmoney",
+    "indexSrc": "tushare",
     "items": [
       {
         "code": "688029.SH",
@@ -17671,139 +17671,6 @@
         "daysUsed": 120
       },
       {
-        "code": "600031.SH",
-        "name": "三一重工",
-        "group": "watch",
-        "industry": "工程机械",
-        "sectorName": "工程机械(合成)",
-        "sectorSrc": "tushare合成",
-        "reverseCount": 11,
-        "reverseDays": [
-          {
-            "date": "10/12",
-            "pct": 3.4,
-            "basePct": -0.6,
-            "base": "板块",
-            "idxPct": -0.4,
-            "secPct": -0.6,
-            "volX": 1.2,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "09/14",
-            "pct": 0.7,
-            "basePct": -0.2,
-            "base": "板块",
-            "idxPct": -0.1,
-            "secPct": -0.2,
-            "volX": 0.7,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "09/04",
-            "pct": 0.3,
-            "basePct": -0.3,
-            "base": "大盘",
-            "idxPct": -0.3,
-            "secPct": -0.1,
-            "volX": 0.7,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "08/28",
-            "pct": 0.2,
-            "basePct": -0.1,
-            "base": "大盘",
-            "idxPct": -0.1,
-            "secPct": -0.1,
-            "volX": 0.7,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/30",
-            "pct": 2.1,
-            "basePct": -1.0,
-            "base": "板块",
-            "idxPct": -0.6,
-            "secPct": -1.0,
-            "volX": 1.1,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/07",
-            "pct": 2.9,
-            "basePct": -1.8,
-            "base": "板块",
-            "idxPct": -1.3,
-            "secPct": -1.8,
-            "volX": 1.5,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "07/06",
-            "pct": 1.8,
-            "basePct": -1.6,
-            "base": "板块",
-            "idxPct": -0.1,
-            "secPct": -1.6,
-            "volX": 0.9,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "06/04",
-            "pct": 1.0,
-            "basePct": -0.8,
-            "base": "板块",
-            "idxPct": -0.6,
-            "secPct": -0.8,
-            "volX": 0.9,
-            "big": false,
-            "ann": true
-          },
-          {
-            "date": "05/29",
-            "pct": 0.2,
-            "basePct": -1.9,
-            "base": "板块",
-            "idxPct": -0.7,
-            "secPct": -1.9,
-            "volX": 1.2,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "05/26",
-            "pct": 0.3,
-            "basePct": -1.9,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -1.9,
-            "volX": 1.1,
-            "big": false,
-            "ann": false
-          },
-          {
-            "date": "05/20",
-            "pct": 0.5,
-            "basePct": -1.2,
-            "base": "板块",
-            "idxPct": -0.2,
-            "secPct": -1.2,
-            "volX": 0.7,
-            "big": false,
-            "ann": false
-          }
-        ],
-        "daysUsed": 120
-      },
-      {
         "code": "600309.SH",
         "name": "万华化学",
         "group": "watch",
@@ -18192,6 +18059,117 @@
         "daysUsed": 120
       },
       {
+        "code": "600031.SH",
+        "name": "三一重工",
+        "group": "watch",
+        "industry": "工程机械",
+        "sectorName": "工程机械",
+        "sectorSrc": "eastmoney",
+        "reverseCount": 9,
+        "reverseDays": [
+          {
+            "date": "10/12",
+            "pct": 3.4,
+            "basePct": -0.9,
+            "base": "板块",
+            "idxPct": -0.4,
+            "secPct": -0.9,
+            "volX": 1.2,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "08/28",
+            "pct": 0.2,
+            "basePct": -0.1,
+            "base": "大盘",
+            "idxPct": -0.1,
+            "secPct": -0.0,
+            "volX": 0.7,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/30",
+            "pct": 2.1,
+            "basePct": -0.7,
+            "base": "板块",
+            "idxPct": -0.6,
+            "secPct": -0.7,
+            "volX": 1.1,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/07",
+            "pct": 2.9,
+            "basePct": -1.3,
+            "base": "板块",
+            "idxPct": -1.3,
+            "secPct": -1.3,
+            "volX": 1.5,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "07/06",
+            "pct": 1.8,
+            "basePct": -1.5,
+            "base": "板块",
+            "idxPct": -0.1,
+            "secPct": -1.5,
+            "volX": 0.9,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "06/04",
+            "pct": 1.0,
+            "basePct": -0.6,
+            "base": "大盘",
+            "idxPct": -0.6,
+            "secPct": -0.6,
+            "volX": 0.9,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "05/29",
+            "pct": 0.2,
+            "basePct": -1.6,
+            "base": "板块",
+            "idxPct": -0.7,
+            "secPct": -1.6,
+            "volX": 1.2,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/26",
+            "pct": 0.3,
+            "basePct": -1.3,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -1.3,
+            "volX": 1.1,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/20",
+            "pct": 0.5,
+            "basePct": -0.8,
+            "base": "板块",
+            "idxPct": -0.2,
+            "secPct": -0.8,
+            "volX": 0.7,
+            "big": false,
+            "ann": false
+          }
+        ],
+        "daysUsed": 120
+      },
+      {
         "code": "600276.SH",
         "name": "恒瑞医药",
         "group": "hold",
@@ -18484,7 +18462,7 @@
     ],
     "unmapped": [],
     "unmappedBoards": [],
-    "note": "逆行日流水（2026-09-26 三条件交集口径，用户正式指令）：逆行日=上证当日跌 且 所属板块当日跌 且 个股收红或平手（pct≥0），三者缺一不可；收绿一律不算（原\"抗跌\"类别已废除）；基准跌幅不设幅度下限；逐日列出 日期+个股涨幅+大盘/板块跌幅；大涨≥3%且放量≥2倍20日均量加粗标⭐；公告日打*号备注（不剔除，消息面强势如实展示由读者自判）；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级Tushare等权合成，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年）；本期数据源：大盘=东财，板块=含tushare合成指数降级（标注（合成））"
+    "note": "逆行日流水（2026-09-26 三条件交集口径，用户正式指令）：逆行日=上证当日跌 且 所属板块当日跌 且 个股收红或平手（pct≥0），三者缺一不可；收绿一律不算（原\"抗跌\"类别已废除）；基准跌幅不设幅度下限；逐日列出 日期+个股涨幅+大盘/板块跌幅；大涨≥3%且放量≥2倍20日均量加粗标⭐；公告日打*号备注（不剔除，消息面强势如实展示由读者自判）；基准=上证综指+所属行业板块（东财行业板块优先，限流时降级Tushare等权合成，名称带（合成）者；东财行业为近似映射：医疗保健→医疗器械、红黄酒→食品饮料、旅游服务→社会服务）；个股涨跌幅=日线收盘环比（未复权，除权日略有误差）；窗口=近120个交易日（约半年）；本期数据源：大盘=tushare，板块=含tushare合成指数降级（标注（合成））"
   },
   "longWindow": {
     "window": "half",
