@@ -12160,6 +12160,94 @@
         "weekly": null
       },
       {
+        "code": "601288.SH",
+        "name": "农业银行",
+        "sector": "银行",
+        "star": false,
+        "inPool": true,
+        "close": 7.24,
+        "tag": "—",
+        "pattern": "杯柄型",
+        "platform": null,
+        "cupHandle": {
+          "type": "杯柄型",
+          "days": 15,
+          "totalDays": 107,
+          "cupDepth": 20.6,
+          "depthOk": true,
+          "depthMax": 22.0,
+          "amplitude": 7.5,
+          "tailRatio": 1.09,
+          "volRatio": 0.85,
+          "pivot": 7.31,
+          "distPct": 1.0,
+          "invalidation": 6.8,
+          "volConfirm": 5443601.2,
+          "branch": "下跌反转",
+          "preDist": -16.0,
+          "brkNeedVol": 4730899.6,
+          "formed": true
+        },
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": true,
+              "val": "7.24 vs MA150 6.67"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": true,
+              "val": "7.24 vs MA200 6.84"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 6.96→6.84"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": true,
+              "val": "6.83 vs 6.67"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "6.67 vs 6.84"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点5.90→现价7.24（+23%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点8.59→现价7.24（-16%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 7.31,
+          "distanceToPivotPct": 1.0,
+          "invalidation": 6.8,
+          "volConfirm": 5443601.2,
+          "breakoutConfirm": "收盘≥7.31 且单日成交量≥柄均量×1.5（≈4730900手）"
+        },
+        "histPct": 72.8,
+        "distHigh250": -15.7,
+        "distMain": 1.0,
+        "mfDays": 4,
+        "sectorFit": "板块中性",
+        "advice": "杯柄型·距枢轴1.0%｜水温偏冷·只观察｜板块中性｜主力10日净流入4天",
+        "daily": null,
+        "weekly": null
+      },
+      {
         "code": "601916.SH",
         "name": "浙商银行",
         "sector": "银行",
@@ -12251,94 +12339,6 @@
         },
         "histPct": 42.4,
         "distHigh250": -6.0,
-        "distMain": 1.0,
-        "mfDays": 4,
-        "sectorFit": "板块中性",
-        "advice": "杯柄型·距枢轴1.0%｜水温偏冷·只观察｜板块中性｜主力10日净流入4天",
-        "daily": null,
-        "weekly": null
-      },
-      {
-        "code": "601288.SH",
-        "name": "农业银行",
-        "sector": "银行",
-        "star": false,
-        "inPool": true,
-        "close": 7.24,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": null,
-        "cupHandle": {
-          "type": "杯柄型",
-          "days": 15,
-          "totalDays": 107,
-          "cupDepth": 20.6,
-          "depthOk": true,
-          "depthMax": 22.0,
-          "amplitude": 7.5,
-          "tailRatio": 1.09,
-          "volRatio": 0.85,
-          "pivot": 7.31,
-          "distPct": 1.0,
-          "invalidation": 6.8,
-          "volConfirm": 5443601.2,
-          "branch": "下跌反转",
-          "preDist": -16.0,
-          "brkNeedVol": 4730899.6,
-          "formed": true
-        },
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": true,
-              "val": "7.24 vs MA150 6.67"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": true,
-              "val": "7.24 vs MA200 6.84"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 6.96→6.84"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": true,
-              "val": "6.83 vs 6.67"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "6.67 vs 6.84"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点5.90→现价7.24（+23%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点8.59→现价7.24（-16%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 7.31,
-          "distanceToPivotPct": 1.0,
-          "invalidation": 6.8,
-          "volConfirm": 5443601.2,
-          "breakoutConfirm": "收盘≥7.31 且单日成交量≥柄均量×1.5（≈4730900手）"
-        },
-        "histPct": 72.8,
-        "distHigh250": -15.7,
         "distMain": 1.0,
         "mfDays": 4,
         "sectorFit": "板块中性",
