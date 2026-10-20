@@ -14070,91 +14070,6 @@
         "weekly": null
       },
       {
-        "code": "000883.SZ",
-        "name": "湖北能源",
-        "sector": "水力发电",
-        "star": false,
-        "inPool": true,
-        "close": 4.34,
-        "tag": "—",
-        "pattern": "底部整理",
-        "platform": {
-          "type": "底部平台型",
-          "days": 14,
-          "amplitude": 6.5,
-          "riseFromLow": 7.1,
-          "tailRatio": 0.99,
-          "volRatio": 0.99,
-          "segAmps": [
-            6.5,
-            5.8,
-            5.1
-          ],
-          "pivot": 4.58,
-          "distPct": 5.5,
-          "formed": true
-        },
-        "cupHandle": null,
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": false,
-              "val": "4.34 vs MA150 4.72"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "4.34 vs MA200 4.69"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 4.71→4.69"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "4.53 vs 4.72"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": true,
-              "val": "4.72 vs 4.69"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点4.32→现价4.34（+0%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点5.42→现价4.34（-20%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 4.58,
-          "distanceToPivotPct": 5.5,
-          "invalidation": 4.3,
-          "volConfirm": 381645.4,
-          "breakoutConfirm": "收盘>4.58 且成交量≥50日均量×1.4（≈381645手）"
-        },
-        "histPct": 2.0,
-        "distHigh250": -19.9,
-        "distMain": 5.5,
-        "mfDays": 3,
-        "sectorFit": "板块配合✅",
-        "advice": "底部整理·距枢轴5.5%｜水温偏冷·只观察｜板块配合✅｜主力10日净流入3天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "300339.SZ",
         "name": "润和软件",
         "sector": "软件服务",
@@ -14236,6 +14151,91 @@
         "mfDays": 3,
         "sectorFit": "板块不配合⚠️",
         "advice": "底部整理·距枢轴5.5%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "000883.SZ",
+        "name": "湖北能源",
+        "sector": "水力发电",
+        "star": false,
+        "inPool": true,
+        "close": 4.34,
+        "tag": "—",
+        "pattern": "底部整理",
+        "platform": {
+          "type": "底部平台型",
+          "days": 14,
+          "amplitude": 6.5,
+          "riseFromLow": 7.1,
+          "tailRatio": 0.99,
+          "volRatio": 0.99,
+          "segAmps": [
+            6.5,
+            5.8,
+            5.1
+          ],
+          "pivot": 4.58,
+          "distPct": 5.5,
+          "formed": true
+        },
+        "cupHandle": null,
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": false,
+              "val": "4.34 vs MA150 4.72"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "4.34 vs MA200 4.69"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 4.71→4.69"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "4.53 vs 4.72"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": true,
+              "val": "4.72 vs 4.69"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点4.32→现价4.34（+0%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点5.42→现价4.34（-20%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 4.58,
+          "distanceToPivotPct": 5.5,
+          "invalidation": 4.3,
+          "volConfirm": 381645.4,
+          "breakoutConfirm": "收盘>4.58 且成交量≥50日均量×1.4（≈381645手）"
+        },
+        "histPct": 2.0,
+        "distHigh250": -19.9,
+        "distMain": 5.5,
+        "mfDays": 3,
+        "sectorFit": "板块配合✅",
+        "advice": "底部整理·距枢轴5.5%｜水温偏冷·只观察｜板块配合✅｜主力10日净流入3天",
         "daily": null,
         "weekly": null
       },
