@@ -11875,94 +11875,6 @@
         "weekly": null
       },
       {
-        "code": "600803.SH",
-        "name": "新奥股份",
-        "sector": "供气供热",
-        "star": false,
-        "inPool": true,
-        "close": 19.92,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": null,
-        "cupHandle": {
-          "type": "杯柄型",
-          "days": 20,
-          "totalDays": 93,
-          "cupDepth": 22.0,
-          "depthOk": true,
-          "depthMax": 22.0,
-          "amplitude": 10.9,
-          "tailRatio": 1.02,
-          "volRatio": 0.8,
-          "pivot": 20.3,
-          "distPct": 1.9,
-          "invalidation": 18.3,
-          "volConfirm": 112180.7,
-          "branch": "下跌反转",
-          "preDist": -20.9,
-          "brkNeedVol": 111690.4,
-          "formed": true
-        },
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": true,
-              "val": "19.92 vs MA150 19.08"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": true,
-              "val": "19.92 vs MA200 19.38"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 19.62→19.38"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "18.59 vs 19.08"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "19.08 vs 19.38"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": true,
-              "val": "低点15.42→现价19.92（+29%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点24.05→现价19.92（-17%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 20.3,
-          "distanceToPivotPct": 1.9,
-          "invalidation": 18.3,
-          "volConfirm": 112180.7,
-          "breakoutConfirm": "收盘≥20.3 且单日成交量≥柄均量×1.5（≈111690手）"
-        },
-        "histPct": 58.0,
-        "distHigh250": -17.2,
-        "distMain": 1.9,
-        "mfDays": 3,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴1.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "601288.SH",
         "name": "农业银行",
         "sector": "银行",
@@ -12047,6 +11959,94 @@
         "mfDays": 4,
         "sectorFit": "板块中性",
         "advice": "杯柄型·距枢轴1.9%｜水温偏冷·只观察｜板块中性｜主力10日净流入4天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "600803.SH",
+        "name": "新奥股份",
+        "sector": "供气供热",
+        "star": false,
+        "inPool": true,
+        "close": 19.92,
+        "tag": "—",
+        "pattern": "杯柄型",
+        "platform": null,
+        "cupHandle": {
+          "type": "杯柄型",
+          "days": 20,
+          "totalDays": 93,
+          "cupDepth": 22.0,
+          "depthOk": true,
+          "depthMax": 22.0,
+          "amplitude": 10.9,
+          "tailRatio": 1.02,
+          "volRatio": 0.8,
+          "pivot": 20.3,
+          "distPct": 1.9,
+          "invalidation": 18.3,
+          "volConfirm": 112180.7,
+          "branch": "下跌反转",
+          "preDist": -20.9,
+          "brkNeedVol": 111690.4,
+          "formed": true
+        },
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": true,
+              "val": "19.92 vs MA150 19.08"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": true,
+              "val": "19.92 vs MA200 19.38"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 19.62→19.38"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "18.59 vs 19.08"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "19.08 vs 19.38"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": true,
+              "val": "低点15.42→现价19.92（+29%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点24.05→现价19.92（-17%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 20.3,
+          "distanceToPivotPct": 1.9,
+          "invalidation": 18.3,
+          "volConfirm": 112180.7,
+          "breakoutConfirm": "收盘≥20.3 且单日成交量≥柄均量×1.5（≈111690手）"
+        },
+        "histPct": 58.0,
+        "distHigh250": -17.2,
+        "distMain": 1.9,
+        "mfDays": 3,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "杯柄型·距枢轴1.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
         "daily": null,
         "weekly": null
       },
@@ -12362,94 +12362,6 @@
         "weekly": null
       },
       {
-        "code": "600893.SH",
-        "name": "航发动力",
-        "sector": "航空",
-        "star": false,
-        "inPool": true,
-        "close": 39.3,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": null,
-        "cupHandle": {
-          "type": "杯柄型",
-          "days": 17,
-          "totalDays": 76,
-          "cupDepth": 21.5,
-          "depthOk": true,
-          "depthMax": 22.0,
-          "amplitude": 12.0,
-          "tailRatio": 1.09,
-          "volRatio": 0.75,
-          "pivot": 40.83,
-          "distPct": 3.9,
-          "invalidation": 36.47,
-          "volConfirm": 423623.5,
-          "branch": "下跌反转",
-          "preDist": -36.3,
-          "brkNeedVol": 396272.9,
-          "formed": true
-        },
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": false,
-              "val": "39.30 vs MA150 43.41"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "39.30 vs MA200 43.35"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": true,
-              "val": "MA200 43.20→43.35"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "37.80 vs 43.41"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": true,
-              "val": "43.41 vs 43.35"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点32.33→现价39.30（+22%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": false,
-              "val": "高点62.09→现价39.30（-37%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 40.83,
-          "distanceToPivotPct": 3.9,
-          "invalidation": 36.47,
-          "volConfirm": 423623.5,
-          "breakoutConfirm": "收盘≥40.83 且单日成交量≥柄均量×1.5（≈396273手）"
-        },
-        "histPct": 42.0,
-        "distHigh250": -36.7,
-        "distMain": 3.9,
-        "mfDays": 2,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴3.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入2天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "603345.SH",
         "name": "安井食品",
         "sector": "食品",
@@ -12534,6 +12446,94 @@
         "mfDays": 3,
         "sectorFit": "板块不配合⚠️",
         "advice": "杯柄型·距枢轴3.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "600893.SH",
+        "name": "航发动力",
+        "sector": "航空",
+        "star": false,
+        "inPool": true,
+        "close": 39.3,
+        "tag": "—",
+        "pattern": "杯柄型",
+        "platform": null,
+        "cupHandle": {
+          "type": "杯柄型",
+          "days": 17,
+          "totalDays": 76,
+          "cupDepth": 21.5,
+          "depthOk": true,
+          "depthMax": 22.0,
+          "amplitude": 12.0,
+          "tailRatio": 1.09,
+          "volRatio": 0.75,
+          "pivot": 40.83,
+          "distPct": 3.9,
+          "invalidation": 36.47,
+          "volConfirm": 423623.5,
+          "branch": "下跌反转",
+          "preDist": -36.3,
+          "brkNeedVol": 396272.9,
+          "formed": true
+        },
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": false,
+              "val": "39.30 vs MA150 43.41"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "39.30 vs MA200 43.35"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": true,
+              "val": "MA200 43.20→43.35"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "37.80 vs 43.41"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": true,
+              "val": "43.41 vs 43.35"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点32.33→现价39.30（+22%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": false,
+              "val": "高点62.09→现价39.30（-37%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 40.83,
+          "distanceToPivotPct": 3.9,
+          "invalidation": 36.47,
+          "volConfirm": 423623.5,
+          "breakoutConfirm": "收盘≥40.83 且单日成交量≥柄均量×1.5（≈396273手）"
+        },
+        "histPct": 42.0,
+        "distHigh250": -36.7,
+        "distMain": 3.9,
+        "mfDays": 2,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "杯柄型·距枢轴3.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入2天",
         "daily": null,
         "weekly": null
       },
@@ -12818,6 +12818,91 @@
         "weekly": null
       },
       {
+        "code": "002271.SZ",
+        "name": "东方雨虹",
+        "sector": "其他建材",
+        "star": false,
+        "inPool": true,
+        "close": 10.49,
+        "tag": "—",
+        "pattern": "底部整理",
+        "platform": {
+          "type": "底部平台型",
+          "days": 20,
+          "amplitude": 10.2,
+          "riseFromLow": 1.7,
+          "tailRatio": 0.74,
+          "volRatio": 0.72,
+          "segAmps": [
+            9.3,
+            9.0,
+            6.7
+          ],
+          "pivot": 11.04,
+          "distPct": 5.2,
+          "formed": true
+        },
+        "cupHandle": null,
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": false,
+              "val": "10.49 vs MA150 12.78"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "10.49 vs MA200 13.60"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 13.86→13.60"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "10.91 vs 12.78"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "12.78 vs 13.60"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点10.11→现价10.49（+4%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": false,
+              "val": "高点18.90→现价10.49（-44%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 11.04,
+          "distanceToPivotPct": 5.2,
+          "invalidation": 10.02,
+          "volConfirm": 638236.6,
+          "breakoutConfirm": "收盘>11.04 且成交量≥50日均量×1.4（≈638237手）"
+        },
+        "histPct": 4.4,
+        "distHigh250": -44.5,
+        "distMain": 5.2,
+        "mfDays": 2,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "底部整理·距枢轴5.2%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入2天",
+        "daily": null,
+        "weekly": null
+      },
+      {
         "code": "601618.SH",
         "name": "中国中冶",
         "sector": "建筑工程",
@@ -12925,91 +13010,6 @@
           "volConfirm": 1106221.2,
           "formed": false
         },
-        "weekly": null
-      },
-      {
-        "code": "002271.SZ",
-        "name": "东方雨虹",
-        "sector": "其他建材",
-        "star": false,
-        "inPool": true,
-        "close": 10.49,
-        "tag": "—",
-        "pattern": "底部整理",
-        "platform": {
-          "type": "底部平台型",
-          "days": 20,
-          "amplitude": 10.2,
-          "riseFromLow": 1.7,
-          "tailRatio": 0.74,
-          "volRatio": 0.72,
-          "segAmps": [
-            9.3,
-            9.0,
-            6.7
-          ],
-          "pivot": 11.04,
-          "distPct": 5.2,
-          "formed": true
-        },
-        "cupHandle": null,
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": false,
-              "val": "10.49 vs MA150 12.78"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "10.49 vs MA200 13.60"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 13.86→13.60"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "10.91 vs 12.78"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "12.78 vs 13.60"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点10.11→现价10.49（+4%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": false,
-              "val": "高点18.90→现价10.49（-44%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 11.04,
-          "distanceToPivotPct": 5.2,
-          "invalidation": 10.02,
-          "volConfirm": 638236.6,
-          "breakoutConfirm": "收盘>11.04 且成交量≥50日均量×1.4（≈638237手）"
-        },
-        "histPct": 4.4,
-        "distHigh250": -44.5,
-        "distMain": 5.2,
-        "mfDays": 2,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "底部整理·距枢轴5.2%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入2天",
-        "daily": null,
         "weekly": null
       },
       {
@@ -14266,87 +14266,6 @@
         "weekly": null
       },
       {
-        "code": "600938.SH",
-        "name": "中国海油",
-        "sector": "石油开采",
-        "star": false,
-        "inPool": true,
-        "close": 33.8,
-        "tag": "—",
-        "pattern": "长平台整理",
-        "platform": null,
-        "cupHandle": null,
-        "flag": null,
-        "longPlat": {
-          "type": "长平台整理",
-          "days": 49,
-          "amplitude": 20.5,
-          "drift": 4.4,
-          "volRatio": 0.71,
-          "pivot": 36.14,
-          "distPct": 6.9,
-          "invalidation": 30.0,
-          "volConfirm": 702353.9,
-          "formed": true
-        },
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": false,
-              "val": "33.80 vs MA150 35.03"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "33.80 vs MA200 33.93"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": true,
-              "val": "MA200 33.38→33.93"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "33.38 vs 35.03"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": true,
-              "val": "35.03 vs 33.93"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": true,
-              "val": "低点25.59→现价33.80（+32%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点43.41→现价33.80（-22%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 36.14,
-          "distanceToPivotPct": 6.9,
-          "invalidation": 30.0,
-          "volConfirm": 702353.9,
-          "breakoutConfirm": "收盘>36.14 且成交量≥50日均量×1.4（≈702354手）"
-        },
-        "histPct": 58.4,
-        "distHigh250": -22.1,
-        "distMain": 6.9,
-        "mfDays": 3,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "长平台整理·距枢轴6.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "600926.SH",
         "name": "杭州银行",
         "sector": "银行",
@@ -14424,6 +14343,87 @@
         "mfDays": 5,
         "sectorFit": "板块中性",
         "advice": "长平台整理·距枢轴6.9%｜水温偏冷·只观察｜板块中性｜主力10日净流入5天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "600938.SH",
+        "name": "中国海油",
+        "sector": "石油开采",
+        "star": false,
+        "inPool": true,
+        "close": 33.8,
+        "tag": "—",
+        "pattern": "长平台整理",
+        "platform": null,
+        "cupHandle": null,
+        "flag": null,
+        "longPlat": {
+          "type": "长平台整理",
+          "days": 49,
+          "amplitude": 20.5,
+          "drift": 4.4,
+          "volRatio": 0.71,
+          "pivot": 36.14,
+          "distPct": 6.9,
+          "invalidation": 30.0,
+          "volConfirm": 702353.9,
+          "formed": true
+        },
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": false,
+              "val": "33.80 vs MA150 35.03"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "33.80 vs MA200 33.93"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": true,
+              "val": "MA200 33.38→33.93"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "33.38 vs 35.03"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": true,
+              "val": "35.03 vs 33.93"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": true,
+              "val": "低点25.59→现价33.80（+32%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点43.41→现价33.80（-22%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 36.14,
+          "distanceToPivotPct": 6.9,
+          "invalidation": 30.0,
+          "volConfirm": 702353.9,
+          "breakoutConfirm": "收盘>36.14 且成交量≥50日均量×1.4（≈702354手）"
+        },
+        "histPct": 58.4,
+        "distHigh250": -22.1,
+        "distMain": 6.9,
+        "mfDays": 3,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "长平台整理·距枢轴6.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
         "daily": null,
         "weekly": null
       },
@@ -15172,10 +15172,10 @@
           "distHigh60": -9.6,
           "ret20": -6.8,
           "tier": "低位",
-          "share5Pct": 55.69,
-          "share20Pct": 58.42,
-          "shareNote": "份额5日+55.7%",
-          "hvPct1y": 15.6,
+          "share5Pct": 70.76,
+          "share20Pct": 71.03,
+          "shareNote": "份额5日+70.8%",
+          "hvPct1y": 11.2,
           "status": "✅趋势候选"
         },
         {
@@ -15187,10 +15187,10 @@
           "distHigh60": -20.2,
           "ret20": -13.3,
           "tier": "低位",
-          "share5Pct": 22.31,
-          "share20Pct": 28.27,
-          "shareNote": "份额5日+22.3%",
-          "hvPct1y": 26.8,
+          "share5Pct": 28.43,
+          "share20Pct": 37.55,
+          "shareNote": "份额5日+28.4%",
+          "hvPct1y": 32.0,
           "status": "✅趋势候选"
         },
         {
@@ -15202,10 +15202,10 @@
           "distHigh60": -26.3,
           "ret20": -14.8,
           "tier": "低位",
-          "share5Pct": 9.48,
-          "share20Pct": 10.71,
-          "shareNote": "份额5日+9.5%",
-          "hvPct1y": 38.4,
+          "share5Pct": 13.93,
+          "share20Pct": 13.06,
+          "shareNote": "份额5日+13.9%",
+          "hvPct1y": 37.2,
           "status": "✅趋势候选"
         },
         {
@@ -15217,10 +15217,10 @@
           "distHigh60": -25.9,
           "ret20": -12.2,
           "tier": "低位",
-          "share5Pct": 8.8,
-          "share20Pct": 44.39,
-          "shareNote": "份额5日+8.8%",
-          "hvPct1y": 62.0,
+          "share5Pct": 21.88,
+          "share20Pct": 50.11,
+          "shareNote": "份额5日+21.9%",
+          "hvPct1y": 59.2,
           "status": "✅趋势候选"
         },
         {
@@ -15232,10 +15232,10 @@
           "distHigh60": -40.9,
           "ret20": -22.9,
           "tier": "低位",
-          "share5Pct": 15.1,
-          "share20Pct": 34.37,
-          "shareNote": "份额5日+15.1%",
-          "hvPct1y": 47.2,
+          "share5Pct": 14.32,
+          "share20Pct": 43.61,
+          "shareNote": "份额5日+14.3%",
+          "hvPct1y": 32.4,
           "status": "✅趋势候选"
         },
         {
@@ -15247,10 +15247,10 @@
           "distHigh60": -41.1,
           "ret20": -27.1,
           "tier": "低位",
-          "share5Pct": 19.09,
-          "share20Pct": 38.25,
-          "shareNote": "份额5日+19.1%",
-          "hvPct1y": 44.0,
+          "share5Pct": 24.29,
+          "share20Pct": 43.83,
+          "shareNote": "份额5日+24.3%",
+          "hvPct1y": 47.6,
           "status": "✅趋势候选"
         },
         {
@@ -15265,7 +15265,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 31.2,
+          "hvPct1y": 32.8,
           "status": "✅趋势候选"
         },
         {
@@ -15280,7 +15280,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 34.8,
+          "hvPct1y": 39.6,
           "status": "✅趋势候选"
         },
         {
@@ -15295,7 +15295,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 41.6,
+          "hvPct1y": 44.4,
           "status": "✅趋势候选"
         }
       ],
@@ -15305,7 +15305,7 @@
       "sectors": [],
       "concepts": [
         {
-          "name": "电机Ⅲ",
+          "name": "电机Ⅱ",
           "pctChange": 4.13,
           "totalMvY": 2258.0,
           "upNum": 18,
@@ -15328,7 +15328,7 @@
           ]
         },
         {
-          "name": "电机Ⅱ",
+          "name": "电机Ⅲ",
           "pctChange": 4.13,
           "totalMvY": 2258.0,
           "upNum": 18,
@@ -15389,10 +15389,10 @@
         "distHigh60": -9.6,
         "ret20": -6.8,
         "tier": "低位",
-        "share5Pct": 55.69,
-        "share20Pct": 58.42,
-        "shareNote": "份额5日+55.7%",
-        "hvPct1y": 15.6,
+        "share5Pct": 70.76,
+        "share20Pct": 71.03,
+        "shareNote": "份额5日+70.8%",
+        "hvPct1y": 11.2,
         "status": "✅趋势候选"
       },
       {
@@ -15404,10 +15404,10 @@
         "distHigh60": -20.2,
         "ret20": -13.3,
         "tier": "低位",
-        "share5Pct": 22.31,
-        "share20Pct": 28.27,
-        "shareNote": "份额5日+22.3%",
-        "hvPct1y": 26.8,
+        "share5Pct": 28.43,
+        "share20Pct": 37.55,
+        "shareNote": "份额5日+28.4%",
+        "hvPct1y": 32.0,
         "status": "✅趋势候选"
       },
       {
@@ -15419,10 +15419,10 @@
         "distHigh60": -26.3,
         "ret20": -14.8,
         "tier": "低位",
-        "share5Pct": 9.48,
-        "share20Pct": 10.71,
-        "shareNote": "份额5日+9.5%",
-        "hvPct1y": 38.4,
+        "share5Pct": 13.93,
+        "share20Pct": 13.06,
+        "shareNote": "份额5日+13.9%",
+        "hvPct1y": 37.2,
         "status": "✅趋势候选"
       },
       {
@@ -15434,10 +15434,10 @@
         "distHigh60": -25.9,
         "ret20": -12.2,
         "tier": "低位",
-        "share5Pct": 8.8,
-        "share20Pct": 44.39,
-        "shareNote": "份额5日+8.8%",
-        "hvPct1y": 62.0,
+        "share5Pct": 21.88,
+        "share20Pct": 50.11,
+        "shareNote": "份额5日+21.9%",
+        "hvPct1y": 59.2,
         "status": "✅趋势候选"
       },
       {
@@ -15449,10 +15449,10 @@
         "distHigh60": -40.9,
         "ret20": -22.9,
         "tier": "低位",
-        "share5Pct": 15.1,
-        "share20Pct": 34.37,
-        "shareNote": "份额5日+15.1%",
-        "hvPct1y": 47.2,
+        "share5Pct": 14.32,
+        "share20Pct": 43.61,
+        "shareNote": "份额5日+14.3%",
+        "hvPct1y": 32.4,
         "status": "✅趋势候选"
       },
       {
@@ -15464,10 +15464,10 @@
         "distHigh60": -41.1,
         "ret20": -27.1,
         "tier": "低位",
-        "share5Pct": 19.09,
-        "share20Pct": 38.25,
-        "shareNote": "份额5日+19.1%",
-        "hvPct1y": 44.0,
+        "share5Pct": 24.29,
+        "share20Pct": 43.83,
+        "shareNote": "份额5日+24.3%",
+        "hvPct1y": 47.6,
         "status": "✅趋势候选"
       },
       {
@@ -15482,7 +15482,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 31.2,
+        "hvPct1y": 32.8,
         "status": "✅趋势候选"
       },
       {
@@ -15497,7 +15497,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 34.8,
+        "hvPct1y": 39.6,
         "status": "✅趋势候选"
       },
       {
@@ -15512,7 +15512,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 41.6,
+        "hvPct1y": 44.4,
         "status": "✅趋势候选"
       }
     ],
