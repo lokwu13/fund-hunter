@@ -11875,94 +11875,6 @@
         "weekly": null
       },
       {
-        "code": "600803.SH",
-        "name": "新奥股份",
-        "sector": "供气供热",
-        "star": false,
-        "inPool": true,
-        "close": 19.92,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": null,
-        "cupHandle": {
-          "type": "杯柄型",
-          "days": 20,
-          "totalDays": 93,
-          "cupDepth": 22.0,
-          "depthOk": true,
-          "depthMax": 22.0,
-          "amplitude": 10.9,
-          "tailRatio": 1.02,
-          "volRatio": 0.8,
-          "pivot": 20.3,
-          "distPct": 1.9,
-          "invalidation": 18.3,
-          "volConfirm": 112180.7,
-          "branch": "下跌反转",
-          "preDist": -20.9,
-          "brkNeedVol": 111690.4,
-          "formed": true
-        },
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": true,
-              "val": "19.92 vs MA150 19.08"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": true,
-              "val": "19.92 vs MA200 19.38"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 19.62→19.38"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "18.59 vs 19.08"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "19.08 vs 19.38"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": true,
-              "val": "低点15.42→现价19.92（+29%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点24.05→现价19.92（-17%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 20.3,
-          "distanceToPivotPct": 1.9,
-          "invalidation": 18.3,
-          "volConfirm": 112180.7,
-          "breakoutConfirm": "收盘≥20.3 且单日成交量≥柄均量×1.5（≈111690手）"
-        },
-        "histPct": 58.0,
-        "distHigh250": -17.2,
-        "distMain": 1.9,
-        "mfDays": 3,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴1.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "601288.SH",
         "name": "农业银行",
         "sector": "银行",
@@ -12047,6 +11959,94 @@
         "mfDays": 4,
         "sectorFit": "板块中性",
         "advice": "杯柄型·距枢轴1.9%｜水温偏冷·只观察｜板块中性｜主力10日净流入4天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "600803.SH",
+        "name": "新奥股份",
+        "sector": "供气供热",
+        "star": false,
+        "inPool": true,
+        "close": 19.92,
+        "tag": "—",
+        "pattern": "杯柄型",
+        "platform": null,
+        "cupHandle": {
+          "type": "杯柄型",
+          "days": 20,
+          "totalDays": 93,
+          "cupDepth": 22.0,
+          "depthOk": true,
+          "depthMax": 22.0,
+          "amplitude": 10.9,
+          "tailRatio": 1.02,
+          "volRatio": 0.8,
+          "pivot": 20.3,
+          "distPct": 1.9,
+          "invalidation": 18.3,
+          "volConfirm": 112180.7,
+          "branch": "下跌反转",
+          "preDist": -20.9,
+          "brkNeedVol": 111690.4,
+          "formed": true
+        },
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": true,
+              "val": "19.92 vs MA150 19.08"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": true,
+              "val": "19.92 vs MA200 19.38"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 19.62→19.38"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "18.59 vs 19.08"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "19.08 vs 19.38"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": true,
+              "val": "低点15.42→现价19.92（+29%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点24.05→现价19.92（-17%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 20.3,
+          "distanceToPivotPct": 1.9,
+          "invalidation": 18.3,
+          "volConfirm": 112180.7,
+          "breakoutConfirm": "收盘≥20.3 且单日成交量≥柄均量×1.5（≈111690手）"
+        },
+        "histPct": 58.0,
+        "distHigh250": -17.2,
+        "distMain": 1.9,
+        "mfDays": 3,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "杯柄型·距枢轴1.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
         "daily": null,
         "weekly": null
       },
@@ -12362,94 +12362,6 @@
         "weekly": null
       },
       {
-        "code": "603345.SH",
-        "name": "安井食品",
-        "sector": "食品",
-        "star": false,
-        "inPool": true,
-        "close": 80.95,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": null,
-        "cupHandle": {
-          "type": "杯柄型",
-          "days": 17,
-          "totalDays": 55,
-          "cupDepth": 21.4,
-          "depthOk": true,
-          "depthMax": 22.0,
-          "amplitude": 9.9,
-          "tailRatio": 0.95,
-          "volRatio": 0.69,
-          "pivot": 84.1,
-          "distPct": 3.9,
-          "invalidation": 76.51,
-          "volConfirm": 77824.5,
-          "branch": "下跌反转",
-          "preDist": -17.1,
-          "brkNeedVol": 65618.3,
-          "formed": true
-        },
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": false,
-              "val": "80.95 vs MA150 87.19"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "80.95 vs MA200 87.33"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 87.40→87.33"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "79.39 vs 87.19"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "87.19 vs 87.33"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点69.83→现价80.95（+16%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": false,
-              "val": "高点109.82→现价80.95（-26%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 84.1,
-          "distanceToPivotPct": 3.9,
-          "invalidation": 76.51,
-          "volConfirm": 77824.5,
-          "breakoutConfirm": "收盘≥84.1 且单日成交量≥柄均量×1.5（≈65618手）"
-        },
-        "histPct": 31.6,
-        "distHigh250": -26.3,
-        "distMain": 3.9,
-        "mfDays": 3,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴3.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "600893.SH",
         "name": "航发动力",
         "sector": "航空",
@@ -12534,6 +12446,94 @@
         "mfDays": 2,
         "sectorFit": "板块不配合⚠️",
         "advice": "杯柄型·距枢轴3.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入2天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "603345.SH",
+        "name": "安井食品",
+        "sector": "食品",
+        "star": false,
+        "inPool": true,
+        "close": 80.95,
+        "tag": "—",
+        "pattern": "杯柄型",
+        "platform": null,
+        "cupHandle": {
+          "type": "杯柄型",
+          "days": 17,
+          "totalDays": 55,
+          "cupDepth": 21.4,
+          "depthOk": true,
+          "depthMax": 22.0,
+          "amplitude": 9.9,
+          "tailRatio": 0.95,
+          "volRatio": 0.69,
+          "pivot": 84.1,
+          "distPct": 3.9,
+          "invalidation": 76.51,
+          "volConfirm": 77824.5,
+          "branch": "下跌反转",
+          "preDist": -17.1,
+          "brkNeedVol": 65618.3,
+          "formed": true
+        },
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": false,
+              "val": "80.95 vs MA150 87.19"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "80.95 vs MA200 87.33"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 87.40→87.33"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "79.39 vs 87.19"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "87.19 vs 87.33"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点69.83→现价80.95（+16%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": false,
+              "val": "高点109.82→现价80.95（-26%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 84.1,
+          "distanceToPivotPct": 3.9,
+          "invalidation": 76.51,
+          "volConfirm": 77824.5,
+          "breakoutConfirm": "收盘≥84.1 且单日成交量≥柄均量×1.5（≈65618手）"
+        },
+        "histPct": 31.6,
+        "distHigh250": -26.3,
+        "distMain": 3.9,
+        "mfDays": 3,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "杯柄型·距枢轴3.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
         "daily": null,
         "weekly": null
       },
@@ -12818,91 +12818,6 @@
         "weekly": null
       },
       {
-        "code": "002271.SZ",
-        "name": "东方雨虹",
-        "sector": "其他建材",
-        "star": false,
-        "inPool": true,
-        "close": 10.49,
-        "tag": "—",
-        "pattern": "底部整理",
-        "platform": {
-          "type": "底部平台型",
-          "days": 20,
-          "amplitude": 10.2,
-          "riseFromLow": 1.7,
-          "tailRatio": 0.74,
-          "volRatio": 0.72,
-          "segAmps": [
-            9.3,
-            9.0,
-            6.7
-          ],
-          "pivot": 11.04,
-          "distPct": 5.2,
-          "formed": true
-        },
-        "cupHandle": null,
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": false,
-              "val": "10.49 vs MA150 12.78"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "10.49 vs MA200 13.60"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 13.86→13.60"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "10.91 vs 12.78"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "12.78 vs 13.60"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点10.11→现价10.49（+4%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": false,
-              "val": "高点18.90→现价10.49（-44%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 11.04,
-          "distanceToPivotPct": 5.2,
-          "invalidation": 10.02,
-          "volConfirm": 638236.6,
-          "breakoutConfirm": "收盘>11.04 且成交量≥50日均量×1.4（≈638237手）"
-        },
-        "histPct": 4.4,
-        "distHigh250": -44.5,
-        "distMain": 5.2,
-        "mfDays": 2,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "底部整理·距枢轴5.2%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入2天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "601618.SH",
         "name": "中国中冶",
         "sector": "建筑工程",
@@ -13010,6 +12925,91 @@
           "volConfirm": 1106221.2,
           "formed": false
         },
+        "weekly": null
+      },
+      {
+        "code": "002271.SZ",
+        "name": "东方雨虹",
+        "sector": "其他建材",
+        "star": false,
+        "inPool": true,
+        "close": 10.49,
+        "tag": "—",
+        "pattern": "底部整理",
+        "platform": {
+          "type": "底部平台型",
+          "days": 20,
+          "amplitude": 10.2,
+          "riseFromLow": 1.7,
+          "tailRatio": 0.74,
+          "volRatio": 0.72,
+          "segAmps": [
+            9.3,
+            9.0,
+            6.7
+          ],
+          "pivot": 11.04,
+          "distPct": 5.2,
+          "formed": true
+        },
+        "cupHandle": null,
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": false,
+              "val": "10.49 vs MA150 12.78"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "10.49 vs MA200 13.60"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 13.86→13.60"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "10.91 vs 12.78"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "12.78 vs 13.60"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点10.11→现价10.49（+4%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": false,
+              "val": "高点18.90→现价10.49（-44%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 11.04,
+          "distanceToPivotPct": 5.2,
+          "invalidation": 10.02,
+          "volConfirm": 638236.6,
+          "breakoutConfirm": "收盘>11.04 且成交量≥50日均量×1.4（≈638237手）"
+        },
+        "histPct": 4.4,
+        "distHigh250": -44.5,
+        "distMain": 5.2,
+        "mfDays": 2,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "底部整理·距枢轴5.2%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入2天",
+        "daily": null,
         "weekly": null
       },
       {
@@ -15305,7 +15305,7 @@
       "sectors": [],
       "concepts": [
         {
-          "name": "电机Ⅱ",
+          "name": "电机Ⅲ",
           "pctChange": 4.13,
           "totalMvY": 2258.0,
           "upNum": 18,
@@ -15328,7 +15328,7 @@
           ]
         },
         {
-          "name": "电机Ⅲ",
+          "name": "电机Ⅱ",
           "pctChange": 4.13,
           "totalMvY": 2258.0,
           "upNum": 18,
