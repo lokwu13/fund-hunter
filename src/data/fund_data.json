@@ -12315,6 +12315,94 @@
         "weekly": null
       },
       {
+        "code": "600893.SH",
+        "name": "航发动力",
+        "sector": "航空",
+        "star": false,
+        "inPool": true,
+        "close": 40.3,
+        "tag": "—",
+        "pattern": "杯柄型",
+        "platform": null,
+        "cupHandle": {
+          "type": "杯柄型",
+          "days": 18,
+          "totalDays": 77,
+          "cupDepth": 21.5,
+          "depthOk": true,
+          "depthMax": 22.0,
+          "amplitude": 12.0,
+          "tailRatio": 1.09,
+          "volRatio": 0.75,
+          "pivot": 40.83,
+          "distPct": 1.3,
+          "invalidation": 36.47,
+          "volConfirm": 420929.1,
+          "branch": "下跌反转",
+          "preDist": -36.3,
+          "brkNeedVol": 398044.3,
+          "formed": true
+        },
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": false,
+              "val": "40.30 vs MA150 43.29"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "40.30 vs MA200 43.37"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": true,
+              "val": "MA200 43.21→43.37"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "37.93 vs 43.29"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "43.29 vs 43.37"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点32.33→现价40.30（+25%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": false,
+              "val": "高点62.09→现价40.30（-35%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 40.83,
+          "distanceToPivotPct": 1.3,
+          "invalidation": 36.47,
+          "volConfirm": 420929.1,
+          "breakoutConfirm": "收盘≥40.83 且单日成交量≥柄均量×1.5（≈398044手）"
+        },
+        "histPct": 54.0,
+        "distHigh250": -35.1,
+        "distMain": 1.3,
+        "mfDays": 3,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "杯柄型·距枢轴1.3%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
+        "daily": null,
+        "weekly": null
+      },
+      {
         "code": "603345.SH",
         "name": "安井食品",
         "sector": "食品",
@@ -12410,94 +12498,6 @@
         },
         "histPct": 44.4,
         "distHigh250": -24.4,
-        "distMain": 1.3,
-        "mfDays": 3,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴1.3%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入3天",
-        "daily": null,
-        "weekly": null
-      },
-      {
-        "code": "600893.SH",
-        "name": "航发动力",
-        "sector": "航空",
-        "star": false,
-        "inPool": true,
-        "close": 40.3,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": null,
-        "cupHandle": {
-          "type": "杯柄型",
-          "days": 18,
-          "totalDays": 77,
-          "cupDepth": 21.5,
-          "depthOk": true,
-          "depthMax": 22.0,
-          "amplitude": 12.0,
-          "tailRatio": 1.09,
-          "volRatio": 0.75,
-          "pivot": 40.83,
-          "distPct": 1.3,
-          "invalidation": 36.47,
-          "volConfirm": 420929.1,
-          "branch": "下跌反转",
-          "preDist": -36.3,
-          "brkNeedVol": 398044.3,
-          "formed": true
-        },
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": false,
-              "val": "40.30 vs MA150 43.29"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "40.30 vs MA200 43.37"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": true,
-              "val": "MA200 43.21→43.37"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "37.93 vs 43.29"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "43.29 vs 43.37"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点32.33→现价40.30（+25%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": false,
-              "val": "高点62.09→现价40.30（-35%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 40.83,
-          "distanceToPivotPct": 1.3,
-          "invalidation": 36.47,
-          "volConfirm": 420929.1,
-          "breakoutConfirm": "收盘≥40.83 且单日成交量≥柄均量×1.5（≈398044手）"
-        },
-        "histPct": 54.0,
-        "distHigh250": -35.1,
         "distMain": 1.3,
         "mfDays": 3,
         "sectorFit": "板块不配合⚠️",
@@ -15051,10 +15051,10 @@
           "distHigh60": -8.5,
           "ret20": -5.7,
           "tier": "低位",
-          "share5Pct": 70.76,
-          "share20Pct": 71.03,
-          "shareNote": "份额5日+70.8%",
-          "hvPct1y": 11.2,
+          "share5Pct": 45.73,
+          "share20Pct": 66.79,
+          "shareNote": "份额5日+45.7%",
+          "hvPct1y": 22.8,
           "status": "✅趋势候选"
         },
         {
@@ -15066,10 +15066,10 @@
           "distHigh60": -18.9,
           "ret20": -11.9,
           "tier": "低位",
-          "share5Pct": 28.43,
-          "share20Pct": 37.55,
-          "shareNote": "份额5日+28.4%",
-          "hvPct1y": 32.0,
+          "share5Pct": 23.43,
+          "share20Pct": 48.7,
+          "shareNote": "份额5日+23.4%",
+          "hvPct1y": 52.8,
           "status": "✅趋势候选"
         },
         {
@@ -15081,10 +15081,10 @@
           "distHigh60": -24.5,
           "ret20": -12.7,
           "tier": "低位",
-          "share5Pct": 13.93,
-          "share20Pct": 13.06,
-          "shareNote": "份额5日+13.9%",
-          "hvPct1y": 37.2,
+          "share5Pct": 26.45,
+          "share20Pct": 28.32,
+          "shareNote": "份额5日+26.4%",
+          "hvPct1y": 58.0,
           "status": "✅趋势候选"
         },
         {
@@ -15096,10 +15096,10 @@
           "distHigh60": -24.1,
           "ret20": -10.1,
           "tier": "低位",
-          "share5Pct": 21.88,
-          "share20Pct": 50.11,
-          "shareNote": "份额5日+21.9%",
-          "hvPct1y": 59.2,
+          "share5Pct": 34.6,
+          "share20Pct": 70.19,
+          "shareNote": "份额5日+34.6%",
+          "hvPct1y": 67.2,
           "status": "✅趋势候选"
         },
         {
@@ -15111,10 +15111,10 @@
           "distHigh60": -39.1,
           "ret20": -20.6,
           "tier": "低位",
-          "share5Pct": 14.32,
-          "share20Pct": 43.61,
-          "shareNote": "份额5日+14.3%",
-          "hvPct1y": 32.4,
+          "share5Pct": 17.23,
+          "share20Pct": 48.03,
+          "shareNote": "份额5日+17.2%",
+          "hvPct1y": 44.8,
           "status": "✅趋势候选"
         },
         {
@@ -15126,10 +15126,10 @@
           "distHigh60": -38.6,
           "ret20": -24.1,
           "tier": "低位",
-          "share5Pct": 24.29,
-          "share20Pct": 43.83,
-          "shareNote": "份额5日+24.3%",
-          "hvPct1y": 47.6,
+          "share5Pct": 22.91,
+          "share20Pct": 54.34,
+          "shareNote": "份额5日+22.9%",
+          "hvPct1y": 62.8,
           "status": "✅趋势候选"
         },
         {
@@ -15144,7 +15144,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 32.8,
+          "hvPct1y": 51.6,
           "status": "✅趋势候选"
         },
         {
@@ -15159,7 +15159,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 39.6,
+          "hvPct1y": 50.4,
           "status": "✅趋势候选"
         },
         {
@@ -15174,7 +15174,7 @@
           "share5Pct": null,
           "share20Pct": null,
           "shareNote": "无份额监测",
-          "hvPct1y": 44.4,
+          "hvPct1y": 62.4,
           "status": "✅趋势候选"
         }
       ],
@@ -15356,10 +15356,10 @@
         "distHigh60": -8.5,
         "ret20": -5.7,
         "tier": "低位",
-        "share5Pct": 70.76,
-        "share20Pct": 71.03,
-        "shareNote": "份额5日+70.8%",
-        "hvPct1y": 11.2,
+        "share5Pct": 45.73,
+        "share20Pct": 66.79,
+        "shareNote": "份额5日+45.7%",
+        "hvPct1y": 22.8,
         "status": "✅趋势候选"
       },
       {
@@ -15371,10 +15371,10 @@
         "distHigh60": -18.9,
         "ret20": -11.9,
         "tier": "低位",
-        "share5Pct": 28.43,
-        "share20Pct": 37.55,
-        "shareNote": "份额5日+28.4%",
-        "hvPct1y": 32.0,
+        "share5Pct": 23.43,
+        "share20Pct": 48.7,
+        "shareNote": "份额5日+23.4%",
+        "hvPct1y": 52.8,
         "status": "✅趋势候选"
       },
       {
@@ -15386,10 +15386,10 @@
         "distHigh60": -24.5,
         "ret20": -12.7,
         "tier": "低位",
-        "share5Pct": 13.93,
-        "share20Pct": 13.06,
-        "shareNote": "份额5日+13.9%",
-        "hvPct1y": 37.2,
+        "share5Pct": 26.45,
+        "share20Pct": 28.32,
+        "shareNote": "份额5日+26.4%",
+        "hvPct1y": 58.0,
         "status": "✅趋势候选"
       },
       {
@@ -15401,10 +15401,10 @@
         "distHigh60": -24.1,
         "ret20": -10.1,
         "tier": "低位",
-        "share5Pct": 21.88,
-        "share20Pct": 50.11,
-        "shareNote": "份额5日+21.9%",
-        "hvPct1y": 59.2,
+        "share5Pct": 34.6,
+        "share20Pct": 70.19,
+        "shareNote": "份额5日+34.6%",
+        "hvPct1y": 67.2,
         "status": "✅趋势候选"
       },
       {
@@ -15416,10 +15416,10 @@
         "distHigh60": -39.1,
         "ret20": -20.6,
         "tier": "低位",
-        "share5Pct": 14.32,
-        "share20Pct": 43.61,
-        "shareNote": "份额5日+14.3%",
-        "hvPct1y": 32.4,
+        "share5Pct": 17.23,
+        "share20Pct": 48.03,
+        "shareNote": "份额5日+17.2%",
+        "hvPct1y": 44.8,
         "status": "✅趋势候选"
       },
       {
@@ -15431,10 +15431,10 @@
         "distHigh60": -38.6,
         "ret20": -24.1,
         "tier": "低位",
-        "share5Pct": 24.29,
-        "share20Pct": 43.83,
-        "shareNote": "份额5日+24.3%",
-        "hvPct1y": 47.6,
+        "share5Pct": 22.91,
+        "share20Pct": 54.34,
+        "shareNote": "份额5日+22.9%",
+        "hvPct1y": 62.8,
         "status": "✅趋势候选"
       },
       {
@@ -15449,7 +15449,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 32.8,
+        "hvPct1y": 51.6,
         "status": "✅趋势候选"
       },
       {
@@ -15464,7 +15464,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 39.6,
+        "hvPct1y": 50.4,
         "status": "✅趋势候选"
       },
       {
@@ -15479,7 +15479,7 @@
         "share5Pct": null,
         "share20Pct": null,
         "shareNote": "无份额监测",
-        "hvPct1y": 44.4,
+        "hvPct1y": 62.4,
         "status": "✅趋势候选"
       }
     ],
@@ -17008,20 +17008,20 @@
         "name": "药明康德",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
         "reverseCount": 13,
         "reverseDays": [
           {
-            "date": "10/15",
-            "pct": 0.2,
-            "basePct": -1.6,
-            "base": "大盘",
-            "idxPct": -1.6,
-            "secPct": -1.4,
-            "volX": 1.0,
+            "date": "09/24",
+            "pct": 3.0,
+            "basePct": -2.3,
+            "base": "板块",
+            "idxPct": -1.2,
+            "secPct": -2.3,
+            "volX": 0.9,
             "big": false,
-            "ann": false
+            "ann": true
           },
           {
             "date": "09/02",
@@ -17037,10 +17037,10 @@
           {
             "date": "06/26",
             "pct": 0.8,
-            "basePct": -4.2,
+            "basePct": -4.1,
             "base": "板块",
             "idxPct": -2.3,
-            "secPct": -4.2,
+            "secPct": -4.1,
             "volX": 1.3,
             "big": false,
             "ann": true
@@ -17048,10 +17048,10 @@
           {
             "date": "06/11",
             "pct": 0.0,
-            "basePct": -1.3,
+            "basePct": -1.2,
             "base": "板块",
             "idxPct": -0.2,
-            "secPct": -1.3,
+            "secPct": -1.2,
             "volX": 0.8,
             "big": false,
             "ann": true
@@ -17062,7 +17062,7 @@
             "basePct": -0.4,
             "base": "大盘",
             "idxPct": -0.4,
-            "secPct": -0.1,
+            "secPct": -0.0,
             "volX": 1.4,
             "big": false,
             "ann": true
@@ -17084,7 +17084,7 @@
             "basePct": -2.0,
             "base": "大盘",
             "idxPct": -2.0,
-            "secPct": -1.7,
+            "secPct": -1.8,
             "volX": 1.3,
             "big": false,
             "ann": false
@@ -17092,10 +17092,10 @@
           {
             "date": "05/20",
             "pct": 1.3,
-            "basePct": -0.9,
+            "basePct": -0.8,
             "base": "板块",
             "idxPct": -0.2,
-            "secPct": -0.9,
+            "secPct": -0.8,
             "volX": 0.7,
             "big": false,
             "ann": false
@@ -17114,10 +17114,10 @@
           {
             "date": "05/12",
             "pct": 1.5,
-            "basePct": -1.4,
+            "basePct": -1.5,
             "base": "板块",
             "idxPct": -0.2,
-            "secPct": -1.4,
+            "secPct": -1.5,
             "volX": 1.4,
             "big": false,
             "ann": false
@@ -17125,10 +17125,10 @@
           {
             "date": "04/28",
             "pct": 10.0,
-            "basePct": -0.6,
+            "basePct": -0.3,
             "base": "板块",
             "idxPct": -0.2,
-            "secPct": -0.6,
+            "secPct": -0.3,
             "volX": 1.3,
             "big": false,
             "ann": true
@@ -17136,10 +17136,10 @@
           {
             "date": "04/23",
             "pct": 0.9,
-            "basePct": -1.4,
+            "basePct": -1.3,
             "base": "板块",
             "idxPct": -0.3,
-            "secPct": -1.4,
+            "secPct": -1.3,
             "volX": 0.8,
             "big": false,
             "ann": false
@@ -17147,10 +17147,10 @@
           {
             "date": "04/09",
             "pct": 2.4,
-            "basePct": -2.2,
+            "basePct": -2.0,
             "base": "板块",
             "idxPct": -0.7,
-            "secPct": -2.2,
+            "secPct": -2.0,
             "volX": 0.9,
             "big": false,
             "ann": false
@@ -17584,27 +17584,27 @@
         "name": "恒瑞医药",
         "group": "hold",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
         "reverseCount": 10,
         "reverseDays": [
-          {
-            "date": "10/15",
-            "pct": 2.4,
-            "basePct": -1.6,
-            "base": "大盘",
-            "idxPct": -1.6,
-            "secPct": -1.4,
-            "volX": 1.1,
-            "big": false,
-            "ann": true
-          },
           {
             "date": "10/12",
             "pct": 2.7,
             "basePct": -2.3,
             "base": "板块",
             "idxPct": -0.4,
+            "secPct": -2.3,
+            "volX": 0.6,
+            "big": false,
+            "ann": true
+          },
+          {
+            "date": "09/24",
+            "pct": 3.1,
+            "basePct": -2.3,
+            "base": "板块",
+            "idxPct": -1.2,
             "secPct": -2.3,
             "volX": 0.6,
             "big": false,
@@ -17624,10 +17624,10 @@
           {
             "date": "07/30",
             "pct": 1.4,
-            "basePct": -2.0,
+            "basePct": -1.9,
             "base": "板块",
             "idxPct": -0.6,
-            "secPct": -2.0,
+            "secPct": -1.9,
             "volX": 0.7,
             "big": false,
             "ann": true
@@ -17638,7 +17638,7 @@
             "basePct": -2.1,
             "base": "大盘",
             "idxPct": -2.1,
-            "secPct": -0.5,
+            "secPct": -0.6,
             "volX": 0.8,
             "big": false,
             "ann": true
@@ -17649,7 +17649,7 @@
             "basePct": -0.4,
             "base": "大盘",
             "idxPct": -0.4,
-            "secPct": -0.1,
+            "secPct": -0.0,
             "volX": 0.7,
             "big": false,
             "ann": true
@@ -17657,10 +17657,10 @@
           {
             "date": "05/27",
             "pct": 2.4,
-            "basePct": -1.2,
-            "base": "大盘",
+            "basePct": -1.3,
+            "base": "板块",
             "idxPct": -1.2,
-            "secPct": -1.1,
+            "secPct": -1.3,
             "volX": 1.1,
             "big": false,
             "ann": true
@@ -17671,7 +17671,7 @@
             "basePct": -2.0,
             "base": "大盘",
             "idxPct": -2.0,
-            "secPct": -1.7,
+            "secPct": -1.8,
             "volX": 1.2,
             "big": false,
             "ann": true
@@ -17679,10 +17679,10 @@
           {
             "date": "05/12",
             "pct": 4.8,
-            "basePct": -1.4,
+            "basePct": -1.5,
             "base": "板块",
             "idxPct": -0.2,
-            "secPct": -1.4,
+            "secPct": -1.5,
             "volX": 3.7,
             "big": true,
             "ann": true
@@ -17690,10 +17690,10 @@
           {
             "date": "04/23",
             "pct": 1.7,
-            "basePct": -1.4,
+            "basePct": -1.3,
             "base": "板块",
             "idxPct": -0.3,
-            "secPct": -1.4,
+            "secPct": -1.3,
             "volX": 1.5,
             "big": false,
             "ann": true
@@ -17828,9 +17828,9 @@
         "name": "华海药业",
         "group": "watch",
         "industry": "化学制药",
-        "sectorName": "化学制药",
-        "sectorSrc": "eastmoney",
-        "reverseCount": 9,
+        "sectorName": "化学制药(合成)",
+        "sectorSrc": "tushare合成",
+        "reverseCount": 10,
         "reverseDays": [
           {
             "date": "10/12",
@@ -17846,10 +17846,10 @@
           {
             "date": "07/30",
             "pct": 0.3,
-            "basePct": -2.0,
+            "basePct": -1.9,
             "base": "板块",
             "idxPct": -0.6,
-            "secPct": -2.0,
+            "secPct": -1.9,
             "volX": 0.7,
             "big": false,
             "ann": true
@@ -17860,7 +17860,7 @@
             "basePct": -2.1,
             "base": "大盘",
             "idxPct": -2.1,
-            "secPct": -0.5,
+            "secPct": -0.6,
             "volX": 1.5,
             "big": false,
             "ann": false
@@ -17868,10 +17868,10 @@
           {
             "date": "07/08",
             "pct": 1.4,
-            "basePct": -1.4,
+            "basePct": -1.5,
             "base": "板块",
             "idxPct": -0.5,
-            "secPct": -1.4,
+            "secPct": -1.5,
             "volX": 2.1,
             "big": false,
             "ann": false
@@ -17893,7 +17893,7 @@
             "basePct": -2.0,
             "base": "大盘",
             "idxPct": -2.0,
-            "secPct": -1.7,
+            "secPct": -1.8,
             "volX": 2.5,
             "big": false,
             "ann": true
@@ -17901,21 +17901,32 @@
           {
             "date": "05/20",
             "pct": 1.5,
-            "basePct": -0.9,
+            "basePct": -0.8,
             "base": "板块",
             "idxPct": -0.2,
-            "secPct": -0.9,
+            "secPct": -0.8,
             "volX": 1.0,
+            "big": false,
+            "ann": false
+          },
+          {
+            "date": "05/08",
+            "pct": 0.4,
+            "basePct": -0.0,
+            "base": "板块",
+            "idxPct": -0.0,
+            "secPct": -0.0,
+            "volX": 0.8,
             "big": false,
             "ann": false
           },
           {
             "date": "04/28",
             "pct": 0.1,
-            "basePct": -0.6,
+            "basePct": -0.3,
             "base": "板块",
             "idxPct": -0.2,
-            "secPct": -0.6,
+            "secPct": -0.3,
             "volX": 0.5,
             "big": false,
             "ann": true
@@ -17923,10 +17934,10 @@
           {
             "date": "04/17",
             "pct": 3.6,
-            "basePct": -1.4,
+            "basePct": -1.5,
             "base": "板块",
             "idxPct": -0.1,
-            "secPct": -1.4,
+            "secPct": -1.5,
             "volX": 2.0,
             "big": false,
             "ann": false
