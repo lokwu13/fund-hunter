@@ -705,12 +705,15 @@ export interface FundData {
     note?: string;
     topAlert: boolean;
     buyWindows: string[];
+    reboundWatch: string[];
     sellAlerts: string[];
     items: Array<{
       indexCode: string; indexName: string; close: number; state: string;
       comment: string; since: string | null;
       rsi?: number; distLower?: number; distUpper?: number;
       lowVol?: boolean; weeklyGate?: boolean; weeklyNote?: string;
+      weeklyMaBull?: boolean; weeklyMa50?: number | null;
+      weeklyMa150?: number | null; weeklyMa200?: number | null; weeklyMaNote?: string;
       divBull?: boolean; divBear?: boolean; flatRsi?: number; volShrink?: boolean;
     }>;
   };

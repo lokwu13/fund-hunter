@@ -133,15 +133,17 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
         </div>
       </div>
 
-      {/* BOLL99·RSI：强硬减仓优先于抄底提示 */}
-      {((data.broadOsc?.sellAlerts?.length ?? 0) > 0 || (data.broadOsc?.buyWindows?.length ?? 0) > 0) && (
+      {/* BOLL99·RSI：强硬减仓 > 完整抄底 > 超跌反弹观察 */}
+      {((data.broadOsc?.sellAlerts?.length ?? 0) > 0 || (data.broadOsc?.buyWindows?.length ?? 0) > 0 || (data.broadOsc?.reboundWatch?.length ?? 0) > 0) && (
         <button
           type="button"
           onClick={() => onNavigate?.('national', 'broad-osc')}
           className={`w-full text-left rounded-lg border px-4 py-3 shadow-sm transition-shadow hover:shadow-md ${
             (data.broadOsc?.sellAlerts?.length ?? 0) > 0
               ? 'border-red-400 bg-red-50 text-red-800'
-              : 'border-emerald-400 bg-emerald-50 text-emerald-800'
+              : (data.broadOsc?.buyWindows?.length ?? 0) > 0
+                ? 'border-emerald-400 bg-emerald-50 text-emerald-800'
+                : 'border-amber-400 bg-amber-50 text-amber-800'
           }`}
         >
           {(data.broadOsc?.sellAlerts?.length ?? 0) > 0 ? (
@@ -149,10 +151,18 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
               <p className="text-sm font-bold">🚨 强硬减仓警报：{data.broadOsc?.sellAlerts?.join('、')}</p>
               <p className="text-[11px] mt-0.5">收回上轨下方 + RSI 不再创新高 + 量能异常，已压过其他信号并关闭做多窗口。查看状态证据 →</p>
             </>
+          ) : (data.broadOsc?.buyWindows?.length ?? 0) > 0 ? (
+            <>
+              <p className="text-sm font-bold">🟢 完整抄底窗口：{data.broadOsc?.buyWindows?.join('、')}</p>
+              <p className="text-[11px] mt-0.5">日线确认 + 周线BOLL前提 + 周MA50＞MA150＞MA200；寻找板块题材个股。查看状态证据 →</p>
+              {(data.broadOsc?.reboundWatch?.length ?? 0) > 0 && (
+                <p className="text-[11px] mt-1 text-amber-700">另有超跌反弹观察：{data.broadOsc?.reboundWatch?.join('、')}（非趋势级做多，不升档）</p>
+              )}
+            </>
           ) : (
             <>
-              <p className="text-sm font-bold">🟢 短线抄底窗口：{data.broadOsc?.buyWindows?.join('、')}</p>
-              <p className="text-[11px] mt-0.5">收回下轨 + 地量后反弹 + RSI≥20 + 周线前提通过；寻找板块题材个股。查看状态证据 →</p>
+              <p className="text-sm font-bold">🟡 超跌反弹观察：{data.broadOsc?.reboundWatch?.join('、')}</p>
+              <p className="text-[11px] mt-0.5">日线确认且周线BOLL前提通过，但周MA未多头：抢反弹性质，非趋势级做多，不升档。查看状态证据 →</p>
             </>
           )}
         </button>

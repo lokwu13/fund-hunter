@@ -16,7 +16,8 @@ export default function NationalTeamPanel() {
   const oscBadge = (state?: string) => {
     const cls = state === '强硬减仓' ? 'bg-red-600 text-white animate-pulse'
       : state === '顶部风险' ? 'bg-orange-500 text-white'
-      : state === '抄底窗口' ? 'bg-emerald-600 text-white'
+      : state === '完整抄底窗口' ? 'bg-emerald-600 text-white'
+      : state === '超跌反弹观察' ? 'bg-amber-500 text-white'
       : state === '超卖观察' ? 'bg-sky-100 text-sky-700'
       : state === '超卖观察(仅观察)' ? 'bg-amber-100 text-amber-700'
       : 'bg-slate-100 text-slate-600';
@@ -81,7 +82,8 @@ export default function NationalTeamPanel() {
                 <div key={o.indexCode} className={`rounded-lg border p-3 ${
                   o.state === '强硬减仓' ? 'border-red-300 bg-red-50' :
                   o.state === '顶部风险' ? 'border-orange-200 bg-orange-50' :
-                  o.state === '抄底窗口' ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-slate-50/60'
+                  o.state === '完整抄底窗口' ? 'border-emerald-300 bg-emerald-50' :
+                  o.state === '超跌反弹观察' ? 'border-amber-300 bg-amber-50' : 'border-slate-200 bg-slate-50/60'
                 }`}>
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-bold text-slate-800">{o.indexName}</span>
@@ -105,7 +107,10 @@ export default function NationalTeamPanel() {
                   </div>
                   <div className="flex items-center gap-1 flex-wrap min-h-[20px]">
                     <Badge variant="outline" className={`text-[9px] ${o.weeklyGate ? 'border-emerald-300 text-emerald-700' : 'border-amber-300 text-amber-700'}`}>
-                      周线前提{o.weeklyGate ? '通过' : '未通过'}
+                      周线BOLL{o.weeklyGate ? '通过' : '未通过'}
+                    </Badge>
+                    <Badge variant="outline" className={`text-[9px] ${o.weeklyMaBull ? 'border-emerald-300 text-emerald-700' : 'border-amber-300 text-amber-700'}`}>
+                      周MA{o.weeklyMaBull ? '多头' : '未多头'}
                     </Badge>
                     {o.lowVol && <Badge className="bg-sky-100 text-sky-700 text-[9px] border-0">20日地量</Badge>}
                     {o.divBull && <Badge className="bg-emerald-100 text-emerald-700 text-[9px] border-0">底背离</Badge>}
@@ -114,6 +119,7 @@ export default function NationalTeamPanel() {
                     {o.volShrink && <Badge className="bg-teal-100 text-teal-700 text-[9px] border-0">破位放量后缩量</Badge>}
                   </div>
                   <p className="text-[10px] text-slate-500 mt-1.5">{o.weeklyNote}</p>
+                  <p className={`text-[10px] mt-0.5 ${o.weeklyMaBull ? 'text-emerald-600' : 'text-amber-600'}`}>{o.weeklyMaNote}</p>
                   <p className="text-[11px] text-slate-700 mt-1 leading-relaxed">{o.comment}</p>
                 </div>
               ))}
