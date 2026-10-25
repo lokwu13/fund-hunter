@@ -4748,27 +4748,14 @@ def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, d
 # ══════════ Minervini 精修（2026-09-26 月底大改版①，用户拍板口径） ══════════
 MINERVINI_VCP_TOL = 1.10    # 收缩严格递减容差：每次收缩必须小于前一次（允许 ≤前次×1.10），且末次<首次
 MINERVINI_MIN_CONTR = 3     # VCP 收缩次数下限
-CUP_DEPTH_MIN, CUP_DEPTH_MAX = 10.0, 22.0   # 杯深 %（2026-10-01 下午② 五案例标定 10.8~21.1）
-CUP_MIN_TOTAL_DAYS = 40     # 杯+柄总时长（2026-10-01 下午② 五案例 39~95 交易日，
-                                        # 海油工程 39 日为最短——阈值取 40 覆盖，杯柄仍属大结构）
-BREAKOUT_VOL_X = 1.4        # 突破确认：成交量 ≥ 50 日均量 ×1.4
-# ── 杯柄·下跌反转分支（2026-10-01 晚 09987 百胜中国标准杯柄校准）──
-CUP_HANDLE_AMP_MAX = 0.08   # 标准柄：右侧横盘振幅 ≤8%（v2 沿用）
-CUP_REV_AMP_MAX = 0.12      # 下跌反转柄：振幅 ≤12%（09987 用户标注 28 日柄实测 11.2%）
-CUP_REV_PRE_DIST = -15.0    # 前置下跌趋势确认①：杯沿距其前 250 日高点 ≤-15%
-                            # （09987 -42.5%；2026-10-01 晚任务B 由 -20 放宽至 -15——
-                            #  中国石油 depth 20.1% 超标准分支 18 上限，靠 preDist -17.1+r120 -12.4% 归入反转分支保留）
-CUP_REV_PRE_RET = -5.0      # 前置下跌趋势确认②：杯沿前 60 或 120 日收益 ≤-5%（09987 -15.3%/-13.3%）
-CUP_REV_DD_MIN = 0.95       # 下跌反转分支双底容差 5%（09987 二底 -4.8%；标准分支沿用 4%）
-CUP_BRK_VOL_X = 1.5         # 柄末端后突破确认：单日量 ≥ 柄均量 ×1.5（09987 突破日 3.05x）
-CUP_DEPTH_MAX_STD = 18.0    # 任务B（2026-10-01 晚用户批准）：标准分支杯深上限 22→18
-                            # （杀华电国际 21.8/中国广核 21.7/宁波港 21.8/申能 20.5 类深坑伪杯柄；
-                            #  反转分支沿用 CUP_DEPTH_MAX=22 保 09987 21.9/万华 21.1/中石油 20.1）
-CUP_PCT_MAX = 82.0          # 任务B：杯柄分位上限 85→82 两分支统一（杀国电电力 83.2/福能 84.4）。
-                            # ⚠️调和记录：用户原口径 70 会误杀钦定案例海油工程 80.4/中国石化 75.6，
-                            # 取 82=六案例最高分位 80.4 留 1.6pt 余量，上报用户定夺是否再压
-CUP_SHOW_DIST = 5.0         # 任务B：杯柄只展示临近成型 ≤5%（七案例 distPct 0.2~4.2 含长安 4.2；
-                            # 皖通高速 5.3/中国广核 5.7 出局）
+CUP_DEPTH_MIN, CUP_DEPTH_MAX = 12.0, 33.0   # 杯深 %（任务E 2026-10-25 奥尼尔《笑傲股市》12~33%）
+CUP_MIN_TOTAL_DAYS = 40     # 杯+柄总时长 ≥40 交易日（奥尼尔杯身≥7周≈35交易日，取 40 沿用）
+BREAKOUT_VOL_X = 1.4        # 突破确认：成交量 ≥ 50 日均量 ×1.4（=均量+40%，奥尼尔 +40~50% 口径）
+CUP_HANDLE_AMP_MAX = 0.08   # 柄窄幅横盘振幅 ≤8%
+CUP_BRK_VOL_X = 1.5         # 柄末端后突破确认：单日量 ≥ 柄均量 ×1.5（≈均量+50%，等价口径保留）
+CUP_PRE_GAIN_MIN = 0.30     # 前置明确上升趋势：杯沿高 ÷ 其前 250 日最低收盘 −1 ≥ +30%（奥尼尔硬判据）
+CUP_PCT_MAX = 82.0          # 位置守卫（自校准非原典）：一年分位 25~82（任务B 沿用）
+CUP_SHOW_DIST = 5.0         # 杯柄只展示临近成型 ≤5%（任务B 沿用）
 
 # ── 长平台整理（任务D 2026-10-01 晚，用户口径：标的大+K线长时间走平+波动窄+跨度大）──
 # 标定案例：海光信息 2024-05-07~09-09（90日 幅20.8% 漂移-3.6% 末段量0.74x）
@@ -4881,26 +4868,19 @@ def _vcp_level_strict(bars, win, k, max_dd=None, max_contraction=None,
 
 
 def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None):
-    """杯柄·大结构底部反转 v2（2026-10-01 下午② 五案例标定重构——
-    案例：中海油服190507~190816(近似)/海油工程250901~260107/中国石油250120~250603(双底)/
-    中国石化220307~220526(双底)/万华化学250403~250820(圣杯)，
-    结构 54~95 交易日、杯深 10.8~21.1%、时点分位 37~80、突破后 60 日 +4.1~+66.9%）：
-    - 大结构：杯沿→现价 ≥50 交易日（比 VCP 平台案例 10~50 日长一个量级）；
-    - 杯深 10~22%（案例实测区间；上午的 12~15 会杀中国石油 16.9/万华 21.1）；
-    - 位置：一年分位 25~85——现价必须已脱离一年低点区域（「下探前低太近」的量化：
-      伪杯柄分位 1~18 现价钉在前低上拒；五案例时点分位 37~80）。
-      不再要求自一年高点回撤≥12%（中国石化案例仅-7.6%），杯深本身即下撤量度；
-      取消坑底强制缩量（中国石油坑底量比 1.51=恐慌底有效）；
-    - 双底变体：杯身 1~2 个坑，第二坑最深可低于第一坑 4%（案例 -3.3%~+4.8%，坑间距 10~42 日）；
-    - 杯柄=右侧 10~20 日窄幅横盘（振幅 ≤8%）且低点不破杯底（容差 2%）；
-    - 量能：柄均量 ≤ 杯身均量×1.15（万华 1.10 容忍），且（柄③大比例缩量 或 柄均量<杯身均量）；
-    枢轴=柄部高点；失效位=柄部低点；放量确认线=50日均量×1.4。取满足条件的最长杯柄。
-    2026-10-01 晚 09987 百胜中国标准杯柄（2024-07-15~08-08 杯身 + 08-09~09-19 柄）校准：
-    新增「前置下跌趋势确认」分支——杯沿距其前 250 日高点 ≥20% 回撤且杯沿前 60/120 日
-    收益 ≤-5%（结束前期下跌趋势反转向上）时，柄振幅放宽至 ≤12%、双底容差 5%；
-    杯深 10~22%、分位 25~85、双底/柄底位置/量能双上限等其余口径沿用 v2 不变。
-    突破确认信号见 _cup_breakout_check（柄末端后放量走高：收≥枢轴+量≥柄均×1.5）。"""
-    if len(bars) < 70:
+    """杯柄·CANSLIM v3（2026-10-25 任务E：奥尼尔《笑傲股市》标准优先，下跌反转分支下线）：
+    - 前置明确上升趋势：杯沿高 ÷ 其前 250 日最低收盘 −1 ≥ +30%
+      （无前置上升趋势=非奥尼尔杯柄，中信伪杯柄类拒）；
+    - 周线趋势+均线多头硬门：现价>30周线、30周线较 4 周前上行、10周线>30周线；
+    - 杯深 12~33%；杯身 1~2 个坑，第二坑最深低于第一坑 4% 以内；
+    - 柄在杯体上半部（柄底位置 h_pos∈[0.50,0.80]）、右侧 10~20 日窄幅（振幅≤8%）、
+      柄低点不破杯底（容差 2%）；
+    - 柄部量能枯竭：柄均量 < 杯身均量（volRatio<1.0）且柄末段量比 ≤1.2；
+    - 杯+柄 ≥40 交易日；枢轴=柄高点；突破确认量=50 日均量×1.4（=均量+40%，
+      奥尼尔 +40~50%），柄均量×1.5 等价口径见 _cup_breakout_check。
+    位置守卫（自校准非原典）：分位 25~82；链路另有限距枢轴 ≤5%、贴新高中高位拒。
+    取满足条件的最长杯柄。"""
+    if len(bars) < 175:                 # 周线门需 ≥35 周数据（约 175 交易日）
         return None
     closes = [b[3] for b in bars]
     close = closes[-1]
@@ -4913,7 +4893,23 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         if hist_pct is None:
             hist_pct = _pct_rank100(win, close)
     if hist_pct is None or not (25 <= hist_pct <= CUP_PCT_MAX):
-        return None                     # 分位 25~82：已脱离前低区域 + 非高位（任务B 上限 85→82）
+        return None                     # 分位 25~82：已脱离前低区域 + 非高位
+    # ── 周线趋势+均线多头（奥尼尔任务E 硬门，与深跌反转天然互斥）──
+    wkey = pd.to_datetime(pd.Series([b[0] for b in bars]), format='%Y%m%d').dt.strftime('%G%V')
+    wk_closes = []
+    for k, c in zip(wkey, closes):
+        if wk_closes and k == wk_closes[-1][0]:
+            wk_closes[-1] = (k, c)      # 每周最后收盘
+        else:
+            wk_closes.append((k, c))
+    wk = [c for _, c in wk_closes]
+    if len(wk) < 35:
+        return None
+    ma30w = sum(wk[-30:]) / 30
+    ma30w_4 = sum(wk[-34:-4]) / 30
+    ma10w = sum(wk[-10:]) / 10
+    if not (close > ma30w and ma30w > ma30w_4 and ma10w > ma30w):
+        return None                     # 现价>30周线 + 30周线上行 + 10周>30周
     vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
     for n in range(20, 9, -1):          # 杯柄 10~20 日（右侧横盘≥2 周），取最长
         handle = bars[-n:]
@@ -4922,6 +4918,8 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         if h_lo <= 0:
             continue
         amp = (h_hi - h_lo) / h_lo
+        if amp > CUP_HANDLE_AMP_MAX:
+            continue                    # 柄右侧窄幅横盘：振幅 ≤8%
         cup = bars[-(n + 120):-n]
         if len(cup) < 40:
             continue
@@ -4929,8 +4927,7 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         cup_lo = cup[lo_pos][2]
         if cup_lo <= 0:
             continue
-        # 杯沿=杯底之前、使杯深落在 10~22% 区间内的最高高点（万华案例：120 日窗内 2 月
-        # 更早高点 72 给杯深 29.6% 过深，正确杯沿=用户区间起点 4/3 的 66.0 给 21.1%）
+        # 杯沿=杯底之前、使杯深落在 12~33%（奥尼尔）区间内的最高高点
         hi_pos, cup_hi = None, 0
         for i in range(lo_pos):
             h = cup[i][1]
@@ -4941,40 +4938,29 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                 hi_pos, cup_hi = i, h
         if hi_pos is None:
             continue                    # 无落在杯深区间的杯沿
-        # 前置下跌趋势确认（2026-10-01 晚 09987 校准）：杯沿较其前 250 日高点回撤
-        # ≥20% 且杯沿前 60/120 日收益 ≤-5% = 杯身终结了一段真实下跌趋势（反转分支），
-        # 柄振幅放宽至 ≤12%、二底容差 5%（09987 实测 28 日柄幅 11.2%、二底 -4.8%）；
-        # 未确认走标准分支（振幅 ≤8%、二底 4%，五案例包络不变）
         cup_start = max(0, len(bars) - (n + 120))
         rim_i = cup_start + hi_pos
-        pre_hi = max(b[1] for b in bars[max(0, rim_i - 250):rim_i + 1])
-        pre_dist = (cup_hi / pre_hi - 1) * 100 if pre_hi > 0 else 0
-        r60 = (closes[rim_i] / closes[rim_i - 60] - 1) * 100 if rim_i >= 60 else 0
-        r120 = (closes[rim_i] / closes[rim_i - 120] - 1) * 100 if rim_i >= 120 else 0
-        rev_branch = (pre_dist <= CUP_REV_PRE_DIST
-                      and (r60 <= CUP_REV_PRE_RET or r120 <= CUP_REV_PRE_RET))
-        amp_max = CUP_REV_AMP_MAX if rev_branch else CUP_HANDLE_AMP_MAX
-        dd_min = CUP_REV_DD_MIN if rev_branch else 0.96
-        if amp > amp_max:
-            continue                    # 柄右侧窄幅横盘：标准 ≤8%，下跌反转分支 ≤12%
+        # 前置明确上升趋势（奥尼尔任务E）：杯沿较前 250 日最低收盘涨幅 ≥30%
+        pre_closes = closes[max(0, rim_i - 250):rim_i]
+        pre_low = min(pre_closes) if pre_closes else 0
+        pre_gain = (cup_hi / pre_low - 1) if pre_low > 0 else 0
+        if pre_gain < CUP_PRE_GAIN_MIN:
+            continue                    # 无前置上升趋势的深坑/横盘非杯柄
         body = cup[hi_pos:]             # 杯身=杯沿之后（含杯底与右侧回升段）
         depth = (cup_hi - cup_lo) / cup_hi * 100
-        if not rev_branch and depth > CUP_DEPTH_MAX_STD:
-            continue                    # 任务B：标准分支杯深 ≤18%（反转分支沿用 ≤22%）
-        # 双底验证：杯身 1~2 个坑，标准分支第二坑最低可低于第一坑 4%（五案例 -3.3%~+4.8%），
-        # 下跌反转分支放宽至 5%（09987 -4.8%）；更深=单边阴跌创新低，非杯身
+        # 双底验证：杯身 1~2 个坑，第二坑最低可低于第一坑 4%；更深=单边阴跌创新低
         half = len(body) // 2
         if half > 0:
             l1 = min(b[2] for b in body[:half])
             l2 = min(b[2] for b in body[half:])
-            if l2 < l1 * dd_min:
+            if l2 < l1 * 0.96:
                 continue
         if h_lo < cup_lo * 0.98:
             continue                    # 柄低点破杯身底部
-        # 柄底位置（2026-10-01 下午② 五案例标定 17~56%）：<15%=柄贴着杯底做停顿
-        # （华能国际 10% 类，与前低无异）；>80%=已涨离结构（惠泰 119% 类）
+        # 柄在杯体上半部（奥尼尔）：h_pos<0.50=柄落在杯体下半部（非强势休整）；
+        # >0.80=已涨离结构
         h_pos = (h_lo - cup_lo) / (cup_hi - cup_lo)
-        if not (0.15 <= h_pos <= 0.80):
+        if not (0.50 <= h_pos <= 0.80):
             continue
         total_days = len(body) + n
         if total_days < CUP_MIN_TOTAL_DAYS:
@@ -4983,12 +4969,11 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         if cup_vol <= 0:
             continue
         h_vol = sum(b[4] for b in handle) / n
-        if h_vol > cup_vol * 1.15:
-            continue                    # 柄均量超杯身×1.15=异常放量（万华 1.12 容忍上限）
+        if h_vol >= cup_vol:
+            continue                    # 柄部量能枯竭（奥尼尔）：柄均量必须 < 杯身均量
         _, tail_ratio = _vol_shrink_ok([b[4] for b in handle])
         if tail_ratio > 1.2:
-            continue                    # 柄末段超 1.2=异常放量。圣杯型柄部允许温和放量回升
-                                        # （万华柄尾 1.12=突破前吸筹），杯柄不做平台③的强制缩量
+            continue                    # 柄末段超 1.2=异常放量
         dist = (h_hi / close - 1) * 100
         return {'type': '杯柄型', 'days': n, 'totalDays': total_days,
                 'cupDepth': round(depth, 1), 'depthOk': True, 'depthMax': CUP_DEPTH_MAX,
@@ -4998,8 +4983,8 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                 'pivot': round(h_hi, 2), 'distPct': round(dist, 1),
                 'invalidation': round(h_lo, 2),
                 'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
-                'branch': '下跌反转' if rev_branch else '标准',
-                'preDist': round(pre_dist, 1),
+                'preGain': round(pre_gain * 100, 1),
+                'weeklyUp': True,
                 'brkNeedVol': round(h_vol * CUP_BRK_VOL_X, 1),
                 'formed': True}
     return None
@@ -5020,7 +5005,7 @@ def _cup_breakout_check(post_bars, pivot, h_vol):
     return None
 
 
-def _long_platform(bars, circ_mv=None, hist_pct=None):
+def _long_platform(bars, circ_mv=None, hist_pct=None, dist_high250=None):
     """长平台整理（任务D 2026-10-01 晚，用户口径：标的大+K线长时间走平+波动窄+跨度大）。
     三段标定案例：海光信息 2024-05-07~09-09（90日 幅20.8% 漂移-3.6%）/
     海光信息 2025-06-10~08-12（46日 幅12.1% 漂移-2.2%）/中微公司 2025-05-15~07-22
@@ -5039,6 +5024,15 @@ def _long_platform(bars, circ_mv=None, hist_pct=None):
     if hist_pct is None:
         hist_pct = _pct_rank100(closes[-250:], close)
     if hist_pct is None or not (LP_PCT_LO <= hist_pct <= LP_PCT_HI):
+        return None
+    # 高位硬拒（任务F 2026-10-25）：分位>65 且距一年收盘高点在 -20%~-8% 的
+    # 「半山腰中高位」长平台拒（中国广核 pct70/距高-13.5% 类）。
+    # 校准依据：福能/申能/农行类拒 vs 用户背书海光段①（pct77.8/距高-4.1%）保留——
+    # 贴高点 8% 内的大市值长平台=强势蓄势（段①原型）放行；距高 ≥20% 的深度回撤长平台
+    # （中微段③ -23.9%）放行；海光段② pct63.6≤65 不受此门限制。
+    if dist_high250 is None:
+        dist_high250 = (close / max(closes[-250:]) - 1) * 100
+    if hist_pct > 65 and -20 < dist_high250 < -8:
         return None
     vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
     for n in range(min(LP_MAX_DAYS, len(bars)), LP_MIN_DAYS - 1, -1):
@@ -5321,7 +5315,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
                                         hist_pct=hist_pct)
                 lp = _long_platform(bars, circ_mv=(mv.get(code, 0) / 1e4 if mv else None),
-                                    hist_pct=hist_pct)
+                                    hist_pct=hist_pct, dist_high250=dist_high250)
                 raw, main_lv = None, None
                 if d_c3 or w_c3:
                     raw, main_lv = 'VCP收缩型', (d_lv if d_c3 else w_lv)
@@ -5352,14 +5346,15 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                         pattern = '旗形整理'           # 急涨后缩量旗面（趋势中继，非 Stage 1 基底，不强制趋势模板）
                         main_lv = fl                  # 距枢轴超窗的旗面不硬贴标签，回落平台判定
                     elif pf and pf['formed']:
-                        # 平台路径按位置三分（任务A 2026-10-01 晚用户总裁决）：分位≤40=底部整理、
-                        # 40~60=平台整理、>60=高位平台⚠️（独立成组沉底，高位股绝不进底部整理组）
+                        # 平台路径位置二分+高位硬拒（任务A 2026-10-01 + 任务F 2026-10-25）：
+                        # 分位≤40=底部整理、40~60=平台整理；>60 一律拒（高位平台⚠️沉底组取消，
+                        # 福能84.4/申能65.6/农行63.2 类不再展示）
                         if hist_pct is not None and hist_pct <= 40:
                             pattern = '底部整理'       # Stage 1 基底分层保留展示
                         elif hist_pct is not None and hist_pct <= 60:
                             pattern = '平台整理'
                         else:
-                            pattern = '高位平台⚠️'
+                            continue                   # 任务F：平台路径高位硬拒
                         plat = bars[-pf['days']:]
                         vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
                         main_lv = dict(pf)
@@ -5433,10 +5428,10 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         # 分组展示（2026-10-01 下午 用户指令）：按形态分四组（VCP收缩/杯柄/底部整理/旗形），
         # 每组各取前 10——组内资金确认(mfDays≥6)优先、再距枢轴升序；底部整理组稳定可见，
         # 不再被杯柄组霸屏截断（伊利股份类排 30 名外被裁的问题根治）
-        # 分组展示（2026-10-01 晚任务A/B/D）：VCP→杯柄→底部整理→长平台（底部组内独立标注）→
-        # 平台整理→旗形→高位平台⚠️沉底独立成组；每组各前 10，组内资金确认优先、再距枢轴升序
+        # 分组展示（2026-10-25 任务E/F）：VCP→杯柄→底部整理→长平台→平台整理→旗形；
+        # 高位平台⚠️沉底组取消（平台/长平台高位硬拒，任务F）。每组各前 10
         pat_order = {'VCP收缩型': 0, '杯柄型': 1, '底部整理': 2, '超窄幅整理': 2, '底部平台型': 2,
-                     '长平台整理': 3, '平台整理': 4, '旗形整理': 5, '高位平台⚠️': 6}
+                     '长平台整理': 3, '平台整理': 4, '旗形整理': 5}
         items.sort(key=lambda x: (pat_order.get(x['pattern'], 4),
                                   0 if x.get('mfDays', 0) >= 6 else 1,
                                   x['distMain']))

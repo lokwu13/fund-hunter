@@ -1151,7 +1151,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
       {/* ===== ② 第3步 · 个股形态工具（服务第3步「看形态」选股与第4步跟踪） ===== */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-dashed border-violet-300 bg-violet-50/40 px-3 py-2 text-xs text-violet-800">
         <span className="text-sm font-bold">② 第3步 · 个股形态工具</span>
-        <span className="text-violet-700/80">形态精扫 / 逆行流水——从第2步圈定的板块里挑形态过硬的个股（VCP收缩/杯柄/底部整理/长平台/平台整理/高位平台⚠️/旗形整理）</span>
+        <span className="text-violet-700/80">形态精扫 / 逆行流水——从第2步圈定的板块里挑形态过硬的个股（VCP收缩/杯柄·奥尼尔CANSLIM/底部整理/长平台/平台整理/旗形整理；平台路径高位硬拒）</span>
       </div>
 
       {/* 形态精扫（原个股 VCP 精扫，2026-10-01 多形态并列：VCP收缩/杯柄/平台整理/旗形整理；上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 池） */}
@@ -1162,7 +1162,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <Waves className="w-4 h-4 text-violet-500" />
                 形态精扫
-                <span className="text-[10px] font-normal text-violet-400">VCP收缩 / 杯柄 / 底部整理 / 长平台 / 平台整理 / 高位平台⚠️ / 旗形整理</span>
+                <span className="text-[10px] font-normal text-violet-400">VCP收缩 / 杯柄·CANSLIM / 底部整理 / 长平台 / 平台整理 / 旗形整理</span>
                 <span className="text-[10px] font-normal text-slate-400">
                   {data.vcpStocks.poolRaw
                     ? `池${data.vcpStocks.poolRaw}→${data.vcpStocks.poolSize ?? '—'}只(≥250亿) · 精扫${data.vcpStocks.scanned ?? 0}只`
