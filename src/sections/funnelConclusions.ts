@@ -49,6 +49,10 @@ function windowConclusion(data: any) {
   if ((osc.sellAlerts || []).length > 0) {
     signals.push(`强硬减仓：${osc.sellAlerts.join('、')}`);
   } else {
+    const topRisks = items.filter((r: any) => r.state === '顶部风险');
+    if (topRisks.length > 0) {
+      signals.push(`顶部风险：${topRisks.map((r: any) => r.indexName).join('、')}（不能做多）`);
+    }
     if ((osc.buyWindows || []).length > 0) signals.push(`完整抄底窗口：${osc.buyWindows.join('、')}`);
     if ((osc.reboundWatch || []).length > 0) signals.push(`反弹观察：${osc.reboundWatch.join('、')}（不升档）`);
     const oversold = items.filter((r: any) => String(r.state).includes('超卖观察'));
