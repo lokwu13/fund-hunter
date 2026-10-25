@@ -482,7 +482,12 @@ export interface FundData {
         name: string;
         eci: number;
         inflow20d: number;
+        inflow30d: number;
         positiveRatio: number;
+        fundScore: number;
+        trendScore: number;
+        momentumScore: number;
+        activityScore: number;
         leaders: Array<{ name: string; code: string; pctChg: number }>;
       }>;
     }>;

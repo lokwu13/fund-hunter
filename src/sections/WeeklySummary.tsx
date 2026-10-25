@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from 'lucide-react';
+import { useState } from 'react';
 import { useFundData } from '@/hooks/useFundData';
 
 const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
@@ -14,6 +15,7 @@ interface WeeklySummaryProps {
 
 export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
   const { data } = useFundData();
+  const [openEciBonus, setOpenEciBonus] = useState<string | null>(null);
   const indices = data.indices;
 
   const myStocks = data.stocks || [];
@@ -271,46 +273,68 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                       {st.key === 'sector' && (
                         <div className="space-y-1">
                           {(st.rows || []).map((r) => (
-                            <div key={r.sector} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-orange-50/60">
-                              <button
-                                className="text-xs font-semibold text-orange-700 flex-shrink-0 underline decoration-dotted underline-offset-2 hover:text-orange-900"
-                                title="跳工具栏对应卡片并高亮该板块"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onNavigate?.('tools', r.lifecycle === '积聚期' ? 'bottom-watch' : 'sector-scan', r.sector);
-                                }}
-                              >{r.sector}</button>
-                              <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 ${
-                                r.lifecycle === '积聚期' ? 'bg-teal-500 text-white' : 'bg-orange-500 text-white'
-                              }`}>{r.lifecycle}</Badge>
-                              {r.dual && <Badge className="text-[9px] h-4 px-1 border-0 bg-red-500 text-white flex-shrink-0">🔥双档共振</Badge>}
-                              {r.pattern && (
-                                <Badge className="text-[9px] h-4 px-1 border-0 bg-indigo-500 text-white flex-shrink-0" title={r.patternEvidence}>
-                                  {r.pattern}·缩量{(r.volRatio ?? 0).toFixed(2)}
-                                </Badge>
+                            <div key={r.sector} className="rounded-lg px-2 py-1 hover:bg-orange-50/60">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <button
+                                  className="text-xs font-semibold text-orange-700 flex-shrink-0 underline decoration-dotted underline-offset-2 hover:text-orange-900"
+                                  title="跳工具栏对应卡片并高亮该板块"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onNavigate?.('tools', r.lifecycle === '积聚期' ? 'bottom-watch' : 'sector-scan', r.sector);
+                                  }}
+                                >{r.sector}</button>
+                                <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 ${
+                                  r.lifecycle === '积聚期' ? 'bg-teal-500 text-white' : 'bg-orange-500 text-white'
+                                }`}>{r.lifecycle}</Badge>
+                                {r.dual && <Badge className="text-[9px] h-4 px-1 border-0 bg-red-500 text-white flex-shrink-0">🔥双档共振</Badge>}
+                                {r.pattern && (
+                                  <Badge className="text-[9px] h-4 px-1 border-0 bg-indigo-500 text-white flex-shrink-0" title={r.patternEvidence}>
+                                    {r.pattern}·缩量{(r.volRatio ?? 0).toFixed(2)}
+                                  </Badge>
+                                )}
+                                {r.smart && (
+                                  <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 text-white ${
+                                    r.smart.verdict === '✅有效' ? 'bg-emerald-600' :
+                                    r.smart.verdict === '❌无效' ? 'bg-rose-600' : 'bg-slate-400'
+                                  }`} title={`聪明钱超额（${r.smart.l1}主动基金${r.smart.proxy ? '代理' : ''}，T+1净值）：YTD超额中位 ${r.smart.exytdMed ?? '—'}%`}>
+                                    {r.smart.verdict === '✅有效' ? '✅聪明钱' : r.smart.verdict === '❌无效' ? '❌主动资金未验证' : '聪明钱中性'}
+                                    {r.smart.proxy && `·${r.smart.l1}代理`}
+                                  </Badge>
+                                )}
+                                {r.eciBonus && (
+                                  <button type="button" onClick={(e) => { e.stopPropagation(); setOpenEciBonus(openEciBonus === r.sector ? null : r.sector); }}>
+                                    <Badge className="text-[9px] h-4 px-1 border-0 bg-violet-500 text-white flex-shrink-0" title="母板块ECI前10且资金达标；展开子板块四维评分前3">
+                                      +ECI·{r.eciBonus.parent}前10 {openEciBonus === r.sector ? '▲' : '▼'}
+                                    </Badge>
+                                  </button>
+                                )}
+                                {r.rotation && (
+                                  <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 text-white ${
+                                    r.rotation.overheat ? 'bg-rose-600' : r.rotation.phase === '中段' ? 'bg-amber-500' : 'bg-emerald-500'
+                                  }`} title={`轮动热度（每日涨幅榜）：近10日上榜${r.rotation.hits10}次·当前连续${r.rotation.streak}天${r.rotation.overheat ? '——轮动上涨已久·追高风险，第2步已沉底降权' : ''}`}>
+                                    {r.rotation.overheat ? '🔥轮动过热·已降权' : r.rotation.phase === '中段' ? '🟠轮动中段' : '🟢轮动启动'}
+                                  </Badge>
+                                )}
+                                <span className="text-[11px] text-slate-500 flex-1 min-w-[120px]">{r.reason}</span>
+                                <span className="text-[11px] text-slate-600 flex-shrink-0">
+                                  双龙头：{(r.leaders || []).length > 0
+                                    ? r.leaders.map((l: any) => `${l.mine ? '⛔' : ''}${l.name}${(l.pctChg ?? 0) >= 0 ? '+' : ''}${l.pctChg}%`).join('、')
+                                    : '暂无（待数据）'}
+                                </span>
+                              </div>
+                              {r.eciBonus && openEciBonus === r.sector && (
+                                <div className="mt-1.5 ml-2 rounded-md border border-violet-100 bg-violet-50/50 px-2 py-1.5">
+                                  <p className="text-[9px] text-violet-500 mb-1">母板块 ECI {r.eciBonus.parentEci} · 子板块四维评分前3（各维满分15；30日净流入均为正）</p>
+                                  {(r.eciBonus.subs || []).map((sub: any) => (
+                                    <div key={sub.name} className="flex items-center gap-x-2 gap-y-0.5 flex-wrap text-[10px] text-slate-600 py-0.5 border-t border-violet-100/70 first:border-0">
+                                      <span className="font-semibold text-violet-700">{sub.name} · ECI {sub.eci}</span>
+                                      <span>资金{sub.fundScore} / 趋势{sub.trendScore} / 动量{sub.momentumScore} / 活跃{sub.activityScore}</span>
+                                      <span className="text-red-500">30日+{sub.inflow30d}亿</span>
+                                      <span className="text-slate-400">方向一致{sub.positiveRatio}%</span>
+                                    </div>
+                                  ))}
+                                </div>
                               )}
-                              {r.smart && (
-                                <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 text-white ${
-                                  r.smart.verdict === '✅有效' ? 'bg-emerald-600' :
-                                  r.smart.verdict === '❌无效' ? 'bg-rose-600' : 'bg-slate-400'
-                                }`} title={`聪明钱超额（${r.smart.l1}主动基金${r.smart.proxy ? '代理' : ''}，T+1净值）：YTD超额中位 ${r.smart.exytdMed ?? '—'}%`}>
-                                  {r.smart.verdict === '✅有效' ? '✅聪明钱' : r.smart.verdict === '❌无效' ? '❌主动资金未验证' : '聪明钱中性'}
-                                  {r.smart.proxy && `·${r.smart.l1}代理`}
-                                </Badge>
-                              )}
-                              {r.rotation && (
-                                <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 text-white ${
-                                  r.rotation.overheat ? 'bg-rose-600' : r.rotation.phase === '中段' ? 'bg-amber-500' : 'bg-emerald-500'
-                                }`} title={`轮动热度（每日涨幅榜）：近10日上榜${r.rotation.hits10}次·当前连续${r.rotation.streak}天${r.rotation.overheat ? '——轮动上涨已久·追高风险，第2步已沉底降权' : ''}`}>
-                                  {r.rotation.overheat ? '🔥轮动过热·已降权' : r.rotation.phase === '中段' ? '🟠轮动中段' : '🟢轮动启动'}
-                                </Badge>
-                              )}
-                              <span className="text-[11px] text-slate-500 flex-1 min-w-[120px]">{r.reason}</span>
-                              <span className="text-[11px] text-slate-600 flex-shrink-0">
-                                双龙头：{(r.leaders || []).length > 0
-                                  ? r.leaders.map((l: any) => `${l.mine ? '⛔' : ''}${l.name}${(l.pctChg ?? 0) >= 0 ? '+' : ''}${l.pctChg}%`).join('、')
-                                  : '暂无（待数据）'}
-                              </span>
                             </div>
                           ))}
                           {(!st.rows || st.rows.length === 0) && (
@@ -326,7 +350,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                               其余板块（折叠）：{Object.entries(st.collapsed).map(([k, v]) => `${k}${v}`).join(' · ')}（生命周期：积聚/启动/主升/高潮/退潮/半路，仅展开积聚+启动）
                             </p>
                           )}
-                          {/* 聪明钱超额榜一行摘要（2026-09-29 用户指令：整表移至板块栏目，总览只留精简摘要） */}
+                          {/* 聪明钱整表已删；第2步徽章与这一行摘要继续保留。 */}
                           {data.sectorSmartMoney && (() => {
                             const sms = data.sectorSmartMoney.sectors;
                             const good = sms.filter((s) => s.verdict === '✅有效').map((s) => s.sector);
@@ -337,12 +361,6 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                               <p className="text-[10px] text-emerald-700 px-2 pt-1 border-t border-emerald-100">
                                 聪明钱：{good.length > 0 ? `${good.join('、')}✅有效` : '无✅有效板块'}，
                                 其余 ❌无效{bad}·中性{mid}{na > 0 ? `·无样本${na}` : ''}
-                                <button type="button"
-                                        className="ml-1 underline decoration-dotted text-emerald-600 hover:text-emerald-800"
-                                        title="跳转板块栏目「板块聪明钱超额榜」完整表格"
-                                        onClick={(e) => { e.stopPropagation(); onNavigate?.('tools', 'smart-money'); }}>
-                                  详见板块栏目 ↗
-                                </button>
                               </p>
                             );
                           })()}

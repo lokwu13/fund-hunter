@@ -2496,6 +2496,8 @@ def build_funnel(data):
             smart_l2[_l2] = {'verdict': _s['verdict'], 'exytdMed': _s.get('exytdMed'), 'l1': _l1}
     # ── 轮动过热因子并入第2步（2026-09-29 用户正式指令）：🔥过热一票降权（排序沉底+警示，不否决）──
     rot_map = {s['sector']: s for s in (data.get('sectorRotation') or {}).get('stats') or []}
+    # ECI 子板块拆解作为加分项，不改入选硬门；复用既有计算结果，零新增取数。
+    eci_by_parent = {x['parent']: x for x in (data.get('eciSubsectors') or {}).get('items') or []}
     step2_rows = []
     dropped2 = []   # 积聚/启动但形态未达标（如实展示哪条卡掉）
     for n in all_sectors:
@@ -2526,6 +2528,8 @@ def build_funnel(data):
                       f"价格低位（分位{round((bw.get('pricePosition') or 0) * 100)}%）")
         elif sc:
             reason = f"{sc.get('status')}：连续净流入{sc.get('consecutiveDays')}天，近5日{sc.get('netInflow5d')}亿"
+        eci_parent = SECTOR_TO_L1.get(n, n)
+        eci_bonus = eci_by_parent.get(eci_parent)
         step2_rows.append({'sector': n, 'lifecycle': lc, 'reason': reason, 'leaders': leaders,
                            'dual': bool(bw and bw.get('both')),
                            'pattern': sp['pattern'], 'volRatio': sp['volRatio'],
@@ -2533,7 +2537,9 @@ def build_funnel(data):
                            'rotation': ({'phase': rot_map[n]['phase'], 'hits10': rot_map[n]['hits10'],
                                          'streak': rot_map[n]['streak'], 'overheat': rot_map[n]['overheat'],
                                          'label': rot_map[n]['label']} if n in rot_map else None),
-                           'smart': dict(smart_l2[n], proxy=(n != smart_l2[n]['l1'])) if n in smart_l2 else None})
+                           'smart': dict(smart_l2[n], proxy=(n != smart_l2[n]['l1'])) if n in smart_l2 else None,
+                           'eciBonus': ({'parent': eci_parent, 'parentEci': eci_bonus['parentEci'],
+                                         'subs': eci_bonus['subs'][:3]} if eci_bonus else None)})
     # 轮动过热一票降权：排序沉底（其余保持原名序），不否决（2026-09-29 用户口径）
     step2_rows.sort(key=lambda r: (1 if (r.get('rotation') or {}).get('overheat') else 0, r['sector']))
     collapsed = {}
@@ -3319,8 +3325,8 @@ def build_eci_subsectors(hist, eci_data, today_map):
     子板块四维简版打分（0-15×4 折算百分制）：资金集中度/趋势同步(20日上涨天数占比)/
     一致性动量/活跃度；选得分前 3 且 30日净流入>0（宁缺毋滥，可少于 3 个甚至为 0）；
     每个入选子板块带今日主力净流入前 2 的龙头。
-    观察池：ECI前10 中未达标但接近的——(30日净流入>0 且 流入天数占比≥40%) 或 ECI前5 之一；
-    每行带差距说明，灰蓝样式区别于达标。
+    观察池：ECI前10 中未达标但接近的，必须先满足30日净流入>0；
+    再要求流入天数占比≥40%或母板块ECI前5。资金为负一律禁入，包括ECI前5。
     """
     days = sorted(hist['days'])
     if len(days) < 40:
@@ -3347,11 +3353,9 @@ def build_eci_subsectors(hist, eci_data, today_map):
         net30 = a['net'] if a else 0.0
         pos_ratio = (a['pos'] / a['n']) if a and a['n'] else 0.0
         if not (a and a['n'] > 0 and net30 > 0 and pos_ratio >= 0.5):
-            # 观察池：未完全达标但接近（金标准不放松，仅分级展示）
-            if (net30 > 0 and pos_ratio >= 0.4) or (parent in top5_names):
-                if net30 <= 0:
-                    gap = f'30日净流出{abs(net30):.1f}亿，待资金回正'
-                elif pos_ratio < 0.4:
+            # 观察池资金硬门：net30>0 是一票前提，ECI前5也不能豁免。
+            if net30 > 0 and (pos_ratio >= 0.4 or parent in top5_names):
+                if pos_ratio < 0.4:
                     gap = f'流入占比{pos_ratio * 100:.1f}%，不足40%'
                 else:
                     gap = f'流入占比{pos_ratio * 100:.1f}%，未过半'
@@ -3393,13 +3397,18 @@ def build_eci_subsectors(hist, eci_data, today_map):
             tsync = round(s['up_ratio'] * _ECI_DIM_MAX, 1)
             mom = round((0.6 * s['align'] + 0.4 * _pct_rank(ret5_vals, s['ret5'])) * _ECI_DIM_MAX, 1)
             act = round(s['act'] * _ECI_DIM_MAX, 1)
+            s['fundScore'], s['trendScore'] = fund, tsync
+            s['momentumScore'], s['activityScore'] = mom, act
             s['eci'] = round((fund + tsync + mom + act) / (_ECI_DIM_MAX * 4) * 100, 1)
         picked = [s for s in sorted(stat_list, key=lambda x: -x['eci']) if s['net30'] > 0][:3]
         if not picked:
             continue
         subs = [{
             'name': s['name'], 'eci': s['eci'], 'inflow20d': s['inflow20d'],
+            'inflow30d': round(s['net30'], 2),
             'positiveRatio': round(s['pos30'] * 100, 1),
+            'fundScore': s['fundScore'], 'trendScore': s['trendScore'],
+            'momentumScore': s['momentumScore'], 'activityScore': s['activityScore'],
             'leaders': [{'name': t['name'], 'code': t['code'], 'pctChg': t['pct']}
                         for t in (today_map.get(s['name']) or [])[:2]],
         } for s in picked]
