@@ -1041,7 +1041,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
         </Card>
       )}
 
-      {/* VCP 波动收缩监测 */}
+      {/* VCP 波动收缩监测：只放宽指数侧，个股形态精扫不变 */}
       {data.vcpWatch && (
         <Card className="border-emerald-200 shadow-sm">
           <CardHeader className="pb-2">
@@ -1051,6 +1051,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                 VCP 波动收缩监测
                 <span className="text-[10px] font-normal text-slate-400">
                   🟢{data.vcpWatch.stats?.green ?? 0} 🟡{data.vcpWatch.stats?.yellow ?? 0} · 共监测{data.vcpWatch.stats?.total ?? 0}个板块
+                  {data.vcpWatch.stats?.conceptMonitored != null && ` · 概念${data.vcpWatch.stats.conceptMonitored}/${data.vcpWatch.stats.conceptTotal ?? 0}（短历史${data.vcpWatch.stats.conceptShortHistory ?? 0}）`}
                 </span>
               </CardTitle>
               <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
@@ -1067,7 +1068,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                     <tr className="text-slate-500 border-b border-slate-200">
                       <th className="text-left py-1.5 font-medium">板块</th>
                       <th className="text-right font-medium">20日波动率</th>
-                      <th className="text-right font-medium">年分位</th>
+                      <th className="text-right font-medium">波动率分位</th>
                       <th className="text-right font-medium">成交收缩比</th>
                       <th className="text-right font-medium">窄幅+缩量龙头</th>
                       <th className="text-center font-medium">信号</th>
@@ -1091,8 +1092,10 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                             {r.signal === '⚪' && <span className="text-[9px] text-slate-300 ml-1">对照</span>}
                           </td>
                           <td className="text-right">{r.vol20}%</td>
-                          <td className={`text-right font-semibold ${r.volPct < 25 ? 'text-emerald-600' : r.volPct < 50 ? 'text-amber-500' : 'text-slate-500'}`}>{r.volPct}%</td>
-                          <td className={`text-right ${r.amtRatio != null && r.amtRatio < 0.7 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>
+                          <td className={`text-right font-semibold ${r.volPct < 35 ? 'text-emerald-600' : r.volPct < 50 ? 'text-amber-500' : 'text-slate-500'}`}>
+                            {r.volPct}%{r.shortHistory && <span className="block text-[9px] font-normal text-amber-500">短历史·{r.historyDays}日</span>}
+                          </td>
+                          <td className={`text-right ${r.amtRatio != null && r.amtRatio < 0.85 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>
                             {r.amtRatio != null ? r.amtRatio : '—'}
                           </td>
                           <td className="text-right">{r.nHit}/{r.nLeaders}</td>
@@ -1110,8 +1113,8 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     <th className="text-right font-medium">年分位</th>
                                     <th className="text-right font-medium">振幅比</th>
                                     <th className="text-right font-medium">量比</th>
-                                    <th className="text-center font-medium">窄幅&lt;0.75</th>
-                                    <th className="text-center font-medium">缩量&lt;0.7</th>
+                                    <th className="text-center font-medium">窄幅&lt;0.85</th>
+                                    <th className="text-center font-medium">缩量&lt;0.85</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -1119,9 +1122,9 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     <tr key={l.code} className="border-t border-slate-100">
                                       <td className="py-1 text-slate-700">{l.name}<span className="text-[9px] text-slate-400 ml-1">{l.code}</span></td>
                                       <td className="text-right">{l.vol20}%</td>
-                                      <td className={`text-right ${l.volPct < 25 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>{l.volPct}%</td>
-                                      <td className={`text-right ${l.ampRatio < 0.75 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>{l.ampRatio}</td>
-                                      <td className={`text-right ${l.volRatio < 0.7 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>{l.volRatio}</td>
+                                      <td className={`text-right ${l.volPct < 35 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>{l.volPct}%</td>
+                                      <td className={`text-right ${l.ampRatio < 0.85 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>{l.ampRatio}</td>
+                                      <td className={`text-right ${l.volRatio < 0.85 ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>{l.volRatio}</td>
                                       <td className="text-center">{l.narrow ? '✅' : <span className="text-slate-300">—</span>}</td>
                                       <td className="text-center">{l.shrink ? '✅' : <span className="text-slate-300">—</span>}</td>
                                     </tr>
@@ -1139,9 +1142,35 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
             ) : (
               <p className="text-xs text-slate-400 py-3 text-center">本期无共振信号且暂无对照数据</p>
             )}
+            <div className="mt-4 pt-3 border-t border-emerald-100">
+              <p className="text-xs font-semibold text-slate-600 mb-2">杯柄监测 · 指数放宽口径</p>
+              {data.vcpWatch.cupItems && data.vcpWatch.cupItems.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-[11px] min-w-[780px]">
+                    <thead><tr className="text-slate-400 border-b border-slate-100">
+                      <th className="text-left py-1 font-medium">板块/概念</th><th className="text-right font-medium">杯深</th>
+                      <th className="text-right font-medium">柄日/振幅</th><th className="text-right font-medium">柄/杯量比</th>
+                      <th className="text-right font-medium">枢轴</th><th className="text-right font-medium">距枢轴</th>
+                      <th className="text-right font-medium">突破放量状态</th>
+                    </tr></thead>
+                    <tbody>{data.vcpWatch.cupItems.map((r) => (
+                      <tr key={r.code} className="border-t border-slate-50">
+                        <td className="py-1.5 text-slate-700">{r.name}<span className="text-[9px] text-slate-400 ml-1">{r.kind}</span></td>
+                        <td className="text-right">{r.cupDepth}%</td><td className="text-right">{r.days}日 / {r.amplitude}%</td>
+                        <td className="text-right">{r.volRatio}</td><td className="text-right">{r.pivot}</td><td className="text-right">{r.distPct}%</td>
+                        <td className={`text-right ${r.breakout ? 'text-emerald-600 font-semibold' : 'text-slate-500'}`}>
+                          {r.breakout ? `已突破 · ${r.breakoutVolX}×柄量` : `待收盘≥枢轴且量≥1.5×柄量（${r.volConfirm}）`}
+                        </td>
+                      </tr>
+                    ))}</tbody>
+                  </table>
+                  <p className="text-[9px] text-slate-400 mt-1">指数无日内高低价，以收盘近似 OHLC；突破需收盘≥枢轴且当日量≥1.5×柄均量。</p>
+                </div>
+              ) : <p className="text-[11px] text-slate-400">本期无命中</p>}
+            </div>
             {data.vcpWatch.conceptShort && data.vcpWatch.conceptShort.length > 0 && (
               <p className="text-[10px] text-amber-500 mt-2">
-                概念指数历史不足一年（无法计算年分位，暂不监测）：{data.vcpWatch.conceptShort.join('、')}
+                概念指数历史不足60日，暂不监测：{data.vcpWatch.conceptShort.join('、')}
               </p>
             )}
           </CardContent>

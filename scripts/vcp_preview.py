@@ -6,11 +6,12 @@
 
 口径：
 - 龙头：申万行业指数成分中流通市值前 5（剔除 ST、上市不足 60 交易日）
-- 20日滚动波动率 = 日收益 std × √244（年化%）；年分位 = 近244交易日该序列中 ≤当前值 的占比
-- 振幅收窄比 = 近10日均(high/low-1) ÷ 近60日均值；<0.75 窄幅
-- 量能收缩比 = 近5日均量 ÷ 近60日均量；<0.7 缩量
-- 板块：SW 行业指数日线的 20日波动率年分位 + 成交额收缩比（近5日均额÷近60日均额）
-- 🟢强共振：板块分位<25% 且 5 龙头中 ≥3 只同时窄幅+缩量；=2 只 → 🟡观察；其余 ⚪
+- 20日滚动波动率 = 日收益 std × √244（年化%）；分位最多取近244个波动率点
+- 概念指数 ≥60 日纳监；60~263 日标短历史并用全部可得波动率历史，<60 日留空
+- 指数卡龙头振幅收窄比 = 近10日均(high/low-1) ÷ 近60日均值；<0.85 窄幅
+- 指数卡龙头量能收缩比 = 近5日均量 ÷ 近60日均量；<0.85 缩量
+- 板块：指数20日波动率分位 + 成交收缩比（近5日÷近60日；概念无成交额用成交量）
+- 🟢强共振：板块分位<35% 且 5 龙头中 ≥3 只同时窄幅+缩量；=2 只 → 🟡观察；其余 ⚪
 - 概念板块：fund_data.json conceptSectors 15 个，走同花顺 ths_index/ths_member/ths_daily
 """
 import importlib.util
@@ -33,9 +34,10 @@ API_DELAY = float(os.environ.get('API_DELAY', '1.5'))
 BACK_CAL_DAYS = 420       # 日线回溯日历日（覆盖 244 个滚动20日波动率点）
 MIN_LIST_CAL_DAYS = 90    # 上市不足约 60 交易日剔除
 VOL_WIN, VOL_YEAR = 20, 244
-AMP_NARROW = 0.75
-VOL_SHRINK = 0.7
-SECTOR_LOW_PCT = 25.0
+# 指数监测放宽（2026-10-25）：只影响板块/概念卡，不影响个股形态精扫。
+AMP_NARROW = 0.85
+VOL_SHRINK = 0.85
+SECTOR_LOW_PCT = 35.0
 
 
 def load_cache():
@@ -60,9 +62,9 @@ def api(pro, fn, **kw):
 
 
 def rolling_vol_pct(closes):
-    """closes: 升序收盘价 → (当前年化波动率%, 年分位%)，数据不足返回 (None, None)"""
+    """20日年化波动率及分位；≥60日用全部可得波动率历史，<60日留空。"""
     rets = [closes[i] / closes[i - 1] - 1 for i in range(1, len(closes)) if closes[i - 1] > 0]
-    if len(rets) < VOL_WIN + 60:
+    if len(closes) < 60 or len(rets) < VOL_WIN:
         return None, None
     series = []
     for i in range(VOL_WIN, len(rets) + 1):
@@ -96,7 +98,7 @@ def stock_metrics(rows):
 
 
 def index_metrics(rows):
-    """rows: 升序 [date, close, amount] → (vol20, volPct, amtRatio)；无成交额(概念指数)则 amtRatio=None"""
+    """rows: 升序 [date, close, amount/vol]；概念无成交额时第三列为成交量。"""
     closes = [r[1] for r in rows]
     amts = [r[2] for r in rows]
     vol, pct = rolling_vol_pct(closes)
@@ -106,7 +108,8 @@ def index_metrics(rows):
         amt_ratio = round((sum(amts[-5:]) / 5) / (sum(amts[-60:]) / 60), 2)
     else:
         amt_ratio = None
-    return {'vol20': vol, 'volPct': pct, 'amtRatio': amt_ratio}
+    return {'vol20': vol, 'volPct': pct, 'amtRatio': amt_ratio,
+            'historyDays': len(rows), 'shortHistory': len(rows) < VOL_WIN + VOL_YEAR}
 
 
 # ── 数据抓取（全部带缓存续传） ─────────────────────────────────
@@ -255,11 +258,33 @@ def ensure_leaders(c):
     save_cache(c)
 
 
+def ths_daily_rows(df):
+    """同花顺指数行；无 amount 时用 vol，保证概念量比和杯柄量可计算。"""
+    rows = []
+    for _, r in df.iterrows():
+        amount = r.get('amount') if 'amount' in df.columns else None
+        volume = r.get('vol') if 'vol' in df.columns else None
+        value = amount if amount is not None and amount == amount else volume
+        rows.append([str(r['trade_date']), float(r['close']),
+                     float(value) if value is not None and value == value else 0.0])
+    rows.sort()
+    return rows
+
+
+def merge_index_rows(old_rows, new_rows, max_len=700):
+    """按日期合并回补，允许新行把旧的零量能替换为成交量。"""
+    merged = {r[0]: r for r in old_rows}
+    merged.update({r[0]: r for r in new_rows})
+    return [merged[d] for d in sorted(merged)][-max_len:]
+
+
 def ensure_index_daily(pro, c):
-    """行业指数走 index_daily；概念指数走 ths_daily（无成交额，板块量比记 None）"""
+    """行业指数走 index_daily；概念历史不足时按 1200 日历日回补。"""
     c.setdefault('index_daily', {})
     start = (datetime.strptime(c['trade_date'], '%Y%m%d')
              - timedelta(days=BACK_CAL_DAYS)).strftime('%Y%m%d')
+    concept_start = (datetime.strptime(c['trade_date'], '%Y%m%d')
+                     - timedelta(days=1200)).strftime('%Y%m%d')
     targets = [s['code'] for s in c['sw_list']]
     for code in targets:
         if code in c['index_daily']:
@@ -273,16 +298,15 @@ def ensure_index_daily(pro, c):
         save_cache(c)
     for con in c.get('concepts', []):
         code = con['code']
-        if code in c['index_daily']:
+        old = c['index_daily'].get(code, [])
+        if len(old) >= VOL_WIN + VOL_YEAR:
             continue
         try:
-            df = api(pro, 'ths_daily', ts_code=code, start_date=start, end_date=c['trade_date'])
-            rows = [[str(r['trade_date']), float(r['close']),
-                     float(r['amount']) if 'amount' in df.columns and r.get('amount') == r.get('amount') else 0]
-                    for _, r in df.iterrows()]
-            rows.sort()
-            c['index_daily'][code] = rows
-            print('ths_daily', con['name'], code, len(rows), 'amount' if rows and rows[-1][2] else 'no-amount')
+            df = api(pro, 'ths_daily', ts_code=code, start_date=concept_start, end_date=c['trade_date'])
+            rows = ths_daily_rows(df)
+            c['index_daily'][code] = merge_index_rows(old, rows)
+            print('ths_daily', con['name'], code, len(c['index_daily'][code]),
+                  'amount/vol' if rows and rows[-1][2] else 'no-volume')
         except Exception as e:
             print('ths_daily FAILED', con['name'], str(e)[:80])
         save_cache(c)
@@ -312,13 +336,14 @@ def ensure_stock_daily(pro, c):
 
 # ── 计算与渲染 ─────────────────────────────────────────────────
 
-def compute_results(c):
+def compute_results(c, cup_detector=None):
     info = c['stock_info']
     sectors = ([{'code': s['code'], 'name': s['name'], 'kind': '行业'} for s in c['sw_list']]
                + [{'code': x['code'], 'name': x['name'], 'kind': '概念'} for x in c.get('concepts', [])])
     out = []
     for s in sectors:
-        im = index_metrics(c['index_daily'].get(s['code'], []))
+        rows = c['index_daily'].get(s['code'], [])
+        im = index_metrics(rows)
         if not im:
             continue
         leaders = []
@@ -335,10 +360,15 @@ def compute_results(c):
             sig = '🟡'
         else:
             sig = '⚪'
+        cup = None
+        if cup_detector is not None:
+            bars = [(r[0], r[1], r[1], r[1], r[2]) for r in rows]
+            cup = cup_detector(bars)
         out.append({'code': s['code'], 'name': s['name'], 'kind': s['kind'],
                     'vol20': im['vol20'], 'volPct': im['volPct'],
                     'amtRatio': im['amtRatio'], 'nHit': n_hit, 'nLeaders': len(leaders),
-                    'signal': sig, 'leaders': leaders})
+                    'historyDays': im['historyDays'], 'shortHistory': im['shortHistory'],
+                    'cup': cup, 'signal': sig, 'leaders': leaders})
     out.sort(key=lambda x: x['volPct'])
     return out
 

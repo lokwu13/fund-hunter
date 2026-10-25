@@ -142,6 +142,25 @@ export interface MedicalSectorFunds {
   nonMainforce: MedicalSectorFundCategory;
 }
 
+export interface VcpIndexCup {
+  type: string;
+  days: number;
+  totalDays: number;
+  cupDepth: number;
+  amplitude: number;
+  volRatio: number;
+  pivot: number;
+  distPct: number;
+  invalidation: number;
+  preGain: number;
+  weeklyUp: boolean;
+  volConfirm: number;
+  breakout: boolean;
+  breakoutVolX: number;
+  priceBasis: string;
+  formed: boolean;
+}
+
 export interface FundData {
   updateTime: string;
   week: string;
@@ -505,8 +524,22 @@ export interface FundData {
   };
   vcpWatch?: {
     trade_date: string;
-    stats: { total: number; green: number; yellow: number };
+    stats: {
+      total: number;
+      green: number;
+      yellow: number;
+      conceptTotal?: number;
+      conceptMonitored?: number;
+      conceptShortHistory?: number;
+    };
     conceptShort?: string[];
+    cupItems?: Array<VcpIndexCup & {
+      code: string;
+      name: string;
+      kind: string;
+      historyDays: number;
+      shortHistory: boolean;
+    }>;
     note?: string;
     items: Array<{
       code: string;
@@ -517,6 +550,9 @@ export interface FundData {
       amtRatio: number | null;
       nHit: number;
       nLeaders: number;
+      historyDays: number;
+      shortHistory: boolean;
+      cup?: VcpIndexCup | null;
       signal: string;
       leaders: Array<{
         code: string;

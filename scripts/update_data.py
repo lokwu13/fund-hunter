@@ -1792,18 +1792,15 @@ def build_long_window(data):
           f"{('；' + bond_note) if bond_note else ''}）")
 
 
-# ══════════ 板块形态判定（2026-09-27 第2-3步共振双轨改版，用户正式指令）══════════
-SECTOR_VOL_SHRINK_MAX = 0.7   # 量能萎缩极致（自定阈值并注明）：近10日均成交额/近60日均成交额 ≤ 0.7
+# ══════════ 板块形态判定（2026-10-25 指数门槛放宽，个股精扫不变）══════════
+SECTOR_VOL_SHRINK_MAX = 0.85  # 板块侧：近10日均成交额/近60日均成交额 ≤0.85
 
 
 def _sector_pattern(hist, name):
-    """板块等权合成指数的形态检测（与个股同族口径，复用 sector_history 沉淀，零新增 API）。
+    """板块等权合成指数形态检测；VCP/底部不变，杯柄使用指数独立放宽口径。
 
-    价格=行业等权日收益复利净值（sector_history 无日内高低价，high/low 以收盘近似——
-    形态为收盘口径近似，阈值沿用个股 Minervini 精修）；量能=行业成交额合计（amt 字段）。
-    形态族：VCP收缩（≥3次严格递减收缩+末次收缩均量<首次）/ 杯柄（个股同口径）/
-    底部（一年价格分位≤30%）；外加要件：量能萎缩极致（10日/60日均额 ≤0.7）。
-    qualified = 任一形态命中 且 缩量极致。历史不足 80 日返回 None。
+    价格=行业等权日收益复利净值（无日内高低价，以收盘近似 OHLC）；量能=成交额合计。
+    qualified = VCP/底部/指数放宽杯柄任一命中 且 10日/60日均额 ≤0.85。
     """
     rows = _history_series(hist, name)
     if len(rows) < 80:
@@ -1821,7 +1818,7 @@ def _sector_pattern(hist, name):
     bottom = pct1y is not None and pct1y <= 30
     bars = [(rows[i][0], closes[i], closes[i], closes[i], amts[i]) for i in range(len(rows))]
     vcp = _vcp_level_strict(bars, VCP_DAILY_WIN, VCP_DAILY_K)
-    cup = _cup_handle_strict(bars)
+    cup = _index_cup_handle(bars)
     patterns = []
     if vcp and vcp['formed']:
         patterns.append('VCP收缩')
@@ -1833,10 +1830,10 @@ def _sector_pattern(hist, name):
     if vcp and vcp['formed']:
         ev.append(f"VCP {vcp['count']}次收缩{vcp['contractions']}·距枢轴{vcp['distPct']}%")
     if cup and cup['formed']:
-        ev.append(f"杯柄·杯深{cup['cupDepth']}%·柄{cup['days']}日")
+        ev.append(f"指数放宽杯柄·杯深{cup['cupDepth']}%·柄{cup['days']}日")
     if bottom:
         ev.append(f"一年分位{pct1y}%")
-    ev.append(f"量能比10/60={vol_ratio:.2f}{'≤0.7✓' if shrink else '>0.7✗'}")
+    ev.append(f"量能比10/60={vol_ratio:.2f}{'≤0.85✓' if shrink else '>0.85✗'}")
     return {'patterns': patterns,
             'pattern': '+'.join(patterns) if patterns else None,
             'volRatio': round(vol_ratio, 2), 'shrinkExtreme': bool(shrink),
@@ -2480,9 +2477,9 @@ def build_funnel(data):
     concl1 = ('当前可关注：' + '；'.join(focus[:3])) if focus else '七只宽基均无可关注形态，空仓等待'
     guide1 = '本步回答：买哪类宽基/什么风格？' + concl1 + '。选好风格后进第2步圈板块'
 
-    # ── 第2步 圈板块（生命周期分级 + 板块形态双达标，2026-09-27 用户正式指令升级）──
+    # ── 第2步 圈板块（生命周期分级 + 板块形态双达标）──
     # 入选 = 资金持续流入（积聚期∪启动期，现有口径）且 板块自身形态达标
-    #       （VCP收缩/底部/杯柄 任一命中 + 量能萎缩极致10/60≤0.7）。两条都要。
+    #       （VCP收缩/底部/指数放宽杯柄任一命中 + 10/60≤0.85）。两条都要。
     all_sectors = sorted(set(list(flows.keys()) + list(bw_map.keys()) + list(scan_map.keys())))
     lc_map = {n: _lifecycle(n) for n in all_sectors}
     sp_map = {}
@@ -2509,7 +2506,7 @@ def build_funnel(data):
         if not (sp and sp['qualified']):
             why = ('历史不足80日' if sp is None
                    else '板块形态未命中（VCP/底部/杯柄均无）' if not sp['patterns']
-                   else f"量能萎缩未达极致（10/60={sp['volRatio']}>0.7）")
+                   else f"量能萎缩未达极致（10/60={sp['volRatio']}>0.85）")
             dropped2.append({'sector': n, 'lifecycle': lc, 'why': why,
                              'pattern': (sp or {}).get('pattern'),
                              'volRatio': (sp or {}).get('volRatio')})
@@ -2659,7 +2656,7 @@ def build_funnel(data):
                  '（阶段底部=一年分位≤30%/窄幅波动=低波/多头排列=50>150>200日线/高位）→2板块生命周期'
                  '（积聚=bottomWatch命中，启动=scan启动确认，主升=20日涨>10%且流入，高潮=高潮风险，'
                  '退潮=流出+一年分位≥70%）；第2步入选=积聚∪启动 且 板块自身形态达标'
-                 '（VCP收缩/底部/杯柄任一+量能萎缩极致10日/60日均额≤0.7，收盘口径近似，两条都要；'
+                 '（VCP收缩/底部/指数放宽杯柄任一+10日/60日均额≤0.85，收盘口径近似，两条都要；'
                  '被卡掉的积聚/启动板块在 dropped 字段如实列出）。'
                  '→3个股形态双轨：🔗共振轨=属于第2步入选板块（置顶，赢面优先）；'
                  '⭐优中选优轨=板块不同步但 池内（上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000，2026-10-01恢复中证1000）'
@@ -4711,16 +4708,17 @@ def fetch_vcp_watch(pro, trade_date, data):
                         c['index_daily'].get(code, []), rows, max_len=290)
             for con in c.get('concepts', []):
                 code = con['code']
+                old = c['index_daily'].get(code, [])
+                fetch_start = start
+                if len(old) < vcp.VOL_WIN + vcp.VOL_YEAR:
+                    fetch_start = (datetime.strptime(eff, '%Y%m%d')
+                                   - timedelta(days=1200)).strftime('%Y%m%d')
                 try:
                     df = vcp.api(pro, 'ths_daily', ts_code=code,
-                                 start_date=start, end_date=eff)
+                                 start_date=fetch_start, end_date=eff)
                     if df is not None and len(df) > 0:
-                        rows = [[str(r['trade_date']), float(r['close']),
-                                 float(r['amount']) if 'amount' in df.columns
-                                 and r.get('amount') == r.get('amount') else 0]
-                                for _, r in df.iterrows()]
-                        c['index_daily'][code] = _vcp_append_rows(
-                            c['index_daily'].get(code, []), rows, max_len=290)
+                        rows = vcp.ths_daily_rows(df)
+                        c['index_daily'][code] = vcp.merge_index_rows(old, rows, max_len=700)
                 except Exception as e:
                     print(f'  vcpWatch ths_daily {con["name"]} failed: {str(e)[:60]}')
             # 周五新入名单的龙头补一年历史
@@ -4741,24 +4739,33 @@ def fetch_vcp_watch(pro, trade_date, data):
                 print(f'  vcpWatch new leaders backfilled: {len(need)}')
         vcp.save_cache(c)
 
-        res = vcp.compute_results(c)
+        res = vcp.compute_results(c, cup_detector=_index_cup_handle)
         green = [r for r in res if r['signal'] == '🟢']
         yellow = [r for r in res if r['signal'] == '🟡']
         white = [r for r in res if r['signal'] == '⚪'][:5]
-        computed = {r['code'] for r in res}
-        concept_short = [x['name'] for x in c.get('concepts', [])
-                         if x['code'] not in computed
-                         and len(c['index_daily'].get(x['code'], [])) < 100]
+        concepts = c.get('concepts', [])
+        concept_res = [r for r in res if r['kind'] == '概念']
+        concept_short = [x['name'] for x in concepts
+                         if len(c['index_daily'].get(x['code'], [])) < 60]
+        cup_items = [{'code': r['code'], 'name': r['name'], 'kind': r['kind'],
+                      'historyDays': r['historyDays'], 'shortHistory': r['shortHistory'],
+                      **r['cup']} for r in res if r.get('cup')]
+        cup_items.sort(key=lambda x: abs(x.get('distPct', 999)))
         td = c['trade_date']
         data['vcpWatch'] = {
             'trade_date': f'{td[:4]}-{td[4:6]}-{td[6:]}',
-            'stats': {'total': len(res), 'green': len(green), 'yellow': len(yellow)},
+            'stats': {'total': len(res), 'green': len(green), 'yellow': len(yellow),
+                      'conceptTotal': len(concepts), 'conceptMonitored': len(concept_res),
+                      'conceptShortHistory': sum(1 for r in concept_res if r['shortHistory'])},
             'items': green + yellow + white,
             'conceptShort': concept_short,
-            'note': '20日滚动波动率年分位<25% 且 ≥3/5 龙头同时窄幅(振幅比<0.75)+缩量(量比<0.7) = 🟢强共振；'
-                    '2只 = 🟡观察；⚪为分位最低前5名对照。概念指数无成交额时收缩比显示—',
+            'cupItems': cup_items,
+            'note': '指数监测：20日波动率分位<35% 且 ≥3/5 龙头窄幅(振幅比<0.85)+缩量(量比<0.85)=🟢；'
+                    '2只=🟡。概念≥60日纳监，不足264日标短历史并用全部可得波动率历史；'
+                    '概念无成交额时用成交量。杯柄为独立指数放宽口径，不改个股精扫。',
         }
         print(f"  vcpWatch: {len(res)} sectors, 🟢{len(green)} 🟡{len(yellow)}, "
+              f"概念 {len(concept_res)}/{len(concepts)}，杯柄 {len(cup_items)}，"
               f"展示 {len(green) + len(yellow) + len(white)} 行")
     except Exception as e:
         print(f"  Warning: fetch_vcp_watch failed (keep old vcpWatch): {e}")
@@ -5280,6 +5287,94 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                 'weeklyUp': True,
                 'brkNeedVol': round(h_vol * CUP_BRK_VOL_X, 1),
                 'formed': True}
+    return None
+
+
+def _index_cup_handle(bars):
+    """指数放宽版 CANSLIM 杯柄；不改个股 _cup_handle_strict 精扫口径。
+
+    bars 为 (date, high, low, close, vol)；指数只有收盘时由调用方以收盘近似 OHLC。
+    前置上升≥20%、杯深12~35%、柄10~20日且振幅≤12%、柄位于杯体上半部、
+    柄均量<杯身均量、现价在30周线上且30周线较4周前上行；杯身回看120日。
+    """
+    if len(bars) < 175:
+        return None
+    closes = [b[3] for b in bars]
+    close = closes[-1]
+    if close <= 0:
+        return None
+    wkey = pd.to_datetime(pd.Series([b[0] for b in bars]), format='%Y%m%d').dt.strftime('%G%V')
+    wk_closes = []
+    for k, value in zip(wkey, closes):
+        if wk_closes and k == wk_closes[-1][0]:
+            wk_closes[-1] = (k, value)
+        else:
+            wk_closes.append((k, value))
+    wk = [value for _, value in wk_closes]
+    if len(wk) < 35:
+        return None
+    ma30w = sum(wk[-30:]) / 30
+    ma30w_4 = sum(wk[-34:-4]) / 30
+    if not (close > ma30w and ma30w > ma30w_4):
+        return None
+    for n in range(20, 9, -1):
+        handle = bars[-n:]
+        h_hi = max(b[1] for b in handle)
+        h_lo = min(b[2] for b in handle)
+        if h_lo <= 0:
+            continue
+        amp = (h_hi - h_lo) / h_lo
+        if amp > 0.12:
+            continue
+        cup = bars[-(n + 120):-n]
+        if len(cup) < 40:
+            continue
+        lo_pos = min(range(len(cup)), key=lambda i: cup[i][2])
+        cup_lo = cup[lo_pos][2]
+        if cup_lo <= 0:
+            continue
+        hi_pos, cup_hi = None, 0
+        for i in range(lo_pos):
+            high = cup[i][1]
+            if high <= cup_hi:
+                continue
+            depth_candidate = (high - cup_lo) / high * 100
+            if 12 <= depth_candidate <= 35:
+                hi_pos, cup_hi = i, high
+        if hi_pos is None:
+            continue
+        cup_start = max(0, len(bars) - (n + 120))
+        rim_i = cup_start + hi_pos
+        pre_closes = closes[max(0, rim_i - 250):rim_i]
+        pre_low = min(pre_closes) if pre_closes else 0
+        pre_gain = (cup_hi / pre_low - 1) if pre_low > 0 else 0
+        if pre_gain < 0.20:
+            continue
+        body = cup[hi_pos:]
+        depth = (cup_hi - cup_lo) / cup_hi * 100
+        if h_lo < cup_lo * 0.98:
+            continue
+        h_pos = (h_lo - cup_lo) / (cup_hi - cup_lo)
+        if not (0.50 <= h_pos <= 1.00):
+            continue
+        total_days = len(body) + n
+        if total_days < 40:
+            continue
+        cup_vol = sum(b[4] for b in body) / len(body)
+        h_vol = sum(b[4] for b in handle) / n
+        if cup_vol <= 0 or h_vol <= 0 or h_vol >= cup_vol:
+            continue
+        vol_confirm = h_vol * 1.5
+        breakout = bool(close >= h_hi and bars[-1][4] >= vol_confirm)
+        dist = (h_hi / close - 1) * 100
+        return {'type': '指数放宽杯柄', 'days': n, 'totalDays': total_days,
+                'cupDepth': round(depth, 1), 'amplitude': round(amp * 100, 1),
+                'volRatio': round(h_vol / cup_vol, 2),
+                'pivot': round(h_hi, 2), 'distPct': round(dist, 1),
+                'invalidation': round(h_lo, 2), 'preGain': round(pre_gain * 100, 1),
+                'weeklyUp': True, 'volConfirm': round(vol_confirm, 1),
+                'breakout': breakout, 'breakoutVolX': round(bars[-1][4] / h_vol, 2),
+                'priceBasis': '收盘近似OHLC', 'formed': True}
     return None
 
 
