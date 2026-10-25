@@ -133,6 +133,31 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
         </div>
       </div>
 
+      {/* BOLL99·RSI：强硬减仓优先于抄底提示 */}
+      {((data.broadOsc?.sellAlerts?.length ?? 0) > 0 || (data.broadOsc?.buyWindows?.length ?? 0) > 0) && (
+        <button
+          type="button"
+          onClick={() => onNavigate?.('national', 'broad-osc')}
+          className={`w-full text-left rounded-lg border px-4 py-3 shadow-sm transition-shadow hover:shadow-md ${
+            (data.broadOsc?.sellAlerts?.length ?? 0) > 0
+              ? 'border-red-400 bg-red-50 text-red-800'
+              : 'border-emerald-400 bg-emerald-50 text-emerald-800'
+          }`}
+        >
+          {(data.broadOsc?.sellAlerts?.length ?? 0) > 0 ? (
+            <>
+              <p className="text-sm font-bold">🚨 强硬减仓警报：{data.broadOsc?.sellAlerts?.join('、')}</p>
+              <p className="text-[11px] mt-0.5">收回上轨下方 + RSI 不再创新高 + 量能异常，已压过其他信号并关闭做多窗口。查看状态证据 →</p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm font-bold">🟢 短线抄底窗口：{data.broadOsc?.buyWindows?.join('、')}</p>
+              <p className="text-[11px] mt-0.5">收回下轨 + 地量后反弹 + RSI≥20 + 周线前提通过；寻找板块题材个股。查看状态证据 →</p>
+            </>
+          )}
+        </button>
+      )}
+
       {/* ====== 五步漏斗（2026-09-27 用户正式指令重构：0窗口→1宽基→2板块→3个股→4排雷） ====== */}
       {(() => {
         const fn = data.funnel;

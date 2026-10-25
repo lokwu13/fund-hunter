@@ -700,6 +700,20 @@ export interface FundData {
       note?: string;
     };
   };
+  broadOsc?: {
+    trade_date: string | null;
+    note?: string;
+    topAlert: boolean;
+    buyWindows: string[];
+    sellAlerts: string[];
+    items: Array<{
+      indexCode: string; indexName: string; close: number; state: string;
+      comment: string; since: string | null;
+      rsi?: number; distLower?: number; distUpper?: number;
+      lowVol?: boolean; weeklyGate?: boolean; weeklyNote?: string;
+      divBull?: boolean; divBear?: boolean; flatRsi?: number; volShrink?: boolean;
+    }>;
+  };
   broadTrend?: {
     trade_date: string;
     note?: string;

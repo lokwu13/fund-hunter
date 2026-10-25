@@ -11,6 +11,17 @@ export default function NationalTeamPanel() {
   const trendItems = data.broadTrend?.items ?? [];
   const vcpItems = data.broadVcp?.items ?? [];
   const volItems = data.indexVol?.items ?? [];
+  const oscItems = data.broadOsc?.items ?? [];
+
+  const oscBadge = (state?: string) => {
+    const cls = state === '强硬减仓' ? 'bg-red-600 text-white animate-pulse'
+      : state === '顶部风险' ? 'bg-orange-500 text-white'
+      : state === '抄底窗口' ? 'bg-emerald-600 text-white'
+      : state === '超卖观察' ? 'bg-sky-100 text-sky-700'
+      : state === '超卖观察(仅观察)' ? 'bg-amber-100 text-amber-700'
+      : 'bg-slate-100 text-slate-600';
+    return <Badge className={`${cls} text-[10px] border-0`}>{state ?? '无数据'}</Badge>;
+  };
 
   const tierBadge = (tier?: string) => {
     if (tier === '低位') return <Badge className="bg-emerald-100 text-emerald-700 text-[10px]">低位</Badge>;
@@ -54,6 +65,63 @@ export default function NationalTeamPanel() {
         </Card>
       )}
 
+      {/* ====== BOLL99·RSI 六宽基状态机 ====== */}
+      {oscItems.length > 0 && (
+        <Card id="broad-osc" className={data.broadOsc?.topAlert ? 'border-red-400 shadow-red-100 shadow-md' : 'border-indigo-200'}>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-bold flex items-center gap-2">
+              <Gauge className="w-5 h-5 text-indigo-600" />
+              BOLL99·RSI 超买超卖系统（截至 {data.broadOsc?.trade_date}）
+            </CardTitle>
+            <CardDescription>{data.broadOsc?.note}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+              {oscItems.map((o) => (
+                <div key={o.indexCode} className={`rounded-lg border p-3 ${
+                  o.state === '强硬减仓' ? 'border-red-300 bg-red-50' :
+                  o.state === '顶部风险' ? 'border-orange-200 bg-orange-50' :
+                  o.state === '抄底窗口' ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-slate-50/60'
+                }`}>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-bold text-slate-800">{o.indexName}</span>
+                    <span className="text-[10px] text-slate-400">{o.indexCode}</span>
+                    {oscBadge(o.state)}
+                    <span className="text-[10px] text-slate-400">始于 {o.since ?? '--'}</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 my-2 text-center">
+                    <div className="rounded bg-white/80 px-2 py-1.5">
+                      <p className="text-[9px] text-slate-400">RSI14</p>
+                      <p className={`text-sm font-bold ${(o.rsi ?? 50) >= 80 || (o.rsi ?? 50) < 20 ? 'text-orange-600' : 'text-slate-700'}`}>{o.rsi ?? '--'}</p>
+                    </div>
+                    <div className="rounded bg-white/80 px-2 py-1.5">
+                      <p className="text-[9px] text-slate-400">距下轨</p>
+                      <p className={`text-sm font-bold ${(o.distLower ?? 0) < 0 ? 'text-sky-600' : 'text-slate-700'}`}>{o.distLower != null ? `${o.distLower > 0 ? '+' : ''}${o.distLower.toFixed(1)}%` : '--'}</p>
+                    </div>
+                    <div className="rounded bg-white/80 px-2 py-1.5">
+                      <p className="text-[9px] text-slate-400">距上轨</p>
+                      <p className={`text-sm font-bold ${(o.distUpper ?? 0) > 0 ? 'text-orange-600' : 'text-slate-700'}`}>{o.distUpper != null ? `${o.distUpper > 0 ? '+' : ''}${o.distUpper.toFixed(1)}%` : '--'}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 flex-wrap min-h-[20px]">
+                    <Badge variant="outline" className={`text-[9px] ${o.weeklyGate ? 'border-emerald-300 text-emerald-700' : 'border-amber-300 text-amber-700'}`}>
+                      周线前提{o.weeklyGate ? '通过' : '未通过'}
+                    </Badge>
+                    {o.lowVol && <Badge className="bg-sky-100 text-sky-700 text-[9px] border-0">20日地量</Badge>}
+                    {o.divBull && <Badge className="bg-emerald-100 text-emerald-700 text-[9px] border-0">底背离</Badge>}
+                    {o.divBear && <Badge className="bg-orange-100 text-orange-700 text-[9px] border-0">顶背离</Badge>}
+                    {(o.flatRsi ?? 0) >= 3 && <Badge className="bg-indigo-100 text-indigo-700 text-[9px] border-0">RSI低位钝化{o.flatRsi}日</Badge>}
+                    {o.volShrink && <Badge className="bg-teal-100 text-teal-700 text-[9px] border-0">破位放量后缩量</Badge>}
+                  </div>
+                  <p className="text-[10px] text-slate-500 mt-1.5">{o.weeklyNote}</p>
+                  <p className="text-[11px] text-slate-700 mt-1 leading-relaxed">{o.comment}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* ====== 宽基指数全景（趋势 + 波动 + 形态 三合一） ====== */}
       {trendItems.length > 0 && (
         <Card id="broad-overview">
@@ -85,9 +153,13 @@ export default function NationalTeamPanel() {
                   {trendItems.map((t) => {
                     const vol = volItems.find((v) => v.code === t.indexCode);
                     const vcp = vcpItems.find((v) => v.indexCode === t.indexCode);
+                    const osc = oscItems.find((o) => o.indexCode === t.indexCode);
                     return (
                       <TableRow key={t.indexCode} className="hover:bg-slate-50">
-                        <TableCell className="text-xs font-semibold whitespace-nowrap">{t.indexName}</TableCell>
+                        <TableCell className="text-xs font-semibold whitespace-nowrap">
+                          {t.indexName}
+                          {osc && <div className="mt-1">{oscBadge(osc.state)}</div>}
+                        </TableCell>
                         <TableCell className="text-xs text-right font-semibold">{t.close?.toFixed(2) ?? '--'}</TableCell>
                         <TableCell className={`text-xs text-right ${(t.ret20 ?? 0) >= 0 ? 'text-red-600' : 'text-green-600'}`}>
                           {t.ret20 != null ? `${t.ret20 >= 0 ? '+' : ''}${t.ret20.toFixed(1)}%` : '--'}

@@ -1213,9 +1213,9 @@ BROAD_ETF_MAP = [
 
 
 def _broad_idx_bars(pro, trade_date):
-    """9 大宽基指数日线 OHLCV 缓存（[date, close, high, low, vol]，≤300 条滚动）。
+    """9 大宽基指数日线 OHLCV 缓存（[date, close, high, low, vol]，≤700 条滚动）。
     每晚 1 次 index_daily 批量调用（按 trade_date 全量快照过滤 9 只）；
-    首次/缺历史时逐只回补（≤9 次，一次性）。"""
+    历史不足 600 条时逐只回补约 1600 日历日，保证周线 BOLL99 有足够已完成周。"""
     cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {})
     try:
         time.sleep(API_DELAY)
@@ -1234,10 +1234,10 @@ def _broad_idx_bars(pro, trade_date):
         print(f"  Warning: broad idx daily batch failed: {e}")
     for tc, _, _, _ in BROAD_ETF_MAP:
         rows = cache.get(tc, [])
-        if len(rows) < 120:
+        if len(rows) < 600:
             try:
                 time.sleep(API_DELAY)
-                start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=600)).strftime('%Y%m%d')
+                start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=1600)).strftime('%Y%m%d')
                 df = pro.index_daily(ts_code=tc, start_date=start, end_date=trade_date)
                 if df is not None and len(df):
                     have = {r[0] for r in rows}
@@ -1250,7 +1250,7 @@ def _broad_idx_bars(pro, trade_date):
                     cache[tc] = rows
             except Exception as e:
                 print(f"  Warning: broad idx backfill failed for {tc}: {e}")
-        cache[tc] = cache.get(tc, [])[-300:]
+        cache[tc] = cache.get(tc, [])[-700:]
     _save_json_cache(BROAD_IDX_CACHE_PATH, cache)
     return cache
 
@@ -1435,6 +1435,242 @@ def build_broad_watch(pro, trade_date, data):
           + '、'.join(f"{i['indexName']}:{i['state']}" for i in vcp_items[:4]))
 
 
+# ══════════ BOLL99·RSI 宽基超买超卖粗略系统（2026-10-25 用户指令） ══════════
+# 指标：BOLL 参数 99（日线+周线，2 倍标准差）、RSI14（Wilder）。
+# 日线两阶段做多：①下破下轨+RSI<20=超卖观察（加分：钝化/底背离/破位放量后缩量）；
+# ②收回下轨不再破+近 20 日地量后反弹+RSI 不再<20=短线抄底窗口。
+# 周线前提（必备过滤器）：A 未大幅击穿中轨（周收≥中轨×0.97）；B 击穿中轨≤4 周；
+# C 多次徘徊下轨后收口（带宽≤26 周最大带宽×0.8）且周收不再破下轨。不满足→日线信号降级仅观察。
+# 镜像顶部：突破上轨+RSI≥80=顶部风险；随后收回上轨下方+RSI 不再新高+量能异常
+# （量>50 日均量×1.5）=强硬减仓警报（最高优先级，压过一切板块个股信号）。
+OSC_INDICES = [('000016.SH', '上证50'), ('000300.SH', '沪深300'), ('000905.SH', '中证500'),
+               ('000852.SH', '中证1000'), ('000688.SH', '科创50'), ('399006.SZ', '创业板指')]
+
+
+def _rsi_series(closes, n=14):
+    """Wilder RSI：首个 n 日均值起步，之后平滑递推。"""
+    out = [None] * len(closes)
+    if len(closes) <= n:
+        return out
+    gains = losses = 0.0
+    for i in range(1, n + 1):
+        ch = closes[i] - closes[i - 1]
+        gains += max(ch, 0); losses += max(-ch, 0)
+    ag, al = gains / n, losses / n
+    out[n] = 100.0 if al == 0 else 100 - 100 / (1 + ag / al)
+    for i in range(n + 1, len(closes)):
+        ch = closes[i] - closes[i - 1]
+        ag = (ag * (n - 1) + max(ch, 0)) / n
+        al = (al * (n - 1) + max(-ch, 0)) / n
+        out[i] = 100.0 if al == 0 else 100 - 100 / (1 + ag / al)
+    return out
+
+
+def _boll_series(closes, n=99, k=2.0):
+    """BOLL(n,k)：返回 (mid, upper, lower) 三个等长数组，前 n-1 个为 None。"""
+    mid = [None] * len(closes); up = [None] * len(closes); lo = [None] * len(closes)
+    for i in range(n - 1, len(closes)):
+        seg = closes[i - n + 1:i + 1]
+        m = sum(seg) / n
+        sd = (sum((x - m) ** 2 for x in seg) / n) ** 0.5
+        mid[i] = m; up[i] = m + k * sd; lo[i] = m - k * sd
+    return mid, up, lo
+
+
+def _osc_weekly_bars(rows):
+    """按 ISO 周重采样：[周首交易日, 周末交易日, close, high, low, vol]。"""
+    wkey = pd.to_datetime(pd.Series([r[0] for r in rows]), format='%Y%m%d').dt.strftime('%G%V')
+    bars = []
+    for k, r in zip(wkey, rows):
+        if bars and bars[-1][0] == k:
+            b = bars[-1]
+            b[2] = r[0]; b[3] = r[1]
+            b[4] = max(b[4], r[2]); b[5] = min(b[5], r[3]); b[6] += r[4]
+        else:
+            bars.append([k, r[0], r[0], r[1], r[2], r[3], r[4]])
+    return bars
+
+
+def _osc_weekly_gate(wcloses, wlows):
+    """周线前提（最近已完成周线）：返回 (通过与否, 说明)。wcloses/wlows 为已完成周线序列。"""
+    if len(wcloses) < 99:
+        return False, '周线数据不足 99 周'
+    mid, up, lo = _boll_series(wcloses, 99, 2.0)
+    c, m, l = wcloses[-1], mid[-1], lo[-1]
+    if c >= m * 0.97:
+        return True, f'周线未大幅击穿中轨（周收/中轨={c / m:.3f}）'
+    # 连续低于中轨的周数（含最近完成周）
+    below = 0
+    for i in range(len(wcloses) - 1, -1, -1):
+        if mid[i] is not None and wcloses[i] < mid[i]:
+            below += 1
+        else:
+            break
+    if below <= 4:
+        return True, f'周线击穿中轨仅 {below} 周（≤4 周）'
+    width = [(up[i] - lo[i]) / mid[i] if mid[i] else None for i in range(len(wcloses))]
+    w26 = [x for x in width[-26:] if x]
+    hover = sum(1 for i in range(max(98, len(wcloses) - 26), len(wcloses)) if wlows[i] <= lo[i] * 1.01)
+    if w26 and hover >= 2 and width[-1] <= max(w26) * 0.8 and c >= l:
+        return True, f'周线多次徘徊下轨后收口（带宽 {width[-1]:.3f}≤26 周峰值×0.8）且不再破下轨'
+    return False, f'周线跌破中轨已 {below} 周且未收口（周收/中轨={c / m:.3f}）'
+
+
+def _osc_replay(rows):
+    """逐日回放状态机。rows=[date, close, high, low, vol] 升序。
+    返回每日状态字典列表（state/rsi/dist 轨/背离/地量/周线前提等证据）。
+    state ∈ 中性 / 超卖观察 / 超卖观察(仅观察) / 抄底窗口 / 顶部风险 / 强硬减仓。"""
+    closes = [r[1] for r in rows]; highs = [r[2] for r in rows]
+    lows = [r[3] for r in rows]; vols = [r[4] for r in rows]
+    n = len(rows)
+    mid, up, lo = _boll_series(closes, 99, 2.0)
+    rsi = _rsi_series(closes, 14)
+    vol20 = [None] * n; vol50 = [None] * n
+    for i in range(n):
+        if i >= 19:
+            vol20[i] = sum(vols[i - 19:i + 1]) / 20
+        if i >= 49:
+            vol50[i] = sum(vols[i - 49:i + 1]) / 50
+    wbars = _osc_weekly_bars(rows)
+    # 每日所属周 index（wbars 的 start/end 日期）
+    wk_of_day = []
+    wi = 0
+    for r in rows:
+        while wi + 1 < len(wbars) and wbars[wi + 1][1] <= r[0]:
+            wi += 1
+        wk_of_day.append(wi)
+    out = []
+    os_ep = None; top_ep = None
+    gate_cache = {}
+    for t in range(n):
+        state, ev = '中性', {}
+        if t >= 98 and rsi[t] is not None:
+            c, m, u, l, r14 = closes[t], mid[t], up[t], lo[t], rsi[t]
+            # 周线前提只用最近已完成周，不引用当日所在的未完成周。
+            wi = wk_of_day[t]
+            if wi not in gate_cache:
+                wc = [b[3] for b in wbars[:wi]]
+                wl = [b[5] for b in wbars[:wi]]
+                gate_cache[wi] = _osc_weekly_gate(wc, wl) if wc else (False, '周线数据不足')
+            gate, gate_note = gate_cache[wi]
+            lowvol = vol20[t] is not None and vols[t] == min(vols[max(0, t - 19):t + 1])
+            # ── 顶部镜像 ──
+            if top_ep is None and c > u and r14 >= 80:
+                start = max(0, t - 60)
+                prior_rsi = [x for x in rsi[start:t] if x is not None]
+                top_ep = {'start': t, 'rsi_high': r14, 'price_high': c, 'trig': None,
+                          'prev_price_high': max(highs[start:t]) if t > start else c,
+                          'prev_rsi_high': max(prior_rsi) if prior_rsi else r14,
+                          'divBear': False}
+            if top_ep is not None:
+                ep = top_ep
+                # 价格创 episode 新高、RSI 未同步创新高 = 顶背离证据。
+                if c > ep['price_high'] and r14 < ep['rsi_high']:
+                    ep['divBear'] = True
+                ep['price_high'] = max(ep['price_high'], c)
+                ep['rsi_high'] = max(ep['rsi_high'], r14)
+                vol_abn = vol50[t] is not None and vols[t] > vol50[t] * 1.5
+                if ep['trig'] is None and c < u and r14 < ep['rsi_high'] and vol_abn:
+                    ep['trig'] = t                      # 收回上轨+RSI 不再新高+量能异常
+                if c < m:                                    # 回归中轨=顶部 episode 结束
+                    top_ep = None
+                elif ep['trig'] is not None and t - ep['trig'] > 10:
+                    top_ep = None                            # 警报 10 个交易日后解除
+            # ── 超卖两阶段 ──
+            if os_ep is None and c < l and r14 < 20:
+                start = max(0, t - 60)
+                prior = closes[start:t]
+                prev_i = start + prior.index(min(prior)) if prior else t
+                os_ep = {'start': t, 'rsi_low': r14, 'price_low': c,
+                         'prev_lo': closes[prev_i], 'prev_rsi': rsi[prev_i] if rsi[prev_i] is not None else 100,
+                         'break_vol': bool(vol20[t] and vols[t] > vol20[t] * 1.5),
+                         'lowvol_t': None, 'stage2': False, 'flat': 0, 'divBull': False}
+            if os_ep is not None:
+                ep = os_ep
+                new_low = c < ep['price_low']
+                initial_div = t == ep['start'] and c < ep['prev_lo'] and r14 > ep['prev_rsi']
+                if (new_low and r14 > ep['rsi_low']) or initial_div:
+                    ep['divBull'] = True
+                if new_low:
+                    ep['lowvol_t'] = None                  # 创新低后须重新等待地量
+                if c < l:
+                    ep['stage2'] = False                   # 收回下轨后再破，抄底确认失效
+                ep['price_low'] = min(ep['price_low'], c)
+                ep['rsi_low'] = min(ep['rsi_low'], r14)
+                ep['flat'] = ep['flat'] + 1 if r14 < 25 else 0
+                if lowvol and ep['lowvol_t'] is None:
+                    ep['lowvol_t'] = t
+                if ep['lowvol_t'] is not None and ep['lowvol_t'] < t:
+                    if (c > l and c > closes[ep['lowvol_t']] and r14 >= 20
+                            and c > closes[t - 1] and t - ep['start'] <= 40):
+                        ep['stage2'] = True                     # 收回下轨+地量后反弹+RSI≥20
+                if c > m or t - ep['start'] > 60:
+                    os_ep = None                               # 回归中轨/超时=episode 结束
+            # ── 状态裁决（顶部优先级最高）──
+            if top_ep is not None and top_ep['trig'] is not None:
+                state = '强硬减仓'
+            elif top_ep is not None:
+                state = '顶部风险'
+            elif os_ep is not None and os_ep['stage2']:
+                state = '抄底窗口' if gate else '超卖观察(仅观察)'
+            elif os_ep is not None:
+                state = '超卖观察'
+            ev = {'rsi': round(r14, 1), 'distLower': round((c / l - 1) * 100, 1),
+                  'distUpper': round((c / u - 1) * 100, 1), 'lowVol': bool(lowvol),
+                  'weeklyGate': bool(gate), 'weeklyNote': gate_note,
+                  'divBull': bool(os_ep and os_ep.get('divBull')),
+                  'divBear': bool(top_ep and top_ep.get('divBear')),
+                  'flatRsi': int(os_ep['flat']) if os_ep else 0,
+                  'volShrink': bool(os_ep and os_ep['break_vol'] and vol20[t] and vols[t] < vol20[t] * 0.9)}
+        out.append({'date': rows[t][0], 'close': closes[t], 'state': state, **ev})
+    return out
+
+
+OSC_COMMENT = {
+    '强硬减仓': '收回上轨下方+RSI 不再新高+量能异常：强硬减仓警报（状态信号，非仓位建议）',
+    '顶部风险': '价格突破 BOLL99 上轨且 RSI≥80：顶部风险，不能做多',
+    '抄底窗口': '收回下轨+地量后反弹+RSI≥20 且周线前提通过：短线抄底窗口→寻找板块题材个股',
+    '超卖观察(仅观察)': '日线抄底形态出现但周线前提未通过：降级仅观察，不开抄底窗口',
+    '超卖观察': '下破 BOLL99 下轨+RSI<20：下跌超卖观察，等地量+收回下轨确认',
+    '中性': '未触发超卖、抄底或顶部状态条件：中性',
+}
+
+
+def build_broad_osc(data):
+    """六宽基 BOLL99·RSI 超买超卖系统（2026-10-25）：读 broad_idx_cache 回放取最新状态。"""
+    cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {})
+    items = []
+    latest = ''
+    for ic, iname in OSC_INDICES:
+        rows = cache.get(ic) or []
+        if len(rows) < 120:
+            continue
+        latest = max(latest, rows[-1][0])
+        series = _osc_replay(rows)
+        cur = series[-1]
+        j = len(series) - 2
+        while j >= 0 and series[j]['state'] == cur['state']:
+            j -= 1
+        since = series[j + 1]['date'] if j + 1 < len(series) else series[0]['date']
+        items.append({'indexCode': ic, 'indexName': iname, 'close': cur['close'],
+                      'state': cur['state'], 'comment': OSC_COMMENT[cur['state']],
+                      'since': since, **{k: v for k, v in cur.items()
+                      if k not in ('date', 'close', 'state')}})
+    buy = [i['indexName'] for i in items if i['state'] == '抄底窗口']
+    sell = [i['indexName'] for i in items if i['state'] == '强硬减仓']
+    trade_date = f'{latest[:4]}-{latest[4:6]}-{latest[6:]}' if latest else None
+    data['broadOsc'] = {
+        'trade_date': trade_date, 'items': items,
+        'buyWindows': buy, 'sellAlerts': sell,
+        'topAlert': bool(sell),
+        'note': ('BOLL99（日线+周线，2σ）+RSI14 超买超卖粗略系统（2026-10-25 用户口径）：'
+                 '超卖观察=下破下轨+RSI<20；抄底窗口=收回下轨+近20日地量后反弹+RSI≥20 且周线前提通过'
+                 '（未大幅破中轨/破中轨≤4周/徘徊下轨后收口不再破）；周线前提不满足=降级仅观察；'
+                 '顶部风险=突破上轨+RSI≥80；强硬减仓=收回上轨+RSI不再新高+量>50日均×1.5（最高优先级）。'
+                 '状态信号非操作建议，不指导仓位比例')}
+    print('  broadOsc: ' + '，'.join(f"{i['indexName']}:{i['state']}" for i in items))
+
+
 def build_long_window(data):
     """做多窗口判定（2026-09-26 月底大改版③，层级服从门控大级别）。
 
@@ -1473,14 +1709,36 @@ def build_long_window(data):
         bond_note = f'10Y收益率近1月{y10_1m:+.0f}bp快速上行=资金趋紧，窗口降一档'
     elif y10_1m is not None and y10_1m <= -10:
         bond_note = f'10Y收益率近1月{y10_1m:+.0f}bp下行=资金面偏松（加分备注，不主动升档）'
+    # BOLL99·RSI：强硬减仓最高优先级；抄底仅能把半窗升开，不能推翻冷水温等高层门控。
+    osc = data.get('broadOsc') or {}
+    sell_alerts = osc.get('sellAlerts') or []
+    buy_windows = osc.get('buyWindows') or []
+    osc_note = ''
+    if sell_alerts:
+        w = 'closed'
+        osc_note = '🚨 强硬减仓警报：' + '、'.join(sell_alerts)
+    elif buy_windows:
+        if w == 'half':
+            w = 'open'
+            osc_note = '短线抄底窗口：' + '、'.join(buy_windows) + '→寻找板块题材个股'
+        elif w == 'closed':
+            osc_note = '短线抄底窗口：' + '、'.join(buy_windows) + '与高层门控冲突，仅观察'
+        else:
+            osc_note = '短线抄底窗口：' + '、'.join(buy_windows) + '→寻找板块题材个股'
     reason_parts = [f"水温{temp or '—'}（{verdict or '—'}）",
                     '宽基形态：' + '，'.join(f"{names[c]}{states[c]}" for c in BROAD_TOP3)]
+    if osc_note:
+        if sell_alerts:
+            reason_parts.insert(0, osc_note)
+        else:
+            reason_parts.append(osc_note)
     if bond_note:
         reason_parts.append(bond_note)
     if w == 'closed':
         reason_parts.append('大级别无做多窗口，下级信号降级为观察')
     elif w == 'open':
-        reason_parts.append('水温偏暖且宽基临近/突破，做多窗口打开')
+        if not (buy_windows and osc_note):
+            reason_parts.append('水温偏暖且宽基临近/突破，做多窗口打开')
     else:
         reason_parts.append('半窗：谨慎关注，仓位与信号强度自行降档')
     data['longWindow'] = {
@@ -1488,9 +1746,11 @@ def build_long_window(data):
         'broadStates': {names[c]: states[c] for c in BROAD_TOP3},
         'nearPivot': bool(near), 'allHigh': bool(all_high),
         'bondY10_1m': y10_1m, 'bondNote': bond_note,
+        'oscSellAlerts': sell_alerts, 'oscBuyWindows': buy_windows, 'oscNote': osc_note,
         'reason': '；'.join(reason_parts),
         'note': ('层级服从（2026-09-26 用户拍板）：水温>宽基>板块>个股；'
                  'closed=水温🔴冷或50/300/500全部高位发散/破位；open=水温🟢暖且至少一只临近枢轴/突破确认；其余half；'
+                 'BOLL99·RSI：强硬减仓强制closed；抄底窗口可把half升open，但不能推翻closed高层门控；'
                  '债券规则（2026-09-27）：10Y收益率近1月≥+10bp=资金紧、窗口降一档，≤-10bp=偏松仅备注不升档；'
                  'closed 时板块/个股信号照常计算但标灰降级"窗口未开，信号仅观察"，half 挂半窗提示，open 全量高亮'),
     }
@@ -7152,7 +7412,11 @@ def main():
     except Exception as e:
         print(f"  Warning: zizengETF failed: {e}")
 
-    # ── 17c. 做多窗口判定（大级别门控：水温×宽基形态，改版③）──
+    # ── 17c. BOLL99·RSI 六宽基状态机 + 做多窗口判定 ──
+    try:
+        build_broad_osc(data)
+    except Exception as e:
+        print(f"  Warning: broadOsc failed: {e}")
     try:
         build_long_window(data)
     except Exception as e:
