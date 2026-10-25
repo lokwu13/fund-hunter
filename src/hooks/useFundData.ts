@@ -114,34 +114,6 @@ export interface ConcentrationItem {
   note: string;
 }
 
-export interface MedicalFundItem {
-  rank: number;
-  name: string;
-  code: string;
-  amount: string;
-  concept: string;
-  sector: string;
-  fundCount?: string;
-  fund?: string;
-  holder?: string;
-  institution?: string;
-  ratio?: string;
-  note: string;
-}
-
-export interface MedicalSectorFundCategory {
-  inflow: MedicalFundItem[];
-  outflow: MedicalFundItem[];
-}
-
-export interface MedicalSectorFunds {
-  publicFund: MedicalSectorFundCategory;
-  privateFund: MedicalSectorFundCategory;
-  nationalTeam: MedicalSectorFundCategory;
-  foreignCapital: MedicalSectorFundCategory;
-  nonMainforce: MedicalSectorFundCategory;
-}
-
 export interface VcpIndexCup {
   type: string;
   days: number;
@@ -224,7 +196,6 @@ export interface FundData {
   top10_publicfund?: Array<{rank: number; name: string; code: string; amount: string; concept: string; sector: string; note: string}>;
   publicFund_outflow_top10?: Array<{rank: number; name: string; code: string; amount: string; concept: string; sector: string; note: string}>;
   top10_foreign?: Array<{name: string; code: string; inflow: string; concept: string; sector: string; note: string}>;
-  medicalSectorFunds?: MedicalSectorFunds;
   conceptSectors?: Array<{
     name: string;
     mainFlow: number;

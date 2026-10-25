@@ -92,7 +92,7 @@ class DataValidator:
     REQUIRED_FIELDS = [
         'updateTime', 'week', 'marketStatus', 'indices', 'sectors', 'stocks',
         'northbound', 'southbound', 'keySignals', 'foreignSummary',
-        'combined_sell_top10', 'leverage_concentration_top10', 'medicalSectorFunds',
+        'combined_sell_top10', 'leverage_concentration_top10',
         'southbound_concentration_top10', 'foreign_concentration_top10',
         'top10_foreign', 'foreignInstitution_top10', 'divergence_top10',
         'dataSources', 'top5_national', 'top10_publicfund', 'publicFund_outflow_top10',
