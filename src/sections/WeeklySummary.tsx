@@ -5,6 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from 'lucide-react';
 import { useState } from 'react';
 import { useFundData } from '@/hooks/useFundData';
+import { broadOscFor, buildFunnelStepViews, sectorEtfFor } from './funnelConclusions';
 
 const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
 const DEFENSIVE_SECTORS = new Set(['中证医药', '中证消费', '中证公用', '中证能源']);
@@ -193,13 +194,14 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
           : key === 'sector' ? () => onNavigate?.('tools', 'bottom-watch')
           : key === 'vcp' ? () => onNavigate?.('tools')
           : undefined;
+        const stepsView = buildFunnelStepViews(data);
         return (
           <div>
             {/* 当日路径总结（点击跳对应步骤） */}
             <div className="mb-3 rounded-lg border border-indigo-200 bg-gradient-to-r from-indigo-50/70 via-white to-emerald-50/60 px-3 py-2 shadow-sm">
               <p className="text-[10px] text-slate-400 mb-1">当日路径 · 点击跳步骤 · {fn.trade_date}</p>
               <div className="flex items-center gap-1 flex-wrap">
-                {fn.steps.map((st, i) => (
+                {stepsView.map((st, i) => (
                   <span key={st.key} className="flex items-center gap-1">
                     {i > 0 && <span className="text-slate-300 text-xs">→</span>}
                     <button
@@ -216,7 +218,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
 
             {/* 五步卡片（编号圆点+竖线串联） */}
             <div className="space-y-3">
-              {fn.steps.map((st) => (
+              {stepsView.map((st) => (
                 <div key={st.key} id={`funnel-step-${st.n}`} className="relative pl-10 scroll-mt-20">
                   {st.n < 4 && <div className="absolute left-[19px] top-9 -bottom-3 w-0.5 bg-slate-200" />}
                   <div className={`absolute left-2 top-3 w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold text-white shadow-sm ${lampColor(st.lamp)}`}>
@@ -238,11 +240,6 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                       </div>
                       <p className="text-[11px] text-slate-400 mb-2">{st.guide}</p>
 
-                      {/* 第0步：窗口判定依据 */}
-                      {st.key === 'window' && (
-                        <p className="text-[11px] text-slate-500 bg-slate-50 rounded-lg px-2.5 py-1.5">{st.reason}</p>
-                      )}
-
                       {/* 第1步：宽基四态 + ETF 买点 */}
                       {st.key === 'broad' && (
                         <div className="space-y-1">
@@ -257,6 +254,14 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                 r.label4 === '高位' ? 'bg-slate-500 text-white' : 'bg-slate-300 text-white'
                               }`}>{r.label4}</Badge>
                               <Badge variant="outline" className="text-[9px] h-4 px-1 border-indigo-200 text-indigo-600 flex-shrink-0">{r.state}</Badge>
+                              {broadOscFor(data, r.indexCode) && (
+                                <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 ${
+                                  broadOscFor(data, r.indexCode).state === '超卖观察' ? 'bg-sky-500 text-white' :
+                                  broadOscFor(data, r.indexCode).state === '完整抄底窗口' ? 'bg-emerald-600 text-white' :
+                                  broadOscFor(data, r.indexCode).state === '强硬减仓' ? 'bg-rose-600 text-white' :
+                                  broadOscFor(data, r.indexCode).state === '中性' ? 'bg-slate-300 text-slate-600' : 'bg-amber-500 text-white'
+                                }`}>{broadOscFor(data, r.indexCode).state}</Badge>
+                              )}
                               <span className="text-[10px] text-slate-500">
                                 {r.pct1y != null ? `一年分位${r.pct1y}%` : ''}{r.maAlign ? ` · ${r.maAlign}` : ''}
                                 {r.pivot != null ? ` · 枢轴${r.pivot} · 距${r.distPct}% · 失效${r.invalidation}` : ''}
@@ -286,6 +291,11 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                 <Badge className={`text-[9px] h-4 px-1 border-0 flex-shrink-0 ${
                                   r.lifecycle === '积聚期' ? 'bg-teal-500 text-white' : 'bg-orange-500 text-white'
                                 }`}>{r.lifecycle}</Badge>
+                                {sectorEtfFor(r.sector) && (
+                                  <Badge variant="outline" className="text-[9px] h-4 px-1 border-orange-200 text-orange-700 flex-shrink-0">
+                                    {sectorEtfFor(r.sector).name} {sectorEtfFor(r.sector).code}
+                                  </Badge>
+                                )}
                                 {r.dual && <Badge className="text-[9px] h-4 px-1 border-0 bg-red-500 text-white flex-shrink-0">🔥双档共振</Badge>}
                                 {r.pattern && (
                                   <Badge className="text-[9px] h-4 px-1 border-0 bg-indigo-500 text-white flex-shrink-0" title={r.patternEvidence}>
@@ -392,55 +402,28 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                         </div>
                       )}
 
-                      {/* 第3步：个股形态双轨（🔗共振优先 / ⭐优中选优；两轨不沾不进榜） */}
+                      {/* 第3步：只列形态事实，个股由用户自行分析 */}
                       {st.key === 'vcp' && (() => {
                         const rows = st.rows || [];
                         const reson = rows.filter((r: any) => r.track === 'reson');
                         const cherry = rows.filter((r: any) => r.track === 'cherry');
                         const renderRow = (r: any) => (
-                          <div key={r.code} className={`flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 ${r.track === 'reson' ? 'bg-violet-50/70 border border-violet-200' : 'hover:bg-amber-50/50'}`}>
-                            <span className="text-xs font-semibold text-slate-800 flex-shrink-0">
-                              {r.star && <span className="text-pink-500 mr-0.5">★</span>}
-                              {r.mine && '⛔'}
-                              {r.name}
-                            </span>
-                            <Badge className={`text-[10px] h-[18px] px-1.5 border-0 flex-shrink-0 ${
+                          <div key={r.code} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-slate-50">
+                            <span className="text-xs font-semibold text-slate-800">{r.name}</span>
+                            <Badge className={`text-[10px] h-[18px] px-1.5 border-0 ${
                               r.pattern === '杯柄型' ? 'bg-violet-500 text-white' :
                               r.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-slate-500 text-white'
                             }`}>{r.pattern}</Badge>
-                            {r.track === 'reson' ? (
-                              <Badge className="text-[9px] h-4 px-1 border-0 bg-violet-600 text-white flex-shrink-0">🔗共振·{r.sector}</Badge>
-                            ) : (
-                              <Badge className="text-[9px] h-4 px-1 border-0 bg-amber-500 text-white flex-shrink-0"
-                                     title="池内（上证50/沪深300/中证500/科创50/创业板50）+形态达标（VCP/杯柄）+聪明钱持续流入">
-                                ⭐精选·主力流入{r.smartMoneyPosDays}/10日
-                              </Badge>
-                            )}
-                            <span className={`text-xs font-bold flex-shrink-0 ${(r.distPct ?? 99) <= 3 ? 'text-red-500' : 'text-amber-600'}`}>距枢轴{r.distPct}%</span>
-                            <span className="text-[10px] text-slate-500">枢轴{r.pivot} · 失效{r.invalidation}</span>
-                            {r.selDays != null && (
-                              <Badge variant="outline"
-                                     className={`text-[9px] h-4 px-1 flex-shrink-0 ${r.selQualified ? 'border-violet-400 bg-violet-50 text-violet-700 font-semibold' : 'border-slate-200 text-slate-400'}`}
-                                     title={`第三步累计入选${r.selDays}个交易日（含今日）；累计≥5日自动收录观察股${r.selQualified ? '——已达标收录' : ''}`}>
-                                {r.selQualified ? '🤖' : ''}累计入选{r.selDays}日{r.selQualified ? '·已收录' : ''}
-                              </Badge>
-                            )}
+                            <span className="text-[11px] text-slate-600">枢轴{r.pivot}</span>
+                            <span className="text-[11px] text-slate-600">距枢轴{r.distPct}%</span>
                           </div>
                         );
                         return (
-                          <div className="space-y-2">
-                            <div className="space-y-1">
-                              <p className="text-[10px] font-semibold text-violet-700 px-2">🔗 板块共振轨（第2步入选板块的个股，赢面优先）</p>
-                              {reson.length > 0 ? reson.map(renderRow) : (
-                                <p className="text-xs text-slate-400 px-2">今日无共振个股（入选板块内个股形态未成型）</p>
-                              )}
-                            </div>
-                            <div className="space-y-1 pt-1.5 border-t border-amber-100">
-                              <p className="text-[10px] font-semibold text-amber-700 px-2">⭐ 优中选优轨（板块不同步但池内+形态达标+聪明钱流入，缺一不入）</p>
-                              {cherry.length > 0 ? cherry.map(renderRow) : (
-                                <p className="text-xs text-slate-400 px-2">今日无精选个股</p>
-                              )}
-                            </div>
+                          <div className="space-y-1.5">
+                            <p className="text-[10px] font-semibold text-violet-700 px-2">共振 {reson.length}</p>
+                            {reson.length > 0 ? reson.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}
+                            <p className="text-[10px] font-semibold text-amber-700 px-2 pt-1 border-t border-slate-100">精选 {cherry.length}</p>
+                            {cherry.length > 0 ? cherry.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}
                           </div>
                         );
                       })()}
