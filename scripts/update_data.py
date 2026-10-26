@@ -5226,10 +5226,11 @@ def _cup_weekly_trend(bars):
             'ma200Rising': ma200 > ma200_prev if ma200_prev is not None else None}
 
 
-def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None):
-    """杯柄·CANSLIM v4（任务81·2026-10-26：22案例与全池敏感性校准）：
+def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None,
+                       allow_ma_defect=False):
+    """杯柄·CANSLIM v4（任务84：可选仅MA150/200瑕疵档，默认严格无瑕疵）：
     - 前置上升趋势：杯沿高 ÷ 其前250日最低收盘 −1 ≥ +15%（任务81由30%校准）；
-    - 周线趋势硬门：现价>30周线、30周线较4周前上行、10周线>30周线；
+    - 周线趋势硬门：最近完成周BOLL99中轨未有效下破（A/B）+ MA150>MA200；
     - 杯深 12~33%；杯身 1~2 个坑，第二坑最深低于第一坑 4% 以内；
     - 柄在杯体上半部（柄底位置 h_pos∈[0.50,0.80]）、右侧10~20日窄幅（振幅≤10%）、
       柄低点不破杯底（容差 2%）；
@@ -5239,6 +5240,8 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
     位置守卫（自校准非原典）：分位 25~82；链路另有限距枢轴 ≤5%、贴新高中高位拒。
     周线趋势硬门（任务83）：最近已完成周线 BOLL99 中轨未有效下破（A/B），且 MA150>MA200；
     MA50短期走弱不否决，MA150/200正利差及是否扩大仅作证据，不改 broadOsc 规则。
+    任务84仅当allow_ma_defect=True且BOLL已通过、唯独MA150≤MA200时返回瑕疵候选；
+    数据不足、BOLL失败及其他任一结构门失败均不允许瑕疵入围，近期突破仍走默认严格档。
     候选采用展示窗内最长优先；若均不在窗内，返回最长成型候选供完整链拒展示。"""
     if len(bars) < 175:                 # 结构门最低长度；长期趋势门另行要求200根完成周线
         return None
@@ -5254,10 +5257,13 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
             hist_pct = _pct_rank100(win, close)
     if hist_pct is None or not (25 <= hist_pct <= CUP_PCT_MAX):
         return None                     # 分位 25~82：已脱离前低区域 + 非高位
-    # ── 任务83：长期趋势完好优先，短期10/30周走弱不再否决反转杯 ──
+    # ── 任务83长期门；任务84只放行“BOLL过且唯独MA150/200未多头”的瑕疵杯柄 ──
     weekly_trend = _cup_weekly_trend(bars)
-    if not weekly_trend.get('pass'):
+    ma_defect = bool(weekly_trend.get('bollPass')
+                     and weekly_trend.get('maBull150_200') is False)
+    if not weekly_trend.get('pass') and not (allow_ma_defect and ma_defect):
         return None
+    defects = ['周MA150/200未多头'] if ma_defect else []
     vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
     best = None                           # 最长成型候选兜底；不放宽+5%展示窗
     for n in range(20, 9, -1):          # 杯柄 10~20 日（右侧横盘≥2 周）
@@ -5336,7 +5342,8 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                      'invalidation': round(h_lo, 2),
                      'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
                      'preGain': round(pre_gain * 100, 1),
-                     'weeklyUp': True, 'weeklyTrend': weekly_trend,
+                     'weeklyUp': not defects, 'weeklyTrend': weekly_trend,
+                     'defects': defects, 'qualified': not defects,
                      'rimDate': bars[rim_i][0], 'rimHigh': round(cup_hi, 2),
                      'handlePosition': round(h_pos, 3),
                      'brkNeedVol': round(h_vol * CUP_BRK_VOL_X, 1),
@@ -5805,7 +5812,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 d_c3 = bool(d_lv and d_lv['formed'])
                 w_c3 = bool(w_lv and w_lv['formed'])
                 ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
-                                        hist_pct=hist_pct)
+                                        hist_pct=hist_pct, allow_ma_defect=True)
                 # 任务81：突破后当前滚动柄常被破坏/分位升高，改由近10日历史锚点独立识别。
                 recent = _cup_recent_breakout(bars) if not (d_c3 or w_c3) else None
                 lp = _long_platform(bars, circ_mv=(mv.get(code, 0) / 1e4 if mv else None),
@@ -5910,6 +5917,8 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                               'inPool': bool(meta.get('inPool')),
                               'close': round(close, 2), 'tag': tag,
                               'pattern': pattern, 'platform': pf,
+                              'entryTier': 'fuzzy' if main_lv.get('defects') else 'qualified',
+                              'defects': main_lv.get('defects') or [],
                               'cupHandle': ch if pattern == '杯柄型' else None,
                               'flag': fl if pattern == '旗形整理' else None,
                               # 长平台共标（2026-10-01 晚）：杯柄/其他形态命中时若长平台也成型，
@@ -5929,17 +5938,17 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         # 分组展示（2026-10-01 下午 用户指令）：按形态分四组（VCP收缩/杯柄/底部整理/旗形），
         # 每组各取前 10——组内资金确认(mfDays≥6)优先、再距枢轴升序；底部整理组稳定可见，
         # 不再被杯柄组霸屏截断（伊利股份类排 30 名外被裁的问题根治）
-        # 分组展示（2026-10-25 任务E/F）：VCP→杯柄→底部整理→长平台→平台整理→旗形；
-        # 高位平台⚠️沉底组取消（平台/长平台高位硬拒，任务F）。每组各前 10
+        # 无瑕疵沿用原排序；任务84杯柄瑕疵档独立沉底，绝不混入资金确认/无瑕疵组。
         pat_order = {'VCP收缩型': 0, '杯柄型': 1, '底部整理': 2, '超窄幅整理': 2, '底部平台型': 2,
                      '长平台整理': 3, '平台整理': 4, '旗形整理': 5}
-        items.sort(key=lambda x: (pat_order.get(x['pattern'], 4),
+        items.sort(key=lambda x: (1 if x.get('defects') else 0,
+                                  pat_order.get(x['pattern'], 4),
                                   0 if x.get('mfDays', 0) >= 6 else 1,
                                   x['distMain']))
         grouped = []
         group_counts = {}
         for it in items:
-            g = pat_order.get(it['pattern'], 4)
+            g = ('fuzzy' if it.get('defects') else 'qualified', pat_order.get(it['pattern'], 4))
             if group_counts.get(g, 0) >= 10:
                 continue
             group_counts[g] = group_counts.get(g, 0) + 1
@@ -5949,20 +5958,22 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'trade_date': eff_d, 'poolSize': len(pool), 'poolRaw': len(pool_raw),
             'mvDate': mc.get('mvDate'), 'scanned': len(targets),
             'formed': len(items),
+            'qualifiedCount': sum(not x.get('defects') for x in items),
+            'fuzzyCount': sum(bool(x.get('defects')) for x in items),
             'items': grouped,
             'droppedByTrendTemplate': dropped_tt[:50],
             'scanScope': scan_scope,
             'note': f'池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由"积聚/信号板块龙头"扩为指数成分全覆盖，当前口径={scan_scope}）；'
                     '形态口径（任务81·2026-10-26校准）：'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%）+末次收缩均量<首次+区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85 直接拒）+Stage 2 趋势模板强制拦截；'
-                    '杯柄型=前置250日涨幅≥15%+现价>30周线且30周线上行且10周>30周+杯深12~33%+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+柄均量<杯身且柄末量≤1.2+一年分位25~82+贴新高中高位拒；普通杯柄展示距枢轴-5~+5；'
+                    '杯柄型=前置250日涨幅≥15%+最近完成周BOLL99中轨未有效下破（A/B）+MA150>MA200+杯深12~33%+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+柄均量<杯身且柄末量≤1.2+一年分位25~82+贴新高中高位拒；普通杯柄展示距枢轴-5~+5；任务84仅BOLL及其余全部门通过、唯独MA150≤MA200者进入模糊入围瑕疵组，逐股标注并独立沉底；'
                     '杯柄突破初期=近10个交易日内逐日用当时数据寻找已通过上述全部门及普通展示窗的历史锚点，其后收盘≥锚点枢轴且量≥锚点柄均量×1.0，当前仍站上枢轴且不高于枢轴15%；展示突破日、柄均量比和50日均量比。此为温和量门，原1.5×柄均量强确认不变；'
                     '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日，振幅≤10.5%+大比例缩量强制+末段≤1.2+杯柄抬升≤20%+近60日跌幅≥-10%排下跌中继；分位>60不展示）；'
                     '旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；'
                     '大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85，允许末段≤1.2温和放量；'
                     '买点参数：枢轴价/失效位/距枢轴%/形态对应的突破确认——均为形态参数，非操作建议；'
                     '普通形态只展示距枢轴-5~+8（杯柄+5、平台+12），突破初期单独使用枢轴上方0~15%；'
-                    '主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用）；名单按VCP/杯柄（前端细分🚀突破初期）/底部整理/长平台/平台整理/旗形分组，每组各取前10，组内资金确认优先→距枢轴升序；'
+                    '主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用）；无瑕疵名单按VCP/杯柄（前端细分🚀突破初期）/底部整理/长平台/平台整理/旗形分组，组内资金确认优先→距枢轴升序；杯柄瑕疵档独立分组沉底弱展示，不参与无瑕疵资金确认排序；'
                     '建议=水温×板块合适度×资金确认，仅供关注优先级参考',
         }
         print(f"  vcpStocks: scanned {len(targets)}, formed {len(items)} "

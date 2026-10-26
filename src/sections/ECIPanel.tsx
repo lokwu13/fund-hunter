@@ -1080,9 +1080,12 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                   </thead>
                   <tbody>
                     {data.vcpStocks.items.map((it: any, idx: number) => {
-                      const grpOf = (x: any) => `${(x.mfDays ?? 0) >= 6 ? '✅ 资金确认 · ' : ''}${x.pattern === 'VCP收缩型' ? 'VCP 收缩' : x.pattern === '杯柄型' ? (x.cupHandle?.breakout ? '🚀 杯柄突破初期' : '杯柄') : x.pattern === '旗形整理' ? '旗形整理' : x.pattern === '底部整理' ? '平台整理 · 底部（分位≤40）' : x.pattern === '长平台整理' ? '平台整理 · 长平台（45~120日大市值）' : x.pattern === '高位平台⚠️' ? '⚠️ 高位平台（分位>60，沉底展示）' : '平台整理 · 中位（分位40~60）'}`;
+                      const grpOf = (x: any) => x.defects?.length
+                        ? `⚠ 模糊入围（有瑕疵） · ${x.pattern === '杯柄型' ? '杯柄' : x.pattern} · 独立沉底`
+                        : `${(x.mfDays ?? 0) >= 6 ? '✅ 资金确认 · ' : ''}${x.pattern === 'VCP收缩型' ? 'VCP 收缩' : x.pattern === '杯柄型' ? (x.cupHandle?.breakout ? '🚀 杯柄突破初期' : '杯柄') : x.pattern === '旗形整理' ? '旗形整理' : x.pattern === '底部整理' ? '平台整理 · 底部（分位≤40）' : x.pattern === '长平台整理' ? '平台整理 · 长平台（45~120日大市值）' : x.pattern === '高位平台⚠️' ? '⚠️ 高位平台（分位>60，沉底展示）' : '平台整理 · 中位（分位40~60）'}`;
                       const grp = grpOf(it);
                       const prevGrp = idx > 0 ? grpOf(data.vcpStocks!.items[idx - 1]) : null;
+                      const isDefect = !!it.defects?.length;
                       const isPlatform = !!it.platform || !!it.longPlat;
                       const isContract = it.pattern === 'VCP收缩型';
                       const isCup = it.pattern === '杯柄型' && !!it.cupHandle;
@@ -1094,11 +1097,11 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                       return (
                         <Fragment key={it.code}>
                         {grp !== prevGrp && (
-                          <tr className="bg-violet-50/70">
-                            <td colSpan={11} className="py-1 px-1 text-[10px] font-bold text-violet-600 tracking-wide">{grp}</td>
+                          <tr className={isDefect ? 'bg-amber-50/70' : 'bg-violet-50/70'}>
+                            <td colSpan={11} className={`py-1 px-1 text-[10px] font-bold tracking-wide ${isDefect ? 'text-amber-700' : 'text-violet-600'}`}>{grp}</td>
                           </tr>
                         )}
-                        <tr className="border-b border-slate-50 hover:bg-violet-50/40 align-top">
+                        <tr className={`border-b border-slate-50 align-top ${isDefect ? 'bg-slate-50/70 opacity-75 hover:bg-amber-50/40' : 'hover:bg-violet-50/40'}`}>
                           <td className="py-1.5 font-medium text-slate-700">
                             {it.star && <Star className="w-3 h-3 text-pink-500 inline mr-0.5 -mt-0.5" />}
                             {it.name}
@@ -1121,7 +1124,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                               <div>
                                 <span
                                   className={`text-[10px] font-bold text-white rounded px-1.5 py-0.5 ${
-                                    it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : it.pattern === '旗形整理' ? 'bg-sky-500' : it.pattern === '底部整理' ? 'bg-slate-500' : it.pattern === '长平台整理' ? 'bg-indigo-500' : it.pattern === '高位平台⚠️' ? 'bg-amber-500' : 'bg-teal-500'
+                                    isDefect ? 'bg-amber-600' : it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : it.pattern === '旗形整理' ? 'bg-sky-500' : it.pattern === '底部整理' ? 'bg-slate-500' : it.pattern === '长平台整理' ? 'bg-indigo-500' : it.pattern === '高位平台⚠️' ? 'bg-amber-500' : 'bg-teal-500'
                                   }`}
                                   title={isContract
                                     ? `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}（首${lv?.volFirst ?? '—'}→末${lv?.volLast ?? '—'}）·枢轴=末次收缩高点`
@@ -1132,8 +1135,13 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     : it.longPlat && !it.platform
                                     ? `长平台${it.longPlat.days}天·振幅${it.longPlat.amplitude}%·首末漂移${it.longPlat.drift}%·末/首量比${it.longPlat.volRatio}·一年分位${it.histPct ?? '—'}%`
                                     : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·末段量比${it.platform.tailRatio ?? '—'}·分段振幅${(it.platform.segAmps || []).join('→')}%·一年分位${it.histPct ?? '—'}%`}
-                                >{it.cupHandle?.breakout ? '🚀 杯柄突破初期' : it.pattern}</span>
-                                <p className="text-[9px] text-violet-400 mt-0.5">
+                                >{isDefect ? `模糊·${it.pattern}` : it.cupHandle?.breakout ? '🚀 杯柄突破初期' : it.pattern}</span>
+                                {isDefect && (
+                                  <p className="text-[9px] font-semibold text-amber-700 bg-amber-100/70 rounded px-1 py-0.5 mt-1">
+                                    瑕疵：{it.defects.join('、')}
+                                  </p>
+                                )}
+                                <p className={`text-[9px] mt-0.5 ${isDefect ? 'text-slate-400' : 'text-violet-400'}`}>
                                   {isContract
                                     ? `收缩${lv?.count ?? 0}次·量能${lv?.volTrend ?? '—'}`
                                     : it.cupHandle?.breakout

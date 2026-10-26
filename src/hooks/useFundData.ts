@@ -377,6 +377,8 @@ export interface FundData {
     poolRaw?: number;
     mvDate?: string | null;
     scanned?: number;
+    qualifiedCount?: number;
+    fuzzyCount?: number;
     note?: string;
     droppedByTrendTemplate?: string[];
     items: Array<{
@@ -388,6 +390,8 @@ export interface FundData {
       tag: string;
       pattern?: '杯柄型' | '底部平台型' | '底部整理' | '收缩型' | 'VCP收缩型' | '旗形整理';
       stage?: string;
+      entryTier?: 'qualified' | 'fuzzy';
+      defects?: string[];
       mfDays?: number;
       flag?: {
         days: number; amplitude: number; polePct: number; volRatio: number;
@@ -401,6 +405,7 @@ export interface FundData {
         pivot: number; distPct: number;
         invalidation?: number; volConfirm?: number; formed: boolean;
         preGain?: number; weeklyUp?: boolean; brkNeedVol?: number;
+        qualified?: boolean; defects?: string[];
         breakout?: boolean; anchorDate?: string; anchorDistPct?: number;
         breakoutDate?: string; breakoutAge?: number; breakoutVolX?: number; breakoutVol50X?: number;
       } | null;
