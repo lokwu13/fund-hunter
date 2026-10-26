@@ -1080,16 +1080,17 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                   </thead>
                   <tbody>
                     {data.vcpStocks.items.map((it: any, idx: number) => {
-                      const grpOf = (x: any) => `${(x.mfDays ?? 0) >= 6 ? '✅ 资金确认 · ' : ''}${x.pattern === 'VCP收缩型' ? 'VCP 收缩' : x.pattern === '杯柄型' ? '杯柄' : x.pattern === '旗形整理' ? '旗形整理' : x.pattern === '底部整理' ? '平台整理 · 底部（分位≤40）' : x.pattern === '长平台整理' ? '平台整理 · 长平台（45~120日大市值）' : x.pattern === '高位平台⚠️' ? '⚠️ 高位平台（分位>60，沉底展示）' : '平台整理 · 中位（分位40~60）'}`;
+                      const grpOf = (x: any) => `${(x.mfDays ?? 0) >= 6 ? '✅ 资金确认 · ' : ''}${x.pattern === 'VCP收缩型' ? 'VCP 收缩' : x.pattern === '杯柄型' ? (x.cupHandle?.breakout ? '🚀 杯柄突破初期' : '杯柄') : x.pattern === '旗形整理' ? '旗形整理' : x.pattern === '底部整理' ? '平台整理 · 底部（分位≤40）' : x.pattern === '长平台整理' ? '平台整理 · 长平台（45~120日大市值）' : x.pattern === '高位平台⚠️' ? '⚠️ 高位平台（分位>60，沉底展示）' : '平台整理 · 中位（分位40~60）'}`;
                       const grp = grpOf(it);
                       const prevGrp = idx > 0 ? grpOf(data.vcpStocks!.items[idx - 1]) : null;
                       const isPlatform = !!it.platform || !!it.longPlat;
                       const isContract = it.pattern === 'VCP收缩型';
+                      const isCup = it.pattern === '杯柄型' && !!it.cupHandle;
                       const isFlag = it.pattern === '旗形整理' && !!it.flag;
                       const lv = isContract
                         ? ((it.daily?.formed && it.daily?.count >= 3) ? it.daily : it.weekly)
                         : (it.daily?.formed ? it.daily : it.weekly);
-                      const pv = isFlag ? it.flag : (isPlatform ? (it.platform || it.longPlat) : lv);
+                      const pv = isCup ? it.cupHandle : isFlag ? it.flag : (isPlatform ? (it.platform || it.longPlat) : lv);
                       return (
                         <Fragment key={it.code}>
                         {grp !== prevGrp && (
@@ -1116,7 +1117,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                             )}
                           </td>
                           <td className="text-center">
-                            {isPlatform || isContract || isFlag ? (
+                            {isPlatform || isContract || isFlag || isCup ? (
                               <div>
                                 <span
                                   className={`text-[10px] font-bold text-white rounded px-1.5 py-0.5 ${
@@ -1125,16 +1126,18 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                   title={isContract
                                     ? `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}（首${lv?.volFirst ?? '—'}→末${lv?.volLast ?? '—'}）·枢轴=末次收缩高点`
                                     : it.cupHandle
-                                    ? `杯柄·底部反转型：杯深${it.cupHandle.cupDepth}%${it.cupHandle.depthMax > 33 ? '（弱势市放宽40%）' : ''}·柄${it.cupHandle.days}天振幅${it.cupHandle.amplitude ?? '—'}%·坑底量比${it.cupHandle.bottomVolRatio ?? '—'}·柄末段量比${it.cupHandle.tailRatio ?? '—'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点`
+                                    ? `杯柄·CANSLIM：杯深${it.cupHandle.cupDepth}%·前置涨幅${it.cupHandle.preGain ?? '—'}%·柄${it.cupHandle.days}天振幅${it.cupHandle.amplitude ?? '—'}%·柄/杯量比${it.cupHandle.volRatio ?? '—'}·柄末段量比${it.cupHandle.tailRatio ?? '—'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点${it.cupHandle.breakout ? `·锚点${it.cupHandle.anchorDate}` : ''}`
                                     : isFlag
                                     ? `旗面${it.flag.days}天·振幅${it.flag.amplitude}%·旗杆+${it.flag.polePct}%·量比${it.flag.volRatio}·一年分位${it.histPct ?? '—'}%`
                                     : it.longPlat && !it.platform
                                     ? `长平台${it.longPlat.days}天·振幅${it.longPlat.amplitude}%·首末漂移${it.longPlat.drift}%·末/首量比${it.longPlat.volRatio}·一年分位${it.histPct ?? '—'}%`
                                     : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·末段量比${it.platform.tailRatio ?? '—'}·分段振幅${(it.platform.segAmps || []).join('→')}%·一年分位${it.histPct ?? '—'}%`}
-                                >{it.pattern}</span>
+                                >{it.cupHandle?.breakout ? '🚀 杯柄突破初期' : it.pattern}</span>
                                 <p className="text-[9px] text-violet-400 mt-0.5">
                                   {isContract
                                     ? `收缩${lv?.count ?? 0}次·量能${lv?.volTrend ?? '—'}`
+                                    : it.cupHandle?.breakout
+                                    ? `${it.cupHandle.breakoutDate}·${it.cupHandle.breakoutVolX}×柄均 / ${it.cupHandle.breakoutVol50X}×50日均·${it.cupHandle.breakoutAge}日前`
                                     : it.cupHandle
                                     ? `杯深${it.cupHandle.cupDepth}%·柄${it.cupHandle.days}天`
                                     : isFlag

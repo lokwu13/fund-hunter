@@ -5060,11 +5060,14 @@ MINERVINI_MIN_CONTR = 3     # VCP 收缩次数下限
 CUP_DEPTH_MIN, CUP_DEPTH_MAX = 12.0, 33.0   # 杯深 %（任务E 2026-10-25 奥尼尔《笑傲股市》12~33%）
 CUP_MIN_TOTAL_DAYS = 40     # 杯+柄总时长 ≥40 交易日（奥尼尔杯身≥7周≈35交易日，取 40 沿用）
 BREAKOUT_VOL_X = 1.4        # 突破确认：成交量 ≥ 50 日均量 ×1.4（=均量+40%，奥尼尔 +40~50% 口径）
-CUP_HANDLE_AMP_MAX = 0.08   # 柄窄幅横盘振幅 ≤8%
-CUP_BRK_VOL_X = 1.5         # 柄末端后突破确认：单日量 ≥ 柄均量 ×1.5（≈均量+50%，等价口径保留）
-CUP_PRE_GAIN_MIN = 0.30     # 前置明确上升趋势：杯沿高 ÷ 其前 250 日最低收盘 −1 ≥ +30%（奥尼尔硬判据）
+CUP_HANDLE_AMP_MAX = 0.10   # 任务81校准：柄窄幅横盘振幅 ≤10%（惠泰实测8.98%）
+CUP_BRK_VOL_X = 1.5         # 强确认：单日量 ≥ 柄均量 ×1.5；近期突破初期的温和量门另见下项
+CUP_PRE_GAIN_MIN = 0.15     # 任务81校准：杯沿高 ÷ 其前250日最低收盘 −1 ≥ +15%（惠泰18.4%）
 CUP_PCT_MAX = 82.0          # 位置守卫（自校准非原典）：一年分位 25~82（任务B 沿用）
 CUP_SHOW_DIST = 5.0         # 杯柄只展示临近成型 ≤5%（任务B 沿用）
+CUP_RECENT_BRK_LOOKBACK = 10  # 历史杯柄锚点回看10个交易日；每日仅用当时可见数据
+CUP_RECENT_BRK_VOL_MIN = 1.0  # 突破初期温和量门：收盘≥锚点枢轴且量≥锚点柄均量×1.0
+CUP_RECENT_BRK_MAX_PCT = 15.0 # 当前仍站上枢轴且不高于枢轴15%
 
 # ── 长平台整理（任务D 2026-10-01 晚，用户口径：标的大+K线长时间走平+波动窄+跨度大）──
 # 标定案例：海光信息 2024-05-07~09-09（90日 幅20.8% 漂移-3.6% 末段量0.74x）
@@ -5177,12 +5180,11 @@ def _vcp_level_strict(bars, win, k, max_dd=None, max_contraction=None,
 
 
 def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None):
-    """杯柄·CANSLIM v3（2026-10-25 任务E：奥尼尔《笑傲股市》标准优先，下跌反转分支下线）：
-    - 前置明确上升趋势：杯沿高 ÷ 其前 250 日最低收盘 −1 ≥ +30%
-      （无前置上升趋势=非奥尼尔杯柄，中信伪杯柄类拒）；
-    - 周线趋势+均线多头硬门：现价>30周线、30周线较 4 周前上行、10周线>30周线；
+    """杯柄·CANSLIM v4（任务81·2026-10-26：22案例与全池敏感性校准）：
+    - 前置上升趋势：杯沿高 ÷ 其前250日最低收盘 −1 ≥ +15%（任务81由30%校准）；
+    - 周线趋势硬门：现价>30周线、30周线较4周前上行、10周线>30周线；
     - 杯深 12~33%；杯身 1~2 个坑，第二坑最深低于第一坑 4% 以内；
-    - 柄在杯体上半部（柄底位置 h_pos∈[0.50,0.80]）、右侧 10~20 日窄幅（振幅≤8%）、
+    - 柄在杯体上半部（柄底位置 h_pos∈[0.50,0.80]）、右侧10~20日窄幅（振幅≤10%）、
       柄低点不破杯底（容差 2%）；
     - 柄部量能枯竭：柄均量 < 杯身均量（volRatio<1.0）且柄末段量比 ≤1.2；
     - 杯+柄 ≥40 交易日；枢轴=柄高点；突破确认量=50 日均量×1.4（=均量+40%，
@@ -5296,6 +5298,50 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                 'weeklyUp': True,
                 'brkNeedVol': round(h_vol * CUP_BRK_VOL_X, 1),
                 'formed': True}
+    return None
+
+
+def _cup_recent_breakout(bars):
+    """近10日杯柄突破初期：历史锚点与当前突破分开判定，禁止未来数据。
+
+    每个锚点只用当时可见 bars 重跑完整杯柄，并复用分位、周线、贴新高中高位拒、
+    -5~+5距枢轴展示门；锚点后首个收盘≥枢轴且量≥柄均量×1.0 为温和突破。
+    当前须仍在枢轴上且不高于枢轴15%。这不替代 _cup_breakout_check 的1.5×强确认。
+    """
+    if len(bars) < 176:
+        return None
+    current_close = bars[-1][3]
+    if current_close <= 0:
+        return None
+    for back in range(1, CUP_RECENT_BRK_LOOKBACK + 1):
+        anchor = bars[:-back]
+        closes = [b[3] for b in anchor]
+        win = closes[-250:]
+        hist_pct = _pct_rank100(win, closes[-1])
+        dist_high = (closes[-1] / max(win) - 1) * 100
+        ch = _cup_handle_strict(anchor, True, dist_high250=dist_high, hist_pct=hist_pct)
+        if not ch or not ch.get('formed'):
+            continue
+        if not (VCP_SHOW_DIST_LO <= ch['distPct'] <= CUP_SHOW_DIST):
+            continue
+        if dist_high > -7 and hist_pct is not None and hist_pct > 60:
+            continue
+        h_vol = ch['brkNeedVol'] / CUP_BRK_VOL_X
+        post = bars[-back:]
+        for i, b in enumerate(post):
+            if b[3] < ch['pivot'] or b[4] < h_vol * CUP_RECENT_BRK_VOL_MIN:
+                continue
+            dist = (ch['pivot'] / current_close - 1) * 100
+            if not (-CUP_RECENT_BRK_MAX_PCT <= dist <= 0):
+                return None
+            history = bars[:len(anchor) + i + 1]
+            vol50 = sum(x[4] for x in history[-50:]) / min(50, len(history))
+            return {**ch, 'anchorDate': anchor[-1][0], 'anchorDistPct': ch['distPct'],
+                    'breakout': True, 'breakoutDate': b[0],
+                    'breakoutAge': len(post) - 1 - i,
+                    'breakoutVolX': round(b[4] / h_vol, 2),
+                    'breakoutVol50X': round(b[4] / vol50, 2),
+                    'distPct': round(dist, 1)}
     return None
 
 
@@ -5711,6 +5757,8 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 w_c3 = bool(w_lv and w_lv['formed'])
                 ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
                                         hist_pct=hist_pct)
+                # 任务81：突破后当前滚动柄常被破坏/分位升高，改由近10日历史锚点独立识别。
+                recent = _cup_recent_breakout(bars) if not (d_c3 or w_c3) else None
                 lp = _long_platform(bars, circ_mv=(mv.get(code, 0) / 1e4 if mv else None),
                                     hist_pct=hist_pct, dist_high250=dist_high250)
                 raw, main_lv = None, None
@@ -5719,13 +5767,13 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     if not tt['pass']:
                         dropped_tt.append(f"{info.get(code, {}).get('name', code)}:VCP收缩型")
                         raw, main_lv = None, None        # VCP 收缩保留 Stage 2 趋势模板拦截
+                elif recent:
+                    raw, main_lv = '杯柄型', recent
+                    ch = recent                       # 前端与买点统一使用历史锚点参数
                 elif (ch and ch['formed']
                       and not (dist_high250 > -7 and hist_pct is not None and hist_pct > 60)):
-                    raw, main_lv = '杯柄型', ch          # 底部反转型（2026-10-01 第三轮重写）：
-                                                         # 不再套 Stage 2，前置回撤≥12%+位置门槛在函数内
-                    # 任务B补充（2026-10-01 晚）：杯柄同样适用「贴新高中高位拒」
-                    # （dist250>-7 且 分位>60，同 ext_high 口径——招商公路/上海银行/长沙银行类；
-                    #  六案例 dist250 ≤-7.6 不受影响）
+                    raw, main_lv = '杯柄型', ch          # 周线趋势、杯深、柄位、量枯等硬门在函数内
+                    # 贴新高中高位拒：dist250>-7 且分位>60。
                 elif lp and lp['formed']:
                     raw, main_lv = '长平台整理', lp        # 任务D（2026-10-01 晚）：大市值长跨度走平，
                                                          # 先于 ext_high 判定（海光段①分位65/距高-4.1% 系钦定案例）
@@ -5761,14 +5809,18 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                         continue
                 else:
                     pattern = raw
-                if pattern in ('底部整理', '平台整理', '高位平台⚠️', '长平台整理'):
-                    dist_limit = VCP_SHOW_DIST_PLAT      # 平台家族放宽至 12%
-                elif pattern == '杯柄型':
-                    dist_limit = CUP_SHOW_DIST           # 任务B：杯柄只展示临近成型 ≤4%（六案例 0.2~2.3）
+                if main_lv.get('breakout'):
+                    dist_lo, dist_limit = -CUP_RECENT_BRK_MAX_PCT, 0.0  # 突破初期独立展示窗
                 else:
-                    dist_limit = VCP_SHOW_DIST
-                if not (VCP_SHOW_DIST_LO <= main_lv['distPct'] <= dist_limit):
-                    continue   # 只展示成型或临近成型（收缩/杯柄距枢轴<8%；底部平台放宽至12%，2026-10-01 校准）
+                    dist_lo = VCP_SHOW_DIST_LO
+                    if pattern in ('底部整理', '平台整理', '高位平台⚠️', '长平台整理'):
+                        dist_limit = VCP_SHOW_DIST_PLAT  # 平台家族放宽至 12%
+                    elif pattern == '杯柄型':
+                        dist_limit = CUP_SHOW_DIST       # 普通杯柄临近成型 -5~+5
+                    else:
+                        dist_limit = VCP_SHOW_DIST
+                if not (dist_lo <= main_lv['distPct'] <= dist_limit):
+                    continue
                 sec = meta['sector']
                 if sec in bad_sectors:
                     fit_txt = '板块不配合⚠️'
@@ -5791,10 +5843,13 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                            + (f"（≈{main_lv['volConfirm']:.0f}手）"
                               if main_lv.get('volConfirm') else ''))
                 if pattern == '杯柄型' and ch and ch.get('formed'):
-                    # 杯柄突破确认信号（2026-10-01 晚 09987 校准）：柄末端后放量走高——
-                    # 收盘≥枢轴 且 单日量≥柄均量×1.5（09987 突破日 3.05x，两周 +33%）
-                    brk_txt = (f"收盘≥{ch['pivot']} 且单日成交量≥柄均量×1.5"
-                               + (f"（≈{ch['brkNeedVol']:.0f}手）" if ch.get('brkNeedVol') else ''))
+                    if ch.get('breakout'):
+                        brk_txt = (f"🚀 {ch['breakoutDate']} 突破初期：量={ch['breakoutVolX']}×柄均/"
+                                   f"{ch['breakoutVol50X']}×50日均；强确认仍为≥1.5×柄均")
+                    else:
+                        # 原强确认不变：收盘≥枢轴且单日量≥柄均量×1.5。
+                        brk_txt = (f"收盘≥{ch['pivot']} 且单日成交量≥柄均量×1.5"
+                                   + (f"（≈{ch['brkNeedVol']:.0f}手）" if ch.get('brkNeedVol') else ''))
                 buy_point = {'pivot': main_lv['pivot'],
                              'distanceToPivotPct': main_lv['distPct'],
                              'invalidation': main_lv.get('invalidation'),
@@ -5849,15 +5904,16 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'droppedByTrendTemplate': dropped_tt[:50],
             'scanScope': scan_scope,
             'note': f'池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由"积聚/信号板块龙头"扩为指数成分全覆盖，当前口径={scan_scope}）；'
-                    '形态口径（2026-10-01 第三轮定稿，用户口径）：'
+                    '形态口径（任务81·2026-10-26校准）：'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%）+末次收缩均量<首次+区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85 直接拒）+Stage 2 趋势模板强制拦截；'
-                    '杯柄型=大结构底部反转v2（2026-10-01下午②五案例标定：中海油服/海油工程/中国石油/中国石化/万华化学，结构54~95日、杯深10.8~21.1%、时点分位37~80、突破后60日+4~67%）：杯+柄≥40交易日+杯深10~22%（杯沿=杯底前使杯深落在区间的最高高点）+一年分位25~85（现价必须脱离一年低点区域，伪杯柄分位1~18贴前低拒）+双底变体（第二坑最深可低第一坑4%）+柄10~20日振幅≤8%不破杯底+柄底位于杯深15~80%处（案例17~56%，<15%=贴杯底停顿拒）+量能双上限（柄均量≤杯身×1.15、柄末段≤1.2，圣杯型允许柄部温和放量），枢轴=柄部高点；'
-                    '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日，振幅≤10.5%+大比例缩量强制（5段递减≥60%或末段/均量≤0.85，末段≤1.2为温和放量上限，超=异常放量拒）+杯柄抬升≤20%+近60日跌幅≥-10%排下跌中继；分位>60打「高位」标签照常展示），单独分层展示；'
-                    '旗形整理=旗杆急涨≥15%（约12个交易日）后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+旗面大比例缩量③，现价在旗杆顶0.85~1.03带内，分位>60打「高位」标签），枢轴=旗面高点，不强制趋势模板；'
-                    '大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85（强制，斜率旁路已删），允许后期温和放量（末段≤1.2），超出=异常放量拒；'
-                    '买点参数：枢轴价/突破确认（收盘>枢轴且量≥50日均量×1.4）/失效位（末次收缩低点或柄部低点）/距枢轴%——形态参数，非操作建议；'
-                    '只展示距枢轴<8%的成型/临近成型个股（底部平台型放宽至12%）；'
-                    '主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用），advice标注；名单按形态分四组（VCP收缩/杯柄/底部整理/旗形）每组各取前10展示，组内「资金确认优先→距枢轴升序」（2026-10-01下午用户指令：底部整理组稳定可见，不再被杯柄组霸屏截断）；'
+                    '杯柄型=前置250日涨幅≥15%+现价>30周线且30周线上行且10周>30周+杯深12~33%+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+柄均量<杯身且柄末量≤1.2+一年分位25~82+贴新高中高位拒；普通杯柄展示距枢轴-5~+5；'
+                    '杯柄突破初期=近10个交易日内逐日用当时数据寻找已通过上述全部门及普通展示窗的历史锚点，其后收盘≥锚点枢轴且量≥锚点柄均量×1.0，当前仍站上枢轴且不高于枢轴15%；展示突破日、柄均量比和50日均量比。此为温和量门，原1.5×柄均量强确认不变；'
+                    '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日，振幅≤10.5%+大比例缩量强制+末段≤1.2+杯柄抬升≤20%+近60日跌幅≥-10%排下跌中继；分位>60不展示）；'
+                    '旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；'
+                    '大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85，允许末段≤1.2温和放量；'
+                    '买点参数：枢轴价/失效位/距枢轴%/形态对应的突破确认——均为形态参数，非操作建议；'
+                    '普通形态只展示距枢轴-5~+8（杯柄+5、平台+12），突破初期单独使用枢轴上方0~15%；'
+                    '主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用）；名单按VCP/杯柄（前端细分🚀突破初期）/底部整理/长平台/平台整理/旗形分组，每组各取前10，组内资金确认优先→距枢轴升序；'
                     '建议=水温×板块合适度×资金确认，仅供关注优先级参考',
         }
         print(f"  vcpStocks: scanned {len(targets)}, formed {len(items)} "

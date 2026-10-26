@@ -400,6 +400,9 @@ export interface FundData {
         amplitude?: number; volRatio?: number; tailRatio?: number; bottomVolRatio?: number;
         pivot: number; distPct: number;
         invalidation?: number; volConfirm?: number; formed: boolean;
+        preGain?: number; weeklyUp?: boolean; brkNeedVol?: number;
+        breakout?: boolean; anchorDate?: string; anchorDistPct?: number;
+        breakoutDate?: string; breakoutAge?: number; breakoutVolX?: number; breakoutVol50X?: number;
       } | null;
       histPct?: number | null;
       distHigh250?: number;
