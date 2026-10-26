@@ -4702,7 +4702,8 @@ def fetch_vcp_watch(pro, trade_date, data):
                         continue
                     row = [str(r['trade_date']), float(r['close']), float(r['high']),
                            float(r['low']), float(r['vol'])]
-                    c['stock_daily'][code] = _vcp_append_rows(c['stock_daily'][code], [row])
+                    c['stock_daily'][code] = _vcp_append_rows(
+                        c['stock_daily'][code], [row], max_len=1200)
                     appended += 1
                 print(f'  vcpWatch stock_daily appended: {appended}/{len(want)}')
             # ── 指数日线增量（31 SW + 15 概念）──
@@ -4730,18 +4731,18 @@ def fetch_vcp_watch(pro, trade_date, data):
                         c['index_daily'][code] = vcp.merge_index_rows(old, rows, max_len=700)
                 except Exception as e:
                     print(f'  vcpWatch ths_daily {con["name"]} failed: {str(e)[:60]}')
-            # 周五新入名单的龙头补一年历史
+            # 周五新入名单的龙头补约1200交易日长历史
             need = sorted({x for v in c['leaders'].values() for x in v}
                           - set(c['stock_daily']))
             back_start = (datetime.strptime(eff, '%Y%m%d')
-                          - timedelta(days=vcp.BACK_CAL_DAYS)).strftime('%Y%m%d')
+                          - timedelta(days=vcp.STOCK_BACK_CAL_DAYS)).strftime('%Y%m%d')
             for code in need:
                 try:
                     df = vcp.api(pro, 'daily', ts_code=code, start_date=back_start, end_date=eff)
                     rows = [[str(r['trade_date']), float(r['close']), float(r['high']),
                              float(r['low']), float(r['vol'])] for _, r in df.iterrows()]
                     rows.sort()
-                    c['stock_daily'][code] = rows
+                    c['stock_daily'][code] = rows[-1200:]
                 except Exception as e:
                     print(f'  vcpWatch leader backfill {code} failed: {str(e)[:60]}')
             if need:
@@ -5179,6 +5180,52 @@ def _vcp_level_strict(bars, win, k, max_dd=None, max_contraction=None,
             'formed': bool(dec_strict and vol_ok)}
 
 
+def _cup_weekly_trend(bars):
+    """杯柄专用长期趋势门（任务83）；不使用broadOsc的MA50>150>200规则。
+
+    只用最近已完成周线：A 周收≥BOLL99中轨×0.97，或 B 连续击穿中轨≤4周；
+    且 MA150>MA200。MA150/200正利差及是否扩大仅作证据，MA50走弱不否决。
+    """
+    if len(bars) < 5:
+        return {'pass': False, 'reason': '数据不足'}
+    rows = [(b[0], b[3], b[1], b[2], b[4]) for b in bars]
+    weekly = _osc_weekly_bars(rows)[:-1]       # 当前未完成周不参与
+    closes = [b[3] for b in weekly]
+    if len(closes) < 200:
+        return {'pass': False, 'reason': f'仅{len(closes)}根已完成周线，不足200周',
+                'weeks': len(closes)}
+    mid, _, _ = _boll_series(closes, 99, 2.0)
+    close, m = closes[-1], mid[-1]
+    below = 0
+    for i in range(len(closes) - 1, -1, -1):
+        if mid[i] is not None and closes[i] < mid[i]:
+            below += 1
+        else:
+            break
+    boll_a = close >= m * 0.97
+    boll_b = below <= 4
+    boll_pass = boll_a or boll_b               # 杯柄只沿用A/B，不借用抄底C旁路
+    ma150 = sum(closes[-150:]) / 150
+    ma200 = sum(closes[-200:]) / 200
+    ma150_prev = sum(closes[-151:-1]) / 150 if len(closes) >= 151 else None
+    ma200_prev = sum(closes[-201:-1]) / 200 if len(closes) >= 201 else None
+    spread = (ma150 / ma200 - 1) * 100 if ma200 > 0 else None
+    prev_spread = ((ma150_prev / ma200_prev - 1) * 100
+                   if ma150_prev is not None and ma200_prev else None)
+    ma_bull = ma150 > ma200
+    return {'pass': bool(boll_pass and ma_bull), 'completedWeekEnd': weekly[-1][2],
+            'weeks': len(closes), 'weeklyClose': round(close, 4),
+            'bollMid99': round(m, 4), 'closeToMid': round(close / m, 4),
+            'weeksBelowMid': below, 'bollA': boll_a, 'bollB': boll_b,
+            'bollPass': boll_pass, 'ma150': round(ma150, 4), 'ma200': round(ma200, 4),
+            'maBull150_200': ma_bull,
+            'spreadPct': round(spread, 3) if spread is not None else None,
+            'prevSpreadPct': round(prev_spread, 3) if prev_spread is not None else None,
+            'spreadExpanding': spread is not None and prev_spread is not None and spread > prev_spread,
+            'ma150Rising': ma150 > ma150_prev if ma150_prev is not None else None,
+            'ma200Rising': ma200 > ma200_prev if ma200_prev is not None else None}
+
+
 def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None):
     """杯柄·CANSLIM v4（任务81·2026-10-26：22案例与全池敏感性校准）：
     - 前置上升趋势：杯沿高 ÷ 其前250日最低收盘 −1 ≥ +15%（任务81由30%校准）；
@@ -5190,8 +5237,10 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
     - 杯+柄 ≥40 交易日；枢轴=柄高点；突破确认量=50 日均量×1.4（=均量+40%，
       奥尼尔 +40~50%），柄均量×1.5 等价口径见 _cup_breakout_check。
     位置守卫（自校准非原典）：分位 25~82；链路另有限距枢轴 ≤5%、贴新高中高位拒。
-    取满足条件的最长杯柄。"""
-    if len(bars) < 175:                 # 周线门需 ≥35 周数据（约 175 交易日）
+    周线趋势硬门（任务83）：最近已完成周线 BOLL99 中轨未有效下破（A/B），且 MA150>MA200；
+    MA50短期走弱不否决，MA150/200正利差及是否扩大仅作证据，不改 broadOsc 规则。
+    候选采用展示窗内最长优先；若均不在窗内，返回最长成型候选供完整链拒展示。"""
+    if len(bars) < 175:                 # 结构门最低长度；长期趋势门另行要求200根完成周线
         return None
     closes = [b[3] for b in bars]
     close = closes[-1]
@@ -5205,24 +5254,13 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
             hist_pct = _pct_rank100(win, close)
     if hist_pct is None or not (25 <= hist_pct <= CUP_PCT_MAX):
         return None                     # 分位 25~82：已脱离前低区域 + 非高位
-    # ── 周线趋势+均线多头（奥尼尔任务E 硬门，与深跌反转天然互斥）──
-    wkey = pd.to_datetime(pd.Series([b[0] for b in bars]), format='%Y%m%d').dt.strftime('%G%V')
-    wk_closes = []
-    for k, c in zip(wkey, closes):
-        if wk_closes and k == wk_closes[-1][0]:
-            wk_closes[-1] = (k, c)      # 每周最后收盘
-        else:
-            wk_closes.append((k, c))
-    wk = [c for _, c in wk_closes]
-    if len(wk) < 35:
+    # ── 任务83：长期趋势完好优先，短期10/30周走弱不再否决反转杯 ──
+    weekly_trend = _cup_weekly_trend(bars)
+    if not weekly_trend.get('pass'):
         return None
-    ma30w = sum(wk[-30:]) / 30
-    ma30w_4 = sum(wk[-34:-4]) / 30
-    ma10w = sum(wk[-10:]) / 10
-    if not (close > ma30w and ma30w > ma30w_4 and ma10w > ma30w):
-        return None                     # 现价>30周线 + 30周线上行 + 10周>30周
     vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
-    for n in range(20, 9, -1):          # 杯柄 10~20 日（右侧横盘≥2 周），取最长
+    best = None                           # 最长成型候选兜底；不放宽+5%展示窗
+    for n in range(20, 9, -1):          # 杯柄 10~20 日（右侧横盘≥2 周）
         handle = bars[-n:]
         h_hi = max(b[1] for b in handle)
         h_lo = min(b[2] for b in handle)
@@ -5238,20 +5276,23 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         cup_lo = cup[lo_pos][2]
         if cup_lo <= 0:
             continue
-        # 杯沿=杯底之前、使杯深落在 12~33%（奥尼尔）区间内的最高高点
+        # 杯沿仍优先最高高点，但最高沿若令柄底跌出上半部，允许继续评估较低沿；
+        # 深度12~33与柄位0.50~0.80均未放宽（任务83平高：05-13沿拒、06-02沿可取）。
         hi_pos, cup_hi = None, 0
         for i in range(lo_pos):
             h = cup[i][1]
-            if h <= cup_hi:
+            if h < cup_hi:               # 同价杯沿取较近者（平高06-02优先于05-22）
                 continue
             d = (h - cup_lo) / h * 100
-            if CUP_DEPTH_MIN <= d <= CUP_DEPTH_MAX:
+            candidate_h_pos = (h_lo - cup_lo) / (h - cup_lo)
+            if (CUP_DEPTH_MIN <= d <= CUP_DEPTH_MAX
+                    and 0.50 - 1e-9 <= candidate_h_pos <= 0.80 + 1e-9):
                 hi_pos, cup_hi = i, h
         if hi_pos is None:
-            continue                    # 无落在杯深区间的杯沿
+            continue                    # 无同时满足杯深与柄位的杯沿
         cup_start = max(0, len(bars) - (n + 120))
         rim_i = cup_start + hi_pos
-        # 前置明确上升趋势（奥尼尔任务E）：杯沿较前 250 日最低收盘涨幅 ≥30%
+        # 前置明确上升趋势：杯沿较前250日最低收盘涨幅≥CUP_PRE_GAIN_MIN（当前15%）
         pre_closes = closes[max(0, rim_i - 250):rim_i]
         pre_low = min(pre_closes) if pre_closes else 0
         pre_gain = (cup_hi / pre_low - 1) if pre_low > 0 else 0
@@ -5271,7 +5312,7 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         # 柄在杯体上半部（奥尼尔）：h_pos<0.50=柄落在杯体下半部（非强势休整）；
         # >0.80=已涨离结构
         h_pos = (h_lo - cup_lo) / (cup_hi - cup_lo)
-        if not (0.50 <= h_pos <= 0.80):
+        if not (0.50 - 1e-9 <= h_pos <= 0.80 + 1e-9):
             continue
         total_days = len(body) + n
         if total_days < CUP_MIN_TOTAL_DAYS:
@@ -5286,19 +5327,25 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         if tail_ratio > 1.2:
             continue                    # 柄末段超 1.2=异常放量
         dist = (h_hi / close - 1) * 100
-        return {'type': '杯柄型', 'days': n, 'totalDays': total_days,
-                'cupDepth': round(depth, 1), 'depthOk': True, 'depthMax': CUP_DEPTH_MAX,
-                'amplitude': round(amp * 100, 1),
-                'tailRatio': round(tail_ratio, 2),
-                'volRatio': round(h_vol / cup_vol, 2),
-                'pivot': round(h_hi, 2), 'distPct': round(dist, 1),
-                'invalidation': round(h_lo, 2),
-                'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
-                'preGain': round(pre_gain * 100, 1),
-                'weeklyUp': True,
-                'brkNeedVol': round(h_vol * CUP_BRK_VOL_X, 1),
-                'formed': True}
-    return None
+        candidate = {'type': '杯柄型', 'days': n, 'totalDays': total_days,
+                     'cupDepth': round(depth, 1), 'depthOk': True, 'depthMax': CUP_DEPTH_MAX,
+                     'amplitude': round(amp * 100, 1),
+                     'tailRatio': round(tail_ratio, 2),
+                     'volRatio': round(h_vol / cup_vol, 2),
+                     'pivot': round(h_hi, 2), 'distPct': round(dist, 1),
+                     'invalidation': round(h_lo, 2),
+                     'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
+                     'preGain': round(pre_gain * 100, 1),
+                     'weeklyUp': True, 'weeklyTrend': weekly_trend,
+                     'rimDate': bars[rim_i][0], 'rimHigh': round(cup_hi, 2),
+                     'handlePosition': round(h_pos, 3),
+                     'brkNeedVol': round(h_vol * CUP_BRK_VOL_X, 1),
+                     'formed': True}
+        if VCP_SHOW_DIST_LO <= dist <= CUP_SHOW_DIST:
+            return candidate               # 展示窗内取最长，保留较短有效柄
+        if best is None:
+            best = candidate               # 无窗内候选时仍由完整链拒展示
+    return best
 
 
 def _cup_recent_breakout(bars):
@@ -5586,8 +5633,9 @@ def _resample_weekly(rows):
 def fetch_vcp_stocks(pro, trade_date, data, today_map):
     """个股级形态精扫（原个股 VCP 精扫，2026-10-01 改名多形态并列：VCP收缩/杯柄/平台整理/旗形整理）：上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 成分池 ∩（持仓观察股 ∪ 积聚板块龙头 ∪ vcpWatch信号板块龙头）。
 
-    个股日线历史复用 vcp_cache.stock_daily（300 交易日，含周线重采样所需长度）；
-    缺历史的票一次性回补 420 日历日后并入缓存，次日起随 vcpWatch 批量日更零成本。
+    个股日线历史复用 vcp_cache.stock_daily（最多1200交易日，覆盖杯柄MA200周）；
+    缺失、过期或不足1050行的票一次性回补2200日历日后并入缓存，之后每日增量。
+    首次nightly目标池长历史回补调用量会增加；行业指数仍沿用原420日历日规则。
     成分池 index_weight 仅周五刷新（4 次调用）+ daily_basic 市值快照（1 次）。失败保留旧 vcpStocks。
     """
     try:
@@ -5659,10 +5707,11 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         eff = eff or trade_date
         stale_cut = (datetime.strptime(eff, '%Y%m%d') - timedelta(days=7)).strftime('%Y%m%d')
         need = [code for code in targets
-                if not stock_daily.get(code) or stock_daily[code][-1][0] < stale_cut]
+                if not stock_daily.get(code) or stock_daily[code][-1][0] < stale_cut
+                or len(stock_daily[code]) < 1050]
         if need:
             back_start = (datetime.strptime(eff, '%Y%m%d')
-                          - timedelta(days=vcp.BACK_CAL_DAYS)).strftime('%Y%m%d')
+                          - timedelta(days=vcp.STOCK_BACK_CAL_DAYS)).strftime('%Y%m%d')
             for i, code in enumerate(need):
                 try:
                     time.sleep(API_DELAY)
@@ -5672,7 +5721,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     rows = [[str(r['trade_date']), float(r['close']), float(r['high']),
                              float(r['low']), float(r['vol'])] for _, r in df.iterrows()]
                     rows.sort()
-                    c.setdefault('stock_daily', {})[code] = rows[-300:]
+                    c.setdefault('stock_daily', {})[code] = rows[-1200:]
                     stock_daily = c['stock_daily']
                 except Exception as e:
                     print(f'  Warning: vcpStocks backfill {code} failed: {str(e)[:60]}')
@@ -6152,13 +6201,13 @@ def fetch_stock_rs(pro, trade_date, data):
                     time.sleep(API_DELAY)
                     df = pro.daily(ts_code=code,
                                    start_date=(datetime.strptime(trade_date, '%Y%m%d')
-                                               - timedelta(days=vcp.BACK_CAL_DAYS)).strftime('%Y%m%d'),
+                                               - timedelta(days=vcp.STOCK_BACK_CAL_DAYS)).strftime('%Y%m%d'),
                                    end_date=trade_date)
                     if df is not None and len(df):
                         rows = [[str(r['trade_date']), float(r['close']), float(r['high']),
                                  float(r['low']), float(r['vol'])] for _, r in df.iterrows()]
                         rows.sort()
-                        vc.setdefault('stock_daily', {})[code] = rows[-300:]
+                        vc.setdefault('stock_daily', {})[code] = rows[-1200:]
                         stock_daily = vc['stock_daily']
                 except Exception as e:
                     print(f'  Warning: stockRS backfill {code} failed: {str(e)[:60]}')

@@ -31,7 +31,8 @@ FUND_DATA_PATH = os.path.join(BASE, 'public', 'fund_data.json')
 HTML_OUT = os.environ.get('VCP_HTML_OUT',
                           r'C:\Users\Administrator\Documents\kimi\workspace\vcp-preview.html')
 API_DELAY = float(os.environ.get('API_DELAY', '1.5'))
-BACK_CAL_DAYS = 420       # 日线回溯日历日（覆盖 244 个滚动20日波动率点）
+BACK_CAL_DAYS = 420       # 行业指数回溯；概念指数另有1200日历日规则
+STOCK_BACK_CAL_DAYS = 2200  # 个股长历史：覆盖杯柄MA200周及BOLL99周；行业指数不受影响
 MIN_LIST_CAL_DAYS = 90    # 上市不足约 60 交易日剔除
 VOL_WIN, VOL_YEAR = 20, 244
 # 指数监测放宽（2026-10-25）：只影响板块/概念卡，不影响个股形态精扫。
@@ -315,7 +316,7 @@ def ensure_index_daily(pro, c):
 def ensure_stock_daily(pro, c):
     c.setdefault('stock_daily', {})
     start = (datetime.strptime(c['trade_date'], '%Y%m%d')
-             - timedelta(days=BACK_CAL_DAYS)).strftime('%Y%m%d')
+             - timedelta(days=STOCK_BACK_CAL_DAYS)).strftime('%Y%m%d')
     need = sorted({code for v in c['leaders'].values() for code in v}
                   - set(c['stock_daily']))
     print('stock_daily to fetch:', len(need))
@@ -325,7 +326,7 @@ def ensure_stock_daily(pro, c):
             rows = [[str(r['trade_date']), float(r['close']), float(r['high']),
                      float(r['low']), float(r['vol'])] for _, r in df.iterrows()]
             rows.sort()
-            c['stock_daily'][code] = rows
+            c['stock_daily'][code] = rows[-1200:]
         except Exception as e:
             print('daily FAILED', code, str(e)[:80])
         if (i + 1) % 10 == 0 or i == len(need) - 1:
