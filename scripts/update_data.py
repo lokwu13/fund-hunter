@@ -5227,8 +5227,8 @@ def _cup_weekly_trend(bars):
 
 
 def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None,
-                       allow_ma_defect=False):
-    """杯柄·CANSLIM v4（任务84：可选仅MA150/200瑕疵档，默认严格无瑕疵）：
+                       allow_weekly_defect=False):
+    """杯柄·CANSLIM v4（任务85：可选周线趋势整体瑕疵档，默认严格无瑕疵）：
     - 前置上升趋势：杯沿高 ÷ 其前250日最低收盘 −1 ≥ +15%（任务81由30%校准）；
     - 周线趋势硬门：最近完成周BOLL99中轨未有效下破（A/B）+ MA150>MA200；
     - 杯深 12~33%；杯身 1~2 个坑，第二坑最深低于第一坑 4% 以内；
@@ -5240,8 +5240,8 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
     位置守卫（自校准非原典）：分位 25~82；链路另有限距枢轴 ≤5%、贴新高中高位拒。
     周线趋势硬门（任务83）：最近已完成周线 BOLL99 中轨未有效下破（A/B），且 MA150>MA200；
     MA50短期走弱不否决，MA150/200正利差及是否扩大仅作证据，不改 broadOsc 规则。
-    任务84仅当allow_ma_defect=True且BOLL已通过、唯独MA150≤MA200时返回瑕疵候选；
-    数据不足、BOLL失败及其他任一结构门失败均不允许瑕疵入围，近期突破仍走默认严格档。
+    任务85将周线趋势整体作为一项瑕疵：BOLL失守和/或MA150≤MA200均可模糊入围；
+    标签精确区分BOLL、MA或双瑕疵。不足200根完成周线及其他结构门失败仍不允许，近期突破默认严格。
     候选采用展示窗内最长优先；若均不在窗内，返回最长成型候选供完整链拒展示。"""
     if len(bars) < 175:                 # 结构门最低长度；长期趋势门另行要求200根完成周线
         return None
@@ -5257,13 +5257,17 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
             hist_pct = _pct_rank100(win, close)
     if hist_pct is None or not (25 <= hist_pct <= CUP_PCT_MAX):
         return None                     # 分位 25~82：已脱离前低区域 + 非高位
-    # ── 任务83长期门；任务84只放行“BOLL过且唯独MA150/200未多头”的瑕疵杯柄 ──
+    # ── 任务85：周线趋势整体作为一项瑕疵；历史不足不得模糊入围 ──
     weekly_trend = _cup_weekly_trend(bars)
-    ma_defect = bool(weekly_trend.get('bollPass')
-                     and weekly_trend.get('maBull150_200') is False)
-    if not weekly_trend.get('pass') and not (allow_ma_defect and ma_defect):
+    enough_weeks = weekly_trend.get('weeks', 0) >= 200 and 'bollPass' in weekly_trend
+    boll_defect = enough_weeks and not weekly_trend.get('bollPass')
+    ma_defect = enough_weeks and weekly_trend.get('maBull150_200') is False
+    weekly_defect = boll_defect or ma_defect
+    if not weekly_trend.get('pass') and not (allow_weekly_defect and weekly_defect):
         return None
-    defects = ['周MA150/200未多头'] if ma_defect else []
+    defects = ([('周BOLL+周MA双瑕疵' if boll_defect and ma_defect else
+                 '周BOLL中轨失守' if boll_defect else '周MA未多头')]
+               if weekly_defect else [])
     vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
     best = None                           # 最长成型候选兜底；不放宽+5%展示窗
     for n in range(20, 9, -1):          # 杯柄 10~20 日（右侧横盘≥2 周）
@@ -5812,7 +5816,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 d_c3 = bool(d_lv and d_lv['formed'])
                 w_c3 = bool(w_lv and w_lv['formed'])
                 ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
-                                        hist_pct=hist_pct, allow_ma_defect=True)
+                                        hist_pct=hist_pct, allow_weekly_defect=True)
                 # 任务81：突破后当前滚动柄常被破坏/分位升高，改由近10日历史锚点独立识别。
                 recent = _cup_recent_breakout(bars) if not (d_c3 or w_c3) else None
                 lp = _long_platform(bars, circ_mv=(mv.get(code, 0) / 1e4 if mv else None),
@@ -5966,7 +5970,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'note': f'池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由"积聚/信号板块龙头"扩为指数成分全覆盖，当前口径={scan_scope}）；'
                     '形态口径（任务81·2026-10-26校准）：'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%）+末次收缩均量<首次+区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85 直接拒）+Stage 2 趋势模板强制拦截；'
-                    '杯柄型=前置250日涨幅≥15%+最近完成周BOLL99中轨未有效下破（A/B）+MA150>MA200+杯深12~33%+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+柄均量<杯身且柄末量≤1.2+一年分位25~82+贴新高中高位拒；普通杯柄展示距枢轴-5~+5；任务84仅BOLL及其余全部门通过、唯独MA150≤MA200者进入模糊入围瑕疵组，逐股标注并独立沉底；'
+                    '杯柄型=前置250日涨幅≥15%+最近完成周BOLL99中轨未有效下破（A/B）+MA150>MA200+杯深12~33%+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+柄均量<杯身且柄末量≤1.2+一年分位25~82+贴新高中高位拒；普通杯柄展示距枢轴-5~+5；任务85将周线趋势整体作为一项瑕疵：BOLL失守和/或MA150≤MA200、但其余全部门通过者进入模糊入围瑕疵组，精确标注周BOLL中轨失守/周MA未多头/周BOLL+周MA双瑕疵并独立沉底；'
                     '杯柄突破初期=近10个交易日内逐日用当时数据寻找已通过上述全部门及普通展示窗的历史锚点，其后收盘≥锚点枢轴且量≥锚点柄均量×1.0，当前仍站上枢轴且不高于枢轴15%；展示突破日、柄均量比和50日均量比。此为温和量门，原1.5×柄均量强确认不变；'
                     '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日，振幅≤10.5%+大比例缩量强制+末段≤1.2+杯柄抬升≤20%+近60日跌幅≥-10%排下跌中继；分位>60不展示）；'
                     '旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；'
