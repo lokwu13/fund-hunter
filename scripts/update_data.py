@@ -1212,45 +1212,70 @@ BROAD_ETF_MAP = [
 ]
 
 
+def _effective_batch_trade_date(trade_date, data):
+    """盘前日期不得领先真实行情：优先本批sectorFlows有效日，否则用已确认行情最新日。"""
+    requested = str(trade_date).replace('-', '')
+    sector_date = str((data.get('sectorFlows') or {}).get('trade_date') or '').replace('-', '')
+    if len(sector_date) == 8 and sector_date <= requested:
+        return sector_date
+    candidates = []
+    for key in ('indexVol', 'etfShareRadar', 'nationalETFWatch'):
+        value = str((data.get(key) or {}).get('trade_date') or '').replace('-', '')
+        if len(value) == 8 and value <= requested:
+            candidates.append(value)
+    return max(candidates) if candidates else requested
+
+
 def _broad_idx_bars(pro, trade_date):
-    """9 大宽基指数日线 OHLCV 缓存（[date, close, high, low, vol]，≤1200 条滚动）。
-    每晚 1 次 index_daily 批量调用（按 trade_date 全量快照过滤 9 只）；
-    历史不足 1100 条时逐只回补约 2200 日历日，保证周线 BOLL99 与 MA200 有足够已完成周。"""
+    """9大宽基统一有效日增量；盘前空快照不回填未来日期，长缺口每指数每晚最多回补1次。"""
+    td = str(trade_date).replace('-', '')
     cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {})
+    codes = [c for c, _, _, _ in BROAD_ETF_MAP]
+    prior_last = {tc: ((cache.get(tc) or [None])[-1][0] if cache.get(tc) else '') for tc in codes}
     try:
         time.sleep(API_DELAY)
-        snap = pro.index_daily(trade_date=trade_date)
+        snap = pro.index_daily(trade_date=td)
         if snap is not None and len(snap):
             for _, r in snap.iterrows():
                 tc = r['ts_code']
-                if tc not in [c for c, _, _, _ in BROAD_ETF_MAP]:
+                if tc not in codes:
                     continue
+                date = str(r['trade_date'])
                 rows = cache.setdefault(tc, [])
-                if not rows or rows[-1][0] != trade_date:
-                    rows.append([trade_date, round(float(r['close']), 3),
+                if not rows or rows[-1][0] != date:
+                    rows.append([date, round(float(r['close']), 3),
                                  round(float(r['high']), 3), round(float(r['low']), 3),
                                  round(float(r['vol']), 1)])
     except Exception as e:
-        print(f"  Warning: broad idx daily batch failed: {e}")
-    for tc, _, _, _ in BROAD_ETF_MAP:
+        print(f"  Warning: broad idx daily batch failed for effective {td}: {e}")
+    end_dt = datetime.strptime(td, '%Y%m%d')
+    for tc in codes:
         rows = cache.get(tc, [])
+        start = None
         if len(rows) < 1100:
+            start = (end_dt - timedelta(days=2200)).strftime('%Y%m%d')
+        elif prior_last[tc] and prior_last[tc] < td:
+            gap_days = (end_dt - datetime.strptime(prior_last[tc], '%Y%m%d')).days
+            # 批量快照失败时即使只缺1天也逐只补；快照成功仅对长缺口补，避免每日9次重复调用。
+            if not rows or rows[-1][0] != td or gap_days > 4:
+                start = (datetime.strptime(prior_last[tc], '%Y%m%d') + timedelta(days=1)).strftime('%Y%m%d')
+        if start and start <= td:
             try:
                 time.sleep(API_DELAY)
-                start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=2200)).strftime('%Y%m%d')
-                df = pro.index_daily(ts_code=tc, start_date=start, end_date=trade_date)
+                df = pro.index_daily(ts_code=tc, start_date=start, end_date=td)
                 if df is not None and len(df):
-                    have = {r[0] for r in rows}
+                    by_date = {r[0]: r for r in rows}
                     for _, r in df.sort_values('trade_date').iterrows():
-                        if r['trade_date'] not in have:
-                            rows.append([r['trade_date'], round(float(r['close']), 3),
+                        date = str(r['trade_date'])
+                        by_date[date] = [date, round(float(r['close']), 3),
                                          round(float(r['high']), 3), round(float(r['low']), 3),
-                                         round(float(r['vol']), 1)])
-                    rows.sort(key=lambda x: x[0])
+                                         round(float(r['vol']), 1)]
+                    rows = [by_date[d] for d in sorted(by_date)]
                     cache[tc] = rows
+                    print(f'  broad idx {tc}: incremental {start}~{td}, latest {rows[-1][0]}')
             except Exception as e:
                 print(f"  Warning: broad idx backfill failed for {tc}: {e}")
-        cache[tc] = cache.get(tc, [])[-1200:]
+        cache[tc] = [r for r in cache.get(tc, []) if r[0] <= td][-1200:]
     _save_json_cache(BROAD_IDX_CACHE_PATH, cache)
     return cache
 
@@ -1361,9 +1386,10 @@ def build_broad_watch(pro, trade_date, data):
       未突破·观察（成型但距枢轴≥5%，盯突破）、临近买点（距枢轴<5%）、已突破（收盘站上枢轴）。
     每晚新增调用：index_daily 批量 1 次（与 nt_upgrade 既有调用不同维度，独立缓存）。
     """
-    d = f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}"
-    cache = _broad_idx_bars(pro, trade_date)
-    etf_cache = _broad_etf_bars(pro, trade_date)   # 2026-09-26 改版②：买点直接对 ETF 行情算
+    effective_date = _effective_batch_trade_date(trade_date, data)
+    d = f"{effective_date[:4]}-{effective_date[4:6]}-{effective_date[6:]}"
+    cache = _broad_idx_bars(pro, effective_date)
+    etf_cache = _broad_etf_bars(pro, effective_date)   # ETF同样不得用盘前领先日期空快照
     radar = {i['code']: i for i in (data.get('etfShareRadar') or {}).get('items', [])}
     vol_map = {i['code']: i for i in (data.get('indexVol') or {}).get('items', [])}
     trend_items, vcp_items = [], []
@@ -5036,7 +5062,7 @@ DIVIDEND_VALUATION_MAX_PCT = 30.0
 
 
 def _dividend_weekly_gate(trade_date):
-    """六宽基最近已完成周 RSI14 全低于20；缺一只或日期不齐都视为未通过。"""
+    """六宽基日线同批、完成周同周且属于当前上一周，再判定RSI14是否全部<20。"""
     idx_cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {})
     td = str(trade_date).replace('-', '')
     current_week = pd.to_datetime(td, format='%Y%m%d').strftime('%G%V')
@@ -5049,30 +5075,40 @@ def _dividend_weekly_gate(trade_date):
         rsi = _rsi_series([b[3] for b in completed], 14) if completed else []
         value = rsi[-1] if rsi else None
         date = completed[-1][2] if completed and value is not None else None
-        if value is None:
+        daily_date = rows[-1][0] if rows else None
+        if value is None or not daily_date:
             missing.append(name)
         items.append({'indexCode': code, 'indexName': name,
+                      'dailyDate': (f'{daily_date[:4]}-{daily_date[4:6]}-{daily_date[6:]}' if daily_date else None),
                       'weeklyRsi': round(value, 2) if value is not None else None,
                       'weeklyRsiDate': (f'{date[:4]}-{date[4:6]}-{date[6:]}' if date else None),
                       'below20': bool(value is not None and value < 20)})
     dates = {r['weeklyRsiDate'] for r in items if r['weeklyRsiDate']}
+    daily_dates = {r['dailyDate'] for r in items if r['dailyDate']}
     satisfied = sum(r['below20'] for r in items)
-    aligned = not missing and len(dates) == 1
+    weekly_aligned = not missing and len(dates) == 1
+    daily_aligned = not missing and len(daily_dates) == 1
     expected_week = (pd.to_datetime(td, format='%Y%m%d') - pd.Timedelta(days=7)).strftime('%G%V')
-    actual_week = (pd.to_datetime(next(iter(dates))).strftime('%G%V') if aligned else None)
-    fresh = aligned and actual_week == expected_week
-    all_below = aligned and fresh and satisfied == len(OSC_INDICES)
+    actual_week = (pd.to_datetime(next(iter(dates))).strftime('%G%V') if weekly_aligned else None)
+    fresh = daily_aligned and weekly_aligned and actual_week == expected_week
+    all_below = fresh and satisfied == len(OSC_INDICES)
+    reason = f'最近完成周RSI14<20满足{satisfied}/{len(OSC_INDICES)}' + ('，六只全部满足' if all_below else '，未达六只全部满足')
     if missing:
-        reason = '周RSI数据不足：' + '、'.join(missing)
-    elif not aligned:
-        reason = '六宽基最近完成周日期不一致，周RSI门不通过'
+        freshness_reason = '周RSI数据不足：' + '、'.join(missing)
+    elif not daily_aligned:
+        freshness_reason = '六宽基最新日线日期不一致，周RSI门不通过'
+    elif not weekly_aligned:
+        freshness_reason = '六宽基最近完成周日期不一致，周RSI门不通过'
     elif not fresh:
-        reason = f'周RSI缓存完成周{next(iter(dates))}不是当前最近完成周（预期周{expected_week}），周RSI门不通过'
+        freshness_reason = f'周RSI缓存完成周{next(iter(dates))}不是当前最近完成周（预期周{expected_week}），周RSI门不通过'
     else:
-        reason = f'最近完成周RSI14<20满足{satisfied}/{len(OSC_INDICES)}' + ('，六只全部满足' if all_below else '，未达六只全部满足')
+        freshness_reason = f'六宽基日线统一至{next(iter(daily_dates))}；周RSI使用当前最近完成周{next(iter(dates))}'
+    if not fresh:
+        reason = freshness_reason
     return {'weeklyAllBelow20': all_below, 'weeklySatisfiedCount': satisfied,
             'weeklyRequiredCount': len(OSC_INDICES), 'weeklyItems': items,
-            'weeklyReason': reason}
+            'dailyDate': next(iter(daily_dates)) if daily_aligned else None,
+            'freshnessReason': freshness_reason, 'weeklyReason': reason}
 
 
 def _market_valuation_gate(pro, trade_date):
@@ -5137,26 +5173,29 @@ def _market_valuation_gate(pro, trade_date):
 
 def build_dividend_watch(pro, trade_date, data):
     """周RSI六只全<20且中证全指PE/PB五年分位均≤30%才生成高股息名单。"""
-    weekly = _dividend_weekly_gate(trade_date)
-    valuation_gate = _market_valuation_gate(pro, trade_date)
+    snapshot_date = _effective_batch_trade_date(trade_date, data)
+    weekly = _dividend_weekly_gate(snapshot_date)
+    valuation_gate = _market_valuation_gate(pro, snapshot_date)
     valuation_low = valuation_gate['valuationLow']
     valuation = valuation_gate['valuation']
     visible = weekly['weeklyAllBelow20'] and valuation_low
-    snapshot_date = ((data.get('sectorFlows') or {}).get('trade_date') or trade_date).replace('-', '')
+    freshness_reason = weekly.get('freshnessReason', weekly['weeklyReason'])
     base = {
         'trade_date': snapshot_date, 'visible': visible, **weekly,
         'valuationLow': valuation_low, 'valuation': valuation,
-        'reasons': [weekly['weeklyReason'], valuation['reason']],
+        'reasons': [freshness_reason, valuation['reason']],
         'poolIndices': list(DIVIDEND_POOL_INDICES),
         'minTotalMv': VCP_MIN_MV, 'minDvTtm': DIVIDEND_MIN_DV_TTM,
         'source': '六宽基周RSI14 + Tushare index_dailybasic（000985.CSI）双门；通过后才取五指数成分与daily_basic',
         'note': ('双门=上证50/沪深300/中证500/中证1000/科创50/创业板指最近完成周RSI14全部<20，'
                  '且中证全指PE_TTM/PB近5年分位均≤30%（至少750个同日有效观测）；未满足不展示股票清单。'
                  '满足后池=沪深300、中证A500、上证50、科创50、创业板50并集，总市值≥250亿，TTM股息率≥4%；'
-                 '与极端修复临时窗、形态/资金分组完全独立。TTM股息率非预测，未做分红质量审查，非投资建议。')}
+                 '与极端修复临时窗、形态/资金分组完全独立。TTM股息率非预测，未做分红质量审查，非投资建议。'
+                 '2026-10-27实测A股全指000002.SH+399107.SZ均无有效返回，上证综指000001.SH有数据但深证综指399106.SZ无有效返回，'
+                 '无法形成沪深双市场共同有效交易日，未采用单市场或其他指数替代。')}
     if not visible:
         data['dividendWatch'] = {**base, 'poolSize': 0, 'count': 0, 'items': []}
-        print(f'  dividendWatch hidden: {weekly["weeklyReason"]}；{valuation["reason"]}')
+        print(f'  dividendWatch hidden: {freshness_reason}；{valuation["reason"]}')
         return
 
     mc = ensure_dividend_members(pro, trade_date)
@@ -8124,12 +8163,6 @@ def main():
     _today_map = watch_ctx[3] if watch_ctx else {}
     fetch_vcp_stocks(pro, trade_date, data, _today_map)
 
-    # ── 16b1. 高股息防御独立池（五指数并集，失败保留上一有效块及数据日期）──
-    try:
-        build_dividend_watch(pro, trade_date, data)
-    except Exception as e:
-        print(f"  Warning: dividendWatch failed (keep old): {e}")
-
     # ── 16b2. 个股半年对抗统计（持仓+观察股 vs 上证综指/所属行业板块）──
     print("\n[16b2/17] Building stock RS battle stats (stockRS)...")
     try:
@@ -8143,6 +8176,12 @@ def main():
         build_broad_watch(pro, trade_date, data)
     except Exception as e:
         print(f"  Warning: broadWatch failed: {e}")
+
+    # ── 16b1. 高股息防御独立池：必须后于宽基缓存更新，读取同晚统一有效日 ──
+    try:
+        build_dividend_watch(pro, trade_date, data)
+    except Exception as e:
+        print(f"  Warning: dividendWatch failed (keep old): {e}")
     try:
         build_dual_axes(pro, trade_date, data, _today_map)
     except Exception as e:

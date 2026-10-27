@@ -464,8 +464,8 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                 高股息防御 {dw?.visible ? `${dividends.length}只` : '未展示'}（独立双门 · 周RSI {dw?.weeklySatisfiedCount ?? '—'}/{dw?.weeklyRequiredCount ?? 6} · 估值{dw?.valuationLow ? '低' : '未达/数据不足'}）
                               </summary>
                               <div className="mt-1 space-y-1 text-[10px] text-slate-600">
-                                <p>{dw?.weeklyReason || '周RSI数据不足'}</p>
-                                {(dw?.weeklyItems || []).length > 0 && <p className="text-[9px] text-slate-500">{(dw?.weeklyItems || []).map((r) => `${r.indexName}${r.weeklyRsi ?? '—'}（${r.weeklyRsiDate || '—'}）`).join(' · ')}</p>}
+                                <p>{dw?.freshnessReason || dw?.weeklyReason || '周RSI数据不足'}</p>
+                                {(dw?.weeklyItems || []).length > 0 && <p className="text-[9px] text-slate-500">{(dw?.weeklyItems || []).map((r) => `${r.indexName}：日线${r.dailyDate || '—'} · 周RSI ${r.weeklyRsi ?? '—'}（${r.weeklyRsiDate || '—'}）`).join(' · ')}</p>}
                                 <p>{dw?.valuation?.pePct5y != null ? `中证全指PE ${dw.valuation.peTtm}（5年分位${dw.valuation.pePct5y}%）· PB ${dw.valuation.pb}（5年分位${dw.valuation.pbPct5y}%）· ${dw.valuation.observations}个观测 · ${dw.valuation.trade_date}` : dw?.valuation?.reason || '全市场估值数据不足'}</p>
                                 {dw?.visible && <p className="text-[9px] text-slate-500">{dw.note}</p>}
                               </div>

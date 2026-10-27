@@ -444,8 +444,10 @@ export interface FundData {
     trade_date: string;
     visible: boolean;
     weeklyAllBelow20: boolean; weeklySatisfiedCount: number; weeklyRequiredCount: number;
-    weeklyItems: Array<{ indexCode: string; indexName: string; weeklyRsi: number | null; weeklyRsiDate: string | null; below20: boolean }>;
+    dailyDate: string | null;
+    weeklyItems: Array<{ indexCode: string; indexName: string; dailyDate: string | null; weeklyRsi: number | null; weeklyRsiDate: string | null; below20: boolean }>;
     weeklyReason: string;
+    freshnessReason: string;
     valuationLow: boolean; reasons: string[];
     valuation: {
       peTtm: number | null; pb: number | null; pePct5y: number | null; pbPct5y: number | null;
