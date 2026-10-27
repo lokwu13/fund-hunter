@@ -450,9 +450,12 @@ export interface FundData {
     freshnessReason: string;
     valuationLow: boolean; reasons: string[];
     valuation: {
-      peTtm: number | null; pb: number | null; pePct5y: number | null; pbPct5y: number | null;
-      observations: number; historyStart: string | null; trade_date: string | null;
-      source: string; sufficientHistory: boolean; reason: string;
+      peTtm: number | null; pb: number | null; pePct10y: number | null; pbPct10y: number | null;
+      observations: number; historyStart: string | null; cutoff: string | null; trade_date: string | null;
+      peDate: string | null; pbDate: string | null;
+      source: string; coverage: string; frequency: string; metric: string;
+      joinMethod: string; percentileMethod: string; fetchError: string | null;
+      sufficientHistory: boolean; fresh: boolean; ageDays: number | null; reason: string;
     };
     poolSize: number;
     poolIndices: string[];

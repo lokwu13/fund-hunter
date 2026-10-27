@@ -12,8 +12,10 @@ import sys
 import json
 import time
 import statistics
+import hashlib
 import requests
 import tushare as ts
+from bs4 import BeautifulSoup
 import re
 import urllib.request
 import urllib.parse
@@ -2796,7 +2798,7 @@ def build_funnel(data):
                  '被卡掉的积聚/启动板块在 dropped 字段如实列出）。'
                  '→3个股形态三轨全量展示（任务87）：🔗共振=第2步入选板块；⭐精选=原池内VCP/杯柄且近10缓存日主力净流入≥6天；'
                  '其余全部进入形态储备，不再excluded。储备原因只写板块未共振/资金未确认，defects单列具体形态或位置瑕疵。'
-                 '高股息防御独立组先过任务88双门（六宽基最近完成周RSI14全<20且中证全指PE/PB五年分位均≤30%），未过门强制空名单；过门后才取沪深300/中证A500/上证50/科创50/创业板50并集∩总市值≥250亿∩TTM股息率≥4%，不与形态资金或极端修复临时窗混排。'
+                 '高股息防御独立组先过任务90双门（六宽基最近完成周RSI14全<20且沪深全A月度中位数PE/PB十年分位均≤30%），未过门强制空名单；过门后才取沪深300/中证A500/上证50/科创50/创业板50并集∩总市值≥250亿∩TTM股息率≥4%，不与形态资金或极端修复临时窗混排。'
                  '→4排雷（范围=第2步龙头∪第3步全部实际展示股∪持仓观察股，复用mineWatch缓存）。'
                  '状态灯🟢可看/🟡谨慎/🔴停；窗口🔴时下级全部降级为观察但绝不隐藏。'),
     }
@@ -5056,9 +5058,22 @@ def ensure_dividend_members(pro, trade_date):
 
 MARKET_VALUATION_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                      'cache', 'market_valuation.json')
-MARKET_VALUATION_INDEX = '000985.CSI'
-DIVIDEND_VALUATION_MIN_OBS = 750
+LEGULEGU_VALUATION_PAGE = 'https://legulegu.com/stockdata/index-basic?indexCode=000985.SH'
+LEGULEGU_PE_API = 'https://www.legulegu.com/api/stock-data/market-ttm-lyr'
+LEGULEGU_PB_API = 'https://www.legulegu.com/api/stock-data/market-index-pb'
+LEGULEGU_UA = ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+               'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36')
+DIVIDEND_VALUATION_MIN_MONTHS = 96
 DIVIDEND_VALUATION_MAX_PCT = 30.0
+DIVIDEND_VALUATION_MAX_AGE_DAYS = 45
+MARKET_VALUATION_META = {
+    'source': '乐咕乐股 legulegu（PE marketId=5；PB marketId=ALL）',
+    'coverage': '沪深全部A股（不含北交所）',
+    'frequency': '月度',
+    'metric': '个股中位数：PE_TTM=middlePETTM，PB=middlePB',
+    'joinMethod': 'PE/PB按YYYY-MM月度inner join；保留双方原始日期',
+    'percentileMethod': '最新共同月向前10年；当前月计入；分位=历史中≤当前值的月份数/共同有效月数×100%',
+}
 
 
 def _dividend_weekly_gate(trade_date):
@@ -5111,68 +5126,156 @@ def _dividend_weekly_gate(trade_date):
             'freshnessReason': freshness_reason, 'weeklyReason': reason}
 
 
-def _market_valuation_gate(pro, trade_date):
-    """中证全指 PE_TTM/PB 同日双字段缓存；首次约6年，之后增量，每日最多1次请求。"""
-    td = str(trade_date).replace('-', '')
-    cache = _load_json_cache(MARKET_VALUATION_PATH, {})
-    rows = list(cache.get('rows') or [])
-    fetch_error = None
-    if cache.get('updated') != td:
-        end_dt = datetime.strptime(td, '%Y%m%d')
-        start = ((datetime.strptime(str(rows[-1][0]), '%Y%m%d') + timedelta(days=1)).strftime('%Y%m%d')
-                 if rows else end_dt.replace(year=end_dt.year - 6).strftime('%Y%m%d'))
-        try:
-            time.sleep(API_DELAY)
-            fresh = pro.index_dailybasic(ts_code=MARKET_VALUATION_INDEX, start_date=start, end_date=td,
-                                         fields='ts_code,trade_date,pe_ttm,pb')
-            by_date = {str(r[0]): r for r in rows if len(r) >= 3}
-            if fresh is not None:
-                for _, r in fresh.iterrows():
-                    date = str(r.get('trade_date') or '')
-                    pe, pb = r.get('pe_ttm'), r.get('pb')
-                    if len(date) == 8 and pd.notna(pe) and pd.notna(pb) and float(pe) > 0 and float(pb) > 0:
-                        by_date[date] = [date, float(pe), float(pb)]
-            rows = [by_date[d] for d in sorted(by_date)]
-            cache = {'tsCode': MARKET_VALUATION_INDEX, 'updated': td, 'rows': rows}
-            _save_json_cache(MARKET_VALUATION_PATH, cache)
-        except Exception as e:
-            fetch_error = str(e)
-            print(f'  Warning: 中证全指估值更新失败，保留历史缓存: {fetch_error[:100]}')
-    if not rows:
-        detail = f'；本次接口错误：{fetch_error}' if fetch_error else ''
-        reason = '全市场估值数据不足：Tushare index_dailybasic 对中证全指000985.CSI无有效返回；未用其他指数替代' + detail
-        return {'valuationLow': False,
-                'valuation': {'peTtm': None, 'pb': None, 'pePct5y': None, 'pbPct5y': None,
-                              'observations': 0, 'historyStart': None, 'trade_date': None,
-                              'source': 'Tushare index_dailybasic（000985.CSI）',
-                              'sufficientHistory': False, 'reason': reason}}
-    latest = rows[-1]
-    cutoff = (pd.Timestamp(datetime.strptime(str(latest[0]), '%Y%m%d')) - pd.DateOffset(years=5)).strftime('%Y%m%d')
-    history = [r for r in rows if cutoff <= str(r[0]) <= str(latest[0])]
-    observations = len(history)
-    pe, pb = float(latest[1]), float(latest[2])
-    pe_pct = sum(float(r[1]) <= pe for r in history) / observations * 100
-    pb_pct = sum(float(r[2]) <= pb for r in history) / observations * 100
-    sufficient = observations >= DIVIDEND_VALUATION_MIN_OBS
-    low = sufficient and pe_pct <= DIVIDEND_VALUATION_MAX_PCT and pb_pct <= DIVIDEND_VALUATION_MAX_PCT
-    if not sufficient:
-        reason = f'全市场估值数据不足：近5年仅{observations}个PE/PB同日有效观测，至少需{DIVIDEND_VALUATION_MIN_OBS}个'
-    elif low:
-        reason = f'中证全指PE/PB近5年分位均≤{DIVIDEND_VALUATION_MAX_PCT:.0f}%'
+def _legulegu_token(day=None):
+    """乐咕token=当天YYYY-MM-DD的MD5；day仅供离线测试注入。"""
+    value = day or datetime.now().date().isoformat()
+    return hashlib.md5(value.encode('utf-8')).hexdigest()
+
+
+def _fetch_legulegu_market_data():
+    """页面1次取CSRF/cookies，随后PE/PB API各1次；返回原始记录及分项错误。"""
+    session = requests.Session()
+    session.headers.update({'User-Agent': LEGULEGU_UA})
+    datasets, errors = {}, []
+    try:
+        page = session.get(LEGULEGU_VALUATION_PAGE, timeout=45)
+        page.raise_for_status()
+        soup = BeautifulSoup(page.text, 'html.parser')
+        csrf = soup.find('meta', attrs={'name': '_csrf'})
+        if csrf is None or not csrf.get('content'):
+            raise RuntimeError('legulegu页面200但缺少_csrf，可能为拦截页或上游改版')
+        headers = {'User-Agent': LEGULEGU_UA, 'X-CSRF-Token': csrf['content'],
+                   'Referer': LEGULEGU_VALUATION_PAGE}
+        token = _legulegu_token()
+        for key, url, market_id in (
+                ('pe', LEGULEGU_PE_API, '5'), ('pb', LEGULEGU_PB_API, 'ALL')):
+            try:
+                response = session.get(url, params={'marketId': market_id, 'token': token},
+                                       cookies=session.cookies, headers=headers, timeout=45)
+                response.raise_for_status()
+                payload = response.json()
+                records = payload.get('data') if isinstance(payload, dict) else None
+                if not isinstance(records, list) or not records:
+                    raise RuntimeError(f'{key} API未返回非空data数组')
+                datasets[key] = records
+            except Exception as exc:
+                errors.append(f'{key} API失败：{str(exc)[:160]}')
+        return datasets, errors
+    finally:
+        session.close()
+
+
+def _normalize_legulegu_rows(records, metric):
+    """提取middlePETTM/middlePB，统一成YYYY-MM月度并保留原始日期。"""
+    frame = pd.DataFrame(records or [])
+    if frame.empty:
+        return []
+    if 'date' not in frame or metric not in frame:
+        raise RuntimeError(f'legulegu记录缺少date或{metric}字段')
+    if metric == 'middlePB':
+        dates = pd.to_datetime(frame['date'], errors='coerce', utc=True).dt.tz_convert('Asia/Shanghai')
     else:
-        reason = f'中证全指PE/PB近5年分位未同时≤{DIVIDEND_VALUATION_MAX_PCT:.0f}%'
+        dates = pd.to_datetime(frame['date'], errors='coerce')
+    frame['_date'] = dates.dt.strftime('%Y-%m-%d')
+    frame['_month'] = frame['_date'].str[:7]
+    frame['_value'] = pd.to_numeric(frame[metric], errors='coerce')
+    frame = frame.dropna(subset=['_month', '_value'])
+    frame = frame[frame['_value'] > 0]
+    return [{'month': r['_month'], 'date': r['_date'], 'value': float(r['_value'])}
+            for _, r in frame.iterrows()]
+
+
+def _market_valuation_gate(pro, trade_date):
+    """沪深全A月度中位数PE/PB共同月缓存；近10年双30分位且缓存≤45天才开估值门。"""
+    del pro  # 保留旧调用签名；生产估值不再使用Tushare或单指数。
+    td = str(trade_date).replace('-', '')
+    batch_date = f'{td[:4]}-{td[4:6]}-{td[6:]}'
+    cache = _load_json_cache(MARKET_VALUATION_PATH, {})
+    rows = [dict(r) for r in (cache.get('rows') or []) if isinstance(r, dict) and r.get('month')]
+    fetch_error = cache.get('fetchError')
+    needs_fetch = cache.get('updated') != td or cache.get('source') != MARKET_VALUATION_META['source']
+    if needs_fetch:
+        by_month = {r['month']: r for r in rows}
+        try:
+            datasets, errors = _fetch_legulegu_market_data()
+            fetch_error = '；'.join(errors) if errors else None
+            for key, metric, value_key, date_key in (
+                    ('pe', 'middlePETTM', 'pe', 'peDate'),
+                    ('pb', 'middlePB', 'pb', 'pbDate')):
+                if key not in datasets:
+                    continue
+                for fresh in _normalize_legulegu_rows(datasets[key], metric):
+                    row = by_month.setdefault(fresh['month'], {'month': fresh['month']})
+                    row[value_key] = fresh['value']
+                    row[date_key] = fresh['date']
+        except Exception as exc:
+            fetch_error = str(exc)[:240]
+            print(f'  Warning: legulegu全市场估值更新失败，保留月度缓存: {fetch_error[:120]}')
+        rows = [by_month[m] for m in sorted(by_month)]
+        cache = {**MARKET_VALUATION_META, 'updated': td, 'fetchError': fetch_error, 'rows': rows}
+        _save_json_cache(MARKET_VALUATION_PATH, cache)
+
+    common = []
+    for row in rows:
+        try:
+            pe, pb = float(row['pe']), float(row['pb'])
+            pe_date, pb_date = str(row['peDate']), str(row['pbDate'])
+            if pe > 0 and pb > 0 and pe_date <= batch_date and pb_date <= batch_date:
+                common.append({**row, 'pe': pe, 'pb': pb,
+                               'valuationDate': max(pe_date, pb_date),
+                               'freshnessDate': min(pe_date, pb_date)})
+        except (KeyError, TypeError, ValueError):
+            continue
+    common.sort(key=lambda r: r['month'])
+    base = {**MARKET_VALUATION_META, 'fetchError': fetch_error}
+    if not common:
+        reason = '全市场估值数据不足：legulegu PE/PB无共同有效月'
+        if fetch_error:
+            reason += f'；本次接口失败：{fetch_error[:100]}'
+        return {'valuationLow': False,
+                'valuation': {**base, 'peTtm': None, 'pb': None,
+                              'pePct10y': None, 'pbPct10y': None,
+                              'observations': 0, 'historyStart': None, 'cutoff': None,
+                              'trade_date': None, 'peDate': None, 'pbDate': None,
+                              'sufficientHistory': False, 'fresh': False, 'ageDays': None,
+                              'reason': reason}}
+
+    latest = common[-1]
+    latest_date = latest['valuationDate']
+    cutoff = (pd.Timestamp(latest_date) - pd.DateOffset(years=10)).strftime('%Y-%m-%d')
+    history = [r for r in common if cutoff <= r['valuationDate'] <= latest_date]
+    observations = len(history)
+    pe, pb = latest['pe'], latest['pb']
+    # 当前月包含在窗口及分子内；不是仅取120条，缺月会真实减少observations。
+    pe_pct = sum(r['pe'] <= pe for r in history) / observations * 100
+    pb_pct = sum(r['pb'] <= pb for r in history) / observations * 100
+    age_days = (pd.Timestamp(batch_date) - pd.Timestamp(latest['freshnessDate'])).days
+    fresh = 0 <= age_days <= DIVIDEND_VALUATION_MAX_AGE_DAYS
+    sufficient = observations >= DIVIDEND_VALUATION_MIN_MONTHS
+    low = sufficient and fresh and pe_pct <= DIVIDEND_VALUATION_MAX_PCT and pb_pct <= DIVIDEND_VALUATION_MAX_PCT
+    if not fresh:
+        reason = (f'全市场估值缓存最新共同日期{latest["freshnessDate"]}距本批有效日{batch_date}'
+                  f'{age_days}天，超过{DIVIDEND_VALUATION_MAX_AGE_DAYS}天，估值门锁门')
+    elif not sufficient:
+        reason = f'全市场估值数据不足：近10年仅{observations}个PE/PB共同有效月，至少需{DIVIDEND_VALUATION_MIN_MONTHS}个'
+    elif low:
+        reason = f'沪深全部A股月度中位数PE/PB近10年分位均≤{DIVIDEND_VALUATION_MAX_PCT:.0f}%'
+    else:
+        reason = f'沪深全部A股月度中位数PE/PB近10年分位未同时≤{DIVIDEND_VALUATION_MAX_PCT:.0f}%'
     if fetch_error:
-        reason += f'；本次更新失败，使用历史缓存（{fetch_error[:60]}）'
+        reason += f'；本次更新失败，使用月度缓存（{fetch_error[:80]}）'
     return {'valuationLow': low,
-            'valuation': {'peTtm': round(pe, 4), 'pb': round(pb, 4),
-                          'pePct5y': round(pe_pct, 1), 'pbPct5y': round(pb_pct, 1),
-                          'observations': observations, 'historyStart': history[0][0],
-                          'trade_date': latest[0], 'source': 'Tushare index_dailybasic（000985.CSI）',
-                          'sufficientHistory': sufficient, 'reason': reason}}
+            'valuation': {**base, 'peTtm': round(pe, 4), 'pb': round(pb, 4),
+                          'pePct10y': round(pe_pct, 1), 'pbPct10y': round(pb_pct, 1),
+                          'observations': observations, 'historyStart': history[0]['month'],
+                          'cutoff': cutoff, 'trade_date': latest_date,
+                          'peDate': latest['peDate'], 'pbDate': latest['pbDate'],
+                          'sufficientHistory': sufficient, 'fresh': fresh, 'ageDays': age_days,
+                          'reason': reason}}
 
 
 def build_dividend_watch(pro, trade_date, data):
-    """周RSI六只全<20且中证全指PE/PB五年分位均≤30%才生成高股息名单。"""
+    """周RSI六只全<20且沪深全A月度中位数PE/PB十年分位均≤30%才生成高股息名单。"""
     snapshot_date = _effective_batch_trade_date(trade_date, data)
     weekly = _dividend_weekly_gate(snapshot_date)
     valuation_gate = _market_valuation_gate(pro, snapshot_date)
@@ -5186,13 +5289,13 @@ def build_dividend_watch(pro, trade_date, data):
         'reasons': [freshness_reason, valuation['reason']],
         'poolIndices': list(DIVIDEND_POOL_INDICES),
         'minTotalMv': VCP_MIN_MV, 'minDvTtm': DIVIDEND_MIN_DV_TTM,
-        'source': '六宽基周RSI14 + Tushare index_dailybasic（000985.CSI）双门；通过后才取五指数成分与daily_basic',
+        'source': '六宽基周RSI14 + legulegu沪深全A月度中位数估值双门；通过后才取五指数成分与daily_basic',
         'note': ('双门=上证50/沪深300/中证500/中证1000/科创50/创业板指最近完成周RSI14全部<20，'
-                 '且中证全指PE_TTM/PB近5年分位均≤30%（至少750个同日有效观测）；未满足不展示股票清单。'
+                 '且全市场=沪深全部A股，不含北交所；月度中位数PE_TTM/PB近10年双30%'
+                 '（至少96个共同有效月，当前月计入，分位按≤当前值月份数/共同有效月数计算）；未满足不展示股票清单。'
+                 'PE/PB按月度inner join并保留双方原始日期，缓存最新共同日期距本批有效日超过45天也锁门。'
                  '满足后池=沪深300、中证A500、上证50、科创50、创业板50并集，总市值≥250亿，TTM股息率≥4%；'
-                 '与极端修复临时窗、形态/资金分组完全独立。TTM股息率非预测，未做分红质量审查，非投资建议。'
-                 '2026-10-27实测A股全指000002.SH+399107.SZ均无有效返回，上证综指000001.SH有数据但深证综指399106.SZ无有效返回，'
-                 '无法形成沪深双市场共同有效交易日，未采用单市场或其他指数替代。')}
+                 '与极端修复临时窗、形态/资金分组完全独立。TTM股息率非预测，未做分红质量审查，非投资建议。')}
     if not visible:
         data['dividendWatch'] = {**base, 'poolSize': 0, 'count': 0, 'items': []}
         print(f'  dividendWatch hidden: {freshness_reason}；{valuation["reason"]}')

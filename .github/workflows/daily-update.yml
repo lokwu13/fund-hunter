@@ -64,7 +64,7 @@ jobs:
       - name: Install Python dependencies
         if: github.event_name != 'push' && steps.guard.outputs.skip != 'true'
         run: |
-          pip install tushare pandas requests
+          pip install tushare pandas requests beautifulsoup4
 
       - name: Fetch data from Tushare
         if: github.event_name != 'push' && steps.guard.outputs.skip != 'true'
