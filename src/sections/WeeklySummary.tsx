@@ -409,14 +409,14 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                         </div>
                       )}
 
-                      {/* 第3步：普通形态随窗口灰显；高股息由独立双门控制，不受临时窗影响。 */}
+                      {/* 第3步：普通形态随窗口灰显；高股息由行业/概念独立催化控制。 */}
                       {st.key === 'vcp' && (() => {
                         const rows = st.rows || [];
                         const reson = rows.filter((r: any) => r.track === 'reson');
                         const cherry = rows.filter((r: any) => r.track === 'cherry');
                         const reserve = rows.filter((r: any) => r.track === 'reserve');
                         const dw = data.dividendWatch;
-                        const dividends = dw?.visible ? (dw.items || []) : [];
+                        const dividendGroups = dw?.groups || [];
                         const renderRow = (r: any) => (
                           <div key={r.code} className={`rounded-lg border px-2 py-1.5 hover:bg-slate-50 ${r.defects?.length ? 'border-amber-200 bg-amber-50/40' : 'border-transparent'} ${r.track === 'reserve' && (r.breakoutAge ?? 0) > 3 ? 'opacity-60' : ''}`}>
                             <div className="flex items-center gap-x-2 gap-y-1 flex-wrap">
@@ -432,12 +432,9 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                               {r.entryTier === 'fuzzy' && <Badge className="text-[9px] h-4 px-1 border-0 bg-amber-500 text-white">瑕疵沉底</Badge>}
                             </div>
                             {r.signalDate && (
-                              <div className={`mt-1 rounded px-2 py-1 text-[10px] ${r.signalType === 'early' ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-700'}`}>
-                                <p><b>首次信号 {r.signalDate} · {r.signalLabel}</b>（{r.signalType === 'early' ? '早期，非收盘强确认' : '收盘强确认'}）</p>
-                                <p>收{r.signalClose ?? '—'} / 高{r.signalHigh ?? '—'} / 量{r.signalVolX ?? '—'}×柄均 · 已{r.breakoutAge ?? '—'}日 · 现价离枢轴{r.currentDist != null ? `${r.currentDist >= 0 ? '+' : ''}${r.currentDist}%` : '—'} · 初始失效位{r.initialStop ?? '—'}</p>
-                                <p className="text-[9px] opacity-80">杯身{r.cupStart ?? '—'}~{r.cupEnd ?? '—'} · 杯柄{r.handleStart ?? '—'}~{r.handleEnd ?? '—'}</p>
-                                {(r.breakoutAge ?? 0) > 3 && <p className="text-[9px] text-slate-500">较晚发现，仅作信号后观察，不冒充新买点</p>}
-                              </div>
+                              <p className={`mt-1 rounded px-2 py-1 text-[10px] font-semibold ${r.signalType === 'early' ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-700'}`}>
+                                首次信号{r.signalDate} · 枢轴{r.pivot ?? '—'} · 初始失效位{r.initialStop ?? '—'} · 已{r.breakoutAge ?? '—'}日
+                              </p>
                             )}
                             {r.defects?.length > 0 && (
                               <p className="text-[10px] text-amber-700 mt-1">具体瑕疵：{r.defects.join('；')}</p>
@@ -461,26 +458,36 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                             </div>
                             <details open={dw?.visible ? true : undefined} className={`rounded-lg border px-2 py-1.5 ${dw?.visible ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-slate-50/70'}`}>
                               <summary className={`cursor-pointer text-[10px] font-semibold ${dw?.visible ? 'text-emerald-800' : 'text-slate-600'}`}>
-                                高股息防御 {dw?.visible ? `${dividends.length}只` : '未展示'}（独立双门 · 周RSI {dw?.weeklySatisfiedCount ?? '—'}/{dw?.weeklyRequiredCount ?? 6} · 估值{dw?.valuationLow ? '低' : '未达/数据不足'}）
+                                高股息防御 {dw?.visible ? `${dw.count}只` : '未展示'}（行业/概念独立催化 · {dw?.catalystGroupCount ?? 0}组）
                               </summary>
                               <div className="mt-1 space-y-1 text-[10px] text-slate-600">
-                                <p>{dw?.freshnessReason || dw?.weeklyReason || '周RSI数据不足'}</p>
-                                {(dw?.weeklyItems || []).length > 0 && <p className="text-[9px] text-slate-500">{(dw?.weeklyItems || []).map((r) => `${r.indexName}：日线${r.dailyDate || '—'} · 周RSI ${r.weeklyRsi ?? '—'}（${r.weeklyRsiDate || '—'}）`).join(' · ')}</p>}
-                                <p>{dw?.valuation?.pePct10y != null ? `沪深全A中位数PE ${dw.valuation.peTtm}（10年分位${dw.valuation.pePct10y}%）· PB ${dw.valuation.pb}（10年分位${dw.valuation.pbPct10y}%）· ${dw.valuation.observations}个共同有效月 · ${dw.valuation.trade_date}` : dw?.valuation?.reason || '全市场估值数据不足'}</p>
-                                {dw?.visible && <p className="text-[9px] text-slate-500">{dw.note}</p>}
+                                <p>{(dw?.reasons || []).join('；') || '暂无行业/概念催化'}</p>
+                                <p className="text-[9px] text-slate-500">{dw?.note || '近4个完成周曾周RSI14<20，且缩量后出现首次量价催化才开门。'}</p>
                               </div>
-                              {dw?.visible && (
-                                <div className="mt-1 grid gap-1">
-                                  {dividends.map((r) => (
-                                    <div key={r.code} className="flex items-center gap-x-2 gap-y-1 flex-wrap rounded bg-white/70 px-2 py-1">
-                                      <span className="text-xs font-semibold text-slate-800">{r.name}</span>
-                                      <span className="text-[10px] text-slate-500">{r.indexMembership.join('/')}</span>
-                                      <span className="text-[11px] font-semibold text-cyan-700">TTM股息率{r.dvTtm}%</span>
-                                      <span className="text-[10px] text-slate-500">收盘{r.close ?? '—'}·总市值{(r.totalMv / 10000).toFixed(0)}亿·{r.trade_date}</span>
+                              <div className="mt-1 grid gap-1.5">
+                                {dividendGroups.map((g) => (
+                                  <details key={`${g.type}-${g.code}`} open={g.count > 0 ? true : undefined} className="rounded border border-emerald-200 bg-white/60 px-2 py-1">
+                                    <summary className="cursor-pointer text-[10px] font-semibold text-emerald-800">
+                                      {g.type === 'industry' ? '行业' : '概念'}·{g.name}（{g.count}只）· 催化{g.catalystDate} · 已{g.signalAge}日
+                                    </summary>
+                                    <div className="mt-1 space-y-1 text-[9px] text-slate-500">
+                                      <p>近4周RSI：{g.rsiEvidence.map((r) => `${r.date} ${r.rsi ?? '—'}${r.below20 ? '<20' : ''}`).join(' · ')}</p>
+                                      <p>缩量：前10日/60日成交额比{g.shrinkEvidence.ratio}≤{g.shrinkEvidence.threshold}；量价：涨{g.priceVolumeEvidence.pctChange}% · 收复5日线{g.priceVolumeEvidence.ma5} · 成交额{g.priceVolumeEvidence.amountRatio}×此前5日均量</p>
                                     </div>
-                                  ))}
-                                </div>
-                              )}
+                                    <div className="mt-1 grid gap-1">
+                                      {g.items.map((r) => (
+                                        <div key={r.code} className="flex items-center gap-x-2 gap-y-1 flex-wrap rounded bg-white/80 px-2 py-1">
+                                          <span className="text-xs font-semibold text-slate-800">{r.name}</span>
+                                          <span className="text-[10px] text-slate-500">{r.indexMembership.join('/')}</span>
+                                          <span className="text-[11px] font-semibold text-cyan-700">TTM股息率{r.dvTtm}%</span>
+                                          <span className="text-[10px] text-slate-500">收盘{r.close ?? '—'}·总市值{(r.totalMv / 10000).toFixed(0)}亿·{r.trade_date}</span>
+                                        </div>
+                                      ))}
+                                      {g.count === 0 && <p className="text-[10px] text-slate-400">该催化组暂无同时满足股票池、市值和股息率条件的股票</p>}
+                                    </div>
+                                  </details>
+                                ))}
+                              </div>
                             </details>
                           </div>
                         );

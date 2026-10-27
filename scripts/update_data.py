@@ -5274,63 +5274,188 @@ def _market_valuation_gate(pro, trade_date):
                           'reason': reason}}
 
 
+DIVIDEND_GROUP_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                         'cache', 'vcp_cache.json')
+DIVIDEND_GROUP_RSI_WEEKS = 4
+DIVIDEND_GROUP_SHRINK_MAX = 0.85
+DIVIDEND_GROUP_MIN_PCT = 1.0
+DIVIDEND_GROUP_MIN_AMOUNT_X = 1.2
+
+
+def _dividend_group_catalyst(group, rows, trade_date):
+    """单组最新有效日首次催化；RSI、缩量均只看催化前证据，严禁陈旧行情开门。"""
+    td = str(trade_date).replace('-', '')
+    normalized = []
+    for row in rows or []:
+        try:
+            date, close, amount = str(row[0]), float(row[1]), float(row[2])
+            if len(date) == 8 and date <= td and close > 0 and amount >= 0:
+                normalized.append([date, close, amount])
+        except (IndexError, TypeError, ValueError):
+            continue
+    rows = sorted({r[0]: r for r in normalized}.values())
+    base = {'type': group['type'], 'code': group['code'], 'name': group['name'],
+            'catalyzed': False, 'catalystDate': None, 'signalAge': None,
+            'dailyDate': rows[-1][0] if rows else None}
+    if not rows or rows[-1][0] != td:
+        return {**base, 'reason': f'行情陈旧或缺失：最新{base["dailyDate"] or "无"}，本批有效日{td}'}
+    if len(rows) < 61:
+        return {**base, 'reason': '日线不足61日，无法计算催化前10日/60日成交额比'}
+
+    current_week = pd.to_datetime(td, format='%Y%m%d').strftime('%G%V')
+    expected_week = (pd.to_datetime(td, format='%Y%m%d') - pd.Timedelta(days=7)).strftime('%G%V')
+    weekly_rows = [[r[0], r[1], r[1], r[1], r[2]] for r in rows]
+    weekly = _osc_weekly_bars(weekly_rows)
+    completed = [b for b in weekly if b[0] != current_week]
+    latest_week = completed[-1][0] if completed else None
+    closes = [b[3] for b in completed]
+    rsi_values = _rsi_series(closes, 14) if completed else []
+    recent = completed[-DIVIDEND_GROUP_RSI_WEEKS:]
+    recent_rsi = rsi_values[-DIVIDEND_GROUP_RSI_WEEKS:]
+    rsi_evidence = [{'date': b[2], 'rsi': round(value, 2) if value is not None else None,
+                     'below20': bool(value is not None and value < 20)}
+                    for b, value in zip(recent, recent_rsi)]
+    rsi_ready = (len(rsi_evidence) == DIVIDEND_GROUP_RSI_WEEKS
+                 and all(x['rsi'] is not None for x in rsi_evidence))
+    rsi_pass = rsi_ready and any(x['below20'] for x in rsi_evidence)
+    weekly_fresh = latest_week == expected_week
+    base['rsiEvidence'] = rsi_evidence
+    base['weeklyRsiPass'] = rsi_pass
+    base['weeklyFresh'] = weekly_fresh
+    if not weekly_fresh:
+        base['reason'] = f'完成周{latest_week or "无"}不是当前最近完成周{expected_week}'
+    elif not rsi_ready:
+        base['reason'] = '近4个完成周RSI14不足'
+    elif not rsi_pass:
+        base['reason'] = '近4个完成周未曾周RSI14<20'
+
+    i = len(rows) - 1
+    amounts = [r[2] for r in rows]
+    avg10 = sum(amounts[i - 10:i]) / 10
+    avg60 = sum(amounts[i - 60:i]) / 60
+    shrink_ratio = avg10 / avg60 if avg60 > 0 else None
+    shrink_pass = shrink_ratio is not None and shrink_ratio <= DIVIDEND_GROUP_SHRINK_MAX
+    base['shrinkEvidence'] = {
+        'avg10Amount': round(avg10, 2), 'avg60Amount': round(avg60, 2),
+        'ratio': round(shrink_ratio, 4) if shrink_ratio is not None else None,
+        'threshold': DIVIDEND_GROUP_SHRINK_MAX, 'pass': shrink_pass}
+    if not shrink_pass:
+        base['reason'] = '催化前10日/60日成交额比未≤0.85'
+
+    closes = [r[1] for r in rows]
+
+    def price_volume_at(pos):
+        prev_ma5 = sum(closes[pos - 5:pos]) / 5
+        ma5 = sum(closes[pos - 4:pos + 1]) / 5
+        prev5_amount = sum(amounts[pos - 5:pos]) / 5
+        pct = (closes[pos] / closes[pos - 1] - 1) * 100
+        amount_x = amounts[pos] / prev5_amount if prev5_amount > 0 else None
+        reclaimed = closes[pos - 1] < prev_ma5 and closes[pos] >= ma5
+        passed = (pct >= DIVIDEND_GROUP_MIN_PCT and reclaimed
+                  and amount_x is not None and amount_x >= DIVIDEND_GROUP_MIN_AMOUNT_X)
+        return passed, {'date': rows[pos][0], 'prevClose': round(closes[pos - 1], 4),
+                        'close': round(closes[pos], 4), 'pctChange': round(pct, 2),
+                        'prevMa5': round(prev_ma5, 4), 'ma5': round(ma5, 4),
+                        'reclaimedMa5': reclaimed, 'amount': round(amounts[pos], 2),
+                        'prev5AvgAmount': round(prev5_amount, 2),
+                        'amountRatio': round(amount_x, 4) if amount_x is not None else None,
+                        'pctThreshold': DIVIDEND_GROUP_MIN_PCT,
+                        'amountThreshold': DIVIDEND_GROUP_MIN_AMOUNT_X, 'pass': passed}
+
+    price_pass, price_evidence = price_volume_at(i)
+    previous_price_pass, _ = price_volume_at(i - 1)
+    price_evidence['previousDayCatalyzed'] = previous_price_pass
+    base['priceVolumeEvidence'] = price_evidence
+    base['priceVolumePass'] = price_pass and not previous_price_pass
+    if not price_pass:
+        base['reason'] = '最新有效日未同时满足涨幅、收复5日线与成交额放大'
+    elif previous_price_pass:
+        base['reason'] = '量价催化并非最新有效日刚开始'
+    catalyzed = weekly_fresh and rsi_pass and shrink_pass and price_pass and not previous_price_pass
+    if catalyzed:
+        base.update({'catalyzed': True, 'catalystDate': td, 'signalAge': 0,
+                     'reason': '本批最新有效日首次满足量价催化；仅保留信号当日，次日自动退出'})
+    return base
+
+
 def build_dividend_watch(pro, trade_date, data):
-    """周RSI六只全<20且沪深全A月度中位数PE/PB十年分位均≤30%才生成高股息名单。"""
+    """行业/概念独立RSI×缩量×最新日首次量价催化；股票按组展示、跨组去重排雷。"""
     snapshot_date = _effective_batch_trade_date(trade_date, data)
-    weekly = _dividend_weekly_gate(snapshot_date)
-    valuation_gate = _market_valuation_gate(pro, snapshot_date)
-    valuation_low = valuation_gate['valuationLow']
-    valuation = valuation_gate['valuation']
-    visible = weekly['weeklyAllBelow20'] and valuation_low
-    freshness_reason = weekly.get('freshnessReason', weekly['weeklyReason'])
+    cache = _load_json_cache(DIVIDEND_GROUP_CACHE_PATH, {})
+    index_daily = cache.get('index_daily') or {}
+    ths_index = cache.get('ths_index') or {}
+    specs = ([{'type': 'industry', 'code': x['code'], 'name': x['name'],
+               'members': set((cache.get('sw_members') or {}).get(x['code']) or [])}
+              for x in cache.get('sw_list') or []]
+             + [{'type': 'concept', 'code': x.get('code') or ths_index.get(x['name']), 'name': x['name'],
+                 'members': set((cache.get('ths_members') or {}).get(x.get('code') or ths_index.get(x['name'])) or [])}
+                for x in cache.get('concepts') or [] if x.get('code') or ths_index.get(x['name'])])
+    evaluated = [{**_dividend_group_catalyst(x, index_daily.get(x['code']), snapshot_date),
+                  '_members': x['members']} for x in specs]
+    active = [x for x in evaluated if x['catalyzed']]
     base = {
-        'trade_date': snapshot_date, 'visible': visible, **weekly,
-        'valuationLow': valuation_low, 'valuation': valuation,
-        'reasons': [freshness_reason, valuation['reason']],
+        'trade_date': snapshot_date, 'visible': False,
+        'evaluatedGroupCount': len(specs), 'catalystGroupCount': len(active),
+        'groups': [], 'reasons': ([f'{len(specs)}个行业/概念组无最新有效日首次催化'] if not active
+                                   else [f'{len(active)}个行业/概念组开始催化，按组核验高股息股票']),
         'poolIndices': list(DIVIDEND_POOL_INDICES),
         'minTotalMv': VCP_MIN_MV, 'minDvTtm': DIVIDEND_MIN_DV_TTM,
-        'source': '六宽基周RSI14 + legulegu沪深全A月度中位数估值双门；通过后才取五指数成分与daily_basic',
-        'note': ('双门=上证50/沪深300/中证500/中证1000/科创50/创业板指最近完成周RSI14全部<20，'
-                 '且全市场=沪深全部A股，不含北交所；月度中位数PE_TTM/PB近10年双30%'
-                 '（至少96个共同有效月，当前月计入，分位按≤当前值月份数/共同有效月数计算）；未满足不展示股票清单。'
-                 'PE/PB按月度inner join并保留双方原始日期，缓存最新共同日期距本批有效日超过45天也锁门。'
-                 '满足后池=沪深300、中证A500、上证50、科创50、创业板50并集，总市值≥250亿，TTM股息率≥4%；'
-                 '与极端修复临时窗、形态/资金分组完全独立。TTM股息率非预测，未做分红质量审查，非投资建议。')}
-    if not visible:
+        'source': 'vcp_cache申万sw_list/sw_members与同花顺ths_index/ths_members/concepts；独立组催化后才取五指数成分与daily_basic',
+        'note': ('系统规则：每组近4个完成周曾周RSI14<20；催化前10日平均成交额/前60日平均成交额≤0.85；'
+                 '随后最新有效日涨幅≥1%、由5日线下方收复5日线且成交额≥此前5日均量1.2倍，才算开始催化。'
+                 '仅保留信号当日（signalAge=0），陈旧行情或连续已催化不开门。股票池=沪深300、中证A500、上证50、科创50、创业板50并集，'
+                 '总市值≥250亿元且daily_basic.dv_ttm≥4；同股可跨组重复展示，items与排雷使用跨组去重并集。'
+                 '旧全市场估值双门不再是高股息条件；TTM股息率非预测，未做分红质量审查，非投资建议。')}
+    if not active:
         data['dividendWatch'] = {**base, 'poolSize': 0, 'count': 0, 'items': []}
-        print(f'  dividendWatch hidden: {freshness_reason}；{valuation["reason"]}')
+        print(f'  dividendWatch hidden: {len(specs)}组无最新日首次催化；未请求成分或daily_basic')
         return
 
-    mc = ensure_dividend_members(pro, trade_date)
+    mc = ensure_dividend_members(pro, snapshot_date)
     membership = {}
     for idx, codes in (mc.get('members') or {}).items():
         for code in codes:
             membership.setdefault(code, []).append(DIVIDEND_INDEX_NAMES[idx])
-    # 双门通过后才调用；直接复用本批最新有效交易日，保证每日最多一次daily_basic。
     time.sleep(API_DELAY)
     snap = pro.daily_basic(trade_date=snapshot_date,
                            fields='ts_code,trade_date,close,total_mv,dv_ttm')
     if snap is None or not len(snap):
         raise RuntimeError(f'daily_basic {snapshot_date}为空，保留上一有效dividendWatch')
     sub = snap[snap['ts_code'].isin(membership)]
-    items = []
+    eligible = {}
     for _, r in sub.iterrows():
         code = r['ts_code']
         if pd.isna(r['total_mv']) or float(r['total_mv']) < VCP_MIN_MV:
             continue
         if pd.isna(r['dv_ttm']) or float(r['dv_ttm']) < DIVIDEND_MIN_DV_TTM:
             continue
-        items.append({
+        eligible[code] = {
             'code': code, 'name': (mc.get('names') or {}).get(code, code),
             'indexMembership': membership[code],
             'close': round(float(r['close']), 2) if pd.notna(r['close']) else None,
             'totalMv': round(float(r['total_mv']), 2),
             'dvTtm': round(float(r['dv_ttm']), 2),
             'trade_date': str(r['trade_date']),
-            'source': 'Tushare daily_basic.dv_ttm'})
-    items.sort(key=lambda x: (-x['dvTtm'], x['code']))
-    data['dividendWatch'] = {**base, 'poolSize': len(membership), 'count': len(items), 'items': items}
-    print(f'  dividendWatch visible: 五指数并集{len(membership)}只，高股息{len(items)}只（{snapshot_date}）')
+            'source': 'Tushare daily_basic.dv_ttm'}
+
+    groups = []
+    union = {}
+    for group in active:
+        members = group.pop('_members')
+        # 成分只来自指定缓存，绝不回退stock_industry或猜测行业。
+        items = [dict(eligible[code]) for code in members if code in eligible]
+        items.sort(key=lambda x: (-x['dvTtm'], x['code']))
+        label = f"{'行业' if group['type'] == 'industry' else '概念'}:{group['name']}"
+        for item in items:
+            union.setdefault(item['code'], {**item, 'groupMembership': []})
+            union[item['code']]['groupMembership'].append(label)
+        groups.append({**group, 'count': len(items), 'items': items})
+    items = sorted(union.values(), key=lambda x: (-x['dvTtm'], x['code']))
+    visible = any(g['count'] > 0 for g in groups)
+    data['dividendWatch'] = {**base, 'visible': visible, 'groups': groups,
+                             'poolSize': len(membership), 'count': len(items), 'items': items}
+    print(f'  dividendWatch {"visible" if visible else "hidden"}: 催化{len(groups)}组，'
+          f'跨组唯一高股息{len(items)}只（{snapshot_date}）')
 
 
 def _vcp_swing_highs(bars, k):

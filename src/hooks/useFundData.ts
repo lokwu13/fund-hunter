@@ -443,20 +443,9 @@ export interface FundData {
   dividendWatch?: {
     trade_date: string;
     visible: boolean;
-    weeklyAllBelow20: boolean; weeklySatisfiedCount: number; weeklyRequiredCount: number;
-    dailyDate: string | null;
-    weeklyItems: Array<{ indexCode: string; indexName: string; dailyDate: string | null; weeklyRsi: number | null; weeklyRsiDate: string | null; below20: boolean }>;
-    weeklyReason: string;
-    freshnessReason: string;
-    valuationLow: boolean; reasons: string[];
-    valuation: {
-      peTtm: number | null; pb: number | null; pePct10y: number | null; pbPct10y: number | null;
-      observations: number; historyStart: string | null; cutoff: string | null; trade_date: string | null;
-      peDate: string | null; pbDate: string | null;
-      source: string; coverage: string; frequency: string; metric: string;
-      joinMethod: string; percentileMethod: string; fetchError: string | null;
-      sufficientHistory: boolean; fresh: boolean; ageDays: number | null; reason: string;
-    };
+    evaluatedGroupCount: number;
+    catalystGroupCount: number;
+    reasons: string[];
     poolSize: number;
     poolIndices: string[];
     minTotalMv: number;
@@ -464,8 +453,27 @@ export interface FundData {
     count: number;
     source: string;
     note: string;
+    groups: Array<{
+      type: 'industry' | 'concept'; code: string; name: string;
+      catalyzed: boolean; catalystDate: string; signalAge: number; dailyDate: string;
+      weeklyRsiPass: boolean; weeklyFresh: boolean; reason: string;
+      rsiEvidence: Array<{ date: string; rsi: number | null; below20: boolean }>;
+      shrinkEvidence: { avg10Amount: number; avg60Amount: number; ratio: number; threshold: number; pass: boolean };
+      priceVolumeEvidence: {
+        date: string; prevClose: number; close: number; pctChange: number;
+        prevMa5: number; ma5: number; reclaimedMa5: boolean;
+        amount: number; prev5AvgAmount: number; amountRatio: number;
+        pctThreshold: number; amountThreshold: number; pass: boolean; previousDayCatalyzed: boolean;
+      };
+      count: number;
+      items: Array<{
+        code: string; name: string; indexMembership: string[];
+        close: number | null; totalMv: number; dvTtm: number;
+        trade_date: string; source: string;
+      }>;
+    }>;
     items: Array<{
-      code: string; name: string; indexMembership: string[];
+      code: string; name: string; indexMembership: string[]; groupMembership: string[];
       close: number | null; totalMv: number; dvTtm: number;
       trade_date: string; source: string;
     }>;

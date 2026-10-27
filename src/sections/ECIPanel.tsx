@@ -1208,16 +1208,12 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                           <td className="text-left text-[10px] text-slate-500 leading-snug min-w-[170px]">
                             {it.buyPoint ? (
                               <>
-                                <p>失效位 <b className="text-slate-600">{it.buyPoint.initialStop ?? it.buyPoint.invalidation ?? '—'}</b></p>
+                                {!it.buyPoint.signalDate && <p>失效位 <b className="text-slate-600">{it.buyPoint.invalidation ?? '—'}</b></p>}
                                 {it.buyPoint.signalDate && (
-                                  <div className={`my-1 rounded px-1.5 py-1 ${it.buyPoint.signalType === 'early' ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-700'}`}>
-                                    <p className="font-semibold">首次 {it.buyPoint.signalDate} · {it.buyPoint.signalLabel}</p>
-                                    <p>收{it.buyPoint.signalClose ?? '—'} / 高{it.buyPoint.signalHigh ?? '—'} / 量{it.buyPoint.signalVolX ?? '—'}×柄均</p>
-                                    <p>已{it.buyPoint.breakoutAge ?? '—'}日 · 现价离枢轴{it.buyPoint.currentDist != null ? `${it.buyPoint.currentDist >= 0 ? '+' : ''}${it.buyPoint.currentDist}%` : '—'}</p>
-                                    {(it.buyPoint.breakoutAge ?? 0) > 3 && <p className="text-[9px] text-slate-500">较晚发现，仅作信号后观察，不冒充新买点</p>}
-                                  </div>
+                                  <p className={`my-1 rounded px-1.5 py-1 font-semibold ${it.buyPoint.signalType === 'early' ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-700'}`}>
+                                    首次信号{it.buyPoint.signalDate} · 枢轴{it.buyPoint.pivot} · 初始失效位{it.buyPoint.initialStop ?? '—'} · 已{it.buyPoint.breakoutAge ?? '—'}日
+                                  </p>
                                 )}
-                                {it.buyPoint.cupStart && <p className="text-[9px] text-slate-400">杯身{it.buyPoint.cupStart}~{it.buyPoint.cupEnd} · 杯柄{it.buyPoint.handleStart}~{it.buyPoint.handleEnd}</p>}
                                 <p className="text-slate-400">{it.buyPoint.breakoutConfirm}</p>
                                 <p className="text-[9px] text-slate-300">形态参数，非操作建议</p>
                               </>
