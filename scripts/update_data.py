@@ -5058,11 +5058,16 @@ def _dividend_weekly_gate(trade_date):
     dates = {r['weeklyRsiDate'] for r in items if r['weeklyRsiDate']}
     satisfied = sum(r['below20'] for r in items)
     aligned = not missing and len(dates) == 1
-    all_below = aligned and satisfied == len(OSC_INDICES)
+    expected_week = (pd.to_datetime(td, format='%Y%m%d') - pd.Timedelta(days=7)).strftime('%G%V')
+    actual_week = (pd.to_datetime(next(iter(dates))).strftime('%G%V') if aligned else None)
+    fresh = aligned and actual_week == expected_week
+    all_below = aligned and fresh and satisfied == len(OSC_INDICES)
     if missing:
         reason = '周RSI数据不足：' + '、'.join(missing)
     elif not aligned:
         reason = '六宽基最近完成周日期不一致，周RSI门不通过'
+    elif not fresh:
+        reason = f'周RSI缓存完成周{next(iter(dates))}不是当前最近完成周（预期周{expected_week}），周RSI门不通过'
     else:
         reason = f'最近完成周RSI14<20满足{satisfied}/{len(OSC_INDICES)}' + ('，六只全部满足' if all_below else '，未达六只全部满足')
     return {'weeklyAllBelow20': all_below, 'weeklySatisfiedCount': satisfied,
