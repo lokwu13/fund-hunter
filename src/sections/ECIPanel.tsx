@@ -1137,7 +1137,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     : it.longPlat && !it.platform
                                     ? `长平台${it.longPlat.days}天·振幅${it.longPlat.amplitude}%·首末漂移${it.longPlat.drift}%·末/首量比${it.longPlat.volRatio}·一年分位${it.histPct ?? '—'}%`
                                     : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·末段量比${it.platform.tailRatio ?? '—'}·分段振幅${(it.platform.segAmps || []).join('→')}%·一年分位${it.histPct ?? '—'}%`}
-                                >{isDefect ? `模糊·${it.pattern}` : it.cupHandle?.breakout ? '🚀 杯柄突破初期' : it.pattern}</span>
+                                >{isDefect ? `模糊·${it.pattern}` : it.cupHandle?.breakout ? ((it.cupHandle.breakoutAge ?? 0) <= 3 ? '🚀 杯柄突破初期' : '杯柄首次信号后观察') : it.pattern}</span>
                                 {isDefect && (
                                   <p className="text-[9px] font-semibold text-amber-700 bg-amber-100/70 rounded px-1 py-0.5 mt-1">
                                     瑕疵：{it.defects.join('、')}
@@ -1208,7 +1208,16 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                           <td className="text-left text-[10px] text-slate-500 leading-snug min-w-[170px]">
                             {it.buyPoint ? (
                               <>
-                                <p>失效位 <b className="text-slate-600">{it.buyPoint.invalidation ?? '—'}</b></p>
+                                <p>失效位 <b className="text-slate-600">{it.buyPoint.initialStop ?? it.buyPoint.invalidation ?? '—'}</b></p>
+                                {it.buyPoint.signalDate && (
+                                  <div className={`my-1 rounded px-1.5 py-1 ${it.buyPoint.signalType === 'early' ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-700'}`}>
+                                    <p className="font-semibold">首次 {it.buyPoint.signalDate} · {it.buyPoint.signalLabel}</p>
+                                    <p>收{it.buyPoint.signalClose ?? '—'} / 高{it.buyPoint.signalHigh ?? '—'} / 量{it.buyPoint.signalVolX ?? '—'}×柄均</p>
+                                    <p>已{it.buyPoint.breakoutAge ?? '—'}日 · 现价离枢轴{it.buyPoint.currentDist != null ? `${it.buyPoint.currentDist >= 0 ? '+' : ''}${it.buyPoint.currentDist}%` : '—'}</p>
+                                    {(it.buyPoint.breakoutAge ?? 0) > 3 && <p className="text-[9px] text-slate-500">较晚发现，仅作信号后观察，不冒充新买点</p>}
+                                  </div>
+                                )}
+                                {it.buyPoint.cupStart && <p className="text-[9px] text-slate-400">杯身{it.buyPoint.cupStart}~{it.buyPoint.cupEnd} · 杯柄{it.buyPoint.handleStart}~{it.buyPoint.handleEnd}</p>}
                                 <p className="text-slate-400">{it.buyPoint.breakoutConfirm}</p>
                                 <p className="text-[9px] text-slate-300">形态参数，非操作建议</p>
                               </>

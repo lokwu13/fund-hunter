@@ -2694,6 +2694,15 @@ def build_funnel(data):
                            'sectorFit': it.get('sectorFit') or ('板块配合✅' if reson else '板块未共振'),
                            'pivot': bp.get('pivot'), 'distPct': bp.get('distanceToPivotPct') if bp.get('distanceToPivotPct') is not None else it.get('distMain'),
                            'invalidation': bp.get('invalidation'),
+                           'cupStart': bp.get('cupStart'), 'cupEnd': bp.get('cupEnd'),
+                           'handleStart': bp.get('handleStart'), 'handleEnd': bp.get('handleEnd'),
+                           'doubleBottom': bp.get('doubleBottom'),
+                           'signalDate': bp.get('signalDate'), 'signalType': bp.get('signalType'),
+                           'signalLabel': bp.get('signalLabel'), 'signalClose': bp.get('signalClose'),
+                           'signalHigh': bp.get('signalHigh'), 'signalVolX': bp.get('signalVolX'),
+                           'initialStop': bp.get('initialStop'), 'firstSignal': bp.get('firstSignal'),
+                           'breakoutAge': bp.get('breakoutAge'), 'currentDist': bp.get('currentDist'),
+                           'currentValid': bp.get('currentValid'),
                            'track': track, 'smartMoneyPosDays': sm_days,
                            'inPool': bool(it.get('inPool')), 'reson': reson,
                            'entryTier': it.get('entryTier') or 'qualified',
@@ -2761,7 +2770,7 @@ def build_funnel(data):
                  '被卡掉的积聚/启动板块在 dropped 字段如实列出）。'
                  '→3个股形态三轨全量展示（任务87）：🔗共振=第2步入选板块；⭐精选=原池内VCP/杯柄且近10缓存日主力净流入≥6天；'
                  '其余全部进入形态储备，不再excluded。储备原因只写板块未共振/资金未确认，defects单列具体形态或位置瑕疵。'
-                 '高股息防御独立组=沪深300/中证A500/上证50/科创50/创业板50并集∩总市值≥250亿∩TTM股息率≥4%，不与形态资金混排。'
+                 '高股息防御独立组先过任务88双门（六宽基最近完成周RSI14全<20且中证全指PE/PB五年分位均≤30%），未过门强制空名单；过门后才取沪深300/中证A500/上证50/科创50/创业板50并集∩总市值≥250亿∩TTM股息率≥4%，不与形态资金或极端修复临时窗混排。'
                  '→4排雷（范围=第2步龙头∪第3步全部实际展示股∪持仓观察股，复用mineWatch缓存）。'
                  '状态灯🟢可看/🟡谨慎/🔴停；窗口🔴时下级全部降级为观察但绝不隐藏。'),
     }
@@ -5019,16 +5028,138 @@ def ensure_dividend_members(pro, trade_date):
     return c
 
 
+MARKET_VALUATION_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                     'cache', 'market_valuation.json')
+MARKET_VALUATION_INDEX = '000985.CSI'
+DIVIDEND_VALUATION_MIN_OBS = 750
+DIVIDEND_VALUATION_MAX_PCT = 30.0
+
+
+def _dividend_weekly_gate(trade_date):
+    """六宽基最近已完成周 RSI14 全低于20；缺一只或日期不齐都视为未通过。"""
+    idx_cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {})
+    td = str(trade_date).replace('-', '')
+    current_week = pd.to_datetime(td, format='%Y%m%d').strftime('%G%V')
+    items = []
+    missing = []
+    for code, name in OSC_INDICES:
+        rows = [r for r in (idx_cache.get(code) or []) if r and r[0] <= td]
+        wbars = _osc_weekly_bars(rows) if rows else []
+        completed = [b for b in wbars if b[0] != current_week]
+        rsi = _rsi_series([b[3] for b in completed], 14) if completed else []
+        value = rsi[-1] if rsi else None
+        date = completed[-1][2] if completed and value is not None else None
+        if value is None:
+            missing.append(name)
+        items.append({'indexCode': code, 'indexName': name,
+                      'weeklyRsi': round(value, 2) if value is not None else None,
+                      'weeklyRsiDate': (f'{date[:4]}-{date[4:6]}-{date[6:]}' if date else None),
+                      'below20': bool(value is not None and value < 20)})
+    dates = {r['weeklyRsiDate'] for r in items if r['weeklyRsiDate']}
+    satisfied = sum(r['below20'] for r in items)
+    aligned = not missing and len(dates) == 1
+    all_below = aligned and satisfied == len(OSC_INDICES)
+    if missing:
+        reason = '周RSI数据不足：' + '、'.join(missing)
+    elif not aligned:
+        reason = '六宽基最近完成周日期不一致，周RSI门不通过'
+    else:
+        reason = f'最近完成周RSI14<20满足{satisfied}/{len(OSC_INDICES)}' + ('，六只全部满足' if all_below else '，未达六只全部满足')
+    return {'weeklyAllBelow20': all_below, 'weeklySatisfiedCount': satisfied,
+            'weeklyRequiredCount': len(OSC_INDICES), 'weeklyItems': items,
+            'weeklyReason': reason}
+
+
+def _market_valuation_gate(pro, trade_date):
+    """中证全指 PE_TTM/PB 同日双字段缓存；首次约6年，之后增量，每日最多1次请求。"""
+    td = str(trade_date).replace('-', '')
+    cache = _load_json_cache(MARKET_VALUATION_PATH, {})
+    rows = list(cache.get('rows') or [])
+    fetch_error = None
+    if cache.get('updated') != td:
+        end_dt = datetime.strptime(td, '%Y%m%d')
+        start = ((datetime.strptime(str(rows[-1][0]), '%Y%m%d') + timedelta(days=1)).strftime('%Y%m%d')
+                 if rows else end_dt.replace(year=end_dt.year - 6).strftime('%Y%m%d'))
+        try:
+            time.sleep(API_DELAY)
+            fresh = pro.index_dailybasic(ts_code=MARKET_VALUATION_INDEX, start_date=start, end_date=td,
+                                         fields='ts_code,trade_date,pe_ttm,pb')
+            by_date = {str(r[0]): r for r in rows if len(r) >= 3}
+            if fresh is not None:
+                for _, r in fresh.iterrows():
+                    date = str(r.get('trade_date') or '')
+                    pe, pb = r.get('pe_ttm'), r.get('pb')
+                    if len(date) == 8 and pd.notna(pe) and pd.notna(pb) and float(pe) > 0 and float(pb) > 0:
+                        by_date[date] = [date, float(pe), float(pb)]
+            rows = [by_date[d] for d in sorted(by_date)]
+            cache = {'tsCode': MARKET_VALUATION_INDEX, 'updated': td, 'rows': rows}
+            _save_json_cache(MARKET_VALUATION_PATH, cache)
+        except Exception as e:
+            fetch_error = str(e)
+            print(f'  Warning: 中证全指估值更新失败，保留历史缓存: {fetch_error[:100]}')
+    if not rows:
+        detail = f'；本次接口错误：{fetch_error}' if fetch_error else ''
+        reason = '全市场估值数据不足：Tushare index_dailybasic 对中证全指000985.CSI无有效返回；未用其他指数替代' + detail
+        return {'valuationLow': False,
+                'valuation': {'peTtm': None, 'pb': None, 'pePct5y': None, 'pbPct5y': None,
+                              'observations': 0, 'historyStart': None, 'trade_date': None,
+                              'source': 'Tushare index_dailybasic（000985.CSI）',
+                              'sufficientHistory': False, 'reason': reason}}
+    latest = rows[-1]
+    cutoff = (pd.Timestamp(datetime.strptime(str(latest[0]), '%Y%m%d')) - pd.DateOffset(years=5)).strftime('%Y%m%d')
+    history = [r for r in rows if cutoff <= str(r[0]) <= str(latest[0])]
+    observations = len(history)
+    pe, pb = float(latest[1]), float(latest[2])
+    pe_pct = sum(float(r[1]) <= pe for r in history) / observations * 100
+    pb_pct = sum(float(r[2]) <= pb for r in history) / observations * 100
+    sufficient = observations >= DIVIDEND_VALUATION_MIN_OBS
+    low = sufficient and pe_pct <= DIVIDEND_VALUATION_MAX_PCT and pb_pct <= DIVIDEND_VALUATION_MAX_PCT
+    if not sufficient:
+        reason = f'全市场估值数据不足：近5年仅{observations}个PE/PB同日有效观测，至少需{DIVIDEND_VALUATION_MIN_OBS}个'
+    elif low:
+        reason = f'中证全指PE/PB近5年分位均≤{DIVIDEND_VALUATION_MAX_PCT:.0f}%'
+    else:
+        reason = f'中证全指PE/PB近5年分位未同时≤{DIVIDEND_VALUATION_MAX_PCT:.0f}%'
+    if fetch_error:
+        reason += f'；本次更新失败，使用历史缓存（{fetch_error[:60]}）'
+    return {'valuationLow': low,
+            'valuation': {'peTtm': round(pe, 4), 'pb': round(pb, 4),
+                          'pePct5y': round(pe_pct, 1), 'pbPct5y': round(pb_pct, 1),
+                          'observations': observations, 'historyStart': history[0][0],
+                          'trade_date': latest[0], 'source': 'Tushare index_dailybasic（000985.CSI）',
+                          'sufficientHistory': sufficient, 'reason': reason}}
+
+
 def build_dividend_watch(pro, trade_date, data):
-    """每日一次全市场daily_basic；用本批次已确认最新交易日，失败保留旧块及日期。"""
+    """周RSI六只全<20且中证全指PE/PB五年分位均≤30%才生成高股息名单。"""
+    weekly = _dividend_weekly_gate(trade_date)
+    valuation_gate = _market_valuation_gate(pro, trade_date)
+    valuation_low = valuation_gate['valuationLow']
+    valuation = valuation_gate['valuation']
+    visible = weekly['weeklyAllBelow20'] and valuation_low
+    snapshot_date = ((data.get('sectorFlows') or {}).get('trade_date') or trade_date).replace('-', '')
+    base = {
+        'trade_date': snapshot_date, 'visible': visible, **weekly,
+        'valuationLow': valuation_low, 'valuation': valuation,
+        'reasons': [weekly['weeklyReason'], valuation['reason']],
+        'poolIndices': list(DIVIDEND_POOL_INDICES),
+        'minTotalMv': VCP_MIN_MV, 'minDvTtm': DIVIDEND_MIN_DV_TTM,
+        'source': '六宽基周RSI14 + Tushare index_dailybasic（000985.CSI）双门；通过后才取五指数成分与daily_basic',
+        'note': ('双门=上证50/沪深300/中证500/中证1000/科创50/创业板指最近完成周RSI14全部<20，'
+                 '且中证全指PE_TTM/PB近5年分位均≤30%（至少750个同日有效观测）；未满足不展示股票清单。'
+                 '满足后池=沪深300、中证A500、上证50、科创50、创业板50并集，总市值≥250亿，TTM股息率≥4%；'
+                 '与极端修复临时窗、形态/资金分组完全独立。TTM股息率非预测，未做分红质量审查，非投资建议。')}
+    if not visible:
+        data['dividendWatch'] = {**base, 'poolSize': 0, 'count': 0, 'items': []}
+        print(f'  dividendWatch hidden: {weekly["weeklyReason"]}；{valuation["reason"]}')
+        return
+
     mc = ensure_dividend_members(pro, trade_date)
     membership = {}
     for idx, codes in (mc.get('members') or {}).items():
         for code in codes:
             membership.setdefault(code, []).append(DIVIDEND_INDEX_NAMES[idx])
-    # 早间/盘前get_trade_date可能领先实际快照；sectorFlows已成功回退到最新有数据日。
-    # 直接复用该日期，不循环补请求，保证每日仍只调用一次daily_basic。
-    snapshot_date = ((data.get('sectorFlows') or {}).get('trade_date') or trade_date).replace('-', '')
+    # 双门通过后才调用；直接复用本批最新有效交易日，保证每日最多一次daily_basic。
     time.sleep(API_DELAY)
     snap = pro.daily_basic(trade_date=snapshot_date,
                            fields='ts_code,trade_date,close,total_mv,dv_ttm')
@@ -5051,15 +5182,8 @@ def build_dividend_watch(pro, trade_date, data):
             'trade_date': str(r['trade_date']),
             'source': 'Tushare daily_basic.dv_ttm'})
     items.sort(key=lambda x: (-x['dvTtm'], x['code']))
-    data['dividendWatch'] = {
-        'trade_date': snapshot_date, 'poolSize': len(membership),
-        'poolIndices': list(DIVIDEND_POOL_INDICES),
-        'minTotalMv': VCP_MIN_MV, 'minDvTtm': DIVIDEND_MIN_DV_TTM,
-        'count': len(items), 'items': items,
-        'source': 'Tushare index_weight（周缓存）+ daily_basic（每日一次全市场快照）',
-        'note': ('池=沪深300、中证A500、上证50、科创50、创业板50并集，总市值≥250亿，TTM股息率≥4%；'
-                 'TTM股息率，非预测，不代表可持续；未做分红质量审查。与形态/资金分组独立，非投资建议。')}
-    print(f'  dividendWatch: 五指数并集{len(membership)}只，高股息{len(items)}只（{snapshot_date}）')
+    data['dividendWatch'] = {**base, 'poolSize': len(membership), 'count': len(items), 'items': items}
+    print(f'  dividendWatch visible: 五指数并集{len(membership)}只，高股息{len(items)}只（{snapshot_date}）')
 
 
 def _vcp_swing_highs(bars, k):
@@ -5578,48 +5702,169 @@ def _apply_post_breakout_position_defect(main_lv, hist_pct, dist_high250):
     return main_lv
 
 
-def _cup_recent_breakout(bars):
-    """近10日杯柄突破初期：历史锚点与当前突破分开判定，禁止未来数据。
+CUP_EARLY_SIGNAL_LOOKBACK = 60
+CUP_EARLY_SIGNAL_VOL_X = 1.4
+CUP_EARLY_CLOSE_MIN = 0.99
 
-    每个锚点只用当时可见 bars 重跑完整杯柄，并复用分位、周线、贴新高中高位拒、
-    -5~+5距枢轴展示门；锚点后首个收盘≥枢轴且量≥柄均量×1.0 为温和突破。
-    当前须仍在枢轴上且不高于枢轴15%。这不替代 _cup_breakout_check 的1.5×强确认。
-    """
-    if len(bars) < 176:
+
+def _cup_signal_kind(bar, pivot, handle_vol):
+    """用户习惯两类信号；强确认优先，早期信号绝不冒充收盘强确认。"""
+    if not bar or not pivot or not handle_vol or handle_vol <= 0:
         return None
+    strong = bar[3] >= pivot and bar[4] >= handle_vol * CUP_BRK_VOL_X
+    if strong:
+        return 'strong'
+    early = (bar[1] >= pivot and bar[3] >= pivot * CUP_EARLY_CLOSE_MIN
+             and bar[4] >= handle_vol * CUP_EARLY_SIGNAL_VOL_X)
+    return 'early' if early else None
+
+
+def _cup_signal_displayable(signal):
+    """初始失效位是硬剔除；离枢轴过远只限制展示，不改写首次信号历史。"""
+    return bool(signal and signal.get('currentValid')
+                and signal.get('currentDist') is not None
+                and signal['currentDist'] <= CUP_RECENT_BRK_MAX_PCT)
+
+
+def _cup_body_evidence(bars, anchor_end, handle_days, rim_date):
+    """用最近低位前最后一个主导高点划分用户习惯杯身，保留双底证据。"""
+    handle_start = anchor_end - handle_days + 1
+    body_end = handle_start - 1
+    body_lo_start = max(0, handle_start - 120)
+    cup_window = bars[body_lo_start:handle_start]
+    if not cup_window or body_end < body_lo_start:
+        return {}
+    low_rel = min(range(len(cup_window)), key=lambda i: cup_window[i][2])
+    low_i = body_lo_start + low_rel
+    rim_default = next((i for i in range(body_lo_start, low_i)
+                        if bars[i][0] == rim_date), body_lo_start)
+    # 最后一个“其后直到杯身结束都未再创新高”的主导高点=本轮杯身起点；
+    # 必须看完整回升段，不能把杯底前一两根普通较低高点误当杯沿。
+    body_start = rim_default
+    for i in range(rim_default, low_i):
+        if bars[i][1] >= max(x[1] for x in bars[i:body_end + 1]):
+            body_start = i
+    body = bars[body_start:body_end + 1]
+    if not body:
+        return {}
+    cup_hi = max(x[1] for x in body)
+    cup_lo = min(x[2] for x in body)
+    half = len(body) // 2
+    first = body[:half] if half else body
+    second = body[half:] if half else body
+    b1 = min(first, key=lambda x: x[2])
+    b2 = min(second, key=lambda x: x[2])
+    return {
+        'cupStart': bars[body_start][0], 'cupEnd': bars[body_end][0],
+        'cupHigh': round(cup_hi, 2), 'cupLow': round(cup_lo, 2),
+        'cupDepth': round((cup_hi - cup_lo) / cup_hi * 100, 1) if cup_hi > 0 else None,
+        'totalDays': len(body) + handle_days,
+        'rimDate': bars[body_start][0], 'rimHigh': round(cup_hi, 2),
+        'doubleBottom': {
+            'firstDate': b1[0], 'firstPrice': round(b1[2], 2),
+            'secondDate': b2[0], 'secondPrice': round(b2[2], 2),
+            'secondVsFirstPct': round((b2[2] / b1[2] - 1) * 100, 1) if b1[2] > 0 else None}}
+
+
+def _cup_early_breakout(bars, lookback=CUP_EARLY_SIGNAL_LOOKBACK,
+                        tick_size=0.01, price_digits=2):
+    """用户习惯·早期杯柄信号：60日回看，先量价预筛，再记忆化运行完整杯柄。
+
+    早期=最高≥柄枢轴、收盘≥枢轴×0.99、量≥柄均量×1.4；强确认仍为收盘≥枢轴且量≥1.5。
+    每个已完成10~20日柄只取其后首个信号；跨锚点先取最早信号，再取最近锚点/较长柄。
+    tick_size/price_digits必须由调用方按市场提供；本生产链A股为0.01元/2位，港股不得盲用。
+    """
+    if len(bars) < 176 or tick_size <= 0:
+        return None
+    n_bars = len(bars)
+    first_possible = max(175, n_bars - max(60, lookback))
     current_close = bars[-1][3]
     if current_close <= 0:
         return None
-    for back in range(1, CUP_RECENT_BRK_LOOKBACK + 1):
-        anchor = bars[:-back]
-        closes = [b[3] for b in anchor]
-        win = closes[-250:]
-        hist_pct = _pct_rank100(win, closes[-1])
-        dist_high = (closes[-1] / max(win) - 1) * 100
-        ch = _cup_handle_strict(anchor, True, dist_high250=dist_high, hist_pct=hist_pct)
-        if not ch or not ch.get('formed'):
-            continue
-        if not (VCP_SHOW_DIST_LO <= ch['distPct'] <= CUP_SHOW_DIST):
-            continue
-        if dist_high > -7 and hist_pct is not None and hist_pct > 60:
-            continue
-        h_vol = ch['brkNeedVol'] / CUP_BRK_VOL_X
-        post = bars[-back:]
-        for i, b in enumerate(post):
-            if b[3] < ch['pivot'] or b[4] < h_vol * CUP_RECENT_BRK_VOL_MIN:
+    anchor_cache = {}
+    candidates = []
+    for signal_i in range(first_possible, n_bars):
+        bar = bars[signal_i]
+        # 通常就是信号前一日；最多回看前3日，防止滚动柄边界漏掉已完成结构。
+        for anchor_i in range(signal_i - 1, max(-1, signal_i - 4), -1):
+            if anchor_i + 1 < 175:
                 continue
-            dist = (ch['pivot'] / current_close - 1) * 100
-            if not (-CUP_RECENT_BRK_MAX_PCT <= dist <= 0):
-                return None
-            history = bars[:len(anchor) + i + 1]
-            vol50 = sum(x[4] for x in history[-50:]) / min(50, len(history))
-            return {**ch, 'anchorDate': anchor[-1][0], 'anchorDistPct': ch['distPct'],
-                    'breakout': True, 'breakoutDate': b[0],
-                    'breakoutAge': len(post) - 1 - i,
-                    'breakoutVolX': round(b[4] / h_vol, 2),
-                    'breakoutVol50X': round(b[4] / vol50, 2),
-                    'distPct': round(dist, 1)}
-    return None
+            anchor = bars[:anchor_i + 1]
+            potential = False
+            for days in range(10, 21):
+                handle = anchor[-days:]
+                if len(handle) < days:
+                    continue
+                pivot = max(x[1] for x in handle)
+                handle_vol = sum(x[4] for x in handle) / days
+                if _cup_signal_kind(bar, pivot, handle_vol):
+                    potential = True
+                    break
+            if not potential:
+                continue
+            if anchor_i not in anchor_cache:
+                closes = [x[3] for x in anchor]
+                win = closes[-250:]
+                hist_pct = _pct_rank100(win, closes[-1])
+                dist_high = (closes[-1] / max(win) - 1) * 100
+                ch = _cup_handle_strict(anchor, True, dist_high250=dist_high, hist_pct=hist_pct)
+                if (not ch or not ch.get('formed')
+                        or not (VCP_SHOW_DIST_LO <= ch['distPct'] <= CUP_SHOW_DIST)
+                        or (dist_high > -7 and hist_pct is not None and hist_pct > 60)):
+                    ch = None
+                anchor_cache[anchor_i] = ch
+            ch = anchor_cache[anchor_i]
+            if not ch:
+                continue
+            pivot = ch['pivot']
+            handle_vol = ch['brkNeedVol'] / CUP_BRK_VOL_X
+            # 从柄完成后的第一天开始找，后面的放量日不能冒充“首次”。
+            for j in range(anchor_i + 1, n_bars):
+                signal_type = _cup_signal_kind(bars[j], pivot, handle_vol)
+                if not signal_type:
+                    continue
+                if j < first_possible:
+                    break           # 首次信号已在回看窗外，后续信号不是新的首次信号
+                signal_bar = bars[j]
+                handle_start = anchor_i - ch['days'] + 1
+                handle = bars[handle_start:anchor_i + 1]
+                handle_low = min(x[2] for x in handle)
+                initial_stop = round(handle_low - tick_size, price_digits)
+                current_dist = (current_close / pivot - 1) * 100
+                history = bars[:j + 1]
+                vol50 = sum(x[4] for x in history[-50:]) / min(50, len(history))
+                body_ev = _cup_body_evidence(bars, anchor_i, ch['days'], ch.get('rimDate'))
+                candidates.append((j, -anchor_i, -ch['days'], {
+                    **ch, **body_ev,
+                    'anchorDate': anchor[-1][0], 'anchorDistPct': ch['distPct'],
+                    'handleStart': bars[handle_start][0], 'handleEnd': anchor[-1][0],
+                    'handleHigh': round(max(x[1] for x in handle), price_digits),
+                    'handleLow': round(handle_low, price_digits),
+                    'handleVol': round(handle_vol, 2),
+                    'pivot': pivot, 'initialStop': initial_stop, 'invalidation': initial_stop,
+                    'signalDate': signal_bar[0], 'signalType': signal_type,
+                    'signalLabel': '盘中突破·贴近枢轴' if signal_type == 'early' else '收盘强确认',
+                    'signalClose': round(signal_bar[3], price_digits),
+                    'signalHigh': round(signal_bar[1], price_digits),
+                    'signalVolX': round(signal_bar[4] / handle_vol, 2),
+                    'firstSignal': True,
+                    'breakout': True, 'breakoutDate': signal_bar[0],
+                    'breakoutAge': n_bars - 1 - j,
+                    'breakoutVolX': round(signal_bar[4] / handle_vol, 2),
+                    'breakoutVol50X': round(signal_bar[4] / vol50, 2),
+                    'currentDist': round(current_dist, 1),
+                    'currentValid': current_close >= initial_stop,
+                    'distPct': round((pivot / current_close - 1) * 100, 1)}))
+                break
+    if not candidates:
+        return None
+    candidates.sort(key=lambda x: x[:3])
+    return candidates[0][3]
+
+
+def _cup_recent_breakout(bars):
+    """兼容旧调用名；生产新链请直接使用_cup_early_breakout。"""
+    return _cup_early_breakout(bars)
 
 
 def _index_cup_handle(bars):
@@ -6036,8 +6281,8 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 w_c3 = bool(w_lv and w_lv['formed'])
                 ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
                                         hist_pct=hist_pct, allow_weekly_defect=True)
-                # 任务81：突破后当前滚动柄常被破坏/分位升高，改由近10日历史锚点独立识别。
-                recent = _cup_recent_breakout(bars) if not (d_c3 or w_c3) else None
+                # 任务88：60日早期信号先量价预筛，再对候选历史锚点记忆化运行完整杯柄。
+                recent = _cup_early_breakout(bars) if not (d_c3 or w_c3) else None
                 lp = _long_platform(bars, circ_mv=(mv.get(code, 0) / 1e4 if mv else None),
                                     hist_pct=hist_pct, dist_high250=dist_high250)
                 raw, main_lv = None, None
@@ -6091,7 +6336,9 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 # 任务87：所有形态的突破后路径统一补查当前位置，不重写锚点或形态参数。
                 _apply_post_breakout_position_defect(main_lv, hist_pct, dist_high250)
                 if main_lv.get('breakout'):
-                    dist_lo, dist_limit = -CUP_RECENT_BRK_MAX_PCT, 0.0  # 突破初期独立展示窗
+                    # 早期/强确认共用：当前跌破初始失效位硬剔除；年龄本身不剔除。
+                    if not _cup_signal_displayable(main_lv):
+                        continue
                 else:
                     dist_lo = VCP_SHOW_DIST_LO
                     if pattern in ('底部整理', '平台整理', '高位平台⚠️', '长平台整理'):
@@ -6100,8 +6347,8 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                         dist_limit = CUP_SHOW_DIST       # 普通杯柄临近成型 -5~+5
                     else:
                         dist_limit = VCP_SHOW_DIST
-                if not (dist_lo <= main_lv['distPct'] <= dist_limit):
-                    continue
+                    if not (dist_lo <= main_lv['distPct'] <= dist_limit):
+                        continue
                 sec = meta['sector']
                 if sec in bad_sectors:
                     fit_txt = '板块不配合⚠️'
@@ -6115,6 +6362,9 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                           else (f'｜主力10日净流入{sm_days}天' if mf_days else ''))
                 advice = (f"{pattern}·距枢轴{main_lv['distPct']}%｜{water_txt}｜{fit_txt}{mf_txt}"
                           if water_txt else f"{pattern}·距枢轴{main_lv['distPct']}%｜{fit_txt}{mf_txt}")
+                if main_lv.get('breakout'):
+                    advice = (f"首次信号后已{main_lv['breakoutAge']}日·已离枢轴"
+                              f"{main_lv['currentDist']:+.1f}%｜" + advice)
                 close = rows[-1][1]
                 d_ok = bool(d_lv and d_lv['formed'])
                 w_ok = bool(w_lv and w_lv['formed'])
@@ -6125,17 +6375,28 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                               if main_lv.get('volConfirm') else ''))
                 if pattern == '杯柄型' and ch and ch.get('formed'):
                     if ch.get('breakout'):
-                        brk_txt = (f"🚀 {ch['breakoutDate']} 突破初期：量={ch['breakoutVolX']}×柄均/"
-                                   f"{ch['breakoutVol50X']}×50日均；强确认仍为≥1.5×柄均")
+                        if ch.get('signalType') == 'early':
+                            brk_txt = (f"⚡ {ch['signalDate']} 首次·盘中突破·贴近枢轴：高{ch['signalHigh']}/"
+                                       f"收{ch['signalClose']}/量{ch['signalVolX']}×柄均；非收盘强确认；"
+                                       f"已{ch['breakoutAge']}日·离枢轴{ch['currentDist']:+.1f}%")
+                        else:
+                            brk_txt = (f"🚀 {ch['signalDate']} 首次·收盘强确认：收{ch['signalClose']}/"
+                                       f"量{ch['signalVolX']}×柄均；已{ch['breakoutAge']}日·"
+                                       f"离枢轴{ch['currentDist']:+.1f}%")
                     else:
                         # 原强确认不变：收盘≥枢轴且单日量≥柄均量×1.5。
                         brk_txt = (f"收盘≥{ch['pivot']} 且单日成交量≥柄均量×1.5"
                                    + (f"（≈{ch['brkNeedVol']:.0f}手）" if ch.get('brkNeedVol') else ''))
+                signal_fields = ('cupStart', 'cupEnd', 'handleStart', 'handleEnd', 'doubleBottom',
+                                 'signalDate', 'signalType', 'signalLabel', 'signalClose', 'signalHigh',
+                                 'signalVolX', 'initialStop', 'firstSignal', 'breakoutAge',
+                                 'currentDist', 'currentValid')
                 buy_point = {'pivot': main_lv['pivot'],
                              'distanceToPivotPct': main_lv['distPct'],
                              'invalidation': main_lv.get('invalidation'),
                              'volConfirm': main_lv.get('volConfirm'),
-                             'breakoutConfirm': brk_txt}
+                             'breakoutConfirm': brk_txt,
+                             **{k: main_lv.get(k) for k in signal_fields if main_lv.get(k) is not None}}
                 items.append({'code': code,
                               'name': info.get(code, {}).get('name', code),
                               'sector': sec, 'star': meta['star'],
@@ -6192,12 +6453,12 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     '形态口径（任务81·2026-10-26校准）：'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%）+末次收缩均量<首次+区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85 直接拒）+Stage 2 趋势模板强制拦截；'
                     '杯柄型=前置250日涨幅≥15%+最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+MA150>MA200+杯深12~33%+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+柄均量<杯身且柄末量≤1.2+一年分位25~82+贴新高中高位拒；普通杯柄展示距枢轴-5~+5；任务86深度回踩未连续4周收在下轨下方可入瑕疵组，标周BOLL深度回踩（包容），叠加MA瑕疵则标周BOLL深度回踩+周MA未多头；连续≥4周收在下轨下方为有效破位拒绝；'
-                    '杯柄突破初期=近10个交易日内逐日用当时数据寻找已通过上述全部门及普通展示窗的历史锚点，其后收盘≥锚点枢轴且量≥锚点柄均量×1.0，当前仍站上枢轴且不高于枢轴15%；展示突破日、柄均量比和50日均量比。此为温和量门，原1.5×柄均量强确认不变；'
+                    '用户习惯·早期杯柄信号（任务88）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；已完成10~20日窄幅缩量柄后的首个有效信号分两类：早期=最高≥柄枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4（只标盘中突破·贴近枢轴），强确认=收盘≥枢轴+量≥柄均量×1.5；跨锚点先取最早信号再取最近锚点。初始失效位=柄低−A股最小价位0.01，当前跌破即剔除；展示首次信号年龄与现价离枢轴%，较久仍可储备但不冒充新买点；'
                     '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日，振幅≤10.5%+大比例缩量强制+末段≤1.2+杯柄抬升≤20%+近60日跌幅≥-10%排下跌中继；分位>60不展示）；'
                     '旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；'
                     '大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85，允许末段≤1.2温和放量；'
                     '买点参数：枢轴价/失效位/距枢轴%/形态对应的突破确认——均为形态参数，非操作建议；'
-                    '普通形态只展示距枢轴-5~+8（杯柄+5、平台+12），突破初期单独使用枢轴上方0~15%；'
+                    '普通形态只展示距枢轴-5~+8（杯柄+5、平台+12）；杯柄首次早期/强确认信号另按当前位置离枢轴≤15%展示，早期允许贴近枢轴下方且不等于收盘强确认；'
                     '主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用）；无瑕疵名单按VCP/杯柄（前端细分🚀突破初期）/底部整理/长平台/平台整理/旗形分组，组内资金确认优先→距枢轴升序；杯柄瑕疵档独立分组沉底弱展示，不参与无瑕疵资金确认排序；'
                     '建议=水温×板块合适度×资金确认，仅供关注优先级参考',
         }

@@ -232,7 +232,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                     {st.n}
                   </div>
                   <Card
-                    className={`${lampBorder(st.lamp)} shadow-sm ${winClosed && st.n > 0 ? 'opacity-60 grayscale' : ''} ${navFor(st.key) ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}
+                    className={`${lampBorder(st.lamp)} shadow-sm ${winClosed && st.n > 0 && st.key !== 'vcp' ? 'opacity-60 grayscale' : ''} ${navFor(st.key) ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}
                     onClick={navFor(st.key)}
                   >
                     <CardContent className="p-4">
@@ -409,16 +409,16 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                         </div>
                       )}
 
-                      {/* 第3步：形态全量三轨 + 独立高股息防御；关窗整卡灰显但绝不隐藏。 */}
+                      {/* 第3步：普通形态随窗口灰显；高股息由独立双门控制，不受临时窗影响。 */}
                       {st.key === 'vcp' && (() => {
                         const rows = st.rows || [];
                         const reson = rows.filter((r: any) => r.track === 'reson');
                         const cherry = rows.filter((r: any) => r.track === 'cherry');
                         const reserve = rows.filter((r: any) => r.track === 'reserve');
-                        const isExtreme = data.longWindow?.windowType === 'extreme_rebound';
-                        const dividends = data.dividendWatch?.items || [];
+                        const dw = data.dividendWatch;
+                        const dividends = dw?.visible ? (dw.items || []) : [];
                         const renderRow = (r: any) => (
-                          <div key={r.code} className={`rounded-lg border px-2 py-1.5 hover:bg-slate-50 ${r.defects?.length ? 'border-amber-200 bg-amber-50/40' : 'border-transparent'}`}>
+                          <div key={r.code} className={`rounded-lg border px-2 py-1.5 hover:bg-slate-50 ${r.defects?.length ? 'border-amber-200 bg-amber-50/40' : 'border-transparent'} ${r.track === 'reserve' && (r.breakoutAge ?? 0) > 3 ? 'opacity-60' : ''}`}>
                             <div className="flex items-center gap-x-2 gap-y-1 flex-wrap">
                               <span className="text-xs font-semibold text-slate-800">{r.name}</span>
                               <Badge className={`text-[10px] h-[18px] px-1.5 border-0 ${
@@ -431,6 +431,14 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                               <span className="text-[10px] text-slate-500">{r.sectorFit || r.sector || '板块—'}</span>
                               {r.entryTier === 'fuzzy' && <Badge className="text-[9px] h-4 px-1 border-0 bg-amber-500 text-white">瑕疵沉底</Badge>}
                             </div>
+                            {r.signalDate && (
+                              <div className={`mt-1 rounded px-2 py-1 text-[10px] ${r.signalType === 'early' ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-700'}`}>
+                                <p><b>首次信号 {r.signalDate} · {r.signalLabel}</b>（{r.signalType === 'early' ? '早期，非收盘强确认' : '收盘强确认'}）</p>
+                                <p>收{r.signalClose ?? '—'} / 高{r.signalHigh ?? '—'} / 量{r.signalVolX ?? '—'}×柄均 · 已{r.breakoutAge ?? '—'}日 · 现价离枢轴{r.currentDist != null ? `${r.currentDist >= 0 ? '+' : ''}${r.currentDist}%` : '—'} · 初始失效位{r.initialStop ?? '—'}</p>
+                                <p className="text-[9px] opacity-80">杯身{r.cupStart ?? '—'}~{r.cupEnd ?? '—'} · 杯柄{r.handleStart ?? '—'}~{r.handleEnd ?? '—'}</p>
+                                {(r.breakoutAge ?? 0) > 3 && <p className="text-[9px] text-slate-500">较晚发现，仅作信号后观察，不冒充新买点</p>}
+                              </div>
+                            )}
                             {r.defects?.length > 0 && (
                               <p className="text-[10px] text-amber-700 mt-1">具体瑕疵：{r.defects.join('；')}</p>
                             )}
@@ -441,27 +449,38 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                         );
                         return (
                           <div className="space-y-1.5" onClick={(e) => e.stopPropagation()}>
-                            <p className="text-[10px] font-semibold text-violet-700 px-2">共振 {reson.length}</p>
-                            {reson.length > 0 ? reson.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}
-                            <p className="text-[10px] font-semibold text-amber-700 px-2 pt-1 border-t border-slate-100">精选 {cherry.length}</p>
-                            {cherry.length > 0 ? cherry.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}
-                            <details className="rounded-lg border border-slate-200 bg-slate-50/60 px-2 py-1.5">
-                              <summary className="cursor-pointer text-[10px] font-semibold text-slate-600">形态储备 {reserve.length}（默认折叠，展开为全量）</summary>
-                              <div className="mt-1 space-y-1">{reserve.map(renderRow)}</div>
-                            </details>
-                            <details open={isExtreme ? true : undefined} className={`rounded-lg border px-2 py-1.5 ${isExtreme ? 'border-emerald-300 bg-emerald-50' : 'border-cyan-200 bg-cyan-50/50'}`}>
-                              <summary className="cursor-pointer text-[10px] font-semibold text-cyan-800">高股息防御 {dividends.length}（独立组·不与形态/资金混排{isExtreme ? '·临时窗直接可见' : ''}）</summary>
-                              <p className="text-[9px] text-slate-500 mt-1">{data.dividendWatch?.note}</p>
-                              <div className="mt-1 grid gap-1">
-                                {dividends.map((r) => (
-                                  <div key={r.code} className="flex items-center gap-x-2 gap-y-1 flex-wrap rounded bg-white/70 px-2 py-1">
-                                    <span className="text-xs font-semibold text-slate-800">{r.name}</span>
-                                    <span className="text-[10px] text-slate-500">{r.indexMembership.join('/')}</span>
-                                    <span className="text-[11px] font-semibold text-cyan-700">TTM股息率{r.dvTtm}%</span>
-                                    <span className="text-[10px] text-slate-500">收盘{r.close ?? '—'}·总市值{(r.totalMv / 10000).toFixed(0)}亿·{r.trade_date}</span>
-                                  </div>
-                                ))}
+                            <div className={winClosed ? 'opacity-60 grayscale' : ''}>
+                              <p className="text-[10px] font-semibold text-violet-700 px-2">共振 {reson.length}</p>
+                              {reson.length > 0 ? reson.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}
+                              <p className="text-[10px] font-semibold text-amber-700 px-2 pt-1 border-t border-slate-100">精选 {cherry.length}</p>
+                              {cherry.length > 0 ? cherry.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}
+                              <details className="rounded-lg border border-slate-200 bg-slate-50/60 px-2 py-1.5">
+                                <summary className="cursor-pointer text-[10px] font-semibold text-slate-600">形态储备 {reserve.length}（默认折叠，展开为全量）</summary>
+                                <div className="mt-1 space-y-1">{reserve.map(renderRow)}</div>
+                              </details>
+                            </div>
+                            <details open={dw?.visible ? true : undefined} className={`rounded-lg border px-2 py-1.5 ${dw?.visible ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-slate-50/70'}`}>
+                              <summary className={`cursor-pointer text-[10px] font-semibold ${dw?.visible ? 'text-emerald-800' : 'text-slate-600'}`}>
+                                高股息防御 {dw?.visible ? `${dividends.length}只` : '未展示'}（独立双门 · 周RSI {dw?.weeklySatisfiedCount ?? '—'}/{dw?.weeklyRequiredCount ?? 6} · 估值{dw?.valuationLow ? '低' : '未达/数据不足'}）
+                              </summary>
+                              <div className="mt-1 space-y-1 text-[10px] text-slate-600">
+                                <p>{dw?.weeklyReason || '周RSI数据不足'}</p>
+                                {(dw?.weeklyItems || []).length > 0 && <p className="text-[9px] text-slate-500">{(dw?.weeklyItems || []).map((r) => `${r.indexName}${r.weeklyRsi ?? '—'}（${r.weeklyRsiDate || '—'}）`).join(' · ')}</p>}
+                                <p>{dw?.valuation?.pePct5y != null ? `中证全指PE ${dw.valuation.peTtm}（5年分位${dw.valuation.pePct5y}%）· PB ${dw.valuation.pb}（5年分位${dw.valuation.pbPct5y}%）· ${dw.valuation.observations}个观测 · ${dw.valuation.trade_date}` : dw?.valuation?.reason || '全市场估值数据不足'}</p>
+                                {dw?.visible && <p className="text-[9px] text-slate-500">{dw.note}</p>}
                               </div>
+                              {dw?.visible && (
+                                <div className="mt-1 grid gap-1">
+                                  {dividends.map((r) => (
+                                    <div key={r.code} className="flex items-center gap-x-2 gap-y-1 flex-wrap rounded bg-white/70 px-2 py-1">
+                                      <span className="text-xs font-semibold text-slate-800">{r.name}</span>
+                                      <span className="text-[10px] text-slate-500">{r.indexMembership.join('/')}</span>
+                                      <span className="text-[11px] font-semibold text-cyan-700">TTM股息率{r.dvTtm}%</span>
+                                      <span className="text-[10px] text-slate-500">收盘{r.close ?? '—'}·总市值{(r.totalMv / 10000).toFixed(0)}亿·{r.trade_date}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </details>
                           </div>
                         );

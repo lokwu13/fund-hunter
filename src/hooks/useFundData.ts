@@ -398,7 +398,16 @@ export interface FundData {
         pivot: number; distPct: number; invalidation?: number; volConfirm?: number; formed: boolean;
       } | null;
       trendTemplate?: { pass: boolean; evidence: Array<{ item: string; ok: boolean; val: string }> } | null;
-      buyPoint?: { pivot: number; distanceToPivotPct: number; invalidation?: number | null; volConfirm?: number | null; breakoutConfirm?: string } | null;
+      buyPoint?: {
+        pivot: number; distanceToPivotPct: number; invalidation?: number | null;
+        volConfirm?: number | null; breakoutConfirm?: string;
+        cupStart?: string; cupEnd?: string; handleStart?: string; handleEnd?: string;
+        doubleBottom?: { firstDate: string; firstPrice: number; secondDate: string; secondPrice: number; secondVsFirstPct: number | null };
+        signalDate?: string; signalType?: 'early' | 'strong'; signalLabel?: string;
+        signalClose?: number; signalHigh?: number; signalVolX?: number;
+        initialStop?: number; firstSignal?: boolean; breakoutAge?: number;
+        currentDist?: number; currentValid?: boolean;
+      } | null;
       cupHandle?: {
         days: number; totalDays: number; cupDepth: number; depthOk: boolean; depthMax: number;
         amplitude?: number; volRatio?: number; tailRatio?: number; bottomVolRatio?: number;
@@ -408,6 +417,7 @@ export interface FundData {
         qualified?: boolean; defects?: string[];
         breakout?: boolean; anchorDate?: string; anchorDistPct?: number;
         breakoutDate?: string; breakoutAge?: number; breakoutVolX?: number; breakoutVol50X?: number;
+        signalType?: 'early' | 'strong'; signalLabel?: string; currentDist?: number;
       } | null;
       histPct?: number | null;
       distHigh250?: number;
@@ -432,6 +442,16 @@ export interface FundData {
   };
   dividendWatch?: {
     trade_date: string;
+    visible: boolean;
+    weeklyAllBelow20: boolean; weeklySatisfiedCount: number; weeklyRequiredCount: number;
+    weeklyItems: Array<{ indexCode: string; indexName: string; weeklyRsi: number | null; weeklyRsiDate: string | null; below20: boolean }>;
+    weeklyReason: string;
+    valuationLow: boolean; reasons: string[];
+    valuation: {
+      peTtm: number | null; pb: number | null; pePct5y: number | null; pbPct5y: number | null;
+      observations: number; historyStart: string | null; trade_date: string | null;
+      source: string; sufficientHistory: boolean; reason: string;
+    };
     poolSize: number;
     poolIndices: string[];
     minTotalMv: number;

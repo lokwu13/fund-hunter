@@ -121,7 +121,7 @@ const GUIDES: Record<string, string> = {
   window: '水温/债券与 broadOsc 合并判定',
   broad: '宽基形态＋超买超卖＋ETF，只点触发项',
   sector: '主线入选＋VCP强共振＋杯柄；ETF仅用可靠映射',
-  vcp: '仅列名单、形态、枢轴与距枢轴，个股自行分析',
+  vcp: '杯柄区分首次早期/强确认信号与信号年龄；高股息须周RSI与全市场估值双门同时满足',
   mine: '入围标的资金、消息与交易风险排查',
 };
 
@@ -147,8 +147,11 @@ export function buildFunnelStepViews(data: any): FunnelStepView[] {
     else if (step.key === 'vcp') {
       const rows = step.rows || [];
       const count = (track: string) => rows.filter((r: any) => r.track === track).length;
-      const dividendCount = data.dividendWatch?.items?.length || 0;
-      conclusion = `形态${rows.length}只｜共振${count('reson')}·精选${count('cherry')}·储备${count('reserve')}｜高股息防御${dividendCount}只（独立）`;
+      const dw = data.dividendWatch;
+      const dividendText = dw?.visible
+        ? `高股息防御${dw.count || 0}只（双门已开）`
+        : `高股息未展示（周RSI ${dw?.weeklySatisfiedCount ?? '—'}/${dw?.weeklyRequiredCount ?? 6}·估值${dw?.valuationLow ? '低' : '未达/数据不足'}）`;
+      conclusion = `形态${rows.length}只｜共振${count('reson')}·精选${count('cherry')}·储备${count('reserve')}｜${dividendText}`;
     }
     return { ...step, conclusion, guide: GUIDES[step.key] || step.guide };
   });
