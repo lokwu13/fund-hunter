@@ -5020,17 +5020,20 @@ def ensure_dividend_members(pro, trade_date):
 
 
 def build_dividend_watch(pro, trade_date, data):
-    """每日一次全市场daily_basic快照；失败抛给main并保留旧块及原数据日期。"""
+    """每日一次全市场daily_basic；用本批次已确认最新交易日，失败保留旧块及日期。"""
     mc = ensure_dividend_members(pro, trade_date)
     membership = {}
     for idx, codes in (mc.get('members') or {}).items():
         for code in codes:
             membership.setdefault(code, []).append(DIVIDEND_INDEX_NAMES[idx])
+    # 早间/盘前get_trade_date可能领先实际快照；sectorFlows已成功回退到最新有数据日。
+    # 直接复用该日期，不循环补请求，保证每日仍只调用一次daily_basic。
+    snapshot_date = ((data.get('sectorFlows') or {}).get('trade_date') or trade_date).replace('-', '')
     time.sleep(API_DELAY)
-    snap = pro.daily_basic(trade_date=trade_date,
+    snap = pro.daily_basic(trade_date=snapshot_date,
                            fields='ts_code,trade_date,close,total_mv,dv_ttm')
     if snap is None or not len(snap):
-        raise RuntimeError(f'daily_basic {trade_date}为空，保留上一有效dividendWatch')
+        raise RuntimeError(f'daily_basic {snapshot_date}为空，保留上一有效dividendWatch')
     sub = snap[snap['ts_code'].isin(membership)]
     items = []
     for _, r in sub.iterrows():
@@ -5049,14 +5052,14 @@ def build_dividend_watch(pro, trade_date, data):
             'source': 'Tushare daily_basic.dv_ttm'})
     items.sort(key=lambda x: (-x['dvTtm'], x['code']))
     data['dividendWatch'] = {
-        'trade_date': trade_date, 'poolSize': len(membership),
+        'trade_date': snapshot_date, 'poolSize': len(membership),
         'poolIndices': list(DIVIDEND_POOL_INDICES),
         'minTotalMv': VCP_MIN_MV, 'minDvTtm': DIVIDEND_MIN_DV_TTM,
         'count': len(items), 'items': items,
         'source': 'Tushare index_weight（周缓存）+ daily_basic（每日一次全市场快照）',
         'note': ('池=沪深300、中证A500、上证50、科创50、创业板50并集，总市值≥250亿，TTM股息率≥4%；'
                  'TTM股息率，非预测，不代表可持续；未做分红质量审查。与形态/资金分组独立，非投资建议。')}
-    print(f'  dividendWatch: 五指数并集{len(membership)}只，高股息{len(items)}只（{trade_date}）')
+    print(f'  dividendWatch: 五指数并集{len(membership)}只，高股息{len(items)}只（{snapshot_date}）')
 
 
 def _vcp_swing_highs(bars, k):
