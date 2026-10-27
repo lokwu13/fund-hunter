@@ -136,6 +136,13 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
         </div>
       </div>
 
+      {data.longWindow?.windowType === 'extreme_rebound' && (
+        <div className="rounded-lg border-2 border-emerald-400 bg-emerald-50 px-4 py-3 text-emerald-900 shadow-sm">
+          <p className="text-sm font-bold">⚡ 极端修复临时窗（最长5日）· 剩余{data.longWindow.remainingDays}日</p>
+          <p className="text-[11px] mt-1">{data.longWindow.extremeRebound?.reason}；这不是普通趋势开窗，形态与高股息独立展示，非投资建议。</p>
+        </div>
+      )}
+
       {/* BOLL99·RSI：强硬减仓 > 完整抄底 > 超跌反弹观察 */}
       {((data.broadOsc?.sellAlerts?.length ?? 0) > 0 || (data.broadOsc?.buyWindows?.length ?? 0) > 0 || (data.broadOsc?.reboundWatch?.length ?? 0) > 0) && (
         <button
@@ -402,28 +409,60 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                         </div>
                       )}
 
-                      {/* 第3步：只列形态事实，个股由用户自行分析 */}
+                      {/* 第3步：形态全量三轨 + 独立高股息防御；关窗整卡灰显但绝不隐藏。 */}
                       {st.key === 'vcp' && (() => {
                         const rows = st.rows || [];
                         const reson = rows.filter((r: any) => r.track === 'reson');
                         const cherry = rows.filter((r: any) => r.track === 'cherry');
+                        const reserve = rows.filter((r: any) => r.track === 'reserve');
+                        const isExtreme = data.longWindow?.windowType === 'extreme_rebound';
+                        const dividends = data.dividendWatch?.items || [];
                         const renderRow = (r: any) => (
-                          <div key={r.code} className="flex items-center gap-2 flex-wrap rounded-lg px-2 py-1 hover:bg-slate-50">
-                            <span className="text-xs font-semibold text-slate-800">{r.name}</span>
-                            <Badge className={`text-[10px] h-[18px] px-1.5 border-0 ${
-                              r.pattern === '杯柄型' ? 'bg-violet-500 text-white' :
-                              r.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-slate-500 text-white'
-                            }`}>{r.pattern}</Badge>
-                            <span className="text-[11px] text-slate-600">枢轴{r.pivot}</span>
-                            <span className="text-[11px] text-slate-600">距枢轴{r.distPct}%</span>
+                          <div key={r.code} className={`rounded-lg border px-2 py-1.5 hover:bg-slate-50 ${r.defects?.length ? 'border-amber-200 bg-amber-50/40' : 'border-transparent'}`}>
+                            <div className="flex items-center gap-x-2 gap-y-1 flex-wrap">
+                              <span className="text-xs font-semibold text-slate-800">{r.name}</span>
+                              <Badge className={`text-[10px] h-[18px] px-1.5 border-0 ${
+                                r.pattern === '杯柄型' ? 'bg-violet-500 text-white' :
+                                r.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-slate-500 text-white'
+                              }`}>{r.pattern}</Badge>
+                              <span className="text-[11px] text-slate-600">枢轴{r.pivot ?? '—'}</span>
+                              <span className="text-[11px] text-slate-600">距枢轴{r.distPct ?? '—'}%</span>
+                              <span className="text-[10px] text-slate-500">资金{r.smartMoneyPosDays ?? 0}/10天</span>
+                              <span className="text-[10px] text-slate-500">{r.sectorFit || r.sector || '板块—'}</span>
+                              {r.entryTier === 'fuzzy' && <Badge className="text-[9px] h-4 px-1 border-0 bg-amber-500 text-white">瑕疵沉底</Badge>}
+                            </div>
+                            {r.defects?.length > 0 && (
+                              <p className="text-[10px] text-amber-700 mt-1">具体瑕疵：{r.defects.join('；')}</p>
+                            )}
+                            {!r.defects?.length && r.reserveReasons?.length > 0 && (
+                              <p className="text-[10px] text-slate-400 mt-1">形态无瑕疵；储备原因：{r.reserveReasons.join('、')}（不是形态瑕疵）</p>
+                            )}
                           </div>
                         );
                         return (
-                          <div className="space-y-1.5">
+                          <div className="space-y-1.5" onClick={(e) => e.stopPropagation()}>
                             <p className="text-[10px] font-semibold text-violet-700 px-2">共振 {reson.length}</p>
                             {reson.length > 0 ? reson.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}
                             <p className="text-[10px] font-semibold text-amber-700 px-2 pt-1 border-t border-slate-100">精选 {cherry.length}</p>
                             {cherry.length > 0 ? cherry.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}
+                            <details className="rounded-lg border border-slate-200 bg-slate-50/60 px-2 py-1.5">
+                              <summary className="cursor-pointer text-[10px] font-semibold text-slate-600">形态储备 {reserve.length}（默认折叠，展开为全量）</summary>
+                              <div className="mt-1 space-y-1">{reserve.map(renderRow)}</div>
+                            </details>
+                            <details open={isExtreme ? true : undefined} className={`rounded-lg border px-2 py-1.5 ${isExtreme ? 'border-emerald-300 bg-emerald-50' : 'border-cyan-200 bg-cyan-50/50'}`}>
+                              <summary className="cursor-pointer text-[10px] font-semibold text-cyan-800">高股息防御 {dividends.length}（独立组·不与形态/资金混排{isExtreme ? '·临时窗直接可见' : ''}）</summary>
+                              <p className="text-[9px] text-slate-500 mt-1">{data.dividendWatch?.note}</p>
+                              <div className="mt-1 grid gap-1">
+                                {dividends.map((r) => (
+                                  <div key={r.code} className="flex items-center gap-x-2 gap-y-1 flex-wrap rounded bg-white/70 px-2 py-1">
+                                    <span className="text-xs font-semibold text-slate-800">{r.name}</span>
+                                    <span className="text-[10px] text-slate-500">{r.indexMembership.join('/')}</span>
+                                    <span className="text-[11px] font-semibold text-cyan-700">TTM股息率{r.dvTtm}%</span>
+                                    <span className="text-[10px] text-slate-500">收盘{r.close ?? '—'}·总市值{(r.totalMv / 10000).toFixed(0)}亿·{r.trade_date}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </details>
                           </div>
                         );
                       })()}

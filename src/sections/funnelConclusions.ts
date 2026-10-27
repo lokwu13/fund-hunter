@@ -37,7 +37,9 @@ export const broadOscFor = (data: any, indexCode: string) =>
 
 function windowConclusion(data: any) {
   const lw = data.longWindow || {};
-  const windowLabel = lw.window === 'open' ? '开窗' : lw.window === 'closed' ? '关窗' : '半窗';
+  const windowLabel = lw.windowType === 'extreme_rebound'
+    ? `极端修复临时窗（最长5日·剩余${lw.remainingDays ?? '—'}日）`
+    : lw.window === 'open' ? '开窗' : lw.window === 'closed' ? '关窗' : '半窗';
   const water = [
     lw.temp ? `水温${lw.temp}` : '',
     lw.verdict ? String(lw.verdict).replace(/[（）]/g, '') : '',
@@ -60,6 +62,9 @@ function windowConclusion(data: any) {
       const rsis = oversold.map((r: any) => r.rsi ?? '—').join('/');
       signals.push(`${oversold.map((r: any) => r.indexName).join('、')}超卖观察（RSI${rsis}，${oversoldWait(oversold)}）`);
     }
+  }
+  if (lw.extremeRebound?.pendingConfirmation) {
+    signals.push(`极端修复待确认：近20日超卖${(lw.extremeEvidence || []).length}个宽基，核心完整抄底未确认，不开窗`);
   }
   if (signals.length === 0) signals.push('宽基无超买超卖触发');
   const bulls = items.filter((r: any) => r.weeklyMaBull).map((r: any) => r.indexName);
@@ -141,8 +146,9 @@ export function buildFunnelStepViews(data: any): FunnelStepView[] {
     else if (step.key === 'sector') conclusion = sectorConclusion(data, step);
     else if (step.key === 'vcp') {
       const rows = step.rows || [];
-      const reson = rows.filter((r: any) => r.track === 'reson').length;
-      conclusion = `${rows.length}只｜共振${reson}·精选${rows.length - reson}`;
+      const count = (track: string) => rows.filter((r: any) => r.track === track).length;
+      const dividendCount = data.dividendWatch?.items?.length || 0;
+      conclusion = `形态${rows.length}只｜共振${count('reson')}·精选${count('cherry')}·储备${count('reserve')}｜高股息防御${dividendCount}只（独立）`;
     }
     return { ...step, conclusion, guide: GUIDES[step.key] || step.guide };
   });

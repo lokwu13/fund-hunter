@@ -1050,7 +1050,9 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                   <Badge className="bg-amber-400 text-white text-[10px]">半窗·谨慎关注</Badge>
                 )}
                 {data.longWindow?.window === 'open' && (
-                  <Badge className="bg-emerald-600 text-white text-[10px]">做多窗口打开</Badge>
+                  <Badge className="bg-emerald-600 text-white text-[10px]">
+                    {data.longWindow.windowType === 'extreme_rebound' ? `极端修复临时窗（最长5日）·剩余${data.longWindow.remainingDays ?? '—'}日` : '做多窗口打开'}
+                  </Badge>
                 )}
               </CardTitle>
               <Badge variant="outline" className="text-xs bg-violet-50 text-violet-700 border-violet-200">

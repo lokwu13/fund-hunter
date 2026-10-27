@@ -1663,10 +1663,76 @@ OSC_COMMENT = {
 }
 
 
+EXTREME_REBOUND_MIN_OVERSOLD = 2
+EXTREME_REBOUND_MAX_DAYS = 5
+EXTREME_REBOUND_LOOKBACK = 20
+EXTREME_REBOUND_CORE = {'上证50', '沪深300', '中证500'}
+
+
+def _extreme_rebound_decision(osc, current_date, previous=None, trading_days=None):
+    """独立临时窗判定；不改原水温分数或普通open/half/closed规则。
+
+    A=六宽基至少2个近20交易日出现超卖观察（含仅观察）；B=核心宽基当前完整抄底；
+    C=无强硬减仓且无顶部风险。首满足日起第6个交易日自动失效。
+    """
+    previous = previous or {}
+    evidence = list(osc.get('extremeEvidence') or [])
+    triggers = [x for x in (osc.get('buyWindows') or []) if x in EXTREME_REBOUND_CORE]
+    sell_alerts = list(osc.get('sellAlerts') or [])
+    top_risks = [i.get('indexName') for i in (osc.get('items') or [])
+                 if i.get('state') == '顶部风险']
+    enough_oversold = len(evidence) >= EXTREME_REBOUND_MIN_OVERSOLD
+    blocked_by = []
+    if sell_alerts:
+        blocked_by.append('强硬减仓：' + '、'.join(sell_alerts))
+    if top_risks:
+        blocked_by.append('顶部风险：' + '、'.join(top_risks))
+    qualifies = enough_oversold and bool(triggers) and not blocked_by
+    started = None
+    age = 0
+    if qualifies:
+        if (previous.get('windowType') == 'extreme_rebound' and previous.get('temporary')
+                and previous.get('startedDate')):
+            started = str(previous['startedDate']).replace('-', '')
+            if trading_days and started in trading_days and current_date in trading_days:
+                age = trading_days.index(current_date) - trading_days.index(started)
+            else:
+                age = int(previous.get('elapsedDays') or 0) + (previous.get('tradeDate') != current_date)
+        else:
+            started = current_date
+    active = bool(qualifies and age < EXTREME_REBOUND_MAX_DAYS)
+    expired = bool(qualifies and age >= EXTREME_REBOUND_MAX_DAYS)
+    if active:
+        reason = (f'极端修复确认：近{EXTREME_REBOUND_LOOKBACK}日{len(evidence)}个宽基曾超卖，'
+                  f'核心完整确认={ "、".join(triggers) }；临时窗第{age + 1}/{EXTREME_REBOUND_MAX_DAYS}日')
+    elif expired:
+        reason = f'极端修复临时窗已满{EXTREME_REBOUND_MAX_DAYS}个交易日，回退原层级判定'
+    elif blocked_by:
+        reason = '极端修复临时窗被否决：' + '；'.join(blocked_by)
+    elif enough_oversold and not triggers:
+        reason = '极端下跌证据已具备，但核心宽基尚无完整抄底确认；仅待确认，不开窗'
+    elif not enough_oversold:
+        reason = f'近{EXTREME_REBOUND_LOOKBACK}日超卖宽基不足{EXTREME_REBOUND_MIN_OVERSOLD}个，不开临时窗'
+    else:
+        reason = '极端修复临时窗条件未同时满足'
+    return {
+        'active': active, 'qualified': qualifies, 'expired': expired,
+        'pendingConfirmation': bool(enough_oversold and not triggers and not blocked_by),
+        'extremeEvidence': evidence, 'triggerIndices': triggers,
+        'topRisks': top_risks, 'blockedBy': blocked_by,
+        'startedDate': (f'{started[:4]}-{started[4:6]}-{started[6:]}' if active and started else None),
+        'tradeDate': current_date, 'elapsedDays': age if active else 0,
+        'remainingDays': EXTREME_REBOUND_MAX_DAYS - age if active else 0,
+        'maxDays': EXTREME_REBOUND_MAX_DAYS, 'lookbackDays': EXTREME_REBOUND_LOOKBACK,
+        'reason': reason,
+    }
+
+
 def build_broad_osc(data):
-    """六宽基 BOLL99·RSI 超买超卖系统（2026-10-25）：读 broad_idx_cache 回放取最新状态。"""
+    """六宽基 BOLL99·RSI 超买超卖系统；另留近20日超卖证据供独立临时窗。"""
     cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {})
     items = []
+    extreme_evidence = []
     latest = ''
     for ic, iname in OSC_INDICES:
         rows = cache.get(ic) or []
@@ -1675,6 +1741,14 @@ def build_broad_osc(data):
         latest = max(latest, rows[-1][0])
         series = _osc_replay(rows)
         cur = series[-1]
+        oversold_dates = [r['date'] for r in series[-EXTREME_REBOUND_LOOKBACK:]
+                          if r['state'] in ('超卖观察', '超卖观察(仅观察)')]
+        if oversold_dates:
+            extreme_evidence.append({
+                'indexCode': ic, 'indexName': iname, 'currentState': cur['state'],
+                'oversoldDates': oversold_dates, 'latestOversoldDate': oversold_dates[-1],
+                'lookbackDays': EXTREME_REBOUND_LOOKBACK,
+                'evidence': '历史序列近20个交易日内曾进入超卖观察（含仅观察）'})
         j = len(series) - 2
         while j >= 0 and series[j]['state'] == cur['state']:
             j -= 1
@@ -1686,32 +1760,26 @@ def build_broad_osc(data):
     buy = [i['indexName'] for i in items if i['state'] == '完整抄底窗口']
     rebound = [i['indexName'] for i in items if i['state'] == '超跌反弹观察']
     sell = [i['indexName'] for i in items if i['state'] == '强硬减仓']
+    triggers = [x for x in buy if x in EXTREME_REBOUND_CORE]
     trade_date = f'{latest[:4]}-{latest[4:6]}-{latest[6:]}' if latest else None
     data['broadOsc'] = {
         'trade_date': trade_date, 'items': items,
         'buyWindows': buy, 'reboundWatch': rebound, 'sellAlerts': sell,
-        'topAlert': bool(sell),
+        'topAlert': bool(sell), 'extremeEvidence': extreme_evidence,
+        'triggerIndices': triggers,
         'note': ('BOLL99（日线+周线，2σ）+RSI14 超买超卖粗略系统（2026-10-25 用户口径）：'
                  '超卖观察=下破下轨+RSI<20；完整抄底窗口=收回下轨+近20日地量后反弹+RSI≥20'
                  ' +周线BOLL前提通过+周MA50>MA150>MA200；周MA未多头=超跌反弹观察（抢反弹性质，非趋势级做多）；'
                  '周线BOLL前提不满足=超卖观察(仅观察)；顶部风险=突破上轨+RSI≥80；'
-                 '强硬减仓=收回上轨+RSI不再新高+量>50日均×1.5（最高优先级）。状态信号非操作建议，不指导仓位比例')}
+                 '强硬减仓=收回上轨+RSI不再新高+量>50日均×1.5（最高优先级）。'
+                 '极端修复证据另取_osc_replay历史序列近20日超卖观察（含仅观察），不只看当前状态；'
+                 '状态信号非操作建议，不指导仓位比例')}
     print('  broadOsc: ' + '，'.join(f"{i['indexName']}:{i['state']}" for i in items))
 
 
 def build_long_window(data):
-    """做多窗口判定（2026-09-26 月底大改版③，层级服从门控大级别）。
-
-    规则（优先级 水温>宽基）：
-    - closed：水温🔴冷，或 上证50/沪深300/中证500 全部处于 高位发散/破位；
-    - open：水温🟢暖 且三只中至少一只处于 临近枢轴/突破确认；
-    - half：其余情形。
-    债券相互关系（2026-09-27 用户拍板纳入）：10Y 收益率近 1 月变动 ≥+10bp
-    =资金趋紧，窗口降一档（open→half、half→closed）；≤-10bp=趋松仅作加分备注，
-    不主动升档（升档仍需水温+宽基自身满足）。
-    window=closed 时板块能投名单/个股 VCP 榜照常计算但前端标灰降级（信号仅观察）；
-    half 时正常展示+顶部"半窗"提示；open 时全量高亮。
-    """
+    """原水温/宽基层级判定保持不变；任务87仅叠加独立极端修复临时窗。"""
+    previous_window = dict(data.get('longWindow') or {})
     temp = ((data.get('bondData') or {}).get('marginTrading') or {}).get('temp') or ''
     verdict = ((data.get('bondData') or {}).get('marginTrading') or {}).get('verdict') or ''
     items = (data.get('broadVcp') or {}).get('items') or []
@@ -1737,7 +1805,7 @@ def build_long_window(data):
         bond_note = f'10Y收益率近1月{y10_1m:+.0f}bp快速上行=资金趋紧，窗口降一档'
     elif y10_1m is not None and y10_1m <= -10:
         bond_note = f'10Y收益率近1月{y10_1m:+.0f}bp下行=资金面偏松（加分备注，不主动升档）'
-    # BOLL99·RSI：强硬减仓最高优先级；仅完整抄底可升半窗，超跌反弹永不升档。
+    # 原BOLL99·RSI升档规则逐字保留：强硬减仓最高；完整抄底只能half升open；反弹观察不升档。
     osc = data.get('broadOsc') or {}
     sell_alerts = osc.get('sellAlerts') or []
     buy_windows = osc.get('buyWindows') or []
@@ -1757,6 +1825,19 @@ def build_long_window(data):
     if not sell_alerts and rebound_watch:
         rebound_note = '超跌反弹观察：' + '、'.join(rebound_watch) + '（抢反弹性质，非趋势级做多，不升档）'
         osc_note = osc_note + '；' + rebound_note if osc_note else rebound_note
+
+    standard_window = w
+    current_date = (osc.get('trade_date') or (data.get('sectorFlows') or {}).get('trade_date') or '').replace('-', '')
+    idx_cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {})
+    trading_days = sorted({r[0] for rows in idx_cache.values() for r in rows
+                           if r and r[0] <= current_date})
+    extreme = _extreme_rebound_decision(osc, current_date, previous_window, trading_days)
+    if extreme['active']:
+        w = 'open'  # 唯一新增旁路；卖压/顶部风险在qualified阶段已否决。
+        osc_note = (osc_note + '；' if osc_note else '') + '⚡' + extreme['reason']
+    elif extreme['pendingConfirmation'] or extreme['expired'] or extreme['blockedBy']:
+        osc_note = (osc_note + '；' if osc_note else '') + extreme['reason']
+
     reason_parts = [f"水温{temp or '—'}（{verdict or '—'}）",
                     '宽基形态：' + '，'.join(f"{names[c]}{states[c]}" for c in BROAD_TOP3)]
     if osc_note:
@@ -1769,27 +1850,36 @@ def build_long_window(data):
     if w == 'closed':
         reason_parts.append('大级别无做多窗口，下级信号降级为观察')
     elif w == 'open':
-        if not (buy_windows and osc_note):
+        if extreme['active']:
+            reason_parts.append('极端修复临时窗（最长5日），不是普通趋势开窗')
+        elif not (buy_windows and osc_note):
             reason_parts.append('水温偏暖且宽基临近/突破，做多窗口打开')
     else:
         reason_parts.append('半窗：谨慎关注，仓位与信号强度自行降档')
     data['longWindow'] = {
-        'window': w, 'temp': temp, 'verdict': verdict,
+        'window': w, 'standardWindow': standard_window,
+        'windowType': 'extreme_rebound' if extreme['active'] else 'standard',
+        'temporary': bool(extreme['active']),
+        'temp': temp, 'verdict': verdict,
         'broadStates': {names[c]: states[c] for c in BROAD_TOP3},
         'nearPivot': bool(near), 'allHigh': bool(all_high),
         'bondY10_1m': y10_1m, 'bondNote': bond_note,
         'oscSellAlerts': sell_alerts, 'oscBuyWindows': buy_windows,
         'oscReboundWatch': rebound_watch, 'oscNote': osc_note,
+        'extremeEvidence': extreme['extremeEvidence'], 'triggerIndices': extreme['triggerIndices'],
+        'startedDate': extreme['startedDate'], 'remainingDays': extreme['remainingDays'],
+        'extremeRebound': extreme,
         'reason': '；'.join(reason_parts),
-        'note': ('层级服从（2026-09-26 用户拍板）：水温>宽基>板块>个股；'
-                 'closed=水温🔴冷或50/300/500全部高位发散/破位；open=水温🟢暖且至少一只临近枢轴/突破确认；其余half；'
-                 'BOLL99·RSI：强硬减仓强制closed；完整抄底窗口可把half升open，超跌反弹观察不升档，均不能推翻closed高层门控；'
-                 '债券规则（2026-09-27）：10Y收益率近1月≥+10bp=资金紧、窗口降一档，≤-10bp=偏松仅备注不升档；'
-                 'closed 时板块/个股信号照常计算但标灰降级"窗口未开，信号仅观察"，half 挂半窗提示，open 全量高亮'),
+        'note': ('原规则不变：水温🔴冷=两融连续≥5日下降，或tight（DR007≥政策+5bp且月度净回笼，或10Y近1月>20bp）；'
+                 '暖=两融连续≥5日上升且loose非tight；其余平。closed=冷或50/300/500全部高位发散/破位；'
+                 'open=暖且至少一只临近/突破，其余half；10Y近1月≥+10bp降一档，≤-10bp只备注。'
+                 'BOLL99·RSI：强硬减仓强制closed；完整抄底只能把half升open，超跌反弹不升档。'
+                 '任务87独立临时窗：近20交易日≥2个六宽基曾超卖（含仅观察）+至少1个核心宽基当前完整抄底+无强硬减仓/顶部风险，'
+                 '才令window=open并标extreme_rebound/temporary；首个满足日起最多5个交易日，第6日回退standardWindow。'
+                 '仅超跌反弹观察或待确认绝不开临时窗。所有信号仅供研究，非投资建议。'),
     }
-    print(f"  longWindow: {w}（水温{temp or '—'}；"
-          f"{'，'.join(names[c] + states[c] for c in BROAD_TOP3)}"
-          f"{('；' + bond_note) if bond_note else ''}）")
+    print(f"  longWindow: {w}（standard={standard_window}；水温{temp or '—'}；"
+          f"{'，'.join(names[c] + states[c] for c in BROAD_TOP3)}；{extreme['reason']}）")
 
 
 # ══════════ 板块形态判定（2026-10-25 指数门槛放宽，个股精扫不变）══════════
@@ -2571,12 +2661,9 @@ def build_funnel(data):
                                for r in step2_rows if (r.get('rotation') or {}).get('overheat')))
     guide2 = '本步回答：主线板块是哪几个？' + concl2 + '。' + ('带着板块去第3步看个股形态（共振轨优先）' if step2_rows else '第3步共振轨为空，只能看⭐优中选优轨')
 
-    # ── 第3步 个股形态（双轨制，2026-09-27 用户正式指令；两轨都不沾不进榜）──
-    # 🔗共振轨（置顶）：个股属于第2步入选板块（形态+资金双达标）；
-    # ⭐优中选优轨：板块不同步但 ①个股在池内（上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000）
-    #   ②形态达标（Minervini 口径 VCP收缩型/杯柄型，Stage 2 过趋势模板；底部整理不算达标）
-    #   ③聪明钱持续流入（自定口径：近10个缓存交易日主力净流入为正天数≥6，
-    #     数据=MINE_MF 全市场 moneyflow 10日滚动缓存，零新增调用）。三条缺一不入。
+    # ── 第3步 个股形态（任务87：三轨全量展示，不再把非共振/非精选剔除）──
+    # 🔗共振=第2步入选板块；⭐精选=原池内VCP/杯柄且聪明钱≥6天；其余=形态储备。
+    # 储备只说明板块/资金未确认，不冒充形态瑕疵；defects 单独逐字输出。
     sel_sectors = {r['sector'] for r in step2_rows}
     mf_cache = _load_json_cache(MINE_MF_CACHE_PATH, {})
     mf_days = sorted(mf_cache)[-10:]
@@ -2593,32 +2680,39 @@ def build_funnel(data):
         cherry = (bool(it.get('inPool'))
                   and it.get('pattern') in ('VCP收缩型', '杯柄型')
                   and sm_days >= 6)
-        if reson:
-            track = 'reson'
-        elif cherry:
-            track = 'cherry'
-        else:
-            step3_excluded += 1
-            continue
+        track = 'reson' if reson else ('cherry' if cherry else 'reserve')
+        reserve_reasons = []
+        if track == 'reserve':
+            if not reson:
+                reserve_reasons.append('板块未共振')
+            if sm_days < 6:
+                reserve_reasons.append(f'资金未确认（{sm_days}/10天）')
+            if not it.get('inPool'):
+                reserve_reasons.append('非原精选池')
         step3_rows.append({'code': it['code'], 'name': it['name'], 'pattern': it.get('pattern'),
                            'stage': it.get('stage'), 'sector': it.get('sector'),
+                           'sectorFit': it.get('sectorFit') or ('板块配合✅' if reson else '板块未共振'),
                            'pivot': bp.get('pivot'), 'distPct': bp.get('distanceToPivotPct') if bp.get('distanceToPivotPct') is not None else it.get('distMain'),
                            'invalidation': bp.get('invalidation'),
                            'track': track, 'smartMoneyPosDays': sm_days,
-                           'inPool': bool(it.get('inPool')),
-                           'reson': reson,
+                           'inPool': bool(it.get('inPool')), 'reson': reson,
+                           'entryTier': it.get('entryTier') or 'qualified',
+                           'defects': list(it.get('defects') or []),
+                           'reserveReasons': reserve_reasons,
+                           'histPct': it.get('histPct'), 'distHigh250': it.get('distHigh250'),
                            'mine': it['code'] in mine_codes, 'star': bool(it.get('star'))})
-    step3_rows.sort(key=lambda r: (0 if r['track'] == 'reson' else 1,
+    track_rank = {'reson': 0, 'cherry': 1, 'reserve': 2}
+    step3_rows.sort(key=lambda r: (track_rank[r['track']], 1 if r.get('defects') else 0,
                                    r['distPct'] if r['distPct'] is not None else 99))
     n_reson = sum(1 for r in step3_rows if r['track'] == 'reson')
-    n_cherry = len(step3_rows) - n_reson
+    n_cherry = sum(1 for r in step3_rows if r['track'] == 'cherry')
+    n_reserve = sum(1 for r in step3_rows if r['track'] == 'reserve')
     lamp3 = ('🟢' if any(r['distPct'] is not None and r['distPct'] <= 3 for r in step3_rows)
              else '🟡' if step3_rows else '🔴')
-    concl3 = (f"🔗共振{n_reson}只 + ⭐精选{n_cherry}只：" + '、'.join(
-              f"{'🔗' if r['track'] == 'reson' else '⭐'}{r['name']}（{r['pattern']}·距枢轴{r['distPct']}%）"
-              for r in step3_rows[:4]) + ('…' if len(step3_rows) > 4 else '')) \
-        if step3_rows else '今日双轨皆空（无共振也无精选）'
-    guide3 = '本步回答：具体买哪只、什么价？' + concl3 + '。' + ('🔗=第2步入选板块共振（赢面优先）；⭐=池内形态达标+聪明钱流入的优中选优；最后过第4步排雷' if step3_rows else '可翻第4步确认持仓无雷')
+    concl3 = (f"形态{len(step3_rows)}只：🔗共振{n_reson} + ⭐精选{n_cherry} + 储备{n_reserve}"
+              if step3_rows else '今日无形态筛出股')
+    guide3 = ('本步展示全部形态筛出股：共振/精选/储备仅表示板块与资金配合层级；'
+              'defects为具体形态或位置瑕疵，储备原因不与瑕疵混写；高股息防御独立分组，最后统一排雷。')
 
     # ── 第4步 排雷（范围=第2步龙头∪第3步入围∪持仓观察股）──
     scope = {l['code'] for r in step2_rows for l in r['leaders'] if l.get('code')} \
@@ -2630,7 +2724,8 @@ def build_funnel(data):
     guide4 = '本步回答：入围的有没有雷？' + concl4 + ('。有雷标的一票否决，不碰' if mw_items else '。可以放心按前面步骤执行')
 
     # ── 当日路径总结 ──
-    w_txt = {'open': '窗口开', 'half': '窗口半开', 'closed': '窗口关'}[w]
+    w_txt = ('极端修复临时窗' if lw.get('windowType') == 'extreme_rebound'
+             else {'open': '窗口开', 'half': '窗口半开', 'closed': '窗口关'}[w])
     broad_txt = '、'.join(f"{r['indexName']}{r['state']}" for r in step1_rows[:3] if r['state'] != '无数据') or '无形态'
     path = (f"{w_txt} → 宽基：{broad_txt} → 板块：{len(step2_rows)}个入选 → "
             f"个股：{len(step3_rows)}只成型 → 排雷：{len(mw_items)}只")
@@ -2664,19 +2759,18 @@ def build_funnel(data):
                  '退潮=流出+一年分位≥70%）；第2步入选=积聚∪启动 且 板块自身形态达标'
                  '（VCP收缩/底部/指数放宽杯柄任一+10日/60日均额≤0.85，收盘口径近似，两条都要；'
                  '被卡掉的积聚/启动板块在 dropped 字段如实列出）。'
-                 '→3个股形态双轨：🔗共振轨=属于第2步入选板块（置顶，赢面优先）；'
-                 '⭐优中选优轨=板块不同步但 池内（上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000，2026-10-01恢复中证1000）'
-                 '∩形态达标（VCP收缩型/杯柄型，Stage2过趋势模板）∩聪明钱持续流入（近10缓存日主力净流入为正≥6天），'
-                 '三条缺一不入；两轨都不沾不进第3步榜。'
-                 '→4排雷（范围=第2步龙头∪第3步入围∪持仓观察股）。'
-                 '状态灯🟢可看/🟡谨慎/🔴停；窗口🔴时下级全部降级为观察。'),
+                 '→3个股形态三轨全量展示（任务87）：🔗共振=第2步入选板块；⭐精选=原池内VCP/杯柄且近10缓存日主力净流入≥6天；'
+                 '其余全部进入形态储备，不再excluded。储备原因只写板块未共振/资金未确认，defects单列具体形态或位置瑕疵。'
+                 '高股息防御独立组=沪深300/中证A500/上证50/科创50/创业板50并集∩总市值≥250亿∩TTM股息率≥4%，不与形态资金混排。'
+                 '→4排雷（范围=第2步龙头∪第3步全部实际展示股∪持仓观察股，复用mineWatch缓存）。'
+                 '状态灯🟢可看/🟡谨慎/🔴停；窗口🔴时下级全部降级为观察但绝不隐藏。'),
     }
     print(f"  funnel: {path}")
     print(f"  funnel 生命周期分布: "
           f"{ {lc: sum(1 for v in lc_map.values() if v == lc) for lc in ['积聚期','启动期','主升期','高潮期','退潮期','半路'] if lc in lc_map.values()} }")
     print(f"  funnel 板块形态: 达标{sum(1 for s in sp_map.values() if s['qualified'])}个/"
           f"{len(sp_map)}个有数据；第2步入选{len(step2_rows)}，形态卡掉{len(dropped2)}"
-          f"（{[d['sector'] for d in dropped2]}）；第3步 共振{n_reson}/精选{n_cherry}/剔除{step3_excluded}")
+          f"（{[d['sector'] for d in dropped2]}）；第3步 共振{n_reson}/精选{n_cherry}/储备{n_reserve}/剔除{step3_excluded}")
 
 
 def build_dual_axes(pro, trade_date, data, today_map):
@@ -2877,6 +2971,8 @@ def build_mine_watch(pro, trade_date, data):
         uni[tc] = {'name': info['name'], 'src': '自选'}
     for it in (data.get('vcpStocks') or {}).get('items', []):
         uni.setdefault(it['code'], {'name': it['name'], 'src': 'VCP'})
+    for it in (data.get('dividendWatch') or {}).get('items', []):
+        uni.setdefault(it['code'], {'name': it['name'], 'src': '高股息防御'})
     for it in (data.get('bottomWatch') or {}).get('items', []):
         for l in (it.get('leaders') or []):
             if l.get('code'):
@@ -4878,6 +4974,91 @@ def ensure_index_members(pro, trade_date):
     return c
 
 
+# 高股息防御独立池（任务87）：中证A500=000510.SH；绝不改写VCP六指数形态池。
+DIVIDEND_POOL_INDICES = ['000300.SH', '000510.SH', '000016.SH', '000688.SH', '399673.SZ']
+DIVIDEND_INDEX_NAMES = {'000300.SH': '沪深300', '000510.SH': '中证A500',
+                        '000016.SH': '上证50', '000688.SH': '科创50', '399673.SZ': '创业板50'}
+DIVIDEND_MEMBERS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                     'cache', 'dividend_index_members.json')
+DIVIDEND_MIN_DV_TTM = 4.0
+
+
+def ensure_dividend_members(pro, trade_date):
+    """高股息五指数并集：成分周缓存；A500独立键，不与六指数index_members混用。"""
+    c = _load_json_cache(DIVIDEND_MEMBERS_PATH, {})
+    friday = datetime.strptime(trade_date, '%Y%m%d').weekday() == 4
+    if (not friday and c.get('members') and c.get('names')
+            and sorted(c['members'].keys()) == sorted(DIVIDEND_POOL_INDICES)):
+        return c
+    members = dict(c.get('members') or {})
+    wide_start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=70)).strftime('%Y%m%d')
+    for idx in DIVIDEND_POOL_INDICES:
+        try:
+            time.sleep(API_DELAY)
+            df = pro.index_weight(index_code=idx, start_date=wide_start, end_date=trade_date)
+            if df is not None and len(df):
+                snap = df['trade_date'].max()
+                cur = df[df['trade_date'] == snap]
+                members[idx] = sorted(set(cur['con_code'].tolist()))
+                print(f'  dividend members {idx}: {len(members[idx])} (snapshot {snap})')
+        except Exception as e:
+            print(f'  Warning: dividend index_weight {idx} failed (keep cached): {str(e)[:60]}')
+    if sorted(members.keys()) != sorted(DIVIDEND_POOL_INDICES):
+        raise RuntimeError('高股息五指数成分不完整，保留上一有效dividendWatch')
+    names = dict(c.get('names') or {})
+    try:
+        time.sleep(API_DELAY)
+        basic = pro.stock_basic(exchange='', list_status='L', fields='ts_code,name')
+        if basic is not None and len(basic):
+            names.update({r['ts_code']: r['name'] for _, r in basic.iterrows()})
+    except Exception as e:
+        print(f'  Warning: dividend stock_basic failed (keep cached names): {str(e)[:60]}')
+    c = {'updated': trade_date, 'members': members, 'names': names,
+         'indices': list(DIVIDEND_POOL_INDICES)}
+    _save_json_cache(DIVIDEND_MEMBERS_PATH, c)
+    return c
+
+
+def build_dividend_watch(pro, trade_date, data):
+    """每日一次全市场daily_basic快照；失败抛给main并保留旧块及原数据日期。"""
+    mc = ensure_dividend_members(pro, trade_date)
+    membership = {}
+    for idx, codes in (mc.get('members') or {}).items():
+        for code in codes:
+            membership.setdefault(code, []).append(DIVIDEND_INDEX_NAMES[idx])
+    time.sleep(API_DELAY)
+    snap = pro.daily_basic(trade_date=trade_date,
+                           fields='ts_code,trade_date,close,total_mv,dv_ttm')
+    if snap is None or not len(snap):
+        raise RuntimeError(f'daily_basic {trade_date}为空，保留上一有效dividendWatch')
+    sub = snap[snap['ts_code'].isin(membership)]
+    items = []
+    for _, r in sub.iterrows():
+        code = r['ts_code']
+        if pd.isna(r['total_mv']) or float(r['total_mv']) < VCP_MIN_MV:
+            continue
+        if pd.isna(r['dv_ttm']) or float(r['dv_ttm']) < DIVIDEND_MIN_DV_TTM:
+            continue
+        items.append({
+            'code': code, 'name': (mc.get('names') or {}).get(code, code),
+            'indexMembership': membership[code],
+            'close': round(float(r['close']), 2) if pd.notna(r['close']) else None,
+            'totalMv': round(float(r['total_mv']), 2),
+            'dvTtm': round(float(r['dv_ttm']), 2),
+            'trade_date': str(r['trade_date']),
+            'source': 'Tushare daily_basic.dv_ttm'})
+    items.sort(key=lambda x: (-x['dvTtm'], x['code']))
+    data['dividendWatch'] = {
+        'trade_date': trade_date, 'poolSize': len(membership),
+        'poolIndices': list(DIVIDEND_POOL_INDICES),
+        'minTotalMv': VCP_MIN_MV, 'minDvTtm': DIVIDEND_MIN_DV_TTM,
+        'count': len(items), 'items': items,
+        'source': 'Tushare index_weight（周缓存）+ daily_basic（每日一次全市场快照）',
+        'note': ('池=沪深300、中证A500、上证50、科创50、创业板50并集，总市值≥250亿，TTM股息率≥4%；'
+                 'TTM股息率，非预测，不代表可持续；未做分红质量审查。与形态/资金分组独立，非投资建议。')}
+    print(f'  dividendWatch: 五指数并集{len(membership)}只，高股息{len(items)}只（{trade_date}）')
+
+
 def _vcp_swing_highs(bars, k):
     """bars: 升序 [(date, high, low, close, vol)]；返回摆动高点下标（前后 k 根内最高）。"""
     idx = []
@@ -5369,6 +5550,29 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         if best is None:
             best = candidate               # 无窗内候选时仍由完整链拒展示
     return best
+
+
+BREAKOUT_NEAR_HIGH_DIST = -8.0       # 突破后当前位置距250日高点不足8%时进入位置风险判定
+BREAKOUT_NEAR_HIGH_HIST = 60.0       # 同时一年价格分位>60才标瑕疵，避免误伤低位修复
+
+
+def _apply_post_breakout_position_defect(main_lv, hist_pct, dist_high250):
+    """突破锚点通过后，独立检查当前位置；原锚点结构不失效，只追加当前位置瑕疵。"""
+    if not main_lv or not main_lv.get('breakout'):
+        return main_lv
+    if (dist_high250 is not None and dist_high250 > BREAKOUT_NEAR_HIGH_DIST
+            and hist_pct is not None and hist_pct > BREAKOUT_NEAR_HIGH_HIST):
+        label = f'临近前高（距250日高点{abs(dist_high250):.1f}%·一年分位{hist_pct:.1f}%）'
+        defects = list(main_lv.get('defects') or [])
+        if label not in defects:
+            defects.append(label)
+        main_lv['defects'] = defects
+        main_lv['qualified'] = False
+        main_lv['positionRisk'] = {
+            'type': 'post_breakout_near_high', 'distHigh250': round(dist_high250, 1),
+            'histPct': round(hist_pct, 1), 'structureIntact': True,
+            'note': '突破后新增的位置风险，不是原杯柄结构失效'}
+    return main_lv
 
 
 def _cup_recent_breakout(bars):
@@ -5881,6 +6085,8 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                         continue
                 else:
                     pattern = raw
+                # 任务87：所有形态的突破后路径统一补查当前位置，不重写锚点或形态参数。
+                _apply_post_breakout_position_defect(main_lv, hist_pct, dist_high250)
                 if main_lv.get('breakout'):
                     dist_lo, dist_limit = -CUP_RECENT_BRK_MAX_PCT, 0.0  # 突破初期独立展示窗
                 else:
@@ -7648,6 +7854,12 @@ def main():
     print("\n[16b/17] Building stock-level pattern scan (vcpStocks)...")
     _today_map = watch_ctx[3] if watch_ctx else {}
     fetch_vcp_stocks(pro, trade_date, data, _today_map)
+
+    # ── 16b1. 高股息防御独立池（五指数并集，失败保留上一有效块及数据日期）──
+    try:
+        build_dividend_watch(pro, trade_date, data)
+    except Exception as e:
+        print(f"  Warning: dividendWatch failed (keep old): {e}")
 
     # ── 16b2. 个股半年对抗统计（持仓+观察股 vs 上证综指/所属行业板块）──
     print("\n[16b2/17] Building stock RS battle stats (stockRS)...")

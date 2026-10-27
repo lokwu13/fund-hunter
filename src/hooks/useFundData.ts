@@ -430,6 +430,21 @@ export interface FundData {
       } | null;
     }>;
   };
+  dividendWatch?: {
+    trade_date: string;
+    poolSize: number;
+    poolIndices: string[];
+    minTotalMv: number;
+    minDvTtm: number;
+    count: number;
+    source: string;
+    note: string;
+    items: Array<{
+      code: string; name: string; indexMembership: string[];
+      close: number | null; totalMv: number; dvTtm: number;
+      trade_date: string; source: string;
+    }>;
+  };
   stockRS?: {
     trade_date: string;
     window: number;
@@ -727,6 +742,12 @@ export interface FundData {
     buyWindows: string[];
     reboundWatch: string[];
     sellAlerts: string[];
+    extremeEvidence?: Array<{
+      indexCode: string; indexName: string; currentState: string;
+      oversoldDates: string[]; latestOversoldDate: string;
+      lookbackDays: number; evidence: string;
+    }>;
+    triggerIndices?: string[];
     items: Array<{
       indexCode: string; indexName: string; close: number; state: string;
       comment: string; since: string | null;
@@ -760,10 +781,21 @@ export interface FundData {
   };
   longWindow?: {
     window: 'open' | 'half' | 'closed';
+    standardWindow?: 'open' | 'half' | 'closed';
+    windowType?: 'standard' | 'extreme_rebound';
+    temporary?: boolean;
     temp?: string; verdict?: string;
     broadStates?: Record<string, string>;
     nearPivot?: boolean; allHigh?: boolean;
     bondY10_1m?: number | null; bondNote?: string;
+    startedDate?: string | null; remainingDays?: number;
+    extremeEvidence?: Array<any>; triggerIndices?: string[];
+    extremeRebound?: {
+      active: boolean; qualified: boolean; expired: boolean; pendingConfirmation: boolean;
+      triggerIndices: string[]; topRisks: string[]; blockedBy: string[];
+      startedDate: string | null; remainingDays: number; maxDays: number;
+      reason: string;
+    };
     reason?: string; note?: string;
   };
   // 五步漏斗（2026-09-27 总览重构，build_funnel 汇总层）
