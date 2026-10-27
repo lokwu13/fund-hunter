@@ -16237,192 +16237,6 @@
         "weekly": null
       },
       {
-        "code": "601000.SH",
-        "name": "唐山港",
-        "sector": "港口",
-        "star": false,
-        "inPool": true,
-        "close": 4.84,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": null,
-        "entryTier": "fuzzy",
-        "defects": [
-          "临近前高（距250日高点2.2%·一年分位95.2%）"
-        ],
-        "cupHandle": {
-          "type": "杯柄型",
-          "days": 15,
-          "totalDays": 85,
-          "cupDepth": 21.1,
-          "depthOk": true,
-          "depthMax": 33.0,
-          "amplitude": 5.9,
-          "tailRatio": 1.19,
-          "volRatio": 0.88,
-          "pivot": 4.69,
-          "distPct": -3.1,
-          "invalidation": 4.42,
-          "volConfirm": 576743.7,
-          "preGain": 28.7,
-          "weeklyUp": true,
-          "weeklyTrend": {
-            "pass": true,
-            "completedWeekEnd": "20260828",
-            "weeks": 245,
-            "weeklyClose": 4.57,
-            "bollMid99": 4.2704,
-            "closeToMid": 1.0702,
-            "bollLower99": 3.6775,
-            "closeToLower": 1.2427,
-            "weeksBelowMid": 0,
-            "weeksBelowLower": 0,
-            "bollA": true,
-            "bollB": false,
-            "bollTolerated": false,
-            "bollEffectiveBreakdown": false,
-            "bollPass": true,
-            "ma150": 4.2732,
-            "ma200": 4.0081,
-            "maBull150_200": true,
-            "spreadPct": 6.614,
-            "prevSpreadPct": 6.712,
-            "spreadExpanding": false,
-            "ma150Rising": true,
-            "ma200Rising": true
-          },
-          "defects": [
-            "临近前高（距250日高点2.2%·一年分位95.2%）"
-          ],
-          "qualified": false,
-          "rimDate": "20260429",
-          "rimHigh": 5.03,
-          "handlePosition": 0.5,
-          "brkNeedVol": 573895.6,
-          "formed": true,
-          "cupStart": "20260429",
-          "cupEnd": "20260810",
-          "cupHigh": 5.03,
-          "cupLow": 3.97,
-          "doubleBottom": {
-            "firstDate": "20260622",
-            "firstPrice": 4.04,
-            "secondDate": "20260629",
-            "secondPrice": 3.97,
-            "secondVsFirstPct": -1.7
-          },
-          "anchorDate": "20260831",
-          "anchorDistPct": 2.9,
-          "handleStart": "20260811",
-          "handleEnd": "20260831",
-          "handleHigh": 4.69,
-          "handleLow": 4.43,
-          "handleVol": 382597.07,
-          "initialStop": 4.42,
-          "signalDate": "20261012",
-          "signalType": "early",
-          "signalLabel": "盘中突破·贴近枢轴",
-          "signalClose": 4.79,
-          "signalHigh": 4.82,
-          "signalVolX": 1.45,
-          "firstSignal": true,
-          "breakout": true,
-          "breakoutDate": "20261012",
-          "breakoutAge": 10,
-          "breakoutVolX": 1.45,
-          "breakoutVol50X": 1.26,
-          "currentDist": 3.2,
-          "currentValid": true,
-          "positionRisk": {
-            "type": "post_breakout_near_high",
-            "distHigh250": -2.2,
-            "histPct": 95.2,
-            "structureIntact": true,
-            "note": "突破后新增的位置风险，不是原杯柄结构失效"
-          }
-        },
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": true,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": true,
-              "val": "4.84 vs MA150 4.54"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": true,
-              "val": "4.84 vs MA200 4.44"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": true,
-              "val": "MA200 4.36→4.44"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": true,
-              "val": "4.61 vs 4.54"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": true,
-              "val": "4.54 vs 4.44"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": true,
-              "val": "低点3.83→现价4.84（+26%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点4.95→现价4.84（-2%）"
-            }
-          ]
-        },
-        "stage": "Stage 2",
-        "buyPoint": {
-          "pivot": 4.69,
-          "distanceToPivotPct": -3.1,
-          "invalidation": 4.42,
-          "volConfirm": 576743.7,
-          "breakoutConfirm": "⚡ 20261012 首次·盘中突破·贴近枢轴：高4.82/收4.79/量1.45×柄均；非收盘强确认；已10日·离枢轴+3.2%",
-          "cupStart": "20260429",
-          "cupEnd": "20260810",
-          "handleStart": "20260811",
-          "handleEnd": "20260831",
-          "doubleBottom": {
-            "firstDate": "20260622",
-            "firstPrice": 4.04,
-            "secondDate": "20260629",
-            "secondPrice": 3.97,
-            "secondVsFirstPct": -1.7
-          },
-          "signalDate": "20261012",
-          "signalType": "early",
-          "signalLabel": "盘中突破·贴近枢轴",
-          "signalClose": 4.79,
-          "signalHigh": 4.82,
-          "signalVolX": 1.45,
-          "initialStop": 4.42,
-          "firstSignal": true,
-          "breakoutAge": 10,
-          "currentDist": 3.2,
-          "currentValid": true
-        },
-        "histPct": 95.2,
-        "distHigh250": -2.2,
-        "distMain": -3.1,
-        "mfDays": 4,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "首次信号后已10日·已离枢轴+3.2%｜杯柄型·距枢轴-3.1%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入4天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "003816.SZ",
         "name": "中国广核",
         "sector": "新型电力",
@@ -16605,6 +16419,192 @@
         "mfDays": 5,
         "sectorFit": "板块不配合⚠️",
         "advice": "首次信号后已12日·已离枢轴+3.2%｜杯柄型·距枢轴-3.1%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入5天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "601000.SH",
+        "name": "唐山港",
+        "sector": "港口",
+        "star": false,
+        "inPool": true,
+        "close": 4.84,
+        "tag": "—",
+        "pattern": "杯柄型",
+        "platform": null,
+        "entryTier": "fuzzy",
+        "defects": [
+          "临近前高（距250日高点2.2%·一年分位95.2%）"
+        ],
+        "cupHandle": {
+          "type": "杯柄型",
+          "days": 15,
+          "totalDays": 85,
+          "cupDepth": 21.1,
+          "depthOk": true,
+          "depthMax": 33.0,
+          "amplitude": 5.9,
+          "tailRatio": 1.19,
+          "volRatio": 0.88,
+          "pivot": 4.69,
+          "distPct": -3.1,
+          "invalidation": 4.42,
+          "volConfirm": 576743.7,
+          "preGain": 28.7,
+          "weeklyUp": true,
+          "weeklyTrend": {
+            "pass": true,
+            "completedWeekEnd": "20260828",
+            "weeks": 245,
+            "weeklyClose": 4.57,
+            "bollMid99": 4.2704,
+            "closeToMid": 1.0702,
+            "bollLower99": 3.6775,
+            "closeToLower": 1.2427,
+            "weeksBelowMid": 0,
+            "weeksBelowLower": 0,
+            "bollA": true,
+            "bollB": false,
+            "bollTolerated": false,
+            "bollEffectiveBreakdown": false,
+            "bollPass": true,
+            "ma150": 4.2732,
+            "ma200": 4.0081,
+            "maBull150_200": true,
+            "spreadPct": 6.614,
+            "prevSpreadPct": 6.712,
+            "spreadExpanding": false,
+            "ma150Rising": true,
+            "ma200Rising": true
+          },
+          "defects": [
+            "临近前高（距250日高点2.2%·一年分位95.2%）"
+          ],
+          "qualified": false,
+          "rimDate": "20260429",
+          "rimHigh": 5.03,
+          "handlePosition": 0.5,
+          "brkNeedVol": 573895.6,
+          "formed": true,
+          "cupStart": "20260429",
+          "cupEnd": "20260810",
+          "cupHigh": 5.03,
+          "cupLow": 3.97,
+          "doubleBottom": {
+            "firstDate": "20260622",
+            "firstPrice": 4.04,
+            "secondDate": "20260629",
+            "secondPrice": 3.97,
+            "secondVsFirstPct": -1.7
+          },
+          "anchorDate": "20260831",
+          "anchorDistPct": 2.9,
+          "handleStart": "20260811",
+          "handleEnd": "20260831",
+          "handleHigh": 4.69,
+          "handleLow": 4.43,
+          "handleVol": 382597.07,
+          "initialStop": 4.42,
+          "signalDate": "20261012",
+          "signalType": "early",
+          "signalLabel": "盘中突破·贴近枢轴",
+          "signalClose": 4.79,
+          "signalHigh": 4.82,
+          "signalVolX": 1.45,
+          "firstSignal": true,
+          "breakout": true,
+          "breakoutDate": "20261012",
+          "breakoutAge": 10,
+          "breakoutVolX": 1.45,
+          "breakoutVol50X": 1.26,
+          "currentDist": 3.2,
+          "currentValid": true,
+          "positionRisk": {
+            "type": "post_breakout_near_high",
+            "distHigh250": -2.2,
+            "histPct": 95.2,
+            "structureIntact": true,
+            "note": "突破后新增的位置风险，不是原杯柄结构失效"
+          }
+        },
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": true,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": true,
+              "val": "4.84 vs MA150 4.54"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": true,
+              "val": "4.84 vs MA200 4.44"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": true,
+              "val": "MA200 4.36→4.44"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": true,
+              "val": "4.61 vs 4.54"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": true,
+              "val": "4.54 vs 4.44"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": true,
+              "val": "低点3.83→现价4.84（+26%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点4.95→现价4.84（-2%）"
+            }
+          ]
+        },
+        "stage": "Stage 2",
+        "buyPoint": {
+          "pivot": 4.69,
+          "distanceToPivotPct": -3.1,
+          "invalidation": 4.42,
+          "volConfirm": 576743.7,
+          "breakoutConfirm": "⚡ 20261012 首次·盘中突破·贴近枢轴：高4.82/收4.79/量1.45×柄均；非收盘强确认；已10日·离枢轴+3.2%",
+          "cupStart": "20260429",
+          "cupEnd": "20260810",
+          "handleStart": "20260811",
+          "handleEnd": "20260831",
+          "doubleBottom": {
+            "firstDate": "20260622",
+            "firstPrice": 4.04,
+            "secondDate": "20260629",
+            "secondPrice": 3.97,
+            "secondVsFirstPct": -1.7
+          },
+          "signalDate": "20261012",
+          "signalType": "early",
+          "signalLabel": "盘中突破·贴近枢轴",
+          "signalClose": 4.79,
+          "signalHigh": 4.82,
+          "signalVolX": 1.45,
+          "initialStop": 4.42,
+          "firstSignal": true,
+          "breakoutAge": 10,
+          "currentDist": 3.2,
+          "currentValid": true
+        },
+        "histPct": 95.2,
+        "distHigh250": -2.2,
+        "distMain": -3.1,
+        "mfDays": 4,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "首次信号后已10日·已离枢轴+3.2%｜杯柄型·距枢轴-3.1%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入4天",
         "daily": null,
         "weekly": null
       },
@@ -23813,57 +23813,6 @@
             "selQualified": false
           },
           {
-            "code": "601000.SH",
-            "name": "唐山港",
-            "pattern": "杯柄型",
-            "stage": "Stage 2",
-            "sector": "港口",
-            "sectorFit": "板块不配合⚠️",
-            "pivot": 4.69,
-            "distPct": -3.1,
-            "invalidation": 4.42,
-            "cupStart": "20260429",
-            "cupEnd": "20260810",
-            "handleStart": "20260811",
-            "handleEnd": "20260831",
-            "doubleBottom": {
-              "firstDate": "20260622",
-              "firstPrice": 4.04,
-              "secondDate": "20260629",
-              "secondPrice": 3.97,
-              "secondVsFirstPct": -1.7
-            },
-            "signalDate": "20261012",
-            "signalType": "early",
-            "signalLabel": "盘中突破·贴近枢轴",
-            "signalClose": 4.79,
-            "signalHigh": 4.82,
-            "signalVolX": 1.45,
-            "initialStop": 4.42,
-            "firstSignal": true,
-            "breakoutAge": 10,
-            "currentDist": 3.2,
-            "currentValid": true,
-            "track": "reserve",
-            "smartMoneyPosDays": 4,
-            "inPool": true,
-            "reson": false,
-            "entryTier": "fuzzy",
-            "defects": [
-              "临近前高（距250日高点2.2%·一年分位95.2%）"
-            ],
-            "reserveReasons": [
-              "板块未共振",
-              "资金未确认（4/10天）"
-            ],
-            "histPct": 95.2,
-            "distHigh250": -2.2,
-            "mine": false,
-            "star": false,
-            "selDays": 1,
-            "selQualified": false
-          },
-          {
             "code": "003816.SZ",
             "name": "中国广核",
             "pattern": "杯柄型",
@@ -23909,6 +23858,57 @@
             ],
             "histPct": 88.4,
             "distHigh250": -6.7,
+            "mine": false,
+            "star": false,
+            "selDays": 1,
+            "selQualified": false
+          },
+          {
+            "code": "601000.SH",
+            "name": "唐山港",
+            "pattern": "杯柄型",
+            "stage": "Stage 2",
+            "sector": "港口",
+            "sectorFit": "板块不配合⚠️",
+            "pivot": 4.69,
+            "distPct": -3.1,
+            "invalidation": 4.42,
+            "cupStart": "20260429",
+            "cupEnd": "20260810",
+            "handleStart": "20260811",
+            "handleEnd": "20260831",
+            "doubleBottom": {
+              "firstDate": "20260622",
+              "firstPrice": 4.04,
+              "secondDate": "20260629",
+              "secondPrice": 3.97,
+              "secondVsFirstPct": -1.7
+            },
+            "signalDate": "20261012",
+            "signalType": "early",
+            "signalLabel": "盘中突破·贴近枢轴",
+            "signalClose": 4.79,
+            "signalHigh": 4.82,
+            "signalVolX": 1.45,
+            "initialStop": 4.42,
+            "firstSignal": true,
+            "breakoutAge": 10,
+            "currentDist": 3.2,
+            "currentValid": true,
+            "track": "reserve",
+            "smartMoneyPosDays": 4,
+            "inPool": true,
+            "reson": false,
+            "entryTier": "fuzzy",
+            "defects": [
+              "临近前高（距250日高点2.2%·一年分位95.2%）"
+            ],
+            "reserveReasons": [
+              "板块未共振",
+              "资金未确认（4/10天）"
+            ],
+            "histPct": 95.2,
+            "distHigh250": -2.2,
             "mine": false,
             "star": false,
             "selDays": 1,
@@ -28839,7 +28839,7 @@
         "below20": false
       }
     ],
-    "weeklyReason": "最近完成周RSI14<20满足0/6，未达六只全部满足",
+    "weeklyReason": "周RSI缓存完成周2026-09-24不是当前最近完成周（预期周202643），周RSI门不通过",
     "valuationLow": false,
     "valuation": {
       "peTtm": null,
@@ -28854,7 +28854,7 @@
       "reason": "全市场估值数据不足：Tushare index_dailybasic 对中证全指000985.CSI无有效返回；未用其他指数替代"
     },
     "reasons": [
-      "最近完成周RSI14<20满足0/6，未达六只全部满足",
+      "周RSI缓存完成周2026-09-24不是当前最近完成周（预期周202643），周RSI门不通过",
       "全市场估值数据不足：Tushare index_dailybasic 对中证全指000985.CSI无有效返回；未用其他指数替代"
     ],
     "poolIndices": [
