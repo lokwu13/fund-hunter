@@ -4794,11 +4794,13 @@ def build_sector_flows(data, expected_date=None):
                     tags.append('降温')
                 if sum(v < 0 for v in nets[-5:]) >= 4:
                     tags.append('持续')
+            # 展示值先保留1位小数，再由展示值计算加速度/10日，避免两项分别取整后公式出现0.1尾差。
+            n5_display, prev5_display = round(n5, 1), round(prev5, 1)
             rows.append({
                 'name': ind,
-                'net1': round(n1, 1), 'net5': round(n5, 1),
-                'prevNet5': round(prev5, 1), 'accel5': round(accel, 1),
-                'net10': round(n10, 1), 'net20': round(n20, 1),
+                'net1': round(n1, 1), 'net5': n5_display,
+                'prevNet5': prev5_display, 'accel5': round(n5_display - prev5_display, 1),
+                'net10': round(n5_display + prev5_display, 1), 'net20': round(n20, 1),
                 'inflowDays5': sum(v > 0 for v in nets[-5:]),
                 'inflowDays10': sum(v > 0 for v in nets[-10:]),
                 'outflowDays5': sum(v < 0 for v in nets[-5:]),
