@@ -17318,130 +17318,6 @@
         "weekly": null
       },
       {
-        "code": "603338.SH",
-        "name": "浙江鼎力",
-        "sector": "工程机械",
-        "star": false,
-        "inPool": true,
-        "close": 51.88,
-        "tag": "—",
-        "pattern": "杯柄型",
-        "platform": null,
-        "entryTier": "fuzzy",
-        "defects": [
-          "周BOLL深度回踩（包容）"
-        ],
-        "cupHandle": {
-          "type": "杯柄型",
-          "days": 14,
-          "totalDays": 105,
-          "cupDepth": 25.8,
-          "depthOk": true,
-          "depthMax": 33.0,
-          "amplitude": 9.6,
-          "tailRatio": 0.98,
-          "volRatio": 0.52,
-          "pivot": 53.39,
-          "distPct": 2.9,
-          "invalidation": 48.71,
-          "volConfirm": 48693.5,
-          "preGain": 31.4,
-          "weeklyUp": false,
-          "weeklyTrend": {
-            "pass": false,
-            "completedWeekEnd": "20261023",
-            "weeks": 252,
-            "weeklyClose": 51.8,
-            "bollMid99": 54.1116,
-            "closeToMid": 0.9573,
-            "bollLower99": 41.9735,
-            "closeToLower": 1.2341,
-            "weeksBelowMid": 6,
-            "weeksBelowLower": 0,
-            "bollA": false,
-            "bollB": true,
-            "bollTolerated": true,
-            "bollEffectiveBreakdown": false,
-            "bollPass": true,
-            "ma150": 54.6285,
-            "ma200": 54.1225,
-            "maBull150_200": true,
-            "spreadPct": 0.935,
-            "prevSpreadPct": 0.909,
-            "spreadExpanding": true,
-            "ma150Rising": true,
-            "ma200Rising": true
-          },
-          "defects": [
-            "周BOLL深度回踩（包容）"
-          ],
-          "qualified": false,
-          "rimDate": "20260526",
-          "rimHigh": 55.87,
-          "handlePosition": 0.504,
-          "brkNeedVol": 41550.1,
-          "formed": true
-        },
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": false,
-              "val": "51.88 vs MA150 52.82"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "51.88 vs MA200 53.85"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 54.57→53.85"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": true,
-              "val": "54.65 vs 52.82"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "52.82 vs 53.85"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点42.50→现价51.88（+22%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": true,
-              "val": "高点62.75→现价51.88（-17%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 53.39,
-          "distanceToPivotPct": 2.9,
-          "invalidation": 48.71,
-          "volConfirm": 48693.5,
-          "breakoutConfirm": "收盘≥53.39 且单日成交量≥柄均量×1.5（≈41550手）"
-        },
-        "histPct": 30.8,
-        "distHigh250": -17.3,
-        "distMain": 2.9,
-        "mfDays": 4,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "杯柄型·距枢轴2.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入4天",
-        "daily": null,
-        "weekly": null
-      },
-      {
         "code": "600977.SH",
         "name": "中国电影",
         "sector": "影视音像",
@@ -17562,6 +17438,130 @@
         "mfDays": 2,
         "sectorFit": "板块中性",
         "advice": "杯柄型·距枢轴2.9%｜水温偏冷·只观察｜板块中性｜主力10日净流入2天",
+        "daily": null,
+        "weekly": null
+      },
+      {
+        "code": "603338.SH",
+        "name": "浙江鼎力",
+        "sector": "工程机械",
+        "star": false,
+        "inPool": true,
+        "close": 51.88,
+        "tag": "—",
+        "pattern": "杯柄型",
+        "platform": null,
+        "entryTier": "fuzzy",
+        "defects": [
+          "周BOLL深度回踩（包容）"
+        ],
+        "cupHandle": {
+          "type": "杯柄型",
+          "days": 14,
+          "totalDays": 105,
+          "cupDepth": 25.8,
+          "depthOk": true,
+          "depthMax": 33.0,
+          "amplitude": 9.6,
+          "tailRatio": 0.98,
+          "volRatio": 0.52,
+          "pivot": 53.39,
+          "distPct": 2.9,
+          "invalidation": 48.71,
+          "volConfirm": 48693.5,
+          "preGain": 31.4,
+          "weeklyUp": false,
+          "weeklyTrend": {
+            "pass": false,
+            "completedWeekEnd": "20261023",
+            "weeks": 252,
+            "weeklyClose": 51.8,
+            "bollMid99": 54.1116,
+            "closeToMid": 0.9573,
+            "bollLower99": 41.9735,
+            "closeToLower": 1.2341,
+            "weeksBelowMid": 6,
+            "weeksBelowLower": 0,
+            "bollA": false,
+            "bollB": true,
+            "bollTolerated": true,
+            "bollEffectiveBreakdown": false,
+            "bollPass": true,
+            "ma150": 54.6285,
+            "ma200": 54.1225,
+            "maBull150_200": true,
+            "spreadPct": 0.935,
+            "prevSpreadPct": 0.909,
+            "spreadExpanding": true,
+            "ma150Rising": true,
+            "ma200Rising": true
+          },
+          "defects": [
+            "周BOLL深度回踩（包容）"
+          ],
+          "qualified": false,
+          "rimDate": "20260526",
+          "rimHigh": 55.87,
+          "handlePosition": 0.504,
+          "brkNeedVol": 41550.1,
+          "formed": true
+        },
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": false,
+              "val": "51.88 vs MA150 52.82"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "51.88 vs MA200 53.85"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 54.57→53.85"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": true,
+              "val": "54.65 vs 52.82"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "52.82 vs 53.85"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点42.50→现价51.88（+22%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点62.75→现价51.88（-17%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 53.39,
+          "distanceToPivotPct": 2.9,
+          "invalidation": 48.71,
+          "volConfirm": 48693.5,
+          "breakoutConfirm": "收盘≥53.39 且单日成交量≥柄均量×1.5（≈41550手）"
+        },
+        "histPct": 30.8,
+        "distHigh250": -17.3,
+        "distMain": 2.9,
+        "mfDays": 4,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "杯柄型·距枢轴2.9%｜水温偏冷·只观察｜板块不配合⚠️｜主力10日净流入4天",
         "daily": null,
         "weekly": null
       },
@@ -24448,51 +24448,6 @@
             "selQualified": false
           },
           {
-            "code": "603338.SH",
-            "name": "浙江鼎力",
-            "pattern": "杯柄型",
-            "stage": "Stage 1 基底（未过趋势模板）",
-            "sector": "工程机械",
-            "sectorFit": "板块不配合⚠️",
-            "pivot": 53.39,
-            "distPct": 2.9,
-            "invalidation": 48.71,
-            "cupStart": null,
-            "cupEnd": null,
-            "handleStart": null,
-            "handleEnd": null,
-            "doubleBottom": null,
-            "signalDate": null,
-            "signalType": null,
-            "signalLabel": null,
-            "signalClose": null,
-            "signalHigh": null,
-            "signalVolX": null,
-            "initialStop": null,
-            "firstSignal": null,
-            "breakoutAge": null,
-            "currentDist": null,
-            "currentValid": null,
-            "track": "reserve",
-            "smartMoneyPosDays": 4,
-            "inPool": true,
-            "reson": false,
-            "entryTier": "fuzzy",
-            "defects": [
-              "周BOLL深度回踩（包容）"
-            ],
-            "reserveReasons": [
-              "板块未共振",
-              "资金未确认（4/10天）"
-            ],
-            "histPct": 30.8,
-            "distHigh250": -17.3,
-            "mine": false,
-            "star": false,
-            "selDays": 2,
-            "selQualified": false
-          },
-          {
             "code": "600977.SH",
             "name": "中国电影",
             "pattern": "杯柄型",
@@ -24535,6 +24490,51 @@
             "mine": false,
             "star": false,
             "selDays": 3,
+            "selQualified": false
+          },
+          {
+            "code": "603338.SH",
+            "name": "浙江鼎力",
+            "pattern": "杯柄型",
+            "stage": "Stage 1 基底（未过趋势模板）",
+            "sector": "工程机械",
+            "sectorFit": "板块不配合⚠️",
+            "pivot": 53.39,
+            "distPct": 2.9,
+            "invalidation": 48.71,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": null,
+            "handleEnd": null,
+            "doubleBottom": null,
+            "signalDate": null,
+            "signalType": null,
+            "signalLabel": null,
+            "signalClose": null,
+            "signalHigh": null,
+            "signalVolX": null,
+            "initialStop": null,
+            "firstSignal": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "track": "reserve",
+            "smartMoneyPosDays": 4,
+            "inPool": true,
+            "reson": false,
+            "entryTier": "fuzzy",
+            "defects": [
+              "周BOLL深度回踩（包容）"
+            ],
+            "reserveReasons": [
+              "板块未共振",
+              "资金未确认（4/10天）"
+            ],
+            "histPct": 30.8,
+            "distHigh250": -17.3,
+            "mine": false,
+            "star": false,
+            "selDays": 2,
             "selQualified": false
           },
           {
