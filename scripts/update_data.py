@@ -2399,7 +2399,8 @@ def build_sector_rotation(data):
 # 零新增 API：行业复用 sector_history 与既有轮动统计；概念复用 vcp_cache 同花顺指数日线。
 # 不造黑箱综合分：轮动过热一票对齐，其余只按透明的20日涨幅、成交分位与热榜阈值分档。
 SECTOR_CROWDING_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache', 'vcp_cache.json')
-SECTOR_CROWDING_TOPN = 10
+SECTOR_CROWDING_GROUP_TOPN = 5
+CONCEPT_HEAT_MIN_SAMPLES = 2 * ROTATION_TOPN
 CROWDING_RET20_HOT = 15.0
 CROWDING_AMOUNT_HOT = 80.0
 CROWDING_RET20_WARM = 8.0
@@ -2415,25 +2416,30 @@ def _crowding_num(v):
 
 
 def _crowding_level(ret20, amount_pct, hits10, streak):
-    """拥挤度透明分档；轮动过热必须同步为拥挤度过热。"""
-    if hits10 >= ROTATION_OVERHEAT_HITS or streak >= ROTATION_OVERHEAT_STREAK:
+    """拥挤度透明分档；热榜无效时不用空值冒充0，也不继承过热。"""
+    heat_ready = hits10 is not None and streak is not None
+    if heat_ready and (hits10 >= ROTATION_OVERHEAT_HITS or streak >= ROTATION_OVERHEAT_STREAK):
         return '过热', '轮动过热'
     if (ret20 is not None and amount_pct is not None
             and ret20 >= CROWDING_RET20_HOT and amount_pct >= CROWDING_AMOUNT_HOT):
         return '过热', '20日涨幅与成交热度双高'
-    if hits10 == ROTATION_MID_HITS:
+    if heat_ready and hits10 == ROTATION_MID_HITS:
         return '偏高', '近10日热榜3次'
     if (ret20 is not None and amount_pct is not None
             and ret20 >= CROWDING_RET20_WARM and amount_pct >= CROWDING_AMOUNT_WARM):
         return '偏高', '20日涨幅与成交热度偏热'
-    if (ret20 is not None and amount_pct is not None and hits10 == 0 and streak == 0
+    if (heat_ready and ret20 is not None and amount_pct is not None and hits10 == 0 and streak == 0
             and ret20 <= CROWDING_RET20_COLD and amount_pct <= CROWDING_AMOUNT_COLD):
         return '低', '涨幅、成交与热榜均低'
+    if not heat_ready and amount_pct is None:
+        if ret20 is not None and ret20 >= CROWDING_RET20_HOT:
+            return '偏高', '热榜样本不足；20日涨幅≥15%，纯价格保守分档'
+        return '正常', '热榜样本不足且成交缺失；纯价格保守分档'
     return '正常', '未触发拥挤阈值'
 
 
 def build_sector_crowding(data):
-    """行业+概念统一拥挤度Top10，按有效日剔除陈旧对象，概念成交缺失不补0。"""
+    """行业、概念各取Top5；概念热榜逐日样本门控，缺失与陈旧均不补0。"""
     try:
         hist = _load_sector_history()
         cache = _load_json_cache(SECTOR_CROWDING_CACHE_PATH, {}) or {}
@@ -2487,7 +2493,7 @@ def build_sector_crowding(data):
             level, reason = _crowding_level(ret20, amount_pct, hits10, streak)
             items.append({'name': name, 'type': '行业', 'ret20': ret20,
                           'amountPct': amount_pct, 'hits10': hits10, 'streak': streak,
-                          'level': level, 'reason': reason})
+                          'heatReady': True, 'heatReason': None, 'level': level, 'reason': reason})
 
         # 概念：ths_daily 缓存未可靠区分成交额与成交量，因此成交热度始终缺失，绝不当0。
         concept_series = {}
@@ -2512,15 +2518,29 @@ def build_sector_crowding(data):
                     rets[rows[i][0]] = (close / prev_close - 1) * 100.0
             concept_returns[name] = rets
 
-        # 同一真实概念池逐日涨幅前10；某日缺数据的对象当日不入榜，不用其它日期替代。
+        # 每日独立核验真实收益样本；不足20个时该日无热榜，不能让小池全员自动上榜。
         board_dates = sorted({d for rets in concept_returns.values() for d in rets})
         last15 = board_dates[-ROTATION_DAYS:]
         concept_boards = {}
+        sample_counts = {}
         for d in last15:
-            ranked = sorted(((name, rets[d]) for name, rets in concept_returns.items() if d in rets),
-                            key=lambda x: (-x[1], x[0]))[:ROTATION_TOPN]
-            concept_boards[d] = [name for name, _ in ranked]
-        last10 = set(last15[-ROTATION_STAT_WINDOW:])
+            daily = [(name, rets[d]) for name, rets in concept_returns.items() if d in rets]
+            sample_counts[d] = len(daily)
+            if sample_counts[d] >= CONCEPT_HEAT_MIN_SAMPLES:
+                ranked = sorted(daily, key=lambda x: (-x[1], x[0]))[:ROTATION_TOPN]
+                concept_boards[d] = [name for name, _ in ranked]
+            else:
+                concept_boards[d] = []
+        last10 = last15[-ROTATION_STAT_WINDOW:]
+        insufficient10 = [d for d in last10 if sample_counts.get(d, 0) < CONCEPT_HEAT_MIN_SAMPLES]
+        latest_samples = sample_counts.get(last15[-1], 0) if last15 else 0
+        heat_ready = bool(last10) and not insufficient10
+        if not last15 or latest_samples < CONCEPT_HEAT_MIN_SAMPLES:
+            heat_reason = f'最新日可用概念{latest_samples}个，低于{CONCEPT_HEAT_MIN_SAMPLES}个有效样本门'
+        elif insufficient10:
+            heat_reason = f'近10日有{len(insufficient10)}个样本不足日，完整热榜窗口不可用'
+        else:
+            heat_reason = None
 
         for name, rows in concept_series.items():
             if not rows or rows[-1][0] != effective:
@@ -2529,36 +2549,58 @@ def build_sector_crowding(data):
             ret20 = None
             if len(rows) >= 21 and rows[-21][1]:
                 ret20 = round((rows[-1][1] / rows[-21][1] - 1) * 100, 1)
-            hits10 = sum(1 for d in last10 if name in concept_boards.get(d, []))
-            streak = 0
-            for d in reversed(last15):
-                if name in concept_boards.get(d, []):
-                    streak += 1
-                else:
-                    break
+            if heat_ready:
+                hits10 = sum(1 for d in last10 if name in concept_boards.get(d, []))
+                streak = 0
+                for d in reversed(last15):
+                    if name in concept_boards.get(d, []):
+                        streak += 1
+                    else:
+                        break
+            else:
+                hits10 = None
+                streak = None
             level, reason = _crowding_level(ret20, None, hits10, streak)
             items.append({'name': name, 'type': '概念', 'ret20': ret20,
                           'amountPct': None, 'hits10': hits10, 'streak': streak,
+                          'heatReady': heat_ready, 'heatReason': heat_reason,
                           'level': level, 'reason': reason})
 
         level_order = {'过热': 0, '偏高': 1, '正常': 2, '低': 3}
-        items.sort(key=lambda x: (
-            level_order[x['level']], -x['hits10'], -x['streak'],
-            -(x['amountPct'] if x['amountPct'] is not None else -1),
-            -(x['ret20'] if x['ret20'] is not None else -float('inf')),
-            x['name'], x['type'],
-        ))
-        items = items[:SECTOR_CROWDING_TOPN]
+
+        def _item_sort_key(x):
+            return (
+                level_order[x['level']],
+                -(x['hits10'] if x['hits10'] is not None else -float('inf')),
+                -(x['streak'] if x['streak'] is not None else -float('inf')),
+                -(x['amountPct'] if x['amountPct'] is not None else -float('inf')),
+                -(x['ret20'] if x['ret20'] is not None else -float('inf')),
+                x['name'],
+            )
+
+        # 固定行业5行在前、概念5行在后；候选不足时如实少于10行。
+        industry_items = sorted((x for x in items if x['type'] == '行业'), key=_item_sort_key)
+        concept_items = sorted((x for x in items if x['type'] == '概念'), key=_item_sort_key)
+        items = (industry_items[:SECTOR_CROWDING_GROUP_TOPN]
+                 + concept_items[:SECTOR_CROWDING_GROUP_TOPN])
         stale_note = f'剔除陈旧行业{len(stale_industries)}个、概念{len(stale_concepts)}个'
         if stale_concepts:
             stale_note += '（' + '、'.join(stale_concepts[:5]) + ('等' if len(stale_concepts) > 5 else '') + '）'
+        heat_window_note = (
+            f'最新日可用概念{latest_samples}个，低于{CONCEPT_HEAT_MIN_SAMPLES}个有效样本门'
+            if not last15 or latest_samples < CONCEPT_HEAT_MIN_SAMPLES
+            else f'最新日可用概念{latest_samples}个；近10日样本不足日{len(insufficient10)}个'
+        )
         note = (
-            f'行业与概念合并Top{SECTOR_CROWDING_TOPN}；{stale_note}。'
-            f'轮动近10日上榜≥{ROTATION_OVERHEAT_HITS}次或连续≥{ROTATION_OVERHEAT_STREAK}天直接判过热；'
+            f'行业Top{SECTOR_CROWDING_GROUP_TOPN}＋概念Top{SECTOR_CROWDING_GROUP_TOPN}，行业在前、概念在后；{stale_note}。'
+            f'概念每日仅有真实收益的概念数≥{CONCEPT_HEAT_MIN_SAMPLES}才生成Top{ROTATION_TOPN}热榜，否则该日无有效热榜；'
+            f'{heat_window_note}。近10日任一日样本不足则完整热榜窗口不可用，上榜次数与连续天数留空，不补0、不继承此前连续天数。'
+            f'可靠热榜近10日上榜≥{ROTATION_OVERHEAT_HITS}次或连续≥{ROTATION_OVERHEAT_STREAK}天直接判过热；'
             f'20日复利涨幅≥{CROWDING_RET20_HOT:.0f}%且最新成交额在过去250交易日分位≥{CROWDING_AMOUNT_HOT:.0f}也判过热；'
             f'热榜3次，或20日涨幅≥{CROWDING_RET20_WARM:.0f}%且成交分位≥{CROWDING_AMOUNT_WARM:.0f}为偏高；'
             f'20日涨幅≤{CROWDING_RET20_COLD:.0f}%、成交分位≤{CROWDING_AMOUNT_COLD:.0f}且未上热榜为低，其余正常。'
-            '概念日线缓存未可靠区分成交额与成交量，成交热度显示—，不补0、不参与成交双高或低温判定。'
+            '概念日线缓存未可靠区分成交额与成交量，成交热度显示—，不补0；热榜不可靠且成交缺失时采用纯价格保守分档：'
+            f'20日涨幅≥{CROWDING_RET20_HOT:.0f}%仅为偏高，其余正常，不仅凭负涨幅、样本不足或空热榜判过热或低。'
             '拥挤度仅为风险提示，不直接等同买卖结论。'
         )
         data['sectorCrowding'] = {
@@ -2566,7 +2608,8 @@ def build_sector_crowding(data):
             'items': items, 'note': note,
         }
         print(f"  sectorCrowding: {len(items)}行（行业{sum(x['type'] == '行业' for x in items)}+"
-              f"概念{sum(x['type'] == '概念' for x in items)}），剔除陈旧行业{len(stale_industries)}、概念{len(stale_concepts)}")
+              f"概念{sum(x['type'] == '概念' for x in items)}），剔除陈旧行业{len(stale_industries)}、概念{len(stale_concepts)}；"
+              f"最新概念样本{latest_samples}，热榜窗口{'可靠' if heat_ready else '不可用'}")
     except Exception as e:
         print(f"  Warning: build_sector_crowding failed (keep old): {e}")
 

@@ -205,7 +205,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <Activity className="w-4 h-4 text-amber-500" />
                 行业 / 概念拥挤度
-                <span className="text-[10px] font-normal text-slate-400">合并 Top 10 · 透明分档</span>
+                <span className="text-[10px] font-normal text-slate-400">行业 5 + 概念 5 · 透明分档</span>
               </CardTitle>
               <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">
                 {data.sectorCrowding.trade_date || '等待有效日'}
@@ -247,7 +247,16 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
                       <TableCell className="text-xs text-right text-slate-600" title={item.amountPct == null ? '无可靠成交额，不补0' : '最新成交额在过去250交易日中的分位'}>
                         {item.amountPct == null ? '—' : `${item.amountPct.toFixed(1)}%`}
                       </TableCell>
-                      <TableCell className="text-xs text-right text-slate-600">{item.hits10}次 · 连{item.streak}天</TableCell>
+                      <TableCell
+                        className="text-xs text-right text-slate-600"
+                        title={!item.heatReady || item.hits10 == null || item.streak == null
+                          ? (item.heatReason || '热榜样本不足')
+                          : '近10日每日涨幅Top10命中与当前连续天数'}
+                      >
+                        {!item.heatReady || item.hits10 == null || item.streak == null
+                          ? '样本不足'
+                          : `${item.hits10}次 · 连${item.streak}天`}
+                      </TableCell>
                       <TableCell className="text-right">
                         <Badge title={item.reason} className={`text-[10px] border-0 ${
                           item.level === '过热' ? 'bg-rose-100 text-rose-700' :

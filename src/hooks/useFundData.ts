@@ -932,8 +932,10 @@ export interface FundData {
       type: '行业' | '概念';
       ret20: number | null;
       amountPct: number | null;
-      hits10: number;
-      streak: number;
+      hits10: number | null;
+      streak: number | null;
+      heatReady: boolean;
+      heatReason?: string | null;
       level: '过热' | '偏高' | '正常' | '低';
       reason?: string;
     }>;
