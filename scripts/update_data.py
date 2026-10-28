@@ -2395,6 +2395,182 @@ def build_sector_rotation(data):
         print(f"  Warning: build_sector_rotation failed (keep old): {e}")
 
 
+# ── 行业/概念拥挤度简表（2026-10-28 用户指令）──
+# 零新增 API：行业复用 sector_history 与既有轮动统计；概念复用 vcp_cache 同花顺指数日线。
+# 不造黑箱综合分：轮动过热一票对齐，其余只按透明的20日涨幅、成交分位与热榜阈值分档。
+SECTOR_CROWDING_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cache', 'vcp_cache.json')
+SECTOR_CROWDING_TOPN = 10
+CROWDING_RET20_HOT = 15.0
+CROWDING_AMOUNT_HOT = 80.0
+CROWDING_RET20_WARM = 8.0
+CROWDING_AMOUNT_WARM = 60.0
+CROWDING_RET20_COLD = 0.0
+CROWDING_AMOUNT_COLD = 20.0
+
+
+def _crowding_num(v):
+    """只接受有限数值；缺日、None、NaN、inf 均不补0。"""
+    return (isinstance(v, (int, float)) and not isinstance(v, bool)
+            and v == v and abs(v) != float('inf'))
+
+
+def _crowding_level(ret20, amount_pct, hits10, streak):
+    """拥挤度透明分档；轮动过热必须同步为拥挤度过热。"""
+    if hits10 >= ROTATION_OVERHEAT_HITS or streak >= ROTATION_OVERHEAT_STREAK:
+        return '过热', '轮动过热'
+    if (ret20 is not None and amount_pct is not None
+            and ret20 >= CROWDING_RET20_HOT and amount_pct >= CROWDING_AMOUNT_HOT):
+        return '过热', '20日涨幅与成交热度双高'
+    if hits10 == ROTATION_MID_HITS:
+        return '偏高', '近10日热榜3次'
+    if (ret20 is not None and amount_pct is not None
+            and ret20 >= CROWDING_RET20_WARM and amount_pct >= CROWDING_AMOUNT_WARM):
+        return '偏高', '20日涨幅与成交热度偏热'
+    if (ret20 is not None and amount_pct is not None and hits10 == 0 and streak == 0
+            and ret20 <= CROWDING_RET20_COLD and amount_pct <= CROWDING_AMOUNT_COLD):
+        return '低', '涨幅、成交与热榜均低'
+    return '正常', '未触发拥挤阈值'
+
+
+def build_sector_crowding(data):
+    """行业+概念统一拥挤度Top10，按有效日剔除陈旧对象，概念成交缺失不补0。"""
+    try:
+        hist = _load_sector_history()
+        cache = _load_json_cache(SECTOR_CROWDING_CACHE_PATH, {}) or {}
+        flows_date = str((data.get('sectorFlows') or {}).get('trade_date') or '')
+        rotation_date = str((data.get('sectorRotation') or {}).get('trade_date') or '')
+        effective = (flows_date or rotation_date).replace('-', '')
+        if not effective:
+            data['sectorCrowding'] = {
+                'trade_date': None, 'stale': True, 'items': [],
+                'note': '缺少本批有效交易日，拥挤度不沿用旧榜。',
+            }
+            return
+
+        def _iso(d):
+            return f'{d[:4]}-{d[4:6]}-{d[6:]}'
+
+        items = []
+        stale_industries = []
+        stale_concepts = []
+        days_map = (hist or {}).get('days') or {}
+        industry_days = sorted(d for d in days_map if len(str(d)) == 8 and str(d) <= effective)
+        latest_industry = industry_days[-1] if industry_days else ''
+        rotation = data.get('sectorRotation') or {}
+        rotation_stats = ({s.get('sector'): s for s in rotation.get('stats') or []}
+                          if str(rotation.get('trade_date') or '').replace('-', '') == effective else {})
+
+        # 行业：20个真实日收益复利；成交额只取最新有效日在过去250日中的真实分位。
+        current_sectors = ((days_map.get(latest_industry) or {}).get('sectors') or {}) if latest_industry else {}
+        for name in sorted(current_sectors):
+            rows = [r for r in _history_series(hist, name) if r[0] <= effective]
+            if not rows or rows[-1][0] != effective:
+                stale_industries.append(name)
+                continue
+            last20 = rows[-20:]
+            ret20 = None
+            if len(last20) == 20 and all(_crowding_num(r[2]) for r in last20):
+                level_value = 1.0
+                for r in last20:
+                    level_value *= 1 + r[2] / 100.0
+                ret20 = round((level_value - 1) * 100, 1)
+            amount_pct = None
+            amount_rows = rows[-250:]
+            latest_amount = amount_rows[-1][3] if amount_rows else None
+            if _crowding_num(latest_amount) and latest_amount > 0:
+                amounts = [r[3] for r in amount_rows if _crowding_num(r[3]) and r[3] > 0]
+                if len(amounts) >= 20:
+                    amount_pct = _pct_rank100(amounts, latest_amount)
+            stat = rotation_stats.get(name) or {}
+            hits10 = int(stat.get('hits10') or 0)
+            streak = int(stat.get('streak') or 0)
+            level, reason = _crowding_level(ret20, amount_pct, hits10, streak)
+            items.append({'name': name, 'type': '行业', 'ret20': ret20,
+                          'amountPct': amount_pct, 'hits10': hits10, 'streak': streak,
+                          'level': level, 'reason': reason})
+
+        # 概念：ths_daily 缓存未可靠区分成交额与成交量，因此成交热度始终缺失，绝不当0。
+        concept_series = {}
+        concept_returns = {}
+        index_daily = cache.get('index_daily') or {}
+        for concept in cache.get('concepts') or []:
+            name, code = concept.get('name'), concept.get('code')
+            if not name or not code:
+                continue
+            by_date = {}
+            for row in index_daily.get(code) or []:
+                if (isinstance(row, (list, tuple)) and len(row) >= 2
+                        and len(str(row[0])) == 8 and str(row[0]) <= effective and _crowding_num(row[1])):
+                    by_date[str(row[0])] = float(row[1])
+            dates = sorted(by_date)
+            rows = [(d, by_date[d]) for d in dates]
+            concept_series[name] = rows
+            rets = {}
+            for i in range(1, len(rows)):
+                prev_close, close = rows[i - 1][1], rows[i][1]
+                if prev_close:
+                    rets[rows[i][0]] = (close / prev_close - 1) * 100.0
+            concept_returns[name] = rets
+
+        # 同一真实概念池逐日涨幅前10；某日缺数据的对象当日不入榜，不用其它日期替代。
+        board_dates = sorted({d for rets in concept_returns.values() for d in rets})
+        last15 = board_dates[-ROTATION_DAYS:]
+        concept_boards = {}
+        for d in last15:
+            ranked = sorted(((name, rets[d]) for name, rets in concept_returns.items() if d in rets),
+                            key=lambda x: (-x[1], x[0]))[:ROTATION_TOPN]
+            concept_boards[d] = [name for name, _ in ranked]
+        last10 = set(last15[-ROTATION_STAT_WINDOW:])
+
+        for name, rows in concept_series.items():
+            if not rows or rows[-1][0] != effective:
+                stale_concepts.append(name)
+                continue
+            ret20 = None
+            if len(rows) >= 21 and rows[-21][1]:
+                ret20 = round((rows[-1][1] / rows[-21][1] - 1) * 100, 1)
+            hits10 = sum(1 for d in last10 if name in concept_boards.get(d, []))
+            streak = 0
+            for d in reversed(last15):
+                if name in concept_boards.get(d, []):
+                    streak += 1
+                else:
+                    break
+            level, reason = _crowding_level(ret20, None, hits10, streak)
+            items.append({'name': name, 'type': '概念', 'ret20': ret20,
+                          'amountPct': None, 'hits10': hits10, 'streak': streak,
+                          'level': level, 'reason': reason})
+
+        level_order = {'过热': 0, '偏高': 1, '正常': 2, '低': 3}
+        items.sort(key=lambda x: (
+            level_order[x['level']], -x['hits10'], -x['streak'],
+            -(x['amountPct'] if x['amountPct'] is not None else -1),
+            -(x['ret20'] if x['ret20'] is not None else -float('inf')),
+            x['name'], x['type'],
+        ))
+        items = items[:SECTOR_CROWDING_TOPN]
+        stale_note = f'剔除陈旧行业{len(stale_industries)}个、概念{len(stale_concepts)}个'
+        if stale_concepts:
+            stale_note += '（' + '、'.join(stale_concepts[:5]) + ('等' if len(stale_concepts) > 5 else '') + '）'
+        note = (
+            f'行业与概念合并Top{SECTOR_CROWDING_TOPN}；{stale_note}。'
+            f'轮动近10日上榜≥{ROTATION_OVERHEAT_HITS}次或连续≥{ROTATION_OVERHEAT_STREAK}天直接判过热；'
+            f'20日复利涨幅≥{CROWDING_RET20_HOT:.0f}%且最新成交额在过去250交易日分位≥{CROWDING_AMOUNT_HOT:.0f}也判过热；'
+            f'热榜3次，或20日涨幅≥{CROWDING_RET20_WARM:.0f}%且成交分位≥{CROWDING_AMOUNT_WARM:.0f}为偏高；'
+            f'20日涨幅≤{CROWDING_RET20_COLD:.0f}%、成交分位≤{CROWDING_AMOUNT_COLD:.0f}且未上热榜为低，其余正常。'
+            '概念日线缓存未可靠区分成交额与成交量，成交热度显示—，不补0、不参与成交双高或低温判定。'
+            '拥挤度仅为风险提示，不直接等同买卖结论。'
+        )
+        data['sectorCrowding'] = {
+            'trade_date': _iso(effective), 'stale': latest_industry != effective,
+            'items': items, 'note': note,
+        }
+        print(f"  sectorCrowding: {len(items)}行（行业{sum(x['type'] == '行业' for x in items)}+"
+              f"概念{sum(x['type'] == '概念' for x in items)}），剔除陈旧行业{len(stale_industries)}、概念{len(stale_concepts)}")
+    except Exception as e:
+        print(f"  Warning: build_sector_crowding failed (keep old): {e}")
+
+
 # ── 第三步入选历史 + 自动收录观察股（2026-09-30 用户正式指令）──
 # "如果个股曾经入选第三步相对长一段时间，记录出来作为备选观察形态。入选超过5个交易日就放入我的观察股，后续都这样处理。"
 # 每日记录第3步（共振轨+优中选优轨）入选名单入 step3_history.json（随 workflow 提交回写延续）；
@@ -8602,6 +8778,10 @@ def main():
         build_sector_rotation(data)
     except Exception as e:
         print(f"  Warning: sectorRotation failed: {e}")
+    try:
+        build_sector_crowding(data)
+    except Exception as e:
+        print(f"  Warning: sectorCrowding failed: {e}")
 
     # ── 17d. 总览五步漏斗结论汇总（2026-09-27 改版第二波，纯汇总零新增调用）──
     try:

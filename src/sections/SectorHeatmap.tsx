@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
-  TrendingUp, TrendingDown, Zap, Activity, ArrowLeftRight
+  TrendingUp, TrendingDown, Zap, Activity, ArrowLeftRight, SortDesc
 } from 'lucide-react';
 import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -82,6 +83,7 @@ function ResonanceEvidence({ flow }: { flow: SectorFlowItem }) {
 
 export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) {
   const { data } = useFundData();
+  const [rotTab, setRotTab] = useState<'tushare' | 'em'>('tushare');
   const flows = data.sectorFlows;
   const inflowTop = flows?.inflowTop || [];
   const outflowTop = flows?.outflowTop || [];
@@ -194,6 +196,202 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
           </p>
         </CardContent>
       </Card>
+
+      {/* ====== 板块页专属：行业/概念拥挤度简表（必须在每日涨幅轮动榜正上方） ====== */}
+      {detailed && data.sectorCrowding && (
+        <Card id="sector-crowding" className="shadow-sm border-amber-200">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Activity className="w-4 h-4 text-amber-500" />
+                行业 / 概念拥挤度
+                <span className="text-[10px] font-normal text-slate-400">合并 Top 10 · 透明分档</span>
+              </CardTitle>
+              <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">
+                {data.sectorCrowding.trade_date || '等待有效日'}
+              </Badge>
+            </div>
+            <CardDescription className="text-[10px] leading-relaxed">{data.sectorCrowding.note}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[720px]">
+                <TableHeader>
+                  <TableRow className="bg-slate-50">
+                    <TableHead className="text-xs">名称</TableHead>
+                    <TableHead className="text-xs">类型</TableHead>
+                    <TableHead className="text-xs text-right">20日涨幅</TableHead>
+                    <TableHead className="text-xs text-right">成交热度</TableHead>
+                    <TableHead className="text-xs text-right">10日热榜</TableHead>
+                    <TableHead className="text-xs text-right">拥挤度</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.sectorCrowding.items.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="py-7 text-center text-xs text-slate-400">
+                        本批有效日无可用行业或概念，陈旧对象未入榜。
+                      </TableCell>
+                    </TableRow>
+                  ) : data.sectorCrowding.items.map((item) => (
+                    <TableRow key={`${item.type}-${item.name}`} className="hover:bg-slate-50">
+                      <TableCell className="text-xs font-semibold text-slate-800">{item.name}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={`text-[10px] ${item.type === '行业' ? 'bg-cyan-50 text-cyan-700' : 'bg-purple-50 text-purple-700'}`}>
+                          {item.type}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className={`text-xs text-right font-semibold ${item.ret20 == null ? 'text-slate-400' : item.ret20 >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {item.ret20 == null ? '—' : `${item.ret20 >= 0 ? '+' : ''}${item.ret20.toFixed(1)}%`}
+                      </TableCell>
+                      <TableCell className="text-xs text-right text-slate-600" title={item.amountPct == null ? '无可靠成交额，不补0' : '最新成交额在过去250交易日中的分位'}>
+                        {item.amountPct == null ? '—' : `${item.amountPct.toFixed(1)}%`}
+                      </TableCell>
+                      <TableCell className="text-xs text-right text-slate-600">{item.hits10}次 · 连{item.streak}天</TableCell>
+                      <TableCell className="text-right">
+                        <Badge title={item.reason} className={`text-[10px] border-0 ${
+                          item.level === '过热' ? 'bg-rose-100 text-rose-700' :
+                          item.level === '偏高' ? 'bg-amber-100 text-amber-700' :
+                          item.level === '低' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'
+                        }`}>{item.level}</Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ===== 每日涨幅轮动榜（原工具栏目整块迁入；双口径、网格、summary、徽章不变） ===== */}
+      {detailed && data.sectorRotation && data.sectorRotation.grid.length > 0 && (() => {
+        const rot = data.sectorRotation;
+        // 同一板块跨列同色系追踪：按上榜热度顺序分配调色板（描边+角标底色）
+        const ROT_PALETTE = ['#dc2626', '#ea580c', '#d97706', '#65a30d', '#0d9488', '#0284c7',
+                             '#4f46e5', '#9333ea', '#db2777', '#57534e', '#16a34a', '#0891b2'];
+        const colorOf: Record<string, string> = {};
+        rot.stats.forEach((s, i) => { colorOf[s.sector] = ROT_PALETTE[i % ROT_PALETTE.length]; });
+        const statOf: Record<string, (typeof rot.stats)[number]> = {};
+        rot.stats.forEach((s) => { statOf[s.sector] = s; });
+        // 涨幅深浅：红色深浅（A股红涨），<=0 的榜首格给灰
+        const cellBg = (ret: number) => ret <= 0
+          ? 'rgba(100,116,139,0.18)'
+          : `rgba(220,38,38,${Math.min(0.88, 0.18 + ret / 7).toFixed(2)})`;
+        const overheatN = rot.stats.filter((s) => s.overheat).length;
+        // ── 东财双轨（2026-09-29 用户批准）：em 可用则可切 tab；不可用灰态说明 ──
+        const em = rot.em;
+        const emOk = !!(em && em.available && em.grid.length > 0);
+        const isEm = rotTab === 'em' && emOk;
+        const view = isEm ? { days: em!.days, grid: em!.grid } : { days: rot.days, grid: rot.grid };
+        // 东财口径的同色追踪：按上榜顺序（网格首次出现）分配调色板
+        const emColorOf: Record<string, string> = {};
+        if (isEm) {
+          let ci = 0;
+          for (const g of view.grid) for (const r of g.rows) {
+            if (!(r.sector in emColorOf)) { emColorOf[r.sector] = ROT_PALETTE[ci % ROT_PALETTE.length]; ci++; }
+          }
+        }
+        return (
+          <Card id="sector-rotation" className="border-rose-200 shadow-sm">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <CardTitle className="text-sm font-bold flex items-center gap-2">
+                  <SortDesc className="w-4 h-4 text-rose-500" />
+                  每日涨幅轮动榜
+                  <span className="text-[10px] font-normal text-slate-400">近{view.days.length}交易日 × 每日行业涨幅前10 · 同色描边=同一板块跨日追踪</span>
+                </CardTitle>
+                <div className="flex items-center gap-1.5">
+                  {overheatN > 0 && (
+                    <Badge className="text-[10px] border-0 bg-rose-600 text-white">🔥过热 {overheatN} 个</Badge>
+                  )}
+                  <Badge variant="outline" className="text-xs bg-rose-50 text-rose-700 border-rose-200">
+                    {rot.trade_date}
+                  </Badge>
+                </div>
+              </div>
+              {/* 口径切换 tab（东财快照自 2026-09-29 起积累，首日列少如实展示） */}
+              <div className="flex items-center gap-1 mt-1.5">
+                <button type="button" onClick={() => setRotTab('tushare')}
+                        className={`text-[10px] px-2 py-0.5 rounded-full border ${!isEm ? 'bg-rose-600 text-white border-rose-600' : 'text-slate-500 border-slate-200 hover:border-rose-300'}`}>
+                  Tushare口径（L2等权·250日历史）
+                </button>
+                <button type="button" onClick={() => emOk && setRotTab('em')}
+                        title={em?.note}
+                        className={`text-[10px] px-2 py-0.5 rounded-full border ${isEm ? 'bg-orange-500 text-white border-orange-500' : emOk ? 'text-slate-500 border-slate-200 hover:border-orange-300' : 'text-slate-300 border-slate-100 cursor-not-allowed'}`}>
+                  东财口径{emOk ? `（快照${em!.snapshotDays}天·积累中）` : '（待补·快照积累中）'}
+                </button>
+                {isEm && (
+                  <span className="text-[9px] text-orange-600/80">东财无历史回补，仅作对照；过热判定以 Tushare 口径为准</span>
+                )}
+              </div>
+              {!isEm && (
+                <p className="text-[11px] text-rose-800 bg-rose-50 rounded-md px-2 py-1.5 mt-1 leading-relaxed">
+                  轮动解读：{rot.summary}
+                </p>
+              )}
+              {isEm && (
+                <p className="text-[11px] text-orange-800 bg-orange-50 rounded-md px-2 py-1.5 mt-1 leading-relaxed">
+                  {em!.note}
+                </p>
+              )}
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="text-[10px] border-separate" style={{ borderSpacing: '2px', minWidth: '900px' }}>
+                  <thead>
+                    <tr>
+                      <th className="text-slate-400 font-medium text-left px-1 py-0.5 sticky left-0 bg-white z-10">名次</th>
+                      {view.days.map((d) => (
+                        <th key={d} className="text-slate-500 font-medium px-1 py-0.5 whitespace-nowrap">{d}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.from({ length: 10 }, (_, rankIdx) => (
+                      <tr key={rankIdx}>
+                        <td className="text-slate-400 px-1 py-0.5 sticky left-0 bg-white z-10">{rankIdx + 1}</td>
+                        {view.grid.map((g) => {
+                          const cell = g.rows[rankIdx];
+                          if (!cell) return <td key={g.date} />;
+                          const st = isEm ? undefined : statOf[cell.sector];
+                          const c = (isEm ? emColorOf[cell.sector] : colorOf[cell.sector]) || '#64748b';
+                          return (
+                            <td key={g.date}
+                                title={`${g.date} 第${cell.rank}名：${cell.sector} ${cell.ret >= 0 ? '+' : ''}${cell.ret}%${st ? `｜近10日上榜${st.hits10}次·连${st.streak}天·${st.phase}` : ''}${isEm ? '｜东财口径' : ''}`}
+                                className="px-1 py-0.5 rounded-sm whitespace-nowrap text-center font-medium"
+                                style={{
+                                  background: cellBg(cell.ret),
+                                  color: cell.ret >= 2 ? '#fff' : '#7f1d1d',
+                                  borderBottom: `2px solid ${c}`,
+                                }}>
+                              {st?.overheat && '🔥'}{cell.sector} {cell.ret >= 0 ? '+' : ''}{cell.ret}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {/* 轮动热度统计（上榜板块，Tushare 口径） */}
+              {!isEm && (
+                <div className="flex flex-wrap gap-1.5 mt-2.5">
+                  {rot.stats.slice(0, 12).map((s) => (
+                    <Badge key={s.sector} variant="outline"
+                           className={`text-[10px] ${s.overheat ? 'border-rose-400 bg-rose-50 text-rose-700 font-semibold' : s.phase === '中段' ? 'border-amber-300 bg-amber-50 text-amber-700' : 'border-slate-200 text-slate-500'}`}
+                           title={`近10日上榜${s.hits10}次 · 当前连续${s.streak}天 · 距上次上榜${s.sinceLast}天 · 近10日累计${s.cum10 != null ? (s.cum10 >= 0 ? '+' : '') + s.cum10 + '%' : '—'}`}>
+                      <span className="inline-block w-1.5 h-1.5 rounded-full mr-1" style={{ background: colorOf[s.sector] }} />
+                      {s.label} {s.sector}（{s.hits10}次{s.streak > 0 ? `/连${s.streak}天` : ''}）
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              <p className="text-[10px] text-slate-400 mt-1.5">{isEm ? em!.note : rot.note}</p>
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* ====== CONCEPT INFLOW HEATMAP (TOP 10) ====== */}
       {data.conceptSectors && data.conceptSectors.length > 0 && (

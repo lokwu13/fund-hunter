@@ -923,6 +923,22 @@ export interface FundData {
     };
     note?: string;
   };
+  // 行业/概念拥挤度简表：真实20日涨幅、成交分位与热榜；缺失不补0，陈旧对象不入榜。
+  sectorCrowding?: {
+    trade_date: string | null;
+    stale: boolean;
+    items: Array<{
+      name: string;
+      type: '行业' | '概念';
+      ret20: number | null;
+      amountPct: number | null;
+      hits10: number;
+      streak: number;
+      level: '过热' | '偏高' | '正常' | '低';
+      reason?: string;
+    }>;
+    note: string;
+  };
   // CCASS 外资托管持股月末快照（2026-09-30 用户指令：港交所 SDW 机查，月底/月初双触发）
   ccassForeign?: {
     asOf: string | null;
