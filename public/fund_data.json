@@ -9722,779 +9722,3697 @@
   },
   "sectorFlows": {
     "trade_date": "2026-10-27",
+    "dataDate": "2026-10-27",
+    "expectedDate": null,
+    "stale": false,
     "items": [
       {
         "name": "银行",
+        "net1": 75.4,
         "net5": 106.5,
+        "prevNet5": 35.1,
+        "accel5": 71.4,
         "net10": 141.6,
         "net20": 260.3,
-        "tag": "加速流入"
+        "inflowDays5": 3,
+        "inflowDays10": 5,
+        "outflowDays5": 2,
+        "outflowDays10": 5,
+        "tag": "加速流入",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "银行",
+          "rank": 2,
+          "score": 67.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "白酒",
+        "net1": 7.2,
         "net5": 35.1,
+        "prevNet5": 40.9,
+        "accel5": -5.7,
         "net10": 76.0,
         "net20": 81.8,
-        "tag": "减速流入"
+        "inflowDays5": 3,
+        "inflowDays10": 7,
+        "outflowDays5": 2,
+        "outflowDays10": 3,
+        "tag": "减速流入",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "食品饮料",
+          "rank": 8,
+          "score": 63.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "保险",
+        "net1": 4.4,
         "net5": 24.4,
+        "prevNet5": -17.9,
+        "accel5": 42.2,
         "net10": 6.5,
         "net20": -38.4,
-        "tag": "加速流入"
+        "inflowDays5": 5,
+        "inflowDays10": 7,
+        "outflowDays5": 0,
+        "outflowDays10": 3,
+        "tag": "加速流入",
+        "tags": [
+          "新晋",
+          "持续"
+        ],
+        "eci": {
+          "parent": "非银金融",
+          "rank": 17,
+          "score": 54.6
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "医疗保健",
+        "net1": -21.1,
         "net5": 9.7,
-        "net10": -12.2,
+        "prevNet5": -21.9,
+        "accel5": 31.6,
+        "net10": -12.3,
         "net20": -62.9,
-        "tag": "拐点·转流入"
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "拐点·转流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "医药生物",
+          "rank": 5,
+          "score": 65.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "农业综合",
+        "net1": -2.2,
         "net5": 8.0,
+        "prevNet5": 0.5,
+        "accel5": 7.5,
         "net10": 8.5,
         "net20": -16.4,
-        "tag": "加速流入"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "加速流入",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "农林牧渔",
+          "rank": 7,
+          "score": 64.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "电信运营",
+        "net1": 0.2,
         "net5": 6.7,
+        "prevNet5": 12.9,
+        "accel5": -6.2,
         "net10": 19.6,
         "net20": 31.6,
-        "tag": "减速流入"
+        "inflowDays5": 4,
+        "inflowDays10": 9,
+        "outflowDays5": 1,
+        "outflowDays10": 1,
+        "tag": "减速流入",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "通信",
+          "rank": 3,
+          "score": 66.8
+        },
+        "bottom": {
+          "hit30": true,
+          "hit60": true,
+          "both": true,
+          "inflow30d": 27.88,
+          "inflow60d": 55.14
+        },
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData",
+          "bottomWatch"
+        ]
       },
       {
         "name": "证券",
+        "net1": -17.6,
         "net5": 6.4,
+        "prevNet5": -24.6,
+        "accel5": 31.0,
         "net10": -18.2,
         "net20": -85.2,
-        "tag": "拐点·转流入"
+        "inflowDays5": 3,
+        "inflowDays10": 5,
+        "outflowDays5": 2,
+        "outflowDays10": 5,
+        "tag": "拐点·转流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "非银金融",
+          "rank": 17,
+          "score": 54.6
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "纺织机械",
+        "net1": 2.3,
         "net5": 4.7,
+        "prevNet5": -0.7,
+        "accel5": 5.3,
         "net10": 4.0,
         "net20": -5.5,
-        "tag": "加速流入"
+        "inflowDays5": 3,
+        "inflowDays10": 5,
+        "outflowDays5": 2,
+        "outflowDays10": 5,
+        "tag": "加速流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "铝",
+        "net1": 7.7,
         "net5": 4.7,
+        "prevNet5": -20.1,
+        "accel5": 24.8,
         "net10": -15.4,
         "net20": -36.2,
-        "tag": "拐点·转流入"
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "拐点·转流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "有色金属",
+          "rank": 11,
+          "score": 62.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "石油开采",
+        "net1": 0.2,
         "net5": 3.2,
+        "prevNet5": 13.6,
+        "accel5": -10.3,
         "net10": 16.8,
         "net20": 29.2,
-        "tag": "减速流入"
+        "inflowDays5": 2,
+        "inflowDays10": 6,
+        "outflowDays5": 3,
+        "outflowDays10": 4,
+        "tag": "减速流入",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "石油石化",
+          "rank": 16,
+          "score": 56.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "铁路",
+        "net1": 0.9,
         "net5": 2.1,
+        "prevNet5": 3.4,
+        "accel5": -1.4,
         "net10": 5.5,
         "net20": 14.3,
-        "tag": "减速流入"
+        "inflowDays5": 4,
+        "inflowDays10": 7,
+        "outflowDays5": 1,
+        "outflowDays10": 3,
+        "tag": "减速流入",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "交通运输",
+          "rank": 24,
+          "score": 46.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "机场",
+        "net1": 0.6,
         "net5": 1.4,
+        "prevNet5": -1.0,
+        "accel5": 2.4,
         "net10": 0.4,
         "net20": -0.9,
-        "tag": "加速流入"
+        "inflowDays5": 3,
+        "inflowDays10": 4,
+        "outflowDays5": 2,
+        "outflowDays10": 6,
+        "tag": "加速流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "交通运输",
+          "rank": 24,
+          "score": 46.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "空运",
+        "net1": -0.8,
         "net5": 1.2,
+        "prevNet5": -7.4,
+        "accel5": 8.6,
         "net10": -6.2,
         "net20": -20.6,
-        "tag": "拐点·转流入"
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "拐点·转流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "交通运输",
+          "rank": 24,
+          "score": 46.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "农用机械",
+        "net1": 0.4,
         "net5": 0.6,
+        "prevNet5": -1.3,
+        "accel5": 1.9,
         "net10": -0.7,
         "net20": -4.6,
-        "tag": "拐点·转流入"
+        "inflowDays5": 3,
+        "inflowDays10": 4,
+        "outflowDays5": 2,
+        "outflowDays10": 6,
+        "tag": "拐点·转流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "汽车整车",
+        "net1": -1.5,
         "net5": 0.6,
+        "prevNet5": -31.4,
+        "accel5": 32.0,
         "net10": -30.8,
         "net20": -36.7,
-        "tag": "拐点·转流入"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "拐点·转流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "汽车",
+          "rank": 15,
+          "score": 56.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "超市连锁",
+        "net1": 1.7,
         "net5": -0.2,
+        "prevNet5": -6.6,
+        "accel5": 6.3,
         "net10": -6.8,
         "net20": -12.2,
-        "tag": "持续流出"
+        "inflowDays5": 3,
+        "inflowDays10": 4,
+        "outflowDays5": 2,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": null,
+        "bottom": null,
+        "resonance": {
+          "source": "step2",
+          "lifecycle": "启动期",
+          "pattern": "底部",
+          "signal": null
+        },
+        "leaders": [],
+        "evidenceSources": [
+          "step2"
+        ]
       },
       {
         "name": "汽车服务",
+        "net1": -0.7,
         "net5": -0.3,
+        "prevNet5": 0.2,
+        "accel5": -0.4,
         "net10": -0.1,
         "net20": -3.6,
-        "tag": "持续流出"
+        "inflowDays5": 3,
+        "inflowDays10": 6,
+        "outflowDays5": 2,
+        "outflowDays10": 4,
+        "tag": "持续流出",
+        "tags": [
+          "转流出"
+        ],
+        "eci": {
+          "parent": "汽车",
+          "rank": 15,
+          "score": 56.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "旅游服务",
+        "net1": -1.3,
         "net5": -0.4,
+        "prevNet5": -2.9,
+        "accel5": 2.6,
         "net10": -3.3,
         "net20": -11.4,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "社会服务",
+          "rank": 20,
+          "score": 51.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "电器连锁",
+        "net1": -0.3,
         "net5": -0.4,
+        "prevNet5": -0.7,
+        "accel5": 0.3,
         "net10": -1.1,
         "net20": -1.9,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": null,
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": []
       },
       {
         "name": "石油贸易",
+        "net1": -0.2,
         "net5": -0.4,
+        "prevNet5": -0.3,
+        "accel5": -0.1,
         "net10": -0.8,
         "net20": -1.9,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "石油石化",
+          "rank": 16,
+          "score": 56.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "仓储物流",
+        "net1": -0.6,
         "net5": -0.5,
+        "prevNet5": -12.7,
+        "accel5": 12.2,
         "net10": -13.2,
         "net20": -18.8,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "交通运输",
+          "rank": 24,
+          "score": 46.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "公路",
+        "net1": -0.3,
         "net5": -0.5,
+        "prevNet5": -0.4,
+        "accel5": -0.1,
         "net10": -1.0,
         "net20": -1.5,
-        "tag": "持续流出"
+        "inflowDays5": 0,
+        "inflowDays10": 0,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "交通运输",
+          "rank": 24,
+          "score": 46.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "酒店餐饮",
+        "net1": -0.5,
         "net5": -0.5,
+        "prevNet5": -0.5,
+        "accel5": -0.0,
         "net10": -1.0,
         "net20": -3.9,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "社会服务",
+          "rank": 20,
+          "score": 51.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "公共交通",
+        "net1": -0.2,
         "net5": -0.7,
+        "prevNet5": -0.8,
+        "accel5": 0.2,
         "net10": -1.5,
         "net20": -2.7,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 2,
+        "outflowDays5": 3,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "交通运输",
+          "rank": 24,
+          "score": 46.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "焦炭加工",
+        "net1": -0.3,
         "net5": -0.7,
+        "prevNet5": -4.5,
+        "accel5": 3.7,
         "net10": -5.2,
         "net20": -12.7,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "煤炭",
+          "rank": 9,
+          "score": 62.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "轻工机械",
+        "net1": -1.3,
         "net5": -0.7,
+        "prevNet5": 0.4,
+        "accel5": -1.1,
         "net10": -0.3,
         "net20": -4.3,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 4,
+        "outflowDays5": 4,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "转流出",
+          "持续"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "批发业",
+        "net1": -0.4,
         "net5": -0.8,
+        "prevNet5": -0.8,
+        "accel5": -0.1,
         "net10": -1.6,
         "net20": -2.6,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": null,
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": []
       },
       {
         "name": "煤炭开采",
+        "net1": 4.8,
         "net5": -0.9,
+        "prevNet5": 1.4,
+        "accel5": -2.3,
         "net10": 0.5,
         "net20": 13.0,
-        "tag": "拐点·转流出"
+        "inflowDays5": 3,
+        "inflowDays10": 6,
+        "outflowDays5": 2,
+        "outflowDays10": 4,
+        "tag": "拐点·转流出",
+        "tags": [
+          "转流出"
+        ],
+        "eci": {
+          "parent": "煤炭",
+          "rank": 9,
+          "score": 62.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "商品城",
+        "net1": -1.4,
         "net5": -1.2,
+        "prevNet5": -0.7,
+        "accel5": -0.5,
         "net10": -1.8,
         "net20": -5.7,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": null,
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": []
       },
       {
         "name": "路桥",
+        "net1": 0.7,
         "net5": -1.2,
+        "prevNet5": -6.0,
+        "accel5": 4.8,
         "net10": -7.2,
         "net20": -1.1,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "交通运输",
+          "rank": 24,
+          "score": 46.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "水务",
+        "net1": -0.6,
         "net5": -1.3,
+        "prevNet5": -1.9,
+        "accel5": 0.6,
         "net10": -3.2,
         "net20": -4.7,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "公用事业",
+          "rank": 1,
+          "score": 68.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "商贸代理",
+        "net1": -1.1,
         "net5": -2.0,
+        "prevNet5": -5.2,
+        "accel5": 3.2,
         "net10": -7.2,
         "net20": -9.6,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 2,
+        "outflowDays5": 3,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": null,
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": []
       },
       {
         "name": "园区开发",
+        "net1": -1.1,
         "net5": -2.0,
+        "prevNet5": -3.1,
+        "accel5": 1.1,
         "net10": -5.1,
         "net20": -10.3,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "房地产",
+          "rank": 27,
+          "score": 45.0
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "房产服务",
+        "net1": -1.8,
         "net5": -2.1,
+        "prevNet5": -9.3,
+        "accel5": 7.2,
         "net10": -11.3,
         "net20": -29.3,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "房地产",
+          "rank": 27,
+          "score": 45.0
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "运输设备",
+        "net1": -1.3,
         "net5": -2.5,
+        "prevNet5": -2.5,
+        "accel5": 0.0,
         "net10": -5.0,
         "net20": -14.7,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "乳制品",
+        "net1": -1.6,
         "net5": -2.6,
+        "prevNet5": -7.0,
+        "accel5": 4.4,
         "net10": -9.6,
         "net20": -4.1,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "食品饮料",
+          "rank": 8,
+          "score": 63.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "啤酒",
+        "net1": -1.4,
         "net5": -2.6,
+        "prevNet5": 0.4,
+        "accel5": -3.0,
         "net10": -2.2,
         "net20": -0.1,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 4,
+        "outflowDays5": 4,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "转流出",
+          "持续"
+        ],
+        "eci": {
+          "parent": "食品饮料",
+          "rank": 8,
+          "score": 63.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "旅游景点",
+        "net1": -0.7,
         "net5": -2.8,
+        "prevNet5": -8.6,
+        "accel5": 5.8,
         "net10": -11.4,
         "net20": -23.3,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 2,
+        "outflowDays5": 3,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "社会服务",
+          "rank": 20,
+          "score": 51.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "特种钢",
+        "net1": -0.9,
         "net5": -2.9,
+        "prevNet5": -0.7,
+        "accel5": -2.2,
         "net10": -3.6,
         "net20": -6.4,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 4,
+        "outflowDays5": 4,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "钢铁",
+          "rank": 26,
+          "score": 45.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "医药商业",
+        "net1": -3.0,
         "net5": -3.0,
+        "prevNet5": -4.5,
+        "accel5": 1.4,
         "net10": -7.5,
         "net20": -14.6,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "医药生物",
+          "rank": 5,
+          "score": 65.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "红黄酒",
+        "net1": -0.9,
         "net5": -3.0,
+        "prevNet5": -3.3,
+        "accel5": 0.3,
         "net10": -6.3,
         "net20": -25.6,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "食品饮料",
+          "rank": 8,
+          "score": 63.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "港口",
+        "net1": -0.2,
         "net5": -4.1,
+        "prevNet5": -2.4,
+        "accel5": -1.7,
         "net10": -6.5,
         "net20": -8.5,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "交通运输",
+          "rank": 24,
+          "score": 46.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "电器仪表",
+        "net1": -12.5,
         "net5": -4.3,
+        "prevNet5": -0.9,
+        "accel5": -3.4,
         "net10": -5.2,
         "net20": -75.0,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 4,
+        "outflowDays5": 4,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "电力设备",
+          "rank": 14,
+          "score": 58.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "饲料",
+        "net1": -0.7,
         "net5": -4.3,
+        "prevNet5": -4.8,
+        "accel5": 0.4,
         "net10": -9.1,
         "net20": -22.4,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "农林牧渔",
+          "rank": 7,
+          "score": 64.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "其他商业",
+        "net1": -2.2,
         "net5": -4.5,
+        "prevNet5": -4.8,
+        "accel5": 0.2,
         "net10": -9.3,
         "net20": -14.1,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 1,
+        "outflowDays5": 4,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": null,
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": []
       },
       {
         "name": "软饮料",
+        "net1": -1.6,
         "net5": -4.6,
+        "prevNet5": -2.1,
+        "accel5": -2.5,
         "net10": -6.7,
         "net20": -10.3,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "食品饮料",
+          "rank": 8,
+          "score": 63.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "多元金融",
+        "net1": -3.1,
         "net5": -4.8,
+        "prevNet5": -8.2,
+        "accel5": 3.4,
         "net10": -13.0,
         "net20": -33.6,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "非银金融",
+          "rank": 17,
+          "score": 54.6
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "影视音像",
+        "net1": -2.0,
         "net5": -5.0,
+        "prevNet5": -14.6,
+        "accel5": 9.6,
         "net10": -19.6,
         "net20": -10.9,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "传媒",
+          "rank": 12,
+          "score": 61.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "橡胶",
+        "net1": -1.5,
         "net5": -5.0,
+        "prevNet5": -5.7,
+        "accel5": 0.7,
         "net10": -10.7,
         "net20": -18.4,
-        "tag": "持续流出"
+        "inflowDays5": 0,
+        "inflowDays10": 1,
+        "outflowDays5": 5,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "基础化工",
+          "rank": 28,
+          "score": 44.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "装修装饰",
+        "net1": -0.6,
         "net5": -5.0,
+        "prevNet5": -7.1,
+        "accel5": 2.1,
         "net10": -12.2,
         "net20": -36.1,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "建筑装饰",
+          "rank": 19,
+          "score": 52.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "水泥",
+        "net1": -1.6,
         "net5": -5.4,
-        "net10": -10.3,
+        "prevNet5": -5.0,
+        "accel5": -0.4,
+        "net10": -10.4,
         "net20": -22.3,
-        "tag": "持续流出"
+        "inflowDays5": 0,
+        "inflowDays10": 1,
+        "outflowDays5": 5,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "建筑材料",
+          "rank": 31,
+          "score": 42.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "陶瓷",
+        "net1": -1.7,
         "net5": -5.4,
+        "prevNet5": -0.4,
+        "accel5": -5.0,
         "net10": -5.8,
         "net20": -8.6,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 4,
+        "outflowDays5": 4,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "建筑材料",
+          "rank": 31,
+          "score": 42.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "百货",
+        "net1": -0.8,
         "net5": -5.8,
+        "prevNet5": -10.2,
+        "accel5": 4.3,
         "net10": -16.0,
         "net20": -32.1,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": null,
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": []
       },
       {
         "name": "石油加工",
+        "net1": -2.1,
         "net5": -5.8,
+        "prevNet5": -1.2,
+        "accel5": -4.6,
         "net10": -6.9,
         "net20": 0.9,
-        "tag": "反复"
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "反复",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "石油石化",
+          "rank": 16,
+          "score": 56.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "水力发电",
+        "net1": -3.8,
         "net5": -6.1,
+        "prevNet5": 13.9,
+        "accel5": -20.0,
         "net10": 7.8,
         "net20": 31.5,
-        "tag": "拐点·转流出"
+        "inflowDays5": 2,
+        "inflowDays10": 5,
+        "outflowDays5": 3,
+        "outflowDays10": 5,
+        "tag": "拐点·转流出",
+        "tags": [
+          "转流出"
+        ],
+        "eci": {
+          "parent": "公用事业",
+          "rank": 1,
+          "score": 68.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "种植业",
+        "net1": -2.0,
         "net5": -6.1,
+        "prevNet5": -11.3,
+        "accel5": 5.2,
         "net10": -17.4,
         "net20": -30.1,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "农林牧渔",
+          "rank": 7,
+          "score": 64.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "区域地产",
+        "net1": -4.2,
         "net5": -6.2,
+        "prevNet5": -11.8,
+        "accel5": 5.6,
         "net10": -18.0,
         "net20": -20.1,
-        "tag": "持续流出"
+        "inflowDays5": 3,
+        "inflowDays10": 4,
+        "outflowDays5": 2,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "房地产",
+          "rank": 27,
+          "score": 45.0
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "铅锌",
+        "net1": -3.4,
         "net5": -6.2,
+        "prevNet5": -7.5,
+        "accel5": 1.3,
         "net10": -13.6,
         "net20": -39.1,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "有色金属",
+          "rank": 11,
+          "score": 62.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "其他建材",
+        "net1": -5.0,
         "net5": -6.4,
+        "prevNet5": -5.6,
+        "accel5": -0.8,
         "net10": -12.0,
         "net20": -20.4,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "建筑材料",
+          "rank": 31,
+          "score": 42.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "水运",
+        "net1": -1.4,
         "net5": -6.5,
+        "prevNet5": -11.7,
+        "accel5": 5.2,
         "net10": -18.1,
         "net20": -47.9,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "交通运输",
+          "rank": 24,
+          "score": 46.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "渔业",
+        "net1": -1.7,
         "net5": -6.6,
+        "prevNet5": -1.2,
+        "accel5": -5.5,
         "net10": -7.8,
         "net20": -8.6,
-        "tag": "持续流出"
+        "inflowDays5": 0,
+        "inflowDays10": 3,
+        "outflowDays5": 5,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "农林牧渔",
+          "rank": 7,
+          "score": 64.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "纺织",
+        "net1": -1.8,
         "net5": -6.9,
+        "prevNet5": -8.1,
+        "accel5": 1.3,
         "net10": -15.0,
         "net20": -31.3,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "纺织服装",
+          "rank": 29,
+          "score": 43.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "普钢",
+        "net1": -3.8,
         "net5": -7.3,
+        "prevNet5": -1.8,
+        "accel5": -5.5,
         "net10": -9.1,
         "net20": -17.6,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 4,
+        "outflowDays5": 4,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "钢铁",
+          "rank": 26,
+          "score": 45.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "摩托车",
+        "net1": -3.0,
         "net5": -7.4,
+        "prevNet5": -6.1,
+        "accel5": -1.2,
         "net10": -13.5,
         "net20": -22.7,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 1,
+        "outflowDays5": 4,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "汽车",
+          "rank": 15,
+          "score": 56.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "综合类",
+        "net1": -2.5,
         "net5": -7.9,
+        "prevNet5": -10.5,
+        "accel5": 2.6,
         "net10": -18.4,
         "net20": -31.5,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 1,
+        "outflowDays5": 4,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "综合",
+          "rank": 23,
+          "score": 49.6
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "日用化工",
+        "net1": -3.5,
         "net5": -8.0,
+        "prevNet5": -5.8,
+        "accel5": -2.1,
         "net10": -13.8,
         "net20": -22.7,
-        "tag": "持续流出"
+        "inflowDays5": 0,
+        "inflowDays10": 0,
+        "outflowDays5": 5,
+        "outflowDays10": 10,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "美容护理",
+          "rank": 25,
+          "score": 45.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "全国地产",
+        "net1": -7.0,
         "net5": -8.5,
+        "prevNet5": -18.0,
+        "accel5": 9.5,
         "net10": -26.5,
         "net20": -28.1,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "房地产",
+          "rank": 27,
+          "score": 45.0
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "机床制造",
+        "net1": -3.0,
         "net5": -8.6,
-        "net10": -13.2,
+        "prevNet5": -4.5,
+        "accel5": -4.1,
+        "net10": -13.1,
         "net20": -30.3,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "服饰",
+        "net1": -4.8,
         "net5": -9.4,
+        "prevNet5": -12.6,
+        "accel5": 3.2,
         "net10": -21.9,
         "net20": -40.2,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 2,
+        "outflowDays5": 3,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "纺织服装",
+          "rank": 29,
+          "score": 43.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "铜",
+        "net1": 2.6,
         "net5": -9.5,
+        "prevNet5": -18.0,
+        "accel5": 8.5,
         "net10": -27.5,
         "net20": -70.0,
-        "tag": "持续流出"
+        "inflowDays5": 3,
+        "inflowDays10": 4,
+        "outflowDays5": 2,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "有色金属",
+          "rank": 11,
+          "score": 62.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "林业",
+        "net1": -0.5,
         "net5": -9.9,
-        "net10": -16.6,
+        "prevNet5": -6.8,
+        "accel5": -3.1,
+        "net10": -16.7,
         "net20": -28.0,
-        "tag": "持续流出"
+        "inflowDays5": 0,
+        "inflowDays10": 1,
+        "outflowDays5": 5,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "农林牧渔",
+          "rank": 7,
+          "score": 64.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "黄金",
+        "net1": -2.5,
         "net5": -10.2,
+        "prevNet5": -1.2,
+        "accel5": -9.0,
         "net10": -11.4,
         "net20": -25.6,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 4,
+        "outflowDays5": 4,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "有色金属",
+          "rank": 11,
+          "score": 62.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "化纤",
+        "net1": -3.1,
         "net5": -10.3,
+        "prevNet5": -10.6,
+        "accel5": 0.3,
         "net10": -20.9,
         "net20": -42.2,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "基础化工",
+          "rank": 28,
+          "score": 44.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "供气供热",
+        "net1": -3.3,
         "net5": -10.4,
+        "prevNet5": -11.3,
+        "accel5": 0.9,
         "net10": -21.7,
         "net20": -46.0,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 1,
+        "outflowDays5": 4,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "公用事业",
+          "rank": 1,
+          "score": 68.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "新型电力",
+        "net1": -3.8,
         "net5": -11.6,
+        "prevNet5": -11.3,
+        "accel5": -0.4,
         "net10": -22.9,
         "net20": -62.0,
-        "tag": "持续流出"
+        "inflowDays5": 0,
+        "inflowDays10": 2,
+        "outflowDays5": 5,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "公用事业",
+          "rank": 1,
+          "score": 68.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "化工机械",
+        "net1": -2.2,
         "net5": -12.2,
+        "prevNet5": -4.0,
+        "accel5": -8.1,
         "net10": -16.2,
         "net20": -30.4,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "出版业",
+        "net1": -2.3,
         "net5": -12.6,
+        "prevNet5": -15.9,
+        "accel5": 3.3,
         "net10": -28.5,
         "net20": -49.7,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "传媒",
+          "rank": 12,
+          "score": 61.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "农药化肥",
+        "net1": -2.0,
         "net5": -13.0,
+        "prevNet5": -6.9,
+        "accel5": -6.0,
         "net10": -19.9,
         "net20": -74.2,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "基础化工",
+          "rank": 28,
+          "score": 44.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "染料涂料",
+        "net1": -3.5,
         "net5": -13.0,
+        "prevNet5": -21.6,
+        "accel5": 8.5,
         "net10": -34.6,
         "net20": -52.3,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 1,
+        "outflowDays5": 4,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "基础化工",
+          "rank": 28,
+          "score": 44.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "船舶",
+        "net1": -4.3,
         "net5": -13.1,
+        "prevNet5": -22.4,
+        "accel5": 9.2,
         "net10": -35.5,
         "net20": -62.3,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "国防军工",
+          "rank": 13,
+          "score": 59.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "广告包装",
+        "net1": -4.2,
         "net5": -13.3,
+        "prevNet5": -19.2,
+        "accel5": 6.0,
         "net10": -32.5,
         "net20": -46.7,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 1,
+        "outflowDays5": 4,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "传媒",
+          "rank": 12,
+          "score": 61.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "文教休闲",
+        "net1": -6.7,
         "net5": -13.7,
+        "prevNet5": -15.2,
+        "accel5": 1.4,
         "net10": -28.9,
         "net20": -43.8,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 2,
+        "outflowDays5": 3,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "社会服务",
+          "rank": 20,
+          "score": 51.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "工程机械",
+        "net1": -4.8,
         "net5": -14.8,
+        "prevNet5": -5.5,
+        "accel5": -9.3,
         "net10": -20.4,
         "net20": -39.0,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "食品",
+        "net1": -10.1,
         "net5": -15.1,
+        "prevNet5": -17.7,
+        "accel5": 2.6,
         "net10": -32.7,
         "net20": -60.7,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "食品饮料",
+          "rank": 8,
+          "score": 63.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "钢加工",
+        "net1": -8.4,
         "net5": -16.3,
+        "prevNet5": -5.6,
+        "accel5": -10.7,
         "net10": -21.9,
         "net20": -28.1,
-        "tag": "持续流出"
+        "inflowDays5": 0,
+        "inflowDays10": 1,
+        "outflowDays5": 5,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "钢铁",
+          "rank": 26,
+          "score": 45.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "火力发电",
+        "net1": -6.2,
         "net5": -16.7,
+        "prevNet5": 3.1,
+        "accel5": -19.7,
         "net10": -13.6,
         "net20": -30.1,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 4,
+        "outflowDays5": 4,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "转流出",
+          "持续"
+        ],
+        "eci": {
+          "parent": "公用事业",
+          "rank": 1,
+          "score": 68.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "家居用品",
+        "net1": -2.4,
         "net5": -17.1,
+        "prevNet5": -13.1,
+        "accel5": -4.1,
         "net10": -30.2,
         "net20": -44.2,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 1,
+        "outflowDays5": 4,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "轻工制造",
+          "rank": 21,
+          "score": 51.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "矿物制品",
+        "net1": -6.7,
         "net5": -17.1,
+        "prevNet5": -7.5,
+        "accel5": -9.6,
         "net10": -24.7,
         "net20": -58.2,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "建筑材料",
+          "rank": 31,
+          "score": 42.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "中成药",
+        "net1": -9.0,
         "net5": -17.4,
+        "prevNet5": -7.6,
+        "accel5": -9.8,
         "net10": -25.0,
         "net20": -47.9,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "医药生物",
+          "rank": 5,
+          "score": 65.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "电气设备",
+        "net1": -52.1,
         "net5": -18.9,
+        "prevNet5": -138.0,
+        "accel5": 119.1,
         "net10": -156.9,
         "net20": -491.0,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "降温"
+        ],
+        "eci": {
+          "parent": "电力设备",
+          "rank": 14,
+          "score": 58.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "IT设备",
+        "net1": -25.1,
         "net5": -22.5,
+        "prevNet5": -33.9,
+        "accel5": 11.4,
         "net10": -56.4,
         "net20": -172.1,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "计算机",
+          "rank": 4,
+          "score": 66.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "玻璃",
+        "net1": -2.5,
         "net5": -24.8,
+        "prevNet5": -11.1,
+        "accel5": -13.7,
         "net10": -35.9,
         "net20": -146.7,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "建筑材料",
+          "rank": 31,
+          "score": 42.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "通信设备",
+        "net1": -36.7,
         "net5": -26.2,
+        "prevNet5": -24.1,
+        "accel5": -2.1,
         "net10": -50.3,
         "net20": -481.0,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 4,
+        "outflowDays5": 4,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "通信",
+          "rank": 3,
+          "score": 66.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "建筑工程",
+        "net1": -6.5,
         "net5": -27.1,
+        "prevNet5": -25.8,
+        "accel5": -1.3,
         "net10": -53.0,
         "net20": -90.4,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "建筑装饰",
+          "rank": 19,
+          "score": 52.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "航空",
+        "net1": -20.9,
         "net5": -28.3,
+        "prevNet5": -0.5,
+        "accel5": -27.8,
         "net10": -28.8,
         "net20": -60.5,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "国防军工",
+          "rank": 13,
+          "score": 59.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "造纸",
+        "net1": -7.0,
         "net5": -29.5,
+        "prevNet5": -26.1,
+        "accel5": -3.4,
         "net10": -55.6,
         "net20": -111.0,
-        "tag": "持续流出"
+        "inflowDays5": 0,
+        "inflowDays10": 0,
+        "outflowDays5": 5,
+        "outflowDays10": 10,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "轻工制造",
+          "rank": 21,
+          "score": 51.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "环境保护",
+        "net1": -8.2,
         "net5": -29.8,
+        "prevNet5": -27.3,
+        "accel5": -2.5,
         "net10": -57.1,
         "net20": -114.2,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 1,
+        "outflowDays5": 4,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "环保",
+          "rank": 22,
+          "score": 50.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "家用电器",
+        "net1": -9.6,
         "net5": -32.5,
+        "prevNet5": -21.2,
+        "accel5": -11.3,
         "net10": -53.7,
         "net20": -91.7,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "家用电器",
+          "rank": 10,
+          "score": 62.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "塑料",
+        "net1": -10.4,
         "net5": -33.9,
+        "prevNet5": -22.7,
+        "accel5": -11.2,
         "net10": -56.6,
         "net20": -122.9,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 1,
+        "outflowDays5": 4,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "基础化工",
+          "rank": 28,
+          "score": 44.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "生物制药",
+        "net1": -17.4,
         "net5": -34.9,
+        "prevNet5": -37.6,
+        "accel5": 2.8,
         "net10": -72.5,
         "net20": -133.9,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "医药生物",
+          "rank": 5,
+          "score": 65.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "软件服务",
+        "net1": -79.1,
         "net5": -45.9,
+        "prevNet5": -42.4,
+        "accel5": -3.4,
         "net10": -88.3,
         "net20": -237.5,
-        "tag": "持续流出"
+        "inflowDays5": 3,
+        "inflowDays10": 5,
+        "outflowDays5": 2,
+        "outflowDays10": 5,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "计算机",
+          "rank": 4,
+          "score": 66.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "机械基件",
+        "net1": -22.7,
         "net5": -49.0,
+        "prevNet5": -28.6,
+        "accel5": -20.4,
         "net10": -77.6,
         "net20": -191.5,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "汽车配件",
+        "net1": -23.9,
         "net5": -50.3,
+        "prevNet5": -31.6,
+        "accel5": -18.7,
         "net10": -81.9,
         "net20": -241.0,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "汽车",
+          "rank": 15,
+          "score": 56.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "小金属",
+        "net1": -17.0,
         "net5": -56.1,
-        "net10": -101.4,
+        "prevNet5": -45.4,
+        "accel5": -10.7,
+        "net10": -101.5,
         "net20": -243.4,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 2,
+        "outflowDays5": 4,
+        "outflowDays10": 8,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "有色金属",
+          "rank": 11,
+          "score": 62.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "互联网",
+        "net1": -24.7,
         "net5": -62.0,
+        "prevNet5": -48.4,
+        "accel5": -13.6,
         "net10": -110.4,
         "net20": -204.6,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "传媒",
+          "rank": 12,
+          "score": 61.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "化学制药",
+        "net1": -31.2,
         "net5": -63.5,
+        "prevNet5": -42.4,
+        "accel5": -21.1,
         "net10": -106.0,
         "net20": -224.2,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "医药生物",
+          "rank": 5,
+          "score": 65.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "专用机械",
+        "net1": -39.3,
         "net5": -89.2,
+        "prevNet5": -32.3,
+        "accel5": -56.9,
         "net10": -121.6,
         "net20": -385.1,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "化工原料",
+        "net1": -28.4,
         "net5": -98.7,
+        "prevNet5": -109.6,
+        "accel5": 10.8,
         "net10": -208.3,
         "net20": -463.6,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 1,
+        "outflowDays5": 4,
+        "outflowDays10": 9,
+        "tag": "持续流出",
+        "tags": [
+          "降温",
+          "持续"
+        ],
+        "eci": {
+          "parent": "基础化工",
+          "rank": 28,
+          "score": 44.7
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "半导体",
+        "net1": -93.8,
         "net5": -105.8,
+        "prevNet5": -103.7,
+        "accel5": -2.1,
         "net10": -209.4,
         "net20": -830.2,
-        "tag": "持续流出"
+        "inflowDays5": 1,
+        "inflowDays10": 4,
+        "outflowDays5": 4,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "电子",
+          "rank": 6,
+          "score": 65.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       },
       {
         "name": "元器件",
+        "net1": -74.9,
         "net5": -133.1,
+        "prevNet5": -91.3,
+        "accel5": -41.8,
         "net10": -224.4,
         "net20": -940.3,
-        "tag": "持续流出"
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "电子",
+          "rank": 6,
+          "score": 65.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
       }
     ],
-    "note": "Tushare 二级行业主力净流入；节奏=近5日日均 vs 前5日日均（加速流入/减速流入/拐点/持续流出）"
+    "inflowTop": [
+      {
+        "name": "银行",
+        "net1": 75.4,
+        "net5": 106.5,
+        "prevNet5": 35.1,
+        "accel5": 71.4,
+        "net10": 141.6,
+        "net20": 260.3,
+        "inflowDays5": 3,
+        "inflowDays10": 5,
+        "outflowDays5": 2,
+        "outflowDays10": 5,
+        "tag": "加速流入",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "银行",
+          "rank": 2,
+          "score": 67.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "保险",
+        "net1": 4.4,
+        "net5": 24.4,
+        "prevNet5": -17.9,
+        "accel5": 42.2,
+        "net10": 6.5,
+        "net20": -38.4,
+        "inflowDays5": 5,
+        "inflowDays10": 7,
+        "outflowDays5": 0,
+        "outflowDays10": 3,
+        "tag": "加速流入",
+        "tags": [
+          "新晋",
+          "持续"
+        ],
+        "eci": {
+          "parent": "非银金融",
+          "rank": 17,
+          "score": 54.6
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "汽车整车",
+        "net1": -1.5,
+        "net5": 0.6,
+        "prevNet5": -31.4,
+        "accel5": 32.0,
+        "net10": -30.8,
+        "net20": -36.7,
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "拐点·转流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "汽车",
+          "rank": 15,
+          "score": 56.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "医疗保健",
+        "net1": -21.1,
+        "net5": 9.7,
+        "prevNet5": -21.9,
+        "accel5": 31.6,
+        "net10": -12.3,
+        "net20": -62.9,
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "拐点·转流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "医药生物",
+          "rank": 5,
+          "score": 65.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "证券",
+        "net1": -17.6,
+        "net5": 6.4,
+        "prevNet5": -24.6,
+        "accel5": 31.0,
+        "net10": -18.2,
+        "net20": -85.2,
+        "inflowDays5": 3,
+        "inflowDays10": 5,
+        "outflowDays5": 2,
+        "outflowDays10": 5,
+        "tag": "拐点·转流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "非银金融",
+          "rank": 17,
+          "score": 54.6
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "铝",
+        "net1": 7.7,
+        "net5": 4.7,
+        "prevNet5": -20.1,
+        "accel5": 24.8,
+        "net10": -15.4,
+        "net20": -36.2,
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "拐点·转流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "有色金属",
+          "rank": 11,
+          "score": 62.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "空运",
+        "net1": -0.8,
+        "net5": 1.2,
+        "prevNet5": -7.4,
+        "accel5": 8.6,
+        "net10": -6.2,
+        "net20": -20.6,
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "拐点·转流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "交通运输",
+          "rank": 24,
+          "score": 46.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "农业综合",
+        "net1": -2.2,
+        "net5": 8.0,
+        "prevNet5": 0.5,
+        "accel5": 7.5,
+        "net10": 8.5,
+        "net20": -16.4,
+        "inflowDays5": 2,
+        "inflowDays10": 3,
+        "outflowDays5": 3,
+        "outflowDays10": 7,
+        "tag": "加速流入",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "农林牧渔",
+          "rank": 7,
+          "score": 64.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "纺织机械",
+        "net1": 2.3,
+        "net5": 4.7,
+        "prevNet5": -0.7,
+        "accel5": 5.3,
+        "net10": 4.0,
+        "net20": -5.5,
+        "inflowDays5": 3,
+        "inflowDays10": 5,
+        "outflowDays5": 2,
+        "outflowDays10": 5,
+        "tag": "加速流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "机场",
+        "net1": 0.6,
+        "net5": 1.4,
+        "prevNet5": -1.0,
+        "accel5": 2.4,
+        "net10": 0.4,
+        "net20": -0.9,
+        "inflowDays5": 3,
+        "inflowDays10": 4,
+        "outflowDays5": 2,
+        "outflowDays10": 6,
+        "tag": "加速流入",
+        "tags": [
+          "新晋"
+        ],
+        "eci": {
+          "parent": "交通运输",
+          "rank": 24,
+          "score": 46.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      }
+    ],
+    "outflowTop": [
+      {
+        "name": "专用机械",
+        "net1": -39.3,
+        "net5": -89.2,
+        "prevNet5": -32.3,
+        "accel5": -56.9,
+        "net10": -121.6,
+        "net20": -385.1,
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "元器件",
+        "net1": -74.9,
+        "net5": -133.1,
+        "prevNet5": -91.3,
+        "accel5": -41.8,
+        "net10": -224.4,
+        "net20": -940.3,
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "电子",
+          "rank": 6,
+          "score": 65.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "航空",
+        "net1": -20.9,
+        "net5": -28.3,
+        "prevNet5": -0.5,
+        "accel5": -27.8,
+        "net10": -28.8,
+        "net20": -60.5,
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "国防军工",
+          "rank": 13,
+          "score": 59.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "化学制药",
+        "net1": -31.2,
+        "net5": -63.5,
+        "prevNet5": -42.4,
+        "accel5": -21.1,
+        "net10": -106.0,
+        "net20": -224.2,
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "医药生物",
+          "rank": 5,
+          "score": 65.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "机械基件",
+        "net1": -22.7,
+        "net5": -49.0,
+        "prevNet5": -28.6,
+        "accel5": -20.4,
+        "net10": -77.6,
+        "net20": -191.5,
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "机械设备",
+          "rank": 18,
+          "score": 53.8
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "水力发电",
+        "net1": -3.8,
+        "net5": -6.1,
+        "prevNet5": 13.9,
+        "accel5": -20.0,
+        "net10": 7.8,
+        "net20": 31.5,
+        "inflowDays5": 2,
+        "inflowDays10": 5,
+        "outflowDays5": 3,
+        "outflowDays10": 5,
+        "tag": "拐点·转流出",
+        "tags": [
+          "转流出"
+        ],
+        "eci": {
+          "parent": "公用事业",
+          "rank": 1,
+          "score": 68.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "火力发电",
+        "net1": -6.2,
+        "net5": -16.7,
+        "prevNet5": 3.1,
+        "accel5": -19.7,
+        "net10": -13.6,
+        "net20": -30.1,
+        "inflowDays5": 1,
+        "inflowDays10": 4,
+        "outflowDays5": 4,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "转流出",
+          "持续"
+        ],
+        "eci": {
+          "parent": "公用事业",
+          "rank": 1,
+          "score": 68.1
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "汽车配件",
+        "net1": -23.9,
+        "net5": -50.3,
+        "prevNet5": -31.6,
+        "accel5": -18.7,
+        "net10": -81.9,
+        "net20": -241.0,
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "汽车",
+          "rank": 15,
+          "score": 56.9
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "玻璃",
+        "net1": -2.5,
+        "net5": -24.8,
+        "prevNet5": -11.1,
+        "accel5": -13.7,
+        "net10": -35.9,
+        "net20": -146.7,
+        "inflowDays5": 1,
+        "inflowDays10": 3,
+        "outflowDays5": 4,
+        "outflowDays10": 7,
+        "tag": "持续流出",
+        "tags": [
+          "加速",
+          "持续"
+        ],
+        "eci": {
+          "parent": "建筑材料",
+          "rank": 31,
+          "score": 42.2
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      },
+      {
+        "name": "互联网",
+        "net1": -24.7,
+        "net5": -62.0,
+        "prevNet5": -48.4,
+        "accel5": -13.6,
+        "net10": -110.4,
+        "net20": -204.6,
+        "inflowDays5": 2,
+        "inflowDays10": 4,
+        "outflowDays5": 3,
+        "outflowDays10": 6,
+        "tag": "持续流出",
+        "tags": [
+          "加速"
+        ],
+        "eci": {
+          "parent": "传媒",
+          "rank": 12,
+          "score": 61.3
+        },
+        "bottom": null,
+        "resonance": null,
+        "leaders": [],
+        "evidenceSources": [
+          "eciData"
+        ]
+      }
+    ],
+    "incompleteSectors": [],
+    "note": "Tushare二级行业；流入按加速度降序→近5日流入天数→近5日净流入，流出镜像；加速度=近5日−前5日，20日仅作背景。旧tag仅供既有能否投否决规则。"
   },
   "vcpWatch": {
     "trade_date": "2026-10-27",
@@ -19001,32 +21919,32 @@
         },
         "白酒": {
           "verdict": "❌无效",
-          "exytdMed": -1.35,
+          "exytdMed": -1.73,
           "l1": "食品饮料"
         },
         "红黄酒": {
           "verdict": "❌无效",
-          "exytdMed": -1.35,
+          "exytdMed": -1.73,
           "l1": "食品饮料"
         },
         "啤酒": {
           "verdict": "❌无效",
-          "exytdMed": -1.35,
+          "exytdMed": -1.73,
           "l1": "食品饮料"
         },
         "食品": {
           "verdict": "❌无效",
-          "exytdMed": -1.35,
+          "exytdMed": -1.73,
           "l1": "食品饮料"
         },
         "乳制品": {
           "verdict": "❌无效",
-          "exytdMed": -1.35,
+          "exytdMed": -1.73,
           "l1": "食品饮料"
         },
         "软饮料": {
           "verdict": "❌无效",
-          "exytdMed": -1.35,
+          "exytdMed": -1.73,
           "l1": "食品饮料"
         },
         "银行": {
@@ -19106,52 +22024,52 @@
         },
         "铜": {
           "verdict": "❌无效",
-          "exytdMed": -4.77,
+          "exytdMed": -5.96,
           "l1": "有色金属"
         },
         "铝": {
           "verdict": "❌无效",
-          "exytdMed": -4.77,
+          "exytdMed": -5.96,
           "l1": "有色金属"
         },
         "铅锌": {
           "verdict": "❌无效",
-          "exytdMed": -4.77,
+          "exytdMed": -5.96,
           "l1": "有色金属"
         },
         "小金属": {
           "verdict": "❌无效",
-          "exytdMed": -4.77,
+          "exytdMed": -5.96,
           "l1": "有色金属"
         },
         "黄金": {
           "verdict": "❌无效",
-          "exytdMed": -4.77,
+          "exytdMed": -5.96,
           "l1": "有色金属"
         },
         "种植业": {
           "verdict": "✅有效",
-          "exytdMed": 3.02,
+          "exytdMed": 2.38,
           "l1": "农林牧渔"
         },
         "林业": {
           "verdict": "✅有效",
-          "exytdMed": 3.02,
+          "exytdMed": 2.38,
           "l1": "农林牧渔"
         },
         "渔业": {
           "verdict": "✅有效",
-          "exytdMed": 3.02,
+          "exytdMed": 2.38,
           "l1": "农林牧渔"
         },
         "饲料": {
           "verdict": "✅有效",
-          "exytdMed": 3.02,
+          "exytdMed": 2.38,
           "l1": "农林牧渔"
         },
         "农业综合": {
           "verdict": "✅有效",
-          "exytdMed": 3.02,
+          "exytdMed": 2.38,
           "l1": "农林牧渔"
         },
         "旅游景点": {
@@ -19184,7 +22102,7 @@
         },
         "食品饮料": {
           "verdict": "❌无效",
-          "exytdMed": -1.35,
+          "exytdMed": -1.73,
           "winYtdPct": 20,
           "benchSrc": "东财板块指数·食品饮料"
         },
@@ -19208,7 +22126,7 @@
         },
         "有色金属": {
           "verdict": "❌无效",
-          "exytdMed": -4.77,
+          "exytdMed": -5.96,
           "winYtdPct": 25,
           "benchSrc": "东财板块指数·有色金属"
         },
@@ -19238,7 +22156,7 @@
         },
         "农林牧渔": {
           "verdict": "✅有效",
-          "exytdMed": 3.02,
+          "exytdMed": 2.38,
           "winYtdPct": 75,
           "benchSrc": "东财板块指数·农林牧渔"
         },
@@ -20887,9 +23805,9 @@
         "sector": "食品饮料",
         "nFunds": 5,
         "benchSrc": "东财板块指数·食品饮料",
-        "ex1mMed": 3.36,
-        "ex3mMed": -9.02,
-        "exytdMed": -1.35,
+        "ex1mMed": 2.93,
+        "ex3mMed": -9.49,
+        "exytdMed": -1.73,
         "winYtdPct": 20,
         "verdict": "❌无效",
         "funds": [
@@ -20901,9 +23819,9 @@
             "r1m": -1.23,
             "r3m": -5.55,
             "rytd": -23.03,
-            "ex1m": 3.21,
-            "ex3m": -10.09,
-            "exytd": -7.31
+            "ex1m": 2.78,
+            "ex3m": -10.56,
+            "exytd": -7.69
           },
           {
             "ts_code": "110022.OF",
@@ -20913,9 +23831,9 @@
             "r1m": -0.75,
             "r3m": -4.48,
             "rytd": -18.97,
-            "ex1m": 3.69,
-            "ex3m": -9.02,
-            "exytd": -3.25
+            "ex1m": 3.26,
+            "ex3m": -9.49,
+            "exytd": -3.63
           },
           {
             "ts_code": "000083.OF",
@@ -20925,9 +23843,9 @@
             "r1m": -5.42,
             "r3m": -6.72,
             "rytd": -17.07,
-            "ex1m": -0.98,
-            "ex3m": -11.26,
-            "exytd": -1.35
+            "ex1m": -1.41,
+            "ex3m": -11.73,
+            "exytd": -1.73
           },
           {
             "ts_code": "519915.OF",
@@ -20937,9 +23855,9 @@
             "r1m": -0.49,
             "r3m": -0.33,
             "rytd": -16.61,
-            "ex1m": 3.95,
-            "ex3m": -4.87,
-            "exytd": -0.89
+            "ex1m": 3.52,
+            "ex3m": -5.34,
+            "exytd": -1.27
           },
           {
             "ts_code": "001044.OF",
@@ -20949,9 +23867,9 @@
             "r1m": -1.08,
             "r3m": -1.31,
             "rytd": 1.5,
-            "ex1m": 3.36,
-            "ex3m": -5.85,
-            "exytd": 17.22
+            "ex1m": 2.93,
+            "ex3m": -6.32,
+            "exytd": 16.84
           }
         ]
       },
@@ -21163,9 +24081,9 @@
         "sector": "有色金属",
         "nFunds": 4,
         "benchSrc": "东财板块指数·有色金属",
-        "ex1mMed": 3.57,
-        "ex3mMed": -1.16,
-        "exytdMed": -4.77,
+        "ex1mMed": 2.42,
+        "ex3mMed": -2.4,
+        "exytdMed": -5.96,
         "winYtdPct": 25,
         "verdict": "❌无效",
         "funds": [
@@ -21177,9 +24095,9 @@
             "r1m": -26.39,
             "r3m": -20.47,
             "rytd": -21.47,
-            "ex1m": -9.02,
-            "ex3m": -9.35,
-            "exytd": -7.04
+            "ex1m": -10.17,
+            "ex3m": -10.58,
+            "exytd": -8.23
           },
           {
             "ts_code": "023036.OF",
@@ -21189,9 +24107,9 @@
             "r1m": -6.97,
             "r3m": -7.31,
             "rytd": -8.77,
-            "ex1m": 10.4,
-            "ex3m": 3.81,
-            "exytd": 5.66
+            "ex1m": 9.25,
+            "ex3m": 2.58,
+            "exytd": 4.47
           },
           {
             "ts_code": "023834.OF",
@@ -21201,9 +24119,9 @@
             "r1m": -10.58,
             "r3m": -1.81,
             "rytd": -16.92,
-            "ex1m": 6.79,
-            "ex3m": 9.31,
-            "exytd": -2.49
+            "ex1m": 5.64,
+            "ex3m": 8.08,
+            "exytd": -3.68
           },
           {
             "ts_code": "024895.OF",
@@ -21213,9 +24131,9 @@
             "r1m": -17.02,
             "r3m": -17.26,
             "rytd": -27.55,
-            "ex1m": 0.35,
-            "ex3m": -6.14,
-            "exytd": -13.12
+            "ex1m": -0.8,
+            "ex3m": -7.37,
+            "exytd": -14.31
           }
         ]
       },
@@ -21390,9 +24308,9 @@
         "sector": "农林牧渔",
         "nFunds": 4,
         "benchSrc": "东财板块指数·农林牧渔",
-        "ex1mMed": 9.2,
-        "ex3mMed": -6.41,
-        "exytdMed": 3.02,
+        "ex1mMed": 8.52,
+        "ex3mMed": -7.21,
+        "exytdMed": 2.38,
         "winYtdPct": 75,
         "verdict": "✅有效",
         "funds": [
@@ -21404,9 +24322,9 @@
             "r1m": -1.78,
             "r3m": -1.78,
             "rytd": -12.82,
-            "ex1m": 11.49,
-            "ex3m": -5.67,
-            "exytd": 4.54
+            "ex1m": 10.81,
+            "ex3m": -6.47,
+            "exytd": 3.9
           },
           {
             "ts_code": "021830.OF",
@@ -21416,9 +24334,9 @@
             "r1m": -6.35,
             "r3m": -6.22,
             "rytd": -15.85,
-            "ex1m": 6.92,
-            "ex3m": -10.11,
-            "exytd": 1.51
+            "ex1m": 6.24,
+            "ex3m": -10.91,
+            "exytd": 0.87
           },
           {
             "ts_code": "022521.OF",
@@ -21428,9 +24346,9 @@
             "r1m": -10.84,
             "r3m": -3.26,
             "rytd": -25.12,
-            "ex1m": 2.43,
-            "ex3m": -7.15,
-            "exytd": -7.76
+            "ex1m": 1.75,
+            "ex3m": -7.95,
+            "exytd": -8.4
           },
           {
             "ts_code": "005106.OF",
@@ -21440,9 +24358,9 @@
             "r1m": -1.8,
             "r3m": 1.44,
             "rytd": -9.92,
-            "ex1m": 11.47,
-            "ex3m": -2.45,
-            "exytd": 7.44
+            "ex1m": 10.79,
+            "ex3m": -3.25,
+            "exytd": 6.8
           }
         ]
       },
