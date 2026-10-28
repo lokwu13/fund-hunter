@@ -133,6 +133,37 @@ export interface VcpIndexCup {
   formed: boolean;
 }
 
+export interface SectorFlowItem {
+  name: string;
+  net1: number;
+  net5: number;
+  prevNet5: number;
+  accel5: number;
+  net10: number;
+  net20: number;
+  inflowDays5: number;
+  inflowDays10: number;
+  outflowDays5: number;
+  outflowDays10: number;
+  /** 旧资金节奏：能否投否决逻辑仍使用，不与新短期标签混用。 */
+  tag: string;
+  tags: string[];
+  eci?: { parent: string; rank: number; score: number } | null;
+  bottom?: {
+    hit30?: boolean; hit60?: boolean; both?: boolean;
+    inflow30d?: number | null; inflow60d?: number | null;
+  } | null;
+  resonance?: {
+    source: 'step2' | 'vcpWatch';
+    lifecycle: string | null; pattern: string | null; signal: string | null;
+  } | null;
+  leaders?: Array<{
+    name: string; code?: string | null; pctChg?: number | null;
+    strength?: string; mine?: boolean;
+  }>;
+  evidenceSources?: string[];
+}
+
 export interface FundData {
   updateTime: string;
   week: string;
@@ -544,15 +575,15 @@ export interface FundData {
     }>;
   };
   sectorFlows?: {
-    trade_date: string;
+    trade_date: string | null;
+    dataDate?: string | null;
+    expectedDate?: string | null;
+    stale?: boolean;
     note?: string;
-    items: Array<{
-      name: string;
-      net5: number;
-      net10: number;
-      net20: number;
-      tag: string;
-    }>;
+    incompleteSectors?: string[];
+    items: SectorFlowItem[];
+    inflowTop: SectorFlowItem[];
+    outflowTop: SectorFlowItem[];
   };
   vcpWatch?: {
     trade_date: string;

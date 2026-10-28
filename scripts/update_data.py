@@ -4702,26 +4702,67 @@ def fetch_sector_commentary(pro, trade_date):
     return entries
 
 
-def build_sector_flows(data):
-    """三档净流入（任务：sectorPeriod 扩展）：近5/10/20日主力净流入 + 资金节奏标签。
+def build_sector_flows(data, expected_date=None):
+    """短期行业资金统一榜：当日、近5/前5日、加速度与5/10日持续性。
 
-    全部用 sector_history 缓存计算（Tushare 二级行业口径，与板块资金表的 data.sectors 同名），
-    不新增接口。
+    全部行业严格对齐全局最近20个历史日期；缺日或非有限数值不补0、不入榜。
+    旧 tag 保留给 build_actionable_sectors 的否决规则，新 tags 只描述短期资金。
+    20日仅作背景，不参与流入/流出排序。expected_date 只供新鲜度锁门和回归测试。
     """
+    import math
+
+    def empty_flows(data_date=None, stale=False):
+        expected = str(expected_date).replace('-', '') if expected_date else None
+        data['sectorFlows'] = {
+            'trade_date': (f'{data_date[:4]}-{data_date[4:6]}-{data_date[6:]}'
+                           if data_date else None),
+            'dataDate': (f'{data_date[:4]}-{data_date[4:6]}-{data_date[6:]}'
+                         if data_date else None),
+            'expectedDate': (f'{expected[:4]}-{expected[4:6]}-{expected[6:]}'
+                             if expected else None),
+            'stale': stale,
+            'items': [], 'inflowTop': [], 'outflowTop': [], 'incompleteSectors': [],
+            'note': '资金历史不足或有效日不符合预期，本期不保留旧榜。',
+        }
+
     try:
         hist = _load_sector_history()
-        days = sorted(hist['days'])
+        days = sorted(hist.get('days') or {})
+        latest = days[-1] if days else None
+        expected = str(expected_date).replace('-', '') if expected_date else None
         if len(days) < 20:
-            print(f"  sectorFlows: history only {len(days)} days, keep old")
+            print(f"  sectorFlows: history only {len(days)} days, empty current rankings")
+            empty_flows(latest, stale=bool(expected and latest != expected))
             return
-        agg = {}
-        for d in days[-20:]:
-            for ind, s in hist['days'][d]['sectors'].items():
-                agg.setdefault(ind, []).append(s.get('net', 0.0))
-        rows = []
-        for ind, nets in agg.items():
-            n5, n10, n20 = sum(nets[-5:]), sum(nets[-10:]), sum(nets[-20:])
-            p5, p10 = n5 / 5, (n10 - n5) / 5
+        if expected and latest != expected:
+            print(f"  sectorFlows: stale history {latest}, expected {expected}; empty rankings")
+            empty_flows(latest, stale=True)
+            return
+
+        window = days[-20:]
+        names = sorted({ind for d in window
+                        for ind in (hist['days'][d].get('sectors') or {})})
+        rows, incomplete = [], []
+        for ind in names:
+            nets = []
+            valid = True
+            for d in window:
+                value = ((hist['days'][d].get('sectors') or {}).get(ind) or {}).get('net')
+                if (not isinstance(value, (int, float)) or isinstance(value, bool)
+                        or not math.isfinite(value)):
+                    valid = False
+                    break
+                nets.append(float(value))
+            if not valid:
+                incomplete.append(ind)
+                continue
+            n1 = nets[-1]
+            n5 = sum(nets[-5:])
+            prev5 = sum(nets[-10:-5])
+            n10 = n5 + prev5
+            n20 = sum(nets)
+            accel = n5 - prev5
+            p5, p10 = n5 / 5, prev5 / 5
             if n5 < 0 and n10 < 0 and n20 < 0:
                 tag = '持续流出'
             elif n5 > 0 and n10 <= 0:
@@ -4734,19 +4775,121 @@ def build_sector_flows(data):
                 tag = '减速流入'
             else:
                 tag = '反复'
-            rows.append({'name': ind, 'net5': round(n5, 1), 'net10': round(n10, 1),
-                         'net20': round(n20, 1), 'tag': tag})
-        rows.sort(key=lambda x: -x['net5'])
+            tags = []
+            if n5 > 0:
+                if prev5 <= 0:
+                    tags.append('新晋')
+                elif accel > 0:
+                    tags.append('加速')
+                elif accel < 0:
+                    tags.append('降温')
+                if sum(v > 0 for v in nets[-5:]) >= 4:
+                    tags.append('持续')
+            elif n5 < 0:
+                if prev5 >= 0:
+                    tags.append('转流出')
+                elif accel < 0:
+                    tags.append('加速')
+                elif accel > 0:
+                    tags.append('降温')
+                if sum(v < 0 for v in nets[-5:]) >= 4:
+                    tags.append('持续')
+            rows.append({
+                'name': ind,
+                'net1': round(n1, 1), 'net5': round(n5, 1),
+                'prevNet5': round(prev5, 1), 'accel5': round(accel, 1),
+                'net10': round(n10, 1), 'net20': round(n20, 1),
+                'inflowDays5': sum(v > 0 for v in nets[-5:]),
+                'inflowDays10': sum(v > 0 for v in nets[-10:]),
+                'outflowDays5': sum(v < 0 for v in nets[-5:]),
+                'outflowDays10': sum(v < 0 for v in nets[-10:]),
+                'tag': tag, 'tags': tags,
+            })
+        rows.sort(key=lambda x: (-x['net5'], x['name']))
+        inflow = sorted((r for r in rows if r['net5'] > 0),
+                        key=lambda r: (-r['accel5'], -r['inflowDays5'], -r['net5'], r['name']))
+        outflow = sorted((r for r in rows if r['net5'] < 0),
+                         key=lambda r: (r['accel5'], -r['outflowDays5'], r['net5'], r['name']))
         d1 = days[-1]
+        iso_date = f'{d1[:4]}-{d1[4:6]}-{d1[6:]}'
         data['sectorFlows'] = {
-            'trade_date': f'{d1[:4]}-{d1[4:6]}-{d1[6:]}',
+            'trade_date': iso_date, 'dataDate': iso_date,
+            'expectedDate': (f'{expected[:4]}-{expected[4:6]}-{expected[6:]}'
+                             if expected else None),
+            'stale': False,
             'items': rows,
-            'note': 'Tushare 二级行业主力净流入；节奏=近5日日均 vs 前5日日均（加速流入/减速流入/拐点/持续流出）',
+            'inflowTop': inflow[:10], 'outflowTop': outflow[:10],
+            'incompleteSectors': incomplete,
+            'note': ('Tushare二级行业；流入按加速度降序→近5日流入天数→近5日净流入，流出镜像；'
+                     '加速度=近5日−前5日，20日仅作背景。旧tag仅供既有能否投否决规则。'),
         }
-        print(f"  sectorFlows: {len(rows)} industries as of {d1}, "
-              f"top: {[(r['name'], r['net5'], r['tag']) for r in rows[:3]]}")
+        print(f"  sectorFlows: {len(rows)} complete/{len(incomplete)} incomplete as of {d1}, "
+              f"inflow: {[(r['name'], r['net5'], r['accel5']) for r in inflow[:3]]}, "
+              f"outflow: {[(r['name'], r['net5'], r['accel5']) for r in outflow[:3]]}")
     except Exception as e:
-        print(f"  Warning: build_sector_flows failed: {e}")
+        empty_flows(stale=True)
+        print(f"  Warning: build_sector_flows failed (empty current rankings): {e}")
+
+
+def attach_sector_flow_evidence(data):
+    """给短期资金榜挂载本批已有 ECI/积聚/漏斗/VCP 证据，零新增抓取。"""
+    try:
+        flows = data.get('sectorFlows') or {}
+        eci_rows = (data.get('eciData') or {}).get('sectors') or []
+        eci_ranked = sorted(eci_rows, key=lambda x: (-x.get('eci', float('-inf')), x.get('sector', '')))
+        eci_map = {r['sector']: {'parent': r['sector'], 'rank': i + 1, 'score': r.get('eci')}
+                   for i, r in enumerate(eci_ranked)}
+        bottom_map = {r['sector']: r for r in (data.get('bottomWatch') or {}).get('items') or []}
+        step2 = next((s for s in (data.get('funnel') or {}).get('steps') or []
+                      if s.get('key') == 'sector'), {})
+        step2_map = {r['sector']: r for r in step2.get('rows') or []}
+        vcp_map = {r['name']: r for r in (data.get('vcpWatch') or {}).get('items') or []}
+        source_order = ('eciData', 'bottomWatch', 'step2', 'vcpWatch')
+
+        for row in flows.get('items') or []:
+            name = row['name']
+            sources = set()
+            parent = SECTOR_TO_L1.get(name)
+            row['eci'] = dict(eci_map[parent]) if parent in eci_map else None
+            if row['eci']:
+                sources.add('eciData')
+
+            bw = bottom_map.get(name)
+            row['bottom'] = ({key: bw.get(key) for key in
+                              ('hit30', 'hit60', 'both', 'inflow30d', 'inflow60d')}
+                             if bw else None)
+            if bw:
+                sources.add('bottomWatch')
+
+            s2 = step2_map.get(name)
+            vcp = vcp_map.get(name)
+            active_vcp = vcp if vcp and vcp.get('signal') and vcp.get('signal') != '⚪' else None
+            if s2:
+                row['resonance'] = {'source': 'step2', 'lifecycle': s2.get('lifecycle'),
+                                    'pattern': s2.get('pattern'), 'signal': None}
+                sources.add('step2')
+            elif active_vcp:
+                row['resonance'] = {'source': 'vcpWatch', 'lifecycle': None,
+                                    'pattern': None, 'signal': active_vcp.get('signal')}
+                sources.add('vcpWatch')
+            else:
+                row['resonance'] = None
+
+            leaders = []
+            if s2 and s2.get('leaders'):
+                leaders = [dict(x) for x in s2['leaders'][:2]]
+            elif bw and bw.get('leaders'):
+                leaders = [dict(x) for x in bw['leaders'][:2]]
+            elif active_vcp:
+                leaders = [dict(x) for x in (active_vcp.get('leaders') or [])
+                           if x.get('narrow') and x.get('shrink')][:2]
+                if leaders:
+                    sources.add('vcpWatch')
+            row['leaders'] = leaders
+            row['evidenceSources'] = [s for s in source_order if s in sources]
+        print(f"  sectorFlows evidence: attached to {len(flows.get('items') or [])} industries")
+    except Exception as e:
+        print(f"  Warning: attach_sector_flow_evidence failed: {e}")
 
 
 def _vcp_append_rows(old_rows, new_rows, max_len=300):
@@ -8463,6 +8606,9 @@ def main():
         build_funnel(data)
     except Exception as e:
         print(f"  Warning: funnel failed: {e}")
+    else:
+        # 资金统一榜只挂载本批已经生成的证据；不在此处新增任何数据请求。
+        attach_sector_flow_evidence(data)
 
     # ── 17e. 第三步入选历史记录（每日名单入 cache + selDays 回写漏斗行；2026-09-30 用户指令）──
     update_step3_history(data)

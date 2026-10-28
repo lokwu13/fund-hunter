@@ -8,7 +8,7 @@ import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ReferenceLine, LabelList, Cell
 } from 'recharts';
-import { useFundData } from '@/hooks/useFundData';
+import { useFundData, type SectorFlowItem } from '@/hooks/useFundData';
 
 interface SectorHeatmapProps {
   detailed?: boolean;
@@ -39,117 +39,159 @@ function getFlowLevel(flow: number): string {
   return 'outflow-heavy';
 }
 
+const formatMoney = (value?: number | null) => (
+  value == null || !Number.isFinite(value)
+    ? '—'
+    : `${value > 0 ? '+' : ''}${value.toFixed(1)}亿`
+);
+
+const shortTagClass: Record<string, string> = {
+  新晋: 'bg-amber-100 text-amber-700',
+  转流出: 'bg-amber-100 text-amber-700',
+  加速: 'bg-orange-100 text-orange-700',
+  降温: 'bg-slate-100 text-slate-600',
+  持续: 'bg-cyan-100 text-cyan-700',
+};
+
+function ResonanceEvidence({ flow }: { flow: SectorFlowItem }) {
+  if (!flow.eci && !flow.bottom && !flow.resonance) {
+    return <span className="text-slate-400">—</span>;
+  }
+  return (
+    <div className="min-w-56 space-y-0.5 text-[10px] leading-snug">
+      {flow.eci && (
+        <p className="text-cyan-700">
+          ECI {flow.eci.parent} 第{flow.eci.rank} · {flow.eci.score.toFixed(1)}
+        </p>
+      )}
+      {flow.bottom && (
+        <p className="text-teal-700">
+          积聚{flow.bottom.both ? '·双档' : ''} 30日{formatMoney(flow.bottom.inflow30d)} / 60日{formatMoney(flow.bottom.inflow60d)}
+        </p>
+      )}
+      {flow.resonance && (
+        <p className="text-indigo-700">
+          {flow.resonance.source === 'step2'
+            ? `${flow.resonance.lifecycle || '板块入选'} · ${flow.resonance.pattern || '形态已确认'}`
+            : `VCP ${flow.resonance.signal}`}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) {
   const { data } = useFundData();
-  const sectors = data.sectors || [];
-  const period = data.sectorPeriod || '近4周主力累计';
-
-  // 分离流入/流出
-  const inflowSectors = sectors.filter(s => (s.mainFlow || 0) > 0);
-  const outflowSectors = sectors.filter(s => (s.mainFlow || 0) < 0);
-
-  const totalInflow = inflowSectors.reduce((a, s) => a + (s.mainFlow || 0), 0);
-  const totalOutflow = outflowSectors.reduce((a, s) => a + (s.mainFlow || 0), 0);
-  const anomalyCount = sectors.filter(s => s.isAnomaly).length;
+  const flows = data.sectorFlows;
+  const inflowTop = flows?.inflowTop || [];
+  const outflowTop = flows?.outflowTop || [];
+  const limit = detailed ? 10 : 5;
+  const unifiedRows: Array<{ flow: SectorFlowItem; direction: 'inflow' | 'outflow' }> = [
+    ...inflowTop.slice(0, limit).map(flow => ({ flow, direction: 'inflow' as const })),
+    ...outflowTop.slice(0, limit).map(flow => ({ flow, direction: 'outflow' as const })),
+  ];
+  const totalInflow = inflowTop.reduce((sum, flow) => sum + flow.net5, 0);
+  const totalOutflow = outflowTop.reduce((sum, flow) => sum + flow.net5, 0);
 
   return (
     <div className="space-y-6">
-      {/* Summary Bar */}
       <div className="flex items-center justify-between bg-white rounded-lg border border-slate-200 px-4 py-3 flex-wrap gap-2">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded bg-orange-400" />
-            <span className="text-xs text-slate-600">流入TOP10 <b className="text-orange-600">+{totalInflow.toFixed(0)}亿</b></span>
+            <span className="text-xs text-slate-600">近5日流入TOP10 <b className="text-orange-600">{formatMoney(totalInflow)}</b></span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded bg-sky-400" />
-            <span className="text-xs text-slate-600">流出TOP10 <b className="text-sky-600">{totalOutflow.toFixed(0)}亿</b></span>
+            <span className="text-xs text-slate-600">近5日流出TOP10 <b className="text-sky-600">{formatMoney(totalOutflow)}</b></span>
           </div>
-          {anomalyCount > 0 && (
-            <div className="flex items-center gap-1">
-              <Zap className="w-3 h-3 text-amber-500" />
-              <span className="text-xs text-amber-600"><b>{anomalyCount}</b>个板块单周突增</span>
-            </div>
-          )}
         </div>
-        <Badge variant="outline" className="text-xs bg-slate-50">{period}</Badge>
+        <Badge variant="outline" className="text-xs bg-slate-50">{flows?.trade_date || '等待有效资金数据'}</Badge>
       </div>
 
-      {/* ====== INFLOW HEATMAP (TOP 10) ====== */}
-      <Card className="shadow-sm border-orange-200">
+      {/* 总览与板块页共用同一数据源、同一排序；仅展示条数不同。 */}
+      <Card id="short-term-sector-flows" className="shadow-sm border-orange-200">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-bold flex items-center gap-2">
+          <CardTitle className="text-base font-bold flex items-center gap-2 flex-wrap">
             <TrendingUp className="w-5 h-5 text-orange-600" />
-            主力净流入 TOP10 行业
-            <Badge variant="outline" className="text-xs bg-orange-50 text-orange-600">4周累计</Badge>
+            短期资金统一表
+            <Badge variant="outline" className="text-xs bg-orange-50 text-orange-600">流入/流出 TOP{limit}</Badge>
           </CardTitle>
+          <CardDescription className="text-[11px]">
+            加速度=近5日−前5日；流入按加速度、5日流入天数、5日净流入降序，流出镜像。20日仅作背景，不参与排序。
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-2 grid-cols-5">
-            {inflowSectors.map((sector) => {
-              const flow = sector.mainFlow || 0;
-              const level = getFlowLevel(flow);
-              const colors = flowColors[level];
-              return (
-                <div
-                  key={sector.name}
-                  className={`${colors.bg} ${colors.text} rounded-lg p-3 border ${colors.border} transition-all hover:scale-105 hover:shadow-md cursor-pointer relative`}
-                >
-                  {sector.isAnomaly && (
-                    <div className="absolute -top-1.5 -right-1.5 z-10" title={`单周最大+${sector.maxWeeklyFlow}亿`}>
-                      <Zap className="w-5 h-5 text-amber-500 fill-amber-500 drop-shadow" />
-                    </div>
-                  )}
-                  <p className="text-sm font-bold truncate pr-2">{sector.name}</p>
-                  <p className="text-lg font-bold mt-1">+{flow}亿</p>
-                  {sector.isAnomaly && (
-                    <p className="text-[10px] mt-0.5 opacity-90 font-semibold">
-                      单周+{sector.maxWeeklyFlow}亿
-                    </p>
-                  )}
-                </div>
-              );
-            })}
+          <div className="overflow-x-auto">
+            <Table className="min-w-[1080px]">
+              <TableHeader>
+                <TableRow className="bg-slate-50">
+                  <TableHead className="text-xs">板块</TableHead>
+                  <TableHead className="text-xs text-right">当日</TableHead>
+                  <TableHead className="text-xs text-right">近5日</TableHead>
+                  <TableHead className="text-xs text-right" title="加速度=近5日净流入−前5日净流入">较前5日</TableHead>
+                  <TableHead className="text-xs">持续性</TableHead>
+                  <TableHead className="text-xs">共振结论</TableHead>
+                  <TableHead className="text-xs">双龙头</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {unifiedRows.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="py-8 text-center text-xs text-slate-400">
+                      {flows?.stale ? '资金历史有效日不符合预期，本期不展示旧榜。' : '完整20日资金历史不足，暂无可展示榜单。'}
+                    </TableCell>
+                  </TableRow>
+                ) : unifiedRows.map(({ flow, direction }, index) => {
+                  const isInflow = direction === 'inflow';
+                  const days5 = isInflow ? flow.inflowDays5 : flow.outflowDays5;
+                  const days10 = isInflow ? flow.inflowDays10 : flow.outflowDays10;
+                  const rank = unifiedRows.slice(0, index + 1).filter(row => row.direction === direction).length;
+                  return (
+                    <TableRow key={`${direction}-${flow.name}`} className="hover:bg-slate-50 align-top">
+                      <TableCell className="min-w-44">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-xs font-bold text-slate-800">#{rank} {flow.name}</span>
+                          <Badge className={`text-[9px] border-0 ${isInflow ? 'bg-orange-100 text-orange-700' : 'bg-sky-100 text-sky-700'}`}>
+                            {isInflow ? '流入' : '流出'}
+                          </Badge>
+                          {(flow.tags || []).map(tag => (
+                            <Badge key={tag} className={`text-[9px] border-0 ${shortTagClass[tag] || 'bg-slate-100 text-slate-500'}`}>{tag}</Badge>
+                          ))}
+                        </div>
+                        <p className="text-[10px] text-slate-400 mt-1" title="20日资金仅作背景，不参与排名">20日背景 {formatMoney(flow.net20)}</p>
+                      </TableCell>
+                      <TableCell className={`text-xs text-right font-bold ${flow.net1 >= 0 ? 'text-orange-600' : 'text-sky-600'}`}>{formatMoney(flow.net1)}</TableCell>
+                      <TableCell className={`text-xs text-right font-bold ${flow.net5 >= 0 ? 'text-orange-600' : 'text-sky-600'}`}>{formatMoney(flow.net5)}</TableCell>
+                      <TableCell className="text-right">
+                        <p className={`text-xs font-bold ${flow.accel5 >= 0 ? 'text-orange-600' : 'text-sky-600'}`}>{formatMoney(flow.accel5)}</p>
+                        <p className="text-[10px] text-slate-400 mt-0.5">前5日 {formatMoney(flow.prevNet5)}</p>
+                      </TableCell>
+                      <TableCell className="min-w-28">
+                        <p className="text-xs font-semibold text-slate-700">{days5}/5 · {days10}/10</p>
+                        <p className="text-[10px] text-slate-400 mt-0.5">近5日 / 近10日同向</p>
+                      </TableCell>
+                      <TableCell><ResonanceEvidence flow={flow} /></TableCell>
+                      <TableCell className="min-w-36">
+                        {flow.leaders?.length ? (
+                          <div className="space-y-1">
+                            {flow.leaders.slice(0, 2).map(leader => (
+                              <p key={leader.code || leader.name} className="text-[11px] font-semibold text-slate-700">
+                                {leader.name}<span className="text-[9px] font-normal text-slate-400 ml-1">{leader.code || ''}</span>
+                              </p>
+                            ))}
+                          </div>
+                        ) : <span className="text-xs text-slate-400">—</span>}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* ====== OUTFLOW HEATMAP (TOP 10) ====== */}
-      <Card className="shadow-sm border-sky-200">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-bold flex items-center gap-2">
-            <TrendingDown className="w-5 h-5 text-sky-600" />
-            主力净流出 TOP10 行业
-            <Badge variant="outline" className="text-xs bg-sky-50 text-sky-600">4周累计</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-2 grid-cols-5">
-            {outflowSectors.map((sector) => {
-              const flow = sector.mainFlow || 0;
-              const level = getFlowLevel(flow);
-              const colors = flowColors[level];
-              return (
-                <div
-                  key={sector.name}
-                  className={`${colors.bg} ${colors.text} rounded-lg p-3 border ${colors.border} transition-all hover:scale-105 hover:shadow-md cursor-pointer relative`}
-                >
-                  {sector.isAnomaly && (
-                    <div className="absolute -top-1.5 -right-1.5 z-10" title={`单周最大${sector.maxWeeklyFlow}亿`}>
-                      <Zap className="w-5 h-5 text-amber-500 fill-amber-500 drop-shadow" />
-                    </div>
-                  )}
-                  <p className="text-sm font-bold truncate pr-2">{sector.name}</p>
-                  <p className="text-lg font-bold mt-1">{flow}亿</p>
-                  {sector.isAnomaly && (
-                    <p className="text-[10px] mt-0.5 opacity-90 font-semibold">
-                      单周{sector.maxWeeklyFlow}亿
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          <p className="text-[10px] text-slate-400 mt-3">
+            金额单位：亿元；缺日或非数值行业不补0、不入榜。{flows?.incompleteSectors?.length ? `本期不完整行业 ${flows.incompleteSectors.length} 个。` : ''}
+          </p>
         </CardContent>
       </Card>
 
@@ -525,79 +567,6 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
                 ))}
               </p>
             )}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* ====== TABLE VIEW (板块页) ====== */}
-      {detailed && (
-        <Card>
-          <CardContent className="p-3">
-            <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
-              <p className="text-xs text-slate-500">三档净流入：二级行业主力净流入（近5/10/20日，亿元）+ 资金节奏</p>
-              {data.sectorFlows?.trade_date && (
-                <Badge variant="outline" className="text-xs bg-slate-50">{data.sectorFlows.trade_date}</Badge>
-              )}
-            </div>
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-slate-50">
-                  <TableHead className="text-xs">排名</TableHead>
-                  <TableHead className="text-xs">行业板块</TableHead>
-                  <TableHead className="text-xs text-right">近5日</TableHead>
-                  <TableHead className="text-xs text-right">近10日</TableHead>
-                  <TableHead className="text-xs text-right">近20日</TableHead>
-                  <TableHead className="text-xs">资金节奏</TableHead>
-                  <TableHead className="text-xs text-right">单周最大</TableHead>
-                  <TableHead className="text-xs">异常标记</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sectors.map((sector, idx) => {
-                  const flow = (data.sectorFlows?.items || []).find((f: any) => f.name === sector.name);
-                  const tagCls: Record<string, string> = {
-                    '加速流入': 'bg-red-100 text-red-600',
-                    '减速流入': 'bg-orange-100 text-orange-600',
-                    '拐点·转流入': 'bg-amber-100 text-amber-700',
-                    '拐点·转流出': 'bg-amber-100 text-amber-700',
-                    '持续流出': 'bg-emerald-100 text-emerald-700',
-                    '反复': 'bg-slate-100 text-slate-500',
-                  };
-                  const flowCell = (v?: number) => (
-                    <TableCell className={`text-xs text-right font-bold ${(v ?? 0) >= 0 ? 'text-orange-600' : 'text-sky-600'}`}>
-                      {v == null ? '—' : `${v >= 0 ? '+' : ''}${v}亿`}
-                    </TableCell>
-                  );
-                  return (
-                    <TableRow key={sector.name} className="hover:bg-slate-50">
-                      <TableCell className="text-xs font-bold">{idx + 1}</TableCell>
-                      <TableCell className="text-xs font-semibold">{sector.name}</TableCell>
-                      {flowCell(flow?.net5)}
-                      {flowCell(flow?.net10)}
-                      {flowCell(flow?.net20)}
-                      <TableCell>
-                        {flow?.tag && (
-                          <Badge className={`text-[10px] border-0 ${tagCls[flow.tag] || 'bg-slate-100 text-slate-500'}`}>
-                            {flow.tag}
-                          </Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-xs text-right">
-                        {(sector.maxWeeklyFlow || 0) >= 0 ? '+' : ''}{sector.maxWeeklyFlow}亿
-                      </TableCell>
-                      <TableCell>
-                        {sector.isAnomaly && (
-                          <Badge className="text-[10px] bg-amber-100 text-amber-700">
-                            <Zap className="w-3 h-3 mr-0.5" />
-                            单周突增
-                          </Badge>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
           </CardContent>
         </Card>
       )}
