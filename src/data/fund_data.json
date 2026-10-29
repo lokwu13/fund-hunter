@@ -8596,7 +8596,29 @@
       "stockName": "万华化学",
       "group": "watch",
       "industry": "化工原料",
-      "items": []
+      "items": [
+        {
+          "type": "公告",
+          "date": "2026-10-27",
+          "title": "万华化学2026年三季度主要经营数据公告",
+          "content": "万华化学2026年三季度主要经营数据公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-10-27/1225622854.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-10-27",
+          "title": "万华化学第十届董事会2026年第三次会议决议公告",
+          "content": "万华化学第十届董事会2026年第三次会议决议公告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-10-27/1225622845.PDF"
+        },
+        {
+          "type": "公告",
+          "date": "2026-10-27",
+          "title": "万华化学2026年三季度报告",
+          "content": "万华化学2026年三季度报告",
+          "url": "http://static.cninfo.com.cn/finalpage/2026-10-27/1225622843.PDF"
+        }
+      ]
     },
     {
       "stockCode": "600406.SH",
@@ -15618,6 +15640,93 @@
         "weekly": null
       },
       {
+        "code": "601866.SH",
+        "name": "中远海发",
+        "sector": "水运",
+        "star": false,
+        "inPool": true,
+        "close": 2.37,
+        "tag": "—",
+        "pattern": "底部整理",
+        "platform": {
+          "type": "底部平台型",
+          "days": 12,
+          "amplitude": 10.1,
+          "riseFromLow": 7.4,
+          "tailRatio": 0.85,
+          "volRatio": 0.94,
+          "segAmps": [
+            7.3,
+            5.3,
+            3.4
+          ],
+          "pivot": 2.51,
+          "distPct": 5.9,
+          "formed": true
+        },
+        "entryTier": "qualified",
+        "defects": [],
+        "cupHandle": null,
+        "flag": null,
+        "longPlat": null,
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": false,
+              "val": "2.37 vs MA150 2.50"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": false,
+              "val": "2.37 vs MA200 2.55"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 2.56→2.55"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": false,
+              "val": "2.42 vs 2.50"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": false,
+              "val": "2.50 vs 2.55"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点2.21→现价2.37（+7%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": false,
+              "val": "高点3.25→现价2.37（-27%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 2.51,
+          "distanceToPivotPct": 5.9,
+          "invalidation": 2.28,
+          "volConfirm": 951576.6,
+          "breakoutConfirm": "收盘>2.51 且成交量≥50日均量×1.4（≈951577手）"
+        },
+        "histPct": 13.2,
+        "distHigh250": -27.1,
+        "distMain": 5.9,
+        "mfDays": 3,
+        "sectorFit": "板块不配合⚠️",
+        "advice": "底部整理·距枢轴5.9%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入3天",
+        "daily": null,
+        "weekly": null
+      },
+      {
         "code": "601018.SH",
         "name": "宁波港",
         "sector": "港口",
@@ -15727,93 +15836,6 @@
           "volConfirm": 793939.1,
           "formed": false
         },
-        "weekly": null
-      },
-      {
-        "code": "601866.SH",
-        "name": "中远海发",
-        "sector": "水运",
-        "star": false,
-        "inPool": true,
-        "close": 2.37,
-        "tag": "—",
-        "pattern": "底部整理",
-        "platform": {
-          "type": "底部平台型",
-          "days": 12,
-          "amplitude": 10.1,
-          "riseFromLow": 7.4,
-          "tailRatio": 0.85,
-          "volRatio": 0.94,
-          "segAmps": [
-            7.3,
-            5.3,
-            3.4
-          ],
-          "pivot": 2.51,
-          "distPct": 5.9,
-          "formed": true
-        },
-        "entryTier": "qualified",
-        "defects": [],
-        "cupHandle": null,
-        "flag": null,
-        "longPlat": null,
-        "trendTemplate": {
-          "pass": false,
-          "evidence": [
-            {
-              "item": "现价>150日线",
-              "ok": false,
-              "val": "2.37 vs MA150 2.50"
-            },
-            {
-              "item": "现价>200日线",
-              "ok": false,
-              "val": "2.37 vs MA200 2.55"
-            },
-            {
-              "item": "200日线上行≥1个月",
-              "ok": false,
-              "val": "MA200 2.56→2.55"
-            },
-            {
-              "item": "50日线>150日线",
-              "ok": false,
-              "val": "2.42 vs 2.50"
-            },
-            {
-              "item": "150日线>200日线",
-              "ok": false,
-              "val": "2.50 vs 2.55"
-            },
-            {
-              "item": "距52周低点≥+25%",
-              "ok": false,
-              "val": "低点2.21→现价2.37（+7%）"
-            },
-            {
-              "item": "距52周高点≤25%",
-              "ok": false,
-              "val": "高点3.25→现价2.37（-27%）"
-            }
-          ]
-        },
-        "stage": "Stage 1 基底（未过趋势模板）",
-        "buyPoint": {
-          "pivot": 2.51,
-          "distanceToPivotPct": 5.9,
-          "invalidation": 2.28,
-          "volConfirm": 951576.6,
-          "breakoutConfirm": "收盘>2.51 且成交量≥50日均量×1.4（≈951577手）"
-        },
-        "histPct": 13.2,
-        "distHigh250": -27.1,
-        "distMain": 5.9,
-        "mfDays": 3,
-        "sectorFit": "板块不配合⚠️",
-        "advice": "底部整理·距枢轴5.9%｜水温中性·谨慎关注｜板块不配合⚠️｜主力10日净流入3天",
-        "daily": null,
         "weekly": null
       },
       {
@@ -18329,12 +18351,12 @@
         "weekly": null
       },
       {
-        "code": "600583.SH",
-        "name": "海油工程",
-        "sector": "石油开采",
+        "code": "300628.SZ",
+        "name": "亿联网络",
+        "sector": "通信设备",
         "star": false,
         "inPool": true,
-        "close": 6.54,
+        "close": 37.47,
         "tag": "—",
         "pattern": "杯柄型",
         "platform": null,
@@ -18344,29 +18366,29 @@
         ],
         "cupHandle": {
           "type": "杯柄型",
-          "days": 15,
-          "totalDays": 131,
-          "cupDepth": 32.7,
+          "days": 13,
+          "totalDays": 111,
+          "cupDepth": 17.3,
           "depthOk": true,
           "depthMax": 33.0,
-          "amplitude": 9.9,
-          "tailRatio": 1.04,
-          "volRatio": 0.95,
-          "pivot": 6.79,
+          "amplitude": 9.5,
+          "tailRatio": 0.95,
+          "volRatio": 0.58,
+          "pivot": 38.88,
           "distPct": 3.8,
-          "invalidation": 6.18,
-          "volConfirm": 613769.0,
-          "preGain": 45.1,
+          "invalidation": 35.51,
+          "volConfirm": 130833.4,
+          "preGain": 21.9,
           "weeklyUp": false,
           "weeklyTrend": {
             "pass": false,
             "completedWeekEnd": "20261023",
             "weeks": 252,
-            "weeklyClose": 6.22,
-            "bollMid99": 5.7591,
-            "closeToMid": 1.08,
-            "bollLower99": 4.6008,
-            "closeToLower": 1.3519,
+            "weeklyClose": 38.5,
+            "bollMid99": 36.9011,
+            "closeToMid": 1.0433,
+            "bollLower99": 31.5774,
+            "closeToLower": 1.2192,
             "weeksBelowMid": 0,
             "weeksBelowLower": 0,
             "bollA": true,
@@ -18374,23 +18396,23 @@
             "bollTolerated": false,
             "bollEffectiveBreakdown": false,
             "bollPass": true,
-            "ma150": 5.8073,
-            "ma200": 5.9196,
+            "ma150": 35.7689,
+            "ma200": 39.3355,
             "maBull150_200": false,
-            "spreadPct": -1.897,
-            "prevSpreadPct": -1.839,
-            "spreadExpanding": false,
-            "ma150Rising": false,
-            "ma200Rising": true
+            "spreadPct": -9.067,
+            "prevSpreadPct": -9.463,
+            "spreadExpanding": true,
+            "ma150Rising": true,
+            "ma200Rising": false
           },
           "defects": [
             "周MA未多头"
           ],
           "qualified": false,
-          "rimDate": "20260416",
-          "rimHigh": 7.33,
-          "handlePosition": 0.521,
-          "brkNeedVol": 622145.8,
+          "rimDate": "20260519",
+          "rimHigh": 38.84,
+          "handlePosition": 0.503,
+          "brkNeedVol": 108068.8,
           "formed": true
         },
         "flag": null,
@@ -18401,54 +18423,54 @@
             {
               "item": "现价>150日线",
               "ok": true,
-              "val": "6.54 vs MA150 6.06"
+              "val": "37.47 vs MA150 37.39"
             },
             {
               "item": "现价>200日线",
               "ok": true,
-              "val": "6.54 vs MA200 6.21"
+              "val": "37.47 vs MA200 37.12"
             },
             {
               "item": "200日线上行≥1个月",
               "ok": true,
-              "val": "MA200 6.11→6.21"
+              "val": "MA200 36.83→37.12"
             },
             {
               "item": "50日线>150日线",
               "ok": true,
-              "val": "6.23 vs 6.06"
+              "val": "39.88 vs 37.39"
             },
             {
               "item": "150日线>200日线",
-              "ok": false,
-              "val": "6.06 vs 6.21"
+              "ok": true,
+              "val": "37.39 vs 37.12"
             },
             {
               "item": "距52周低点≥+25%",
-              "ok": true,
-              "val": "低点5.03→现价6.54（+30%）"
+              "ok": false,
+              "val": "低点31.86→现价37.47（+18%）"
             },
             {
               "item": "距52周高点≤25%",
-              "ok": false,
-              "val": "高点8.72→现价6.54（-25%）"
+              "ok": true,
+              "val": "高点42.40→现价37.47（-12%）"
             }
           ]
         },
         "stage": "Stage 1 基底（未过趋势模板）",
         "buyPoint": {
-          "pivot": 6.79,
+          "pivot": 38.88,
           "distanceToPivotPct": 3.8,
-          "invalidation": 6.18,
-          "volConfirm": 613769.0,
-          "breakoutConfirm": "收盘≥6.79 且单日成交量≥柄均量×1.5（≈622146手）"
+          "invalidation": 35.51,
+          "volConfirm": 130833.4,
+          "breakoutConfirm": "收盘≥38.88 且单日成交量≥柄均量×1.5（≈108069手）"
         },
-        "histPct": 76.8,
-        "distHigh250": -25.0,
+        "histPct": 65.6,
+        "distHigh250": -11.6,
         "distMain": 3.8,
-        "mfDays": 4,
-        "sectorFit": "板块配合✅",
-        "advice": "杯柄型·距枢轴3.8%｜水温中性·谨慎关注｜板块配合✅｜主力10日净流入4天",
+        "mfDays": 3,
+        "sectorFit": "板块中性",
+        "advice": "杯柄型·距枢轴3.8%｜水温中性·谨慎关注｜板块中性｜主力10日净流入3天",
         "daily": null,
         "weekly": null
       }
@@ -21339,7 +21361,7 @@
             "secPct": -1.8,
             "volX": 3.1,
             "big": false,
-            "ann": true
+            "ann": false
           },
           {
             "date": "09/28",
@@ -24401,49 +24423,6 @@
             "selQualified": false
           },
           {
-            "code": "601018.SH",
-            "name": "宁波港",
-            "pattern": "底部整理",
-            "stage": "Stage 1 基底（未过趋势模板）",
-            "sector": "港口",
-            "sectorFit": "板块不配合⚠️",
-            "pivot": 3.75,
-            "distPct": 5.9,
-            "invalidation": 3.48,
-            "cupStart": null,
-            "cupEnd": null,
-            "handleStart": null,
-            "handleEnd": null,
-            "doubleBottom": null,
-            "signalDate": null,
-            "signalType": null,
-            "signalLabel": null,
-            "signalClose": null,
-            "signalHigh": null,
-            "signalVolX": null,
-            "initialStop": null,
-            "firstSignal": null,
-            "breakoutAge": null,
-            "currentDist": null,
-            "currentValid": null,
-            "track": "reserve",
-            "smartMoneyPosDays": 4,
-            "inPool": true,
-            "reson": false,
-            "entryTier": "qualified",
-            "defects": [],
-            "reserveReasons": [
-              "板块未共振",
-              "资金未确认（4/10天）"
-            ],
-            "histPct": 37.6,
-            "distHigh250": -17.9,
-            "mine": false,
-            "star": false,
-            "selDays": 2,
-            "selQualified": false
-          },
-          {
             "code": "601866.SH",
             "name": "中远海发",
             "pattern": "底部整理",
@@ -24484,6 +24463,49 @@
             "mine": false,
             "star": false,
             "selDays": 1,
+            "selQualified": false
+          },
+          {
+            "code": "601018.SH",
+            "name": "宁波港",
+            "pattern": "底部整理",
+            "stage": "Stage 1 基底（未过趋势模板）",
+            "sector": "港口",
+            "sectorFit": "板块不配合⚠️",
+            "pivot": 3.75,
+            "distPct": 5.9,
+            "invalidation": 3.48,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": null,
+            "handleEnd": null,
+            "doubleBottom": null,
+            "signalDate": null,
+            "signalType": null,
+            "signalLabel": null,
+            "signalClose": null,
+            "signalHigh": null,
+            "signalVolX": null,
+            "initialStop": null,
+            "firstSignal": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "track": "reserve",
+            "smartMoneyPosDays": 4,
+            "inPool": true,
+            "reson": false,
+            "entryTier": "qualified",
+            "defects": [],
+            "reserveReasons": [
+              "板块未共振",
+              "资金未确认（4/10天）"
+            ],
+            "histPct": 37.6,
+            "distHigh250": -17.9,
+            "mine": false,
+            "star": false,
+            "selDays": 2,
             "selQualified": false
           },
           {
@@ -25037,15 +25059,15 @@
             "selQualified": false
           },
           {
-            "code": "600583.SH",
-            "name": "海油工程",
+            "code": "300628.SZ",
+            "name": "亿联网络",
             "pattern": "杯柄型",
             "stage": "Stage 1 基底（未过趋势模板）",
-            "sector": "石油开采",
-            "sectorFit": "板块配合✅",
-            "pivot": 6.79,
+            "sector": "通信设备",
+            "sectorFit": "板块中性",
+            "pivot": 38.88,
             "distPct": 3.8,
-            "invalidation": 6.18,
+            "invalidation": 35.51,
             "cupStart": null,
             "cupEnd": null,
             "handleStart": null,
@@ -25063,7 +25085,7 @@
             "currentDist": null,
             "currentValid": null,
             "track": "reserve",
-            "smartMoneyPosDays": 4,
+            "smartMoneyPosDays": 3,
             "inPool": true,
             "reson": false,
             "entryTier": "fuzzy",
@@ -25072,10 +25094,10 @@
             ],
             "reserveReasons": [
               "板块未共振",
-              "资金未确认（4/10天）"
+              "资金未确认（3/10天）"
             ],
-            "histPct": 76.8,
-            "distHigh250": -25.0,
+            "histPct": 65.6,
+            "distHigh250": -11.6,
             "mine": false,
             "star": false,
             "selDays": 2,
