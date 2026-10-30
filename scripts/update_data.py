@@ -6195,6 +6195,24 @@ def _cup_weekly_trend(bars):
             'ma200Rising': ma200 > ma200_prev if ma200_prev is not None else None}
 
 
+def _weekly_ma150_200_display_gate(weekly_trend):
+    """形态精扫通用周MA状态门：只看MA150与MA200的相对关系。
+
+    MA150<MA200为明确空头，直接拒绝；相等或多头不被本门误杀。不足200根
+    已完成周线或均线缺失时返回不通过，绝不把未知状态伪造成安全通过。
+    本门不看价格与均线关系，也不新增MA50条件；BOLL等旧瑕疵机制不变。
+    """
+    weeks = weekly_trend.get('weeks', 0)
+    ma150, ma200 = weekly_trend.get('ma150'), weekly_trend.get('ma200')
+    if weeks < 200 or ma150 is None or ma200 is None:
+        return {'pass': False, 'state': 'unknown',
+                'reason': weekly_trend.get('reason') or '周MA150/200数据不足'}
+    if ma150 < ma200:
+        return {'pass': False, 'state': 'bearish', 'reason': '周MA150<MA200空头排列'}
+    return {'pass': True, 'state': 'bull' if ma150 > ma200 else 'neutral',
+            'reason': None}
+
+
 def _cup_right_side_gate(cup_hi, pivot, right_side):
     """任务95共用右侧硬门：返回可复算证据与透明拒绝原因，不看股票代码。"""
     if cup_hi <= 0 or pivot <= 0 or not right_side:
@@ -6292,6 +6310,9 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
     if hist_pct is None or not (25 <= hist_pct <= CUP_PCT_MAX):
         return None
     weekly_trend = _cup_weekly_trend(bars)
+    # 任务97：MA150<MA200及未知状态直接拒绝；相等仍走原“周MA未多头”fuzzy。
+    if not _weekly_ma150_200_display_gate(weekly_trend)['pass']:
+        return None
     enough_weeks = weekly_trend.get('weeks', 0) >= 200 and 'bollPass' in weekly_trend
     if weekly_trend.get('bollEffectiveBreakdown'):
         return None
@@ -6962,12 +6983,22 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         mf_days = sorted(mf_cache)[-10:]
         items = []
         dropped_tt = []
+        dropped_weekly_ma = []
         for code, meta in targets.items():
             try:
                 rows = stock_daily.get(code) or []
                 if len(rows) < 60:
                     continue
                 bars = [(r[0], r[2], r[3], r[1], r[4]) for r in rows]  # (date, high, low, close, vol)
+                # 任务97只硬删已确认空头；未知不冒充MA通过，沿用各形态原有数据审慎门。
+                weekly_ma = _cup_weekly_trend(bars)
+                weekly_ma_gate = _weekly_ma150_200_display_gate(weekly_ma)
+                if weekly_ma_gate['state'] == 'bearish':
+                    dropped_weekly_ma.append({
+                        'code': code, 'name': info.get(code, {}).get('name', code),
+                        'state': weekly_ma_gate['state'], 'reason': weekly_ma_gate['reason'],
+                        'ma150': weekly_ma.get('ma150'), 'ma200': weekly_ma.get('ma200')})
+                    continue
                 # 个股一年位置：250 交易日窗口价格分位 + 距250日高点回撤（复用日线缓存，零新增调用）
                 closes250 = [r[1] for r in rows[-250:]]
                 hist_pct = _pct_rank100(closes250, rows[-1][1])
@@ -7159,11 +7190,14 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'fuzzyCount': sum(bool(x.get('defects')) for x in items),
             'items': grouped,
             'droppedByTrendTemplate': dropped_tt[:50],
+            'droppedByWeeklyMA': dropped_weekly_ma[:50],
+            'droppedByWeeklyMACount': len(dropped_weekly_ma),
             'scanScope': scan_scope,
             'note': f'池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由"积聚/信号板块龙头"扩为指数成分全覆盖，当前口径={scan_scope}）；'
-                    '形态口径（任务96b·2026-10-30多样本校准）：'
+                    '形态口径（任务97·2026-10-30周MA状态门）：'
+                    '全部形态先查最近已完成周MA150/200：MA150<MA200为明确空头，直接从形态精扫及漏斗第3步剔除，不再作为fuzzy瑕疵展示；MA150=MA200不被本门硬删，仍按原周MA未多头fuzzy；MA150>MA200不因此误杀；不足200根完成周或均线缺失不伪造MA安全通过，沿用各形态原有数据审慎门（杯柄仍拒绝不足）；本门不看价格与均线关系、不新增MA50条件，既有周BOLL深度回踩包容与有效破位门不变；'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%）+末次收缩均量<首次+区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85 直接拒）+Stage 2 趋势模板强制拦截；'
-                    '杯柄型=前置250日涨幅≥15%+最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+MA150>MA200+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点或35~50%柄位进入fuzzy，但只允许一项温和结构偏离，且不得换局部杯身绕过全局杯的杯深/U底/双底/前置趋势/右侧/缩量等独立硬门；结构fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；'
+                    '杯柄型=前置250日涨幅≥15%+最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点或35~50%柄位进入fuzzy，但只允许一项温和结构偏离，且不得换局部杯身绕过全局杯的杯深/U底/双底/前置趋势/右侧/缩量等独立硬门；结构fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；'
                     '用户习惯·早期杯柄信号（任务92新鲜度硬门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯与50~80%柄位，不用局部/35~50% fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01，当前跌破即剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；'
                     '底部整理/平台整理=10~50日规律窄幅缩量平台，个股精扫振幅≤12%+三段收缩容差10%+抬升后平台日均量较拉升段至少低5%+末段≤1.35+杯柄抬升≤20%；大比例缩量或平台量较拉升段缩至少40%居其一；近60日跌幅超过-10%时仅近期首末漂移≤3%且平台量≤拉升段75%的已稳定结构可通过，分位>60不展示；'
                     '长平台整理=45~120日+振幅≤21%+首末漂移≤6%+末段量≤首段1.4+市值≥800亿+一年分位25~85+距枢轴≤12%；分位>65且距高-20~-8%或分位>80时，必须三段收缩且末段量未增，极高位另须距一年高点≤15%；'
@@ -7176,6 +7210,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         }
         print(f"  vcpStocks: scanned {len(targets)}, formed {len(items)} "
               f"({[i['name'] + ':' + i['pattern'] for i in items[:5]]})"
+              + f", 周MA状态门拦截 {len(dropped_weekly_ma)}"
               + (f", 趋势模板拦截 {len(dropped_tt)}: {dropped_tt[:6]}" if dropped_tt else ''))
     except Exception as e:
         print(f"  Warning: fetch_vcp_stocks failed (keep old vcpStocks): {e}")
