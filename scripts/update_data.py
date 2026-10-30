@@ -5872,10 +5872,14 @@ def _vcp_level(bars, win, k):
             'formed': bool(formed)}
 
 
-def _vol_shrink_ok(vols, tail_max=1.2, tail_shrink=0.85, decline_min=0.6):
+PATTERN_TAIL_VOL_MAX = 1.35  # 任务96多样本校准：温和末端放量共享上限，平台/杯柄/旗形一致
+PLATFORM_RALLY_VOL_MAX = 0.95  # 抬升后平台日均量须比拉升段至少低5%，底部平台型不追加此门
+
+
+def _vol_shrink_ok(vols, tail_max=PATTERN_TAIL_VOL_MAX, tail_shrink=0.85, decline_min=0.6):
     """大比例缩量判定（2026-10-01 第三轮③，用户口径）：5 段均量相邻递减对占比≥60%
     或末段均量/全程均量 ≤0.85，二者必居其一（强制缩量，斜率旁路已删除）；
-    允许后期温和放量——末段/全程 ≤tail_max(=1.2) 为上限，超出=异常放量拒。
+    允许后期温和放量——末段/全程 ≤tail_max（任务96共享上限1.35），超出=异常放量拒。
     返回 (ok, tail_ratio)。平台/杯柄/旗形统一套用。"""
     n = len(vols)
     if n < 4:
@@ -5894,16 +5898,23 @@ def _vol_shrink_ok(vols, tail_max=1.2, tail_shrink=0.85, decline_min=0.6):
     return bool(decline_ok or tail_ratio <= tail_shrink), round(tail_ratio, 3)
 
 
+def _platform_contraction_ok(seg_amps):
+    """平台三段收缩与VCP共用10%容差，末段必须小于首段。"""
+    return bool(len(seg_amps) == 3 and seg_amps[2] < seg_amps[0]
+                and all(seg_amps[i + 1] <= seg_amps[i] * MINERVINI_VCP_TOL
+                        for i in range(2)))
+
+
 def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, dist_gate=None,
                   tail_vol_max=None, rise_max=None, trend60_min=None):
     """平台判定（2026-08-19 用户口径重命名两类，缺一不入选）。
 
     共同要件：平台期 10~50 个交易日窄幅横盘（振幅≤14%）、缩量（平台日均量<前 20 日拉升段）、
-    规律收缩（平台三等分段振幅递减，容差 1.25 且末段<首段）。
+    规律收缩（任务96起三等分段与VCP共用10%相邻容差，且末段<首段）。
     2026-10-01 收紧（用户反馈粤高速A/联影一眼假，12 案例口径锚定，默认 None=旧行为，
     宽基/杯柄调用不受影响；个股精扫调用处启用）：
-    - tail_vol_max：末段量/区间均量失控上限（=1.4；2026-10-01 用户口径②由 0.95 硬门槛改为
-      整体缩量判定——5 段递减对≥60% 或日量线性斜率<0 即可，末端单段放量=主力预热不一票否决）；
+    - tail_vol_max：末段量/区间均量失控上限；任务96个股精扫与杯柄/旗形共享1.35，
+      大比例缩量强制不变，温和末端放量可接受、异常放量仍拒绝；
     - rise_max：杯柄型温和抬升上限（用户⑤「一段温和抬升后的平台整理」抬升段 ≤20%）；
     - trend60_min：近 60 日涨跌下限（排除下跌中继——粤高速A 60 日 -14% 的 12 天停顿非底部基座）。
     分类：
@@ -5953,7 +5964,13 @@ def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, d
         vol_quiet = rally_vol > 0 and plat_vol <= rally_vol
         if not vol_quiet:
             continue
-        # 规律收缩：三等分段振幅递减（容差：后段≤前段×1.25 且末段<首段）
+        # 任务96：抬升后平台不能只比拉升段低一点点；整体量至少收缩5%。
+        # 仅个股精扫启用，底部平台型及宽基旧调用不追加此门。
+        if (kind == '杯柄型' and tail_vol_max is not None
+                and plat_vol > rally_vol * PLATFORM_RALLY_VOL_MAX):
+            continue
+        # 任务96：三等分段振幅递减，与VCP共用10%相邻容差且末段<首段；
+        # 燕京啤酒第二段/第一段=1.119的扩散中段不得再被1.25容差误收。
         seg = n // 3
         seg_amps = []
         seg_vols = []
@@ -5962,14 +5979,13 @@ def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, d
             seg_amps.append((max(b[1] for b in part) - min(b[2] for b in part))
                             / min(b[2] for b in part))
             seg_vols.append(sum(b[4] for b in part) / len(part))
-        reg_shrink = (seg_amps[2] < seg_amps[0]
-                      and all(seg_amps[i + 1] <= seg_amps[i] * 1.25 for i in range(2)))
+        reg_shrink = _platform_contraction_ok(seg_amps)
         if not reg_shrink:
             continue
         # 量能判定（2026-10-01 第三轮③，用户口径，仅 tail_vol_max 非 None 时启用）：
         # 大比例缩量强制——5 段递减对≥60% 或末段/区间均量≤0.85 必居其一（斜率旁路已删，
-        # 银行/电力/高速靠斜率<0 混进来的漏洞封堵）；末段≤tail_vol_max(=1.2) 为温和放量
-        # 上限，超出=异常放量拒。保留 tailRatio 展示。
+        # 银行/电力/高速靠斜率<0 混进来的漏洞封堵）；末段≤tail_vol_max（精扫共享1.35）
+        # 为温和放量上限，超出=异常放量拒。保留 tailRatio 展示。
         tail_ratio = seg_vols[2] / plat_vol if plat_vol > 0 else 9.0
         if tail_vol_max is not None:
             vol_ok, tail_ratio = _vol_shrink_ok([b[4] for b in plat], tail_max=tail_vol_max)
@@ -6010,6 +6026,8 @@ CUP_BRK_VOL_X = 1.5         # 强确认：单日量 ≥ 柄均量 ×1.5；近期
 CUP_PRE_GAIN_MIN = 0.15     # 任务81校准：杯沿高 ÷ 其前250日最低收盘 −1 ≥ +15%（惠泰18.4%）
 CUP_PIVOT_RECOVERY_MIN = 92.0  # 任务95：柄枢轴至少收复原左杯沿92%，即低于杯沿最多8%
 CUP_RIGHT_OVERSHOOT_MAX = 5.0  # 任务95：柄前右侧最高不得先明显突破原左杯沿5%以上
+CUP_BOTTOM_ZONE_PCT = 0.03     # 任务96：U形杯底最低价上方3%区域
+CUP_BOTTOM_ZONE_MIN_DAYS = 3   # 至少3个交易日，排除南微医学类2日尖V
 CUP_PCT_MAX = 82.0          # 位置守卫（自校准非原典）：一年分位 25~82（任务B 沿用）
 CUP_SHOW_DIST = 5.0         # 杯柄只展示临近成型 ≤5%（任务B 沿用）
 CUP_RECENT_BRK_LOOKBACK = 10  # 历史杯柄锚点回看10个交易日；每日仅用当时可见数据
@@ -6203,15 +6221,57 @@ def _cup_right_side_gate(cup_hi, pivot, right_side):
                               'rightSideOvershootMax': CUP_RIGHT_OVERSHOOT_MAX}}
 
 
+def _cup_shape_gate(body, cup_lo):
+    """任务96：U形杯底须在最低价上方3%区域停留至少3日，排除2日尖V。"""
+    if cup_lo <= 0 or not body:
+        return {'pass': False, 'rejectReasons': ['杯身或杯底无效']}
+    zone_limit = cup_lo * (1 + CUP_BOTTOM_ZONE_PCT)
+    dates = [b[0] for b in body if b[2] <= zone_limit + 1e-12]
+    reasons = ([] if len(dates) >= CUP_BOTTOM_ZONE_MIN_DAYS else
+               [f'杯底{CUP_BOTTOM_ZONE_PCT:.0%}区域仅{len(dates)}日，'
+                f'少于{CUP_BOTTOM_ZONE_MIN_DAYS}日，属于尖V而非充分筑底'])
+    return {'pass': not reasons, 'bottomZoneDays': len(dates),
+            'bottomZonePct': round(CUP_BOTTOM_ZONE_PCT * 100, 1),
+            'bottomZoneLimit': round(zone_limit, 4), 'bottomZoneDates': dates,
+            'rejectReasons': reasons,
+            'structureGate': {'bottomZonePct': round(CUP_BOTTOM_ZONE_PCT * 100, 1),
+                              'bottomZoneMinDays': CUP_BOTTOM_ZONE_MIN_DAYS}}
+
+
+def _cup_structure_segments(cup, h_lo):
+    """沿用全局最低杯底与原杯沿优先级；不以局部配对重置既有首次信号。"""
+    global_lo = min(range(len(cup)), key=lambda i: cup[i][2])
+    global_low = cup[global_lo][2]
+    primary_hi, primary_high = None, 0
+    # 与原实现一致：同价取较近者；高沿令柄位不合格时仍可评估较低沿。
+    for i in range(global_lo):
+        high = cup[i][1]
+        if high < primary_high:
+            continue
+        depth = (high - global_low) / high * 100 if high > 0 else -1
+        h_pos = ((h_lo - global_low) / (high - global_low)
+                 if high > global_low else -1)
+        if (CUP_DEPTH_MIN <= depth <= CUP_DEPTH_MAX
+                and 0.50 - 1e-9 <= h_pos <= 0.80 + 1e-9):
+            primary_hi, primary_high = i, high
+    if primary_hi is not None:
+        return [{'hiPos': primary_hi, 'cupHi': primary_high,
+                 'loPos': global_lo, 'cupLo': global_low,
+                 'segmentBasis': 'global_lowest_low'}]
+    return []
+
+
 def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None,
                        allow_weekly_defect=False):
-    """杯柄·CANSLIM v4（任务95：原杯沿收复与柄前右侧超沿双硬门）：
+    """杯柄·CANSLIM v5（任务96：U形底部校准）：
     - 前置上升趋势：杯沿高 ÷ 其前250日最低收盘 −1 ≥ +15%（任务81由30%校准）；
     - 无瑕疵周线：周收≥BOLL99中轨×0.97 + MA150>MA200；深度回踩可入瑕疵档；
     - 杯深 12~33%；杯身 1~2 个坑，第二坑最深低于第一坑 4% 以内；
+    - 杯底最低价上方3%区域至少3个交易日，拒绝尖V；保留全局杯底与原杯沿优先级，
+      不用局部配对提前重置首次信号；
     - 柄在杯体上半部（柄底位置 h_pos∈[0.50,0.80]）、右侧10~20日窄幅（振幅≤10%）、
       柄低点不破杯底（容差 2%）；枢轴收复原杯沿≥92%，柄前右侧超原杯沿≤5%；
-    - 柄部量能枯竭：柄均量 < 杯身均量（volRatio<1.0）且柄末段量比 ≤1.2；
+    - 柄部量能枯竭：柄均量 < 杯身均量（volRatio<1.0）且柄末段量比 ≤1.35；
     - 杯+柄 ≥40 交易日；枢轴=柄高点；突破确认量=50 日均量×1.4（=均量+40%，
       奥尼尔 +40~50%），柄均量×1.5 等价口径见 _cup_breakout_check。
     位置守卫（自校准非原典）：分位 25~82；链路另有限距枢轴 ≤5%、贴新高中高位拒。
@@ -6260,90 +6320,86 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         cup = bars[-(n + 120):-n]
         if len(cup) < 40:
             continue
-        lo_pos = min(range(len(cup)), key=lambda i: cup[i][2])
-        cup_lo = cup[lo_pos][2]
-        if cup_lo <= 0:
-            continue
-        # 杯沿仍优先最高高点，但最高沿若令柄底跌出上半部，允许继续评估较低沿；
-        # 深度12~33与柄位0.50~0.80均未放宽（任务83平高：05-13沿拒、06-02沿可取）。
-        hi_pos, cup_hi = None, 0
-        for i in range(lo_pos):
-            h = cup[i][1]
-            if h < cup_hi:               # 同价杯沿取较近者（平高06-02优先于05-22）
+        # 保留原全局低点与杯沿优先级；任务96只新增U形底部证据，不做局部配对豁免。
+        for segment in _cup_structure_segments(cup, h_lo):
+            lo_pos, cup_lo = segment['loPos'], segment['cupLo']
+            hi_pos, cup_hi = segment['hiPos'], segment['cupHi']
+            cup_start = max(0, len(bars) - (n + 120))
+            rim_i = cup_start + hi_pos
+            # 前置明确上升趋势：杯沿较前250日最低收盘涨幅≥CUP_PRE_GAIN_MIN（当前15%）
+            pre_closes = closes[max(0, rim_i - 250):rim_i]
+            pre_low = min(pre_closes) if pre_closes else 0
+            pre_gain = (cup_hi / pre_low - 1) if pre_low > 0 else 0
+            if pre_gain < CUP_PRE_GAIN_MIN:
+                continue                # 无前置上升趋势的深坑/横盘非杯柄
+            body = cup[hi_pos:]         # 杯身=杯沿之后（含杯底与右侧回升段）
+            depth = (cup_hi - cup_lo) / cup_hi * 100
+            shape_gate = _cup_shape_gate(body, cup_lo)
+            if not shape_gate['pass']:
+                continue                # 任务96：2日尖V不算充分U形筑底
+            # 双底验证：杯身 1~2 个坑，第二坑最低可低于第一坑 4%；更深=单边阴跌创新低
+            half = len(body) // 2
+            if half > 0:
+                l1 = min(b[2] for b in body[:half])
+                l2 = min(b[2] for b in body[half:])
+                if l2 < l1 * 0.96:
+                    continue
+            if h_lo < cup_lo * 0.98:
+                continue                # 柄低点破杯身底部
+            # 柄在杯体上半部（奥尼尔）：h_pos<0.50=柄落在杯体下半部（非强势休整）；
+            # >0.80=已涨离结构。任务95正样本实测仍支持0.50边界，不机械升至60/65%。
+            h_pos = (h_lo - cup_lo) / (cup_hi - cup_lo)
+            if not (0.50 - 1e-9 <= h_pos <= 0.80 + 1e-9):
                 continue
-            d = (h - cup_lo) / h * 100
-            candidate_h_pos = (h_lo - cup_lo) / (h - cup_lo)
-            if (CUP_DEPTH_MIN <= d <= CUP_DEPTH_MAX
-                    and 0.50 - 1e-9 <= candidate_h_pos <= 0.80 + 1e-9):
-                hi_pos, cup_hi = i, h
-        if hi_pos is None:
-            continue                    # 无同时满足杯深与柄位的杯沿
-        cup_start = max(0, len(bars) - (n + 120))
-        rim_i = cup_start + hi_pos
-        # 前置明确上升趋势：杯沿较前250日最低收盘涨幅≥CUP_PRE_GAIN_MIN（当前15%）
-        pre_closes = closes[max(0, rim_i - 250):rim_i]
-        pre_low = min(pre_closes) if pre_closes else 0
-        pre_gain = (cup_hi / pre_low - 1) if pre_low > 0 else 0
-        if pre_gain < CUP_PRE_GAIN_MIN:
-            continue                    # 无前置上升趋势的深坑/横盘非杯柄
-        body = cup[hi_pos:]             # 杯身=杯沿之后（含杯底与右侧回升段）
-        depth = (cup_hi - cup_lo) / cup_hi * 100
-        # 双底验证：杯身 1~2 个坑，第二坑最低可低于第一坑 4%；更深=单边阴跌创新低
-        half = len(body) // 2
-        if half > 0:
-            l1 = min(b[2] for b in body[:half])
-            l2 = min(b[2] for b in body[half:])
-            if l2 < l1 * 0.96:
+            # 任务95：右侧既要充分收复左杯沿，也不能在柄前已经大幅突破后又跌回。
+            # 后者属于前一次突破后的另一段结构，不能倒填成原杯的右侧回升。
+            right_side = cup[lo_pos + 1:]   # 局部杯底次日起至柄前，严格PIT、不含柄自身
+            right_gate = _cup_right_side_gate(cup_hi, h_hi, right_side)
+            if not right_gate['pass']:
                 continue
-        if h_lo < cup_lo * 0.98:
-            continue                    # 柄低点破杯身底部
-        # 柄在杯体上半部（奥尼尔）：h_pos<0.50=柄落在杯体下半部（非强势休整）；
-        # >0.80=已涨离结构。任务95正样本实测仍支持0.50边界，不机械升至60/65%。
-        h_pos = (h_lo - cup_lo) / (cup_hi - cup_lo)
-        if not (0.50 - 1e-9 <= h_pos <= 0.80 + 1e-9):
-            continue
-        # 任务95：右侧既要充分收复左杯沿，也不能在柄前已经大幅突破后又跌回。
-        # 后者属于前一次突破后的另一段结构，不能倒填成原杯的右侧回升。
-        right_side = cup[lo_pos + 1:]   # 杯底次日起至柄前，严格PIT、不含柄自身
-        right_gate = _cup_right_side_gate(cup_hi, h_hi, right_side)
-        if not right_gate['pass']:
-            continue
-        total_days = len(body) + n
-        if total_days < CUP_MIN_TOTAL_DAYS:
-            continue
-        cup_vol = sum(b[4] for b in body) / len(body)
-        if cup_vol <= 0:
-            continue
-        h_vol = sum(b[4] for b in handle) / n
-        if h_vol >= cup_vol:
-            continue                    # 柄部量能枯竭（奥尼尔）：柄均量必须 < 杯身均量
-        _, tail_ratio = _vol_shrink_ok([b[4] for b in handle])
-        if tail_ratio > 1.2:
-            continue                    # 柄末段超 1.2=异常放量
-        dist = (h_hi / close - 1) * 100
-        candidate = {'type': '杯柄型', 'days': n, 'totalDays': total_days,
-                     'cupDepth': round(depth, 1), 'depthOk': True, 'depthMax': CUP_DEPTH_MAX,
-                     'amplitude': round(amp * 100, 1),
-                     'tailRatio': round(tail_ratio, 2),
-                     'volRatio': round(h_vol / cup_vol, 2),
-                     'pivot': round(h_hi, 2), 'distPct': round(dist, 1),
-                     'invalidation': round(h_lo, 2),
-                     'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
-                     'preGain': round(pre_gain * 100, 1),
-                     'weeklyUp': not defects, 'weeklyTrend': weekly_trend,
-                     'defects': defects, 'qualified': not defects,
-                     'rimDate': bars[rim_i][0], 'rimHigh': round(cup_hi, 2),
-                     'handlePosition': round(h_pos, 3),
-                     'pivotRecovery': right_gate['pivotRecovery'],
-                     'rightSideHigh': right_gate['rightSideHigh'],
-                     'rightSideOvershootPct': right_gate['rightSideOvershootPct'],
-                     'structureGate': right_gate['structureGate'],
-                     'brkNeedVol': round(h_vol * CUP_BRK_VOL_X, 1),
-                     'formed': True}
-        if VCP_SHOW_DIST_LO <= dist <= CUP_SHOW_DIST:
-            return candidate               # 展示窗内取最长，保留较短有效柄
-        if best is None:
-            best = candidate               # 无窗内候选时仍由完整链拒展示
+            total_days = len(body) + n
+            if total_days < CUP_MIN_TOTAL_DAYS:
+                continue
+            cup_vol = sum(b[4] for b in body) / len(body)
+            if cup_vol <= 0:
+                continue
+            h_vol = sum(b[4] for b in handle) / n
+            if h_vol >= cup_vol:
+                continue                # 柄部量能枯竭（奥尼尔）：柄均量必须 < 杯身均量
+            _, tail_ratio = _vol_shrink_ok([b[4] for b in handle])
+            if tail_ratio > PATTERN_TAIL_VOL_MAX:
+                continue                # 柄末段超共享温和放量上限=异常放量
+            dist = (h_hi / close - 1) * 100
+            candidate = {'type': '杯柄型', 'days': n, 'totalDays': total_days,
+                         'cupDepth': round(depth, 1), 'depthOk': True, 'depthMax': CUP_DEPTH_MAX,
+                         'amplitude': round(amp * 100, 1),
+                         'tailRatio': round(tail_ratio, 2),
+                         'volRatio': round(h_vol / cup_vol, 2),
+                         'pivot': round(h_hi, 2), 'distPct': round(dist, 1),
+                         'invalidation': round(h_lo, 2),
+                         'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
+                         'preGain': round(pre_gain * 100, 1),
+                         'weeklyUp': not defects, 'weeklyTrend': weekly_trend,
+                         'defects': defects, 'qualified': not defects,
+                         'rimDate': bars[rim_i][0], 'rimHigh': round(cup_hi, 2),
+                         'handleStart': handle[0][0], 'handleEnd': handle[-1][0],
+                         'bottomDate': cup[lo_pos][0], 'cupLow': round(cup_lo, 2),
+                         'segmentBasis': segment['segmentBasis'],
+                         'bottomZoneDays': shape_gate['bottomZoneDays'],
+                         'bottomZonePct': shape_gate['bottomZonePct'],
+                         'bottomZoneLimit': shape_gate['bottomZoneLimit'],
+                         'handlePosition': round(h_pos, 3),
+                         'pivotRecovery': right_gate['pivotRecovery'],
+                         'rightSideHigh': right_gate['rightSideHigh'],
+                         'rightSideOvershootPct': right_gate['rightSideOvershootPct'],
+                         'structureGate': {**right_gate['structureGate'],
+                                           **shape_gate['structureGate']},
+                         'brkNeedVol': round(h_vol * CUP_BRK_VOL_X, 1),
+                         'formed': True}
+            if VCP_SHOW_DIST_LO <= dist <= CUP_SHOW_DIST:
+                return candidate           # 展示窗内取最长，保留较短有效柄
+            if best is None:
+                best = candidate           # 无窗内候选时仍由完整链拒展示
     return best
 
 
@@ -6741,7 +6797,7 @@ def _flag_pattern(bars):
         pole_vol = sum(b[4] for b in pole) / len(pole)
         if not (pole_vol > 0 and flag_vol < pole_vol):
             continue
-        # 旗面大比例缩量③（2026-10-01 第三轮）：递减对≥60% 或末段/均量≤0.85，末段≤1.2 上限
+        # 旗面大比例缩量③：递减对≥60% 或末段/均量≤0.85；任务96共享末段≤1.35上限
         vol_ok, flag_tail = _vol_shrink_ok([b[4] for b in flag])
         if not vol_ok:
             continue
@@ -6933,12 +6989,11 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 dist_high250 = (rows[-1][1] / max(closes250) - 1) * 100
                 hist_low = (hist_pct is not None and hist_pct <= 30) or dist_high250 <= -20
                 tt = _trend_template(rows)
-                pf = _vcp_platform(bars, max_amp=0.105, tail_vol_max=1.2, rise_max=0.20,
-                                   trend60_min=-0.10,
+                pf = _vcp_platform(bars, max_amp=0.105, tail_vol_max=PATTERN_TAIL_VOL_MAX,
+                                   rise_max=0.20, trend60_min=-0.10,
                                    dist_gate=(VCP_SHOW_DIST_LO, VCP_SHOW_DIST_PLAT))
-                                   # 2026-10-01 第三轮③（用户口径）：量能=大比例缩量强制
-                                   # （5段递减对≥60%或末段/均量≤0.85，斜率旁路已删）+
-                                   # 末段≤1.2 温和放量上限（由 1.4 收口），超=异常放量拒
+                                   # 任务96：大比例缩量强制不变；平台/杯柄/旗形共享
+                                   # 末段≤1.35温和放量上限，超=异常放量拒
                 fl = _flag_pattern(bars)
                 # VCP 收缩三收紧（2026-10-01 第三轮，用户口径）：区间总回撤≤15%、单次收缩≤8%、
                 # 距一年高点<8% 或分位>85 直接拒（参数默认 None，板块侧 vcpPreview 不受影响）
@@ -6986,11 +7041,10 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                         pattern = '旗形整理'           # 急涨后缩量旗面（趋势中继，非 Stage 1 基底，不强制趋势模板）
                         main_lv = fl                  # 距枢轴超窗的旗面不硬贴标签，回落平台判定
                     elif pf and pf['formed']:
-                        # 平台路径位置二分+高位硬拒（任务A 2026-10-01 + 任务F 2026-10-25）：
-                        # 分位≤40=底部整理、40~60=平台整理；>60 一律拒（高位平台⚠️沉底组取消，
-                        # 福能84.4/申能65.6/农行63.2 类不再展示）
-                        if hist_pct is not None and hist_pct <= 40:
-                            pattern = '底部整理'       # Stage 1 基底分层保留展示
+                        # 平台路径位置二分+高位硬拒：深度基底恢复原双口径，
+                        # 分位≤40或距250日高点≥20%=底部整理，其余分位≤60=平台整理；>60一律拒。
+                        if ((hist_pct is not None and hist_pct <= 40) or dist_high250 <= -20):
+                            pattern = '底部整理'       # Stage 1 深度基底分层保留展示
                         elif hist_pct is not None and hist_pct <= 60:
                             pattern = '平台整理'
                         else:
@@ -7121,13 +7175,13 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'droppedByTrendTemplate': dropped_tt[:50],
             'scanScope': scan_scope,
             'note': f'池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由"积聚/信号板块龙头"扩为指数成分全覆盖，当前口径={scan_scope}）；'
-                    '形态口径（任务81·2026-10-26校准）：'
+                    '形态口径（任务96·2026-10-30多样本校准）：'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%）+末次收缩均量<首次+区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85 直接拒）+Stage 2 趋势模板强制拦截；'
-                    '杯柄型=前置250日涨幅≥15%+最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+MA150>MA200+杯深12~33%+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%（低于杯沿最多8%）+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.2+一年分位25~82+贴新高中高位拒；普通与早期共用上述结构硬门，普通杯柄展示距枢轴-5~+5；任务86深度回踩未连续4周收在下轨下方可入瑕疵组，标周BOLL深度回踩（包容），叠加MA瑕疵则标周BOLL深度回踩+周MA未多头；连续≥4周收在下轨下方为有效破位拒绝；'
+                    '杯柄型=前置250日涨幅≥15%+最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+MA150>MA200+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%（低于杯沿最多8%）+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；保留全局杯底与原杯沿优先级，普通与早期共用上述结构硬门，普通杯柄展示距枢轴-5~+5；任务86深度回踩未连续4周收在下轨下方可入瑕疵组，标周BOLL深度回踩（包容），叠加MA瑕疵则标周BOLL深度回踩+周MA未多头；连续≥4周收在下轨下方为有效破位拒绝；'
                     '用户习惯·早期杯柄信号（任务92新鲜度硬门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；已完成10~20日窄幅缩量柄后的首个有效信号分两类：早期=最高≥柄枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4（只标盘中突破·贴近枢轴），强确认=收盘≥枢轴+量≥柄均量×1.5；跨锚点先取最早信号再取最近锚点。初始失效位=柄低−A股最小价位0.01，当前跌破即剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号，不再作为当前买点展示；'
-                    '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日，振幅≤10.5%+大比例缩量强制+末段≤1.2+杯柄抬升≤20%+近60日跌幅≥-10%排下跌中继；分位>60不展示）；'
+                    '底部整理=Stage 1 深度基底（分位≤40或距250日高点≥20%）的规律窄幅缩量平台（10~50日，振幅≤10.5%+三段收缩容差10%+大比例缩量强制+抬升后平台日均量较拉升段至少低5%+末段≤1.35+杯柄抬升≤20%+近60日跌幅≥-10%排下跌中继；分位>60不展示）；'
                     '旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；'
-                    '大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85，允许末段≤1.2温和放量；'
+                    '大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85，允许末段≤1.35温和放量；'
                     '买点参数：枢轴价/失效位/距枢轴%/形态对应的突破确认——均为形态参数，非操作建议；'
                     '普通形态只展示距枢轴-5~+8（杯柄+5、平台+12）；杯柄首次早期/强确认信号另按当前位置离枢轴≤15%且年龄0~5个交易日展示，早期允许贴近枢轴下方且不等于收盘强确认；'
                     '主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用）；无瑕疵名单按VCP/杯柄（前端细分🚀突破初期）/底部整理/长平台/平台整理/旗形分组，组内资金确认优先→距枢轴升序；杯柄瑕疵档独立分组沉底弱展示，不参与无瑕疵资金确认排序；'
