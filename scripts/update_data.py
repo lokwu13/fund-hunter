@@ -6008,6 +6008,8 @@ BREAKOUT_VOL_X = 1.4        # 突破确认：成交量 ≥ 50 日均量 ×1.4（
 CUP_HANDLE_AMP_MAX = 0.10   # 任务81校准：柄窄幅横盘振幅 ≤10%（惠泰实测8.98%）
 CUP_BRK_VOL_X = 1.5         # 强确认：单日量 ≥ 柄均量 ×1.5；近期突破初期的温和量门另见下项
 CUP_PRE_GAIN_MIN = 0.15     # 任务81校准：杯沿高 ÷ 其前250日最低收盘 −1 ≥ +15%（惠泰18.4%）
+CUP_PIVOT_RECOVERY_MIN = 92.0  # 任务95：柄枢轴至少收复原左杯沿92%，即低于杯沿最多8%
+CUP_RIGHT_OVERSHOOT_MAX = 5.0  # 任务95：柄前右侧最高不得先明显突破原左杯沿5%以上
 CUP_PCT_MAX = 82.0          # 位置守卫（自校准非原典）：一年分位 25~82（任务B 沿用）
 CUP_SHOW_DIST = 5.0         # 杯柄只展示临近成型 ≤5%（任务B 沿用）
 CUP_RECENT_BRK_LOOKBACK = 10  # 历史杯柄锚点回看10个交易日；每日仅用当时可见数据
@@ -6181,14 +6183,34 @@ def _cup_weekly_trend(bars):
             'ma200Rising': ma200 > ma200_prev if ma200_prev is not None else None}
 
 
+def _cup_right_side_gate(cup_hi, pivot, right_side):
+    """任务95共用右侧硬门：返回可复算证据与透明拒绝原因，不看股票代码。"""
+    if cup_hi <= 0 or pivot <= 0 or not right_side:
+        return {'pass': False, 'rejectReasons': ['杯沿/枢轴或右侧回升段无效']}
+    pivot_recovery = pivot / cup_hi * 100
+    right_high = max(b[1] for b in right_side)
+    right_overshoot = (right_high / cup_hi - 1) * 100
+    reasons = []
+    if pivot_recovery < CUP_PIVOT_RECOVERY_MIN - 1e-9:
+        reasons.append(f'枢轴收复原杯沿仅{pivot_recovery:.2f}%，低于{CUP_PIVOT_RECOVERY_MIN:.0f}%')
+    if right_overshoot > CUP_RIGHT_OVERSHOOT_MAX + 1e-9:
+        reasons.append(f'柄前右侧超原杯沿{right_overshoot:.2f}%，超过{CUP_RIGHT_OVERSHOOT_MAX:.0f}%')
+    return {'pass': not reasons, 'pivotRecovery': round(pivot_recovery, 2),
+            'rightSideHigh': round(right_high, 2),
+            'rightSideOvershootPct': round(right_overshoot, 2),
+            'rejectReasons': reasons,
+            'structureGate': {'pivotRecoveryMin': CUP_PIVOT_RECOVERY_MIN,
+                              'rightSideOvershootMax': CUP_RIGHT_OVERSHOOT_MAX}}
+
+
 def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None,
                        allow_weekly_defect=False):
-    """杯柄·CANSLIM v4（任务86：BOLL中轨无瑕疵/深度回踩包容/下轨有效破位拒绝）：
+    """杯柄·CANSLIM v4（任务95：原杯沿收复与柄前右侧超沿双硬门）：
     - 前置上升趋势：杯沿高 ÷ 其前250日最低收盘 −1 ≥ +15%（任务81由30%校准）；
     - 无瑕疵周线：周收≥BOLL99中轨×0.97 + MA150>MA200；深度回踩可入瑕疵档；
     - 杯深 12~33%；杯身 1~2 个坑，第二坑最深低于第一坑 4% 以内；
     - 柄在杯体上半部（柄底位置 h_pos∈[0.50,0.80]）、右侧10~20日窄幅（振幅≤10%）、
-      柄低点不破杯底（容差 2%）；
+      柄低点不破杯底（容差 2%）；枢轴收复原杯沿≥92%，柄前右侧超原杯沿≤5%；
     - 柄部量能枯竭：柄均量 < 杯身均量（volRatio<1.0）且柄末段量比 ≤1.2；
     - 杯+柄 ≥40 交易日；枢轴=柄高点；突破确认量=50 日均量×1.4（=均量+40%，
       奥尼尔 +40~50%），柄均量×1.5 等价口径见 _cup_breakout_check。
@@ -6276,9 +6298,15 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
         if h_lo < cup_lo * 0.98:
             continue                    # 柄低点破杯身底部
         # 柄在杯体上半部（奥尼尔）：h_pos<0.50=柄落在杯体下半部（非强势休整）；
-        # >0.80=已涨离结构
+        # >0.80=已涨离结构。任务95正样本实测仍支持0.50边界，不机械升至60/65%。
         h_pos = (h_lo - cup_lo) / (cup_hi - cup_lo)
         if not (0.50 - 1e-9 <= h_pos <= 0.80 + 1e-9):
+            continue
+        # 任务95：右侧既要充分收复左杯沿，也不能在柄前已经大幅突破后又跌回。
+        # 后者属于前一次突破后的另一段结构，不能倒填成原杯的右侧回升。
+        right_side = cup[lo_pos + 1:]   # 杯底次日起至柄前，严格PIT、不含柄自身
+        right_gate = _cup_right_side_gate(cup_hi, h_hi, right_side)
+        if not right_gate['pass']:
             continue
         total_days = len(body) + n
         if total_days < CUP_MIN_TOTAL_DAYS:
@@ -6306,6 +6334,10 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                      'defects': defects, 'qualified': not defects,
                      'rimDate': bars[rim_i][0], 'rimHigh': round(cup_hi, 2),
                      'handlePosition': round(h_pos, 3),
+                     'pivotRecovery': right_gate['pivotRecovery'],
+                     'rightSideHigh': right_gate['rightSideHigh'],
+                     'rightSideOvershootPct': right_gate['rightSideOvershootPct'],
+                     'structureGate': right_gate['structureGate'],
                      'brkNeedVol': round(h_vol * CUP_BRK_VOL_X, 1),
                      'formed': True}
         if VCP_SHOW_DIST_LO <= dist <= CUP_SHOW_DIST:
@@ -7091,7 +7123,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'note': f'池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由"积聚/信号板块龙头"扩为指数成分全覆盖，当前口径={scan_scope}）；'
                     '形态口径（任务81·2026-10-26校准）：'
                     'VCP收缩型=≥3次严格递减收缩（每次<前次，容差10%）+末次收缩均量<首次+区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85 直接拒）+Stage 2 趋势模板强制拦截；'
-                    '杯柄型=前置250日涨幅≥15%+最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+MA150>MA200+杯深12~33%+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+柄均量<杯身且柄末量≤1.2+一年分位25~82+贴新高中高位拒；普通杯柄展示距枢轴-5~+5；任务86深度回踩未连续4周收在下轨下方可入瑕疵组，标周BOLL深度回踩（包容），叠加MA瑕疵则标周BOLL深度回踩+周MA未多头；连续≥4周收在下轨下方为有效破位拒绝；'
+                    '杯柄型=前置250日涨幅≥15%+最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+MA150>MA200+杯深12~33%+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%（低于杯沿最多8%）+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.2+一年分位25~82+贴新高中高位拒；普通与早期共用上述结构硬门，普通杯柄展示距枢轴-5~+5；任务86深度回踩未连续4周收在下轨下方可入瑕疵组，标周BOLL深度回踩（包容），叠加MA瑕疵则标周BOLL深度回踩+周MA未多头；连续≥4周收在下轨下方为有效破位拒绝；'
                     '用户习惯·早期杯柄信号（任务92新鲜度硬门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；已完成10~20日窄幅缩量柄后的首个有效信号分两类：早期=最高≥柄枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4（只标盘中突破·贴近枢轴），强确认=收盘≥枢轴+量≥柄均量×1.5；跨锚点先取最早信号再取最近锚点。初始失效位=柄低−A股最小价位0.01，当前跌破即剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号，不再作为当前买点展示；'
                     '底部整理=Stage 1 基底（未过趋势模板）的规律窄幅缩量平台（10~50日，振幅≤10.5%+大比例缩量强制+末段≤1.2+杯柄抬升≤20%+近60日跌幅≥-10%排下跌中继；分位>60不展示）；'
                     '旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；'
