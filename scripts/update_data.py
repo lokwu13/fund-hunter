@@ -6399,6 +6399,107 @@ def _cup_shape_gate(body, cup_lo):
 
 
 CUP_HANDLE_FUZZY_POS_MIN = 0.35  # 仅普通精扫瑕疵档；干净杯与首次信号仍要求50%
+CUP_HANDLE_CLEAN_AMP_MAX = 0.08  # 任务99：8~10%仍可普通fuzzy观察，干净柄要求更窄
+CUP_HANDLE_CLEAN_DRIFT_MAX = 5.0
+CUP_HANDLE_CLEAN_TREND_MAX = 6.0
+CUP_HANDLE_MA10_FULL_MAX = 1.05
+CUP_HANDLE_MA5_MA10_MAX = 1.10
+CUP_RANGE_LOOKBACK = 120
+CUP_RANGE_MIN_BARS = 60
+CUP_RANGE_MIN_SPAN = 0.15
+CUP_RANGE_MAX_NET_DRIFT = 0.15
+CUP_RANGE_MIN_MEDIAN_CROSSES = 2
+
+
+def _cup_handle_quality(handle):
+    """任务99柄质量：漂移/回归趋势、窄幅和5/10/全柄量能共同分级。
+
+    首尾量点不能单独证明缩量；持续滑梯同时要求净跌、回归下跌、多数下跌日和低位收尾，
+    避免把净向上但中间连跌的横盘柄误删。非干净不等于硬失效，普通精扫可标fuzzy。
+    """
+    n = len(handle)
+    if n < 10:
+        return {'clean': False, 'persistentDownslide': False, 'multiWindowClean': False}
+    closes = [b[3] for b in handle]
+    vols = [b[4] for b in handle]
+    h_hi, h_lo = max(b[1] for b in handle), min(b[2] for b in handle)
+    if min(closes) <= 0 or h_lo <= 0:
+        return {'clean': False, 'persistentDownslide': True, 'multiWindowClean': False}
+    mean_close = sum(closes) / n
+    x_mean = (n - 1) / 2
+    denominator = sum((i - x_mean) ** 2 for i in range(n))
+    slope = sum((i - x_mean) * (c - mean_close) for i, c in enumerate(closes)) / denominator
+    trend_pct = slope * (n - 1) / mean_close * 100
+    drift_pct = (closes[-1] / closes[0] - 1) * 100
+    down_ratio = sum(closes[i] < closes[i - 1] for i in range(1, n)) / (n - 1)
+    end_position = (closes[-1] - h_lo) / (h_hi - h_lo) if h_hi > h_lo else 0.5
+    persistent_downslide = bool(drift_pct <= -4.0 and trend_pct <= -4.0
+                                and down_ratio >= 0.60 and end_position <= 0.45)
+    ma5 = sum(vols[-5:]) / 5
+    ma10 = sum(vols[-10:]) / min(10, n)
+    ma_full = sum(vols) / n
+    ma5_ma10 = ma5 / ma10 if ma10 > 0 else 9.0
+    ma10_full = ma10 / ma_full if ma_full > 0 else 9.0
+    multi_clean = ma10_full <= CUP_HANDLE_MA10_FULL_MAX and ma5_ma10 <= CUP_HANDLE_MA5_MA10_MAX
+    amp = (h_hi - h_lo) / h_lo
+    clean = bool(not persistent_downslide and abs(drift_pct) <= CUP_HANDLE_CLEAN_DRIFT_MAX
+                 and abs(trend_pct) <= CUP_HANDLE_CLEAN_TREND_MAX
+                 and amp <= CUP_HANDLE_CLEAN_AMP_MAX and multi_clean)
+    return {'clean': clean, 'persistentDownslide': persistent_downslide,
+            'multiWindowClean': multi_clean, 'driftPct': round(drift_pct, 2),
+            'trendPct': round(trend_pct, 2), 'downDayRatio': round(down_ratio, 3),
+            'endPosition': round(end_position, 3), 'amplitudePct': round(amp * 100, 2),
+            'ma5ToMa10': round(ma5_ma10, 3), 'ma10ToFull': round(ma10_full, 3),
+            'cleanGate': {'absDriftPctMax': CUP_HANDLE_CLEAN_DRIFT_MAX,
+                          'absTrendPctMax': CUP_HANDLE_CLEAN_TREND_MAX,
+                          'amplitudePctMax': CUP_HANDLE_CLEAN_AMP_MAX * 100,
+                          'ma10ToFullMax': CUP_HANDLE_MA10_FULL_MAX,
+                          'ma5ToMa10Max': CUP_HANDLE_MA5_MA10_MAX}}
+
+
+def _cup_body_background(pre_bars, cup_hi):
+    """任务99杯身背景：保留前置多头，新增区间震荡后的明显回撤修复路径。
+
+    区间路径只替代preGain>=15%的前置背景判断；杯深、U底、双底与右侧修复仍由
+    原有独立硬门检验。区间须至少60根、真实摆动、净漂移有限，且杯沿接近区间上沿。
+    """
+    pre_closes = [b[3] for b in pre_bars if b[3] > 0]
+    pre_gain = cup_hi / min(pre_closes) - 1 if pre_closes and cup_hi > 0 else 0
+    if pre_gain >= CUP_PRE_GAIN_MIN:
+        return {'pass': True, 'mode': 'uptrend', 'preGainPct': round(pre_gain * 100, 2)}
+    recent = pre_bars[-CUP_RANGE_LOOKBACK:]
+    evidence = {'mode': 'none', 'preGainPct': round(pre_gain * 100, 2),
+                'rangeBars': len(recent)}
+    if len(recent) < CUP_RANGE_MIN_BARS or cup_hi <= 0:
+        evidence['pass'] = False
+        return evidence
+    range_high = max(b[1] for b in recent)
+    range_low = min(b[2] for b in recent)
+    if range_low <= 0 or range_high <= range_low:
+        evidence['pass'] = False
+        return evidence
+    mid = (range_high + range_low) / 2
+    signs = [1 if b[3] >= mid else -1 for b in recent]
+    crosses = sum(signs[i] != signs[i - 1] for i in range(1, len(signs)))
+    span = range_high / range_low - 1
+    net_drift = recent[-1][3] / recent[0][3] - 1
+    rim_vs_high = cup_hi / range_high - 1
+    range_ok = bool(span >= CUP_RANGE_MIN_SPAN
+                    and abs(net_drift) <= CUP_RANGE_MAX_NET_DRIFT
+                    and crosses >= CUP_RANGE_MIN_MEDIAN_CROSSES
+                    and -0.15 <= rim_vs_high <= 0.10)
+    evidence.update({'pass': range_ok, 'mode': 'range_repair' if range_ok else 'none',
+                     'rangeSpanPct': round(span * 100, 2),
+                     'rangeNetDriftPct': round(net_drift * 100, 2),
+                     'rangeMedianCrosses': crosses,
+                     'rimVsRangeHighPct': round(rim_vs_high * 100, 2),
+                     'rangeGate': {'lookbackMax': CUP_RANGE_LOOKBACK,
+                                   'barsMin': CUP_RANGE_MIN_BARS,
+                                   'spanPctMin': CUP_RANGE_MIN_SPAN * 100,
+                                   'absNetDriftPctMax': CUP_RANGE_MAX_NET_DRIFT * 100,
+                                   'medianCrossesMin': CUP_RANGE_MIN_MEDIAN_CROSSES,
+                                   'rimVsRangeHighPct': [-15.0, 10.0]}})
+    return evidence
 
 
 def _cup_structure_segments(cup, h_lo, fuzzy=False):
@@ -6435,11 +6536,10 @@ def _cup_structure_segments(cup, h_lo, fuzzy=False):
 
 def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None,
                        allow_weekly_defect=False, allow_structure_defect=None):
-    """杯柄·CANSLIM v5（任务96b：干净全局杯优先，单一温和结构偏离入fuzzy）。
-    前置趋势、周线有效破位、杯深12~33%、U底、双底、右侧收复/超沿、柄振幅、
-    柄量与尾量、总天数及位置门始终为硬门。普通精扫在干净全局杯无候选后，
-    可评估局部摆动杯底或35~50%柄位，但不得叠加两项结构偏离，也不得换局部杯身
-    绕过全局杯的独立硬门。早期信号默认allow_structure_defect=False，绝不重置首次信号。
+    """杯柄·CANSLIM v6（任务99：趋势/区间修复双背景，柄质量干净与fuzzy分级）。
+    周线有效破位、杯深12~33%、U底、双底、92%收复、右侧≤5%、总天数、柄均量
+    与尾量始终是独立硬门。持续下滑柄直接拒绝；温和漂移/宽幅/多窗口量能瑕疵仅
+    普通精扫可展示为fuzzy。早期信号默认allow_structure_defect=False，只接受干净柄。
     """
     if allow_structure_defect is None:
         allow_structure_defect = allow_weekly_defect
@@ -6481,6 +6581,14 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
             h_hi, h_lo = max(b[1] for b in handle), min(b[2] for b in handle)
             if h_lo <= 0 or (h_hi - h_lo) / h_lo > CUP_HANDLE_AMP_MAX:
                 continue
+            handle_quality = _cup_handle_quality(handle)
+            if handle_quality['persistentDownslide'] or (not fuzzy and not handle_quality['clean']):
+                continue
+            handle_defects = []
+            if not handle_quality['clean']:
+                handle_defects.append(
+                    f"柄质量近似（漂移{handle_quality['driftPct']:.1f}%·振幅{handle_quality['amplitudePct']:.1f}%·"
+                    f"5/10日量{handle_quality['ma5ToMa10']:.2f}x·10/全柄量{handle_quality['ma10ToFull']:.2f}x）")
             amp = (h_hi - h_lo) / h_lo
             cup = bars[-(n + 120):-n]
             if len(cup) < 40:
@@ -6493,8 +6601,10 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                 lo_pos, cup_lo = segment['loPos'], segment['cupLo']
                 hi_pos, cup_hi = segment['hiPos'], segment['cupHi']
                 rim_i = max(0, len(bars) - (n + 120)) + hi_pos
-                pre = closes[max(0, rim_i - 250):rim_i]
+                pre_bars = bars[max(0, rim_i - 250):rim_i]
+                pre = [b[3] for b in pre_bars]
                 pre_gain = cup_hi / min(pre) - 1 if pre else 0
+                background = _cup_body_background(pre_bars, cup_hi)
                 body = cup[hi_pos:]
                 shape = _cup_shape_gate(body, cup_lo)
                 half = len(body) // 2
@@ -6504,7 +6614,7 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                 cv = sum(b[4] for b in body) / len(body)
                 hv = sum(b[4] for b in handle) / n
                 _, tail = _vol_shrink_ok([b[4] for b in handle])
-                hard_ok = (pre_gain >= CUP_PRE_GAIN_MIN and shape['pass'] and double_ok
+                hard_ok = (background['pass'] and shape['pass'] and double_ok
                            and h_lo >= cup_lo * .98 and right['pass']
                            and total_days >= CUP_MIN_TOTAL_DAYS and cv > 0 and hv < cv
                            and tail <= PATTERN_TAIL_VOL_MAX)
@@ -6525,7 +6635,7 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                 if len(structure_defects) > 1:
                     continue
                 dist = (h_hi / close - 1) * 100
-                defects = weekly_defects + structure_defects
+                defects = weekly_defects + structure_defects + handle_defects
                 if fuzzy and dist > CUP_SHOW_DIST:
                     defects = defects + [f'距枢轴{dist:.1f}%（模糊观察·非干净高亮）']
                 depth = (cup_hi - cup_lo) / cup_hi * 100
@@ -6536,6 +6646,8 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                              'distPct': round(dist, 1), 'invalidation': round(h_lo, 2),
                              'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
                              'preGain': round(pre_gain * 100, 1), 'weeklyUp': not weekly_defects,
+                             'backgroundMode': background['mode'], 'cupBackground': background,
+                             'handleQuality': handle_quality, 'handleFuzzy': bool(handle_defects),
                              'weeklyTrend': weekly_trend, 'defects': defects, 'qualified': not defects,
                              'structureFuzzy': fuzzy,
                              'rimDate': bars[rim_i][0], 'rimHigh': round(cup_hi, 2),
@@ -7353,8 +7465,8 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     '全部形态先查最近已完成周MA150/200：MA150<MA200为明确空头，直接从形态精扫及漏斗第3步剔除，不再作为fuzzy瑕疵展示；MA150=MA200不被本门硬删，仍按原周MA未多头fuzzy；MA150>MA200不因此误杀；不足200根完成周或均线缺失不伪造MA安全通过，沿用各形态原有数据审慎门（杯柄仍拒绝不足）；本门不看价格与均线关系、不新增MA50条件，既有周BOLL深度回踩包容与有效破位门不变；'
                     'VCP收缩型（任务98务实口径）=原严格路径保留：≥3次收缩、每次≤前次1.10且末次<首次、末段均量<首段；务实价格路径允许最多一次温和反复（该次≤前次1.25，其余≤1.10），末次仍<首次，并要求末段均量<首段+10≤20≤50日均量（周线为10≤20周均量）且10日/50日均量≤0.85（周线10周/20周≤0.85）独立校准；两条路径均保留区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85直接拒）+Stage 2趋势模板强制拦截，宽幅发散不得入围；'
                     '平台型VCP属性（任务98b）=个股平台候选先取最长严格三段收缩，无严格候选才走务实路径（最多一次温和反复、该次≤前次1.25、其余≤1.10且末段<首段），避免重锚既有平台；属性另须振幅≤12%+平台首日相对前收及内部任一单日收跌均<5%（仅拒VCP属性，绝不修改底层平台标签）+一年分位≤60且距一年高点≥8%+平台日均量≤前20日拉升段75%+10≤20≤50日均量且10/50≤0.85；60日跌幅>10%时仍须平台漂移|≤3%|且显著缩量，排除明显下跌中继；属性写入vcpAttribute/patternNote，单标签仍为底部整理或平台整理，不伪造双标签，也不绕过摆动VCP的Stage 2门；'
-                    '杯柄型=前置250日涨幅≥15%+最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点或35~50%柄位进入fuzzy，但只允许一项温和结构偏离，且不得换局部杯身绕过全局杯的杯深/U底/双底/前置趋势/右侧/缩量等独立硬门；结构fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；'
-                    '用户习惯·早期杯柄信号（任务92新鲜度硬门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯与50~80%柄位，不用局部/35~50% fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01，当前跌破即剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；'
+                    '杯柄型（任务99双背景与柄质量分级）=杯身背景满足前置250日涨幅≥15%（uptrend）或60~120日震荡修复（range_repair：区间跨度≥15%+首末净漂移绝对值≤15%+中位穿越≥2次+杯沿相对区间上沿-15%~+10%）之一，仍须最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净柄须净漂移绝对值≤5%+全程回归趋势绝对值≤6%+振幅≤8%+10日/全柄均量≤1.05+5日/10日均量≤1.10；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点、35~50%柄位或8~10%振幅/温和漂移/多窗口量能瑕疵进入fuzzy，但不得换局部杯身绕过全局杯的杯深/U底/双底/杯身背景/右侧/缩量等独立硬门；持续滑梯（净漂移≤-4%+回归趋势≤-4%+下跌日≥60%+末端处柄区间下45%）硬拒绝；结构或柄质量fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；'
+                    '用户习惯·早期杯柄信号（任务92新鲜度+任务99干净柄硬门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯、50~80%柄位与干净柄，不用局部/35~50%结构fuzzy或柄质量fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01，当前跌破即剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；'
                     '底部整理/平台整理=10~50日窄幅缩量平台，个股精扫振幅≤12%+严格三段收缩候选优先、无候选时允许任务98b务实收缩+抬升后平台日均量较拉升段至少低5%+末段≤1.35+杯柄抬升≤20%；大比例缩量或平台量较拉升段缩至少40%居其一；近60日跌幅超过-10%时仅近期首末漂移≤3%且平台量≤拉升段75%的已稳定结构可通过，分位>60不展示；属性专属单日门不撤销底层平台标签；'
                     '长平台整理=45~120日+振幅≤21%+首末漂移≤6%+末段量≤首段1.4+市值≥800亿+一年分位25~85+距枢轴≤12%；分位>65且距高-20~-8%或分位>80时，必须三段收缩且末段量未增，极高位另须距一年高点≤15%；'
                     '旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；'
