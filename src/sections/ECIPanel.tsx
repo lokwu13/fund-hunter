@@ -1026,6 +1026,12 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     ? `长平台${it.longPlat.days}天·振幅${it.longPlat.amplitude}%·漂移${it.longPlat.drift}%`
                                     : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·末段量${it.platform.tailRatio ?? '—'}`}
                                 </p>
+                                {it.vcpAttribute?.formed && (
+                                  <span
+                                    className="inline-block text-[9px] font-bold text-cyan-700 bg-cyan-50 border border-cyan-200 rounded px-1 py-0.5 mt-1"
+                                    title={it.patternNote || it.vcpAttribute.note || '平台型VCP属性；仅为阶段性证据，不计入正式VCP'}
+                                  >平台型VCP属性（非正式VCP）</span>
+                                )}
                                 {(it.histPct ?? 0) > 60 && (
                                   <span
                                     className="inline-block text-[9px] font-bold text-amber-700 bg-amber-100 rounded px-1 py-0.5 mt-0.5"

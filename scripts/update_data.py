@@ -6820,18 +6820,22 @@ def _cup_early_breakout(bars, lookback=CUP_EARLY_SIGNAL_LOOKBACK,
                 continue
             pivot = ch['pivot']
             handle_vol = ch['brkNeedVol'] / CUP_BRK_VOL_X
+            handle_start = anchor_i - ch['days'] + 1
+            handle = bars[handle_start:anchor_i + 1]
+            handle_low = min(x[2] for x in handle)
+            initial_stop = round(handle_low - tick_size, price_digits)
             # 从柄完成后的第一天开始找，后面的放量日不能冒充“首次”。
+            # 任务101：首个有效信号之前若收盘已跌破初始失效位，此锚点永久失效；
+            # 跳出本锚点并继续检查其他锚点，不允许价格收回后复活旧柄。
             for j in range(anchor_i + 1, n_bars):
+                if j > anchor_i + 1 and bars[j - 1][3] < initial_stop:
+                    break
                 signal_type = _cup_signal_kind(bars[j], pivot, handle_vol)
                 if not signal_type:
                     continue
                 if j < first_possible:
                     break           # 首次信号已在回看窗外，后续信号不是新的首次信号
                 signal_bar = bars[j]
-                handle_start = anchor_i - ch['days'] + 1
-                handle = bars[handle_start:anchor_i + 1]
-                handle_low = min(x[2] for x in handle)
-                initial_stop = round(handle_low - tick_size, price_digits)
                 current_dist = (current_close / pivot - 1) * 100
                 history = bars[:j + 1]
                 vol50 = sum(x[4] for x in history[-50:]) / min(50, len(history))
@@ -7292,6 +7296,34 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 recent = _cup_early_breakout(bars) if not (d_c3 or w_c3) else None
                 lp = _long_platform(bars, circ_mv=(mv.get(code, 0) / 1e4 if mv else None),
                                     hist_pct=hist_pct, dist_high250=dist_high250)
+                def non_cup_fallback(after_cup=False):
+                    """杯柄展示失败时复用既有非杯柄门；不修改任何候选结构或阈值。"""
+                    if (after_cup and lp and lp['formed']
+                            and VCP_SHOW_DIST_LO <= lp['distPct'] <= VCP_SHOW_DIST_PLAT):
+                        return '长平台整理', lp
+                    # 极高位门槛与任务F平台位置二分保持原样。
+                    ext_high = ((hist_pct is not None and hist_pct > 85)
+                                or (dist_high250 > -7
+                                    and hist_pct is not None and hist_pct > 60))
+                    if ext_high:
+                        return None, None
+                    if fl and fl['formed'] and VCP_SHOW_DIST_LO <= fl['distPct'] <= VCP_SHOW_DIST:
+                        return '旗形整理', fl
+                    if pf and pf['formed']:
+                        if (hist_pct is not None and hist_pct <= 40) or dist_high250 <= -20:
+                            fallback_pattern = '底部整理'
+                        elif hist_pct is not None and hist_pct <= 60:
+                            fallback_pattern = '平台整理'
+                        else:
+                            return None, None
+                        plat = bars[-pf['days']:]
+                        vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
+                        fallback_lv = dict(pf)
+                        fallback_lv['invalidation'] = round(min(b[2] for b in plat), 2)
+                        fallback_lv['volConfirm'] = round(vol50 * BREAKOUT_VOL_X, 1)
+                        return fallback_pattern, fallback_lv
+                    return None, None
+
                 raw, main_lv = None, None
                 if d_c3 or w_c3:
                     raw, main_lv = 'VCP收缩型', (d_lv if d_c3 else w_lv)
@@ -7309,53 +7341,38 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     raw, main_lv = '长平台整理', lp        # 任务D（2026-10-01 晚）：大市值长跨度走平，
                                                          # 先于 ext_high 判定（海光段①分位65/距高-4.1% 系钦定案例）
                 if raw is None:
-                    # 极高位门槛（2026-10-01 下午校准）：分位>85 拒（同 VCP/杯柄）；
-                    # 或 距一年收盘高点<7% 且 分位>60 = 贴新高的中高位平台拒
-                    # （招商银行/招商公路/华能水电/上港集团类）；分位≤60 或距高点≥7% 放行
-                    # （伊利股份类一年区间中位的窄幅平台，分位64.8/距高点7.7%，60~85档仍带⚠高位徽章）
-                    ext_high = ((hist_pct is not None and hist_pct > 85)
-                                or (dist_high250 > -7
-                                    and hist_pct is not None and hist_pct > 60))
-                    if ext_high:
-                        continue
-                    if fl and fl['formed'] and VCP_SHOW_DIST_LO <= fl['distPct'] <= VCP_SHOW_DIST:
-                        pattern = '旗形整理'           # 急涨后缩量旗面（趋势中继，非 Stage 1 基底，不强制趋势模板）
-                        main_lv = fl                  # 距枢轴超窗的旗面不硬贴标签，回落平台判定
-                    elif pf and pf['formed']:
-                        # 平台路径位置二分+高位硬拒：深度基底恢复原双口径，
-                        # 分位≤40或距250日高点≥20%=底部整理，其余分位≤60=平台整理；>60一律拒。
-                        if ((hist_pct is not None and hist_pct <= 40) or dist_high250 <= -20):
-                            pattern = '底部整理'       # Stage 1 深度基底分层保留展示
-                        elif hist_pct is not None and hist_pct <= 60:
-                            pattern = '平台整理'
-                        else:
-                            continue                   # 任务F：平台路径高位硬拒
-                        plat = bars[-pf['days']:]
-                        vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
-                        main_lv = dict(pf)
-                        main_lv['invalidation'] = round(min(b[2] for b in plat), 2)
-                        main_lv['volConfirm'] = round(vol50 * BREAKOUT_VOL_X, 1)
-                    else:
+                    pattern, main_lv = non_cup_fallback()
+                    if not main_lv:
                         continue
                 else:
                     pattern = raw
                 # 任务87：所有形态的突破后路径统一补查当前位置，不重写锚点或形态参数。
-                _apply_post_breakout_position_defect(main_lv, hist_pct, dist_high250)
-                if main_lv.get('breakout'):
-                    # 早期/强确认共用：失效位与距枢轴门不变；首次有效信号超过5个交易日即旧信号。
-                    if not _cup_signal_displayable(main_lv):
-                        continue
-                else:
-                    dist_lo = VCP_SHOW_DIST_LO
-                    if pattern in ('底部整理', '平台整理', '高位平台⚠️', '长平台整理'):
-                        dist_limit = VCP_SHOW_DIST_PLAT  # 平台家族放宽至 12%
-                    elif pattern == '杯柄型':
-                        # 干净杯仍-5~+5；仅结构近似观察到12%，且函数已追加距离瑕疵。
-                        dist_limit = 12.0 if main_lv.get('structureFuzzy') else CUP_SHOW_DIST
+                # 任务101：recent/普通杯柄展示失败后，允许回退到自身可展示的既有非杯柄候选；
+                # 只向前走一次，不重选旧杯柄，也不扩展到VCP或其他形态的回退。
+                display_ok = False
+                for display_attempt in range(2):
+                    _apply_post_breakout_position_defect(main_lv, hist_pct, dist_high250)
+                    if main_lv.get('breakout'):
+                        # 早期/强确认共用：失效位与距枢轴门不变；首次有效信号超过5个交易日即旧信号。
+                        display_ok = _cup_signal_displayable(main_lv)
                     else:
-                        dist_limit = VCP_SHOW_DIST
-                    if not (dist_lo <= main_lv['distPct'] <= dist_limit):
-                        continue
+                        if pattern in ('底部整理', '平台整理', '高位平台⚠️', '长平台整理'):
+                            dist_limit = VCP_SHOW_DIST_PLAT
+                        elif pattern == '杯柄型':
+                            # 干净杯仍-5~+5；仅结构近似观察到12%，且函数已追加距离瑕疵。
+                            dist_limit = 12.0 if main_lv.get('structureFuzzy') else CUP_SHOW_DIST
+                        else:
+                            dist_limit = VCP_SHOW_DIST
+                        display_ok = VCP_SHOW_DIST_LO <= main_lv['distPct'] <= dist_limit
+                    if display_ok:
+                        break
+                    if display_attempt == 0 and pattern == '杯柄型':
+                        pattern, main_lv = non_cup_fallback(after_cup=True)
+                        if main_lv:
+                            continue
+                    break
+                if not display_ok:
+                    continue
                 sec = meta['sector']
                 if sec in bad_sectors:
                     fit_txt = '板块不配合⚠️'
@@ -7466,13 +7483,13 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     'VCP收缩型（任务98务实口径）=原严格路径保留：≥3次收缩、每次≤前次1.10且末次<首次、末段均量<首段；务实价格路径允许最多一次温和反复（该次≤前次1.25，其余≤1.10），末次仍<首次，并要求末段均量<首段+10≤20≤50日均量（周线为10≤20周均量）且10日/50日均量≤0.85（周线10周/20周≤0.85）独立校准；两条路径均保留区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85直接拒）+Stage 2趋势模板强制拦截，宽幅发散不得入围；'
                     '平台型VCP属性（任务98b）=个股平台候选先取最长严格三段收缩，无严格候选才走务实路径（最多一次温和反复、该次≤前次1.25、其余≤1.10且末段<首段），避免重锚既有平台；属性另须振幅≤12%+平台首日相对前收及内部任一单日收跌均<5%（仅拒VCP属性，绝不修改底层平台标签）+一年分位≤60且距一年高点≥8%+平台日均量≤前20日拉升段75%+10≤20≤50日均量且10/50≤0.85；60日跌幅>10%时仍须平台漂移|≤3%|且显著缩量，排除明显下跌中继；属性写入vcpAttribute/patternNote，单标签仍为底部整理或平台整理，不伪造双标签，也不绕过摆动VCP的Stage 2门；'
                     '杯柄型（任务99双背景与柄质量分级）=杯身背景满足前置250日涨幅≥15%（uptrend）或60~120日震荡修复（range_repair：区间跨度≥15%+首末净漂移绝对值≤15%+中位穿越≥2次+杯沿相对区间上沿-15%~+10%）之一，仍须最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净柄须净漂移绝对值≤5%+全程回归趋势绝对值≤6%+振幅≤8%+10日/全柄均量≤1.05+5日/10日均量≤1.10；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点、35~50%柄位或8~10%振幅/温和漂移/多窗口量能瑕疵进入fuzzy，但不得换局部杯身绕过全局杯的杯深/U底/双底/杯身背景/右侧/缩量等独立硬门；持续滑梯（净漂移≤-4%+回归趋势≤-4%+下跌日≥60%+末端处柄区间下45%）硬拒绝；结构或柄质量fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；'
-                    '用户习惯·早期杯柄信号（任务92新鲜度+任务99干净柄硬门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯、50~80%柄位与干净柄，不用局部/35~50%结构fuzzy或柄质量fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01，当前跌破即剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；'
+                    '用户习惯·早期杯柄信号（任务92新鲜度+任务99干净柄硬门+任务101等待期失效门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯、50~80%柄位与干净柄，不用局部/35~50%结构fuzzy或柄质量fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01；柄锚点后、首个有效信号前任一收盘跌破初始失效位即永久放弃该锚点并继续检查其他锚点，不得收回后复活旧柄；信号后当前跌破同样剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；'
                     '底部整理/平台整理=10~50日窄幅缩量平台，个股精扫振幅≤12%+严格三段收缩候选优先、无候选时允许任务98b务实收缩+抬升后平台日均量较拉升段至少低5%+末段≤1.35+杯柄抬升≤20%；大比例缩量或平台量较拉升段缩至少40%居其一；近60日跌幅超过-10%时仅近期首末漂移≤3%且平台量≤拉升段75%的已稳定结构可通过，分位>60不展示；属性专属单日门不撤销底层平台标签；'
                     '长平台整理=45~120日+振幅≤21%+首末漂移≤6%+末段量≤首段1.4+市值≥800亿+一年分位25~85+距枢轴≤12%；分位>65且距高-20~-8%或分位>80时，必须三段收缩且末段量未增，极高位另须距一年高点≤15%；'
                     '旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；'
                     '大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85，允许末段≤1.35温和放量；'
                     '买点参数：枢轴价/失效位/距枢轴%/形态对应的突破确认——均为形态参数，非操作建议；'
-                    '普通形态只展示距枢轴-5~+8（干净杯柄+5、结构fuzzy杯柄/平台+12）；杯柄首次早期/强确认信号另按当前位置离枢轴≤15%且年龄0~5个交易日展示，早期允许贴近枢轴下方且不等于收盘强确认；'
+                    '普通形态只展示距枢轴-5~+8（干净杯柄+5、结构fuzzy杯柄/平台+12）；杯柄首次早期/强确认信号另按当前位置离枢轴≤15%且年龄0~5个交易日展示，早期允许贴近枢轴下方且不等于收盘强确认；任务101回退=recent/普通杯柄因年龄、当前失效或距离等展示门失败后，重新选择已经形成且自身可展示的长平台/旗形/底部或平台整理，不回选旧杯柄、不放宽其他形态门；'
                     '主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用）；无瑕疵名单按VCP/杯柄（前端细分🚀突破初期）/底部整理/长平台/平台整理/旗形分组，组内资金确认优先→距枢轴升序；杯柄瑕疵档独立分组沉底弱展示，不参与无瑕疵资金确认排序；'
                     '建议=水温×板块合适度×资金确认，仅供关注优先级参考',
         }

@@ -459,6 +459,11 @@ export interface FundData {
         days: number; amplitude: number; riseFromLow: number;
         volRatio: number; tailRatio?: number; segAmps?: number[]; pivot: number; distPct: number; formed: boolean;
       } | null;
+      vcpAttribute?: {
+        formed: boolean; style?: 'platform_vcp'; note?: string | null;
+        platformDays?: number; amplitudePct?: number; segAmpsPct?: number[];
+      } | null;
+      patternNote?: string | null;
       daily?: {
         contractions: number[]; contractionsOk?: boolean[]; count: number; decreasing: boolean;
         volTrend: string; volFirst?: number; volLast?: number;
