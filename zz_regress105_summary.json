@@ -1,0 +1,57 @@
+{
+  "task": 103,
+  "dataSha256": "f77eb8dcfcd11c0d582ea44eec9b25b67b859fd9c1de383c4dde6cbb4fa25d45",
+  "pitOnly": true,
+  "notMarketWinRate": true,
+  "checksPassed": 40,
+  "checksTotal": 40,
+  "failed": [],
+  "casePassed": 10,
+  "caseTotal": 10,
+  "failedCases": [],
+  "failedWindows": [],
+  "casePatterns": {
+    "002371.SZ": null,
+    "000776.SZ": "VCP收缩型",
+    "600118.SH": "底部整理",
+    "002027.SZ": null,
+    "600030.SH": "底部整理",
+    "600919.SH": null,
+    "000651.SZ": null,
+    "603392.SH": "VCP收缩型",
+    "002252.SZ": null,
+    "601328.SH": null
+  },
+  "windowFirstBest": {
+    "000776.SZ": {
+      "first": "20250403",
+      "best": "20250403",
+      "pass": true
+    },
+    "603392.SH": {
+      "first": "20240715",
+      "best": "20240715",
+      "pass": true
+    },
+    "002027.SZ": {
+      "first": "20250801",
+      "best": "20250801",
+      "pass": true
+    },
+    "600030.SH": {
+      "first": "20240823",
+      "best": "20240823",
+      "pass": true
+    },
+    "601328.SH": {
+      "first": "20230920",
+      "best": "20231127",
+      "pass": true
+    },
+    "600118.SH": {
+      "first": "20250402",
+      "best": null,
+      "pass": true
+    }
+  }
+}

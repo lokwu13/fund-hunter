@@ -6314,10 +6314,11 @@ def _platform_contraction_practical_ok(seg_amps):
 
 
 def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, dist_gate=None,
-                  tail_vol_max=None, rise_max=None, trend60_min=None, practical=False):
-    """平台候选入口；个股精扫严格候选优先，无严格候选时才走98b务实收缩。
+                  tail_vol_max=None, rise_max=None, trend60_min=None, practical=False,
+                  dist_high250=None):
+    """平台候选入口；严格/务实收缩优先，深度回撤后的内部底部平台走独立律动路径。
 
-    两阶段选择避免原有严格平台被更长的务实候选重新锚定；旧调用默认严格路径不变。
+    平台量能有律动、可温和放大，不错套VCP的总体缩量门；旧调用默认行为不变。
     """
     modes = ('strict', 'practical') if practical else ('strict',)
     for mode in modes:
@@ -6327,7 +6328,62 @@ def _vcp_platform(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, d
             trend60_min=trend60_min, contraction_mode=mode)
         if candidate:
             return candidate
+    if dist_high250 is not None and dist_high250 <= -15:
+        return _bottom_platform_rhythmic(bars, min_days=min_days, max_days=max_days,
+                                        dist_gate=dist_gate)
     return None
+
+
+def _bottom_platform_rhythmic(bars, min_days=10, max_days=50, dist_gate=None):
+    """内部底部平台：距一年高点已≥15%，10~50日、振幅≤15%，平台未破前低。
+
+    平台/前20日均量≤1.15且末段/首段≤1.40，允许量能律动和温和放大；
+    不强制VCP式总体缩量或机械三段价格收缩。
+    """
+    if len(bars) < min_days + 70:
+        return None
+    close = bars[-1][3]
+    if close <= 0:
+        return None
+    best = None
+    for n in range(max_days, min_days - 1, -1):
+        plat = bars[-n:]
+        hi, lo = max(x[1] for x in plat), min(x[2] for x in plat)
+        if lo <= 0 or (hi - lo) / lo > 0.15:
+            continue
+        prior = bars[-(n + 60):-n]
+        prior_low = min(x[2] for x in prior)
+        if prior_low <= 0 or lo < prior_low * 0.98:
+            continue
+        rally = bars[-(n + 20):-n]
+        rally_vol = sum(x[4] for x in rally) / len(rally)
+        plat_vol = sum(x[4] for x in plat) / n
+        if rally_vol <= 0 or plat_vol > rally_vol * 1.15:
+            continue
+        seg = n // 3
+        seg_amps, seg_vols = [], []
+        for i in range(3):
+            part = plat[i * seg:(i + 1) * seg] if i < 2 else plat[i * seg:]
+            part_lo = min(x[2] for x in part)
+            seg_amps.append((max(x[1] for x in part) - part_lo) / part_lo)
+            seg_vols.append(sum(x[4] for x in part) / len(part))
+        if seg_vols[0] <= 0 or seg_vols[-1] > seg_vols[0] * 1.40:
+            continue
+        dist = (hi / close - 1) * 100
+        cand = {'type': '底部平台型', 'days': n, 'amplitude': round((hi - lo) / lo * 100, 1),
+                'riseFromLow': round((plat[0][3] / prior_low - 1) * 100, 1),
+                'tailRatio': round(seg_vols[-1] / plat_vol, 2),
+                'volRatio': round(plat_vol / rally_vol, 2),
+                'segAmps': [round(x * 100, 1) for x in seg_amps],
+                'contractionMode': 'rhythmic', 'volumePolicy': 'rhythmic_mild_expansion',
+                'pivot': round(hi, 2), 'distPct': round(dist, 1), 'formed': True}
+        if dist_gate is None:
+            return cand
+        if best is None:
+            best = cand
+        if dist_gate[0] <= dist <= dist_gate[1]:
+            return cand
+    return best
 
 
 def _vcp_platform_once(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.10, dist_gate=None,
@@ -6506,14 +6562,80 @@ def _trend_template(rows):
             'evidence': [{'item': n, 'ok': bool(ok), 'val': v} for n, ok, v in checks]}
 
 
-VCP_PRACTICAL_TOL = 1.25       # 务实价格路径：单次反复最多为前次1.25倍，且全程最多一次
+VCP_PRACTICAL_TOL = 1.25       # 价格反复仅保留为结构证据，不再独立形成VCP
 VCP_PRACTICAL_MAX_EXPANSIONS = 1
-VCP_VOL_MA_RATIO_MAX = 0.85    # 10日均量/50日(周20周)均量上限；同时要求10≤20≤长均量
-PLATFORM_VCP_STAGE_VOL_MAX = 0.75  # 平台日均量/前20日拉升段均量上限
+VCP_VOL_MA_RATIO_MAX = 1.20    # 多窗口量能异常放大上限；不强制MA10≤MA20≤长均量
+VCP_READY_DIST_MAX = 4.0       # 识别日距枢轴右侧不超过4%，左侧仍沿用-5%展示窗
+VCP_RIGHT_DOWN_DAYS_MIN = 0.70
+VCP_RIGHT_DRIFT_MAX = -0.025
+VCP_RIGHT_POSITION_MAX = 25.0
+VCP_RIGHT_VOLATILITY_MIN = 35.0
+VCP_RIGHT_MAX_DAY_MIN = 5.0
+VCP_REEXPAND_MA5_MA10_MIN = 1.08
+VCP_REEXPAND_LAST3_MA10_MIN = 1.10
+PLATFORM_VCP_STAGE_VOL_MAX = 0.75  # 低位平台VCP属性的阶段缩量证据门
+
+
+def _vcp_recent_volume_quality(bars, pivot=None):
+    """近期量能质量；已突破日只审查突破前基底，绝不以突破大量反判原基底失效。"""
+    if len(bars) < 11:
+        return {'pass': False, 'reason': '近期量能至少11根K线'}
+    close = bars[-1][3]
+    excludes_breakout = bool(pivot is not None and pivot > 0 and close > pivot)
+    base = bars[:-1] if excludes_breakout else bars
+    if len(base) < 10:
+        return {'pass': False, 'reason': '突破前基底量能不足10根K线'}
+    vols = [x[4] for x in base]
+    ma10 = sum(vols[-10:]) / 10
+    ma5 = sum(vols[-5:]) / 5
+    last3 = sum(vols[-3:]) / 3
+    if ma10 <= 0:
+        return {'pass': False, 'reason': '近期均量为0'}
+    ma5_ma10 = ma5 / ma10
+    last3_ma10 = last3 / ma10
+    reexpanded = ma5_ma10 > VCP_REEXPAND_MA5_MA10_MIN and last3_ma10 > VCP_REEXPAND_LAST3_MA10_MIN
+    return {'pass': not reexpanded, 'ma5ToMa10': round(ma5_ma10, 3),
+            'last3ToMa10': round(last3_ma10, 3),
+            'reexpanded': bool(reexpanded), 'basisExcludesBreakout': excludes_breakout,
+            'reason': '5日与最近3日均量同步重新放大' if reexpanded else None}
+
+
+def _vcp_right_side_quality(bars):
+    """识别日右侧质量：排除持续下滑与急跌后剧烈起伏，只使用当时及此前K线。"""
+    if len(bars) < 21:
+        return {'pass': False, 'rejectReasons': ['右侧质量至少21根K线']}
+    closes = [x[3] for x in bars]
+    rets = [closes[i] / closes[i - 1] - 1 for i in range(len(closes) - 10, len(closes))
+            if closes[i - 1] > 0]
+    if len(rets) != 10:
+        return {'pass': False, 'rejectReasons': ['右侧收益率数据无效']}
+    last20 = bars[-20:]
+    hi20, lo20 = max(x[1] for x in last20), min(x[2] for x in last20)
+    close = closes[-1]
+    drift10 = close / closes[-11] - 1 if closes[-11] > 0 else -1
+    down_ratio = sum(x < 0 for x in rets) / 10
+    pos20 = (close - lo20) / (hi20 - lo20) * 100 if hi20 > lo20 else 50.0
+    mean = sum(rets) / len(rets)
+    variance = sum((x - mean) ** 2 for x in rets) / (len(rets) - 1)
+    annual_vol = variance ** 0.5 * 252 ** 0.5 * 100
+    max_abs_day = max(abs(x) for x in rets) * 100
+    persistent_down = (down_ratio >= VCP_RIGHT_DOWN_DAYS_MIN
+                       and drift10 <= VCP_RIGHT_DRIFT_MAX and pos20 <= VCP_RIGHT_POSITION_MAX)
+    violent = max_abs_day >= VCP_RIGHT_MAX_DAY_MIN and annual_vol >= VCP_RIGHT_VOLATILITY_MIN
+    reasons = []
+    if persistent_down:
+        reasons.append('近10日持续下滑且末端处20日低位')
+    if violent:
+        reasons.append('近10日单日剧烈波动且年化波动过高')
+    return {'pass': not reasons, 'drift10Pct': round(drift10 * 100, 3),
+            'downDayRatio10': round(down_ratio, 3), 'position20Pct': round(pos20, 3),
+            'annualVolatility10Pct': round(annual_vol, 3), 'maxAbsDay10Pct': round(max_abs_day, 3),
+            'persistentDownslide': bool(persistent_down), 'violent': bool(violent),
+            'rejectReasons': reasons}
 
 
 def _vcp_volume_ma_evidence(bars, win):
-    """多窗口均量校准，不依赖首尾两个量点；日线60根、周线40根共用同一口径。"""
+    """多窗口均量证据：保留各均线供审计，但不再机械要求MA10≤MA20≤长均量。"""
     bars = bars[-win:]
     if len(bars) < 20:
         return {'pass': False, 'reason': '均量校准至少20根K线'}
@@ -6528,22 +6650,22 @@ def _vcp_volume_ma_evidence(bars, win):
         return {'pass': False, 'reason': '均量缺失或为0'}
     ratio = ma10 / ma_base
     sequence_ok = ma10 <= ma20 <= ma_base
-    return {'pass': bool(sequence_ok and ratio <= VCP_VOL_MA_RATIO_MAX),
+    ratio_ok = ratio <= VCP_VOL_MA_RATIO_MAX
+    return {'pass': bool(ratio_ok),
             'ma5': round(ma5, 1) if ma5 is not None else None,
             'ma10': round(ma10, 1), 'ma20': round(ma20, 1),
             'maBase': round(ma_base, 1), 'baseWindow': base_n,
             'ma10ToBase': round(ratio, 3), 'sequenceOk': bool(sequence_ok),
             'ratioMax': VCP_VOL_MA_RATIO_MAX,
-            'reason': None if sequence_ok and ratio <= VCP_VOL_MA_RATIO_MAX else '10/20/长均量未总体下行或短长均量比超0.85'}
+            'reason': None if ratio_ok else '10日/长均量超过1.20，近期量能异常放大'}
 
 
 def _platform_vcp_attribute(bars, platform, hist_pct, dist_high250):
     """低位窄幅平台的VCP属性；只附证据，不伪造第二个形态标签。
 
     平台候选自身保证10~50日、振幅≤12%和下跌中继稳定门；98b价格走务实收缩。
-    此处另要求低位/非临近新高、平台量≤拉升段75%、10≤20≤50日均量且10/50≤0.85，
-    以及属性专属窄幅完整性：平台首日相对前收及内部任一单日收跌均不得达到5%。
-    该单日门不修改、不撤销底层平台标签。
+    此处另要求低位/非临近新高、平台量≤拉升段75%和多窗口量能不能异常放大；
+    不再机械要求MA10≤MA20≤MA50。属性专属单日门不修改底层平台标签。
     """
     if not platform or not platform.get('formed'):
         return None
@@ -6587,6 +6709,9 @@ def _platform_vcp_attribute(bars, platform, hist_pct, dist_high250):
     volume_ma = _vcp_volume_ma_evidence(bars, VCP_DAILY_WIN)
     if not volume_ma['pass']:
         reasons.append(volume_ma['reason'])
+    recent_volume = _vcp_recent_volume_quality(bars, platform.get('pivot'))
+    if not recent_volume['pass']:
+        reasons.append(recent_volume['reason'])
     trend60 = bars[-1][3] / bars[-61][3] - 1 if len(bars) > 61 and bars[-61][3] > 0 else None
     drift = bars[-1][3] / bars[-platform['days']][3] - 1 if platform.get('days') else None
     stable = trend60 is not None and (trend60 >= -0.10 or
@@ -6603,7 +6728,7 @@ def _platform_vcp_attribute(bars, platform, hist_pct, dist_high250):
                 f"一年分位{hist_pct:.1f}%≤60%、距一年高点{dist_high250:.1f}%≤-8%；"
                 f"平台/拉升段均量{vol_ratio:.2f}≤0.75，"
                 f"MA10/MA20/MA50={volume_ma['ma10']:.0f}/{volume_ma['ma20']:.0f}/{volume_ma['maBase']:.0f}，"
-                f"MA10/MA50={volume_ma['ma10ToBase']:.3f}≤0.85；"
+                f"MA10/MA50={volume_ma['ma10ToBase']:.3f}≤1.20（不强制均线排列）；"
                 f"60日趋势{trend60 * 100:.1f}%、平台漂移{drift * 100:.1f}%，"
                 "若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。")
     return {'formed': formed, 'style': 'platform_vcp', 'rejectReasons': reasons,
@@ -6613,19 +6738,18 @@ def _platform_vcp_attribute(bars, platform, hist_pct, dist_high250):
             'segAmpsPct': platform.get('segAmps'),
             'contractionMode': platform.get('contractionMode') or 'strict',
             'narrowIntegrity': narrow_integrity, 'platformToRallyVol': vol_ratio,
-            'volumeMA': volume_ma, 'trend60Pct': round(trend60 * 100, 2) if trend60 is not None else None,
+            'volumeMA': volume_ma, 'recentVolumeQuality': recent_volume,
+            'trend60Pct': round(trend60 * 100, 2) if trend60 is not None else None,
             'platformDriftPct': round(drift * 100, 2) if drift is not None else None,
             'note': note}
 
 
 def _vcp_level_strict(bars, win, k, max_dd=None, max_contraction=None,
                       dist_high250=None, hist_pct=None, practical=False):
-    """VCP摆动路径：原严格形态保留；个股精扫可启用任务98务实路径。
+    """VCP摆动证据：只有严格价格收缩可成型，务实反复序列不再独立形成VCP。
 
-    两种路径都保留窗口总回撤≤15%、单次收缩≤8%及高位拒。务实路径允许最多一次
-    不超过前次1.25倍的价格反复，但末次仍小于首次；同时要求收缩段均量末<首，
-    以及10≤20≤50日(周20周)均量、10/长均量≤0.85的独立多窗口校准。
-    practical默认False，板块预览等旧调用不变。枢轴/失效位/放量确认线不变。
+    成型还须总体段量收缩、近期量未同步重新放大、右侧无持续下滑/剧烈起伏，
+    且距枢轴处于-5%~+4%。突破日的近期量只审查突破前基底，不读取后续行情。
     """
     if dist_high250 is not None and dist_high250 > -8:
         return None
@@ -6665,24 +6789,100 @@ def _vcp_level_strict(bars, win, k, max_dd=None, max_contraction=None,
                                  for i in range(1, len(depths))))
     segment_vol_ok = bool(seg_vols[0] > 0 and seg_vols[-1] < seg_vols[0])
     volume_ma = _vcp_volume_ma_evidence(bars, win)
-    strict_formed = dec_strict and segment_vol_ok
-    practical_formed = practical and dec_practical and segment_vol_ok and volume_ma['pass']
     pivot = bars[sh[-1]][1]
     close = bars[-1][3]
     dist = (pivot / close - 1) * 100 if close > 0 else 999
+    recent_volume = _vcp_recent_volume_quality(bars, pivot)
+    right_quality = _vcp_right_side_quality(bars)
+    reasons = list(right_quality['rejectReasons'])
+    if not recent_volume['pass']:
+        reasons.append(recent_volume['reason'])
+    if not volume_ma['pass']:
+        reasons.append(volume_ma['reason'])
+    if not (-5.0 <= dist <= VCP_READY_DIST_MAX):
+        reasons.append(f'距枢轴{dist:.1f}%超出VCP就绪窗-5%~+4%')
+    strict_formed = dec_strict and segment_vol_ok and not reasons
+    # practical_formed只保留兼容字段；务实摆动本身永远不足以形成VCP。
+    practical_formed = False
     vol50 = sum(x[4] for x in bars[-50:]) / min(50, len(bars))
     price_mode = 'strict' if dec_strict else ('practical' if dec_practical else '未递减')
     return {'contractions': [round(x, 1) for x in depths],
             'contractionsOk': marks,
             'count': len(depths), 'decreasing': dec_strict,
             'practicalDecreasing': dec_practical, 'priceMode': price_mode,
+            'structurePath': 'swing_strict' if dec_strict else 'swing_evidence_only',
             'volTrend': '递减' if segment_vol_ok else '未递减',
             'volFirst': round(seg_vols[0], 1), 'volLast': round(seg_vols[-1], 1),
-            'volumeMA': volume_ma, 'practical': bool(practical),
+            'volumeMA': volume_ma, 'recentVolumeQuality': recent_volume,
+            'rightSideQuality': right_quality, 'rejectReasons': reasons,
+            'practical': bool(practical),
             'pivot': round(pivot, 2), 'distPct': round(dist, 1),
             'invalidation': round(seg_lows[-1], 2),
             'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
             'formed': bool(strict_formed or practical_formed)}
+
+
+def _vcp_fixed_base(bars, min_days=15, max_days=50, max_amp=0.105):
+    """固定区间紧致VCP：承接非机械摆动序列的真实三段收缩。
+
+    每个识别日独立搜索15~50日、振幅≤10.5%的区间；只按当时振幅、阶段量比和枢轴距离选最佳结构。
+    不沿用摆动路径的临近一年新高硬拒，也不使用后续收益或突破成败。
+    """
+    if len(bars) < max_days + 20:
+        return None
+    candidates = []
+    close = bars[-1][3]
+    if close <= 0:
+        return None
+    for n in range(min_days, max_days + 1):
+        base = bars[-n:]
+        hi, lo = max(x[1] for x in base), min(x[2] for x in base)
+        if lo <= 0:
+            continue
+        amplitude = (hi - lo) / lo
+        if amplitude > max_amp:
+            continue
+        seg = n // 3
+        seg_amps, seg_vols = [], []
+        for i in range(3):
+            part = base[i * seg:(i + 1) * seg] if i < 2 else base[i * seg:]
+            part_lo = min(x[2] for x in part)
+            if part_lo <= 0:
+                break
+            seg_amps.append((max(x[1] for x in part) - part_lo) / part_lo)
+            seg_vols.append(sum(x[4] for x in part) / len(part))
+        if len(seg_amps) != 3 or not _platform_contraction_practical_ok(seg_amps):
+            continue
+        rally = bars[-(n + 20):-n]
+        rally_vol = sum(x[4] for x in rally) / len(rally)
+        base_vol = sum(x[4] for x in base) / n
+        if rally_vol <= 0 or base_vol >= rally_vol or seg_vols[-1] >= seg_vols[0]:
+            continue
+        pivot = hi
+        dist = (pivot / close - 1) * 100
+        if not (-5.0 <= dist <= VCP_READY_DIST_MAX):
+            continue
+        recent_volume = _vcp_recent_volume_quality(bars, pivot)
+        right_quality = _vcp_right_side_quality(bars)
+        if not recent_volume['pass'] or not right_quality['pass']:
+            continue
+        vol_ratio = base_vol / rally_vol
+        candidates.append({
+            'type': 'VCP收缩型', 'structurePath': 'fixed_base', 'priceMode': 'fixed_base',
+            'days': n, 'amplitude': round(amplitude * 100, 1),
+            'segAmps': [round(x * 100, 1) for x in seg_amps],
+            'contractionMode': 'practical', 'volRatio': round(vol_ratio, 3),
+            'volFirst': round(seg_vols[0], 1), 'volLast': round(seg_vols[-1], 1),
+            'pivot': round(pivot, 2), 'distPct': round(dist, 1),
+            'invalidation': round(lo, 2),
+            'volConfirm': round(sum(x[4] for x in bars[-50:]) / min(50, len(bars)) * BREAKOUT_VOL_X, 1),
+            'recentVolumeQuality': recent_volume, 'rightSideQuality': right_quality,
+            'formed': True, 'startDate': base[0][0], 'endDate': base[-1][0],
+            'selectionScore': [round(amplitude, 6), round(vol_ratio, 6), round(abs(dist), 3), -n]})
+    if not candidates:
+        return None
+    # 紧致度优先，其次总体量缩、贴近枢轴，最后才以较长区间作稳定排序；无未来数据。
+    return min(candidates, key=lambda x: x['selectionScore'])
 
 
 def _cup_weekly_trend(bars):
@@ -7629,9 +7829,9 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 bad_sectors.add(s['sector'])
 
         # ── 形态判定（2026-09-26 Minervini 精修口径，月底大改版①）──
-        # 趋势模板前置：VCP收缩型/杯柄型强制要求 Stage 2（不过则打回——能落底部整理则降级，
-        # 否则剔除并记录 dropped_tt 供对照验证）；底部整理类保留并标注 Stage 1 基底分层。
-        # VCP 收缩：严格递减（每次<前次，容差10%，逐项标红）≥3次 + 末次收缩均量<首次（量能递减强制）；
+        # 趋势模板前置：严格摆动VCP保留Stage 2；任务103固定区间路径独立判定紧致结构。
+        # 杯柄原周趋势与结构门不变；底部整理类保留并标注 Stage 1 基底分层。
+        # VCP：严格摆动或固定区间三段收缩，均须总体量缩、近期量质量和右侧稳定；
         # 杯柄：杯深12~33%（大盘弱势期放宽40%）+柄在杯体上半部+杯柄总时长≥25交易日；
         # 每只入围股输出买点参数（精确枢轴/突破放量确认条件/失效位/距枢轴%）——形态参数，非操作建议。
         market_weak = ('冷' in temp) or ('平' in temp)   # 大盘弱势期杯深上限放宽至 40%
@@ -7670,28 +7870,26 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 tt = _trend_template(rows)
                 pf = _vcp_platform(bars, max_amp=0.105, tail_vol_max=PATTERN_TAIL_VOL_MAX,
                                    rise_max=0.20, trend60_min=-0.10,
-                                   dist_gate=(VCP_SHOW_DIST_LO, VCP_SHOW_DIST_PLAT), practical=True)
-                                   # 任务98b：严格平台候选优先，无候选才走务实收缩；不改其它调用。
-                                   # 大比例缩量强制不变；平台/杯柄/旗形共享末段≤1.35温和放量上限。
+                                   dist_gate=(VCP_SHOW_DIST_LO, VCP_SHOW_DIST_PLAT), practical=True,
+                                   dist_high250=dist_high250)
                 fl = _flag_pattern(bars)
-                # VCP 收缩三收紧（2026-10-01 第三轮，用户口径）：区间总回撤≤15%、单次收缩≤8%、
-                # 距一年高点<8% 或分位>85 直接拒（参数默认 None，板块侧 vcpPreview 不受影响）
+                # 摆动VCP保留原高位保护；固定区间路径独立处理中继紧致结构。
                 d_lv = _vcp_level_strict(bars, VCP_DAILY_WIN, VCP_DAILY_K, max_dd=0.15,
                                          max_contraction=8.0, dist_high250=dist_high250,
                                          hist_pct=hist_pct, practical=True)
                 w_lv = _vcp_level_strict(_resample_weekly(rows), VCP_WEEK_WIN, VCP_WEEK_K,
                                          max_dd=0.15, max_contraction=8.0,
                                          dist_high250=dist_high250, hist_pct=hist_pct, practical=True)
-                # 任务98：低位平台可附VCP属性；单标签优先级不变，属性不绕过Stage 2摆动VCP门。
+                fixed_lv = _vcp_fixed_base(bars)
                 platform_vcp = _platform_vcp_attribute(bars, pf, hist_pct, dist_high250)
                 if platform_vcp and platform_vcp['formed']:
                     pf = dict(pf)
                     pf['vcpAttribute'] = platform_vcp
                 d_c3 = bool(d_lv and d_lv['formed'])
                 w_c3 = bool(w_lv and w_lv['formed'])
+                f_c3 = bool(fixed_lv and fixed_lv['formed'])
                 ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
                                         hist_pct=hist_pct, allow_weekly_defect=True)
-                # 任务88：60日早期信号先量价预筛，再对候选历史锚点记忆化运行完整杯柄。
                 recent = _cup_early_breakout(bars) if not (d_c3 or w_c3) else None
                 lp = _long_platform(bars, circ_mv=(mv.get(code, 0) / 1e4 if mv else None),
                                     hist_pct=hist_pct, dist_high250=dist_high250)
@@ -7700,7 +7898,6 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     if (after_cup and lp and lp['formed']
                             and VCP_SHOW_DIST_LO <= lp['distPct'] <= VCP_SHOW_DIST_PLAT):
                         return '长平台整理', lp
-                    # 极高位门槛与任务F平台位置二分保持原样。
                     ext_high = ((hist_pct is not None and hist_pct > 85)
                                 or (dist_high250 > -7
                                     and hist_pct is not None and hist_pct > 60))
@@ -7709,7 +7906,8 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     if fl and fl['formed'] and VCP_SHOW_DIST_LO <= fl['distPct'] <= VCP_SHOW_DIST:
                         return '旗形整理', fl
                     if pf and pf['formed']:
-                        if (hist_pct is not None and hist_pct <= 40) or dist_high250 <= -20:
+                        internal_bottom = pf.get('type') == '底部平台型' and dist_high250 <= -15
+                        if (hist_pct is not None and hist_pct <= 40) or dist_high250 <= -20 or internal_bottom:
                             fallback_pattern = '底部整理'
                         elif hist_pct is not None and hist_pct <= 60:
                             fallback_pattern = '平台整理'
@@ -7725,20 +7923,22 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
 
                 raw, main_lv = None, None
                 if d_c3 or w_c3:
-                    raw, main_lv = 'VCP收缩型', (d_lv if d_c3 else w_lv)
-                    if not tt['pass']:
+                    swing_lv = d_lv if d_c3 else w_lv
+                    if tt['pass']:
+                        raw, main_lv = 'VCP收缩型', swing_lv
+                    else:
                         dropped_tt.append(f"{info.get(code, {}).get('name', code)}:VCP收缩型")
-                        raw, main_lv = None, None        # VCP 收缩保留 Stage 2 趋势模板拦截
-                elif recent:
+                if raw is None and recent:
                     raw, main_lv = '杯柄型', recent
-                    ch = recent                       # 前端与买点统一使用历史锚点参数
-                elif (ch and ch['formed']
+                    ch = recent
+                elif raw is None and (ch and ch['formed']
                       and not (dist_high250 > -7 and hist_pct is not None and hist_pct > 60)):
-                    raw, main_lv = '杯柄型', ch          # 周线趋势、杯深、柄位、量枯等硬门在函数内
-                    # 贴新高中高位拒：dist250>-7 且分位>60。
-                elif lp and lp['formed']:
-                    raw, main_lv = '长平台整理', lp        # 任务D（2026-10-01 晚）：大市值长跨度走平，
-                                                         # 先于 ext_high 判定（海光段①分位65/距高-4.1% 系钦定案例）
+                    raw, main_lv = '杯柄型', ch
+                elif raw is None and f_c3:
+                    # 固定区间VCP不抢占已经成立的杯柄；自身仍独立于摆动Stage2/高位门。
+                    raw, main_lv = 'VCP收缩型', fixed_lv
+                elif raw is None and lp and lp['formed']:
+                    raw, main_lv = '长平台整理', lp
                 if raw is None:
                     pattern, main_lv = non_cup_fallback()
                     if not main_lv:
@@ -7830,8 +8030,15 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                               'defects': main_lv.get('defects') or [],
                               'cupHandle': ch if pattern == '杯柄型' else None,
                               'flag': fl if pattern == '旗形整理' else None,
+                              'fixedBase': fixed_lv if main_lv is fixed_lv else None,
                               'vcpAttribute': main_lv.get('vcpAttribute'),
-                              'patternNote': (main_lv.get('vcpAttribute') or {}).get('note'),
+                              'patternNote': ((main_lv.get('vcpAttribute') or {}).get('note')
+                                              if main_lv.get('vcpAttribute') else
+                                              (f"固定区间VCP：{main_lv.get('days')}日振幅{main_lv.get('amplitude')}%≤10.5%，"
+                                               f"三段振幅{'→'.join(str(x) for x in main_lv.get('segAmps') or [])}%，"
+                                               f"平台/前段量{main_lv.get('volRatio')}，总体缩量且近期量未同步放大；"
+                                               "右侧无持续下滑或剧烈起伏，仅使用识别日当时可见数据。"
+                                               if main_lv.get('structurePath') == 'fixed_base' else None)),
                               # 长平台共标（2026-10-01 晚）：杯柄/其他形态命中时若长平台也成型，
                               # 一并挂上供前端「兼长平台」标注（中微段③=杯柄+长平台双命中类）
                               'longPlat': lp if (lp and lp.get('formed')) else None,
@@ -7879,11 +8086,11 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'note': f'池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由"积聚/信号板块龙头"扩为指数成分全覆盖，当前口径={scan_scope}）；'
                     '形态口径（任务97·2026-10-30周MA状态门）：'
                     '全部形态先查最近已完成周MA150/200：MA150<MA200为明确空头，直接从形态精扫及漏斗第3步剔除，不再作为fuzzy瑕疵展示；MA150=MA200不被本门硬删，仍按原周MA未多头fuzzy；MA150>MA200不因此误杀；不足200根完成周或均线缺失不伪造MA安全通过，沿用各形态原有数据审慎门（杯柄仍拒绝不足）；本门不看价格与均线关系、不新增MA50条件，既有周BOLL深度回踩包容与有效破位门不变；'
-                    'VCP收缩型（任务98务实口径）=原严格路径保留：≥3次收缩、每次≤前次1.10且末次<首次、末段均量<首段；务实价格路径允许最多一次温和反复（该次≤前次1.25，其余≤1.10），末次仍<首次，并要求末段均量<首段+10≤20≤50日均量（周线为10≤20周均量）且10日/50日均量≤0.85（周线10周/20周≤0.85）独立校准；两条路径均保留区间总回撤≤15%+单次收缩≤8%+高位拒（距一年高点<8%或分位>85直接拒）+Stage 2趋势模板强制拦截，宽幅发散不得入围；'
-                    '平台型VCP属性（任务98b）=个股平台候选先取最长严格三段收缩，无严格候选才走务实路径（最多一次温和反复、该次≤前次1.25、其余≤1.10且末段<首段），避免重锚既有平台；属性另须振幅≤12%+平台首日相对前收及内部任一单日收跌均<5%（仅拒VCP属性，绝不修改底层平台标签）+一年分位≤60且距一年高点≥8%+平台日均量≤前20日拉升段75%+10≤20≤50日均量且10/50≤0.85；60日跌幅>10%时仍须平台漂移|≤3%|且显著缩量，排除明显下跌中继；属性写入vcpAttribute/patternNote，单标签仍为底部整理或平台整理，不伪造双标签，也不绕过摆动VCP的Stage 2门；'
+                    'VCP收缩型（任务103十例人工标签校准）=严格摆动证据须≥3次收缩、每次≤前次1.10且末次<首次、末段均量<首段；务实反复序列只留证据、不再独立成型。严格摆动另须近期量未出现5日/10日>1.08且最近3日/10日>1.10的同步重新放大、近10日无持续下滑（下跌日≥70%+漂移≤-2.5%+20日位置≤25%）或剧烈起伏（单日绝对涨跌≥5%+年化波动≥35%），识别日距枢轴-5%~+4%；不强制MA10≤MA20≤MA50，多窗口短长均量比≤1.20仅作异常放量门；已突破日只审突破前基底量，不用突破大量或后续结果反判。新增固定区间路径=15~50日+振幅≤10.5%+三段务实价格收缩+区间/前20日均量<1且末段量<首段+相同近期量/右侧质量/枢轴门；按当时紧致度、阶段量比、枢轴距离选最佳，可接近一年新高，不套用摆动Stage2/高位门；'
+                    '平台型VCP属性（任务103量能口径）=个股平台候选先取最长严格三段收缩，无严格候选才走务实路径（最多一次温和反复、该次≤前次1.25、其余≤1.10且末段<首段）；属性另须振幅≤12%+平台首日相对前收及内部任一单日收跌均<5%（仅拒VCP属性，绝不修改底层平台标签）+一年分位≤60且距一年高点≥8%+平台日均量≤前20日拉升段75%+多窗口短长均量比≤1.20且近期量未同步重新放大，不再机械要求MA10≤MA20≤MA50；60日跌幅>10%时仍须平台漂移|≤3%|且显著缩量；属性写入vcpAttribute/patternNote，单标签仍为底部整理或平台整理，不伪造双标签；'
                     '杯柄型（任务99双背景与柄质量分级）=杯身背景满足前置250日涨幅≥15%（uptrend）或60~120日震荡修复（range_repair：区间跨度≥15%+首末净漂移绝对值≤15%+中位穿越≥2次+杯沿相对区间上沿-15%~+10%）之一，仍须最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净柄须净漂移绝对值≤5%+全程回归趋势绝对值≤6%+振幅≤8%+10日/全柄均量≤1.05+5日/10日均量≤1.10；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点、35~50%柄位或8~10%振幅/温和漂移/多窗口量能瑕疵进入fuzzy，但不得换局部杯身绕过全局杯的杯深/U底/双底/杯身背景/右侧/缩量等独立硬门；持续滑梯（净漂移≤-4%+回归趋势≤-4%+下跌日≥60%+末端处柄区间下45%）硬拒绝；结构或柄质量fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；'
                     '用户习惯·早期杯柄信号（任务92新鲜度+任务99干净柄硬门+任务101等待期失效门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯、50~80%柄位与干净柄，不用局部/35~50%结构fuzzy或柄质量fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01；柄锚点后、首个有效信号前任一收盘跌破初始失效位即永久放弃该锚点并继续检查其他锚点，不得收回后复活旧柄；信号后当前跌破同样剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；'
-                    '底部整理/平台整理=10~50日窄幅缩量平台，个股精扫振幅≤12%+严格三段收缩候选优先、无候选时允许任务98b务实收缩+抬升后平台日均量较拉升段至少低5%+末段≤1.35+杯柄抬升≤20%；大比例缩量或平台量较拉升段缩至少40%居其一；近60日跌幅超过-10%时仅近期首末漂移≤3%且平台量≤拉升段75%的已稳定结构可通过，分位>60不展示；属性专属单日门不撤销底层平台标签；'
+                    '底部整理/平台整理=普通路径沿用10~50日窄幅缩量平台、个股精扫振幅≤12%、严格三段收缩优先及任务98b务实候选；另增内部底部律动路径：距一年高点≥15%回撤+10~50日+振幅≤15%+平台未破前低，平台/前20日均量≤1.15且末段/首段≤1.40，允许量能律动与温和放大，不强制VCP式总体缩量或机械三段价格收缩；内部底部平台即使一年分位>60也可归底部整理，属性专属单日门不撤销底层平台标签；'
                     '长平台整理=45~120日+振幅≤21%+首末漂移≤6%+末段量≤首段1.4+市值≥800亿+一年分位25~85+距枢轴≤12%；分位>65且距高-20~-8%或分位>80时，必须三段收缩且末段量未增，极高位另须距一年高点≤15%；'
                     '旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；'
                     '大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85，允许末段≤1.35温和放量；'
