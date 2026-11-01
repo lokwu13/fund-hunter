@@ -964,12 +964,15 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                       const isDefect = !!it.defects?.length;
                       const isPlatform = !!it.platform || !!it.longPlat;
                       const isContract = it.pattern === 'VCP收缩型';
+                      const isFixedBase = isContract && !!it.fixedBase;
                       const isCup = it.pattern === '杯柄型' && !!it.cupHandle;
                       const isFlag = it.pattern === '旗形整理' && !!it.flag;
-                      const lv = isContract
+                      const lv = isFixedBase
+                        ? it.fixedBase
+                        : isContract
                         ? ((it.daily?.formed && it.daily?.count >= 3) ? it.daily : it.weekly)
                         : (it.daily?.formed ? it.daily : it.weekly);
-                      const pv = isCup ? it.cupHandle : isFlag ? it.flag : (isPlatform ? (it.platform || it.longPlat) : lv);
+                      const pv = isFixedBase ? it.fixedBase : isCup ? it.cupHandle : isFlag ? it.flag : (isPlatform ? (it.platform || it.longPlat) : lv);
                       return (
                         <Fragment key={it.code}>
                         {grp !== prevGrp && (
@@ -1002,7 +1005,9 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                   className={`text-[10px] font-bold text-white rounded px-1.5 py-0.5 ${
                                     isDefect ? 'bg-amber-600' : it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : it.pattern === '旗形整理' ? 'bg-sky-500' : it.pattern === '底部整理' ? 'bg-slate-500' : it.pattern === '长平台整理' ? 'bg-indigo-500' : it.pattern === '高位平台⚠️' ? 'bg-amber-500' : 'bg-teal-500'
                                   }`}
-                                  title={isContract
+                                  title={isFixedBase
+                                    ? (it.patternNote || `固定区间VCP：${it.fixedBase.days}日振幅${it.fixedBase.amplitude}%·三段振幅${(it.fixedBase.segAmps || []).join('→')}%·区间/前20日均量${it.fixedBase.volRatio}·仅使用识别日当时数据`)
+                                    : isContract
                                     ? `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}（首${lv?.volFirst ?? '—'}→末${lv?.volLast ?? '—'}）·枢轴=末次收缩高点`
                                     : it.cupHandle
                                     ? `杯柄·CANSLIM：杯深${it.cupHandle.cupDepth}%·前置涨幅${it.cupHandle.preGain ?? '—'}%·柄${it.cupHandle.days}天振幅${it.cupHandle.amplitude ?? '—'}%·柄/杯量比${it.cupHandle.volRatio ?? '—'}·柄末段量比${it.cupHandle.tailRatio ?? '—'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点${it.cupHandle.breakout ? `·锚点${it.cupHandle.anchorDate}` : ''}`
@@ -1018,7 +1023,9 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                   </p>
                                 )}
                                 <p className={`text-[9px] mt-0.5 ${isDefect ? 'text-slate-400' : 'text-violet-400'}`}>
-                                  {isContract
+                                  {isFixedBase
+                                    ? `固定区间${it.fixedBase.days}日·振幅${it.fixedBase.amplitude}%·三段${(it.fixedBase.segAmps || []).join('→')}%`
+                                    : isContract
                                     ? `收缩${lv?.count ?? 0}次·量能${lv?.volTrend ?? '—'}`
                                     : it.cupHandle?.breakout
                                     ? `${it.cupHandle.breakoutDate}·${it.cupHandle.breakoutVolX}×柄均 / ${it.cupHandle.breakoutVol50X}×50日均·${it.cupHandle.breakoutAge}日前`
