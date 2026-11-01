@@ -827,6 +827,25 @@ export interface FundData {
       divBull?: boolean; divBear?: boolean; flatRsi?: number; volShrink?: boolean;
     }>;
   };
+  broadObservation?: {
+    active: boolean;
+    label: string;
+    tradeDate: string;
+    requiredCount: number;
+    qualifiedCount: number;
+    qualifiedIndices: string[];
+    reason: string;
+    note: string;
+    items: Array<{
+      indexCode: string; indexName: string; qualified: boolean;
+      dailyDate?: string | null; weeklyRsiDate?: string | null;
+      weeklyRsi: number | null; weeklyFresh?: boolean; rsiPass: boolean; rsiReason?: string;
+      source?: string; valuationDate?: string | null; observations?: number;
+      historyStart?: string | null; sufficientHistory?: boolean; fresh?: boolean; ageDays?: number;
+      peTtm: number | null; pb: number | null; pePct10y: number | null; pbPct10y: number | null;
+      valuationLow: boolean; reason?: string; dataError?: string | null;
+    }>;
+  };
   broadTrend?: {
     trade_date: string;
     note?: string;
@@ -851,7 +870,7 @@ export interface FundData {
   longWindow?: {
     window: 'open' | 'half' | 'closed';
     standardWindow?: 'open' | 'half' | 'closed';
-    windowType?: 'standard' | 'extreme_rebound';
+    windowType?: 'standard' | 'extreme_rebound' | 'oversold_valuation_watch';
     temporary?: boolean;
     temp?: string; verdict?: string;
     broadStates?: Record<string, string>;
@@ -864,6 +883,9 @@ export interface FundData {
       triggerIndices: string[]; topRisks: string[]; blockedBy: string[];
       startedDate: string | null; remainingDays: number; maxDays: number;
       reason: string;
+    };
+    oversoldValuationWatch?: NonNullable<FundData['broadObservation']> & {
+      effectiveActive: boolean; blockedBy: string[];
     };
     reason?: string; note?: string;
   };

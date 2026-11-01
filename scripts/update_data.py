@@ -1200,7 +1200,7 @@ def _short_leaders(sector, today_map, mf_cache, max_n=3):
 
 BROAD_IDX_CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                     'cache', 'broad_idx_cache.json')
-# 9 大宽基 → 代表 ETF（名称 2026-09-01 经 fund_basic 核实；展示顺序=用户指定顺序）
+# 9 大宽基 → 代表 ETF；任务102观察窗独立回补创业板50，不扩改本层与OSC_INDICES。
 BROAD_ETF_MAP = [
     ('000300.SH', '沪深300',   '510300.SH', '华泰柏瑞沪深300ETF'),
     ('000016.SH', '上证50',    '510050.SH', '华夏上证50ETF'),
@@ -1228,11 +1228,11 @@ def _effective_batch_trade_date(trade_date, data):
     return max(candidates) if candidates else requested
 
 
-def _broad_idx_bars(pro, trade_date):
-    """9大宽基统一有效日增量；盘前空快照不回填未来日期，长缺口每指数每晚最多回补1次。"""
+def _broad_idx_bars(pro, trade_date, codes=None):
+    """默认9大宽基统一有效日增量；任务102可仅对观察窗五宽基复用，不改默认调用。"""
     td = str(trade_date).replace('-', '')
     cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {})
-    codes = [c for c, _, _, _ in BROAD_ETF_MAP]
+    codes = list(codes) if codes is not None else [c for c, _, _, _ in BROAD_ETF_MAP]
     prior_last = {tc: ((cache.get(tc) or [None])[-1][0] if cache.get(tc) else '') for tc in codes}
     try:
         time.sleep(API_DELAY)
@@ -1805,8 +1805,165 @@ def build_broad_osc(data):
     print('  broadOsc: ' + '，'.join(f"{i['indexName']}:{i['state']}" for i in items))
 
 
+# ══════════ 任务102：五宽基周RSI×真实低估值观察窗 ══════════
+OBSERVATION_INDICES = [('000016.SH', '上证50'), ('000300.SH', '沪深300'), ('000905.SH', '中证500'),
+                       ('000688.SH', '科创50'), ('399673.SZ', '创业板50')]
+OBSERVATION_MIN_QUALIFIED = 2  # 沿用任务87“至少2个宽基进入极端区”的组合语义
+OBSERVATION_VALUATION_MAX_PCT = 20.0
+OBSERVATION_VALUATION_MIN_OBS = 500
+OBSERVATION_VALUATION_MAX_AGE_DAYS = 10
+BROAD_VALUATION_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                    'cache', 'broad_valuation.json')
+
+
+def _broad_weekly_rsi(trade_date, idx_cache=None):
+    """五宽基最近已完成周 Wilder RSI14；严禁用broadOsc单日RSI替代。"""
+    td = str(trade_date).replace('-', '')
+    idx_cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {}) if idx_cache is None else idx_cache
+    current_week = pd.to_datetime(td, format='%Y%m%d').strftime('%G%V')
+    expected_week = (pd.to_datetime(td, format='%Y%m%d') - pd.Timedelta(days=7)).strftime('%G%V')
+    items = []
+    for code, name in OBSERVATION_INDICES:
+        rows = [r for r in (idx_cache.get(code) or []) if r and r[0] <= td]
+        weekly = _osc_weekly_bars(rows) if rows else []
+        completed = [b for b in weekly if b[0] != current_week]
+        rsi = _rsi_series([b[3] for b in completed], 14) if completed else []
+        value = rsi[-1] if rsi else None
+        rsi_date = completed[-1][2] if completed and value is not None else None
+        daily_date = rows[-1][0] if rows else None
+        actual_week = pd.to_datetime(rsi_date, format='%Y%m%d').strftime('%G%V') if rsi_date else None
+        fresh = bool(daily_date == td and actual_week == expected_week)
+        passed = bool(fresh and value is not None and value < 20)
+        if value is None:
+            reason = '周RSI数据不足'
+        elif not fresh:
+            reason = f'行情/完成周不新鲜：日线{daily_date or "无"}，完成周{rsi_date or "无"}'
+        else:
+            reason = f'最近完成周RSI14={value:.2f}' + ('<20' if passed else '，未低于20')
+        items.append({'indexCode': code, 'indexName': name,
+                      'dailyDate': daily_date, 'weeklyRsiDate': rsi_date,
+                      'weeklyRsi': round(value, 2) if value is not None else None,
+                      'weeklyFresh': fresh, 'rsiPass': passed, 'rsiReason': reason})
+    return items
+
+
+def _broad_valuation_gate(pro, trade_date):
+    """Tushare index_dailybasic 五宽基PE_TTM/PB十年日频分位；缺数/陈旧/不足均锁门。"""
+    td = str(trade_date).replace('-', '')
+    cache = _load_json_cache(BROAD_VALUATION_PATH, {})
+    cached_rows = cache.get('rows') or {}
+    output_rows = {}
+    items = []
+    for code, name in OBSERVATION_INDICES:
+        normalized = {}
+        for row in cached_rows.get(code) or []:
+            try:
+                date, pe, pb = str(row[0]), float(row[1]), float(row[2])
+                if len(date) == 8 and date <= td and pe > 0 and pb > 0:
+                    normalized[date] = [date, pe, pb]
+            except (IndexError, TypeError, ValueError):
+                continue
+        rows = [normalized[d] for d in sorted(normalized)]
+        error = None
+        latest_cached = rows[-1][0] if rows else ''
+        if latest_cached < td:
+            start = ((datetime.strptime(latest_cached, '%Y%m%d') + timedelta(days=1)).strftime('%Y%m%d')
+                     if latest_cached else
+                     (datetime.strptime(td, '%Y%m%d') - timedelta(days=3653)).strftime('%Y%m%d'))
+            try:
+                time.sleep(API_DELAY)
+                frame = pro.index_dailybasic(ts_code=code, start_date=start, end_date=td,
+                                             fields='ts_code,trade_date,pe_ttm,pb')
+                if frame is not None and len(frame):
+                    for _, r in frame.iterrows():
+                        date = str(r['trade_date'])
+                        if (date <= td and pd.notna(r['pe_ttm']) and pd.notna(r['pb'])
+                                and float(r['pe_ttm']) > 0 and float(r['pb']) > 0):
+                            normalized[date] = [date, float(r['pe_ttm']), float(r['pb'])]
+                elif not rows:
+                    error = f'{code} index_dailybasic无有效返回'
+            except Exception as exc:
+                error = str(exc)[:240]
+                print(f'  Warning: broad valuation {code} failed: {error[:100]}')
+        rows = [normalized[d] for d in sorted(normalized)]
+        output_rows[code] = rows
+        base = {'indexCode': code, 'indexName': name, 'source': 'Tushare index_dailybasic',
+                'peTtm': None, 'pb': None, 'pePct10y': None, 'pbPct10y': None,
+                'valuationDate': None, 'observations': 0, 'historyStart': None,
+                'sufficientHistory': False, 'fresh': False, 'valuationLow': False,
+                'dataError': error}
+        if not rows:
+            items.append({**base, 'reason': '估值数据缺失，观察窗锁门' + (f'：{error}' if error else '')})
+            continue
+        latest = rows[-1]
+        cutoff = (pd.Timestamp(latest[0]) - pd.DateOffset(years=10)).strftime('%Y%m%d')
+        history = [r for r in rows if cutoff <= r[0] <= latest[0]]
+        observations = len(history)
+        pe, pb = latest[1], latest[2]
+        pe_pct = sum(r[1] <= pe for r in history) / observations * 100
+        pb_pct = sum(r[2] <= pb for r in history) / observations * 100
+        age_days = (datetime.strptime(td, '%Y%m%d') - datetime.strptime(latest[0], '%Y%m%d')).days
+        fresh = 0 <= age_days <= OBSERVATION_VALUATION_MAX_AGE_DAYS
+        sufficient = observations >= OBSERVATION_VALUATION_MIN_OBS
+        low = bool(fresh and sufficient and pe_pct <= OBSERVATION_VALUATION_MAX_PCT
+                   and pb_pct <= OBSERVATION_VALUATION_MAX_PCT)
+        if not fresh:
+            reason = f'估值日期{latest[0]}距本批{td}共{age_days}天，超过{OBSERVATION_VALUATION_MAX_AGE_DAYS}天，锁门'
+        elif not sufficient:
+            reason = f'估值历史仅{observations}日，不足{OBSERVATION_VALUATION_MIN_OBS}日，锁门'
+        else:
+            reason = f'PE_TTM/PB十年分位={pe_pct:.1f}%/{pb_pct:.1f}%' + ('，均≤20%' if low else '，未同时≤20%')
+        if error:
+            reason += f'；本次更新失败，使用缓存：{error[:100]}'
+        items.append({**base, 'peTtm': round(pe, 4), 'pb': round(pb, 4),
+                      'pePct10y': round(pe_pct, 1), 'pbPct10y': round(pb_pct, 1),
+                      'valuationDate': latest[0], 'observations': observations,
+                      'historyStart': history[0][0], 'sufficientHistory': sufficient,
+                      'fresh': fresh, 'ageDays': age_days, 'valuationLow': low, 'reason': reason})
+    _save_json_cache(BROAD_VALUATION_PATH, {
+        'source': 'Tushare index_dailybasic', 'updated': td,
+        'method': '各宽基最新有效日前10年；PE_TTM/PB日频≤当前值占比；当前日计入；至少500个共同有效日',
+        'rows': output_rows})
+    return items
+
+
+def _broad_observation_decision(weekly_items, valuation_items, trade_date):
+    """逐宽基(周RSI<20 AND PE/PB十年分位均≤20)后，至少2只才满足；绝不按OR开窗。"""
+    weekly = {x['indexCode']: x for x in weekly_items or []}
+    valuation = {x['indexCode']: x for x in valuation_items or []}
+    items = []
+    for code, name in OBSERVATION_INDICES:
+        w = weekly.get(code) or {'weeklyRsi': None, 'rsiPass': False, 'rsiReason': '周RSI缺失'}
+        v = valuation.get(code) or {'pePct10y': None, 'pbPct10y': None,
+                                    'valuationLow': False, 'reason': '估值缺失'}
+        qualified = bool(w.get('rsiPass') and v.get('valuationLow'))
+        items.append({'indexCode': code, 'indexName': name, **w, **v, 'qualified': qualified})
+    triggers = [x['indexName'] for x in items if x['qualified']]
+    active = len(triggers) >= OBSERVATION_MIN_QUALIFIED
+    reason = (f'极端超卖/低估值观察窗：{len(triggers)}/{OBSERVATION_MIN_QUALIFIED}只满足='
+              + '、'.join(triggers) if active else
+              f'极端超卖/低估值观察窗未触发：仅{len(triggers)}只同时满足周RSI<20与PE/PB十年分位均≤20%，'
+              f'至少需{OBSERVATION_MIN_QUALIFIED}只；缺估值或缺周RSI均不计满足')
+    return {'active': active, 'label': '极端超卖/低估值观察窗', 'tradeDate': trade_date,
+            'requiredCount': OBSERVATION_MIN_QUALIFIED, 'qualifiedCount': len(triggers),
+            'qualifiedIndices': triggers, 'items': items, 'reason': reason,
+            'note': ('任务102：上证50（用户“中证50”在项目中的既有映射）、沪深300、中证500、科创50、创业板50；'
+                     '每只必须最近完成周Wilder RSI14<20 AND 同一宽基PE_TTM/PB十年历史分位均≤20%，'
+                     '至少2只才开观察窗。不是单日RSI，不是RSI或估值OR，不伪称趋势反转或买点。')}
+
+
+def build_broad_observation(pro, trade_date, data):
+    effective = _effective_batch_trade_date(trade_date, data)
+    # 默认九宽基展示/状态机不扩改；这里只保证观察窗五宽基（含399673.SZ）真实同批日线。
+    idx_cache = _broad_idx_bars(pro, effective, codes=[c for c, _ in OBSERVATION_INDICES])
+    weekly = _broad_weekly_rsi(effective, idx_cache)
+    valuation = _broad_valuation_gate(pro, effective)
+    data['broadObservation'] = _broad_observation_decision(weekly, valuation, effective)
+    print('  broadObservation: ' + data['broadObservation']['reason'])
+
+
 def build_long_window(data):
-    """原水温/宽基层级判定保持不变；任务87仅叠加独立极端修复临时窗。"""
+    """普通门与任务87保持不变；任务102补充无5日限制的超卖低估值观察窗。"""
     previous_window = dict(data.get('longWindow') or {})
     temp = ((data.get('bondData') or {}).get('marginTrading') or {}).get('temp') or ''
     verdict = ((data.get('bondData') or {}).get('marginTrading') or {}).get('verdict') or ''
@@ -1860,11 +2017,23 @@ def build_long_window(data):
     trading_days = sorted({r[0] for rows in idx_cache.values() for r in rows
                            if r and r[0] <= current_date})
     extreme = _extreme_rebound_decision(osc, current_date, previous_window, trading_days)
+    observation = dict(data.get('broadObservation') or {})
+    observation_blocked = list(extreme.get('blockedBy') or [])
+    observation_active = bool(observation.get('active') and not observation_blocked)
+    oversold_watch = {**observation, 'effectiveActive': observation_active,
+                      'blockedBy': observation_blocked}
     if extreme['active']:
-        w = 'open'  # 唯一新增旁路；卖压/顶部风险在qualified阶段已否决。
+        w = 'open'  # 任务87优先；卖压/顶部风险在qualified阶段已否决。
         osc_note = (osc_note + '；' if osc_note else '') + '⚡' + extreme['reason']
     elif extreme['pendingConfirmation'] or extreme['expired'] or extreme['blockedBy']:
         osc_note = (osc_note + '；' if osc_note else '') + extreme['reason']
+    if observation.get('active'):
+        if observation_active and not extreme['active']:
+            # 普通水温、债券、普通宽基门不得二次关闭；仅沿用任务87强硬减仓/顶部风险否决。
+            w = 'open'
+            osc_note = (osc_note + '；' if osc_note else '') + observation['reason']
+        elif observation_blocked:
+            osc_note = (osc_note + '；' if osc_note else '') + '极端超卖/低估值观察窗被否决：' + '；'.join(observation_blocked)
 
     reason_parts = [f"水温{temp or '—'}（{verdict or '—'}）",
                     '宽基形态：' + '，'.join(f"{names[c]}{states[c]}" for c in BROAD_TOP3)]
@@ -1880,13 +2049,16 @@ def build_long_window(data):
     elif w == 'open':
         if extreme['active']:
             reason_parts.append('极端修复临时窗（最长5日），不是普通趋势开窗')
+        elif observation_active:
+            reason_parts.append('极端超卖/低估值观察窗，不是趋势反转或买点')
         elif not (buy_windows and osc_note):
             reason_parts.append('水温偏暖且宽基临近/突破，做多窗口打开')
     else:
         reason_parts.append('半窗：谨慎关注，仓位与信号强度自行降档')
     data['longWindow'] = {
         'window': w, 'standardWindow': standard_window,
-        'windowType': 'extreme_rebound' if extreme['active'] else 'standard',
+        'windowType': ('extreme_rebound' if extreme['active'] else
+                       'oversold_valuation_watch' if observation_active else 'standard'),
         'temporary': bool(extreme['active']),
         'temp': temp, 'verdict': verdict,
         'broadStates': {names[c]: states[c] for c in BROAD_TOP3},
@@ -1896,7 +2068,7 @@ def build_long_window(data):
         'oscReboundWatch': rebound_watch, 'oscNote': osc_note,
         'extremeEvidence': extreme['extremeEvidence'], 'triggerIndices': extreme['triggerIndices'],
         'startedDate': extreme['startedDate'], 'remainingDays': extreme['remainingDays'],
-        'extremeRebound': extreme,
+        'extremeRebound': extreme, 'oversoldValuationWatch': oversold_watch,
         'reason': '；'.join(reason_parts),
         'note': ('原规则不变：水温🔴冷=两融连续≥5日下降，或tight（DR007≥政策+5bp且月度净回笼，或10Y近1月>20bp）；'
                  '暖=两融连续≥5日上升且loose非tight；其余平。closed=冷或50/300/500全部高位发散/破位；'
@@ -1904,10 +2076,13 @@ def build_long_window(data):
                  'BOLL99·RSI：强硬减仓强制closed；完整抄底只能把half升open，超跌反弹不升档。'
                  '任务87独立临时窗：近20交易日≥2个六宽基曾超卖（含仅观察）+至少1个核心宽基当前完整抄底+无强硬减仓/顶部风险，'
                  '才令window=open并标extreme_rebound/temporary；首个满足日起最多5个交易日，第6日回退standardWindow。'
-                 '仅超跌反弹观察或待确认绝不开临时窗。所有信号仅供研究，非投资建议。'),
+                 '任务102补充观察窗：五宽基逐一同名配对，每只最近完成周Wilder RSI14<20 AND 同一宽基PE_TTM/PB十年分位均≤20%，'
+                 '至少2只满足且无强硬减仓/顶部风险才open并标oversold_valuation_watch；普通水温/债券/宽基门不再关闭。'
+                 '该观察窗不是趋势反转或买点，不使用5日限时。仅超跌反弹观察或待确认绝不开临时窗。所有信号仅供研究，非投资建议。'),
     }
     print(f"  longWindow: {w}（standard={standard_window}；水温{temp or '—'}；"
-          f"{'，'.join(names[c] + states[c] for c in BROAD_TOP3)}；{extreme['reason']}）")
+          f"{'，'.join(names[c] + states[c] for c in BROAD_TOP3)}；{extreme['reason']}；"
+          f"{observation.get('reason') or '无观察窗数据'}）")
 
 
 # ══════════ 板块形态判定（2026-10-25 指数门槛放宽，个股精扫不变）══════════
@@ -2755,12 +2930,16 @@ def build_funnel(data):
     lw = data.get('longWindow') or {}
     w = lw.get('window') or 'half'
     lamp0 = {'open': '🟢', 'half': '🟡', 'closed': '🔴'}[w]
-    concl0 = {'open': '窗口打开：水温偏暖+宽基临近买点，可以做多',
-              'half': '半窗：只看不动，仓位与信号降档',
-              'closed': '窗口关闭：今天到此为止'}[w]
+    observation_open = lw.get('windowType') == 'oversold_valuation_watch'
+    concl0 = ('极端超卖/低估值观察窗：AND门已满足，继续观察第1步；不是趋势反转或买点'
+              if observation_open else
+              {'open': '窗口打开：水温偏暖+宽基临近买点，可以做多',
+               'half': '半窗：只看不动，仓位与信号降档',
+               'closed': '窗口关闭：今天到此为止'}[w])
     guide0 = ('本步回答：今天能不能做多？' + concl0 +
               ('。下级全部标灰"窗口未开"，无需往下翻' if w == 'closed'
                else '。可以继续看第1步，但只观察不动手' if w == 'half'
+               else '。继续第1步定风格，观察窗不解释为趋势反转或买点' if observation_open
                else '。继续第1步定风格'))
 
     # ── 第1步 宽基定风格（四态标签 + ETF 买点）──
@@ -2981,6 +3160,7 @@ def build_funnel(data):
 
     # ── 当日路径总结 ──
     w_txt = ('极端修复临时窗' if lw.get('windowType') == 'extreme_rebound'
+             else '极端超卖/低估值观察窗' if observation_open
              else {'open': '窗口开', 'half': '窗口半开', 'closed': '窗口关'}[w])
     broad_txt = '、'.join(f"{r['indexName']}{r['state']}" for r in step1_rows[:3] if r['state'] != '无数据') or '无形态'
     path = (f"{w_txt} → 宽基：{broad_txt} → 板块：{len(step2_rows)}个入选 → "
@@ -2996,7 +3176,8 @@ def build_funnel(data):
                                     'winYtdPct': v.get('winYtdPct'), 'benchSrc': v.get('benchSrc')}
                                 for k, v in sm_l1.items()}},
         'steps': [
-            {'n': 0, 'key': 'window', 'title': '做多窗口', 'lamp': lamp0,
+            {'n': 0, 'key': 'window',
+             'title': '极端超卖/低估值观察窗' if observation_open else '做多窗口', 'lamp': lamp0,
              'conclusion': concl0, 'guide': guide0, 'reason': lw.get('reason')},
             {'n': 1, 'key': 'broad', 'title': '宽基定风格', 'lamp': lamp1,
              'conclusion': concl1, 'guide': guide1, 'rows': step1_rows},
@@ -9194,6 +9375,18 @@ def main():
         build_broad_osc(data)
     except Exception as e:
         print(f"  Warning: broadOsc failed: {e}")
+    # 任务102失败必须锁门：先清掉存量active，避免上周旧观察窗在本批断流后误开。
+    data['broadObservation'] = {
+        'active': False, 'label': '极端超卖/低估值观察窗',
+        'tradeDate': _effective_batch_trade_date(trade_date, data),
+        'requiredCount': OBSERVATION_MIN_QUALIFIED, 'qualifiedCount': 0,
+        'qualifiedIndices': [], 'items': [],
+        'reason': '本批观察窗数据链尚未完成，锁门', 'note': '任务102：缺数/失败不沿用存量active。'}
+    try:
+        build_broad_observation(pro, trade_date, data)
+    except Exception as e:
+        data['broadObservation']['reason'] = f'本批观察窗数据链失败，锁门：{str(e)[:240]}'
+        print(f"  Warning: broadObservation failed (locked): {e}")
     try:
         build_long_window(data)
     except Exception as e:

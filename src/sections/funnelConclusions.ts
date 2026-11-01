@@ -37,9 +37,12 @@ export const broadOscFor = (data: any, indexCode: string) =>
 
 function windowConclusion(data: any) {
   const lw = data.longWindow || {};
+  const observation = data.broadObservation;
   const windowLabel = lw.windowType === 'extreme_rebound'
     ? `极端修复临时窗（最长5日·剩余${lw.remainingDays ?? '—'}日）`
-    : lw.window === 'open' ? '开窗' : lw.window === 'closed' ? '关窗' : '半窗';
+    : lw.windowType === 'oversold_valuation_watch'
+      ? `极端超卖/低估值观察窗（${observation?.qualifiedCount ?? 0}只满足·非趋势反转或买点）`
+      : lw.window === 'open' ? '开窗' : lw.window === 'closed' ? '关窗' : '半窗';
   const water = [
     lw.temp ? `水温${lw.temp}` : '',
     lw.verdict ? String(lw.verdict).replace(/[（）]/g, '') : '',
@@ -62,6 +65,11 @@ function windowConclusion(data: any) {
       const rsis = oversold.map((r: any) => r.rsi ?? '—').join('/');
       signals.push(`${oversold.map((r: any) => r.indexName).join('、')}超卖观察（RSI${rsis}，${oversoldWait(oversold)}）`);
     }
+  }
+  if (observation) {
+    signals.push(`观察窗AND门${observation.qualifiedCount}/${observation.requiredCount}只：` + (observation.items || []).map((r: any) =>
+      `${r.indexName}${r.qualified ? '✓' : '—'} 周RSI${r.weeklyRsi ?? '—'}/PE分位${r.pePct10y ?? '—'}%/PB分位${r.pbPct10y ?? '—'}%`
+    ).join('；'));
   }
   if (lw.extremeRebound?.pendingConfirmation) {
     signals.push(`极端修复待确认：近20日超卖${(lw.extremeEvidence || []).length}个宽基，核心完整抄底未确认，不开窗`);

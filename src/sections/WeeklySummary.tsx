@@ -143,6 +143,13 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
         </div>
       )}
 
+      {data.longWindow?.windowType === 'oversold_valuation_watch' && (
+        <div className="rounded-lg border-2 border-sky-400 bg-sky-50 px-4 py-3 text-sky-900 shadow-sm">
+          <p className="text-sm font-bold">🔎 极端超卖/低估值观察窗 · {data.broadObservation?.qualifiedCount ?? 0}只宽基同时满足</p>
+          <p className="text-[11px] mt-1">同一宽基最近完成周RSI14＜20 AND PE_TTM/PB十年分位均≤20%，至少2只才开窗；这不是趋势反转或买点，非投资建议。</p>
+        </div>
+      )}
+
       {/* BOLL99·RSI：强硬减仓 > 完整抄底 > 超跌反弹观察 */}
       {((data.broadOsc?.sellAlerts?.length ?? 0) > 0 || (data.broadOsc?.buyWindows?.length ?? 0) > 0 || (data.broadOsc?.reboundWatch?.length ?? 0) > 0) && (
         <button
@@ -246,6 +253,25 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                         )}
                       </div>
                       <p className="text-[11px] text-slate-400 mb-2">{st.guide}</p>
+
+                      {st.key === 'window' && data.broadObservation && (
+                        <div className="mb-2 rounded-lg border border-sky-100 bg-sky-50/50 px-2 py-1.5">
+                          <p className="text-[10px] font-semibold text-sky-800">
+                            极端超卖/低估值观察窗：{data.broadObservation.qualifiedCount}/{data.broadObservation.requiredCount}只满足 · {data.broadObservation.active ? 'AND门已满足' : 'AND门未满足'} · 观察不等于趋势反转或买点
+                          </p>
+                          <div className="mt-1 grid gap-1">
+                            {data.broadObservation.items.map((r) => (
+                              <div key={r.indexCode} className="flex items-center gap-x-2 gap-y-0.5 flex-wrap text-[10px] text-slate-600" title={`${r.rsiReason || ''}；${r.reason || ''}`}>
+                                <span className={`font-semibold ${r.qualified ? 'text-emerald-700' : 'text-slate-700'}`}>{r.qualified ? '✓' : '—'} {r.indexName}</span>
+                                <span>周RSI14 {r.weeklyRsi ?? '—'}（{r.weeklyRsiDate || '缺完成周'}）</span>
+                                <span>PE_TTM {r.peTtm ?? '—'} · 十年分位 {r.pePct10y ?? '—'}%</span>
+                                <span>PB {r.pb ?? '—'} · 十年分位 {r.pbPct10y ?? '—'}%</span>
+                                <span className="text-slate-400">估值{r.valuationDate || '缺失'} · {r.observations ?? 0}日</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       {/* 第1步：宽基四态 + ETF 买点 */}
                       {st.key === 'broad' && (
