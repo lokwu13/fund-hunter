@@ -2936,6 +2936,10 @@ def build_funnel(data):
               {'open': '窗口打开：水温偏暖+宽基临近买点，可以做多',
                'half': '半窗：只看不动，仓位与信号降档',
                'closed': '窗口关闭：今天到此为止'}[w])
+    # 任务104：只承接极端强制开窗结果；空结果也明示，绝不反向开门。
+    value_directions_summary = _oversold_value_directions_summary(data)
+    if value_directions_summary:
+        concl0 += '；' + value_directions_summary
     guide0 = ('本步回答：今天能不能做多？' + concl0 +
               ('。下级全部标灰"窗口未开"，无需往下翻' if w == 'closed'
                else '。可以继续看第1步，但只观察不动手' if w == 'half'
@@ -3522,6 +3526,8 @@ def build_mine_watch(pro, trade_date, data):
     data['mineWatch'] = {
         'trade_date': f"{trade_date[:4]}-{trade_date[4:6]}-{trade_date[6:]}",
         'checked': len(uni),
+        # 任务104：新方向龙头据此区分“已覆盖未命中”与“未覆盖”，不把未扫描写成无风险。
+        'checkedCodes': sorted(uni),
         'items': items,
         'thresholds': ('资金=融资红灯(marginWatch既有口径)或近5日主力净流出≥3亿；'
                        '消息=近7天公告命中处罚/立案/问询/诉讼/减持/退市等关键词；'
@@ -6001,6 +6007,218 @@ def build_dividend_watch(pro, trade_date, data):
                              'poolSize': len(membership), 'count': len(items), 'items': items}
     print(f'  dividendWatch {"visible" if visible else "hidden"}: 催化{len(groups)}组，'
           f'跨组唯一高股息{len(items)}只（{snapshot_date}）')
+
+
+# 任务104：仅任务87“现行极端超卖强制开窗”触发后展示方向，不参与开窗判定。
+OVERSOLD_VALUE_MAX_PCT = 20.0
+OVERSOLD_VALUE_MIN_COMMON = 5
+OVERSOLD_VALUE_MIN_COVERAGE = 0.60
+OVERSOLD_VALUE_METHOD = ('成分股当前横截面聚合，非板块历史分位：组内真实成员的PE_TTM/PB中位数，'
+                         '分别相对同一日全A有效PE_TTM>0、PB>0横截面计算分位，两项均≤20%才入围；'
+                         '共同有效成员≥5且覆盖率≥60%；亏损/非正PE不进入PE中位数。')
+
+
+def _oversold_value_extreme_active(data):
+    lw = data.get('longWindow') or {}
+    return bool(lw.get('window') == 'open' and lw.get('windowType') == 'extreme_rebound'
+                and (lw.get('extremeRebound') or {}).get('active') is True)
+
+
+def build_oversold_value_directions(pro, trade_date, data):
+    """极端强制开窗后的超低估值行业/大概念与各自总市值前2龙头（纯展示）。"""
+    effective = _effective_batch_trade_date(trade_date, data)
+    extreme_active = _oversold_value_extreme_active(data)
+    base = {
+        'visible': extreme_active, 'tradeDate': effective, 'snapshotDate': None,
+        'source': 'Tushare daily_basic；vcp_cache申万sw_list/sw_members与同花顺concepts/ths_members真实成分',
+        'valuationMethod': OVERSOLD_VALUE_METHOD,
+        'maxPct': OVERSOLD_VALUE_MAX_PCT, 'minCommon': OVERSOLD_VALUE_MIN_COMMON,
+        'minCoverage': OVERSOLD_VALUE_MIN_COVERAGE,
+        'industries': [], 'concepts': [],
+        'counts': {'industryCount': 0, 'conceptCount': 0, 'directionCount': 0,
+                   'leaderCount': 0, 'evaluatedGroupCount': 0,
+                   'insufficientCoverageGroupCount': 0, 'highValuationGroupCount': 0},
+        'reasons': [], 'coverage': {},
+        'note': ('仅在现行极端超卖强制开窗（open + extreme_rebound + extremeRebound.active）触发时展示；'
+                 '正常关窗不得借低估值名单开门，本模块不反向影响longWindow。极端超卖≠立即反转；'
+                 '方向与龙头仅作研究展示，非独立买入建议、非操作买卖建议。龙头按daily_basic.total_mv降序、代码升序取前2，'
+                 '不套用高股息/VCP股票池或250亿元门槛；既有排雷未覆盖不等于无风险。'),
+    }
+    data['oversoldValueDirections'] = base
+    if not extreme_active:
+        base['reasons'] = ['现行极端超卖强制开窗未触发：不请求daily_basic，清空旧名单且不展示']
+        print('  oversoldValueDirections hidden: 非现行极端强制开窗，未请求daily_basic')
+        return
+
+    cache = _load_json_cache(DIVIDEND_GROUP_CACHE_PATH, {})
+    ths_index = cache.get('ths_index') or {}
+    specs = ([{'type': 'industry', 'code': x['code'], 'name': x['name'],
+               'members': set((cache.get('sw_members') or {}).get(x['code']) or [])}
+              for x in cache.get('sw_list') or []]
+             + [{'type': 'concept', 'code': x.get('code') or ths_index.get(x['name']), 'name': x['name'],
+                 'members': set((cache.get('ths_members') or {}).get(x.get('code') or ths_index.get(x['name'])) or [])}
+                for x in cache.get('concepts') or [] if x.get('code') or ths_index.get(x['name'])])
+    base['coverage'] = {'groupTotal': len(specs), 'snapshotRows': 0,
+                        'marketPeCount': 0, 'marketPbCount': 0, 'insufficientGroups': []}
+    try:
+        time.sleep(API_DELAY)
+        snap = pro.daily_basic(trade_date=effective,
+                               fields='ts_code,trade_date,close,total_mv,pe_ttm,pb')
+    except Exception as exc:
+        base['reasons'] = [f'本批全A daily_basic估值快照失败，暂无符合项并锁定名单：{str(exc)[:240]}']
+        print(f'  Warning: oversoldValueDirections daily_basic failed (locked): {exc}')
+        return
+    if snap is None or not len(snap):
+        base['reasons'] = [f'本批全A daily_basic估值快照为空（{effective}），暂无符合项并锁定名单']
+        return
+
+    records = {}
+    snapshot_dates = set()
+    for _, row in snap.iterrows():
+        code = str(row.get('ts_code') or '')
+        if not code:
+            continue
+        date = str(row.get('trade_date') or '')
+        if date:
+            snapshot_dates.add(date)
+
+        def number(key):
+            value = row.get(key)
+            if value is None or pd.isna(value):
+                return None
+            try:
+                return float(value)
+            except (TypeError, ValueError):
+                return None
+
+        records[code] = {'code': code, 'tradeDate': date, 'close': number('close'),
+                         'totalMv': number('total_mv'), 'peTtm': number('pe_ttm'), 'pb': number('pb')}
+    base['coverage']['snapshotRows'] = len(records)
+    base['snapshotDate'] = sorted(snapshot_dates)[-1] if snapshot_dates else None
+    if snapshot_dates != {effective}:
+        actual = '、'.join(sorted(snapshot_dates)) or '缺失'
+        base['reasons'] = [f'估值快照日期{actual}不等于本批有效日{effective}，已标记陈旧并锁定全部名单']
+        base['coverage']['stale'] = True
+        return
+
+    market_pe = sorted(r['peTtm'] for r in records.values() if r['peTtm'] is not None and r['peTtm'] > 0)
+    market_pb = sorted(r['pb'] for r in records.values() if r['pb'] is not None and r['pb'] > 0)
+    base['coverage']['marketPeCount'] = len(market_pe)
+    base['coverage']['marketPbCount'] = len(market_pb)
+    if not market_pe or not market_pb:
+        base['reasons'] = ['全A有效PE_TTM或PB横截面为空，无法计算相对分位，暂无符合项并锁定名单']
+        return
+
+    stock_info = cache.get('stock_info') or {}
+    mine_watch = data.get('mineWatch') or {}
+    mine_map = {x.get('code'): x for x in mine_watch.get('items') or []}
+    # 旧数据没有checkedCodes时，只能确认命中项已覆盖；其余一律保守标“未覆盖”。
+    checked_codes = set(mine_watch.get('checkedCodes') or []) | set(mine_map)
+    qualified_groups = []
+    insufficient = []
+    high_valuation = 0
+    for spec in specs:
+        members = sorted(spec['members'])
+        rows = [records[c] for c in members if c in records]
+        pe_values = [r['peTtm'] for r in rows if r['peTtm'] is not None and r['peTtm'] > 0]
+        pb_values = [r['pb'] for r in rows if r['pb'] is not None and r['pb'] > 0]
+        common = [r for r in rows if r['peTtm'] is not None and r['peTtm'] > 0
+                  and r['pb'] is not None and r['pb'] > 0]
+        member_count = len(members)
+        common_coverage = len(common) / member_count if member_count else 0.0
+        loss_pe = sum(r['peTtm'] is not None and r['peTtm'] <= 0 for r in rows)
+        coverage_info = {
+            'type': spec['type'], 'code': spec['code'], 'name': spec['name'],
+            'memberCount': member_count, 'snapshotCount': len(rows),
+            'missingSnapshotCount': member_count - len(rows),
+            'peCount': len(pe_values), 'pbCount': len(pb_values), 'commonCount': len(common),
+            'commonCoverage': round(common_coverage, 4), 'lossPeCount': loss_pe,
+        }
+        if len(common) < OVERSOLD_VALUE_MIN_COMMON or common_coverage < OVERSOLD_VALUE_MIN_COVERAGE:
+            reason = (f'共同有效估值成员{len(common)}只/覆盖率{common_coverage * 100:.1f}%，'
+                      f'不足{OVERSOLD_VALUE_MIN_COMMON}只或{OVERSOLD_VALUE_MIN_COVERAGE * 100:.0f}%门槛')
+            insufficient.append({**coverage_info, 'reason': reason})
+            continue
+        pe_median = float(statistics.median(pe_values))
+        pb_median = float(statistics.median(pb_values))
+        pe_pct = sum(v <= pe_median for v in market_pe) / len(market_pe) * 100
+        pb_pct = sum(v <= pb_median for v in market_pb) / len(market_pb) * 100
+        if pe_pct > OVERSOLD_VALUE_MAX_PCT or pb_pct > OVERSOLD_VALUE_MAX_PCT:
+            high_valuation += 1
+            continue
+
+        leader_rows = sorted((r for r in rows if r['totalMv'] is not None),
+                             key=lambda r: (-r['totalMv'], r['code']))[:2]
+        leaders = []
+        for r in leader_rows:
+            code = r['code']
+            name = str((stock_info.get(code) or {}).get('name') or code)
+            mine = mine_map.get(code)
+            covered = code in checked_codes
+            mine_types = list((mine or {}).get('types') or [])
+            mine_details = list((mine or {}).get('details') or [])
+            mine_note = (('既有排雷命中：' + '、'.join(mine_types)) if mine else
+                         '既有排雷已覆盖，未命中既有规则（不代表无风险）' if covered else '既有排雷未覆盖')
+            leaders.append({
+                'code': code, 'name': name, 'close': r['close'],
+                'peTtm': round(r['peTtm'], 4) if r['peTtm'] is not None else None,
+                'pb': round(r['pb'], 4) if r['pb'] is not None else None,
+                'peStatus': '亏损/非正PE，未计入组内PE中位数' if r['peTtm'] is not None and r['peTtm'] <= 0
+                            else 'PE缺失' if r['peTtm'] is None else '有效PE',
+                'pbStatus': 'PB缺失' if r['pb'] is None else '有效PB',
+                'totalMv': round(r['totalMv'], 2),
+                'totalMvYi': round(r['totalMv'] / 10000, 2),
+                'isST': 'ST' in name.upper(), 'tradeDate': r['tradeDate'],
+                'mineCovered': covered, 'mineTypes': mine_types, 'mineDetails': mine_details,
+                'mineNote': mine_note,
+            })
+        leader_note = ('总市值有效成员不足2只，仅展示实际可用的'
+                       f'{len(leaders)}只；不以其他股票补足' if len(leaders) < 2 else '总市值前2，代码升序打破同市值并列')
+        qualified_groups.append({
+            **coverage_info, 'peTtmMedian': round(pe_median, 4), 'pbMedian': round(pb_median, 4),
+            'peCrossPct': round(pe_pct, 1), 'pbCrossPct': round(pb_pct, 1),
+            'leaders': leaders, 'leaderNote': leader_note,
+            'reason': f'PE/PB当前横截面分位{pe_pct:.1f}%/{pb_pct:.1f}%，均≤20%；{leader_note}',
+        })
+
+    qualified_groups.sort(key=lambda g: (g['peCrossPct'] + g['pbCrossPct'], g['type'], g['code']))
+    industries = [g for g in qualified_groups if g['type'] == 'industry']
+    concepts = [g for g in qualified_groups if g['type'] == 'concept']
+    base['industries'], base['concepts'] = industries, concepts
+    base['counts'] = {
+        'industryCount': len(industries), 'conceptCount': len(concepts),
+        'directionCount': len(qualified_groups), 'leaderCount': sum(len(g['leaders']) for g in qualified_groups),
+        'evaluatedGroupCount': len(specs), 'insufficientCoverageGroupCount': len(insufficient),
+        'highValuationGroupCount': high_valuation,
+    }
+    base['coverage']['insufficientGroups'] = insufficient
+    if qualified_groups:
+        base['reasons'] = [f'{len(qualified_groups)}个方向同时满足PE/PB当前横截面分位均≤20%；'
+                           f'{len(insufficient)}组覆盖不足、{high_valuation}组未达双低门，均未补足名单']
+    else:
+        base['reasons'] = ['暂无符合项：' + (f'{len(insufficient)}组共同有效估值覆盖不足；' if insufficient else '')
+                           + (f'{high_valuation}组PE/PB当前横截面分位未同时≤20%；' if high_valuation else '')
+                           + '不以高估值、关系不标或覆盖不足股票补足']
+    print(f'  oversoldValueDirections: 行业{len(industries)}组/概念{len(concepts)}组，'
+          f'龙头{base["counts"]["leaderCount"]}只（{effective}）')
+
+
+def _oversold_value_directions_summary(data):
+    """后端漏斗与前端共用同一语义；非极端强制开窗绝不输出低估值名单。"""
+    block = data.get('oversoldValueDirections') or {}
+    if not (_oversold_value_extreme_active(data) and block.get('visible')):
+        return ''
+    def groups_text(groups):
+        if not groups:
+            return '暂无符合项'
+        return '、'.join(g['name'] + '（' + ('、'.join(l['name'] for l in g.get('leaders') or []) or '龙头不足') + '）'
+                         for g in groups)
+    if not block.get('counts', {}).get('directionCount'):
+        detail = '；'.join(block.get('reasons') or ['暂无符合项'])
+        return f'超低估值方向：{detail}｜极端超卖≠立即反转，非操作买卖建议'
+    return ('超低估值方向（成分股当前横截面，非板块历史分位）｜行业：'
+            + groups_text(block.get('industries') or []) + '｜大概念：'
+            + groups_text(block.get('concepts') or []) + '｜极端超卖≠立即反转，非操作买卖建议')
 
 
 def _vcp_swing_highs(bars, k):
@@ -9391,6 +9609,20 @@ def main():
         build_long_window(data)
     except Exception as e:
         print(f"  Warning: longWindow failed: {e}")
+    # 任务104：必须在longWindow之后、funnel之前；失败/陈旧/空结果均锁名单，不保留旧active方向。
+    try:
+        build_oversold_value_directions(pro, trade_date, data)
+    except Exception as e:
+        previous_values = data.get('oversoldValueDirections') or {}
+        data['oversoldValueDirections'] = {
+            **previous_values, 'visible': _oversold_value_extreme_active(data),
+            'industries': [], 'concepts': [],
+            'counts': {'industryCount': 0, 'conceptCount': 0, 'directionCount': 0,
+                       'leaderCount': 0, 'evaluatedGroupCount': 0,
+                       'insufficientCoverageGroupCount': 0, 'highValuationGroupCount': 0},
+            'reasons': [f'本批低估值方向计算失败，清空旧名单并锁定：{str(e)[:240]}'], 'coverage': {},
+        }
+        print(f"  Warning: oversoldValueDirections failed (locked): {e}")
 
     # ── 17c2. 板块聪明钱超额榜（45只主动基金×12板块；每晚净值增量45次，周五+份额周更）──
     try:

@@ -164,6 +164,82 @@ export interface SectorFlowItem {
   evidenceSources?: string[];
 }
 
+export interface OversoldValueLeader {
+  code: string;
+  name: string;
+  close: number | null;
+  peTtm: number | null;
+  pb: number | null;
+  peStatus: string;
+  pbStatus: string;
+  totalMv: number;
+  totalMvYi: number;
+  isST: boolean;
+  tradeDate: string;
+  mineCovered: boolean;
+  mineTypes: string[];
+  mineDetails: Array<{ type: string; detail: string; date: string }>;
+  mineNote: string;
+}
+
+export interface OversoldValueGroup {
+  type: 'industry' | 'concept';
+  code: string;
+  name: string;
+  memberCount: number;
+  snapshotCount: number;
+  missingSnapshotCount: number;
+  peCount: number;
+  pbCount: number;
+  commonCount: number;
+  commonCoverage: number;
+  lossPeCount: number;
+  peTtmMedian: number;
+  pbMedian: number;
+  peCrossPct: number;
+  pbCrossPct: number;
+  leaders: OversoldValueLeader[];
+  leaderNote: string;
+  reason: string;
+}
+
+export interface OversoldValueDirections {
+  visible: boolean;
+  tradeDate: string;
+  snapshotDate: string | null;
+  source: string;
+  valuationMethod: string;
+  maxPct: number;
+  minCommon: number;
+  minCoverage: number;
+  industries: OversoldValueGroup[];
+  concepts: OversoldValueGroup[];
+  counts: {
+    industryCount: number;
+    conceptCount: number;
+    directionCount: number;
+    leaderCount: number;
+    evaluatedGroupCount: number;
+    insufficientCoverageGroupCount: number;
+    highValuationGroupCount: number;
+  };
+  reasons: string[];
+  coverage: {
+    groupTotal?: number;
+    snapshotRows?: number;
+    marketPeCount?: number;
+    marketPbCount?: number;
+    stale?: boolean;
+    insufficientGroups?: Array<{
+      type: 'industry' | 'concept'; code: string; name: string;
+      memberCount: number; snapshotCount: number; missingSnapshotCount: number;
+      peCount: number; pbCount: number; commonCount: number;
+      commonCoverage: number; lossPeCount: number; reason: string;
+    }>;
+  };
+  note: string;
+}
+
 export interface FundData {
   updateTime: string;
   week: string;
@@ -514,6 +590,7 @@ export interface FundData {
       trade_date: string; source: string;
     }>;
   };
+  oversoldValueDirections?: OversoldValueDirections;
   stockRS?: {
     trade_date: string;
     window: number;
@@ -1018,6 +1095,7 @@ export interface FundData {
   mineWatch?: {
     trade_date: string;
     checked: number;
+    checkedCodes?: string[];
     thresholds?: string;
     items: Array<{
       code: string;

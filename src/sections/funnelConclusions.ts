@@ -16,6 +16,25 @@ export const SECTOR_ETF_MAP: Record<string, { code: string; name: string }> = {
 const shortNames = (names: string[], max = 3) =>
   names.length > max ? `${names.slice(0, max).join('、')}等${names.length}项` : names.join('、');
 
+// 任务104：三条件缺一不可；观察窗、普通open或旧名单都不能触发本模块。
+export const extremeReboundActive = (data: any) => !!(
+  data.longWindow?.window === 'open'
+  && data.longWindow?.windowType === 'extreme_rebound'
+  && data.longWindow?.extremeRebound?.active === true
+);
+
+export const oversoldValueDirectionsText = (data: any) => {
+  const block = data.oversoldValueDirections;
+  if (!extremeReboundActive(data) || !block?.visible) return '';
+  const groupsText = (groups: any[]) => groups.length > 0
+    ? groups.map((g) => `${g.name}（${(g.leaders || []).map((l: any) => l.name).join('、') || '龙头不足'}）`).join('、')
+    : '暂无符合项';
+  if (!(block.counts?.directionCount > 0)) {
+    return `超低估值方向：${(block.reasons || ['暂无符合项']).join('；')}｜极端超卖≠立即反转，非操作买卖建议`;
+  }
+  return `超低估值方向（成分股当前横截面，非板块历史分位）｜行业：${groupsText(block.industries || [])}｜大概念：${groupsText(block.concepts || [])}｜极端超卖≠立即反转，非操作买卖建议`;
+};
+
 const oversoldWait = (items: any[]) => {
   const pending = [
     items.some((r) => (r.rsi ?? 100) < 20) ? 'RSI回20上方' : '',
@@ -74,6 +93,8 @@ function windowConclusion(data: any) {
   if (lw.extremeRebound?.pendingConfirmation) {
     signals.push(`极端修复待确认：近20日超卖${(lw.extremeEvidence || []).length}个宽基，核心完整抄底未确认，不开窗`);
   }
+  const valueDirections = oversoldValueDirectionsText(data);
+  if (valueDirections) signals.push(valueDirections);
   if (signals.length === 0) signals.push('宽基无超买超卖触发');
   const bulls = items.filter((r: any) => r.weeklyMaBull).map((r: any) => r.indexName);
   const ma = items.length > 0

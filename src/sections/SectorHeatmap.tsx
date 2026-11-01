@@ -9,7 +9,8 @@ import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ReferenceLine, LabelList, Cell
 } from 'recharts';
-import { useFundData, type SectorFlowItem } from '@/hooks/useFundData';
+import { useFundData, type OversoldValueGroup, type SectorFlowItem } from '@/hooks/useFundData';
+import { extremeReboundActive } from './funnelConclusions';
 
 interface SectorHeatmapProps {
   detailed?: boolean;
@@ -196,6 +197,86 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
           </p>
         </CardContent>
       </Card>
+
+      {/* 任务104：只在现行极端超卖强制开窗展示；正常关窗或观察窗不能借名单开门。 */}
+      {detailed && extremeReboundActive(data) && data.oversoldValueDirections?.visible && (() => {
+        const block = data.oversoldValueDirections!;
+        const renderGroup = (group: OversoldValueGroup) => (
+          <div key={`${group.type}-${group.code}`} className="rounded-lg border border-emerald-100 bg-white px-3 py-2.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm font-bold text-slate-800">{group.name}</span>
+              <Badge variant="outline" className="text-[9px] border-emerald-200 text-emerald-700">{group.code}</Badge>
+              <Badge className="text-[9px] border-0 bg-emerald-100 text-emerald-800">
+                PE分位{group.peCrossPct.toFixed(1)}% · PB分位{group.pbCrossPct.toFixed(1)}%
+              </Badge>
+            </div>
+            <p className="mt-1 text-[10px] text-slate-500 leading-relaxed">
+              中位PE_TTM {group.peTtmMedian} · 中位PB {group.pbMedian}；共同有效{group.commonCount}/{group.memberCount}只（{(group.commonCoverage * 100).toFixed(1)}%）
+              · PE有效{group.peCount} · PB有效{group.pbCount} · 缺快照{group.missingSnapshotCount} · 亏损/非正PE {group.lossPeCount}
+            </p>
+            <div className="mt-2 grid gap-2 lg:grid-cols-2">
+              {group.leaders.map((leader) => (
+                <div key={leader.code} className="rounded-md bg-slate-50 px-2.5 py-2">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-xs font-bold text-slate-800">{leader.name}</span>
+                    <span className="text-[9px] text-slate-400">{leader.code}</span>
+                    {leader.isST && <Badge className="text-[9px] border-0 bg-rose-600 text-white">ST风险</Badge>}
+                  </div>
+                  <p className="mt-0.5 text-[10px] text-slate-600">
+                    PE_TTM {leader.peStatus === '有效PE' ? leader.peTtm : `—（${leader.peStatus}）`}
+                    {' · '}PB {leader.pbStatus === '有效PB' ? leader.pb : `—（${leader.pbStatus}）`}
+                    {' · '}总市值{leader.totalMvYi}亿元
+                  </p>
+                  <p className={`mt-1 text-[10px] ${leader.mineTypes.length ? 'text-rose-700' : leader.mineCovered ? 'text-slate-500' : 'text-amber-700'}`}
+                     title={leader.mineDetails.map((d) => `${d.type}：${d.detail}（${d.date}）`).join('；') || leader.mineNote}>
+                    {leader.mineNote}{leader.mineDetails.length ? `：${leader.mineDetails.map((d) => d.detail).join('；')}` : ''}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-1 text-[9px] text-slate-400">{group.leaderNote}；估值日{block.snapshotDate || '缺失'}</p>
+          </div>
+        );
+        return (
+          <Card id="oversold-value-directions" className="shadow-sm border-emerald-300 scroll-mt-20">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <CardTitle className="text-sm font-bold text-emerald-900">
+                  极端超卖强制开窗 · 超低估值行业 / 大概念与双龙头
+                </CardTitle>
+                <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
+                  {block.tradeDate} · {block.counts.directionCount}组
+                </Badge>
+              </div>
+              <CardDescription className="text-[10px] leading-relaxed">{block.valuationMethod}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {block.counts.directionCount === 0 && (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] text-amber-900">
+                  {block.reasons.map((reason, i) => <p key={i}>暂无符合项：{reason}</p>)}
+                  {(block.coverage.insufficientGroups || []).slice(0, 8).map((group) => (
+                    <p key={`${group.type}-${group.code}`} className="mt-1 text-[10px]">{group.name}：{group.reason}</p>
+                  ))}
+                </div>
+              )}
+              {(['industries', 'concepts'] as const).map((key) => (
+                <section key={key}>
+                  <h3 className="mb-1.5 text-xs font-bold text-slate-700">{key === 'industries' ? '申万行业' : '既有大概念'} · {block[key].length}组</h3>
+                  <div className="space-y-2">
+                    {block[key].length ? block[key].map(renderGroup) : (
+                      <p className="rounded-md bg-slate-50 px-3 py-2 text-[11px] text-slate-500">暂无符合项；不以高估值、关系不标或覆盖不足股票补足。</p>
+                    )}
+                  </div>
+                </section>
+              ))}
+              <div className="rounded-md border border-emerald-100 bg-emerald-50/60 px-3 py-2 text-[10px] leading-relaxed text-emerald-950">
+                <p>{block.note}</p>
+                <p className="mt-1 text-slate-500">来源：{block.source}；快照{block.snapshotDate || '缺失'}；本批有效日{block.tradeDate}。极端超卖≠立即反转。</p>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* ====== 板块页专属：行业/概念拥挤度简表（必须在每日涨幅轮动榜正上方） ====== */}
       {detailed && data.sectorCrowding && (

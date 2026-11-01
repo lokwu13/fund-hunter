@@ -5,7 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from 'lucide-react';
 import { useState } from 'react';
 import { useFundData } from '@/hooks/useFundData';
-import { broadOscFor, buildFunnelStepViews, sectorEtfFor } from './funnelConclusions';
+import { broadOscFor, buildFunnelStepViews, extremeReboundActive, oversoldValueDirectionsText, sectorEtfFor } from './funnelConclusions';
 
 const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
 const DEFENSIVE_SECTORS = new Set(['中证医药', '中证消费', '中证公用', '中证能源']);
@@ -136,10 +136,19 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
         </div>
       </div>
 
-      {data.longWindow?.windowType === 'extreme_rebound' && (
+      {extremeReboundActive(data) && (
         <div className="rounded-lg border-2 border-emerald-400 bg-emerald-50 px-4 py-3 text-emerald-900 shadow-sm">
-          <p className="text-sm font-bold">⚡ 极端修复临时窗（最长5日）· 剩余{data.longWindow.remainingDays}日</p>
-          <p className="text-[11px] mt-1">{data.longWindow.extremeRebound?.reason}；这不是普通趋势开窗，形态与高股息独立展示，非投资建议。</p>
+          <p className="text-sm font-bold">⚡ 极端修复临时窗（最长5日）· 剩余{data.longWindow?.remainingDays}日</p>
+          <p className="text-[11px] mt-1">{data.longWindow?.extremeRebound?.reason}；这不是普通趋势开窗，形态与高股息独立展示，非投资建议。</p>
+          {data.oversoldValueDirections?.visible && (
+            <div className="mt-2 rounded-md border border-emerald-200 bg-white/60 px-2.5 py-2">
+              <p className="text-[11px] leading-relaxed">{oversoldValueDirectionsText(data)}</p>
+              <button type="button" className="mt-1 text-[10px] font-semibold underline underline-offset-2"
+                      onClick={() => onNavigate?.('tools', 'oversold-value-directions')}>
+                查看超低估值方向、双龙头估值与排雷明细 →
+              </button>
+            </div>
+          )}
         </div>
       )}
 
