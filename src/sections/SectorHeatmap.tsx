@@ -198,7 +198,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
         </CardContent>
       </Card>
 
-      {/* 任务104：只在现行极端超卖强制开窗展示；正常关窗或观察窗不能借名单开门。 */}
+      {/* 只在RSI6极端强制开窗展示；方向排序不反向影响开窗。 */}
       {detailed && extremeReboundActive(data) && data.oversoldValueDirections?.visible && (() => {
         const block = data.oversoldValueDirections!;
         const renderGroup = (group: OversoldValueGroup) => (
@@ -206,13 +206,16 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm font-bold text-slate-800">{group.name}</span>
               <Badge variant="outline" className="text-[9px] border-emerald-200 text-emerald-700">{group.code}</Badge>
-              <Badge className="text-[9px] border-0 bg-emerald-100 text-emerald-800">
-                PE分位{group.peCrossPct.toFixed(1)}% · PB分位{group.pbCrossPct.toFixed(1)}%
-              </Badge>
+              <Badge className="text-[9px] border-0 bg-emerald-100 text-emerald-800">周RSI6 {group.weeklyRsi6 ?? '—'}</Badge>
+              {group.oversoldPriority && <Badge className="text-[9px] border-0 bg-amber-100 text-amber-800">超跌优先</Badge>}
             </div>
+            <p className="mt-1 text-[10px] text-slate-600 leading-relaxed">
+              {group.previousWeeklyRsiDate || '缺'} 前周RSI6 {group.previousWeeklyRsi6 ?? '—'} → {group.weeklyRsiDate || '缺'} 周RSI6 {group.weeklyRsi6 ?? '—'}
+              {' · '}日RSI6 {group.dailyRsi6 ?? '—'} · 20日回撤 {group.drawdown20Pct ?? '—'}% · 60日回撤 {group.drawdown60Pct ?? '—'}%
+            </p>
             <p className="mt-1 text-[10px] text-slate-500 leading-relaxed">
-              中位PE_TTM {group.peTtmMedian} · 中位PB {group.pbMedian}；共同有效{group.commonCount}/{group.memberCount}只（{(group.commonCoverage * 100).toFixed(1)}%）
-              · PE有效{group.peCount} · PB有效{group.pbCount} · 缺快照{group.missingSnapshotCount} · 亏损/非正PE {group.lossPeCount}
+              估值仅参考：中位PE_TTM {group.peTtmMedian ?? '—'} · 中位PB {group.pbMedian ?? '—'}
+              {' · '}PE/PB分位 {group.peCrossPct ?? '—'}%/{group.pbCrossPct ?? '—'}%；估值缺失不过滤方向。
             </p>
             <div className="mt-2 grid gap-2 lg:grid-cols-2">
               {group.leaders.map((leader) => (
@@ -225,7 +228,9 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
                   <p className="mt-0.5 text-[10px] text-slate-600">
                     PE_TTM {leader.peStatus === '有效PE' ? leader.peTtm : `—（${leader.peStatus}）`}
                     {' · '}PB {leader.pbStatus === '有效PB' ? leader.pb : `—（${leader.pbStatus}）`}
-                    {' · '}总市值{leader.totalMvYi}亿元
+                    {' · '}{leader.totalMvYi != null
+                      ? `总市值${leader.totalMvYi}亿元`
+                      : leader.circMv != null ? `流通市值${(leader.circMv / 10000).toFixed(2)}亿元（非总市值）` : '市值缺失'}
                   </p>
                   <p className={`mt-1 text-[10px] ${leader.mineTypes.length ? 'text-rose-700' : leader.mineCovered ? 'text-slate-500' : 'text-amber-700'}`}
                      title={leader.mineDetails.map((d) => `${d.type}：${d.detail}（${d.date}）`).join('；') || leader.mineNote}>
@@ -234,7 +239,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
                 </div>
               ))}
             </div>
-            <p className="mt-1 text-[9px] text-slate-400">{group.leaderNote}；估值日{block.snapshotDate || '缺失'}</p>
+            <p className="mt-1 text-[9px] text-slate-400">{group.leaderSortMethod}；{group.leaderNote}；估值日{block.snapshotDate || '缺失'}</p>
           </div>
         );
         return (
@@ -242,36 +247,34 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <CardTitle className="text-sm font-bold text-emerald-900">
-                  极端超卖强制开窗 · 超低估值行业 / 大概念与双龙头
+                  行业 / 大概念按超跌程度排序 · 周RSI6升序与双龙头
                 </CardTitle>
                 <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
-                  {block.tradeDate} · {block.counts.directionCount}组
+                  {block.tradeDate} · {block.counts.directionCount}组 · RSI不足{block.counts.rsiInsufficientGroupCount || 0}组
                 </Badge>
               </div>
-              <CardDescription className="text-[10px] leading-relaxed">{block.valuationMethod}</CardDescription>
+              <CardDescription className="text-[10px] leading-relaxed">{block.rankingMethod}；{block.valuationMethod}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {block.counts.directionCount === 0 && (
-                <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] text-amber-900">
-                  {block.reasons.map((reason, i) => <p key={i}>暂无符合项：{reason}</p>)}
-                  {(block.coverage.insufficientGroups || []).slice(0, 8).map((group) => (
-                    <p key={`${group.type}-${group.code}`} className="mt-1 text-[10px]">{group.name}：{group.reason}</p>
-                  ))}
-                </div>
-              )}
+              <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] text-amber-900">
+                {block.reasons.map((reason, i) => <p key={i}>{reason}</p>)}
+                {(block.coverage.insufficientGroups || []).slice(0, 8).map((group) => (
+                  <p key={`${group.type}-${group.code}`} className="mt-1 text-[10px]">{group.name}：{group.reason}</p>
+                ))}
+              </div>
               {(['industries', 'concepts'] as const).map((key) => (
                 <section key={key}>
-                  <h3 className="mb-1.5 text-xs font-bold text-slate-700">{key === 'industries' ? '申万行业' : '既有大概念'} · {block[key].length}组</h3>
+                  <h3 className="mb-1.5 text-xs font-bold text-slate-700">{key === 'industries' ? '申万行业' : '真实大概念'} · {block[key].length}组</h3>
                   <div className="space-y-2">
                     {block[key].length ? block[key].map(renderGroup) : (
-                      <p className="rounded-md bg-slate-50 px-3 py-2 text-[11px] text-slate-500">暂无符合项；不以高估值、关系不标或覆盖不足股票补足。</p>
+                      <p className="rounded-md bg-slate-50 px-3 py-2 text-[11px] text-slate-500">暂无可复算方向；行情不足或关系不标时不凑数。</p>
                     )}
                   </div>
                 </section>
               ))}
               <div className="rounded-md border border-emerald-100 bg-emerald-50/60 px-3 py-2 text-[10px] leading-relaxed text-emerald-950">
                 <p>{block.note}</p>
-                <p className="mt-1 text-slate-500">来源：{block.source}；快照{block.snapshotDate || '缺失'}；本批有效日{block.tradeDate}。极端超卖≠立即反转。</p>
+                <p className="mt-1 text-slate-500">来源：{block.source}；估值状态{block.valuationStatus || 'missing'}；快照{block.snapshotDate || '缺失'}；本批有效日{block.tradeDate}。极端超卖≠立即反转。</p>
               </div>
             </CardContent>
           </Card>

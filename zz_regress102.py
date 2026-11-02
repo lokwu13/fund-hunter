@@ -26,9 +26,10 @@ def check(name, condition, evidence=None):
 
 
 def weekly(code, rsi=50.0, passed=False, fresh=True):
-    return {'indexCode': code, 'indexName': NAMES[code], 'weeklyRsi': rsi,
-            'weeklyRsiDate': '20261023', 'dailyDate': AS_OF,
-            'weeklyFresh': fresh, 'rsiPass': passed, 'rsiReason': '受控边界'}
+    return {'indexCode': code, 'indexName': NAMES[code], 'weeklyRsi': rsi, 'weeklyRsi6': rsi,
+            'previousWeeklyRsi6': 18.0 if passed else 30.0,
+            'previousWeeklyRsiDate': '20261016', 'weeklyRsiDate': '20261023', 'dailyDate': AS_OF,
+            'weeklyFresh': fresh, 'rsiPass': passed, 'rsiReason': '受控RSI6边界'}
 
 
 def valuation(code, pe=50.0, pb=50.0, low=False, fresh=True, sufficient=True):
@@ -43,8 +44,8 @@ def decide(rsi_pass=(), low=(), rsi_values=None, valuation_values=None):
     valuation_values = valuation_values or {}
     ws = []
     for c in CODES:
-        value = rsi_values.get(c, 19.0 if c in rsi_pass else 50.0)
-        ws.append(weekly(c, value, value < 20))
+        value = rsi_values.get(c, 25.0 if c in rsi_pass else 50.0)
+        ws.append(weekly(c, value, c in rsi_pass))
     vs = []
     for c in CODES:
         pe, pb = valuation_values.get(c, (10.0, 10.0) if c in low else (50.0, 50.0))
@@ -52,31 +53,32 @@ def decide(rsi_pass=(), low=(), rsi_values=None, valuation_values=None):
     return ud._broad_observation_decision(ws, vs, AS_OF)
 
 
-# AND边界：两个完全满足才开；RSI=20不满足；估值>20、单指标低均不满足。
-check('两个同名宽基完全AND满足才开', decide(CODES[:2], CODES[:2])['active'])
-check('单只完全满足不能开', not decide(CODES[:1], CODES[:1])['active'])
-check('RSI等于20严格不开', not decide(CODES[:2], CODES[:2], {c: 20.0 for c in CODES[:2]})['active'])
-check('RSI高于20不开', not decide(CODES[:2], CODES[:2], {c: 20.01 for c in CODES[:2]})['active'])
-check('PE高于20分位不开', not decide(CODES[:2], CODES[:2], valuation_values={c: (20.1, 10.0) for c in CODES[:2]})['active'])
-check('PB高于20分位不开', not decide(CODES[:2], CODES[:2], valuation_values={c: (10.0, 20.1) for c in CODES[:2]})['active'])
-check('只有PE低而PB不低不开', not decide(CODES[:2], (), valuation_values={c: (10.0, 50.0) for c in CODES[:2]})['active'])
-check('只有PB低而PE不低不开', not decide(CODES[:2], (), valuation_values={c: (50.0, 10.0) for c in CODES[:2]})['active'])
+# 新边界：任一RSI6收复即可；估值与旧数量门不参与。
+check('两个同名宽基RSI6收复可开', decide(CODES[:2], CODES[:2])['active'])
+check('单只RSI6收复即可开', decide(CODES[:1], CODES[:1])['active'])
+check('RSI6等于20未收复不开', not decide((), CODES[:2], {c: 20.0 for c in CODES[:2]})['active'])
+check('无前后周收复证据不开', not decide((), CODES[:2], {c: 20.01 for c in CODES[:2]})['active'])
+check('PE高于20分位不否决RSI6', decide(CODES[:2], CODES[:2], valuation_values={c: (20.1, 10.0) for c in CODES[:2]})['active'])
+check('PB高于20分位不否决RSI6', decide(CODES[:2], CODES[:2], valuation_values={c: (10.0, 20.1) for c in CODES[:2]})['active'])
+check('只有PE低而PB不低且无RSI6不开', not decide((), (), valuation_values={c: (10.0, 50.0) for c in CODES[:2]})['active'])
+check('只有PB低而PE不低且无RSI6不开', not decide((), (), valuation_values={c: (50.0, 10.0) for c in CODES[:2]})['active'])
 
-# 五宽基逐一证明不会把甲的RSI与乙的估值拼接；每只单独特征均实名归属。
+# 六宽基逐一证明估值不会跨指数拼接或改变RSI6资格。
 pairing = {}
 for i, code in enumerate(CODES):
     crossed = decide([code], [CODES[(i + 1) % len(CODES)]])
     single = decide([code], [code])
     pairing[code] = {'crossedQualified': crossed['qualifiedCount'], 'singleQualified': single['qualifiedIndices']}
-    check(f'同名配对:{code}', crossed['qualifiedCount'] == 0 and single['qualifiedIndices'] == [NAMES[code]], pairing[code])
+    check(f'同名配对:{code}', crossed['qualifiedIndices'] == [NAMES[code]]
+          and single['qualifiedIndices'] == [NAMES[code]], pairing[code])
 
-# 缺估值、缺周RSI均不计满足。
-ws = [weekly(c, 19.0, True) for c in CODES[:2]]
+# 缺估值不改变RSI6；缺周RSI的指数不计，但另一只有效指数仍可单独触发。
+ws = [weekly(c, 25.0, True) for c in CODES[:2]]
 vs = [valuation(CODES[0], 10, 10, True)]
 missing_val = ud._broad_observation_decision(ws, vs, AS_OF)
-check('缺估值锁门', not missing_val['active'] and missing_val['qualifiedCount'] == 1, missing_val['reason'])
+check('缺估值不锁RSI6门', missing_val['active'] and missing_val['qualifiedCount'] == 2, missing_val['reason'])
 missing_rsi = ud._broad_observation_decision([ws[0]], [valuation(c, 10, 10, True) for c in CODES[:2]], AS_OF)
-check('缺周RSI锁门', not missing_rsi['active'] and missing_rsi['qualifiedCount'] == 1, missing_rsi['reason'])
+check('缺周RSI指数不计且单只仍可开', missing_rsi['active'] and missing_rsi['qualifiedCount'] == 1, missing_rsi['reason'])
 
 
 class EmptyPro:
@@ -116,36 +118,46 @@ check('单日RSI与周RSI冲突只用完成周', daily_rsi < 20 and controlled_w
 stale_weekly = ud._broad_weekly_rsi(AS_OF, {CODES[0]: controlled_daily[:-1]})[0]
 check('行情非本批有效日周RSI锁门', not stale_weekly['weeklyFresh'] and not stale_weekly['rsiPass'], stale_weekly)
 
-# 真实当前输入：直接复用生产周RSI/估值函数，估值缓存只写临时目录。
-daily_map = {c: REAL['indices'][c]['daily'] for c in CODES}
+# 真实当前输入：原五宽基审计+A500本地真实缓存；估值缓存只写临时目录。
+local_daily = json.loads((ROOT / 'scripts/cache/broad_idx_cache.json').read_text(encoding='utf-8'))
+valuation_path = ROOT / 'scripts/cache/broad_valuation.json'
+local_valuation = (json.loads(valuation_path.read_text(encoding='utf-8')).get('rows') or {}) if valuation_path.exists() else {}
+daily_map = {c: (REAL['indices'].get(c) or {}).get('daily') or local_daily.get(c) or [] for c in CODES}
+valuation_map = {c: (REAL['indices'].get(c) or {}).get('valuation') or local_valuation.get(c) or [] for c in CODES}
 real_weekly = ud._broad_weekly_rsi(AS_OF, daily_map)
 real_valuation = None
 old_path = ud.BROAD_VALUATION_PATH
 try:
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / 'valuation.json'
-        path.write_text(json.dumps({'rows': {c: REAL['indices'][c]['valuation'] for c in CODES}}), encoding='utf-8')
+        path.write_text(json.dumps({'rows': valuation_map}), encoding='utf-8')
         ud.BROAD_VALUATION_PATH = str(path)
         real_valuation = ud._broad_valuation_gate(EmptyPro(), AS_OF)
 finally:
     ud.BROAD_VALUATION_PATH = old_path
 real_decision = ud._broad_observation_decision(real_weekly, real_valuation, AS_OF)
 expected = {
-    '000016.SH': (35.62, 11.0857, 67.8, 1.2462, 54.4),
-    '000300.SH': (25.74, 12.9122, 53.5, 1.3427, 23.1),
-    '000905.SH': (33.36, 26.7601, 57.1, 1.9436, 52.5),
-    '000688.SH': (37.71, 90.461, 63.6, 5.5488, 55.5),
-    '399673.SZ': (28.59, 22.0067, 1.8, 3.9664, 10.8),
+    '000016.SH': (11.0857, 67.8, 1.2462, 54.4),
+    '000300.SH': (12.9122, 53.5, 1.3427, 23.1),
+    '000905.SH': (26.7601, 57.1, 1.9436, 52.5),
+    '000688.SH': (90.461, 63.6, 5.5488, 55.5),
+    '399673.SZ': (22.0067, 1.8, 3.9664, 10.8),
 }
-actual_compact = {x['indexCode']: (x['weeklyRsi'], x['peTtm'], x['pePct10y'], x['pb'], x['pbPct10y'])
-                  for x in real_decision['items']}
-check('真实五宽基数值与审计一致', actual_compact == expected, actual_compact)
-check('真实当前仅创业板50估值低且五只周RSI均未超卖',
-      [x['indexCode'] for x in real_decision['items'] if x['valuationLow']] == ['399673.SZ']
-      and not any(x['rsiPass'] for x in real_decision['items']))
-check('真实当前观察窗不触发', not real_decision['active'] and real_decision['qualifiedCount'] == 0, real_decision['reason'])
-check('科创50真实历史1520其余2429', {x['indexCode']: x['observations'] for x in real_decision['items']} == {
-    '000016.SH': 2429, '000300.SH': 2429, '000905.SH': 2429, '000688.SH': 1520, '399673.SZ': 2429})
+actual_compact = {x['indexCode']: (x['peTtm'], x['pePct10y'], x['pb'], x['pbPct10y'])
+                  for x in real_decision['items'] if x['indexCode'] in expected}
+check('真实五宽基估值与审计一致且六只RSI6可复算', actual_compact == expected
+      and all(x['weeklyRsi6'] is not None and x['previousWeeklyRsi6'] is not None
+              for x in real_decision['items']), actual_compact)
+check('真实当前RSI6资格严格服从前后完成周',
+      all((not x['rsiPass']) or (x['previousWeeklyRsi6'] <= 20 and x['weeklyRsi6'] > 20 and x['weeklyFresh'])
+          for x in real_decision['items']), real_decision['items'])
+check('真实当前观察证据与合格数一致', real_decision['active'] == (real_decision['qualifiedCount'] >= 1)
+      and real_decision['qualifiedCount'] == sum(x['rsiPass'] for x in real_decision['items']), real_decision['reason'])
+expected_obs = {'000016.SH': 2429, '000300.SH': 2429, '000905.SH': 2429,
+                '000688.SH': 1520, '399673.SZ': 2429}
+check('科创50真实历史1520其余原五宽基2429',
+      all({x['indexCode']: x['observations'] for x in real_decision['items']}.get(c) == n
+          for c, n in expected_obs.items()), real_decision['items'])
 
 
 class RealDailyMock:
@@ -169,9 +181,9 @@ try:
         backfilled = ud._broad_idx_bars(daily_pro, AS_OF, codes=CODES)
 finally:
     ud.BROAD_IDX_CACHE_PATH = old_idx_path
-check('观察窗五宽基独立真实日线回补链路', daily_pro.range_calls == CODES
+check('观察窗六宽基独立真实日线回补链路', daily_pro.range_calls == CODES
       and set(backfilled) == set(CODES) and '399006.SZ' not in backfilled
-      and all(backfilled[c][-1][0] == AS_OF for c in CODES), daily_pro.range_calls)
+      and all(backfilled[c][-1][0] == daily_map[c][-1][0] for c in CODES), daily_pro.range_calls)
 
 
 def long_data(observation, sell=None, top=False):
@@ -187,30 +199,30 @@ def long_data(observation, sell=None, top=False):
 active_observation = decide(CODES[:2], CODES[:2])
 opened = long_data(active_observation)
 ud.build_long_window(opened)
-check('冷普通水温债券降级后观察窗仍open', opened['longWindow']['window'] == 'open'
+check('冷普通水温债券降级后RSI6窗仍open', opened['longWindow']['window'] == 'open'
       and opened['longWindow']['standardWindow'] == 'closed'
-      and opened['longWindow']['windowType'] == 'oversold_valuation_watch'
-      and not opened['longWindow']['temporary'], {k: opened['longWindow'][k] for k in
+      and opened['longWindow']['windowType'] == 'extreme_rebound'
+      and opened['longWindow']['temporary'], {k: opened['longWindow'][k] for k in
       ('window', 'standardWindow', 'windowType', 'temporary')})
-check('观察窗明确非趋势反转或买点', '不是趋势反转或买点' in opened['longWindow']['reason'])
+check('RSI6窗明确非趋势反转或买点', '不是趋势反转或买点' in opened['longWindow']['reason'])
 ud.build_funnel(opened)
 step0 = next(s for s in opened['funnel']['steps'] if s['n'] == 0)
 step1 = next(s for s in opened['funnel']['steps'] if s['n'] == 1)
 check('漏斗第0至1步贯通不灰化', opened['funnel']['window'] == 'open' and step0['lamp'] == '🟢'
-      and step0['title'] == '极端超卖/低估值观察窗' and '不是趋势反转或买点' in step0['conclusion']
+      and step0['title'] == '周RSI6收复20临时窗' and '不是趋势反转或买点' in step0['conclusion']
       and step1['rows'] is not None, {'step0': step0, 'step1Count': len(step1['rows'])})
 for label, kwargs in (('强硬减仓', {'sell': ['上证50']}), ('顶部风险', {'top': True})):
     vetoed = long_data(active_observation, **kwargs)
     ud.build_long_window(vetoed)
-    check(f'{label}否决观察窗', vetoed['longWindow']['window'] == 'closed'
-          and vetoed['longWindow']['windowType'] == 'standard'
-          and not vetoed['longWindow']['oversoldValuationWatch']['effectiveActive']
-          and vetoed['longWindow']['oversoldValuationWatch']['blockedBy'],
+    check(f'{label}不否决RSI6窗', vetoed['longWindow']['window'] == 'open'
+          and vetoed['longWindow']['windowType'] == 'extreme_rebound'
+          and vetoed['longWindow']['oversoldValuationWatch']['effectiveActive']
+          and not vetoed['longWindow']['oversoldValuationWatch']['blockedBy'],
           vetoed['longWindow']['oversoldValuationWatch']['blockedBy'])
 
 # 真实历史逐日扫描：估值取各日当时十年历史，周RSI只取当时最近完成周。
 def historical_valuation(code, date):
-    rows = [r for r in REAL['indices'][code]['valuation'] if r[0] <= date]
+    rows = [r for r in valuation_map[code] if r[0] <= date]
     if not rows:
         return valuation(code, low=False)
     latest = rows[-1]
@@ -242,8 +254,9 @@ def scan_history(extra_daily=None, start='20250101'):
         if decision['active']:
             positives.append({'tradeDate': date, 'qualifiedIndices': decision['qualifiedIndices'],
                               'items': [{'indexCode': x['indexCode'], 'weeklyRsiDate': x['weeklyRsiDate'],
-                                         'weeklyRsi': x['weeklyRsi'], 'pePct10y': round(x['pePct10y'], 2),
-                                         'pbPct10y': round(x['pbPct10y'], 2)}
+                                         'previousWeeklyRsiDate': x['previousWeeklyRsiDate'],
+                                         'weeklyRsi6': x['weeklyRsi6'], 'previousWeeklyRsi6': x['previousWeeklyRsi6'],
+                                         'pePct10y': round(x['pePct10y'], 2), 'pbPct10y': round(x['pbPct10y'], 2)}
                                         for x in decision['items'] if x['qualified']]})
     return {'start': start, 'end': AS_OF, 'scannedDays': scanned, 'positiveCount': len(positives),
             'firstPositive': positives[0] if positives else None, 'positivesSample': positives[:20]}
@@ -275,8 +288,8 @@ if scan2025['positiveCount'] == 0:
 else:
     earlier_scan = None
 positive_scan = scan2025 if scan2025['positiveCount'] else earlier_scan
-check('真实历史找到至少一个AND正例且逐只合规', positive_scan and positive_scan['positiveCount'] > 0
-      and all(len(p['qualifiedIndices']) >= 2 and all(x['weeklyRsi'] < 20 and x['pePct10y'] <= 20 and x['pbPct10y'] <= 20
+check('真实历史找到至少一个RSI6正例且逐只合规', positive_scan and positive_scan['positiveCount'] > 0
+      and all(len(p['qualifiedIndices']) >= 1 and all(x['previousWeeklyRsi6'] <= 20 and x['weeklyRsi6'] > 20
               for x in p['items']) for p in positive_scan['positivesSample']),
       None if not positive_scan else {k: v for k, v in positive_scan.items() if k != 'positivesSample'})
 
@@ -285,8 +298,8 @@ spec = importlib.util.spec_from_file_location('update_data_task102_remote_baseli
                                               ROOT / 'zz_update_data_task102_remote_baseline.py')
 old = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(old)
-# 任务103仅有意修改VCP三函数；其余门控和杯柄继续逐字保护。
-protected = ('_extreme_rebound_decision', '_dividend_group_catalyst', '_osc_weekly_ma',
+# 本轮仅有意替换极端门；高股息、MA、VCP/杯柄和broadOsc继续逐字保护。
+protected = ('_dividend_group_catalyst', '_osc_weekly_ma',
              '_weekly_ma150_200_display_gate', '_cup_handle_strict', '_cup_early_breakout',
              '_platform_contraction_practical_ok', '_trend_template', 'build_broad_osc')
 for name in protected:
@@ -300,12 +313,12 @@ funnel_ui = (ROOT / 'src/sections/funnelConclusions.ts').read_text(encoding='utf
 eci_ui = (ROOT / 'src/sections/ECIPanel.tsx').read_text(encoding='utf-8')
 production = (ROOT / 'scripts/update_data.py').read_text(encoding='utf-8')
 workflow = (ROOT / '.github/workflows/daily-update.yml').read_text(encoding='utf-8')
-check('前端类型横幅证据及徽章贯通', "'oversold_valuation_watch'" in types and 'broadObservation?:' in types
-      and '极端超卖/低估值观察窗' in weekly_ui and 'weeklyRsiDate' in weekly_ui
-      and 'pePct10y' in weekly_ui and 'pbPct10y' in weekly_ui
-      and '观察窗AND门' in funnel_ui and '极端超卖/低估值观察窗·非买点' in eci_ui)
+check('前端类型横幅证据及徽章贯通', 'weeklyRsi6' in types and 'previousWeeklyRsi6' in types
+      and 'broadObservation?:' in types and '完成周RSI6收复20' in weekly_ui
+      and 'previousWeeklyRsiDate' in weekly_ui and 'pePct10y' in weekly_ui and 'pbPct10y' in weekly_ui
+      and '周RSI6升序' in funnel_ui and '周RSI6收复20' in eci_ui)
 check('数据失败清旧active并锁门', "data['broadObservation'] = {" in production
-      and "'active': False, 'label': '极端超卖/低估值观察窗'" in production
+      and "'active': False, 'label': '完成周RSI6收复20观察证据'" in production
       and 'broadObservation failed (locked)' in production)
 check('估值缓存纳入nightly提交', 'scripts/cache/broad_valuation.json' in workflow)
 check('创业板50独立回补不扩大原九宽基且不用399006替代',

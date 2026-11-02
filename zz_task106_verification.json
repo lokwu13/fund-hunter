@@ -1,0 +1,87 @@
+{
+  "task": 106,
+  "stage": "preRelease",
+  "asOf": "2026-11-01",
+  "rules": {
+    "rsiPeriod": 6,
+    "rsiMethod": "Wilder",
+    "previousCompletedWeekMax": 20,
+    "latestCompletedWeekMinExclusive": 20,
+    "requiredCount": 1,
+    "temporaryTradingDays": 5,
+    "observationIndices": [
+      "000016.SH",
+      "000300.SH",
+      "000510.SH",
+      "000905.SH",
+      "000688.SH",
+      "399673.SZ"
+    ],
+    "valuationParticipatesInGate": false,
+    "unfinishedWeekCanTrigger": false,
+    "standardWindowPreserved": true,
+    "oldRiskGatesCanVetoRsi6": false
+  },
+  "commands": [
+    {"command": "PYTHONPATH=scripts python zz_regress87.py", "passed": true, "checksPassed": 21, "checksTotal": 21},
+    {"command": "PYTHONPATH=scripts python zz_regress96.py", "passed": true, "sampleCount": 38, "boundaryPassed": 8, "boundaryTotal": 8},
+    {"command": "PYTHONPATH=scripts python zz_regress98.py", "passed": true, "checksPassed": 30, "checksTotal": 30},
+    {"command": "PYTHONPATH=scripts python zz_regress99.py", "passed": true, "checksPassed": 21, "checksTotal": 21, "sampleChanges": 0},
+    {"command": "PYTHONPATH=scripts python zz_regress101.py", "passed": true, "checksPassed": 19, "checksTotal": 19},
+    {"command": "PYTHONPATH=scripts python zz_regress102.py", "passed": true, "checksPassed": 44, "checksTotal": 44, "history2025Positive": 10, "firstPositiveDate": "20260413", "firstPositiveIndex": "000016.SH"},
+    {"command": "PYTHONPATH=scripts python zz_regress104.py", "passed": true, "checksPassed": 26, "checksTotal": 26},
+    {"command": "PYTHONPATH=scripts python zz_regress105.py", "passed": true, "checksPassed": 40, "checksTotal": 40, "casePassed": 10, "caseTotal": 10, "windowPassed": 6, "windowTotal": 6, "failedCases": [], "failedWindows": [], "pitOnly": true, "notMarketWinRate": true},
+    {"command": "PYTHONPATH=scripts python zz_regress106.py", "passed": true, "checksPassed": 37, "checksTotal": 37},
+    {"command": "npm run build", "passed": true, "jsBundle": "dist/assets/index-Dua-zYHz-v25.js", "cssBundle": "dist/assets/index-BiaatRQU.css"}
+  ],
+  "task103Regression": {
+    "source": "zz_regress105.py",
+    "checksPassed": 40,
+    "checksTotal": 40,
+    "cases": {"passed": 10, "total": 10, "failed": []},
+    "windows": {"passed": 6, "total": 6, "failed": []},
+    "windowFirstBest": {
+      "000776.SZ": {"first": "20250403", "best": "20250403", "pass": true},
+      "603392.SH": {"first": "20240715", "best": "20240715", "pass": true},
+      "002027.SZ": {"first": "20250801", "best": "20250801", "pass": true},
+      "600030.SH": {"first": "20240823", "best": "20240823", "pass": true},
+      "601328.SZ": {"first": "20230920", "best": "20231127", "pass": true},
+      "600118.SH": {"first": "20250402", "best": null, "pass": true}
+    }
+  },
+  "a500Cache": {
+    "rows": 300,
+    "firstDate": "20250612",
+    "lastDate": "20260924",
+    "denseAsOf": "20260831",
+    "weeklyRsi6": 42.06,
+    "previousWeeklyRsi6": 39.83,
+    "freshAtCurrentProductionDate": false,
+    "note": "末尾孤立点之前有缺口，不能伪称新鲜"
+  },
+  "preReleaseMain": "6bd9cc82e9673a40e968fd016436fc527eb0b5da",
+  "dataPreflight": {
+    "public/fund_data.json": {
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+      "remoteBytes": 778908,
+      "remoteSha256": "38bf8a7acb67ce04a0ff6dc4e3649deedaae09f925f0f87b6c9c03f8bd0199d8",
+      "remoteBlobSha": "cea2cf6d2c93e1e5b47e66ebb5942d873cf771ef"
+    },
+    "src/data/fund_data.json": {
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+      "remoteBytes": 778908,
+      "remoteSha256": "38bf8a7acb67ce04a0ff6dc4e3649deedaae09f925f0f87b6c9c03f8bd0199d8",
+      "remoteBlobSha": "cea2cf6d2c93e1e5b47e66ebb5942d873cf771ef"
+    },
+    "localEqualsRemoteBeforeRelease": false,
+    "note": "本地与远端原本就是不同快照；发布不得覆盖任一侧"
+  },
+  "releaseConstraints": {
+    "manualDispatch": false,
+    "workflowModified": false,
+    "fundDataIncludedInCommit": false,
+    "forcePush": false
+  }
+}

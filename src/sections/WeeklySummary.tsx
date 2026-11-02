@@ -138,24 +138,24 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
 
       {extremeReboundActive(data) && (
         <div className="rounded-lg border-2 border-emerald-400 bg-emerald-50 px-4 py-3 text-emerald-900 shadow-sm">
-          <p className="text-sm font-bold">⚡ 极端修复临时窗（最长5日）· 剩余{data.longWindow?.remainingDays}日</p>
-          <p className="text-[11px] mt-1">{data.longWindow?.extremeRebound?.reason}；这不是普通趋势开窗，形态与高股息独立展示，非投资建议。</p>
+          <p className="text-sm font-bold">⚡ 完成周RSI6收复20 · 极端修复临时窗（最长5日）· 剩余{data.longWindow?.remainingDays}日</p>
+          <p className="text-[11px] mt-1">{data.longWindow?.extremeRebound?.reason}；任一宽基单独触发，旧风险与估值门不否决；这不是普通趋势开窗，非投资建议。</p>
+          <div className="mt-1 space-y-0.5 text-[10px]">
+            {(data.longWindow?.triggerDetails || []).map((r) => (
+              <p key={r.indexCode}>
+                {r.indexName}：{r.previousWeeklyRsiDate} 周RSI6={r.previousWeeklyRsi6}≤20 → {r.weeklyRsiDate} 周RSI6={r.weeklyRsi6}＞20
+              </p>
+            ))}
+          </div>
           {data.oversoldValueDirections?.visible && (
             <div className="mt-2 rounded-md border border-emerald-200 bg-white/60 px-2.5 py-2">
               <p className="text-[11px] leading-relaxed">{oversoldValueDirectionsText(data)}</p>
               <button type="button" className="mt-1 text-[10px] font-semibold underline underline-offset-2"
                       onClick={() => onNavigate?.('tools', 'oversold-value-directions')}>
-                查看超低估值方向、双龙头估值与排雷明细 →
+                查看周RSI6超跌排序、双龙头与估值降级明细 →
               </button>
             </div>
           )}
-        </div>
-      )}
-
-      {data.longWindow?.windowType === 'oversold_valuation_watch' && (
-        <div className="rounded-lg border-2 border-sky-400 bg-sky-50 px-4 py-3 text-sky-900 shadow-sm">
-          <p className="text-sm font-bold">🔎 极端超卖/低估值观察窗 · {data.broadObservation?.qualifiedCount ?? 0}只宽基同时满足</p>
-          <p className="text-[11px] mt-1">同一宽基最近完成周RSI14＜20 AND PE_TTM/PB十年分位均≤20%，至少2只才开窗；这不是趋势反转或买点，非投资建议。</p>
         </div>
       )}
 
@@ -175,7 +175,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
           {(data.broadOsc?.sellAlerts?.length ?? 0) > 0 ? (
             <>
               <p className="text-sm font-bold">🚨 强硬减仓警报：{data.broadOsc?.sellAlerts?.join('、')}</p>
-              <p className="text-[11px] mt-0.5">收回上轨下方 + RSI 不再创新高 + 量能异常，已压过其他信号并关闭做多窗口。查看状态证据 →</p>
+              <p className="text-[11px] mt-0.5">收回上轨下方 + RSI 不再创新高 + 量能异常：标准窗口关闭；完成周RSI6收复20新门独立判定，不因此被否决。查看状态证据 →</p>
             </>
           ) : (data.broadOsc?.buyWindows?.length ?? 0) > 0 ? (
             <>
@@ -266,16 +266,15 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                       {st.key === 'window' && data.broadObservation && (
                         <div className="mb-2 rounded-lg border border-sky-100 bg-sky-50/50 px-2 py-1.5">
                           <p className="text-[10px] font-semibold text-sky-800">
-                            极端超卖/低估值观察窗：{data.broadObservation.qualifiedCount}/{data.broadObservation.requiredCount}只满足 · {data.broadObservation.active ? 'AND门已满足' : 'AND门未满足'} · 观察不等于趋势反转或买点
+                            完成周RSI6收复20：{data.broadObservation.qualifiedCount}只触发（任一即可） · 未完结周仅动态观察 · PE/PB只参考，不是开窗门
                           </p>
                           <div className="mt-1 grid gap-1">
                             {data.broadObservation.items.map((r) => (
-                              <div key={r.indexCode} className="flex items-center gap-x-2 gap-y-0.5 flex-wrap text-[10px] text-slate-600" title={`${r.rsiReason || ''}；${r.reason || ''}`}>
+                              <div key={r.indexCode} className="flex items-center gap-x-2 gap-y-0.5 flex-wrap text-[10px] text-slate-600" title={`${r.rsiReason || ''}；${r.valuationReason || ''}`}>
                                 <span className={`font-semibold ${r.qualified ? 'text-emerald-700' : 'text-slate-700'}`}>{r.qualified ? '✓' : '—'} {r.indexName}</span>
-                                <span>周RSI14 {r.weeklyRsi ?? '—'}（{r.weeklyRsiDate || '缺完成周'}）</span>
-                                <span>PE_TTM {r.peTtm ?? '—'} · 十年分位 {r.pePct10y ?? '—'}%</span>
-                                <span>PB {r.pb ?? '—'} · 十年分位 {r.pbPct10y ?? '—'}%</span>
-                                <span className="text-slate-400">估值{r.valuationDate || '缺失'} · {r.observations ?? 0}日</span>
+                                <span>前周RSI6 {r.previousWeeklyRsi6 ?? '—'}（{r.previousWeeklyRsiDate || '缺'}）→ 最近完成周RSI6 {r.weeklyRsi6 ?? '—'}（{r.weeklyRsiDate || '缺'}）</span>
+                                {r.dynamicWatch && <span className="text-amber-700">未完结周动态RSI6 {r.dynamicWeeklyRsi6 ?? '—'}，仅观察</span>}
+                                <span>参考：PE分位 {r.pePct10y ?? '—'}% · PB分位 {r.pbPct10y ?? '—'}%</span>
                               </div>
                             ))}
                           </div>

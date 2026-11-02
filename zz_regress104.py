@@ -50,6 +50,16 @@ def extreme_data():
     }
 
 
+def direction_rows(final_gain):
+    days = pd.date_range(end='2026-10-23', periods=30, freq='W-FRI').strftime('%Y%m%d').tolist()
+    closes = [100.0]
+    for _ in range(28):
+        closes.append(closes[-1] * 0.96)
+    closes.append(closes[-1] * (1 + final_gain))
+    rows = [[d, round(c, 6), 1000.0] for d, c in zip(days, closes)]
+    return rows + [[AS_OF, round(closes[-1], 6), 1000.0]]
+
+
 BASE_CACHE = {
     'sw_list': [
         {'code': 'I1', 'name': '低估值行业'},
@@ -64,6 +74,10 @@ BASE_CACHE = {
     'concepts': [{'code': 'C1', 'name': '真实大概念'}],
     'ths_members': {'C1': ['C001.SZ', 'C002.SZ', 'C003.SZ', 'C004.SZ', 'C005.SZ']},
     'ths_index': {'真实大概念': 'C1'},
+    'index_daily': {'I1': direction_rows(0.05), 'I2': direction_rows(0.10),
+                    'I3': direction_rows(0.15), 'C1': direction_rows(0.20)},
+    'circ_mv': {'MISS.SZ': 10_000_000, 'LOSS.SZ': 9_000_000,
+                'C002.SZ': 8_000_000, 'C003.SZ': 8_000_000},
     'stock_info': {
         **{f'A{i:03d}.SZ': {'name': f'行业{i}'} for i in range(1, 6)},
         **{f'C{i:03d}.SZ': {'name': f'概念{i}'} for i in range(1, 6)},
@@ -132,15 +146,16 @@ with tempfile.TemporaryDirectory() as tmp:
         check('极端三条件触发且仅一次全A请求', block['visible'] and len(active_pro.calls) == 1
               and active_pro.calls[0]['trade_date'] == AS_OF
               and active_pro.calls[0]['fields'] == 'ts_code,trade_date,close,total_mv,pe_ttm,pb', active_pro.calls)
-        check('行业与真实大概念均入围', [g['name'] for g in block['industries']] == ['低估值行业']
-              and [g['name'] for g in block['concepts']] == ['真实大概念'], block['counts'])
-        industry = block['industries'][0]
+        check('行业与真实大概念均由RSI6入围', len(block['industries']) == 3
+              and [g['name'] for g in block['concepts']] == ['真实大概念']
+              and block['counts']['directionCount'] == 4, block['counts'])
+        industry = next(g for g in block['industries'] if g['name'] == '低估值行业')
         concept = block['concepts'][0]
         check('亏损非正PE不进中位数且单独披露', industry['lossPeCount'] == 1 and industry['peTtmMedian'] == 7
               and industry['commonCount'] == 5 and industry['commonCoverage'] == round(5 / 7, 4), industry)
         check('缺失估值不补0且龙头如实披露', [x['code'] for x in industry['leaders']] == ['MISS.SZ', 'LOSS.SZ']
               and industry['leaders'][0]['peTtm'] is None and industry['leaders'][0]['pb'] is None
-              and industry['leaders'][0]['peStatus'] == 'PE缺失'
+              and industry['leaders'][0]['peStatus'] == '估值快照缺失'
               and industry['leaders'][1]['peStatus'].startswith('亏损/非正PE')
               and industry['leaders'][1]['isST'], industry['leaders'])
         check('概念真实归属关系不标股票不得进入', all(x['code'] != 'OUTSIDE.SZ' for x in concept['leaders'])
@@ -152,15 +167,16 @@ with tempfile.TemporaryDirectory() as tmp:
               and concept['leaders'][0]['mineNote'] == '既有排雷已覆盖，未命中既有规则（不代表无风险）'
               and concept['leaders'][1]['mineNote'] == '既有排雷未覆盖',
               [x['mineNote'] for x in industry['leaders'] + concept['leaders']])
-        check('高估值与覆盖不足均不补足', block['counts']['highValuationGroupCount'] == 1
+        check('高估值与覆盖不足仅统计不过滤RSI6方向', block['counts']['highValuationGroupCount'] == 2
               and block['counts']['insufficientCoverageGroupCount'] == 1
-              and block['coverage']['insufficientGroups'][0]['name'] == '覆盖不足行业'
-              and all(g['name'] not in ('高估值行业', '覆盖不足行业') for g in block['industries']), block['coverage'])
-        check('口径明示非板块历史分位', '成分股当前横截面聚合，非板块历史分位' in block['valuationMethod']
-              and '极端超卖≠立即反转' in block['note'] and '非独立买入建议' in block['note'])
+              and block['counts']['rsiInsufficientGroupCount'] == 0
+              and all(g['name'] in ('低估值行业', '高估值行业', '覆盖不足行业') for g in block['industries']),
+              block['counts'])
+        check('口径明示估值仅参考', '不参与方向入围或排序' in block['valuationMethod']
+              and '极端超卖≠立即反转' in block['note'] and 'PE/PB不参与入围' in block['note'])
         summary = ud._oversold_value_directions_summary(active)
         check('摘要含各组前2龙头和非反转提示', all(x in summary for x in
-              ('低估值行业（缺估值龙头、*ST亏损）', '真实大概念（概念2、概念3）',
+              ('低估值行业[周RSI6', '缺估值龙头、*ST亏损', '真实大概念[周RSI6', '概念2、概念3',
                '极端超卖≠立即反转', '非操作买卖建议')), summary)
         ud.build_funnel(active)
         step0 = next(s for s in active['funnel']['steps'] if s['n'] == 0)
@@ -173,23 +189,26 @@ with tempfile.TemporaryDirectory() as tmp:
         stale_pro = FakePro([dict(r, trade_date='20261029') for r in ROWS])
         ud.build_oversold_value_directions(stale_pro, AS_OF, stale)
         stale_block = stale['oversoldValueDirections']
-        check('陈旧快照提示并锁全部名单', stale_block['visible'] and stale_block['coverage']['stale']
-              and stale_block['snapshotDate'] == '20261029' and not stale_block['industries']
-              and not stale_block['concepts'] and '不等于本批有效日' in stale_block['reasons'][0], stale_block)
+        check('陈旧快照标缺失但保留RSI6名单', stale_block['visible'] and stale_block['coverage']['stale']
+              and stale_block['snapshotDate'] == '20261029' and len(stale_block['industries']) == 3
+              and len(stale_block['concepts']) == 1 and stale_block['valuationStatus'] == 'stale'
+              and '不等于本批有效日' in stale_block['reasons'][0], stale_block)
 
         failed = extreme_data()
         failed_pro = FakePro([], fail=True)
         ud.build_oversold_value_directions(failed_pro, AS_OF, failed)
-        check('API失败不清空门控但锁名单', failed['oversoldValueDirections']['visible']
+        check('API失败不清空门控或RSI6名单', failed['oversoldValueDirections']['visible']
               and failed['longWindow']['window'] == 'open'
-              and failed['oversoldValueDirections']['counts']['directionCount'] == 0
+              and failed['oversoldValueDirections']['counts']['directionCount'] == 4
+              and failed['oversoldValueDirections']['valuationStatus'] == 'missing'
               and '失败' in failed['oversoldValueDirections']['reasons'][0])
 
-        # 只有高估值真实组，其他低估值股票均关系不标：必须保留空结果与原因。
+        # 高估值真实组仍按RSI6入榜；关系不标的低估值股票不得混入。
         high_cache = {
             'sw_list': [{'code': 'I2', 'name': '高估值行业'}],
             'sw_members': {'I2': BASE_CACHE['sw_members']['I2']},
             'concepts': [], 'ths_members': {}, 'ths_index': {}, 'stock_info': BASE_CACHE['stock_info'],
+            'index_daily': {'I2': BASE_CACHE['index_daily']['I2']},
         }
         cache_path.write_text(json.dumps(high_cache, ensure_ascii=False), encoding='utf-8')
         high = extreme_data()
@@ -197,10 +216,10 @@ with tempfile.TemporaryDirectory() as tmp:
         high_rows += [row(f'L{i:03d}.SZ', i, i / 10, 1000) for i in range(1, 31)]
         ud.build_oversold_value_directions(FakePro(high_rows), AS_OF, high)
         high_block = high['oversoldValueDirections']
-        check('高估值空结果保留原因不拿低PE关系股补足', high_block['visible']
-              and high_block['counts']['directionCount'] == 0 and not high_block['industries']
-              and not high_block['concepts'] and '暂无符合项' in high_block['reasons'][0]
-              and high_block['counts']['highValuationGroupCount'] == 1, high_block)
+        check('高估值不过滤且关系不标股票不补足', high_block['visible']
+              and high_block['counts']['directionCount'] == 1 and len(high_block['industries']) == 1
+              and not high_block['concepts'] and high_block['counts']['highValuationGroupCount'] == 1
+              and all(x['code'] != 'OUTSIDE.SZ' for x in high_block['industries'][0]['leaders']), high_block)
     finally:
         ud.DIVIDEND_GROUP_CACHE_PATH = old_path
 
@@ -209,9 +228,8 @@ spec = importlib.util.spec_from_file_location('update_data_task104_remote_baseli
                                               ROOT / 'zz_update_data_task104_remote_baseline.py')
 old = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(old)
-# 任务103仅有意修改VCP三函数；其余门控和杯柄继续逐字保护。
-protected = ('_extreme_rebound_decision', 'build_long_window', '_broad_observation_decision',
-             '_broad_valuation_gate', '_dividend_group_catalyst', 'build_broad_osc',
+# 本轮有意替换RSI开窗三函数；估值函数、高股息、broadOsc和VCP/杯柄继续逐字保护。
+protected = ('_broad_valuation_gate', '_dividend_group_catalyst', 'build_broad_osc',
              '_cup_handle_strict', '_cup_early_breakout', '_trend_template')
 for name in protected:
     check(f'既有函数未改:{name}', inspect.getsource(getattr(old, name)) == inspect.getsource(getattr(ud, name)),
@@ -229,7 +247,8 @@ check('前端极端三条件防止旧名单绕门', "window === 'open'" in funne
 check('第0步板块明细及类型全链路', 'oversoldValueDirectionsText(data)' in weekly
       and 'oversoldValueDirectionsText(data)' in funnel_ui
       and 'oversold-value-directions' in heatmap and 'OversoldValueDirections' in types
-      and 'mineCovered' in heatmap and 'lossPeCount' in heatmap)
+      and 'mineCovered' in heatmap and 'weeklyRsi6' in heatmap
+      and 'rsiInsufficientGroupCount' in heatmap and '超跌程度' in heatmap)
 
 out = {'task': 104, 'asOf': AS_OF, 'checks': checks,
        'testIsolation': 'TemporaryDirectory + FakePro；未调用真实API，未读写正式vcp_cache'}

@@ -172,10 +172,11 @@ export interface OversoldValueLeader {
   pb: number | null;
   peStatus: string;
   pbStatus: string;
-  totalMv: number;
-  totalMvYi: number;
+  totalMv: number | null;
+  totalMvYi: number | null;
+  circMv: number | null;
   isST: boolean;
-  tradeDate: string;
+  tradeDate: string | null;
   mineCovered: boolean;
   mineTypes: string[];
   mineDetails: Array<{ type: string; detail: string; date: string }>;
@@ -187,6 +188,18 @@ export interface OversoldValueGroup {
   code: string;
   name: string;
   memberCount: number;
+  dailyDate: string | null;
+  weeklyRsiDate: string | null;
+  previousWeeklyRsiDate: string | null;
+  weeklyRsi6: number;
+  previousWeeklyRsi6: number;
+  dynamicWeeklyRsi6: number | null;
+  weeklyFresh: boolean;
+  weeklyCross20: boolean;
+  dailyRsi6: number | null;
+  drawdown20Pct: number | null;
+  drawdown60Pct: number | null;
+  oversoldPriority: boolean;
   snapshotCount: number;
   missingSnapshotCount: number;
   peCount: number;
@@ -194,12 +207,14 @@ export interface OversoldValueGroup {
   commonCount: number;
   commonCoverage: number;
   lossPeCount: number;
-  peTtmMedian: number;
-  pbMedian: number;
-  peCrossPct: number;
-  pbCrossPct: number;
+  peTtmMedian: number | null;
+  pbMedian: number | null;
+  peCrossPct: number | null;
+  pbCrossPct: number | null;
   leaders: OversoldValueLeader[];
   leaderNote: string;
+  leaderSortMethod: string;
+  valuationReferenceOnly: boolean;
   reason: string;
 }
 
@@ -207,8 +222,11 @@ export interface OversoldValueDirections {
   visible: boolean;
   tradeDate: string;
   snapshotDate: string | null;
+  valuationStatus: 'ok' | 'missing' | 'stale';
+  valuationError: string | null;
   source: string;
   valuationMethod: string;
+  rankingMethod: string;
   maxPct: number;
   minCommon: number;
   minCoverage: number;
@@ -220,6 +238,7 @@ export interface OversoldValueDirections {
     directionCount: number;
     leaderCount: number;
     evaluatedGroupCount: number;
+    rsiInsufficientGroupCount: number;
     insufficientCoverageGroupCount: number;
     highValuationGroupCount: number;
   };
@@ -232,9 +251,7 @@ export interface OversoldValueDirections {
     stale?: boolean;
     insufficientGroups?: Array<{
       type: 'industry' | 'concept'; code: string; name: string;
-      memberCount: number; snapshotCount: number; missingSnapshotCount: number;
-      peCount: number; pbCount: number; commonCount: number;
-      commonCoverage: number; lossPeCount: number; reason: string;
+      memberCount: number; dailyRows: number; weeklyRsiDate: string | null; reason: string;
     }>;
   };
   note: string;
@@ -921,8 +938,11 @@ export interface FundData {
     note: string;
     items: Array<{
       indexCode: string; indexName: string; qualified: boolean;
-      dailyDate?: string | null; weeklyRsiDate?: string | null;
-      weeklyRsi: number | null; weeklyFresh?: boolean; rsiPass: boolean; rsiReason?: string;
+      dailyDate?: string | null; weeklyRsiDate?: string | null; previousWeeklyRsiDate?: string | null;
+      weeklyRsi6: number | null; previousWeeklyRsi6: number | null;
+      dynamicWeeklyRsi6?: number | null; dynamicWeeklyRsiDate?: string | null;
+      dynamicWatch?: boolean; weeklyCross20?: boolean;
+      weeklyFresh?: boolean; rsiPass: boolean; rsiReason?: string; valuationReason?: string;
       source?: string; valuationDate?: string | null; observations?: number;
       historyStart?: string | null; sufficientHistory?: boolean; fresh?: boolean; ageDays?: number;
       peTtm: number | null; pb: number | null; pePct10y: number | null; pbPct10y: number | null;
@@ -961,9 +981,19 @@ export interface FundData {
     bondY10_1m?: number | null; bondNote?: string;
     startedDate?: string | null; remainingDays?: number;
     extremeEvidence?: Array<any>; triggerIndices?: string[];
+    triggerDetails?: Array<{
+      indexCode: string; indexName: string;
+      previousWeeklyRsi6: number; weeklyRsi6: number;
+      previousWeeklyRsiDate: string; weeklyRsiDate: string; dailyDate: string;
+    }>;
     extremeRebound?: {
       active: boolean; qualified: boolean; expired: boolean; pendingConfirmation: boolean;
       triggerIndices: string[]; topRisks: string[]; blockedBy: string[];
+      triggerDetails?: Array<{
+        indexCode: string; indexName: string;
+        previousWeeklyRsi6: number; weeklyRsi6: number;
+        previousWeeklyRsiDate: string; weeklyRsiDate: string; dailyDate: string;
+      }>;
       startedDate: string | null; remainingDays: number; maxDays: number;
       reason: string;
     };

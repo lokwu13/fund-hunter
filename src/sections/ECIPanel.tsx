@@ -922,10 +922,8 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                 {data.longWindow?.window === 'open' && (
                   <Badge className="bg-emerald-600 text-white text-[10px]">
                     {data.longWindow.windowType === 'extreme_rebound'
-                      ? `极端修复临时窗（最长5日）·剩余${data.longWindow.remainingDays ?? '—'}日`
-                      : data.longWindow.windowType === 'oversold_valuation_watch'
-                        ? '极端超卖/低估值观察窗·非买点'
-                        : '做多窗口打开'}
+                      ? `周RSI6收复20·临时窗剩余${data.longWindow.remainingDays ?? '—'}日`
+                      : '做多窗口打开'}
                   </Badge>
                 )}
               </CardTitle>
