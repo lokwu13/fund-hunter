@@ -188,29 +188,29 @@ export interface OversoldValueGroup {
   code: string;
   name: string;
   memberCount: number;
-  dailyDate: string | null;
-  weeklyRsiDate: string | null;
-  previousWeeklyRsiDate: string | null;
-  weeklyRsi6: number;
-  previousWeeklyRsi6: number;
-  dynamicWeeklyRsi6: number | null;
-  weeklyFresh: boolean;
-  weeklyCross20: boolean;
-  dailyRsi6: number | null;
-  drawdown20Pct: number | null;
-  drawdown60Pct: number | null;
-  oversoldPriority: boolean;
+  tradeDate: string;
   snapshotCount: number;
   missingSnapshotCount: number;
   peCount: number;
   pbCount: number;
   commonCount: number;
+  peCoverage: number;
+  pbCoverage: number;
   commonCoverage: number;
   lossPeCount: number;
   peTtmMedian: number | null;
   pbMedian: number | null;
-  peCrossPct: number | null;
-  pbCrossPct: number | null;
+  peHistoryPct: number | null;
+  pbHistoryPct: number | null;
+  compositeHistoryPct: number | null;
+  peHistorySamples: number;
+  pbHistorySamples: number;
+  valuationRankBasis: 'dual' | 'single' | 'missing';
+  rankEligible: boolean;
+  historyStatus: 'ok' | 'insufficient' | 'coverage_insufficient' | 'snapshot_missing';
+  historyReason: string;
+  peCrossPct: null;
+  pbCrossPct: null;
   leaders: OversoldValueLeader[];
   leaderNote: string;
   leaderSortMethod: string;
@@ -241,18 +241,32 @@ export interface OversoldValueDirections {
     rsiInsufficientGroupCount: number;
     insufficientCoverageGroupCount: number;
     highValuationGroupCount: number;
+    rankedGroupCount: number;
+    insufficientHistoryGroupCount: number;
   };
   reasons: string[];
   coverage: {
     groupTotal?: number;
     snapshotRows?: number;
-    marketPeCount?: number;
-    marketPbCount?: number;
     stale?: boolean;
     insufficientGroups?: Array<{
       type: 'industry' | 'concept'; code: string; name: string;
-      memberCount: number; dailyRows: number; weeklyRsiDate: string | null; reason: string;
+      memberCount: number; reason: string;
     }>;
+  };
+  historySampling: {
+    frequency: 'month_end';
+    years: number;
+    minSamples: number;
+    cachedMonthEnds: number;
+    historyStart: string | null;
+    historyEnd: string | null;
+    membershipBasis: 'current_constituents_non_pit';
+    pit: false;
+    survivorshipBias: true;
+    fetchError: string | null;
+    lastRequestedMonthEnds?: number;
+    lastAddedMonthEnds?: number;
   };
   note: string;
 }
@@ -993,6 +1007,7 @@ export interface FundData {
       weeklyRsi6: number | null; previousWeeklyRsi6: number | null;
       dynamicWeeklyRsi6?: number | null; dynamicWeeklyRsiDate?: string | null;
       dynamicWatch?: boolean; weeklyCross20?: boolean;
+      dynamicWeeklyFresh?: boolean; inOversoldZone?: boolean;
       weeklyFresh?: boolean; rsiPass: boolean; rsiReason?: string; valuationReason?: string;
       source?: string; valuationDate?: string | null; observations?: number;
       historyStart?: string | null; sufficientHistory?: boolean; fresh?: boolean; ageDays?: number;
@@ -1034,18 +1049,20 @@ export interface FundData {
     extremeEvidence?: Array<any>; triggerIndices?: string[];
     triggerDetails?: Array<{
       indexCode: string; indexName: string;
-      previousWeeklyRsi6: number; weeklyRsi6: number;
-      previousWeeklyRsiDate: string; weeklyRsiDate: string; dailyDate: string;
+      dynamicWeeklyRsi6: number | null; dynamicWeeklyRsiDate: string | null;
+      previousWeeklyRsi6: number | null; weeklyRsi6: number | null;
+      previousWeeklyRsiDate: string | null; weeklyRsiDate: string | null; dailyDate: string | null;
     }>;
     extremeRebound?: {
       active: boolean; qualified: boolean; expired: boolean; pendingConfirmation: boolean;
       triggerIndices: string[]; topRisks: string[]; blockedBy: string[];
       triggerDetails?: Array<{
         indexCode: string; indexName: string;
-        previousWeeklyRsi6: number; weeklyRsi6: number;
-        previousWeeklyRsiDate: string; weeklyRsiDate: string; dailyDate: string;
+        dynamicWeeklyRsi6: number | null; dynamicWeeklyRsiDate: string | null;
+        previousWeeklyRsi6: number | null; weeklyRsi6: number | null;
+        previousWeeklyRsiDate: string | null; weeklyRsiDate: string | null; dailyDate: string | null;
       }>;
-      startedDate: string | null; remainingDays: number; maxDays: number;
+      startedDate: string | null; remainingDays: number; maxDays: number | null;
       reason: string;
     };
     oversoldValuationWatch?: NonNullable<FundData['broadObservation']> & {

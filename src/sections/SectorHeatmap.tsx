@@ -198,7 +198,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
         </CardContent>
       </Card>
 
-      {/* 只在RSI6极端强制开窗展示；方向排序不反向影响开窗。 */}
+      {/* 只在RSI6极端强制开窗展示；自身历史估值排序不反向影响开窗。 */}
       {detailed && extremeReboundActive(data) && data.oversoldValueDirections?.visible && (() => {
         const block = data.oversoldValueDirections!;
         const renderGroup = (group: OversoldValueGroup) => (
@@ -206,17 +206,26 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm font-bold text-slate-800">{group.name}</span>
               <Badge variant="outline" className="text-[9px] border-emerald-200 text-emerald-700">{group.code}</Badge>
-              <Badge className="text-[9px] border-0 bg-emerald-100 text-emerald-800">周RSI6 {group.weeklyRsi6 ?? '—'}</Badge>
-              {group.oversoldPriority && <Badge className="text-[9px] border-0 bg-amber-100 text-amber-800">超跌优先</Badge>}
+              <Badge className="text-[9px] border-0 bg-emerald-100 text-emerald-800">
+                综合自身历史分位 {group.compositeHistoryPct == null ? '缺失' : `${group.compositeHistoryPct}%`}
+              </Badge>
+              <Badge variant="outline" className="text-[9px] border-slate-200 text-slate-600">
+                {group.valuationRankBasis === 'dual' ? 'PE/PB双指标均值' : group.valuationRankBasis === 'single' ? '单一指标排序' : '不参与排序'}
+              </Badge>
             </div>
-            <p className="mt-1 text-[10px] text-slate-600 leading-relaxed">
-              {group.previousWeeklyRsiDate || '缺'} 前周RSI6 {group.previousWeeklyRsi6 ?? '—'} → {group.weeklyRsiDate || '缺'} 周RSI6 {group.weeklyRsi6 ?? '—'}
-              {' · '}日RSI6 {group.dailyRsi6 ?? '—'} · 20日回撤 {group.drawdown20Pct ?? '—'}% · 60日回撤 {group.drawdown60Pct ?? '—'}%
-            </p>
-            <p className="mt-1 text-[10px] text-slate-500 leading-relaxed">
-              估值仅参考：中位PE_TTM {group.peTtmMedian ?? '—'} · 中位PB {group.pbMedian ?? '—'}
-              {' · '}PE/PB分位 {group.peCrossPct ?? '—'}%/{group.pbCrossPct ?? '—'}%；估值缺失不过滤方向。
-            </p>
+            <div className="mt-1.5 space-y-1 text-[10px] text-slate-600 leading-relaxed">
+              <p>
+                当前PE_TTM中位数 {group.peTtmMedian ?? '—'} · 自身历史分位 {group.peHistoryPct == null ? '—' : `${group.peHistoryPct}%`}
+                {' · '}有效{group.peCount}/{group.memberCount}（{(group.peCoverage * 100).toFixed(1)}%）· 历史样本{group.peHistorySamples}个
+              </p>
+              <p>
+                当前PB中位数 {group.pbMedian ?? '—'} · 自身历史分位 {group.pbHistoryPct == null ? '—' : `${group.pbHistoryPct}%`}
+                {' · '}有效{group.pbCount}/{group.memberCount}（{(group.pbCoverage * 100).toFixed(1)}%）· 历史样本{group.pbHistorySamples}个
+              </p>
+              <p className={group.rankEligible ? 'text-slate-500' : 'text-amber-700'}>
+                {group.historyReason}；亏损/非正PE {group.lossPeCount}只已披露且未计入PE中位数。估值仅参考，不是入围门。
+              </p>
+            </div>
             <div className="mt-2 grid gap-2 lg:grid-cols-2">
               {group.leaders.map((leader) => (
                 <div key={leader.code} className="rounded-md bg-slate-50 px-2.5 py-2">
@@ -239,7 +248,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
                 </div>
               ))}
             </div>
-            <p className="mt-1 text-[9px] text-slate-400">{group.leaderSortMethod}；{group.leaderNote}；估值日{block.snapshotDate || '缺失'}</p>
+            <p className="mt-1 text-[9px] text-slate-400">{group.leaderSortMethod}；{group.leaderNote}；当前快照{block.snapshotDate || '缺失'}</p>
           </div>
         );
         return (
@@ -247,10 +256,10 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <CardTitle className="text-sm font-bold text-emerald-900">
-                  行业 / 大概念按超跌程度排序 · 周RSI6升序与双龙头
+                  RSI6≤20窗 · 行业 / 大概念自身历史估值低→高与双龙头
                 </CardTitle>
                 <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 border-emerald-200">
-                  {block.tradeDate} · {block.counts.directionCount}组 · RSI不足{block.counts.rsiInsufficientGroupCount || 0}组
+                  {block.tradeDate} · 共{block.counts.directionCount}组 · 可排{block.counts.rankedGroupCount}组 · 历史不足{block.counts.insufficientHistoryGroupCount}组
                 </Badge>
               </div>
               <CardDescription className="text-[10px] leading-relaxed">{block.rankingMethod}；{block.valuationMethod}</CardDescription>
@@ -267,14 +276,19 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
                   <h3 className="mb-1.5 text-xs font-bold text-slate-700">{key === 'industries' ? '申万行业' : '真实大概念'} · {block[key].length}组</h3>
                   <div className="space-y-2">
                     {block[key].length ? block[key].map(renderGroup) : (
-                      <p className="rounded-md bg-slate-50 px-3 py-2 text-[11px] text-slate-500">暂无可复算方向；行情不足或关系不标时不凑数。</p>
+                      <p className="rounded-md bg-slate-50 px-3 py-2 text-[11px] text-slate-500">暂无可展示行业/大概念；真实成分关系缺失时不凑数。</p>
                     )}
                   </div>
                 </section>
               ))}
               <div className="rounded-md border border-emerald-100 bg-emerald-50/60 px-3 py-2 text-[10px] leading-relaxed text-emerald-950">
                 <p>{block.note}</p>
-                <p className="mt-1 text-slate-500">来源：{block.source}；估值状态{block.valuationStatus || 'missing'}；快照{block.snapshotDate || '缺失'}；本批有效日{block.tradeDate}。极端超卖≠立即反转。</p>
+                <p className="mt-1">
+                  历史采样：真实月末交易日 · {block.historySampling.years}年区间 · 缓存{block.historySampling.cachedMonthEnds}个月末 · 每指标至少{block.historySampling.minSamples}个样本（含当前点）
+                  {' · '}区间{block.historySampling.historyStart || '—'}至{block.historySampling.historyEnd || '—'}；按现行成分回溯，非PIT且存在生存者偏差。
+                </p>
+                {block.historySampling.fetchError && <p className="mt-1 text-amber-700">本轮历史增量：{block.historySampling.fetchError}</p>}
+                <p className="mt-1 text-slate-500">来源：{block.source}；估值状态{block.valuationStatus || 'missing'}；当前快照{block.snapshotDate || '缺失'}；本批有效日{block.tradeDate}。</p>
               </div>
             </CardContent>
           </Card>

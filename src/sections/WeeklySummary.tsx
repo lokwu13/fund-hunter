@@ -138,12 +138,12 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
 
       {extremeReboundActive(data) && (
         <div className="rounded-lg border-2 border-emerald-400 bg-emerald-50 px-4 py-3 text-emerald-900 shadow-sm">
-          <p className="text-sm font-bold">⚡ 完成周RSI6收复20 · 极端修复临时窗（最长5日）· 剩余{data.longWindow?.remainingDays}日</p>
-          <p className="text-[11px] mt-1">{data.longWindow?.extremeRebound?.reason}；任一宽基单独触发，旧风险与估值门不否决；这不是普通趋势开窗，非投资建议。</p>
+          <p className="text-sm font-bold">⚡ 当周动态RSI6进入20以下区域 · 极端修复临时窗</p>
+          <p className="text-[11px] mt-1">{data.longWindow?.extremeRebound?.reason}；任一宽基单独触发，旧风险与估值门不否决；全部离开20以下区域即关闭，这不是普通趋势开窗，非投资建议。</p>
           <div className="mt-1 space-y-0.5 text-[10px]">
             {(data.longWindow?.triggerDetails || []).map((r) => (
               <p key={r.indexCode}>
-                {r.indexName}：{r.previousWeeklyRsiDate} 周RSI6={r.previousWeeklyRsi6}≤20 → {r.weeklyRsiDate} 周RSI6={r.weeklyRsi6}＞20
+                {r.indexName}：{r.dynamicWeeklyRsiDate || r.dailyDate || '日期缺失'} 当周动态RSI6={r.dynamicWeeklyRsi6 ?? '—'}≤20；周内会变化
               </p>
             ))}
           </div>
@@ -152,7 +152,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
               <p className="text-[11px] leading-relaxed">{oversoldValueDirectionsText(data)}</p>
               <button type="button" className="mt-1 text-[10px] font-semibold underline underline-offset-2"
                       onClick={() => onNavigate?.('tools', 'oversold-value-directions')}>
-                查看周RSI6超跌排序、双龙头与估值降级明细 →
+                查看行业/大概念自身历史估值、双龙头与数据限制 →
               </button>
             </div>
           )}
@@ -184,7 +184,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
           {(data.broadOsc?.sellAlerts?.length ?? 0) > 0 ? (
             <>
               <p className="text-sm font-bold">🚨 强硬减仓警报：{data.broadOsc?.sellAlerts?.join('、')}</p>
-              <p className="text-[11px] mt-0.5">收回上轨下方 + RSI 不再创新高 + 量能异常：标准窗口关闭；完成周RSI6收复20新门独立判定，不因此被否决。查看状态证据 →</p>
+              <p className="text-[11px] mt-0.5">收回上轨下方 + RSI 不再创新高 + 量能异常：标准窗口关闭；当周动态RSI6≤20新门独立判定，不因此被否决。查看状态证据 →</p>
             </>
           ) : (data.broadOsc?.buyWindows?.length ?? 0) > 0 ? (
             <>
@@ -275,14 +275,13 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                       {st.key === 'window' && data.broadObservation && (
                         <div className="mb-2 rounded-lg border border-sky-100 bg-sky-50/50 px-2 py-1.5">
                           <p className="text-[10px] font-semibold text-sky-800">
-                            完成周RSI6收复20：{data.broadObservation.qualifiedCount}只触发（任一即可） · 未完结周仅动态观察 · PE/PB只参考，不是开窗门
+                            当周动态RSI6进入20以下区域：{data.broadObservation.qualifiedCount}只触发（任一即可） · 最新{data.broadObservation.tradeDate || '日期缺失'} · 周内会变化 · PE/PB只参考，不是开窗门
                           </p>
                           <div className="mt-1 grid gap-1">
                             {data.broadObservation.items.map((r) => (
                               <div key={r.indexCode} className="flex items-center gap-x-2 gap-y-0.5 flex-wrap text-[10px] text-slate-600" title={`${r.rsiReason || ''}；${r.valuationReason || ''}`}>
                                 <span className={`font-semibold ${r.qualified ? 'text-emerald-700' : 'text-slate-700'}`}>{r.qualified ? '✓' : '—'} {r.indexName}</span>
-                                <span>前周RSI6 {r.previousWeeklyRsi6 ?? '—'}（{r.previousWeeklyRsiDate || '缺'}）→ 最近完成周RSI6 {r.weeklyRsi6 ?? '—'}（{r.weeklyRsiDate || '缺'}）</span>
-                                {r.dynamicWatch && <span className="text-amber-700">未完结周动态RSI6 {r.dynamicWeeklyRsi6 ?? '—'}，仅观察</span>}
+                                <span>当周动态RSI6 {r.dynamicWeeklyRsi6 ?? '—'}（{r.dynamicWeeklyRsiDate || '缺'}）· {r.inOversoldZone ? '处于20以下区域' : r.dynamicWeeklyFresh ? '未处于20以下区域' : '行情缺失或不新鲜'}</span>
                                 <span>参考：PE分位 {r.pePct10y ?? '—'}% · PB分位 {r.pbPct10y ?? '—'}%</span>
                               </div>
                             ))}

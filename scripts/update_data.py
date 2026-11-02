@@ -25,6 +25,9 @@ API_DELAY = float(os.environ.get('API_DELAY', '1.5'))  # seconds（本地调试�
 import pandas as pd
 from datetime import datetime, timedelta
 from rsi6_oversold import weekly_rsi6_evidence, build_direction_groups
+from sector_valuation_history import (group_valuation_snapshot, history_valuation_position,
+                                      month_end_sample_dates, MIN_HISTORY_SAMPLES,
+                                      MIN_METRIC_COUNT, MIN_METRIC_COVERAGE)
 
 # ── Configuration ──
 TUSHARE_TOKEN = os.environ.get('TUSHARE_TOKEN', '')
@@ -1704,61 +1707,35 @@ EXTREME_REBOUND_CORE = {'上证50', '沪深300', '中证500'}
 
 
 def _extreme_rebound_decision(observation, current_date, previous=None, trading_days=None):
-    """任一宽基完成周RSI6由≤20收复至>20即强制open；其他风险门不否决。
-
-    临时窗仍只保留5个交易日生命周期；未完结周动态值仅观察，不能触发。
-    """
-    previous = previous or {}
+    """任一六宽基当周动态Wilder RSI6<=20即open；离开区域立即回退，不延续旧状态。"""
     details = []
     for item in (observation or {}).get('items') or []:
         if not item.get('rsiPass'):
             continue
         details.append({
             'indexCode': item.get('indexCode'), 'indexName': item.get('indexName'),
+            'dynamicWeeklyRsi6': item.get('dynamicWeeklyRsi6'),
+            'dynamicWeeklyRsiDate': item.get('dynamicWeeklyRsiDate'),
             'previousWeeklyRsi6': item.get('previousWeeklyRsi6'),
             'weeklyRsi6': item.get('weeklyRsi6'),
             'previousWeeklyRsiDate': item.get('previousWeeklyRsiDate'),
-            'weeklyRsiDate': item.get('weeklyRsiDate'),
-            'dailyDate': item.get('dailyDate'),
+            'weeklyRsiDate': item.get('weeklyRsiDate'), 'dailyDate': item.get('dailyDate'),
         })
     triggers = [x['indexName'] for x in details]
-    qualifies = bool((observation or {}).get('active') and details)
-    started = None
-    age = 0
-    if qualifies:
-        if (previous.get('windowType') == 'extreme_rebound' and previous.get('temporary')
-                and previous.get('startedDate')):
-            started = str(previous['startedDate']).replace('-', '')
-            if trading_days and started in trading_days and current_date in trading_days:
-                age = trading_days.index(current_date) - trading_days.index(started)
-            else:
-                age = int(previous.get('elapsedDays') or 0) + (previous.get('tradeDate') != current_date)
-        else:
-            started = current_date
-    active = bool(qualifies and age < EXTREME_REBOUND_MAX_DAYS)
-    expired = bool(qualifies and age >= EXTREME_REBOUND_MAX_DAYS)
-    dynamic = [x.get('indexName') for x in (observation or {}).get('items') or []
-               if x.get('dynamicWatch')]
+    active = bool((observation or {}).get('active') and details)
     if active:
-        crosses = '、'.join(
-            f"{x['indexName']} {x['previousWeeklyRsiDate']} RSI6={x['previousWeeklyRsi6']:.2f}≤20 → "
-            f"{x['weeklyRsiDate']} RSI6={x['weeklyRsi6']:.2f}>20" for x in details)
-        reason = f'完成周RSI6收复20强制开窗：{crosses}；临时窗第{age + 1}/{EXTREME_REBOUND_MAX_DAYS}日；不是趋势反转或买点'
-    elif expired:
-        reason = f'RSI6极端修复临时窗已满{EXTREME_REBOUND_MAX_DAYS}个交易日，回退standardWindow'
-    elif dynamic:
-        reason = '未完结周RSI6动态收复20仅观察：' + '、'.join(dynamic) + '；不触发开窗'
+        evidence = '、'.join(f"{x['indexName']} {x['dynamicWeeklyRsiDate']} 当周动态RSI6={x['dynamicWeeklyRsi6']:.2f}≤20"
+                             for x in details)
+        reason = f'当周动态RSI6进入20以下区域，强制开窗：{evidence}；周内会变化，不是趋势反转或买点'
     else:
-        reason = '六宽基均未出现新鲜的“上一完成周RSI6≤20、最近完成周RSI6>20”，不开极端临时窗'
+        reason = '六宽基当周动态RSI6均未处于20以下区域，或行情缺失/不新鲜；不开窗且不延续旧active状态'
     return {
-        'active': active, 'qualified': qualifies, 'expired': expired,
-        'pendingConfirmation': bool(dynamic and not qualifies),
+        'active': active, 'qualified': active, 'expired': False, 'pendingConfirmation': False,
         'extremeEvidence': details, 'triggerDetails': details, 'triggerIndices': triggers,
         'topRisks': [], 'blockedBy': [],
-        'startedDate': (f'{started[:4]}-{started[4:6]}-{started[6:]}' if active and started else None),
-        'tradeDate': current_date, 'elapsedDays': age if active else 0,
-        'remainingDays': EXTREME_REBOUND_MAX_DAYS - age if active else 0,
-        'maxDays': EXTREME_REBOUND_MAX_DAYS, 'lookbackDays': None,
+        'startedDate': (f'{current_date[:4]}-{current_date[4:6]}-{current_date[6:]}' if active else None),
+        'tradeDate': current_date, 'elapsedDays': 0,
+        'remainingDays': 1 if active else 0, 'maxDays': None, 'lookbackDays': None,
         'reason': reason,
     }
 
@@ -1824,7 +1801,7 @@ BROAD_VALUATION_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 
 
 def _broad_weekly_rsi(trade_date, idx_cache=None):
-    """六宽基前后完成周RSI6；只有≤20→>20且行情新鲜才通过。"""
+    """六宽基当周动态RSI6；只有≤20且最新行情日等于本批有效日才通过。"""
     td = str(trade_date).replace('-', '')
     idx_cache = _load_json_cache(BROAD_IDX_CACHE_PATH, {}) if idx_cache is None else idx_cache
     return [{'indexCode': code, 'indexName': name,
@@ -1913,13 +1890,14 @@ def _broad_valuation_gate(pro, trade_date):
 
 
 def _broad_observation_decision(weekly_items, valuation_items, trade_date):
-    """RSI6收复20单独决定资格；估值仅作同指数展示，不参与AND/OR门。"""
+    """任一六宽基当周动态RSI6<=20单独决定资格；估值不参与开窗。"""
     weekly = {x['indexCode']: x for x in weekly_items or []}
     valuation = {x['indexCode']: x for x in valuation_items or []}
     items = []
     for code, name in OBSERVATION_INDICES:
         w = weekly.get(code) or {'weeklyRsi6': None, 'previousWeeklyRsi6': None,
-                                 'rsiPass': False, 'rsiReason': '周RSI6缺失'}
+                                 'dynamicWeeklyRsi6': None, 'dynamicWeeklyRsiDate': None,
+                                 'rsiPass': False, 'rsiReason': '当周动态周RSI6缺失'}
         v = valuation.get(code) or {'pePct10y': None, 'pbPct10y': None,
                                     'valuationLow': False, 'reason': '估值缺失（仅参考）'}
         items.append({'indexCode': code, 'indexName': name, **w, **v,
@@ -1927,13 +1905,14 @@ def _broad_observation_decision(weekly_items, valuation_items, trade_date):
                       'reason': w.get('rsiReason'), 'qualified': bool(w.get('rsiPass'))})
     triggers = [x['indexName'] for x in items if x['qualified']]
     active = len(triggers) >= OBSERVATION_MIN_QUALIFIED
-    reason = (f'完成周RSI6收复20观察证据已触发：{len(triggers)}只=' + '、'.join(triggers)
-              if active else '完成周RSI6收复20观察证据未触发；未完结周动态值不触发')
-    return {'active': active, 'label': '完成周RSI6收复20观察证据', 'tradeDate': trade_date,
+    reason = (f'当周动态RSI6进入20以下区域：{len(triggers)}只=' + '、'.join(triggers) + '；周内会变化'
+              if active else '六宽基当周动态RSI6均未进入20以下区域，不开窗')
+    return {'active': active, 'label': '当周动态RSI6进入20以下区域', 'tradeDate': trade_date,
             'requiredCount': OBSERVATION_MIN_QUALIFIED, 'qualifiedCount': len(triggers),
             'qualifiedIndices': triggers, 'items': items, 'reason': reason,
-            'note': ('上证50、沪深300、中证A500、中证500、科创50、创业板50；任一指数上一完成周Wilder RSI6≤20、'
-                     '最近完成周RSI6>20且日线与完成周新鲜即满足。未完结周RSI6只作动态观察。'
+            'note': ('上证50、沪深300、中证A500、中证500、科创50、创业板50；任一指数包含最新交易日所在未完结周的'
+                     'Wilder RSI6≤20且行情日等于本批有效日即满足；399300/000300不重复。'
+                     '开窗只看当前是否处于≤20区域；全部>20即关闭，不延续旧active状态。'
                      'PE/PB仅参考，不参与开窗；本证据不是趋势反转或买点。')}
 
 
@@ -2025,7 +2004,7 @@ def build_long_window(data):
         reason_parts.append('大级别无做多窗口，下级信号降级为观察')
     elif w == 'open':
         if extreme['active']:
-            reason_parts.append('完成周RSI6收复20极端修复临时窗（最长5日），不是普通趋势开窗')
+            reason_parts.append('当周动态RSI6进入20以下区域，不是普通趋势开窗；周内会变化')
         elif not (buy_windows and osc_note):
             reason_parts.append('水温偏暖且宽基临近/突破，做多窗口打开')
     else:
@@ -2046,11 +2025,11 @@ def build_long_window(data):
         'extremeRebound': extreme, 'oversoldValuationWatch': oversold_watch,
         'reason': '；'.join(reason_parts),
         'note': ('普通standardWindow规则不变：水温、宽基形态、10Y收益率及BOLL99·RSI14仍先照常计算。'
-                 '随后仅检查上证50、沪深300、中证A500、中证500、科创50、创业板50的真实完成周Wilder RSI6：'
-                 '任一指数上一完成周RSI6≤20且最近完成周RSI6>20，并满足日线与完成周新鲜，即最后覆盖为open，'
-                 '标extreme_rebound/temporary；冷水温、债券降级、旧顶部风险、强硬减仓、指数数量与PE/PB均不否决此新门。'
-                 '未完结周动态RSI6只观察不触发；临时窗首满足日起最多5个交易日，第6日回退standardWindow。'
-                 '没有该RSI6收复证据时，不借旧极端逻辑开窗。所有信号仅供研究，非投资建议。'),
+                 '随后仅检查上证50、沪深300、中证A500、中证500、科创50、创业板50包含最新交易日所在未完结周的Wilder RSI6：'
+                 '任一指数当周动态RSI6≤20且行情日等于本批有效日，即最后覆盖为open，标extreme_rebound/temporary；'
+                 '冷水温、债券降级、旧顶部风险、强硬减仓、指数数量与PE/PB均不否决此新门。'
+                 '只有处于≤20区域时active，全部>20即关闭，不延续旧active状态。'
+                 '周内数值会变化。所有信号仅供研究，非投资建议。'),
     }
     print(f"  longWindow: {w}（standard={standard_window}；水温{temp or '—'}；"
           f"{'，'.join(names[c] + states[c] for c in BROAD_TOP3)}；{extreme['reason']}；"
@@ -2903,12 +2882,12 @@ def build_funnel(data):
     w = lw.get('window') or 'half'
     lamp0 = {'open': '🟢', 'half': '🟡', 'closed': '🔴'}[w]
     extreme_open = lw.get('windowType') == 'extreme_rebound'
-    concl0 = ('完成周RSI6收复20：任一六宽基单独触发极端临时窗；不是趋势反转或买点'
+    concl0 = ('当周动态RSI6进入20以下区域：任一六宽基单独触发极端临时窗；周内会变化，不是趋势反转或买点'
               if extreme_open else
               {'open': '窗口打开：水温偏暖+宽基临近买点，可以做多',
                'half': '半窗：只看不动，仓位与信号降档',
                'closed': '窗口关闭：今天到此为止'}[w])
-    # 只承接极端强制开窗结果；超跌排序与全A股息率Top20均不反向开门。
+    # 只承接极端强制开窗结果；历史估值排序与全A股息率Top20均不反向开门。
     value_directions_summary = _oversold_value_directions_summary(data)
     if value_directions_summary:
         concl0 += '；' + value_directions_summary
@@ -3138,7 +3117,7 @@ def build_funnel(data):
     guide4 = '本步回答：入围的有没有雷？' + concl4 + ('。有雷标的一票否决，不碰' if mw_items else '。可以放心按前面步骤执行')
 
     # ── 当日路径总结 ──
-    w_txt = ('周RSI6收复20临时窗' if extreme_open
+    w_txt = ('当周动态RSI6≤20临时窗' if extreme_open
              else {'open': '窗口开', 'half': '窗口半开', 'closed': '窗口关'}[w])
     broad_txt = '、'.join(f"{r['indexName']}{r['state']}" for r in step1_rows[:3] if r['state'] != '无数据') or '无形态'
     path = (f"{w_txt} → 宽基：{broad_txt} → 板块：{len(step2_rows)}个入选 → "
@@ -3155,7 +3134,7 @@ def build_funnel(data):
                                 for k, v in sm_l1.items()}},
         'steps': [
             {'n': 0, 'key': 'window',
-             'title': '周RSI6收复20临时窗' if extreme_open else '做多窗口', 'lamp': lamp0,
+             'title': '当周动态RSI6≤20临时窗' if extreme_open else '做多窗口', 'lamp': lamp0,
              'conclusion': concl0, 'guide': guide0, 'reason': lw.get('reason')},
             {'n': 1, 'key': 'broad', 'title': '宽基定风格', 'lamp': lamp1,
              'conclusion': concl1, 'guide': guide1, 'rows': step1_rows},
@@ -5983,13 +5962,103 @@ def build_dividend_watch(pro, trade_date, data):
           f'跨组唯一高股息{len(items)}只（{snapshot_date}）')
 
 
-# 任务104：仅任务87“现行极端超卖强制开窗”触发后展示方向，不参与开窗判定。
+# 任务108：RSI6进入20以下区域后，行业/概念按自身历史估值分位从低到高展示。
 OVERSOLD_VALUE_MAX_PCT = 20.0
-OVERSOLD_VALUE_MIN_COMMON = 5
-OVERSOLD_VALUE_MIN_COVERAGE = 0.60
-OVERSOLD_VALUE_METHOD = ('成分股当前横截面聚合，非板块历史分位：组内真实成员的PE_TTM/PB中位数，'
-                         '分别相对同一日全A有效PE_TTM>0、PB>0横截面计算分位，两项均≤20%才入围；'
-                         '共同有效成员≥5且覆盖率≥60%；亏损/非正PE不进入PE中位数。')
+OVERSOLD_VALUE_MIN_COMMON = MIN_METRIC_COUNT
+OVERSOLD_VALUE_MIN_COVERAGE = MIN_METRIC_COVERAGE
+# 复用nightly已提交的vcp_cache.json，独立嵌套键保存；不改计划任务，也不覆盖其它缓存字段。
+SECTOR_VALUATION_HISTORY_PATH = DIVIDEND_GROUP_CACHE_PATH
+SECTOR_VALUATION_HISTORY_CACHE_KEY = 'sectorValuationHistory'
+SECTOR_VALUATION_HISTORY_YEARS = 10
+SECTOR_VALUATION_MIN_SAMPLES = MIN_HISTORY_SAMPLES
+OVERSOLD_VALUE_METHOD = ('当前有效日真实成分股PE_TTM>0、PB>0分别取中位数；与自身历史有效月末中位数比较，'
+                         'PE/PB各自有效数量≥5且覆盖率≥60%，历史样本分别至少24个（含当前点）；'
+                         '双指标有效取历史分位均值，单指标有效按单指标排序，均无效置后。亏损/非正PE不进PE中位数。')
+
+
+def _load_sector_valuation_history():
+    container = _load_json_cache(SECTOR_VALUATION_HISTORY_PATH, {})
+    return dict(container.get(SECTOR_VALUATION_HISTORY_CACHE_KEY) or {})
+
+
+def _save_sector_valuation_history(history):
+    container = _load_json_cache(SECTOR_VALUATION_HISTORY_PATH, {})
+    container[SECTOR_VALUATION_HISTORY_CACHE_KEY] = history
+    _save_json_cache(SECTOR_VALUATION_HISTORY_PATH, container)
+
+
+def _sector_valuation_key(spec):
+    return f"{spec['type']}:{spec['code']}"
+
+
+def _daily_valuation_records(frame):
+    records = {}
+    if frame is None:
+        return records
+    for _, row in frame.iterrows():
+        code = str(row.get('ts_code') or '').upper()
+        if not code:
+            continue
+
+        def number(key):
+            value = row.get(key)
+            if value is None or pd.isna(value):
+                return None
+            try:
+                return float(value)
+            except (TypeError, ValueError):
+                return None
+
+        records[code] = {'code': code, 'tradeDate': str(row.get('trade_date') or ''),
+                         'close': number('close'), 'totalMv': number('total_mv'),
+                         'peTtm': number('pe_ttm'), 'pb': number('pb')}
+    return records
+
+
+def _update_sector_valuation_history(pro, trade_date, specs):
+    """十年真实月末交易日采样；一次日历+每个缺失月一次daily_basic，成功即增量落盘。"""
+    cache = _load_sector_valuation_history()
+    rows = dict(cache.get('rows') or {})
+    cache.update({'version': 1, 'frequency': 'month_end',
+                  'membershipBasis': 'current_constituents_non_pit',
+                  'survivorshipBias': True, 'minSamples': SECTOR_VALUATION_MIN_SAMPLES,
+                  'rows': rows, 'fetchError': None})
+    start = (pd.Timestamp(trade_date) - pd.DateOffset(years=SECTOR_VALUATION_HISTORY_YEARS)).strftime('%Y%m%d')
+    previous_month_end = (pd.Timestamp(trade_date).replace(day=1) - pd.Timedelta(days=1)).strftime('%Y%m%d')
+    try:
+        time.sleep(API_DELAY)
+        cal = pro.trade_cal(exchange='SSE', start_date=start, end_date=previous_month_end, is_open='1')
+        dates = month_end_sample_dates([] if cal is None else cal['cal_date'].tolist(), trade_date,
+                                       SECTOR_VALUATION_HISTORY_YEARS)
+    except Exception as exc:
+        cache['fetchError'] = f'trade_cal失败：{str(exc)[:200]}'
+        _save_sector_valuation_history(cache)
+        return cache
+    missing = [date for date in dates if date not in rows]
+    added = 0
+    for date in missing:
+        try:
+            time.sleep(API_DELAY)
+            frame = pro.daily_basic(trade_date=date, fields='ts_code,trade_date,pe_ttm,pb')
+            if frame is None or not len(frame):
+                raise RuntimeError('daily_basic为空')
+            records = _daily_valuation_records(frame)
+            if not records or {r['tradeDate'] for r in records.values()} != {date}:
+                raise RuntimeError('daily_basic日期不一致')
+            rows[date] = {_sector_valuation_key(spec): dict(group_valuation_snapshot(spec['members'], records),
+                                                            tradeDate=date)
+                          for spec in specs}
+            added += 1
+            cache['updated'] = trade_date
+            _save_sector_valuation_history(cache)
+        except Exception as exc:
+            cache['fetchError'] = f'{date}采样失败，停止本轮历史请求并保留既有缓存：{str(exc)[:200]}'
+            break
+    cache['lastRequestedMonthEnds'] = len(missing)
+    cache['lastAddedMonthEnds'] = added
+    cache['updated'] = trade_date
+    _save_sector_valuation_history(cache)
+    return cache
 
 
 def _oversold_value_extreme_active(data):
@@ -6188,32 +6257,39 @@ def _rsi6_dividend_top20_summary(data):
 
 
 def build_oversold_value_directions(pro, trade_date, data):
-    """真实行业/概念指数按周RSI6超跌程度排序；估值只参考，失败绝不清空榜单。"""
+    """行业/大概念按自身历史估值分位低→高；历史不足明示，不回退横截面。"""
     effective = _effective_batch_trade_date(trade_date, data)
     extreme_active = _oversold_value_extreme_active(data)
     base = {
         'visible': extreme_active, 'tradeDate': effective, 'snapshotDate': None,
         'valuationStatus': 'missing', 'valuationError': None,
-        'source': ('vcp_cache.index_daily真实行业/概念指数日线；申万sw_list/sw_members与同花顺concepts/ths_members真实成分；'
-                   'Tushare daily_basic仅作估值与总市值参考'),
-        'valuationMethod': 'PE_TTM/PB横截面中位数及分位仅参考，不参与方向入围或排序；亏损/非正PE不进入PE中位数。',
-        'rankingMethod': '完成周Wilder RSI6升序，辅以日RSI6、20/60日回撤；周RSI6≤20或刚上穿20标优先。',
+        'source': ('申万sw_list/sw_members与同花顺concepts/ths_members真实现行成分；'
+                   'Tushare daily_basic当前有效日及真实月末增量采样；vcp_cache.sectorValuationHistory独立嵌套缓存'),
+        'valuationMethod': OVERSOLD_VALUE_METHOD,
+        'rankingMethod': ('PE/PB自身历史分位均有效取二者平均作为综合估值分位，从低到高；'
+                          '仅一个有效按单一指标并标注；均无效置后标历史样本不足或覆盖不足；不按RSI6排序。'),
         'maxPct': OVERSOLD_VALUE_MAX_PCT, 'minCommon': OVERSOLD_VALUE_MIN_COMMON,
         'minCoverage': OVERSOLD_VALUE_MIN_COVERAGE,
         'industries': [], 'concepts': [],
         'counts': {'industryCount': 0, 'conceptCount': 0, 'directionCount': 0,
                    'leaderCount': 0, 'evaluatedGroupCount': 0, 'rsiInsufficientGroupCount': 0,
-                   'insufficientCoverageGroupCount': 0, 'highValuationGroupCount': 0},
+                   'insufficientCoverageGroupCount': 0, 'highValuationGroupCount': 0,
+                   'rankedGroupCount': 0, 'insufficientHistoryGroupCount': 0},
         'reasons': [], 'coverage': {},
-        'note': ('仅在现行RSI6极端强制开窗触发时展示；本模块不反向影响longWindow。'
-                 '方向按真实指数完成周RSI6升序，极端超卖≠立即反转；PE/PB不参与入围。'
+        'historySampling': {'frequency': 'month_end', 'years': SECTOR_VALUATION_HISTORY_YEARS,
+                            'minSamples': SECTOR_VALUATION_MIN_SAMPLES, 'cachedMonthEnds': 0,
+                            'historyStart': None, 'historyEnd': None, 'membershipBasis': 'current_constituents_non_pit',
+                            'pit': False, 'survivorshipBias': True, 'fetchError': None},
+        'note': ('仅在任一六宽基当周动态RSI6进入20以下区域时展示；本模块不反向影响longWindow。'
+                 '估值按自身历史中位数分位低→高，不是当日全A横截面分位，也不按RSI6超跌排序。'
+                 '历史月末采样按现行成分回溯，非PIT，存在生存者偏差；历史样本不足明确披露，不伪造、不充数。'
                  'daily_basic有效时龙头按total_mv总市值前2；失败或陈旧时用既有circ_mv流通市值排序并明确非总市值，'
-                 '无市值不凑数。概念归属只认ths_members；既有排雷未覆盖不等于无风险。'),
+                 '无市值不凑数。估值与排雷仅为参考，不变成入围门；既有排雷未覆盖不等于无风险。'),
     }
     data['oversoldValueDirections'] = base
     if not extreme_active:
-        base['reasons'] = ['现行RSI6极端强制开窗未触发：不请求daily_basic，清空旧名单且不展示']
-        print('  oversoldValueDirections hidden: 非现行RSI6极端强制开窗，未请求daily_basic')
+        base['reasons'] = ['当周动态RSI6进入20以下区域未触发：不请求估值数据，清空旧名单且不展示']
+        print('  oversoldValueDirections hidden: 当周动态RSI6未进入20以下区域，未请求估值数据')
         return
 
     cache = _load_json_cache(DIVIDEND_GROUP_CACHE_PATH, {})
@@ -6224,8 +6300,7 @@ def build_oversold_value_directions(pro, trade_date, data):
              + [{'type': 'concept', 'code': x.get('code') or ths_index.get(x['name']), 'name': x['name'],
                  'members': set((cache.get('ths_members') or {}).get(x.get('code') or ths_index.get(x['name'])) or [])}
                 for x in cache.get('concepts') or [] if x.get('code') or ths_index.get(x['name'])])
-    base['coverage'] = {'groupTotal': len(specs), 'snapshotRows': 0, 'stale': False,
-                        'marketPeCount': 0, 'marketPbCount': 0, 'insufficientGroups': []}
+    base['coverage'] = {'groupTotal': len(specs), 'snapshotRows': 0, 'stale': False, 'insufficientGroups': []}
     snap = None
     try:
         time.sleep(API_DELAY)
@@ -6233,97 +6308,139 @@ def build_oversold_value_directions(pro, trade_date, data):
                                fields='ts_code,trade_date,close,total_mv,pe_ttm,pb')
     except Exception as exc:
         base['valuationError'] = str(exc)[:240]
-        base['reasons'].append(f'全A daily_basic失败，估值标缺失；RSI6超跌榜保留并降级circ_mv：{base["valuationError"]}')
-        print(f'  Warning: oversoldValueDirections daily_basic failed (RSI6 retained): {exc}')
+        base['reasons'].append(f'当前全A daily_basic失败，估值标缺失且不影响开窗或股息Top20：{base["valuationError"]}')
+        print(f'  Warning: sector historical valuation current snapshot failed: {exc}')
     if snap is None or not len(snap):
         if not base['valuationError']:
-            base['reasons'].append(f'全A daily_basic为空（{effective}），估值标缺失；RSI6超跌榜保留并降级circ_mv')
+            base['reasons'].append(f'当前全A daily_basic为空（{effective}），估值标缺失且不影响开窗或股息Top20')
         snap = None
 
-    records = {}
-    snapshot_dates = set()
-    if snap is not None:
-        for _, row in snap.iterrows():
-            code = str(row.get('ts_code') or '')
-            if not code:
-                continue
-            date = str(row.get('trade_date') or '')
-            if date:
-                snapshot_dates.add(date)
-
-            def number(key):
-                value = row.get(key)
-                if value is None or pd.isna(value):
-                    return None
-                try:
-                    return float(value)
-                except (TypeError, ValueError):
-                    return None
-
-            records[code] = {'code': code, 'tradeDate': date, 'close': number('close'),
-                             'totalMv': number('total_mv'), 'peTtm': number('pe_ttm'), 'pb': number('pb')}
-        base['coverage']['snapshotRows'] = len(records)
-        base['snapshotDate'] = sorted(snapshot_dates)[-1] if snapshot_dates else None
+    records = _daily_valuation_records(snap)
+    snapshot_dates = {r['tradeDate'] for r in records.values() if r['tradeDate']}
+    base['coverage']['snapshotRows'] = len(records)
+    base['snapshotDate'] = max(snapshot_dates) if snapshot_dates else None
+    if records:
         if snapshot_dates != {effective}:
             actual = '、'.join(sorted(snapshot_dates)) or '缺失'
             base['valuationStatus'] = 'stale'
             base['coverage']['stale'] = True
-            base['reasons'].append(f'估值快照日期{actual}不等于本批有效日{effective}，估值标缺失；RSI6超跌榜保留')
+            base['reasons'].append(f'估值快照日期{actual}不等于本批有效日{effective}，当前中位数与历史分位均标缺失，不用旧快照')
             records = {}
         else:
             base['valuationStatus'] = 'ok'
 
-    market_pe = [r['peTtm'] for r in records.values() if r['peTtm'] is not None and r['peTtm'] > 0]
-    market_pb = [r['pb'] for r in records.values() if r['pb'] is not None and r['pb'] > 0]
-    base['coverage']['marketPeCount'] = len(market_pe)
-    base['coverage']['marketPbCount'] = len(market_pb)
-    result = build_direction_groups(
-        specs, cache.get('index_daily') or {}, effective, _rsi_series,
-        records=records, stock_info=cache.get('stock_info') or {},
-        circ_mv=cache.get('circ_mv') or {}, mine_watch=data.get('mineWatch') or {},
-        market_pe=market_pe, market_pb=market_pb)
-    industries, concepts = result['industries'], result['concepts']
-    directions = industries + concepts
+    history_cache = (_update_sector_valuation_history(pro, effective, specs) if records else
+                     _load_sector_valuation_history())
+    history_rows = history_cache.get('rows') or {}
+    dates = sorted(history_rows)
+    base['historySampling'].update({
+        'cachedMonthEnds': len(dates), 'historyStart': dates[0] if dates else None,
+        'historyEnd': dates[-1] if dates else None, 'fetchError': history_cache.get('fetchError'),
+        'lastRequestedMonthEnds': history_cache.get('lastRequestedMonthEnds', 0),
+        'lastAddedMonthEnds': history_cache.get('lastAddedMonthEnds', 0),
+    })
+    if history_cache.get('fetchError'):
+        base['reasons'].append('历史估值缓存增量：' + history_cache['fetchError'])
+
+    stock_info = cache.get('stock_info') or {}
+    circ_mv = cache.get('circ_mv') or {}
+    mine_watch = data.get('mineWatch') or {}
+    mine_map = {x.get('code'): x for x in mine_watch.get('items') or []}
+    checked_codes = set(mine_watch.get('checkedCodes') or []) | set(mine_map)
+
+    def leaders_for(spec):
+        members = sorted(spec['members'])
+        if records:
+            rows = [records[code] for code in members if code in records]
+            leader_rows = sorted((r for r in rows if r.get('totalMv') is not None),
+                                 key=lambda r: (-r['totalMv'], r['code']))[:2]
+            leader_sort = 'daily_basic.total_mv总市值降序，代码升序打破并列'
+        else:
+            leader_rows = []
+            for code in members:
+                value = circ_mv.get(code)
+                if value is not None:
+                    leader_rows.append({'code': code, 'tradeDate': None, 'close': None,
+                                        'totalMv': None, 'peTtm': None, 'pb': None, 'circMv': float(value)})
+            leader_rows = sorted(leader_rows, key=lambda r: (-r['circMv'], r['code']))[:2]
+            leader_sort = 'daily_basic缺失；vcp_cache.circ_mv既有流通市值降序（非总市值）'
+        leaders = []
+        for row in leader_rows:
+            code = row['code']
+            name = str((stock_info.get(code) or {}).get('name') or code)
+            mine = mine_map.get(code)
+            covered = code in checked_codes
+            types = list((mine or {}).get('types') or [])
+            details = list((mine or {}).get('details') or [])
+            note = (('既有排雷命中：' + '、'.join(types)) if mine else
+                    '既有排雷已覆盖，未命中既有规则（不代表无风险）' if covered else '既有排雷未覆盖')
+            pe, pb, mv = row.get('peTtm'), row.get('pb'), row.get('totalMv')
+            leaders.append({'code': code, 'name': name, 'close': row.get('close'),
+                            'peTtm': pe, 'pb': pb,
+                            'peStatus': '估值快照缺失' if pe is None else '亏损/非正PE，未计入组内PE中位数' if pe <= 0 else '有效PE',
+                            'pbStatus': '估值快照缺失' if pb is None else '有效PB',
+                            'totalMv': mv, 'totalMvYi': round(mv / 10000, 2) if mv is not None else None,
+                            'circMv': circ_mv.get(code), 'isST': 'ST' in name.upper(),
+                            'tradeDate': row.get('tradeDate'), 'mineCovered': covered,
+                            'mineTypes': types, 'mineDetails': details, 'mineNote': note})
+        return leaders, leader_sort
+
+    groups = []
+    for spec in specs:
+        current = dict(group_valuation_snapshot(spec['members'], records), tradeDate=effective)
+        history = [history_rows[date].get(_sector_valuation_key(spec)) for date in dates]
+        position = history_valuation_position(current, [x for x in history if x])
+        leaders, leader_sort = leaders_for(spec)
+        groups.append({**{k: v for k, v in spec.items() if k != 'members'}, **position,
+                       'leaders': leaders, 'leaderSortMethod': leader_sort,
+                       'leaderNote': leader_sort if len(leaders) == 2 else f'可用市值成员仅{len(leaders)}只，不凑数',
+                       'valuationReferenceOnly': True, 'peCrossPct': None, 'pbCrossPct': None,
+                       'reason': position['historyReason']})
+    sort_key = lambda g: (g['compositeHistoryPct'] is None,
+                          g['compositeHistoryPct'] if g['compositeHistoryPct'] is not None else 999,
+                          g['type'], g['code'])
+    groups.sort(key=sort_key)
+    industries = [g for g in groups if g['type'] == 'industry']
+    concepts = [g for g in groups if g['type'] == 'concept']
     base['industries'], base['concepts'] = industries, concepts
     base['counts'] = {
         'industryCount': len(industries), 'conceptCount': len(concepts),
-        'directionCount': len(directions), 'leaderCount': sum(len(g['leaders']) for g in directions),
-        'evaluatedGroupCount': result['evaluatedGroupCount'],
-        'rsiInsufficientGroupCount': result['rsiInsufficientGroupCount'],
-        'insufficientCoverageGroupCount': result['insufficientCoverageGroupCount'],
-        'highValuationGroupCount': result['highValuationGroupCount'],
+        'directionCount': len(groups), 'leaderCount': sum(len(g['leaders']) for g in groups),
+        'evaluatedGroupCount': len(specs), 'rsiInsufficientGroupCount': 0,
+        'insufficientCoverageGroupCount': sum(g['historyStatus'] == 'coverage_insufficient' for g in groups),
+        'highValuationGroupCount': 0,
+        'rankedGroupCount': sum(g['rankEligible'] for g in groups),
+        'insufficientHistoryGroupCount': sum(g['historyStatus'] == 'insufficient' for g in groups),
     }
-    base['coverage']['insufficientGroups'] = result['insufficientGroups']
+    base['coverage']['insufficientGroups'] = [
+        {'type': g['type'], 'code': g['code'], 'name': g['name'], 'memberCount': g['memberCount'],
+         'reason': g['historyReason']} for g in groups if not g['rankEligible']]
     base['reasons'].append(
-        f'{len(directions)}个方向按真实指数周RSI6升序展示；'
-        f'{result["rsiInsufficientGroupCount"]}组行情不足/不新鲜单独披露，不凑数')
+        f'{len(groups)}个行业/大概念按自身历史估值分位低→高；可排{base["counts"]["rankedGroupCount"]}组，'
+        f'历史样本不足{base["counts"]["insufficientHistoryGroupCount"]}组，覆盖不足{base["counts"]["insufficientCoverageGroupCount"]}组')
     print(f'  oversoldValueDirections: 行业{len(industries)}组/概念{len(concepts)}组，'
-          f'RSI数据不足{result["rsiInsufficientGroupCount"]}组，估值{base["valuationStatus"]}（{effective}）')
+          f'历史估值可排{base["counts"]["rankedGroupCount"]}组，缓存月末{len(dates)}个，估值{base["valuationStatus"]}（{effective}）')
 
 
 def _oversold_value_directions_summary(data):
-    """周RSI6升序超跌榜摘要；估值缺失不改变方向排序。"""
+    """自身历史估值分位低→高摘要；历史不足明示，不回退横截面或RSI排序。"""
     block = data.get('oversoldValueDirections') or {}
     if not (_oversold_value_extreme_active(data) and block.get('visible')):
         return ''
 
     def groups_text(groups):
-        if not groups:
-            return '暂无可复算方向'
-        return '、'.join(
-            f"{g['name']}[周RSI6 {g.get('weeklyRsi6')}]（"
-            + ('、'.join(l['name'] for l in g.get('leaders') or []) or '无可用市值龙头') + '）'
-            for g in groups)
+        ranked = [g for g in groups if g.get('compositeHistoryPct') is not None]
+        if not ranked:
+            return '历史样本不足或当前估值缺失，暂无可排组'
+        return '、'.join(f"{g['name']}[综合{g['compositeHistoryPct']}%"
+                         f"{'·单指标' if g.get('valuationRankBasis') == 'single' else ''}]" for g in ranked[:8])
 
-    insufficient = (block.get('counts') or {}).get('rsiInsufficientGroupCount') or 0
-    suffix = f'｜{insufficient}组RSI6行情不足已单独披露' if insufficient else ''
-    if not (block.get('counts') or {}).get('directionCount'):
-        detail = '；'.join(block.get('reasons') or ['暂无可复算方向'])
-        return f'超跌方向（周RSI6升序）：{detail}｜极端超卖≠立即反转，非操作买卖建议'
-    return ('超跌方向（真实指数周RSI6升序，PE/PB仅参考）｜行业：'
+    insufficient = (block.get('counts') or {}).get('insufficientHistoryGroupCount') or 0
+    suffix = f'｜{insufficient}组历史样本不足' if insufficient else ''
+    return ('板块估值（PE/PB自身历史分位低→高，非横截面、非RSI排序）｜行业：'
             + groups_text(block.get('industries') or []) + '｜大概念：'
             + groups_text(block.get('concepts') or []) + suffix
-            + '｜极端超卖≠立即反转，非操作买卖建议')
+            + '｜现行成分回溯非PIT、有生存者偏差；估值仅参考，非操作买卖建议')
 
 
 def _vcp_swing_highs(bars, k):
@@ -9907,11 +10024,12 @@ def main():
         print(f"  Warning: broadOsc failed: {e}")
     # RSI6数据链失败必须锁门，绝不沿用存量active。
     data['broadObservation'] = {
-        'active': False, 'label': '完成周RSI6收复20观察证据',
+        'active': False, 'label': '当周动态RSI6进入20以下区域',
         'tradeDate': _effective_batch_trade_date(trade_date, data),
         'requiredCount': OBSERVATION_MIN_QUALIFIED, 'qualifiedCount': 0,
         'qualifiedIndices': [], 'items': [],
-        'reason': '本批RSI6数据链尚未完成，锁门', 'note': '缺数/失败不沿用存量active；未完结周不触发。'}
+        'reason': '本批RSI6数据链尚未完成，锁门',
+        'note': '缺数/失败不沿用存量active；当周动态值必须新鲜且≤20才触发。'}
     try:
         build_broad_observation(pro, trade_date, data)
     except Exception as e:

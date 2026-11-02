@@ -922,7 +922,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                 {data.longWindow?.window === 'open' && (
                   <Badge className="bg-emerald-600 text-white text-[10px]">
                     {data.longWindow.windowType === 'extreme_rebound'
-                      ? `周RSI6收复20·临时窗剩余${data.longWindow.remainingDays ?? '—'}日`
+                      ? '当周动态RSI6≤20·临时窗（周内会变化）'
                       : '做多窗口打开'}
                   </Badge>
                 )}

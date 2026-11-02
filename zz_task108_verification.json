@@ -1,0 +1,53 @@
+{
+  "task": 108,
+  "date": "2026-11-02",
+  "allPassed": true,
+  "checksPassed": 203,
+  "checksTotal": 203,
+  "tests": {
+    "zz_regress108.py": {"passed": 40, "total": 40, "failed": []},
+    "zz_regress107.py": {"passed": 29, "total": 29, "failed": []},
+    "zz_regress106.py": {"passed": 19, "total": 19, "failed": [], "updatedForTask108": true},
+    "zz_regress105.py": {"passed": 40, "total": 40, "failed": [], "vcpCases": "10/10", "vcpWindows": "6/6"},
+    "zz_regress104.py": {"passed": 20, "total": 20, "failed": [], "updatedForTask108": true},
+    "zz_regress102.py": {"passed": 34, "total": 34, "failed": [], "updatedForTask108": true},
+    "zz_regress87.py": {"passed": 21, "total": 21, "failed": [], "updatedForTask108": true}
+  },
+  "build": {
+    "command": "npm run build",
+    "success": true,
+    "js": {"path": "dist/assets/index-2uAAZ1Rd-v25.js", "bytes": 1399567, "sha256": "b8bd3e49675dfbfcd5739db78345a84ca82390c8fe919950eb14a588e40e0c6a"},
+    "css": {"path": "dist/assets/index-CAAZ_2W_.css", "bytes": 109684, "sha256": "f360bc63d4f5797e191c48a8a41716ddb6fa8870d0a9390b42a930a8885237c9"},
+    "warning": "仅既有大chunk提示，无构建错误"
+  },
+  "historicalValuation": {
+    "source": "Tushare daily_basic真实月末采样",
+    "years": 10,
+    "minSamplesPerMetricIncludingCurrent": 24,
+    "minMetricCount": 5,
+    "minMetricCoverage": 0.6,
+    "cacheFile": "scripts/cache/vcp_cache.json",
+    "cacheKey": "sectorValuationHistory",
+    "cacheIndependentKeyPreservesOtherFields": true,
+    "workflowModificationRequired": false,
+    "bootstrapLimit": "首次无缓存时逐月bootstrap；失败即停止本轮并保留成功月份；每指标不足24个有效样本周前不排，不制造数据",
+    "membershipBasis": "current_constituents_non_pit",
+    "pit": false,
+    "survivorshipBias": true
+  },
+  "localFundData": {
+    "public/fund_data.json": {"bytes": 594886, "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"},
+    "src/data/fund_data.json": {"bytes": 594886, "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"},
+    "unchangedByTests": true
+  },
+  "releaseConstraints": {
+    "gitDataApi": true,
+    "realTimeMainBaseTreeAndParent": true,
+    "force": false,
+    "manualDispatch": false,
+    "workflowModified": false,
+    "fundDataCommitted": false,
+    "productionDataRegenerated": false
+  },
+  "onlineVerification": "发布后只读结果写入zz_task108_online_verification.json；生产数据等待既有计划任务"
+}

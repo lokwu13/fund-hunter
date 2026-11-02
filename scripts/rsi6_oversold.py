@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""完成周 Wilder RSI6 与真实行业/概念指数超跌榜的纯计算函数。
+"""当周动态 Wilder RSI6 与真实行业/概念指数的纯计算函数。
 
-不访问API、不读写生产数据；所有排序均可由输入行情复算。
+不访问API、不读写生产数据；所有证据均可由输入行情复算。
 """
 from datetime import datetime, timedelta
 import statistics
@@ -33,7 +33,7 @@ def _week_series(rows, trade_date):
 
 
 def weekly_rsi6_evidence(rows, trade_date, rsi_func):
-    """上一完成周RSI6<=20且最近完成周>20才通过；未完结周仅动态观察。"""
+    """当周动态Wilder RSI6<=20即通过；完成周上穿只保留为历史证据，不再开窗。"""
     td = str(trade_date).replace('-', '')
     timestamp = pd.to_datetime(td, format='%Y%m%d')
     current_week = timestamp.strftime('%G%V')
@@ -56,20 +56,21 @@ def weekly_rsi6_evidence(rows, trade_date, rsi_func):
     live_rsi = rsi_func([bar[2] for bar in weekly], 6) if weekly else []
     dynamic = live_rsi[-1] if live_rsi else None
     dynamic_date = weekly[-1][1] if weekly and weekly[-1][0] == current_week and dynamic is not None else None
-    dynamic_watch = bool(not crossed and previous is not None and dynamic is not None
-                         and previous <= 20 and dynamic > 20 and dynamic_date)
+    dynamic_fresh = bool(daily_date == td and dynamic_date == td)
+    in_zone = bool(dynamic_fresh and dynamic is not None and dynamic <= 20)
+    dynamic_watch = bool(dynamic_fresh and dynamic is not None and dynamic > 20)
     if not normalized:
         reason = '真实指数行情为空'
-    elif current is None or previous is None:
-        reason = f'完成周不足，无法同时计算前后Wilder RSI6（完成周{len(completed)}个）'
-    elif not fresh:
-        reason = f'行情/完成周不新鲜：日线{daily_date or "无"}，完成周{rsi_date or "无"}，要求日线{td}且完成周为{expected_week}'
-    elif crossed:
-        reason = f'周RSI6收复20：{previous_date} {previous:.2f}≤20 → {rsi_date} {current:.2f}>20'
+    elif dynamic is None:
+        reason = '周线不足，无法计算当周动态Wilder RSI6'
+    elif not dynamic_fresh:
+        reason = f'当周动态RSI6行情不新鲜：日线{daily_date or "无"}，要求本批有效日{td}'
+    elif in_zone:
+        reason = f'当周动态RSI6进入20以下区域：{dynamic_date} RSI6={dynamic:.2f}≤20；周内会变化'
     else:
-        reason = f'最近完成周RSI6={current:.2f}，前一周={previous:.2f}，未形成≤20→>20收复'
-    if dynamic_watch:
-        reason += f'；未完结周动态RSI6={dynamic:.2f}>20，仅观察不触发'
+        reason = f'当周动态RSI6={dynamic:.2f}>20，不在20以下区域，不开窗'
+    if crossed:
+        reason += f'；完成周上穿仅作历史证据：{previous_date} {previous:.2f}≤20 → {rsi_date} {current:.2f}>20'
     return {
         'dailyDate': daily_date,
         'weeklyRsiDate': rsi_date, 'previousWeeklyRsiDate': previous_date,
@@ -79,7 +80,8 @@ def weekly_rsi6_evidence(rows, trade_date, rsi_func):
         'previousWeeklyRsi6': round(previous, 2) if previous is not None else None,
         'dynamicWeeklyRsi6': round(dynamic, 2) if dynamic is not None else None,
         'dynamicWeeklyRsiDate': dynamic_date,
-        'weeklyFresh': fresh, 'rsiPass': crossed, 'weeklyCross20': crossed,
+        'weeklyFresh': fresh, 'dynamicWeeklyFresh': dynamic_fresh,
+        'rsiPass': in_zone, 'inOversoldZone': in_zone, 'weeklyCross20': crossed,
         'dynamicWatch': dynamic_watch, 'completedWeekCount': len(completed),
         'rsiReason': reason,
     }

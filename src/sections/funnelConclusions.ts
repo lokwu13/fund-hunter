@@ -26,15 +26,20 @@ export const extremeReboundActive = (data: any) => !!(
 export const oversoldValueDirectionsText = (data: any) => {
   const block = data.oversoldValueDirections;
   if (!extremeReboundActive(data) || !block?.visible) return '';
-  const groupsText = (groups: any[]) => groups.length > 0
-    ? groups.map((g) => `${g.name}[周RSI6 ${g.weeklyRsi6 ?? '—'}]（${(g.leaders || []).map((l: any) => l.name).join('、') || '无可用市值龙头'}）`).join('、')
-    : '暂无可复算方向';
-  const insufficient = block.counts?.rsiInsufficientGroupCount || 0;
-  const suffix = insufficient > 0 ? `｜${insufficient}组RSI6行情不足已单独披露` : '';
+  const groupsText = (groups: any[]) => {
+    const ranked = groups.filter((g) => g.compositeHistoryPct != null);
+    if (!ranked.length) return '当前快照、覆盖率或历史样本不足，暂无可排组';
+    return ranked.slice(0, 8).map((g) =>
+      `${g.name}[综合${g.compositeHistoryPct}%·PE/PB ${g.peHistoryPct ?? '—'}%/${g.pbHistoryPct ?? '—'}%${g.valuationRankBasis === 'single' ? '·单指标' : ''}]`
+    ).join('、');
+  };
+  const insufficient = block.counts?.insufficientHistoryGroupCount || 0;
+  const coverage = block.counts?.insufficientCoverageGroupCount || 0;
+  const suffix = `${insufficient ? `｜${insufficient}组历史样本不足` : ''}${coverage ? `｜${coverage}组覆盖不足` : ''}`;
   if (!(block.counts?.directionCount > 0)) {
-    return `超跌方向（周RSI6升序）：${(block.reasons || ['暂无可复算方向']).join('；')}｜极端超卖≠立即反转，非操作买卖建议`;
+    return `板块自身历史估值（PE/PB分位低→高）：${(block.reasons || ['暂无可复算方向']).join('；')}｜估值仅参考，非操作买卖建议`;
   }
-  return `超跌方向（真实指数周RSI6升序，PE/PB仅参考）｜行业：${groupsText(block.industries || [])}｜大概念：${groupsText(block.concepts || [])}${suffix}｜极端超卖≠立即反转，非操作买卖建议`;
+  return `板块估值（PE/PB自身历史分位低→高，非横截面）｜行业：${groupsText(block.industries || [])}｜大概念：${groupsText(block.concepts || [])}${suffix}｜现行成分回溯非PIT、有生存者偏差；估值仅参考，非操作买卖建议`;
 };
 
 export const dividendTop20Text = (data: any) => {
@@ -74,7 +79,7 @@ function windowConclusion(data: any) {
   const lw = data.longWindow || {};
   const observation = data.broadObservation;
   const windowLabel = lw.windowType === 'extreme_rebound'
-    ? `完成周RSI6收复20·极端修复临时窗（最长5日·剩余${lw.remainingDays ?? '—'}日）`
+    ? '当周动态RSI6进入20以下区域·极端修复临时窗（周内会变化）'
     : lw.window === 'open' ? '开窗' : lw.window === 'closed' ? '关窗' : '半窗';
   const water = [
     lw.temp ? `水温${lw.temp}` : '',
@@ -100,12 +105,9 @@ function windowConclusion(data: any) {
     }
   }
   if (observation) {
-    signals.push(`完成周RSI6收复20（任一即可）${observation.qualifiedCount}只：` + (observation.items || []).map((r: any) =>
-      `${r.indexName}${r.qualified ? '✓' : '—'} ${r.previousWeeklyRsiDate || '缺'} RSI6=${r.previousWeeklyRsi6 ?? '—'}→${r.weeklyRsiDate || '缺'} RSI6=${r.weeklyRsi6 ?? '—'}`
-    ).join('；'));
-  }
-  if (lw.extremeRebound?.pendingConfirmation) {
-    signals.push('未完结周RSI6动态收复20仅观察，不触发开窗');
+    signals.push(`当周动态RSI6进入20以下区域（任一即可）${observation.qualifiedCount}只：` + (observation.items || []).map((r: any) =>
+      `${r.indexName}${r.qualified ? '✓' : '—'} ${r.dynamicWeeklyRsiDate || '缺'} 动态RSI6=${r.dynamicWeeklyRsi6 ?? '—'}`
+    ).join('；') + '；周内会变化');
   }
   const valueDirections = oversoldValueDirectionsText(data);
   if (valueDirections) signals.push(valueDirections);
@@ -163,7 +165,7 @@ function sectorConclusion(data: any, step: any) {
 }
 
 const GUIDES: Record<string, string> = {
-  window: 'standardWindow照常计算；任一六宽基完成周RSI6≤20→>20最后覆盖open',
+  window: 'standardWindow照常计算；任一六宽基当周动态RSI6≤20且行情新鲜即最后覆盖open；周内会变化',
   broad: '宽基形态＋超买超卖＋ETF，只点触发项',
   sector: '主线入选＋VCP强共振＋杯柄；ETF仅用可靠映射',
   vcp: '杯柄仅紧凑展示首次信号；高股息按行业/概念近4周RSI、缩量与首次量价催化独立开门',

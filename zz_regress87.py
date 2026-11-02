@@ -42,37 +42,39 @@ def osc(n=0, buy=None, sell=None, top=False, date='2026-10-19'):
     }
 
 
-def observation(cross=False, dynamic=False):
-    item = {'indexCode': '000300.SH', 'indexName': '沪深300', 'qualified': cross,
-            'previousWeeklyRsi6': 18.0, 'weeklyRsi6': 25.0 if cross else 19.0,
+def observation(zone=False, dynamic=False):
+    dynamic_rsi = 18.0 if zone else 25.0 if dynamic else 30.0
+    item = {'indexCode': '000300.SH', 'indexName': '沪深300', 'qualified': zone,
+            'previousWeeklyRsi6': 18.0, 'weeklyRsi6': 25.0,
             'previousWeeklyRsiDate': '20261016', 'weeklyRsiDate': '20261023',
-            'dailyDate': '20261026', 'weeklyFresh': True, 'rsiPass': cross,
-            'dynamicWatch': dynamic}
-    return {'active': cross, 'requiredCount': 1, 'qualifiedCount': int(cross),
-            'qualifiedIndices': ['沪深300'] if cross else [], 'items': [item], 'reason': '受控RSI6边界'}
+            'dailyDate': '20261019', 'weeklyFresh': True, 'rsiPass': zone,
+            'dynamicWeeklyRsi6': dynamic_rsi, 'dynamicWeeklyRsiDate': '20261019',
+            'dynamicWeeklyFresh': True, 'inOversoldZone': zone, 'dynamicWatch': dynamic and not zone}
+    return {'active': zone, 'requiredCount': 1, 'qualifiedCount': int(zone),
+            'qualifiedIndices': ['沪深300'] if zone else [], 'items': [item], 'reason': '受控RSI6边界'}
 
 
 days = ['20261019', '20261020', '20261021', '20261022', '20261023', '20261026']
-check('单纯超卖不开临时窗', not u._extreme_rebound_decision(observation(), '20261019')['active'],
+check('动态值不在20以下区域不开临时窗', not u._extreme_rebound_decision(observation(), '20261019')['active'],
       u._extreme_rebound_decision(observation(), '20261019'))
 pending = u._extreme_rebound_decision(observation(dynamic=True), '20261019')
-check('未完结周动态收复只待确认', pending['pendingConfirmation'] and not pending['active'], pending)
-opened = u._extreme_rebound_decision(observation(True), '20261019', trading_days=days)
-check('单指数完成周RSI6收复即开', opened['active'] and opened['remainingDays'] == 5, opened)
-sell = u._extreme_rebound_decision(observation(True), '20261019')
+check('动态值大于20不待确认也不开窗', not pending['pendingConfirmation'] and not pending['active'], pending)
+opened = u._extreme_rebound_decision(observation(zone=True), '20261019', trading_days=days)
+check('单指数当周动态RSI6不超20即开', opened['active'] and opened['remainingDays'] == 1
+      and opened['maxDays'] is None, opened)
+sell = u._extreme_rebound_decision(observation(zone=True), '20261019')
 check('强硬减仓不否决RSI6临时窗', sell['active'] and not sell['blockedBy'], sell)
-top = u._extreme_rebound_decision(observation(True), '20261019')
+top = u._extreme_rebound_decision(observation(zone=True), '20261019')
 check('顶部风险不否决RSI6临时窗', top['active'] and not top['blockedBy'], top)
 prev = {**opened, 'windowType': 'extreme_rebound', 'temporary': True}
-fifth = None
-for d in days[1:5]:
-    fifth = u._extreme_rebound_decision(observation(True), d, prev, days)
-    prev = {**fifth, 'windowType': 'extreme_rebound', 'temporary': True}
-check('第5个交易日仍有效', fifth['active'] and fifth['remainingDays'] == 1, fifth)
-expired = u._extreme_rebound_decision(observation(True), '20261026', prev, days)
-check('第6个交易日到期关闭', expired['expired'] and not expired['active'], expired)
+continued = u._extreme_rebound_decision(observation(zone=True), '20261020', prev, days)
+check('仍在20以下区域只按当日状态active', continued['active'] and continued['remainingDays'] == 1
+      and continued['maxDays'] is None, continued)
+expired = u._extreme_rebound_decision(observation(), '20261026', prev, days)
+check('离开20以下区域立即关闭且无到期续命', not expired['expired'] and not expired['active']
+      and expired['remainingDays'] == 0, expired)
 
-# 冷水温原层级为closed；只有完成周RSI6收复可旁路，动态周不能误开。
+# 冷水温原层级为closed；当周动态RSI6≤20可独立旁路，大于20不能误开。
 def long_data(obs, osc_block=None):
     return {'bondData': {'marginTrading': {'temp': '🔴冷', 'verdict': '测试'},
                          'stats': {'1m_change': {'y10': 0}}},
@@ -81,9 +83,9 @@ def long_data(obs, osc_block=None):
 
 ld = long_data(observation(dynamic=True))
 u.build_long_window(ld)
-check('冷水温+动态周仍关窗', ld['longWindow']['window'] == 'closed'
+check('冷水温+动态值大于20仍关窗', ld['longWindow']['window'] == 'closed'
       and ld['longWindow']['windowType'] == 'standard', ld['longWindow']['extremeRebound'])
-ld2 = long_data(observation(True))
+ld2 = long_data(observation(zone=True))
 u.build_long_window(ld2)
 check('RSI6临时窗独立open且保留standardWindow', ld2['longWindow']['window'] == 'open'
       and ld2['longWindow']['standardWindow'] == 'closed'
