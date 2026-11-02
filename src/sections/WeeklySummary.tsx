@@ -5,7 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from 'lucide-react';
 import { useState } from 'react';
 import { useFundData } from '@/hooks/useFundData';
-import { broadOscFor, buildFunnelStepViews, extremeReboundActive, oversoldValueDirectionsText, sectorEtfFor } from './funnelConclusions';
+import { broadOscFor, buildFunnelStepViews, dividendTop20Text, extremeReboundActive, oversoldValueDirectionsText, sectorEtfFor } from './funnelConclusions';
 
 const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
 const DEFENSIVE_SECTORS = new Set(['中证医药', '中证消费', '中证公用', '中证能源']);
@@ -153,6 +153,15 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
               <button type="button" className="mt-1 text-[10px] font-semibold underline underline-offset-2"
                       onClick={() => onNavigate?.('tools', 'oversold-value-directions')}>
                 查看周RSI6超跌排序、双龙头与估值降级明细 →
+              </button>
+            </div>
+          )}
+          {data.dividendWatch?.rsi6Top20?.visible && (
+            <div className="mt-2 rounded-md border border-cyan-200 bg-white/60 px-2.5 py-2">
+              <p className="text-[11px] leading-relaxed">{dividendTop20Text(data)}</p>
+              <button type="button" className="mt-1 text-[10px] font-semibold underline underline-offset-2"
+                      onClick={() => onNavigate?.('tools', 'rsi6-dividend-top20')}>
+                查看全A股息率TTM Top20完整原榜 →
               </button>
             </div>
           )}

@@ -281,6 +281,74 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
         );
       })()}
 
+      {/* 任务107：总览仅给入口；板块承接唯一完整全A股息率Top20原榜。 */}
+      {detailed && extremeReboundActive(data) && data.dividendWatch?.rsi6Top20?.visible && (() => {
+        const top = data.dividendWatch.rsi6Top20!;
+        return (
+          <Card id="rsi6-dividend-top20" className="shadow-sm border-cyan-300 scroll-mt-20">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <CardTitle className="text-sm font-bold text-cyan-950">RSI6极端窗 · 全A股息率TTM Top20</CardTitle>
+                <Badge variant="outline" className="text-xs bg-cyan-50 text-cyan-700 border-cyan-200">
+                  快照{top.snapshotDate || '缺失'} · 实际{top.count}只 · {top.status}
+                </Badge>
+              </div>
+              <CardDescription className="text-[10px] leading-relaxed">
+                {top.marketScope}；{top.rankingMethod}。TTM为历史滚动股息率，非预测。
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className={`rounded-lg border px-3 py-2 text-[11px] ${top.status === 'ok' ? 'border-cyan-200 bg-cyan-50 text-cyan-950' : 'border-amber-300 bg-amber-50 text-amber-900'}`}>
+                {top.reasons.map((reason, i) => <p key={i}>{reason}</p>)}
+                {top.status !== 'ok' && <p className="mt-1 font-semibold">榜单已锁定，未沿用旧日期或旧清单，不以其他股票凑数。</p>}
+              </div>
+              {top.items.length > 0 && (
+                <div className="overflow-x-auto">
+                  <Table className="min-w-[1080px]">
+                    <TableHeader>
+                      <TableRow className="bg-slate-50">
+                        <TableHead className="text-xs">排名</TableHead>
+                        <TableHead className="text-xs">代码 / 中文名</TableHead>
+                        <TableHead className="text-xs">所属行业</TableHead>
+                        <TableHead className="text-xs text-right">股息率TTM</TableHead>
+                        <TableHead className="text-xs text-right">PE_TTM / PB</TableHead>
+                        <TableHead className="text-xs text-right">总市值</TableHead>
+                        <TableHead className="text-xs">ST</TableHead>
+                        <TableHead className="text-xs">既有排雷状态（只标记）</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {top.items.map((r) => (
+                        <TableRow key={r.code} className={r.mineStatus === 'hit' ? 'bg-rose-50/60' : ''}>
+                          <TableCell className="text-xs font-bold text-cyan-800">#{r.rank}</TableCell>
+                          <TableCell>
+                            <p className="text-xs font-semibold text-slate-800">{r.name}</p>
+                            <p className="text-[10px] text-slate-400">{r.code}</p>
+                          </TableCell>
+                          <TableCell className="text-xs text-slate-600">{r.industry}</TableCell>
+                          <TableCell className="text-xs text-right font-bold text-cyan-700">{r.dvTtm}%</TableCell>
+                          <TableCell className="text-xs text-right text-slate-600">{r.peTtm ?? '—'} / {r.pb ?? '—'}</TableCell>
+                          <TableCell className="text-xs text-right text-slate-600">{r.totalMvYi == null ? '—' : `${r.totalMvYi}亿`}</TableCell>
+                          <TableCell>{r.isST ? <Badge className="text-[9px] border-0 bg-rose-600 text-white">ST风险</Badge> : <span className="text-xs text-slate-400">—</span>}</TableCell>
+                          <TableCell className={`text-[10px] ${r.mineStatus === 'hit' ? 'text-rose-700' : r.mineStatus === 'unchecked' ? 'text-amber-700' : 'text-slate-500'}`}
+                                     title={r.mineDetails.map((d) => `${d.type}：${d.detail}（${d.date}）`).join('；') || r.mineNote}>
+                            {r.mineNote}{r.mineDetails.length ? `：${r.mineDetails.map((d) => d.detail).join('；')}` : ''}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+              <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-[10px] leading-relaxed text-amber-950">
+                <p>{top.note}</p>
+                <p className="mt-1 text-slate-500">来源：{top.source}；本批有效日{top.tradeDate}；快照{top.snapshotDate || '缺失'}；排雷命中不删除，未覆盖不写成无风险。</p>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })()}
+
       {/* ====== 板块页专属：行业/概念拥挤度简表（必须在每日涨幅轮动榜正上方） ====== */}
       {detailed && data.sectorCrowding && (
         <Card id="sector-crowding" className="shadow-sm border-amber-200">

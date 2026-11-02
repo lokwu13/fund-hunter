@@ -2908,10 +2908,13 @@ def build_funnel(data):
               {'open': '窗口打开：水温偏暖+宽基临近买点，可以做多',
                'half': '半窗：只看不动，仓位与信号降档',
                'closed': '窗口关闭：今天到此为止'}[w])
-    # 只承接极端强制开窗结果；超跌排序不反向开门。
+    # 只承接极端强制开窗结果；超跌排序与全A股息率Top20均不反向开门。
     value_directions_summary = _oversold_value_directions_summary(data)
     if value_directions_summary:
         concl0 += '；' + value_directions_summary
+    dividend_top20_summary = _rsi6_dividend_top20_summary(data)
+    if dividend_top20_summary:
+        concl0 += '；' + dividend_top20_summary
     guide0 = ('本步回答：今天能不能做多？' + concl0 +
               ('。下级全部标灰"窗口未开"，无需往下翻' if w == 'closed'
                else '。可以继续看第1步，但只观察不动手' if w == 'half'
@@ -5993,6 +5996,154 @@ def _oversold_value_extreme_active(data):
     lw = data.get('longWindow') or {}
     return bool(lw.get('window') == 'open' and lw.get('windowType') == 'extreme_rebound'
                 and (lw.get('extremeRebound') or {}).get('active') is True)
+
+
+RSI6_DIVIDEND_TOP_N = 20
+
+
+def _rsi6_dividend_top20_base(trade_date, active):
+    return {
+        'visible': bool(active), 'tradeDate': trade_date, 'snapshotDate': None,
+        'snapshotDates': [], 'status': 'missing' if active else 'not_requested',
+        'rankingLocked': bool(active), 'snapshotError': None,
+        'requestedCount': RSI6_DIVIDEND_TOP_N, 'count': 0, 'eligibleCount': 0,
+        'snapshotRows': 0, 'items': [],
+        'marketScope': '同一有效交易日沪深北真实全A股；不限宽基/VCP池，排除指数、ETF与B股',
+        'source': 'Tushare daily_basic.dv_ttm（股息率TTM，%）',
+        'rankingMethod': '仅有效dv_ttm>0参与；按原始dv_ttm降序、代码升序打破并列，取前20；不按PE/PB、概念或市值过滤',
+        'reasons': ([] if active else ['现行RSI6极端强制开窗未触发：不请求daily_basic，清空旧Top20且不展示']),
+        'note': ('股息率TTM为历史滚动口径，不是预测；高股息不等于安全或买点。'
+                 '警惕一次性/特别分红、分红持续性、基本面与除权风险。既有排雷只标记，不改变原Top20排名；未覆盖不代表无风险。'),
+    }
+
+
+def _is_real_a_share_code(code):
+    """daily_basic理论为股票横截面；仍显式排除测试或异常混入的指数、ETF、B股。"""
+    code = str(code or '').upper()
+    if code.endswith('.SH'):
+        return code.startswith(('600', '601', '603', '605', '688', '689'))
+    if code.endswith('.SZ'):
+        return code.startswith(('000', '001', '002', '003', '300', '301', '302'))
+    if code.endswith('.BJ'):
+        return code.startswith(('43', '83', '87', '88', '92'))
+    return False
+
+
+def build_rsi6_dividend_top20(pro, trade_date, data):
+    """仅RSI6极端强制开窗展示全A股息率TTM Top20；失败/陈旧锁榜且绝不留旧项。"""
+    effective = _effective_batch_trade_date(trade_date, data)
+    active = _oversold_value_extreme_active(data)
+    block = _rsi6_dividend_top20_base(effective, active)
+    dividend_watch = dict(data.get('dividendWatch') or {})
+    dividend_watch['rsi6Top20'] = block
+    data['dividendWatch'] = dividend_watch
+    if not active:
+        print('  rsi6DividendTop20 hidden: 非现行RSI6极端强制开窗，未请求daily_basic')
+        return
+
+    snap = None
+    try:
+        time.sleep(API_DELAY)
+        snap = pro.daily_basic(
+            trade_date=effective,
+            fields='ts_code,trade_date,close,total_mv,dv_ttm,pe_ttm,pb')
+    except Exception as exc:
+        block['snapshotError'] = str(exc)[:240]
+        block['reasons'] = [f'全A daily_basic失败，Top20锁榜并清空旧清单：{block["snapshotError"]}']
+        print(f'  Warning: rsi6DividendTop20 daily_basic failed (locked): {exc}')
+        return
+    if snap is None or not len(snap):
+        block['reasons'] = [f'全A daily_basic为空（{effective}），Top20锁榜并清空旧清单']
+        return
+
+    def number(row, key):
+        value = row.get(key)
+        if value is None or pd.isna(value):
+            return None
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return None
+
+    records = {}
+    snapshot_dates = set()
+    for _, row in snap.iterrows():
+        code = str(row.get('ts_code') or '').upper()
+        if not _is_real_a_share_code(code):
+            continue
+        raw_date = row.get('trade_date')
+        date = '' if raw_date is None or pd.isna(raw_date) else str(raw_date)
+        if date:
+            snapshot_dates.add(date)
+        records[code] = {
+            'code': code, 'tradeDate': date, 'close': number(row, 'close'),
+            'totalMv': number(row, 'total_mv'), 'dvTtm': number(row, 'dv_ttm'),
+            'peTtm': number(row, 'pe_ttm'), 'pb': number(row, 'pb'),
+        }
+    block['snapshotRows'] = len(records)
+    block['snapshotDates'] = sorted(snapshot_dates)
+    block['snapshotDate'] = max(snapshot_dates) if snapshot_dates else None
+    if snapshot_dates != {effective}:
+        actual = '、'.join(sorted(snapshot_dates)) or '缺失'
+        block['status'] = 'stale'
+        block['reasons'] = [f'全A快照日期{actual}不等于本批有效日{effective}，Top20锁榜并清空旧清单；不把旧日期伪装成当前']
+        return
+
+    cache = _load_json_cache(DIVIDEND_GROUP_CACHE_PATH, {})
+    stock_info = cache.get('stock_info') or {}
+    stock_industry = cache.get('stock_industry') or {}
+    sw_industry = {}
+    for group in cache.get('sw_list') or []:
+        for code in (cache.get('sw_members') or {}).get(group.get('code')) or []:
+            sw_industry.setdefault(code, group.get('name'))
+    mine_watch = data.get('mineWatch') or {}
+    mine_map = {x.get('code'): x for x in mine_watch.get('items') or []}
+    checked_codes = set(mine_watch.get('checkedCodes') or []) | set(mine_map)
+
+    eligible = [r for r in records.values() if r['dvTtm'] is not None and r['dvTtm'] > 0]
+    eligible.sort(key=lambda r: (-r['dvTtm'], r['code']))
+    block['eligibleCount'] = len(eligible)
+    items = []
+    for rank, row in enumerate(eligible[:RSI6_DIVIDEND_TOP_N], 1):
+        code = row['code']
+        name = str((stock_info.get(code) or {}).get('name') or '名称缺失')
+        industry = stock_industry.get(code) or (stock_info.get(code) or {}).get('industry') or sw_industry.get(code) or '行业未标注'
+        mine = mine_map.get(code)
+        covered = code in checked_codes
+        mine_types = list((mine or {}).get('types') or [])
+        mine_details = list((mine or {}).get('details') or [])
+        mine_note = (('既有排雷命中：' + '、'.join(mine_types)) if mine else
+                     '既有排雷已覆盖，未命中既有规则（不代表无风险）' if covered else '既有排雷未覆盖')
+        total_mv = row['totalMv']
+        items.append({
+            'rank': rank, 'code': code, 'name': name, 'industry': str(industry),
+            'dvTtm': round(row['dvTtm'], 4), 'peTtm': round(row['peTtm'], 4) if row['peTtm'] is not None else None,
+            'pb': round(row['pb'], 4) if row['pb'] is not None else None,
+            'close': round(row['close'], 4) if row['close'] is not None else None,
+            'totalMv': round(total_mv, 2) if total_mv is not None else None,
+            'totalMvYi': round(total_mv / 10000, 2) if total_mv is not None else None,
+            'tradeDate': row['tradeDate'], 'isST': 'ST' in name.upper(),
+            'mineCovered': covered, 'mineTypes': mine_types, 'mineDetails': mine_details,
+            'mineStatus': 'hit' if mine else 'clear' if covered else 'unchecked', 'mineNote': mine_note,
+            'source': 'Tushare daily_basic.dv_ttm',
+        })
+    block.update({'status': 'ok', 'rankingLocked': False, 'count': len(items), 'items': items})
+    block['reasons'] = [
+        f'全A有效dv_ttm>0共{len(eligible)}只，按股息率TTM降序、代码升序取实际{len(items)}只；不足20不凑数'
+    ]
+    print(f'  rsi6DividendTop20: {len(items)}只（有效{len(eligible)}只，{effective}）')
+
+
+def _rsi6_dividend_top20_summary(data):
+    block = (data.get('dividendWatch') or {}).get('rsi6Top20') or {}
+    if not (_oversold_value_extreme_active(data) and block.get('visible')):
+        return ''
+    if block.get('status') != 'ok':
+        detail = '；'.join(block.get('reasons') or ['快照缺失'])
+        return f'全A股息率TTM Top20：{detail}；高股息≠安全/买点'
+    leaders = '、'.join(f"{x['name']}{x['dvTtm']}%" for x in (block.get('items') or [])[:3]) or '无有效项'
+    return (f"全A股息率TTM Top20（{block.get('snapshotDate')}，实际{block.get('count', 0)}只）：{leaders}"
+            '｜完整榜见板块RSI6区域；高股息≠安全/买点')
 
 
 def build_oversold_value_directions(pro, trade_date, data):
@@ -9729,7 +9880,18 @@ def main():
         build_long_window(data)
     except Exception as e:
         print(f"  Warning: longWindow failed: {e}")
-    # 必须在longWindow之后、funnel之前；估值失败由模块内降级，其他计算异常不得保留旧名单。
+    # RSI6全A股息率Top20与超跌方向均在longWindow之后；任何异常都不得保留旧清单。
+    try:
+        build_rsi6_dividend_top20(pro, trade_date, data)
+    except Exception as e:
+        dividend_watch = dict(data.get('dividendWatch') or {})
+        dividend_top20 = _rsi6_dividend_top20_base(
+            _effective_batch_trade_date(trade_date, data), _oversold_value_extreme_active(data))
+        dividend_top20['reasons'] = [f'本批全A股息率Top20计算异常，锁榜并清空旧清单：{str(e)[:240]}']
+        dividend_top20['snapshotError'] = str(e)[:240]
+        dividend_watch['rsi6Top20'] = dividend_top20
+        data['dividendWatch'] = dividend_watch
+        print(f'  Warning: rsi6DividendTop20 failed (locked): {e}')
     try:
         build_oversold_value_directions(pro, trade_date, data)
     except Exception as e:

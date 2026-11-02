@@ -257,6 +257,47 @@ export interface OversoldValueDirections {
   note: string;
 }
 
+export interface Rsi6DividendTop20Item {
+  rank: number;
+  code: string;
+  name: string;
+  industry: string;
+  dvTtm: number;
+  peTtm: number | null;
+  pb: number | null;
+  close: number | null;
+  totalMv: number | null;
+  totalMvYi: number | null;
+  tradeDate: string;
+  isST: boolean;
+  mineCovered: boolean;
+  mineTypes: string[];
+  mineDetails: Array<{ type: string; detail: string; date: string }>;
+  mineStatus: 'hit' | 'clear' | 'unchecked';
+  mineNote: string;
+  source: string;
+}
+
+export interface Rsi6DividendTop20 {
+  visible: boolean;
+  tradeDate: string;
+  snapshotDate: string | null;
+  snapshotDates: string[];
+  status: 'ok' | 'missing' | 'stale' | 'not_requested';
+  rankingLocked: boolean;
+  snapshotError: string | null;
+  requestedCount: number;
+  count: number;
+  eligibleCount: number;
+  snapshotRows: number;
+  items: Rsi6DividendTop20Item[];
+  marketScope: string;
+  source: string;
+  rankingMethod: string;
+  reasons: string[];
+  note: string;
+}
+
 export interface FundData {
   updateTime: string;
   week: string;
@@ -612,6 +653,7 @@ export interface FundData {
       close: number | null; totalMv: number; dvTtm: number;
       trade_date: string; source: string;
     }>;
+    rsi6Top20?: Rsi6DividendTop20;
   };
   oversoldValueDirections?: OversoldValueDirections;
   stockRS?: {

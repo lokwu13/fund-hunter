@@ -37,6 +37,16 @@ export const oversoldValueDirectionsText = (data: any) => {
   return `超跌方向（真实指数周RSI6升序，PE/PB仅参考）｜行业：${groupsText(block.industries || [])}｜大概念：${groupsText(block.concepts || [])}${suffix}｜极端超卖≠立即反转，非操作买卖建议`;
 };
 
+export const dividendTop20Text = (data: any) => {
+  const block = data.dividendWatch?.rsi6Top20;
+  if (!extremeReboundActive(data) || !block?.visible) return '';
+  if (block.status !== 'ok') {
+    return `全A股息率TTM Top20：${(block.reasons || ['快照缺失，Top20锁榜']).join('；')}｜高股息≠安全/买点`;
+  }
+  const leaders = (block.items || []).slice(0, 3).map((r: any) => `${r.name}${r.dvTtm}%`).join('、') || '无有效项';
+  return `全A股息率TTM Top20（${block.snapshotDate || '日期缺失'}，实际${block.count || 0}只）：${leaders}｜高股息≠安全/买点`;
+};
+
 const oversoldWait = (items: any[]) => {
   const pending = [
     items.some((r) => (r.rsi ?? 100) < 20) ? 'RSI回20上方' : '',
@@ -95,6 +105,8 @@ function windowConclusion(data: any) {
   }
   const valueDirections = oversoldValueDirectionsText(data);
   if (valueDirections) signals.push(valueDirections);
+  const dividendTop20 = dividendTop20Text(data);
+  if (dividendTop20) signals.push(dividendTop20);
   if (signals.length === 0) signals.push('宽基无超买超卖触发');
   const bulls = items.filter((r: any) => r.weeklyMaBull).map((r: any) => r.indexName);
   const ma = items.length > 0

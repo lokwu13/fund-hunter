@@ -1,0 +1,51 @@
+{
+  "task": 107,
+  "stage": "preRelease",
+  "asOf": "2026-11-02",
+  "implementation": {
+    "dataBlock": "dividendWatch.rsi6Top20",
+    "gate": "longWindow.window=open and windowType=extreme_rebound and extremeRebound.active=true",
+    "source": "Tushare daily_basic.dv_ttm",
+    "fields": "ts_code,trade_date,close,total_mv,dv_ttm,pe_ttm,pb",
+    "marketScope": "same-effective-date Shanghai/Shenzhen/Beijing real A-shares; indices, ETFs and B-shares excluded",
+    "ranking": "valid dv_ttm>0 descending, code ascending tie-break, first 20",
+    "conceptFilter": false,
+    "marketCapFilter": false,
+    "pePbFilter": false,
+    "mineItemsRemoved": false,
+    "oldRsi14DividendModulePreserved": true,
+    "failureBehavior": "visible degraded reason, rankingLocked=true, count=0, items=[]; no stale reuse",
+    "frontend": "compact step-0 summary plus one complete table in sector RSI6 area"
+  },
+  "commands": [
+    {"command": "PYTHONPATH=scripts python zz_regress107.py", "passed": true, "checksPassed": 25, "checksTotal": 25},
+    {"command": "PYTHONPATH=scripts python zz_regress87.py", "passed": true, "checksPassed": 21, "checksTotal": 21},
+    {"command": "PYTHONPATH=scripts python zz_regress102.py", "passed": true, "checksPassed": 44, "checksTotal": 44},
+    {"command": "PYTHONPATH=scripts python zz_regress104.py", "passed": true, "checksPassed": 26, "checksTotal": 26},
+    {"command": "PYTHONPATH=scripts python zz_regress105.py", "passed": true, "checksPassed": 40, "checksTotal": 40, "casePassed": 10, "caseTotal": 10, "windowPassed": 6, "windowTotal": 6, "failedCases": [], "failedWindows": []},
+    {"command": "PYTHONPATH=scripts python zz_regress106.py", "passed": true, "checksPassed": 37, "checksTotal": 37},
+    {"command": "npm run build", "passed": true, "jsBundle": "dist/assets/index-Cfe0YJ3g-v25.js", "cssBundle": "dist/assets/index-C4iuyN-6.css"}
+  ],
+  "task106": {"regression": "37/37", "preserved": true},
+  "task103": {"regression": "40/40", "cases": "10/10", "windows": "6/6", "pitOnly": true, "notMarketWinRate": true},
+  "preReleaseMain": "4bc77467096708efe971c8934fd813389ad0c521",
+  "alreadyPartiallyPublished": false,
+  "dataPreflight": {
+    "public/fund_data.json": {
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+      "remoteBytes": 778908,
+      "remoteSha256": "38bf8a7acb67ce04a0ff6dc4e3649deedaae09f925f0f87b6c9c03f8bd0199d8",
+      "remoteBlobSha": "cea2cf6d2c93e1e5b47e66ebb5942d873cf771ef"
+    },
+    "src/data/fund_data.json": {
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+      "remoteBytes": 778908,
+      "remoteSha256": "38bf8a7acb67ce04a0ff6dc4e3649deedaae09f925f0f87b6c9c03f8bd0199d8",
+      "remoteBlobSha": "cea2cf6d2c93e1e5b47e66ebb5942d873cf771ef"
+    },
+    "localAndRemoteWereAlreadyDifferentSnapshots": true
+  },
+  "releaseConstraints": {"forcePush": false, "manualDispatch": false, "workflowModified": false, "fundDataIncluded": false}
+}
