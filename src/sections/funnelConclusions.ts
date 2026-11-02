@@ -44,7 +44,11 @@ export const dividendTop20Text = (data: any) => {
     return `全A股息率TTM Top20：${(block.reasons || ['快照缺失，Top20锁榜']).join('；')}｜高股息≠安全/买点`;
   }
   const leaders = (block.items || []).slice(0, 3).map((r: any) => `${r.name}${r.dvTtm}%`).join('、') || '无有效项';
-  return `全A股息率TTM Top20（${block.snapshotDate || '日期缺失'}，实际${block.count || 0}只）：${leaders}｜高股息≠安全/买点`;
+  const excluded = block.excludedCount || 0;
+  const filterText = block.mineCoverageStatus === 'missing'
+    ? '排雷数据整体缺失，未剔除且全部标未核验'
+    : excluded > 0 ? `明确命中排雷剔除${excluded}只并顺延补足` : '无明确排雷命中剔除；未覆盖仅标未核验';
+  return `全A股息率TTM Top20（${block.snapshotDate || '日期缺失'}，实际${block.count || 0}只）：${leaders}｜${filterText}；高股息≠安全/买点`;
 };
 
 const oversoldWait = (items: any[]) => {

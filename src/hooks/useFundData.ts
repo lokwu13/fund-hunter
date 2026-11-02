@@ -259,6 +259,7 @@ export interface OversoldValueDirections {
 
 export interface Rsi6DividendTop20Item {
   rank: number;
+  originalRank: number;
   code: string;
   name: string;
   industry: string;
@@ -278,6 +279,10 @@ export interface Rsi6DividendTop20Item {
   source: string;
 }
 
+export interface Rsi6DividendExcludedItem extends Omit<Rsi6DividendTop20Item, 'rank'> {
+  reason: string;
+}
+
 export interface Rsi6DividendTop20 {
   visible: boolean;
   tradeDate: string;
@@ -289,6 +294,10 @@ export interface Rsi6DividendTop20 {
   requestedCount: number;
   count: number;
   eligibleCount: number;
+  excludedCount: number;
+  excludedItems: Rsi6DividendExcludedItem[];
+  remainingCandidateCount: number;
+  mineCoverageStatus: 'ok' | 'missing';
   snapshotRows: number;
   items: Rsi6DividendTop20Item[];
   marketScope: string;

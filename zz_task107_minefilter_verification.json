@@ -1,0 +1,46 @@
+{
+  "task": 107,
+  "increment": "mine-exclusion-and-backfill",
+  "stage": "preRelease",
+  "asOf": "2026-11-02",
+  "implementation": {
+    "dataBlock": "dividendWatch.rsi6Top20",
+    "originalOrder": "all valid dv_ttm>0 descending, code ascending",
+    "filterBeforeSlice": true,
+    "explicitMineHitOnly": "mine item has types or details",
+    "backfillTo20": true,
+    "originalRank": true,
+    "exclusionFields": ["excludedCount", "excludedItems", "remainingCandidateCount"],
+    "mineCoverageMissingBehavior": "no exclusion; every item unchecked and marked unverified",
+    "stBehavior": "uncovered or covered non-hit retained with ST; explicit hit excluded",
+    "lockedFailureBehaviorPreserved": true,
+    "singleCompleteCard": true,
+    "task106And103Unchanged": true
+  },
+  "controlledProof": {
+    "eligible": 23,
+    "explicitlyExcluded": 2,
+    "remainingCandidates": 21,
+    "finalItems": 20,
+    "backfilledOriginalRanks": [21, 22],
+    "missingMineWatchExcluded": 0
+  },
+  "commands": [
+    {"command": "PYTHONPATH=scripts python zz_regress107.py", "passed": true, "checksPassed": 29, "checksTotal": 29},
+    {"command": "PYTHONPATH=scripts python zz_regress106.py", "passed": true, "checksPassed": 37, "checksTotal": 37},
+    {"command": "PYTHONPATH=scripts python zz_regress105.py", "passed": true, "checksPassed": 40, "checksTotal": 40, "casePassed": 10, "caseTotal": 10, "windowPassed": 6, "windowTotal": 6, "failedCases": [], "failedWindows": []},
+    {"command": "PYTHONPATH=scripts python zz_regress87.py", "passed": true, "checksPassed": 21, "checksTotal": 21},
+    {"command": "PYTHONPATH=scripts python zz_regress102.py", "passed": true, "checksPassed": 44, "checksTotal": 44},
+    {"command": "PYTHONPATH=scripts python zz_regress104.py", "passed": true, "checksPassed": 26, "checksTotal": 26},
+    {"command": "npm run build", "passed": true, "jsBundle": "dist/assets/index-BFKLBSY0-v25.js", "cssBundle": "dist/assets/index-CAAZ_2W_.css"}
+  ],
+  "task106": {"regression": "37/37", "preserved": true},
+  "task103": {"regression": "40/40", "cases": "10/10", "windows": "6/6", "pitOnly": true, "notMarketWinRate": true},
+  "localDataPreflight": {
+    "public/fund_data.json": {"bytes": 594886, "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"},
+    "src/data/fund_data.json": {"bytes": 594886, "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"}
+  },
+  "releaseConstraints": {"forcePush": false, "manualDispatch": false, "workflowModified": false, "fundDataIncluded": false},
+  "productionDataClaimedRegenerated": false,
+  "waitingForExistingSchedule": true
+}

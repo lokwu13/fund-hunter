@@ -281,7 +281,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
         );
       })()}
 
-      {/* 任务107：总览仅给入口；板块承接唯一完整全A股息率Top20原榜。 */}
+      {/* 任务107：总览仅给入口；板块承接唯一完整全A股息率Top20排雷顺延榜。 */}
       {detailed && extremeReboundActive(data) && data.dividendWatch?.rsi6Top20?.visible && (() => {
         const top = data.dividendWatch.rsi6Top20!;
         return (
@@ -290,7 +290,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <CardTitle className="text-sm font-bold text-cyan-950">RSI6极端窗 · 全A股息率TTM Top20</CardTitle>
                 <Badge variant="outline" className="text-xs bg-cyan-50 text-cyan-700 border-cyan-200">
-                  快照{top.snapshotDate || '缺失'} · 实际{top.count}只 · {top.status}
+                  快照{top.snapshotDate || '缺失'} · 实际{top.count}只 · 排雷剔除{top.excludedCount || 0}只 · {top.status}
                 </Badge>
               </div>
               <CardDescription className="text-[10px] leading-relaxed">
@@ -307,20 +307,23 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
                   <Table className="min-w-[1080px]">
                     <TableHeader>
                       <TableRow className="bg-slate-50">
-                        <TableHead className="text-xs">排名</TableHead>
+                        <TableHead className="text-xs">最终排名 / 原始股息率名次</TableHead>
                         <TableHead className="text-xs">代码 / 中文名</TableHead>
                         <TableHead className="text-xs">所属行业</TableHead>
                         <TableHead className="text-xs text-right">股息率TTM</TableHead>
                         <TableHead className="text-xs text-right">PE_TTM / PB</TableHead>
                         <TableHead className="text-xs text-right">总市值</TableHead>
                         <TableHead className="text-xs">ST</TableHead>
-                        <TableHead className="text-xs">既有排雷状态（只标记）</TableHead>
+                        <TableHead className="text-xs">既有排雷覆盖状态</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {top.items.map((r) => (
-                        <TableRow key={r.code} className={r.mineStatus === 'hit' ? 'bg-rose-50/60' : ''}>
-                          <TableCell className="text-xs font-bold text-cyan-800">#{r.rank}</TableCell>
+                        <TableRow key={r.code}>
+                          <TableCell className="text-xs font-bold text-cyan-800">
+                            <p>#{r.rank}</p>
+                            <p className="text-[10px] font-normal text-slate-500">原#{r.originalRank}</p>
+                          </TableCell>
                           <TableCell>
                             <p className="text-xs font-semibold text-slate-800">{r.name}</p>
                             <p className="text-[10px] text-slate-400">{r.code}</p>
@@ -330,7 +333,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
                           <TableCell className="text-xs text-right text-slate-600">{r.peTtm ?? '—'} / {r.pb ?? '—'}</TableCell>
                           <TableCell className="text-xs text-right text-slate-600">{r.totalMvYi == null ? '—' : `${r.totalMvYi}亿`}</TableCell>
                           <TableCell>{r.isST ? <Badge className="text-[9px] border-0 bg-rose-600 text-white">ST风险</Badge> : <span className="text-xs text-slate-400">—</span>}</TableCell>
-                          <TableCell className={`text-[10px] ${r.mineStatus === 'hit' ? 'text-rose-700' : r.mineStatus === 'unchecked' ? 'text-amber-700' : 'text-slate-500'}`}
+                          <TableCell className={`text-[10px] ${r.mineStatus === 'unchecked' ? 'text-amber-700' : 'text-slate-500'}`}
                                      title={r.mineDetails.map((d) => `${d.type}：${d.detail}（${d.date}）`).join('；') || r.mineNote}>
                             {r.mineNote}{r.mineDetails.length ? `：${r.mineDetails.map((d) => d.detail).join('；')}` : ''}
                           </TableCell>
@@ -340,9 +343,21 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
                   </Table>
                 </div>
               )}
+              {(top.excludedItems || []).length > 0 && (
+                <section className="rounded-lg border border-rose-200 bg-rose-50 px-3 py-2">
+                  <h3 className="text-xs font-bold text-rose-900">明确命中排雷已剔除 · {top.excludedCount}只（后续候选已按原始顺序补位）</h3>
+                  <div className="mt-1.5 space-y-1">
+                    {top.excludedItems.map((r) => (
+                      <p key={r.code} className="text-[10px] leading-relaxed text-rose-800">
+                        <span className="font-semibold">原#{r.originalRank} · {r.code} {r.name} · 股息率{r.dvTtm}%</span>：{r.reason}
+                      </p>
+                    ))}
+                  </div>
+                </section>
+              )}
               <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-[10px] leading-relaxed text-amber-950">
                 <p>{top.note}</p>
-                <p className="mt-1 text-slate-500">来源：{top.source}；本批有效日{top.tradeDate}；快照{top.snapshotDate || '缺失'}；排雷命中不删除，未覆盖不写成无风险。</p>
+                <p className="mt-1 text-slate-500">来源：{top.source}；本批有效日{top.tradeDate}；快照{top.snapshotDate || '缺失'}；排雷覆盖{top.mineCoverageStatus}；剩余候选{top.remainingCandidateCount || 0}只。明确命中排雷剔除并顺延补足，未覆盖仅标未核验；已覆盖未命中不代表无风险。</p>
               </div>
             </CardContent>
           </Card>

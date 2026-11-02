@@ -6007,13 +6007,17 @@ def _rsi6_dividend_top20_base(trade_date, active):
         'snapshotDates': [], 'status': 'missing' if active else 'not_requested',
         'rankingLocked': bool(active), 'snapshotError': None,
         'requestedCount': RSI6_DIVIDEND_TOP_N, 'count': 0, 'eligibleCount': 0,
-        'snapshotRows': 0, 'items': [],
+        'excludedCount': 0, 'excludedItems': [], 'remainingCandidateCount': 0,
+        'mineCoverageStatus': 'missing', 'snapshotRows': 0, 'items': [],
         'marketScope': '同一有效交易日沪深北真实全A股；不限宽基/VCP池，排除指数、ETF与B股',
         'source': 'Tushare daily_basic.dv_ttm（股息率TTM，%）',
-        'rankingMethod': '仅有效dv_ttm>0参与；按原始dv_ttm降序、代码升序打破并列，取前20；不按PE/PB、概念或市值过滤',
+        'rankingMethod': ('仅有效dv_ttm>0参与；先按原始dv_ttm降序、代码升序确定原始名次，'
+                          '再剔除既有排雷明确命中项并由后续候选顺延补足前20；不按PE/PB、概念或市值过滤'),
         'reasons': ([] if active else ['现行RSI6极端强制开窗未触发：不请求daily_basic，清空旧Top20且不展示']),
         'note': ('股息率TTM为历史滚动口径，不是预测；高股息不等于安全或买点。'
-                 '警惕一次性/特别分红、分红持续性、基本面与除权风险。既有排雷只标记，不改变原Top20排名；未覆盖不代表无风险。'),
+                 '警惕一次性/特别分红、分红持续性、基本面与除权风险。'
+                 '明确命中排雷剔除并顺延补足；未覆盖仅标未核验，已覆盖未命中不代表无风险。'
+                 '排雷数据整体缺失时不擅自剔除，全部标未核验。ST未命中保留并继续标ST，明确命中剔除。'),
     }
 
 
@@ -6030,7 +6034,7 @@ def _is_real_a_share_code(code):
 
 
 def build_rsi6_dividend_top20(pro, trade_date, data):
-    """仅RSI6极端强制开窗展示全A股息率TTM Top20；失败/陈旧锁榜且绝不留旧项。"""
+    """原始高息序先剔除明确排雷命中再取Top20；失败/陈旧锁榜且绝不留旧项。"""
     effective = _effective_batch_trade_date(trade_date, data)
     active = _oversold_value_extreme_active(data)
     block = _rsi6_dividend_top20_base(effective, active)
@@ -6096,27 +6100,38 @@ def build_rsi6_dividend_top20(pro, trade_date, data):
     for group in cache.get('sw_list') or []:
         for code in (cache.get('sw_members') or {}).get(group.get('code')) or []:
             sw_industry.setdefault(code, group.get('name'))
-    mine_watch = data.get('mineWatch') or {}
-    mine_map = {x.get('code'): x for x in mine_watch.get('items') or []}
+    raw_mine_watch = data.get('mineWatch')
+    mine_available = isinstance(raw_mine_watch, dict) and ('items' in raw_mine_watch or 'checkedCodes' in raw_mine_watch)
+    mine_watch = raw_mine_watch if mine_available else {}
+    mine_map = {x.get('code'): x for x in mine_watch.get('items') or [] if x.get('code')}
     checked_codes = set(mine_watch.get('checkedCodes') or []) | set(mine_map)
+    block['mineCoverageStatus'] = 'ok' if mine_available else 'missing'
 
     eligible = [r for r in records.values() if r['dvTtm'] is not None and r['dvTtm'] > 0]
     eligible.sort(key=lambda r: (-r['dvTtm'], r['code']))
     block['eligibleCount'] = len(eligible)
-    items = []
-    for rank, row in enumerate(eligible[:RSI6_DIVIDEND_TOP_N], 1):
+    candidates = []
+    excluded_items = []
+    for original_rank, row in enumerate(eligible, 1):
         code = row['code']
         name = str((stock_info.get(code) or {}).get('name') or '名称缺失')
         industry = stock_industry.get(code) or (stock_info.get(code) or {}).get('industry') or sw_industry.get(code) or '行业未标注'
         mine = mine_map.get(code)
-        covered = code in checked_codes
         mine_types = list((mine or {}).get('types') or [])
         mine_details = list((mine or {}).get('details') or [])
-        mine_note = (('既有排雷命中：' + '、'.join(mine_types)) if mine else
-                     '既有排雷已覆盖，未命中既有规则（不代表无风险）' if covered else '既有排雷未覆盖')
+        explicit_hit = bool(mine and (mine_types or mine_details))
+        covered = mine_available and code in checked_codes
+        if not mine_available:
+            mine_note = '既有排雷数据整体缺失，未核验'
+        elif explicit_hit:
+            mine_note = '既有排雷明确命中：' + ('、'.join(mine_types) or '详见命中明细')
+        elif covered:
+            mine_note = '既有排雷已覆盖，未命中既有规则（不代表无风险）'
+        else:
+            mine_note = '既有排雷未覆盖，未核验'
         total_mv = row['totalMv']
-        items.append({
-            'rank': rank, 'code': code, 'name': name, 'industry': str(industry),
+        item = {
+            'originalRank': original_rank, 'code': code, 'name': name, 'industry': str(industry),
             'dvTtm': round(row['dvTtm'], 4), 'peTtm': round(row['peTtm'], 4) if row['peTtm'] is not None else None,
             'pb': round(row['pb'], 4) if row['pb'] is not None else None,
             'close': round(row['close'], 4) if row['close'] is not None else None,
@@ -6124,14 +6139,35 @@ def build_rsi6_dividend_top20(pro, trade_date, data):
             'totalMvYi': round(total_mv / 10000, 2) if total_mv is not None else None,
             'tradeDate': row['tradeDate'], 'isST': 'ST' in name.upper(),
             'mineCovered': covered, 'mineTypes': mine_types, 'mineDetails': mine_details,
-            'mineStatus': 'hit' if mine else 'clear' if covered else 'unchecked', 'mineNote': mine_note,
+            'mineStatus': 'hit' if explicit_hit else 'clear' if covered else 'unchecked', 'mineNote': mine_note,
             'source': 'Tushare daily_basic.dv_ttm',
-        })
-    block.update({'status': 'ok', 'rankingLocked': False, 'count': len(items), 'items': items})
+        }
+        if explicit_hit:
+            detail = '；'.join(str(x.get('detail') or x.get('type') or '明确命中') for x in mine_details)
+            reason = '明确命中既有排雷：' + ('、'.join(mine_types) or '命中明细') + (f'（{detail}）' if detail else '')
+            excluded_items.append(dict(item, reason=reason))
+        else:
+            candidates.append(item)
+
+    items = []
+    for rank, item in enumerate(candidates[:RSI6_DIVIDEND_TOP_N], 1):
+        items.append(dict(item, rank=rank))
+    block.update({'status': 'ok', 'rankingLocked': False, 'count': len(items), 'items': items,
+                  'excludedCount': len(excluded_items), 'excludedItems': excluded_items,
+                  'remainingCandidateCount': len(candidates)})
+    exclusion_summary = '、'.join(f"{x['code']}（原#{x['originalRank']}：{x['reason']}）" for x in excluded_items)
     block['reasons'] = [
-        f'全A有效dv_ttm>0共{len(eligible)}只，按股息率TTM降序、代码升序取实际{len(items)}只；不足20不凑数'
+        (f'全A有效dv_ttm>0共{len(eligible)}只；明确命中排雷剔除{len(excluded_items)}只，'
+         f'剩余候选{len(candidates)}只，后续候选自动顺延，实际展示{len(items)}只'),
     ]
-    print(f'  rsi6DividendTop20: {len(items)}只（有效{len(eligible)}只，{effective}）')
+    if exclusion_summary:
+        block['reasons'].append('剔除代码/原因：' + exclusion_summary)
+    if not mine_available:
+        block['reasons'].append('既有排雷数据整体缺失：未把未知当成未命中或无风险，不剔除候选，所有项目标未核验')
+    if len(items) < RSI6_DIVIDEND_TOP_N:
+        block['reasons'].append(f'候选不足或数据限制，实际{len(items)}只，不足20不凑数')
+    print(f'  rsi6DividendTop20: {len(items)}只（原始有效{len(eligible)}只，排雷剔除{len(excluded_items)}只，'
+          f'剩余候选{len(candidates)}只，{effective}）')
 
 
 def _rsi6_dividend_top20_summary(data):
@@ -6142,8 +6178,13 @@ def _rsi6_dividend_top20_summary(data):
         detail = '；'.join(block.get('reasons') or ['快照缺失'])
         return f'全A股息率TTM Top20：{detail}；高股息≠安全/买点'
     leaders = '、'.join(f"{x['name']}{x['dvTtm']}%" for x in (block.get('items') or [])[:3]) or '无有效项'
+    excluded = block.get('excludedCount', 0)
+    filter_text = (f'明确命中排雷剔除{excluded}只并顺延补足' if excluded else
+                   '无明确排雷命中剔除；未覆盖仅标未核验')
+    if block.get('mineCoverageStatus') == 'missing':
+        filter_text = '排雷数据整体缺失，未剔除且全部标未核验'
     return (f"全A股息率TTM Top20（{block.get('snapshotDate')}，实际{block.get('count', 0)}只）：{leaders}"
-            '｜完整榜见板块RSI6区域；高股息≠安全/买点')
+            f'｜{filter_text}；完整榜见板块RSI6区域；高股息≠安全/买点')
 
 
 def build_oversold_value_directions(pro, trade_date, data):

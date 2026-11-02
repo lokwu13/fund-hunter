@@ -30,13 +30,14 @@ def row(code, dv, name=None, date=AS_OF, pe=10.0, pb=1.0, mv=1000000.0):
 
 valid_rows = [
     row('600000.SH', 12.0, pe=-15.0, mv=1.0),                 # 亏损PE、小市值，仍第一
-    row('600001.SH', 11.8),                                   # *ST且排雷命中，保留
-    row('000001.SZ', 11.8),                                   # 与上行并列，代码升序在前
-    row('300001.SZ', 11.7, mv=0.01),
+    row('600001.SH', 11.8),                                   # *ST且明确排雷命中，剔除
+    row('000001.SZ', 11.8),                                   # 三只并列，代码升序
+    row('000002.SZ', 11.8),
+    row('300001.SZ', 11.7, mv=0.01),                          # ST已覆盖未命中，保留
     row('920001.BJ', 11.6),                                   # 北交所真实A股
     row('600002.SH', 11.5, mv=None),                          # 缺市值不删除
 ]
-valid_rows += [row(f'600{100 + i}.SH', 10.9 - i * 0.1) for i in range(16)]  # 合计22只有效
+valid_rows += [row(f'600{100 + i}.SH', 10.9 - i * 0.1) for i in range(16)]  # 合计23只有效
 invalid_rows = [
     row('000300.SH', 999), row('510300.SH', 998),            # 指数/ETF不得混入
     row('900901.SH', 997), row('200001.SZ', 996),            # B股不得混入
@@ -48,7 +49,7 @@ ROWS = valid_rows + invalid_rows
 stock_info = {r['ts_code']: {'name': f'股票{r["ts_code"][:6]}'} for r in valid_rows}
 stock_info['600001.SH']['name'] = '*ST高息'
 stock_info['000001.SZ']['name'] = '并列平安'
-stock_info['300001.SZ']['name'] = '全A池外股票'
+stock_info['300001.SZ']['name'] = 'ST未命中'
 stock_industry = {r['ts_code']: '测试行业' for r in valid_rows}
 stock_industry['600000.SH'] = '银行'
 stock_industry.pop('000001.SZ')
@@ -80,9 +81,13 @@ def extreme_data():
         'longWindow': {'window': 'open', 'windowType': 'extreme_rebound',
                        'extremeRebound': {'active': True}},
         'mineWatch': {
-            'checkedCodes': ['600000.SH', '600001.SH'],
-            'items': [{'code': '600001.SH', 'types': ['基本面'],
-                       'details': [{'type': '基本面', 'detail': '中报亏损', 'date': '20260630'}]}],
+            'checkedCodes': ['600000.SH', '600001.SH', '300001.SZ', '600100.SH'],
+            'items': [
+                {'code': '600001.SH', 'types': ['基本面'],
+                 'details': [{'type': '基本面', 'detail': '中报亏损', 'date': '20260630'}]},
+                {'code': '600100.SH', 'types': ['交易风险'],
+                 'details': [{'type': '交易风险', 'detail': '受控异常交易', 'date': '20261029'}]},
+            ],
         },
         # 原RSI14独立高股息模块必须原样保留，不被新子模块覆盖。
         'dividendWatch': {'visible': True, 'count': 1, 'catalystGroupCount': 1,
@@ -126,44 +131,74 @@ with tempfile.TemporaryDirectory() as tmp:
               and pro.calls[0]['trade_date'] == AS_OF
               and pro.calls[0]['fields'] == 'ts_code,trade_date,close,total_mv,dv_ttm,pe_ttm,pb', pro.calls)
         check('全A范围含北交所和VCP池外且严格Top20', block['status'] == 'ok' and block['count'] == 20
-              and block['eligibleCount'] == 22 and len(items) == 20
+              and block['eligibleCount'] == 23 and len(items) == 20
               and any(x['code'] == '920001.BJ' for x in items)
               and any(x['code'] == '300001.SZ' for x in items)
               and all(x['code'] not in ('000300.SH', '510300.SH', '900901.SH', '200001.SZ') for x in items),
               {'count': block['count'], 'eligible': block['eligibleCount'], 'codes': [x['code'] for x in items]})
-        expected = sorted([r['ts_code'] for r in valid_rows], key=lambda c: c)
-        actual_sorted = sorted(items, key=lambda x: (-next(r['dv_ttm'] for r in valid_rows if r['ts_code'] == x['code']), x['code']))
-        check('dv_ttm原始值降序且并列代码升序', [x['code'] for x in items[:3]] == ['600000.SH', '000001.SZ', '600001.SH']
-              and [x['code'] for x in actual_sorted] == [x['code'] for x in items]
-              and [x['rank'] for x in items] == list(range(1, 21)), items[:3])
-        check('缺失NaN零负股息不参与且不补0', block['eligibleCount'] == 22
+        expected_original = sorted(valid_rows, key=lambda r: (-r['dv_ttm'], r['ts_code']))
+        original_ranks = {r['ts_code']: i for i, r in enumerate(expected_original, 1)}
+        expected_codes = [r['ts_code'] for r in expected_original if r['ts_code'] not in ('600001.SH', '600100.SH')][:20]
+        check('原始股息率降序并列代码升序且最终名次重排', [x['code'] for x in items[:3]] == ['600000.SH', '000001.SZ', '000002.SZ']
+              and [x['code'] for x in items] == expected_codes
+              and [x['rank'] for x in items] == list(range(1, 21))
+              and all(x['originalRank'] == original_ranks[x['code']] for x in items), items[:4])
+        check('缺失NaN零负股息不参与且不补0', block['eligibleCount'] == 23
               and all(x['code'] not in ('600200.SH', '600201.SH', '600202.SH', '600203.SH') for x in items)
               and all(x['dvTtm'] > 0 for x in items), block['reasons'])
         check('亏损PE小市值和缺市值均不影响原榜', items[0]['code'] == '600000.SH'
               and items[0]['peTtm'] == -15 and items[0]['totalMvYi'] == 0.0
               and any(x['code'] == '600002.SH' and x['totalMv'] is None for x in items), items[0])
-        st_item = next(x for x in items if x['code'] == '600001.SH')
-        check('ST保留并明确标记', st_item['isST'] and st_item['name'] == '*ST高息', st_item)
+        st_item = next(x for x in items if x['code'] == '300001.SZ')
+        check('ST未命中保留并标记且命中ST剔除', st_item['isST'] and st_item['name'] == 'ST未命中'
+              and st_item['mineStatus'] == 'clear' and '不代表无风险' in st_item['mineNote']
+              and all(x['code'] != '600001.SH' for x in items), st_item)
         check('中文名和行业归属含申万回退及未标注', items[0]['name'] == '股票600000' and items[0]['industry'] == '银行'
               and next(x for x in items if x['code'] == '000001.SZ')['industry'] == '保险'
-              and next(x for x in items if x['code'] == '300001.SZ')['industry'] == '行业未标注', items[:4])
-        check('排雷命中已覆盖未覆盖严格区分且不改排名', items[0]['mineStatus'] == 'clear'
-              and '不代表无风险' in items[0]['mineNote'] and st_item['mineStatus'] == 'hit'
-              and st_item['mineTypes'] == ['基本面']
-              and next(x for x in items if x['code'] == '300001.SZ')['mineStatus'] == 'unchecked'
-              and next(x for x in items if x['code'] == '300001.SZ')['mineNote'] == '既有排雷未覆盖'
-              and st_item['rank'] == 3, items[:4])
+              and st_item['industry'] == '行业未标注', items[:4])
+        check('已覆盖未命中与未覆盖未核验严格区分', items[0]['mineStatus'] == 'clear'
+              and '不代表无风险' in items[0]['mineNote']
+              and next(x for x in items if x['code'] == '600101.SH')['mineStatus'] == 'unchecked'
+              and next(x for x in items if x['code'] == '600101.SH')['mineNote'] == '既有排雷未覆盖，未核验'
+              and all(x['mineStatus'] != 'hit' for x in items), items[:4])
+        check('原Top20多只明确命中剔除且第21名及以后顺延补足', block['excludedCount'] == 2
+              and block['remainingCandidateCount'] == 21 and len(block['excludedItems']) == 2
+              and [x['code'] for x in block['excludedItems']] == ['600001.SH', '600100.SH']
+              and [x['originalRank'] for x in block['excludedItems']] == [4, 8]
+              and [(x['code'], x['originalRank']) for x in items[-2:]] == [('600113.SH', 21), ('600114.SH', 22)]
+              and all(x['code'] not in ('600001.SH', '600100.SH') for x in items), block['excludedItems'])
+        check('剔除摘要完整含原始名次代码股息率和原因', all(
+              all(key in x for key in ('originalRank', 'code', 'name', 'dvTtm', 'mineTypes', 'mineDetails', 'reason'))
+              for x in block['excludedItems'])
+              and '中报亏损' in block['excludedItems'][0]['reason']
+              and '受控异常交易' in block['excludedItems'][1]['reason']
+              and any('剔除代码/原因' in reason and '600100.SH' in reason for reason in block['reasons']), block['reasons'])
         check('快照日期TTM口径和一次性分红风险明示', block['snapshotDate'] == AS_OF
               and all(x['tradeDate'] == AS_OF for x in items)
               and 'dv_ttm' in block['source'] and '一次性/特别分红' in block['note']
               and '高股息不等于安全或买点' in block['note'], block['note'])
 
         fewer = extreme_data()
-        ud.build_rsi6_dividend_top20(FakePro(valid_rows[:3]), AS_OF, fewer)
+        ud.build_rsi6_dividend_top20(FakePro(valid_rows[2:5]), AS_OF, fewer)
         fewer_block = fewer['dividendWatch']['rsi6Top20']
         check('不足20如实显示实际数量不凑数', fewer_block['visible'] and fewer_block['status'] == 'ok'
               and fewer_block['count'] == 3 and len(fewer_block['items']) == 3
-              and '实际3只' in fewer_block['reasons'][0], fewer_block)
+              and '实际展示3只' in fewer_block['reasons'][0]
+              and any('候选不足或数据限制' in reason for reason in fewer_block['reasons']), fewer_block)
+
+        missing_mine = extreme_data()
+        missing_mine.pop('mineWatch')
+        ud.build_rsi6_dividend_top20(FakePro(ROWS), AS_OF, missing_mine)
+        missing_block = missing_mine['dividendWatch']['rsi6Top20']
+        check('排雷整体缺失不剔除且全部未核验', missing_block['mineCoverageStatus'] == 'missing'
+              and missing_block['excludedCount'] == 0 and missing_block['excludedItems'] == []
+              and missing_block['remainingCandidateCount'] == 23 and missing_block['count'] == 20
+              and all(x['mineStatus'] == 'unchecked' and not x['mineCovered'] for x in missing_block['items'])
+              and all('未核验' in x['mineNote'] for x in missing_block['items'])
+              and all(x['mineStatus'] != 'clear' for x in missing_block['items']), missing_block['reasons'])
+        check('排雷整体缺失不把未知写成无风险且保留ST', any(x['code'] == '600001.SH' and x['isST'] for x in missing_block['items'])
+              and any('未把未知当成未命中或无风险' in reason for reason in missing_block['reasons'])
+              and '未剔除且全部标未核验' in ud._rsi6_dividend_top20_summary(missing_mine), missing_block['note'])
 
         stale = extreme_data()
         stale['dividendWatch']['rsi6Top20'] = {'visible': True, 'count': 20, 'items': [{'code': 'OLD'}]}
@@ -212,12 +247,18 @@ weekly_ui = (ROOT / 'src/sections/WeeklySummary.tsx').read_text(encoding='utf-8'
 funnel_ui = (ROOT / 'src/sections/funnelConclusions.ts').read_text(encoding='utf-8')
 heatmap_ui = (ROOT / 'src/sections/SectorHeatmap.tsx').read_text(encoding='utf-8')
 check('前端类型总览入口和唯一完整榜契约', 'rsi6Top20?: Rsi6DividendTop20' in types
+      and 'originalRank: number' in types and 'excludedItems: Rsi6DividendExcludedItem[]' in types
+      and 'mineCoverageStatus' in types and 'remainingCandidateCount' in types
       and 'dividendTop20Text' in weekly_ui and 'rsi6-dividend-top20' in weekly_ui
       and 'dividendTop20Text' in funnel_ui and 'top.items.map' in heatmap_ui
       and 'top.items.filter' not in heatmap_ui)
-check('前端日期TTM排雷和风险文案契约', '快照{top.snapshotDate' in heatmap_ui
-      and '股息率TTM' in heatmap_ui and '既有排雷状态（只标记）' in heatmap_ui
-      and '未覆盖不写成无风险' in heatmap_ui and '一次性/特别分红' in production)
+check('前端原始名次剔除顺延和风险文案契约', '快照{top.snapshotDate' in heatmap_ui
+      and '股息率TTM' in heatmap_ui and '原#{r.originalRank}' in heatmap_ui
+      and 'top.excludedItems.map' in heatmap_ui and '明确命中排雷剔除并顺延补足' in heatmap_ui
+      and '未覆盖仅标未核验' in heatmap_ui and '已覆盖未命中不代表无风险' in heatmap_ui
+      and '排雷只标记不删除' not in production + heatmap_ui
+      and '排雷命中不删除' not in production + heatmap_ui
+      and '既有排雷状态（只标记）' not in heatmap_ui and '一次性/特别分红' in production)
 
 data_sha_after = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in DATA_FILES}
 check('两份生产fund_data字节未变', data_sha_before == data_sha_after, data_sha_after)
