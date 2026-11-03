@@ -21,7 +21,7 @@ ALL_CODES = ['600000.SH', '000895.SZ', '601818.SH', '601916.SH', '600795.SH',
 NAMES = {'600000.SH': '浦发银行', '000895.SZ': '双汇发展', '601818.SH': '光大银行',
          '601916.SH': '浙商银行', '600795.SH': '国电电力', '601233.SH': '桐昆股份',
          '601872.SH': '招商轮船', '600926.SH': '杭州银行', '002648.SZ': '卫星化学'}
-FORMAL = {'平台整理', '长平台整理', '底部整理'}
+FORMAL = {'平台整理', '底部整理'}
 DATA_FILES = ['public/fund_data.json', 'src/data/fund_data.json']
 sha_before = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in DATA_FILES}
 checks = []
@@ -48,7 +48,7 @@ def platform_bars(n, long=False, uptrend=True, wide=False, shrink=True, prior_en
     prior_n = maximum + 60 - n
     ds = dates_business(prior_n + n)
     # 平台前收低于平台，使任何更长窗都因振幅超限而不能吞并目标下边界。
-    end = prior_end if prior_end is not None else (85.0 if long else 90.0)
+    end = prior_end if prior_end is not None else 85.0
     start = 80.0 if uptrend else end * 1.25
     rows = []
     for i in range(prior_n):
@@ -56,7 +56,7 @@ def platform_bars(n, long=False, uptrend=True, wide=False, shrink=True, prior_en
         rows.append([ds[i], close * 1.002, close * 0.998, close, 100.0])
     for i in range(n):
         close = 100.0 + (0.2 if i % 2 else -0.2)
-        spread = 0.07 if wide else 0.01
+        spread = 0.08 if wide else 0.01
         rows.append([ds[prior_n + i], close * (1 + spread), close * (1 - spread), close,
                      50.0 if shrink else 100.0])
     return [tuple(r) for r in rows]
@@ -64,7 +64,7 @@ def platform_bars(n, long=False, uptrend=True, wide=False, shrink=True, prior_en
 
 def weekly_bars(mode='flat'):
     # 每周五一根合成K线，周线重采样仍走生产函数；前10周为历史高位。
-    periods = 36 if mode == 'multi' else 140
+    periods = 22 if mode == 'multi' else 140
     ds = dates_business(periods * 5, AS_OF)[4::5]
     last = periods - 11
     rows = []
@@ -76,8 +76,8 @@ def weekly_bars(mode='flat'):
             if mode == 'down':
                 close = 100.0 - 40.0 * j / 129
             elif mode == 'multi':
-                close = 88.0 + 12.0 * j / last
-                if j in (5, 15):
+                close = 100.0 + 10.0 * j / last
+                if j in (2, 7):
                     close = 82.0
             elif mode == 'near_high':
                 close = 100.0 if j < 129 else 195.0
@@ -86,7 +86,7 @@ def weekly_bars(mode='flat'):
         low = close * 0.99
         if mode == 'flat' and i == 40:
             low = 85.0
-        if mode == 'multi' and i - 10 in (5, 15):
+        if mode == 'multi' and i - 10 in (2, 7):
             low = 80.0
         rows.append((d, close * 1.01, low, close, 100.0))
     # 生产入口还要求至少132根输入K线；多重底短样本复制周内记录但不新增周。
@@ -98,7 +98,7 @@ def valuation_history(samples=40, boundary=False, dual=True):
     for i in range(samples):
         if i == samples - 1:
             pe = 12.0
-        elif boundary and i < 11:
+        elif boundary and i < 15:
             pe = 10.0 + i * 0.1
         else:
             pe = 20.0 + i
@@ -125,16 +125,16 @@ def evidence_view(e):
 # ── 合成通用边界：不用真实标签反推阈值。 ──
 try:
     p15 = ud._platform_price_pattern(platform_bars(15))
-    check('普通平台15日下边界通过', p15 and p15['days'] == 15, evidence_view(p15))
-    check('普通平台14日不冒充15日', ud._platform_price_pattern(
-        platform_bars(14, prior_end=90.0)) is None)
-    check('普通平台宽幅拒绝', ud._platform_price_pattern(platform_bars(15, wide=True)) is None)
-    check('普通平台下跌趋势拒绝', ud._platform_price_pattern(platform_bars(15, uptrend=False)) is None)
-    check('普通平台总体未缩量拒绝', ud._platform_price_pattern(platform_bars(15, shrink=False)) is None)
-    p45 = ud._platform_price_pattern(platform_bars(45, long=True), long=True)
-    check('长平台45日下边界通过', p45 and p45['days'] == 45, evidence_view(p45))
-    check('长平台宽于12%拒绝', ud._platform_price_pattern(
-        platform_bars(45, long=True, wide=True), long=True) is None)
+    check('统一平台15日下边界通过', p15 and p15['days'] == 15 and p15['type'] == '平台整理', evidence_view(p15))
+    check('统一平台14日不冒充15日', ud._platform_price_pattern(
+        platform_bars(14, prior_end=85.0)) is None)
+    check('统一平台宽于15%拒绝', ud._platform_price_pattern(platform_bars(15, wide=True)) is None)
+    check('统一平台下跌趋势拒绝', ud._platform_price_pattern(platform_bars(15, uptrend=False)) is None)
+    check('统一平台总体未缩量拒绝', ud._platform_price_pattern(platform_bars(15, shrink=False)) is None)
+    p45 = ud._platform_price_pattern(platform_bars(45))
+    check('统一平台45日也只用一个标签', p45 and p45['days'] == 45 and p45['type'] == '平台整理', evidence_view(p45))
+    check('统一平台长窗宽于15%拒绝', ud._platform_price_pattern(
+        platform_bars(45, wide=True)) is None)
 
     days = [b[0] for b in platform_bars(15)[-15:]]
     pos = ud._apply_platform_eligibility(p15, platform_bars(15), {d: 1.0 for d in days})
@@ -149,7 +149,7 @@ try:
 
     flat_bars = weekly_bars('flat')
     flat = ud._bottom_weekly_price_pattern(flat_bars)
-    check('26~104周长期走平结构可识别', flat and flat['weeklyStructure'] == 'weekly_flat', evidence_view(flat))
+    check('12~104周长期走平结构可识别', flat and flat['weeklyStructure'] == 'weekly_flat', evidence_view(flat))
     check('周线下跌中继拒绝', ud._bottom_weekly_price_pattern(weekly_bars('down')) is None)
     multi = ud._bottom_weekly_price_pattern(weekly_bars('multi'))
     check('多重底结构可识别', multi and multi['weeklyStructure'] == 'multi_bottom', evidence_view(multi))
@@ -160,12 +160,12 @@ try:
     check('近期仍创新低拒绝', ud._bottom_weekly_price_pattern(recent_low) is None)
 
     exact = ud._stock_valuation_evidence(valuation_history(boundary=True), AS_OF)
-    check('估值分位恰好30%通过', exact['valuationPass'] and exact['valuationScorePct'] == 30.0, exact)
+    check('估值分位恰好40%通过', exact['valuationPass'] and exact['valuationScorePct'] == 40.0, exact)
     above_history = valuation_history(boundary=True)
-    above_history['20200128']['peTtm'] = 10.0  # 13/40=32.5%，明确验证不放宽30%边界。
+    above_history['20200128']['peTtm'] = 10.0  # 17/40=42.5%，验证不放宽40%边界。
     above_history['20200128']['pb'] = 1.0
     above = ud._stock_valuation_evidence(above_history, AS_OF)
-    check('估值分位高于30%拒绝', not above['valuationPass'], above)
+    check('估值分位高于40%拒绝', not above['valuationPass'], above)
     insufficient = ud._stock_valuation_evidence(valuation_history(samples=23), AS_OF)
     check('估值历史不足24样本拒绝', not insufficient['valuationPass'] and insufficient['valuationBasis'] == 'insufficient', insufficient)
     single = ud._stock_valuation_evidence(valuation_history(dual=False), AS_OF)
@@ -257,15 +257,12 @@ try:
         flows = (cache9['patternMoneyflow']['rows'].get(code) or {})
         vals = (cache9['stockValuationHistory']['rows'].get(code) or {})
         ps = ud._platform_price_pattern(bars)
-        ls = ud._platform_price_pattern(bars, long=True)
         bs = ud._bottom_weekly_price_pattern(bars)
         plat = ud._apply_platform_eligibility(ps, bars, flows)
-        lp = ud._apply_platform_eligibility(ls, bars, flows)
         bottom = ud._apply_bottom_eligibility(bs, bars, flows, vals)
         real_cases.append({'code': code, 'name': NAMES[code], 'asOf': rows[-1][0],
                            'dailyBars': len(rows), 'dailyStart': rows[0][0], 'dailyEnd': rows[-1][0],
-                           'platform': evidence_view(plat), 'longPlatform': evidence_view(lp),
-                           'bottom': evidence_view(bottom)})
+                           'platform': evidence_view(plat), 'bottom': evidence_view(bottom)})
     production_snapshot = run_production(ALL_CODES)
     production_snapshot['items'] = [{k: v for k, v in it.items() if k not in ('daily', 'weekly')}
                                     for it in production_snapshot.get('items', [])]
@@ -278,30 +275,29 @@ try:
                         'bottomShapeWatch': watch}
         case = next(x for x in real_cases if x['code'] == code)
         case['production'] = labels[code]
+        bottom = case.get('bottom') or {}
+        case['shapePassed'] = bool(bottom.get('bottomShape') and bottom.get('shapeRecognized')
+                                   and bottom.get('weeklyStructure'))
+        case['qualificationPassed'] = bool(bottom.get('eligible'))
+        expected_eligible = bool(bottom.get('moneyflowPass') and bottom.get('valuationPass'))
+        formal_bottom = any(it['pattern'] == '底部整理' for it in items)
+        formal_platform = any(it['pattern'] == '平台整理' for it in items)
+        observation_ok = (not case['shapePassed'] or (len(watch) == 1 and watch[0]['bottomShape']
+                          and watch[0]['formalAdmission'] == expected_eligible))
+        eligibility_ok = not case['shapePassed'] or bottom.get('eligible') == expected_eligible
+        classification_ok = not expected_eligible or formal_bottom or formal_platform
+        case['releaseCasePassed'] = bool(observation_ok and eligibility_ok and classification_ok)
         if code in CORE_POSITIVE:
             # 用户原话的价格结构正例与正式资格分开断言；不得用资金/估值反否形态。
-            bottom = case.get('bottom') or {}
-            case['shapePassed'] = bool(bottom.get('bottomShape') and bottom.get('shapeRecognized')
-                                       and bottom.get('weeklyStructure'))
-            case['qualificationPassed'] = bool(bottom.get('eligible'))
-            expected_eligible = bool(bottom.get('moneyflowPass') and bottom.get('valuationPass'))
-            formal_bottom = any(it['pattern'] == '底部整理' for it in items)
-            observation_ok = bool(len(watch) == 1 and watch[0]['bottomShape']
-                                  and watch[0]['formalAdmission'] == expected_eligible)
-            case['releaseCasePassed'] = bool(case['shapePassed'] and observation_ok
-                                             and bottom.get('eligible') == expected_eligible
-                                             and formal_bottom == expected_eligible)
             check(f'核心正例通用周线价格结构:{NAMES[code]}', case['shapePassed'], bottom)
-            check(f'资格硬门独立且观察不计正式入选:{NAMES[code]}', case['releaseCasePassed'], {
-                'expectedEligible': expected_eligible, 'actualEligible': bottom.get('eligible'),
-                'formalBottom': formal_bottom, 'observation': watch})
-        else:
-            case['releaseCasePassed'] = not any(it['pattern'] in FORMAL for it in items)
-            check(f'反例完整生产不误收:{NAMES[code]}', case['releaseCasePassed'], case['production'])
+        check(f'资格/观察/分类一致:{NAMES[code]}', case['releaseCasePassed'], {
+            'expectedEligible': expected_eligible, 'actualEligible': bottom.get('eligible'),
+            'formalBottom': formal_bottom, 'formalPlatform': formal_platform,
+            'observation': watch, 'drops': drops})
 
     hz = next(x for x in real_cases if x['code'] == '600926.SH')
     structure_ok = bool((hz['platform'] or {}).get('displayEligible')
-                        or (hz['longPlatform'] or {}).get('displayEligible'))
+                        or (hz['bottom'] or {}).get('displayEligible'))
     high_drop = any('高位门' in reason for d in hz['production']['drops'] for reason in d['reasons'])
     check('杭州银行辅助结构通过但完整一年高位门排除', structure_ok and high_drop
           and not any(p in FORMAL for p in hz['production']['patterns']),

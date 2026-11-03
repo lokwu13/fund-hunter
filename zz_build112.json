@@ -1,0 +1,36 @@
+{
+  "task": 112,
+  "command": "npm run build",
+  "success": true,
+  "returncode": 0,
+  "modulesTransformed": 2362,
+  "warning": "Some chunks are larger than 500 kB after minification",
+  "log": "zz_build112.log",
+  "assets": [
+    {
+      "path": "dist/assets/index-C3QzACFH-v25.js",
+      "bytes": 1406816,
+      "sha256": "264ed5f65060e0e9a5026058054e84cec0bf01b4fd36d7f82d2b4bd8fa710778"
+    },
+    {
+      "path": "dist/assets/index-DIF-ROR-.css",
+      "bytes": 109869,
+      "sha256": "5d5adce1b2bcf117dc0291ad895d4480a460c0a9b9d679edf3707b337f8ff055"
+    }
+  ],
+  "localFundData": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "matchesTask112RegressionDataSha": true,
+  "manualDispatch": false,
+  "productionDataRegenerated": false
+}

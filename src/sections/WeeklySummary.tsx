@@ -511,7 +511,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                 <summary className="cursor-pointer text-[10px] font-bold text-teal-800">
                                   底部价格结构观察 {(st.bottomShapeRows || []).length} 只（不计正式入选）
                                 </summary>
-                                <p className="mt-1 text-[9px] text-teal-800">这里只验证通用周线价格结构；正式底部仍须区间净流入&gt;0且自身估值历史分位≤30%。资格排除不表示形态不成立。</p>
+                                <p className="mt-1 text-[9px] text-teal-800">这里只验证通用周线价格结构（最少12周）；正式底部仍须区间净流入&gt;0且自身估值历史分位≤40%。资格排除不表示形态不成立。</p>
                                 <div className="mt-1 space-y-1.5">
                                   {(st.bottomShapeRows || []).map((w: any) => (
                                     <div key={w.code} className="rounded border border-teal-200 bg-white/80 px-2 py-1.5">

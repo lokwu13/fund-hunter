@@ -5,7 +5,7 @@
   "releaseEligible": true,
   "corePositivePassed": 4,
   "corePositiveTotal": 4,
-  "coreEligiblePassed": 0,
+  "coreEligiblePassed": 1,
   "coreEligibleTotal": 4,
   "checksPassed": 59,
   "checksTotal": 59,
@@ -13,45 +13,45 @@
   "fatalErrors": [],
   "checks": [
     {
-      "name": "普通平台15日下边界通过",
+      "name": "统一平台15日下边界通过",
       "passed": true,
       "evidence": {
         "type": "平台整理",
         "days": 15,
         "amplitude": 2.43,
         "drift": 0.0,
-        "trendSlopePct": 5.0485,
-        "ma20": 88.9205,
-        "ma20Previous": 86.6477,
-        "ma60": 86.6477,
+        "trendSlopePct": 1.4087,
+        "ma20": 84.7104,
+        "ma20Previous": 84.1006,
+        "ma60": 84.1006,
         "volRatio": 0.5
       }
     },
     {
-      "name": "普通平台14日不冒充15日",
+      "name": "统一平台14日不冒充15日",
       "passed": true,
       "evidence": null
     },
     {
-      "name": "普通平台宽幅拒绝",
+      "name": "统一平台宽于15%拒绝",
       "passed": true,
       "evidence": null
     },
     {
-      "name": "普通平台下跌趋势拒绝",
+      "name": "统一平台下跌趋势拒绝",
       "passed": true,
       "evidence": null
     },
     {
-      "name": "普通平台总体未缩量拒绝",
+      "name": "统一平台总体未缩量拒绝",
       "passed": true,
       "evidence": null
     },
     {
-      "name": "长平台45日下边界通过",
+      "name": "统一平台45日也只用一个标签",
       "passed": true,
       "evidence": {
-        "type": "长平台整理",
+        "type": "平台整理",
         "days": 45,
         "amplitude": 2.43,
         "drift": 0.0,
@@ -63,7 +63,7 @@
       }
     },
     {
-      "name": "长平台宽于12%拒绝",
+      "name": "统一平台长窗宽于15%拒绝",
       "passed": true,
       "evidence": null
     },
@@ -75,10 +75,10 @@
         "days": 15,
         "amplitude": 2.43,
         "drift": 0.0,
-        "trendSlopePct": 5.0485,
-        "ma20": 88.9205,
-        "ma20Previous": 86.6477,
-        "ma60": 86.6477,
+        "trendSlopePct": 1.4087,
+        "ma20": 84.7104,
+        "ma20Previous": 84.1006,
+        "ma60": 84.1006,
         "volRatio": 0.5,
         "moneyflowStart": "20261012",
         "moneyflowEnd": "20261030",
@@ -103,10 +103,10 @@
         "days": 15,
         "amplitude": 2.43,
         "drift": 0.0,
-        "trendSlopePct": 5.0485,
-        "ma20": 88.9205,
-        "ma20Previous": 86.6477,
-        "ma60": 86.6477,
+        "trendSlopePct": 1.4087,
+        "ma20": 84.7104,
+        "ma20Previous": 84.1006,
+        "ma60": 84.1006,
         "volRatio": 0.5,
         "moneyflowStart": "20261012",
         "moneyflowEnd": "20261030",
@@ -131,10 +131,10 @@
         "days": 15,
         "amplitude": 2.43,
         "drift": 0.0,
-        "trendSlopePct": 5.0485,
-        "ma20": 88.9205,
-        "ma20Previous": 86.6477,
-        "ma60": 86.6477,
+        "trendSlopePct": 1.4087,
+        "ma20": 84.7104,
+        "ma20Previous": 84.1006,
+        "ma60": 84.1006,
         "volRatio": 0.5,
         "moneyflowStart": "20261012",
         "moneyflowEnd": "20261030",
@@ -159,10 +159,10 @@
         "days": 15,
         "amplitude": 2.43,
         "drift": 0.0,
-        "trendSlopePct": 5.0485,
-        "ma20": 88.9205,
-        "ma20Previous": 86.6477,
-        "ma60": 86.6477,
+        "trendSlopePct": 1.4087,
+        "ma20": 84.7104,
+        "ma20Previous": 84.1006,
+        "ma60": 84.1006,
         "volRatio": 0.5,
         "moneyflowStart": "20261012",
         "moneyflowEnd": "20261030",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "name": "26~104周长期走平结构可识别",
+      "name": "12~104周长期走平结构可识别",
       "passed": true,
       "evidence": {
         "type": "底部整理",
@@ -204,14 +204,14 @@
       "passed": true,
       "evidence": {
         "type": "底部整理",
-        "days": 104,
-        "weeks": 26,
-        "amplitude": 26.25,
-        "drift": 13.64,
-        "trendSlopePct": 13.4302,
+        "days": 48,
+        "weeks": 12,
+        "amplitude": 38.87,
+        "drift": 10.0,
+        "trendSlopePct": 12.3615,
         "weeklyStructure": "multi_bottom",
         "weeklyStructureLabel": "周线双底/多重底",
-        "distanceToAvailableHighPct": -50.0
+        "distanceToAvailableHighPct": -45.0
       }
     },
     {
@@ -225,18 +225,18 @@
       "evidence": null
     },
     {
-      "name": "估值分位恰好30%通过",
+      "name": "估值分位恰好40%通过",
       "passed": true,
       "evidence": {
         "valuationPass": true,
         "valuationBasis": "dual",
-        "valuationScorePct": 30.0,
+        "valuationScorePct": 40.0,
         "valuationDate": "20261030",
         "valuationMetrics": [
           {
             "metric": "peTtm",
             "value": 12.0,
-            "percentile": 30.0,
+            "percentile": 40.0,
             "samples": 40,
             "historyStart": "20200101",
             "historyEnd": "20261030",
@@ -245,7 +245,7 @@
           {
             "metric": "pb",
             "value": 1.2,
-            "percentile": 30.0,
+            "percentile": 40.0,
             "samples": 40,
             "historyStart": "20200101",
             "historyEnd": "20261030",
@@ -253,22 +253,22 @@
           }
         ],
         "valuationMinSamples": 24,
-        "valuationReason": "双指标历史分位均值≤30%"
+        "valuationReason": "双指标历史分位均值≤40%"
       }
     },
     {
-      "name": "估值分位高于30%拒绝",
+      "name": "估值分位高于40%拒绝",
       "passed": true,
       "evidence": {
         "valuationPass": false,
         "valuationBasis": "dual",
-        "valuationScorePct": 32.5,
+        "valuationScorePct": 42.5,
         "valuationDate": "20261030",
         "valuationMetrics": [
           {
             "metric": "peTtm",
             "value": 12.0,
-            "percentile": 32.5,
+            "percentile": 42.5,
             "samples": 40,
             "historyStart": "20200101",
             "historyEnd": "20261030",
@@ -277,7 +277,7 @@
           {
             "metric": "pb",
             "value": 1.2,
-            "percentile": 32.5,
+            "percentile": 42.5,
             "samples": 40,
             "historyStart": "20200101",
             "historyEnd": "20261030",
@@ -285,7 +285,7 @@
           }
         ],
         "valuationMinSamples": 24,
-        "valuationReason": "个股自身PE/PB历史分位未通过30%门"
+        "valuationReason": "个股自身PE/PB历史分位未通过40%门"
       }
     },
     {
@@ -349,7 +349,7 @@
           }
         ],
         "valuationMinSamples": 24,
-        "valuationReason": "单指标历史分位≤30%"
+        "valuationReason": "单指标历史分位≤40%"
       }
     },
     {
@@ -381,7 +381,7 @@
           }
         ],
         "valuationMinSamples": 24,
-        "valuationReason": "双指标历史分位均值≤30%"
+        "valuationReason": "双指标历史分位均值≤40%"
       }
     },
     {
@@ -407,7 +407,7 @@
         "valuationBasis": "dual",
         "valuationScorePct": 2.5,
         "valuationPass": true,
-        "valuationReason": "双指标历史分位均值≤30%",
+        "valuationReason": "双指标历史分位均值≤40%",
         "valuationMetrics": [
           {
             "metric": "peTtm",
@@ -533,7 +533,7 @@
         "valuationBasis": "dual",
         "valuationScorePct": 46.6667,
         "valuationPass": false,
-        "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+        "valuationReason": "个股自身PE/PB历史分位未通过40%门",
         "valuationMetrics": [
           {
             "metric": "peTtm",
@@ -565,17 +565,18 @@
         "qualificationLabel": "底部形态观察·资格排除",
         "patternReasons": [
           "区间累计净流入未大于0",
-          "个股自身PE/PB历史分位未通过30%门"
+          "个股自身PE/PB历史分位未通过40%门"
         ]
       }
     },
     {
-      "name": "资格硬门独立且观察不计正式入选:浦发银行",
+      "name": "资格/观察/分类一致:浦发银行",
       "passed": true,
       "evidence": {
         "expectedEligible": false,
         "actualEligible": false,
         "formalBottom": false,
+        "formalPlatform": true,
         "observation": [
           {
             "code": "600000.SH",
@@ -593,7 +594,7 @@
             "formalAdmission": false,
             "patternReasons": [
               "区间累计净流入未大于0",
-              "个股自身PE/PB历史分位未通过30%门"
+              "个股自身PE/PB历史分位未通过40%门"
             ],
             "patternEvidence": {
               "type": "底部整理",
@@ -669,7 +670,7 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+              "valuationReason": "个股自身PE/PB历史分位未通过40%门",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
@@ -680,9 +681,23 @@
               "qualificationLabel": "底部形态观察·资格排除",
               "patternReasons": [
                 "区间累计净流入未大于0",
-                "个股自身PE/PB历史分位未通过30%门"
+                "个股自身PE/PB历史分位未通过40%门"
               ]
             }
+          }
+        ],
+        "drops": [
+          {
+            "code": "600000.SH",
+            "name": "浦发银行",
+            "pattern": "底部整理",
+            "reasons": [
+              "区间累计净流入未大于0",
+              "个股自身PE/PB历史分位未通过40%门"
+            ],
+            "moneyflowCoveragePct": 100.0,
+            "intervalNetInflow": -29.3504,
+            "valuationScorePct": 46.6667
           }
         ]
       }
@@ -710,7 +725,7 @@
         "valuationBasis": "dual",
         "valuationScorePct": 12.0833,
         "valuationPass": true,
-        "valuationReason": "双指标历史分位均值≤30%",
+        "valuationReason": "双指标历史分位均值≤40%",
         "valuationMetrics": [
           {
             "metric": "peTtm",
@@ -746,12 +761,13 @@
       }
     },
     {
-      "name": "资格硬门独立且观察不计正式入选:双汇发展",
+      "name": "资格/观察/分类一致:双汇发展",
       "passed": true,
       "evidence": {
         "expectedEligible": false,
         "actualEligible": false,
         "formalBottom": false,
+        "formalPlatform": false,
         "observation": [
           {
             "code": "000895.SZ",
@@ -896,7 +912,7 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "双指标历史分位均值≤30%",
+              "valuationReason": "双指标历史分位均值≤40%",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
@@ -909,6 +925,30 @@
                 "区间累计净流入未大于0"
               ]
             }
+          }
+        ],
+        "drops": [
+          {
+            "code": "000895.SZ",
+            "name": "双汇发展",
+            "pattern": "平台整理",
+            "reasons": [
+              "区间累计净流入未大于0"
+            ],
+            "moneyflowCoveragePct": 100.0,
+            "intervalNetInflow": -3.7693,
+            "valuationScorePct": null
+          },
+          {
+            "code": "000895.SZ",
+            "name": "双汇发展",
+            "pattern": "底部整理",
+            "reasons": [
+              "区间累计净流入未大于0"
+            ],
+            "moneyflowCoveragePct": 100.0,
+            "intervalNetInflow": -15.7132,
+            "valuationScorePct": 12.0833
           }
         ]
       }
@@ -936,7 +976,7 @@
         "valuationBasis": "dual",
         "valuationScorePct": 29.5833,
         "valuationPass": true,
-        "valuationReason": "双指标历史分位均值≤30%",
+        "valuationReason": "双指标历史分位均值≤40%",
         "valuationMetrics": [
           {
             "metric": "peTtm",
@@ -972,12 +1012,13 @@
       }
     },
     {
-      "name": "资格硬门独立且观察不计正式入选:光大银行",
+      "name": "资格/观察/分类一致:光大银行",
       "passed": true,
       "evidence": {
         "expectedEligible": false,
         "actualEligible": false,
         "formalBottom": false,
+        "formalPlatform": true,
         "observation": [
           {
             "code": "601818.SH",
@@ -1074,7 +1115,7 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "双指标历史分位均值≤30%",
+              "valuationReason": "双指标历史分位均值≤40%",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
@@ -1087,6 +1128,19 @@
                 "区间累计净流入未大于0"
               ]
             }
+          }
+        ],
+        "drops": [
+          {
+            "code": "601818.SH",
+            "name": "光大银行",
+            "pattern": "底部整理",
+            "reasons": [
+              "区间累计净流入未大于0"
+            ],
+            "moneyflowCoveragePct": 100.0,
+            "intervalNetInflow": -16.926,
+            "valuationScorePct": 29.5833
           }
         ]
       }
@@ -1113,8 +1167,8 @@
         "moneyflowReason": "区间累计净流入>0",
         "valuationBasis": "dual",
         "valuationScorePct": 33.7349,
-        "valuationPass": false,
-        "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+        "valuationPass": true,
+        "valuationReason": "双指标历史分位均值≤40%",
         "valuationMetrics": [
           {
             "metric": "peTtm",
@@ -1139,23 +1193,24 @@
         "bottomShape": true,
         "bottomPattern": "底部整理",
         "shapeRecognized": true,
-        "eligible": false,
-        "displayEligible": false,
-        "formalAdmission": false,
-        "qualificationStatus": "excluded",
-        "qualificationLabel": "底部形态观察·资格排除",
+        "eligible": true,
+        "displayEligible": true,
+        "formalAdmission": true,
+        "qualificationStatus": "eligible",
+        "qualificationLabel": "正式底部入选",
         "patternReasons": [
-          "个股自身PE/PB历史分位未通过30%门"
+          "周线底部结构、区间资金与个股历史估值全部通过"
         ]
       }
     },
     {
-      "name": "资格硬门独立且观察不计正式入选:浙商银行",
+      "name": "资格/观察/分类一致:浙商银行",
       "passed": true,
       "evidence": {
-        "expectedEligible": false,
-        "actualEligible": false,
+        "expectedEligible": true,
+        "actualEligible": true,
         "formalBottom": false,
+        "formalPlatform": true,
         "observation": [
           {
             "code": "601916.SH",
@@ -1166,13 +1221,13 @@
             "asOf": "20261026",
             "bottomShape": true,
             "bottomPattern": "底部整理",
-            "qualificationStatus": "excluded",
-            "qualificationLabel": "底部形态观察·资格排除",
-            "eligible": false,
-            "displayEligible": false,
-            "formalAdmission": false,
+            "qualificationStatus": "eligible",
+            "qualificationLabel": "正式底部入选",
+            "eligible": true,
+            "displayEligible": true,
+            "formalAdmission": true,
             "patternReasons": [
-              "个股自身PE/PB历史分位未通过30%门"
+              "周线底部结构、区间资金与个股历史估值全部通过"
             ],
             "patternEvidence": {
               "type": "底部整理",
@@ -1251,7 +1306,7 @@
               "moneyflowUnit": "亿元",
               "moneyflowPass": true,
               "moneyflowReason": "区间累计净流入>0",
-              "valuationPass": false,
+              "valuationPass": true,
               "valuationBasis": "dual",
               "valuationScorePct": 33.7349,
               "valuationDate": "20260930",
@@ -1276,43 +1331,33 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+              "valuationReason": "双指标历史分位均值≤40%",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
-              "eligible": false,
-              "displayEligible": false,
-              "formalAdmission": false,
-              "qualificationStatus": "excluded",
-              "qualificationLabel": "底部形态观察·资格排除",
+              "eligible": true,
+              "displayEligible": true,
+              "formalAdmission": true,
+              "qualificationStatus": "eligible",
+              "qualificationLabel": "正式底部入选",
               "patternReasons": [
-                "个股自身PE/PB历史分位未通过30%门"
+                "周线底部结构、区间资金与个股历史估值全部通过"
               ]
             }
           }
-        ]
+        ],
+        "drops": []
       }
     },
     {
-      "name": "反例完整生产不误收:国电电力",
+      "name": "资格/观察/分类一致:国电电力",
       "passed": true,
       "evidence": {
-        "patterns": [],
-        "drops": [
-          {
-            "code": "600795.SH",
-            "name": "国电电力",
-            "pattern": "底部整理",
-            "reasons": [
-              "区间累计净流入未大于0",
-              "个股自身PE/PB历史分位未通过30%门"
-            ],
-            "moneyflowCoveragePct": 100.0,
-            "intervalNetInflow": -22.5517,
-            "valuationScorePct": 59.887
-          }
-        ],
-        "bottomShapeWatch": [
+        "expectedEligible": false,
+        "actualEligible": false,
+        "formalBottom": false,
+        "formalPlatform": true,
+        "observation": [
           {
             "code": "600795.SH",
             "name": "国电电力",
@@ -1329,7 +1374,7 @@
             "formalAdmission": false,
             "patternReasons": [
               "区间累计净流入未大于0",
-              "个股自身PE/PB历史分位未通过30%门"
+              "个股自身PE/PB历史分位未通过40%门"
             ],
             "patternEvidence": {
               "type": "底部整理",
@@ -1425,7 +1470,7 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+              "valuationReason": "个股自身PE/PB历史分位未通过40%门",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
@@ -1436,36 +1481,60 @@
               "qualificationLabel": "底部形态观察·资格排除",
               "patternReasons": [
                 "区间累计净流入未大于0",
-                "个股自身PE/PB历史分位未通过30%门"
+                "个股自身PE/PB历史分位未通过40%门"
               ]
             }
+          }
+        ],
+        "drops": [
+          {
+            "code": "600795.SH",
+            "name": "国电电力",
+            "pattern": "底部整理",
+            "reasons": [
+              "区间累计净流入未大于0",
+              "个股自身PE/PB历史分位未通过40%门"
+            ],
+            "moneyflowCoveragePct": 100.0,
+            "intervalNetInflow": -22.5517,
+            "valuationScorePct": 59.887
           }
         ]
       }
     },
     {
-      "name": "反例完整生产不误收:桐昆股份",
+      "name": "资格/观察/分类一致:桐昆股份",
       "passed": true,
       "evidence": {
-        "patterns": [],
-        "drops": [],
-        "bottomShapeWatch": []
+        "expectedEligible": false,
+        "actualEligible": null,
+        "formalBottom": false,
+        "formalPlatform": false,
+        "observation": [],
+        "drops": []
       }
     },
     {
-      "name": "反例完整生产不误收:招商轮船",
+      "name": "资格/观察/分类一致:招商轮船",
       "passed": true,
       "evidence": {
-        "patterns": [],
-        "drops": [],
-        "bottomShapeWatch": []
+        "expectedEligible": false,
+        "actualEligible": null,
+        "formalBottom": false,
+        "formalPlatform": false,
+        "observation": [],
+        "drops": []
       }
     },
     {
-      "name": "反例完整生产不误收:杭州银行",
+      "name": "资格/观察/分类一致:杭州银行",
       "passed": true,
       "evidence": {
-        "patterns": [],
+        "expectedEligible": false,
+        "actualEligible": null,
+        "formalBottom": false,
+        "formalPlatform": false,
+        "observation": [],
         "drops": [
           {
             "code": "600926.SH",
@@ -1475,44 +1544,21 @@
               "一年分位73.2%、距一年高点-5.3%，触发平台高位门"
             ],
             "moneyflowCoveragePct": 100.0,
-            "intervalNetInflow": 0.451,
-            "valuationScorePct": null
-          },
-          {
-            "code": "600926.SH",
-            "name": "杭州银行",
-            "pattern": "长平台整理",
-            "reasons": [
-              "一年分位73.2%、距一年高点-5.3%，触发平台高位门"
-            ],
-            "moneyflowCoveragePct": 100.0,
             "intervalNetInflow": 5.232,
             "valuationScorePct": null
           }
-        ],
-        "bottomShapeWatch": []
+        ]
       }
     },
     {
-      "name": "反例完整生产不误收:卫星化学",
+      "name": "资格/观察/分类一致:卫星化学",
       "passed": true,
       "evidence": {
-        "patterns": [],
-        "drops": [
-          {
-            "code": "002648.SZ",
-            "name": "卫星化学",
-            "pattern": "底部整理",
-            "reasons": [
-              "区间累计净流入未大于0",
-              "个股自身PE/PB历史分位未通过30%门"
-            ],
-            "moneyflowCoveragePct": 100.0,
-            "intervalNetInflow": -56.0076,
-            "valuationScorePct": 31.9253
-          }
-        ],
-        "bottomShapeWatch": [
+        "expectedEligible": false,
+        "actualEligible": false,
+        "formalBottom": false,
+        "formalPlatform": false,
+        "observation": [
           {
             "code": "002648.SZ",
             "name": "卫星化学",
@@ -1528,8 +1574,7 @@
             "displayEligible": false,
             "formalAdmission": false,
             "patternReasons": [
-              "区间累计净流入未大于0",
-              "个股自身PE/PB历史分位未通过30%门"
+              "区间累计净流入未大于0"
             ],
             "patternEvidence": {
               "type": "底部整理",
@@ -1576,7 +1621,7 @@
               "moneyflowUnit": "亿元",
               "moneyflowPass": false,
               "moneyflowReason": "区间累计净流入未大于0",
-              "valuationPass": false,
+              "valuationPass": true,
               "valuationBasis": "dual",
               "valuationScorePct": 31.9253,
               "valuationDate": "20260930",
@@ -1601,7 +1646,7 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+              "valuationReason": "双指标历史分位均值≤40%",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
@@ -1611,10 +1656,33 @@
               "qualificationStatus": "excluded",
               "qualificationLabel": "底部形态观察·资格排除",
               "patternReasons": [
-                "区间累计净流入未大于0",
-                "个股自身PE/PB历史分位未通过30%门"
+                "区间累计净流入未大于0"
               ]
             }
+          }
+        ],
+        "drops": [
+          {
+            "code": "002648.SZ",
+            "name": "卫星化学",
+            "pattern": "平台整理",
+            "reasons": [
+              "区间累计净流入未大于0"
+            ],
+            "moneyflowCoveragePct": 100.0,
+            "intervalNetInflow": -8.3919,
+            "valuationScorePct": null
+          },
+          {
+            "code": "002648.SZ",
+            "name": "卫星化学",
+            "pattern": "底部整理",
+            "reasons": [
+              "区间累计净流入未大于0"
+            ],
+            "moneyflowCoveragePct": 100.0,
+            "intervalNetInflow": -56.0076,
+            "valuationScorePct": 31.9253
           }
         ]
       }
@@ -1631,17 +1699,6 @@
               "code": "600926.SH",
               "name": "杭州银行",
               "pattern": "平台整理",
-              "reasons": [
-                "一年分位73.2%、距一年高点-5.3%，触发平台高位门"
-              ],
-              "moneyflowCoveragePct": 100.0,
-              "intervalNetInflow": 0.451,
-              "valuationScorePct": null
-            },
-            {
-              "code": "600926.SH",
-              "name": "杭州银行",
-              "pattern": "长平台整理",
               "reasons": [
                 "一年分位73.2%、距一年高点-5.3%，触发平台高位门"
               ],
@@ -1774,9 +1831,8 @@
       "dailyBars": 1200,
       "dailyStart": "20211111",
       "dailyEnd": "20261026",
-      "platform": null,
-      "longPlatform": {
-        "type": "长平台整理",
+      "platform": {
+        "type": "平台整理",
         "days": 52,
         "amplitude": 10.66,
         "drift": 3.55,
@@ -1819,7 +1875,7 @@
         "valuationBasis": "dual",
         "valuationScorePct": 46.6667,
         "valuationPass": false,
-        "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+        "valuationReason": "个股自身PE/PB历史分位未通过40%门",
         "valuationMetrics": [
           {
             "metric": "peTtm",
@@ -1851,12 +1907,12 @@
         "qualificationLabel": "底部形态观察·资格排除",
         "patternReasons": [
           "区间累计净流入未大于0",
-          "个股自身PE/PB历史分位未通过30%门"
+          "个股自身PE/PB历史分位未通过40%门"
         ]
       },
       "production": {
         "patterns": [
-          "长平台整理"
+          "平台整理"
         ],
         "drops": [
           {
@@ -1865,7 +1921,7 @@
             "pattern": "底部整理",
             "reasons": [
               "区间累计净流入未大于0",
-              "个股自身PE/PB历史分位未通过30%门"
+              "个股自身PE/PB历史分位未通过40%门"
             ],
             "moneyflowCoveragePct": 100.0,
             "intervalNetInflow": -29.3504,
@@ -1889,7 +1945,7 @@
             "formalAdmission": false,
             "patternReasons": [
               "区间累计净流入未大于0",
-              "个股自身PE/PB历史分位未通过30%门"
+              "个股自身PE/PB历史分位未通过40%门"
             ],
             "patternEvidence": {
               "type": "底部整理",
@@ -1965,7 +2021,7 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+              "valuationReason": "个股自身PE/PB历史分位未通过40%门",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
@@ -1976,7 +2032,7 @@
               "qualificationLabel": "底部形态观察·资格排除",
               "patternReasons": [
                 "区间累计净流入未大于0",
-                "个股自身PE/PB历史分位未通过30%门"
+                "个股自身PE/PB历史分位未通过40%门"
               ]
             }
           }
@@ -1995,44 +2051,20 @@
       "dailyEnd": "20261026",
       "platform": {
         "type": "平台整理",
-        "days": 38,
-        "amplitude": 9.71,
-        "drift": -4.15,
-        "trendSlopePct": 8.211,
-        "ma20": 25.238,
-        "ma20Previous": 24.1015,
-        "ma60": 24.3122,
-        "volRatio": 0.8286,
-        "moneyflowStart": "20260826",
+        "days": 54,
+        "amplitude": 13.39,
+        "drift": -5.84,
+        "trendSlopePct": 10.6347,
+        "ma20": 24.6955,
+        "ma20Previous": 23.3255,
+        "ma60": 24.5552,
+        "volRatio": 0.7112,
+        "moneyflowStart": "20260804",
         "moneyflowEnd": "20261026",
-        "moneyflowDays": 38,
-        "moneyflowCoveredDays": 38,
+        "moneyflowDays": 54,
+        "moneyflowCoveredDays": 54,
         "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": -2.1792,
-        "moneyflowPass": false,
-        "moneyflowReason": "区间累计净流入未大于0",
-        "eligible": false,
-        "displayEligible": false,
-        "patternReasons": [
-          "区间累计净流入未大于0"
-        ]
-      },
-      "longPlatform": {
-        "type": "长平台整理",
-        "days": 53,
-        "amplitude": 11.09,
-        "drift": -5.13,
-        "trendSlopePct": 11.6023,
-        "ma20": 24.8115,
-        "ma20Previous": 23.278,
-        "ma60": 24.528,
-        "volRatio": 0.6995,
-        "moneyflowStart": "20260805",
-        "moneyflowEnd": "20261026",
-        "moneyflowDays": 53,
-        "moneyflowCoveredDays": 53,
-        "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": -2.9368,
+        "intervalNetInflow": -3.7693,
         "moneyflowPass": false,
         "moneyflowReason": "区间累计净流入未大于0",
         "eligible": false,
@@ -2061,7 +2093,7 @@
         "valuationBasis": "dual",
         "valuationScorePct": 12.0833,
         "valuationPass": true,
-        "valuationReason": "双指标历史分位均值≤30%",
+        "valuationReason": "双指标历史分位均值≤40%",
         "valuationMetrics": [
           {
             "metric": "peTtm",
@@ -2106,18 +2138,7 @@
               "区间累计净流入未大于0"
             ],
             "moneyflowCoveragePct": 100.0,
-            "intervalNetInflow": -2.1792,
-            "valuationScorePct": null
-          },
-          {
-            "code": "000895.SZ",
-            "name": "双汇发展",
-            "pattern": "长平台整理",
-            "reasons": [
-              "区间累计净流入未大于0"
-            ],
-            "moneyflowCoveragePct": 100.0,
-            "intervalNetInflow": -2.9368,
+            "intervalNetInflow": -3.7693,
             "valuationScorePct": null
           },
           {
@@ -2276,7 +2297,7 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "双指标历史分位均值≤30%",
+              "valuationReason": "双指标历史分位均值≤40%",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
@@ -2305,30 +2326,6 @@
       "dailyEnd": "20261026",
       "platform": {
         "type": "平台整理",
-        "days": 44,
-        "amplitude": 7.19,
-        "drift": 1.68,
-        "trendSlopePct": 2.6617,
-        "ma20": 3.1045,
-        "ma20Previous": 3.045,
-        "ma60": 3.0933,
-        "volRatio": 0.8879,
-        "moneyflowStart": "20260818",
-        "moneyflowEnd": "20261026",
-        "moneyflowDays": 44,
-        "moneyflowCoveredDays": 44,
-        "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": 8.6595,
-        "moneyflowPass": true,
-        "moneyflowReason": "区间累计净流入>0",
-        "eligible": true,
-        "displayEligible": true,
-        "patternReasons": [
-          "前期上升趋势、固定窄幅、总体缩量与区间资金全部通过"
-        ]
-      },
-      "longPlatform": {
-        "type": "长平台整理",
         "days": 57,
         "amplitude": 9.93,
         "drift": -5.02,
@@ -2371,7 +2368,7 @@
         "valuationBasis": "dual",
         "valuationScorePct": 29.5833,
         "valuationPass": true,
-        "valuationReason": "双指标历史分位均值≤30%",
+        "valuationReason": "双指标历史分位均值≤40%",
         "valuationMetrics": [
           {
             "metric": "peTtm",
@@ -2407,7 +2404,7 @@
       },
       "production": {
         "patterns": [
-          "长平台整理"
+          "平台整理"
         ],
         "drops": [
           {
@@ -2518,7 +2515,7 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "双指标历史分位均值≤30%",
+              "valuationReason": "双指标历史分位均值≤40%",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
@@ -2547,30 +2544,6 @@
       "dailyEnd": "20261026",
       "platform": {
         "type": "平台整理",
-        "days": 44,
-        "amplitude": 7.12,
-        "drift": 0.69,
-        "trendSlopePct": 5.9435,
-        "ma20": 2.9275,
-        "ma20Previous": 2.8045,
-        "ma60": 2.9235,
-        "volRatio": 0.9524,
-        "moneyflowStart": "20260818",
-        "moneyflowEnd": "20261026",
-        "moneyflowDays": 44,
-        "moneyflowCoveredDays": 44,
-        "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": 4.8939,
-        "moneyflowPass": true,
-        "moneyflowReason": "区间累计净流入>0",
-        "eligible": true,
-        "displayEligible": true,
-        "patternReasons": [
-          "前期上升趋势、固定窄幅、总体缩量与区间资金全部通过"
-        ]
-      },
-      "longPlatform": {
-        "type": "长平台整理",
         "days": 45,
         "amplitude": 7.12,
         "drift": 0.34,
@@ -2612,8 +2585,8 @@
         "moneyflowReason": "区间累计净流入>0",
         "valuationBasis": "dual",
         "valuationScorePct": 33.7349,
-        "valuationPass": false,
-        "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+        "valuationPass": true,
+        "valuationReason": "双指标历史分位均值≤40%",
         "valuationMetrics": [
           {
             "metric": "peTtm",
@@ -2638,32 +2611,20 @@
         "bottomShape": true,
         "bottomPattern": "底部整理",
         "shapeRecognized": true,
-        "eligible": false,
-        "displayEligible": false,
-        "formalAdmission": false,
-        "qualificationStatus": "excluded",
-        "qualificationLabel": "底部形态观察·资格排除",
+        "eligible": true,
+        "displayEligible": true,
+        "formalAdmission": true,
+        "qualificationStatus": "eligible",
+        "qualificationLabel": "正式底部入选",
         "patternReasons": [
-          "个股自身PE/PB历史分位未通过30%门"
+          "周线底部结构、区间资金与个股历史估值全部通过"
         ]
       },
       "production": {
         "patterns": [
-          "长平台整理"
+          "平台整理"
         ],
-        "drops": [
-          {
-            "code": "601916.SH",
-            "name": "浙商银行",
-            "pattern": "底部整理",
-            "reasons": [
-              "个股自身PE/PB历史分位未通过30%门"
-            ],
-            "moneyflowCoveragePct": 100.0,
-            "intervalNetInflow": 14.3435,
-            "valuationScorePct": 33.7349
-          }
-        ],
+        "drops": [],
         "bottomShapeWatch": [
           {
             "code": "601916.SH",
@@ -2674,13 +2635,13 @@
             "asOf": "20261026",
             "bottomShape": true,
             "bottomPattern": "底部整理",
-            "qualificationStatus": "excluded",
-            "qualificationLabel": "底部形态观察·资格排除",
-            "eligible": false,
-            "displayEligible": false,
-            "formalAdmission": false,
+            "qualificationStatus": "eligible",
+            "qualificationLabel": "正式底部入选",
+            "eligible": true,
+            "displayEligible": true,
+            "formalAdmission": true,
             "patternReasons": [
-              "个股自身PE/PB历史分位未通过30%门"
+              "周线底部结构、区间资金与个股历史估值全部通过"
             ],
             "patternEvidence": {
               "type": "底部整理",
@@ -2759,7 +2720,7 @@
               "moneyflowUnit": "亿元",
               "moneyflowPass": true,
               "moneyflowReason": "区间累计净流入>0",
-              "valuationPass": false,
+              "valuationPass": true,
               "valuationBasis": "dual",
               "valuationScorePct": 33.7349,
               "valuationDate": "20260930",
@@ -2784,24 +2745,24 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+              "valuationReason": "双指标历史分位均值≤40%",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
-              "eligible": false,
-              "displayEligible": false,
-              "formalAdmission": false,
-              "qualificationStatus": "excluded",
-              "qualificationLabel": "底部形态观察·资格排除",
+              "eligible": true,
+              "displayEligible": true,
+              "formalAdmission": true,
+              "qualificationStatus": "eligible",
+              "qualificationLabel": "正式底部入选",
               "patternReasons": [
-                "个股自身PE/PB历史分位未通过30%门"
+                "周线底部结构、区间资金与个股历史估值全部通过"
               ]
             }
           }
         ]
       },
       "shapePassed": true,
-      "qualificationPassed": false,
+      "qualificationPassed": true,
       "releaseCasePassed": true
     },
     {
@@ -2811,8 +2772,30 @@
       "dailyBars": 1200,
       "dailyStart": "20211111",
       "dailyEnd": "20261026",
-      "platform": null,
-      "longPlatform": null,
+      "platform": {
+        "type": "平台整理",
+        "days": 50,
+        "amplitude": 12.88,
+        "drift": 2.59,
+        "trendSlopePct": 4.6815,
+        "ma20": 4.908,
+        "ma20Previous": 4.7715,
+        "ma60": 4.9048,
+        "volRatio": 0.8365,
+        "moneyflowStart": "20260810",
+        "moneyflowEnd": "20261026",
+        "moneyflowDays": 50,
+        "moneyflowCoveredDays": 50,
+        "moneyflowCoveragePct": 100.0,
+        "intervalNetInflow": 7.4136,
+        "moneyflowPass": true,
+        "moneyflowReason": "区间累计净流入>0",
+        "eligible": true,
+        "displayEligible": true,
+        "patternReasons": [
+          "前期上升趋势、固定窄幅、总体缩量与区间资金全部通过"
+        ]
+      },
       "bottom": {
         "type": "底部整理",
         "days": 326,
@@ -2833,7 +2816,7 @@
         "valuationBasis": "dual",
         "valuationScorePct": 59.887,
         "valuationPass": false,
-        "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+        "valuationReason": "个股自身PE/PB历史分位未通过40%门",
         "valuationMetrics": [
           {
             "metric": "peTtm",
@@ -2865,11 +2848,13 @@
         "qualificationLabel": "底部形态观察·资格排除",
         "patternReasons": [
           "区间累计净流入未大于0",
-          "个股自身PE/PB历史分位未通过30%门"
+          "个股自身PE/PB历史分位未通过40%门"
         ]
       },
       "production": {
-        "patterns": [],
+        "patterns": [
+          "平台整理"
+        ],
         "drops": [
           {
             "code": "600795.SH",
@@ -2877,7 +2862,7 @@
             "pattern": "底部整理",
             "reasons": [
               "区间累计净流入未大于0",
-              "个股自身PE/PB历史分位未通过30%门"
+              "个股自身PE/PB历史分位未通过40%门"
             ],
             "moneyflowCoveragePct": 100.0,
             "intervalNetInflow": -22.5517,
@@ -2901,7 +2886,7 @@
             "formalAdmission": false,
             "patternReasons": [
               "区间累计净流入未大于0",
-              "个股自身PE/PB历史分位未通过30%门"
+              "个股自身PE/PB历史分位未通过40%门"
             ],
             "patternEvidence": {
               "type": "底部整理",
@@ -2997,7 +2982,7 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+              "valuationReason": "个股自身PE/PB历史分位未通过40%门",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
@@ -3008,12 +2993,14 @@
               "qualificationLabel": "底部形态观察·资格排除",
               "patternReasons": [
                 "区间累计净流入未大于0",
-                "个股自身PE/PB历史分位未通过30%门"
+                "个股自身PE/PB历史分位未通过40%门"
               ]
             }
           }
         ]
       },
+      "shapePassed": true,
+      "qualificationPassed": false,
       "releaseCasePassed": true
     },
     {
@@ -3024,13 +3011,14 @@
       "dailyStart": "20211111",
       "dailyEnd": "20261026",
       "platform": null,
-      "longPlatform": null,
       "bottom": null,
       "production": {
         "patterns": [],
         "drops": [],
         "bottomShapeWatch": []
       },
+      "shapePassed": false,
+      "qualificationPassed": false,
       "releaseCasePassed": true
     },
     {
@@ -3041,13 +3029,14 @@
       "dailyStart": "20211111",
       "dailyEnd": "20261026",
       "platform": null,
-      "longPlatform": null,
       "bottom": null,
       "production": {
         "patterns": [],
         "drops": [],
         "bottomShapeWatch": []
       },
+      "shapePassed": false,
+      "qualificationPassed": false,
       "releaseCasePassed": true
     },
     {
@@ -3059,30 +3048,6 @@
       "dailyEnd": "20261026",
       "platform": {
         "type": "平台整理",
-        "days": 29,
-        "amplitude": 8.45,
-        "drift": -2.62,
-        "trendSlopePct": 9.3866,
-        "ma20": 16.6755,
-        "ma20Previous": 15.953,
-        "ma60": 15.9793,
-        "volRatio": 0.9844,
-        "moneyflowStart": "20260908",
-        "moneyflowEnd": "20261026",
-        "moneyflowDays": 29,
-        "moneyflowCoveredDays": 29,
-        "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": 0.451,
-        "moneyflowPass": true,
-        "moneyflowReason": "区间累计净流入>0",
-        "eligible": true,
-        "displayEligible": true,
-        "patternReasons": [
-          "前期上升趋势、固定窄幅、总体缩量与区间资金全部通过"
-        ]
-      },
-      "longPlatform": {
-        "type": "长平台整理",
         "days": 51,
         "amplitude": 11.8,
         "drift": 4.69,
@@ -3117,23 +3082,14 @@
               "一年分位73.2%、距一年高点-5.3%，触发平台高位门"
             ],
             "moneyflowCoveragePct": 100.0,
-            "intervalNetInflow": 0.451,
-            "valuationScorePct": null
-          },
-          {
-            "code": "600926.SH",
-            "name": "杭州银行",
-            "pattern": "长平台整理",
-            "reasons": [
-              "一年分位73.2%、距一年高点-5.3%，触发平台高位门"
-            ],
-            "moneyflowCoveragePct": 100.0,
             "intervalNetInflow": 5.232,
             "valuationScorePct": null
           }
         ],
         "bottomShapeWatch": []
       },
+      "shapePassed": false,
+      "qualificationPassed": false,
       "releaseCasePassed": true
     },
     {
@@ -3143,8 +3099,30 @@
       "dailyBars": 1200,
       "dailyStart": "20211111",
       "dailyEnd": "20261026",
-      "platform": null,
-      "longPlatform": null,
+      "platform": {
+        "type": "平台整理",
+        "days": 22,
+        "amplitude": 14.81,
+        "drift": -4.52,
+        "trendSlopePct": 12.5714,
+        "ma20": 27.397,
+        "ma20Previous": 25.492,
+        "ma60": 25.5672,
+        "volRatio": 0.6744,
+        "moneyflowStart": "20260917",
+        "moneyflowEnd": "20261026",
+        "moneyflowDays": 22,
+        "moneyflowCoveredDays": 22,
+        "moneyflowCoveragePct": 100.0,
+        "intervalNetInflow": -8.3919,
+        "moneyflowPass": false,
+        "moneyflowReason": "区间累计净流入未大于0",
+        "eligible": false,
+        "displayEligible": false,
+        "patternReasons": [
+          "区间累计净流入未大于0"
+        ]
+      },
       "bottom": {
         "type": "底部整理",
         "days": 179,
@@ -3164,8 +3142,8 @@
         "moneyflowReason": "区间累计净流入未大于0",
         "valuationBasis": "dual",
         "valuationScorePct": 31.9253,
-        "valuationPass": false,
-        "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+        "valuationPass": true,
+        "valuationReason": "双指标历史分位均值≤40%",
         "valuationMetrics": [
           {
             "metric": "peTtm",
@@ -3196,8 +3174,7 @@
         "qualificationStatus": "excluded",
         "qualificationLabel": "底部形态观察·资格排除",
         "patternReasons": [
-          "区间累计净流入未大于0",
-          "个股自身PE/PB历史分位未通过30%门"
+          "区间累计净流入未大于0"
         ]
       },
       "production": {
@@ -3206,10 +3183,20 @@
           {
             "code": "002648.SZ",
             "name": "卫星化学",
+            "pattern": "平台整理",
+            "reasons": [
+              "区间累计净流入未大于0"
+            ],
+            "moneyflowCoveragePct": 100.0,
+            "intervalNetInflow": -8.3919,
+            "valuationScorePct": null
+          },
+          {
+            "code": "002648.SZ",
+            "name": "卫星化学",
             "pattern": "底部整理",
             "reasons": [
-              "区间累计净流入未大于0",
-              "个股自身PE/PB历史分位未通过30%门"
+              "区间累计净流入未大于0"
             ],
             "moneyflowCoveragePct": 100.0,
             "intervalNetInflow": -56.0076,
@@ -3232,8 +3219,7 @@
             "displayEligible": false,
             "formalAdmission": false,
             "patternReasons": [
-              "区间累计净流入未大于0",
-              "个股自身PE/PB历史分位未通过30%门"
+              "区间累计净流入未大于0"
             ],
             "patternEvidence": {
               "type": "底部整理",
@@ -3280,7 +3266,7 @@
               "moneyflowUnit": "亿元",
               "moneyflowPass": false,
               "moneyflowReason": "区间累计净流入未大于0",
-              "valuationPass": false,
+              "valuationPass": true,
               "valuationBasis": "dual",
               "valuationScorePct": 31.9253,
               "valuationDate": "20260930",
@@ -3305,7 +3291,7 @@
                 }
               ],
               "valuationMinSamples": 24,
-              "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+              "valuationReason": "双指标历史分位均值≤40%",
               "bottomShape": true,
               "bottomPattern": "底部整理",
               "shapeRecognized": true,
@@ -3315,13 +3301,14 @@
               "qualificationStatus": "excluded",
               "qualificationLabel": "底部形态观察·资格排除",
               "patternReasons": [
-                "区间累计净流入未大于0",
-                "个股自身PE/PB历史分位未通过30%门"
+                "区间累计净流入未大于0"
               ]
             }
           }
         ]
       },
+      "shapePassed": true,
+      "qualificationPassed": false,
       "releaseCasePassed": true
     }
   ],
@@ -3331,8 +3318,8 @@
     "poolRaw": 9,
     "mvDate": "20261030",
     "scanned": 9,
-    "formed": 3,
-    "qualifiedCount": 3,
+    "formed": 4,
+    "qualifiedCount": 4,
     "fuzzyCount": 0,
     "items": [
       {
@@ -3343,9 +3330,9 @@
         "inPool": true,
         "close": 9.62,
         "tag": "—",
-        "pattern": "长平台整理",
+        "pattern": "平台整理",
         "platform": {
-          "type": "长平台整理",
+          "type": "平台整理",
           "days": 52,
           "amplitude": 10.66,
           "drift": 3.55,
@@ -3378,7 +3365,7 @@
           ]
         },
         "patternEvidence": {
-          "type": "长平台整理",
+          "type": "平台整理",
           "days": 52,
           "amplitude": 10.66,
           "drift": 3.55,
@@ -3416,40 +3403,7 @@
         "flag": null,
         "fixedBase": null,
         "vcpAttribute": null,
-        "patternNote": "长平台整理：前期40日斜率0.5867%，MA20 9.182 > MA60 9.1388；52日、振幅10.66%、总体量比0.804；区间净流入9.5949亿元，覆盖100.0%。",
-        "longPlat": {
-          "type": "长平台整理",
-          "days": 52,
-          "amplitude": 10.66,
-          "drift": 3.55,
-          "volRatio": 0.804,
-          "trendSlopePct": 0.5867,
-          "ma20": 9.182,
-          "ma20Previous": 9.0635,
-          "ma60": 9.1388,
-          "trendWindowDays": 40,
-          "trendEvidence": "平台前40日回归斜率>0且MA20上升并高于MA60",
-          "pivot": 9.86,
-          "distPct": 2.5,
-          "invalidation": 8.91,
-          "volConfirm": 1000231.6,
-          "formed": true,
-          "structureOnly": true,
-          "moneyflowStart": "20260806",
-          "moneyflowEnd": "20261026",
-          "moneyflowDays": 52,
-          "moneyflowCoveredDays": 52,
-          "moneyflowCoveragePct": 100.0,
-          "intervalNetInflow": 9.5949,
-          "moneyflowUnit": "亿元",
-          "moneyflowPass": true,
-          "moneyflowReason": "区间累计净流入>0",
-          "eligible": true,
-          "displayEligible": true,
-          "patternReasons": [
-            "前期上升趋势、固定窄幅、总体缩量与区间资金全部通过"
-          ]
-        },
+        "patternNote": "平台整理：前期40日斜率0.5867%，MA20 9.182 > MA60 9.1388；52日、振幅10.66%（统一≤15%）、总体量比0.804；区间净流入9.5949亿元，覆盖100.0%。",
         "trendTemplate": {
           "pass": false,
           "evidence": [
@@ -3503,7 +3457,7 @@
         "distMain": 2.5,
         "mfDays": 0,
         "sectorFit": "板块中性",
-        "advice": "长平台整理·距枢轴2.5%｜板块中性"
+        "advice": "平台整理·距枢轴2.5%｜板块中性"
       },
       {
         "code": "601916.SH",
@@ -3513,9 +3467,9 @@
         "inPool": true,
         "close": 2.92,
         "tag": "—",
-        "pattern": "长平台整理",
+        "pattern": "平台整理",
         "platform": {
-          "type": "长平台整理",
+          "type": "平台整理",
           "days": 45,
           "amplitude": 7.12,
           "drift": 0.34,
@@ -3548,7 +3502,7 @@
           ]
         },
         "patternEvidence": {
-          "type": "长平台整理",
+          "type": "平台整理",
           "days": 45,
           "amplitude": 7.12,
           "drift": 0.34,
@@ -3586,40 +3540,7 @@
         "flag": null,
         "fixedBase": null,
         "vcpAttribute": null,
-        "patternNote": "长平台整理：前期40日斜率4.992%，MA20 2.926 > MA60 2.9245；45日、振幅7.12%、总体量比0.9157；区间净流入4.5213亿元，覆盖100.0%。",
-        "longPlat": {
-          "type": "长平台整理",
-          "days": 45,
-          "amplitude": 7.12,
-          "drift": 0.34,
-          "volRatio": 0.9157,
-          "trendSlopePct": 4.992,
-          "ma20": 2.926,
-          "ma20Previous": 2.811,
-          "ma60": 2.9245,
-          "trendWindowDays": 40,
-          "trendEvidence": "平台前40日回归斜率>0且MA20上升并高于MA60",
-          "pivot": 3.01,
-          "distPct": 3.1,
-          "invalidation": 2.81,
-          "volConfirm": 1931005.2,
-          "formed": true,
-          "structureOnly": true,
-          "moneyflowStart": "20260817",
-          "moneyflowEnd": "20261026",
-          "moneyflowDays": 45,
-          "moneyflowCoveredDays": 45,
-          "moneyflowCoveragePct": 100.0,
-          "intervalNetInflow": 4.5213,
-          "moneyflowUnit": "亿元",
-          "moneyflowPass": true,
-          "moneyflowReason": "区间累计净流入>0",
-          "eligible": true,
-          "displayEligible": true,
-          "patternReasons": [
-            "前期上升趋势、固定窄幅、总体缩量与区间资金全部通过"
-          ]
-        },
+        "patternNote": "平台整理：前期40日斜率4.992%，MA20 2.926 > MA60 2.9245；45日、振幅7.12%（统一≤15%）、总体量比0.9157；区间净流入4.5213亿元，覆盖100.0%。",
         "trendTemplate": {
           "pass": false,
           "evidence": [
@@ -3673,7 +3594,7 @@
         "distMain": 3.1,
         "mfDays": 0,
         "sectorFit": "板块中性",
-        "advice": "长平台整理·距枢轴3.1%｜板块中性"
+        "advice": "平台整理·距枢轴3.1%｜板块中性"
       },
       {
         "code": "601818.SH",
@@ -3683,9 +3604,9 @@
         "inPool": true,
         "close": 3.03,
         "tag": "—",
-        "pattern": "长平台整理",
+        "pattern": "平台整理",
         "platform": {
-          "type": "长平台整理",
+          "type": "平台整理",
           "days": 57,
           "amplitude": 9.93,
           "drift": -5.02,
@@ -3718,7 +3639,7 @@
           ]
         },
         "patternEvidence": {
-          "type": "长平台整理",
+          "type": "平台整理",
           "days": 57,
           "amplitude": 9.93,
           "drift": -5.02,
@@ -3756,40 +3677,7 @@
         "flag": null,
         "fixedBase": null,
         "vcpAttribute": null,
-        "patternNote": "长平台整理：前期40日斜率0.5316%，MA20 3.1055 > MA60 3.1033；57日、振幅9.93%、总体量比0.9414；区间净流入3.3433亿元，覆盖100.0%。",
-        "longPlat": {
-          "type": "长平台整理",
-          "days": 57,
-          "amplitude": 9.93,
-          "drift": -5.02,
-          "volRatio": 0.9414,
-          "trendSlopePct": 0.5316,
-          "ma20": 3.1055,
-          "ma20Previous": 3.0885,
-          "ma60": 3.1033,
-          "trendWindowDays": 40,
-          "trendEvidence": "平台前40日回归斜率>0且MA20上升并高于MA60",
-          "pivot": 3.21,
-          "distPct": 5.9,
-          "invalidation": 2.92,
-          "volConfirm": 2628190.0,
-          "formed": true,
-          "structureOnly": true,
-          "moneyflowStart": "20260730",
-          "moneyflowEnd": "20261026",
-          "moneyflowDays": 57,
-          "moneyflowCoveredDays": 57,
-          "moneyflowCoveragePct": 100.0,
-          "intervalNetInflow": 3.3433,
-          "moneyflowUnit": "亿元",
-          "moneyflowPass": true,
-          "moneyflowReason": "区间累计净流入>0",
-          "eligible": true,
-          "displayEligible": true,
-          "patternReasons": [
-            "前期上升趋势、固定窄幅、总体缩量与区间资金全部通过"
-          ]
-        },
+        "patternNote": "平台整理：前期40日斜率0.5316%，MA20 3.1055 > MA60 3.1033；57日、振幅9.93%（统一≤15%）、总体量比0.9414；区间净流入3.3433亿元，覆盖100.0%。",
         "trendTemplate": {
           "pass": false,
           "evidence": [
@@ -3843,7 +3731,144 @@
         "distMain": 5.9,
         "mfDays": 0,
         "sectorFit": "板块中性",
-        "advice": "长平台整理·距枢轴5.9%｜板块中性"
+        "advice": "平台整理·距枢轴5.9%｜板块中性"
+      },
+      {
+        "code": "600795.SH",
+        "name": "国电电力",
+        "sector": "测试行业",
+        "star": false,
+        "inPool": true,
+        "close": 5.15,
+        "tag": "—",
+        "pattern": "平台整理",
+        "platform": {
+          "type": "平台整理",
+          "days": 50,
+          "amplitude": 12.88,
+          "drift": 2.59,
+          "volRatio": 0.8365,
+          "trendSlopePct": 4.6815,
+          "ma20": 4.908,
+          "ma20Previous": 4.7715,
+          "ma60": 4.9048,
+          "trendWindowDays": 40,
+          "trendEvidence": "平台前40日回归斜率>0且MA20上升并高于MA60",
+          "pivot": 5.52,
+          "distPct": 7.2,
+          "invalidation": 4.89,
+          "volConfirm": 1713675.9,
+          "formed": true,
+          "structureOnly": true,
+          "moneyflowStart": "20260810",
+          "moneyflowEnd": "20261026",
+          "moneyflowDays": 50,
+          "moneyflowCoveredDays": 50,
+          "moneyflowCoveragePct": 100.0,
+          "intervalNetInflow": 7.4136,
+          "moneyflowUnit": "亿元",
+          "moneyflowPass": true,
+          "moneyflowReason": "区间累计净流入>0",
+          "eligible": true,
+          "displayEligible": true,
+          "patternReasons": [
+            "前期上升趋势、固定窄幅、总体缩量与区间资金全部通过"
+          ]
+        },
+        "patternEvidence": {
+          "type": "平台整理",
+          "days": 50,
+          "amplitude": 12.88,
+          "drift": 2.59,
+          "volRatio": 0.8365,
+          "trendSlopePct": 4.6815,
+          "ma20": 4.908,
+          "ma20Previous": 4.7715,
+          "ma60": 4.9048,
+          "trendWindowDays": 40,
+          "trendEvidence": "平台前40日回归斜率>0且MA20上升并高于MA60",
+          "pivot": 5.52,
+          "distPct": 7.2,
+          "invalidation": 4.89,
+          "volConfirm": 1713675.9,
+          "formed": true,
+          "structureOnly": true,
+          "moneyflowStart": "20260810",
+          "moneyflowEnd": "20261026",
+          "moneyflowDays": 50,
+          "moneyflowCoveredDays": 50,
+          "moneyflowCoveragePct": 100.0,
+          "intervalNetInflow": 7.4136,
+          "moneyflowUnit": "亿元",
+          "moneyflowPass": true,
+          "moneyflowReason": "区间累计净流入>0",
+          "eligible": true,
+          "displayEligible": true,
+          "patternReasons": [
+            "前期上升趋势、固定窄幅、总体缩量与区间资金全部通过"
+          ]
+        },
+        "entryTier": "qualified",
+        "defects": [],
+        "cupHandle": null,
+        "flag": null,
+        "fixedBase": null,
+        "vcpAttribute": null,
+        "patternNote": "平台整理：前期40日斜率4.6815%，MA20 4.908 > MA60 4.9048；50日、振幅12.88%（统一≤15%）、总体量比0.8365；区间净流入7.4136亿元，覆盖100.0%。",
+        "trendTemplate": {
+          "pass": false,
+          "evidence": [
+            {
+              "item": "现价>150日线",
+              "ok": true,
+              "val": "5.15 vs MA150 5.01"
+            },
+            {
+              "item": "现价>200日线",
+              "ok": true,
+              "val": "5.15 vs MA200 4.99"
+            },
+            {
+              "item": "200日线上行≥1个月",
+              "ok": false,
+              "val": "MA200 5.04→4.99"
+            },
+            {
+              "item": "50日线>150日线",
+              "ok": true,
+              "val": "5.24 vs 5.01"
+            },
+            {
+              "item": "150日线>200日线",
+              "ok": true,
+              "val": "5.01 vs 4.99"
+            },
+            {
+              "item": "距52周低点≥+25%",
+              "ok": false,
+              "val": "低点4.55→现价5.15（+13%）"
+            },
+            {
+              "item": "距52周高点≤25%",
+              "ok": true,
+              "val": "高点5.99→现价5.15（-14%）"
+            }
+          ]
+        },
+        "stage": "Stage 1 基底（未过趋势模板）",
+        "buyPoint": {
+          "pivot": 5.52,
+          "distanceToPivotPct": 7.2,
+          "invalidation": 4.89,
+          "volConfirm": 1713675.9,
+          "breakoutConfirm": "收盘>5.52 且成交量≥50日均量×1.4（≈1713676手）"
+        },
+        "histPct": 64.4,
+        "distHigh250": -14.0,
+        "distMain": 7.2,
+        "mfDays": 0,
+        "sectorFit": "板块中性",
+        "advice": "平台整理·距枢轴7.2%｜板块中性"
       }
     ],
     "bottomShapeWatch": [
@@ -3863,7 +3888,7 @@
         "formalAdmission": false,
         "patternReasons": [
           "区间累计净流入未大于0",
-          "个股自身PE/PB历史分位未通过30%门"
+          "个股自身PE/PB历史分位未通过40%门"
         ],
         "patternEvidence": {
           "type": "底部整理",
@@ -3959,7 +3984,7 @@
             }
           ],
           "valuationMinSamples": 24,
-          "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+          "valuationReason": "个股自身PE/PB历史分位未通过40%门",
           "bottomShape": true,
           "bottomPattern": "底部整理",
           "shapeRecognized": true,
@@ -3970,7 +3995,7 @@
           "qualificationLabel": "底部形态观察·资格排除",
           "patternReasons": [
             "区间累计净流入未大于0",
-            "个股自身PE/PB历史分位未通过30%门"
+            "个股自身PE/PB历史分位未通过40%门"
           ]
         }
       },
@@ -3989,8 +4014,7 @@
         "displayEligible": false,
         "formalAdmission": false,
         "patternReasons": [
-          "区间累计净流入未大于0",
-          "个股自身PE/PB历史分位未通过30%门"
+          "区间累计净流入未大于0"
         ],
         "patternEvidence": {
           "type": "底部整理",
@@ -4037,7 +4061,7 @@
           "moneyflowUnit": "亿元",
           "moneyflowPass": false,
           "moneyflowReason": "区间累计净流入未大于0",
-          "valuationPass": false,
+          "valuationPass": true,
           "valuationBasis": "dual",
           "valuationScorePct": 31.9253,
           "valuationDate": "20260930",
@@ -4062,117 +4086,7 @@
             }
           ],
           "valuationMinSamples": 24,
-          "valuationReason": "个股自身PE/PB历史分位未通过30%门",
-          "bottomShape": true,
-          "bottomPattern": "底部整理",
-          "shapeRecognized": true,
-          "eligible": false,
-          "displayEligible": false,
-          "formalAdmission": false,
-          "qualificationStatus": "excluded",
-          "qualificationLabel": "底部形态观察·资格排除",
-          "patternReasons": [
-            "区间累计净流入未大于0",
-            "个股自身PE/PB历史分位未通过30%门"
-          ]
-        }
-      },
-      {
-        "code": "601818.SH",
-        "name": "光大银行",
-        "sector": "测试行业",
-        "star": false,
-        "inPool": true,
-        "asOf": "20261026",
-        "bottomShape": true,
-        "bottomPattern": "底部整理",
-        "qualificationStatus": "excluded",
-        "qualificationLabel": "底部形态观察·资格排除",
-        "eligible": false,
-        "displayEligible": false,
-        "formalAdmission": false,
-        "patternReasons": [
-          "区间累计净流入未大于0"
-        ],
-        "patternEvidence": {
-          "type": "底部整理",
-          "weeks": 37,
-          "days": 169,
-          "amplitude": 17.07,
-          "drift": -7.9,
-          "trendSlopePct": -8.3681,
-          "weeklyStructure": "weekly_flat",
-          "weeklyStructureLabel": "周线长期走平",
-          "swingLows": [
-            {
-              "week": "2026W10",
-              "low": 3.18
-            },
-            {
-              "week": "2026W13",
-              "low": 3.17
-            },
-            {
-              "week": "2026W22",
-              "low": 3.06
-            },
-            {
-              "week": "2026W27",
-              "low": 2.87
-            },
-            {
-              "week": "2026W36",
-              "low": 2.92
-            },
-            {
-              "week": "2026W40",
-              "low": 2.98
-            }
-          ],
-          "bottomStart": "20260209",
-          "bottomEnd": "20261026",
-          "distanceToAvailableHighPct": -31.76,
-          "pivot": 3.36,
-          "distPct": 10.9,
-          "invalidation": 2.87,
-          "volConfirm": 2628190.0,
-          "formed": true,
-          "structureOnly": true,
-          "moneyflowStart": "20260209",
-          "moneyflowEnd": "20261026",
-          "moneyflowDays": 169,
-          "moneyflowCoveredDays": 169,
-          "moneyflowCoveragePct": 100.0,
-          "intervalNetInflow": -16.926,
-          "moneyflowUnit": "亿元",
-          "moneyflowPass": false,
-          "moneyflowReason": "区间累计净流入未大于0",
-          "valuationPass": true,
-          "valuationBasis": "dual",
-          "valuationScorePct": 29.5833,
-          "valuationDate": "20260930",
-          "valuationMetrics": [
-            {
-              "metric": "peTtm",
-              "value": 5.4571,
-              "percentile": 56.6667,
-              "samples": 120,
-              "historyStart": "20161031",
-              "historyEnd": "20260930",
-              "sufficient": true
-            },
-            {
-              "metric": "pb",
-              "value": 0.3539,
-              "percentile": 2.5,
-              "samples": 120,
-              "historyStart": "20161031",
-              "historyEnd": "20260930",
-              "sufficient": true
-            }
-          ],
-          "valuationMinSamples": 24,
-          "valuationReason": "双指标历史分位均值≤30%",
+          "valuationReason": "双指标历史分位均值≤40%",
           "bottomShape": true,
           "bottomPattern": "底部整理",
           "shapeRecognized": true,
@@ -4187,8 +4101,8 @@
         }
       },
       {
-        "code": "601916.SH",
-        "name": "浙商银行",
+        "code": "600000.SH",
+        "name": "浦发银行",
         "sector": "测试行业",
         "star": false,
         "inPool": true,
@@ -4201,111 +4115,84 @@
         "displayEligible": false,
         "formalAdmission": false,
         "patternReasons": [
-          "个股自身PE/PB历史分位未通过30%门"
+          "区间累计净流入未大于0",
+          "个股自身PE/PB历史分位未通过40%门"
         ],
         "patternEvidence": {
           "type": "底部整理",
-          "weeks": 60,
-          "days": 276,
-          "amplitude": 24.23,
-          "drift": -5.19,
-          "trendSlopePct": -6.3877,
+          "weeks": 39,
+          "days": 179,
+          "amplitude": 24.03,
+          "drift": -4.18,
+          "trendSlopePct": -8.2141,
           "weeklyStructure": "weekly_flat",
           "weeklyStructureLabel": "周线长期走平",
           "swingLows": [
             {
-              "week": "2025W41",
-              "low": 2.96
-            },
-            {
-              "week": "2025W45",
-              "low": 2.99
-            },
-            {
-              "week": "2025W49",
-              "low": 3.03
-            },
-            {
-              "week": "2025W52",
-              "low": 3.03
-            },
-            {
-              "week": "2026W05",
-              "low": 2.88
-            },
-            {
               "week": "2026W10",
-              "low": 2.95
+              "low": 9.43
             },
             {
-              "week": "2026W15",
-              "low": 2.93
-            },
-            {
-              "week": "2026W18",
-              "low": 2.95
-            },
-            {
-              "week": "2026W22",
-              "low": 2.96
+              "week": "2026W21",
+              "low": 8.75
             },
             {
               "week": "2026W27",
-              "low": 2.6
+              "low": 8.49
             },
             {
               "week": "2026W35",
-              "low": 2.86
+              "low": 8.95
             },
             {
-              "week": "2026W40",
-              "low": 2.81
+              "week": "2026W39",
+              "low": 8.91
             }
           ],
-          "bottomStart": "20250901",
+          "bottomStart": "20260126",
           "bottomEnd": "20261026",
-          "distanceToAvailableHighPct": -22.96,
-          "pivot": 3.23,
-          "distPct": 10.6,
-          "invalidation": 2.6,
-          "volConfirm": 1931005.2,
+          "distanceToAvailableHighPct": -34.11,
+          "pivot": 10.53,
+          "distPct": 9.5,
+          "invalidation": 8.49,
+          "volConfirm": 1000231.6,
           "formed": true,
           "structureOnly": true,
-          "moneyflowStart": "20250901",
+          "moneyflowStart": "20260126",
           "moneyflowEnd": "20261026",
-          "moneyflowDays": 276,
-          "moneyflowCoveredDays": 276,
+          "moneyflowDays": 179,
+          "moneyflowCoveredDays": 179,
           "moneyflowCoveragePct": 100.0,
-          "intervalNetInflow": 14.3435,
+          "intervalNetInflow": -29.3504,
           "moneyflowUnit": "亿元",
-          "moneyflowPass": true,
-          "moneyflowReason": "区间累计净流入>0",
+          "moneyflowPass": false,
+          "moneyflowReason": "区间累计净流入未大于0",
           "valuationPass": false,
           "valuationBasis": "dual",
-          "valuationScorePct": 33.7349,
+          "valuationScorePct": 46.6667,
           "valuationDate": "20260930",
           "valuationMetrics": [
             {
               "metric": "peTtm",
-              "value": 6.0436,
-              "percentile": 62.6506,
-              "samples": 83,
-              "historyStart": "20191129",
+              "value": 6.1631,
+              "percentile": 65.0,
+              "samples": 120,
+              "historyStart": "20161031",
               "historyEnd": "20260930",
               "sufficient": true
             },
             {
               "metric": "pb",
-              "value": 0.4354,
-              "percentile": 4.8193,
-              "samples": 83,
-              "historyStart": "20191129",
+              "value": 0.4188,
+              "percentile": 28.3333,
+              "samples": 120,
+              "historyStart": "20161031",
               "historyEnd": "20260930",
               "sufficient": true
             }
           ],
           "valuationMinSamples": 24,
-          "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+          "valuationReason": "个股自身PE/PB历史分位未通过40%门",
           "bottomShape": true,
           "bottomPattern": "底部整理",
           "shapeRecognized": true,
@@ -4315,7 +4202,8 @@
           "qualificationStatus": "excluded",
           "qualificationLabel": "底部形态观察·资格排除",
           "patternReasons": [
-            "个股自身PE/PB历史分位未通过30%门"
+            "区间累计净流入未大于0",
+            "个股自身PE/PB历史分位未通过40%门"
           ]
         }
       },
@@ -4462,7 +4350,7 @@
             }
           ],
           "valuationMinSamples": 24,
-          "valuationReason": "双指标历史分位均值≤30%",
+          "valuationReason": "双指标历史分位均值≤40%",
           "bottomShape": true,
           "bottomPattern": "底部整理",
           "shapeRecognized": true,
@@ -4477,8 +4365,141 @@
         }
       },
       {
-        "code": "600000.SH",
-        "name": "浦发银行",
+        "code": "601916.SH",
+        "name": "浙商银行",
+        "sector": "测试行业",
+        "star": false,
+        "inPool": true,
+        "asOf": "20261026",
+        "bottomShape": true,
+        "bottomPattern": "底部整理",
+        "qualificationStatus": "eligible",
+        "qualificationLabel": "正式底部入选",
+        "eligible": true,
+        "displayEligible": true,
+        "formalAdmission": true,
+        "patternReasons": [
+          "周线底部结构、区间资金与个股历史估值全部通过"
+        ],
+        "patternEvidence": {
+          "type": "底部整理",
+          "weeks": 60,
+          "days": 276,
+          "amplitude": 24.23,
+          "drift": -5.19,
+          "trendSlopePct": -6.3877,
+          "weeklyStructure": "weekly_flat",
+          "weeklyStructureLabel": "周线长期走平",
+          "swingLows": [
+            {
+              "week": "2025W41",
+              "low": 2.96
+            },
+            {
+              "week": "2025W45",
+              "low": 2.99
+            },
+            {
+              "week": "2025W49",
+              "low": 3.03
+            },
+            {
+              "week": "2025W52",
+              "low": 3.03
+            },
+            {
+              "week": "2026W05",
+              "low": 2.88
+            },
+            {
+              "week": "2026W10",
+              "low": 2.95
+            },
+            {
+              "week": "2026W15",
+              "low": 2.93
+            },
+            {
+              "week": "2026W18",
+              "low": 2.95
+            },
+            {
+              "week": "2026W22",
+              "low": 2.96
+            },
+            {
+              "week": "2026W27",
+              "low": 2.6
+            },
+            {
+              "week": "2026W35",
+              "low": 2.86
+            },
+            {
+              "week": "2026W40",
+              "low": 2.81
+            }
+          ],
+          "bottomStart": "20250901",
+          "bottomEnd": "20261026",
+          "distanceToAvailableHighPct": -22.96,
+          "pivot": 3.23,
+          "distPct": 10.6,
+          "invalidation": 2.6,
+          "volConfirm": 1931005.2,
+          "formed": true,
+          "structureOnly": true,
+          "moneyflowStart": "20250901",
+          "moneyflowEnd": "20261026",
+          "moneyflowDays": 276,
+          "moneyflowCoveredDays": 276,
+          "moneyflowCoveragePct": 100.0,
+          "intervalNetInflow": 14.3435,
+          "moneyflowUnit": "亿元",
+          "moneyflowPass": true,
+          "moneyflowReason": "区间累计净流入>0",
+          "valuationPass": true,
+          "valuationBasis": "dual",
+          "valuationScorePct": 33.7349,
+          "valuationDate": "20260930",
+          "valuationMetrics": [
+            {
+              "metric": "peTtm",
+              "value": 6.0436,
+              "percentile": 62.6506,
+              "samples": 83,
+              "historyStart": "20191129",
+              "historyEnd": "20260930",
+              "sufficient": true
+            },
+            {
+              "metric": "pb",
+              "value": 0.4354,
+              "percentile": 4.8193,
+              "samples": 83,
+              "historyStart": "20191129",
+              "historyEnd": "20260930",
+              "sufficient": true
+            }
+          ],
+          "valuationMinSamples": 24,
+          "valuationReason": "双指标历史分位均值≤40%",
+          "bottomShape": true,
+          "bottomPattern": "底部整理",
+          "shapeRecognized": true,
+          "eligible": true,
+          "displayEligible": true,
+          "formalAdmission": true,
+          "qualificationStatus": "eligible",
+          "qualificationLabel": "正式底部入选",
+          "patternReasons": [
+            "周线底部结构、区间资金与个股历史估值全部通过"
+          ]
+        }
+      },
+      {
+        "code": "601818.SH",
+        "name": "光大银行",
         "sector": "测试行业",
         "star": false,
         "inPool": true,
@@ -4491,67 +4512,70 @@
         "displayEligible": false,
         "formalAdmission": false,
         "patternReasons": [
-          "区间累计净流入未大于0",
-          "个股自身PE/PB历史分位未通过30%门"
+          "区间累计净流入未大于0"
         ],
         "patternEvidence": {
           "type": "底部整理",
-          "weeks": 39,
-          "days": 179,
-          "amplitude": 24.03,
-          "drift": -4.18,
-          "trendSlopePct": -8.2141,
+          "weeks": 37,
+          "days": 169,
+          "amplitude": 17.07,
+          "drift": -7.9,
+          "trendSlopePct": -8.3681,
           "weeklyStructure": "weekly_flat",
           "weeklyStructureLabel": "周线长期走平",
           "swingLows": [
             {
               "week": "2026W10",
-              "low": 9.43
+              "low": 3.18
             },
             {
-              "week": "2026W21",
-              "low": 8.75
+              "week": "2026W13",
+              "low": 3.17
+            },
+            {
+              "week": "2026W22",
+              "low": 3.06
             },
             {
               "week": "2026W27",
-              "low": 8.49
+              "low": 2.87
             },
             {
-              "week": "2026W35",
-              "low": 8.95
+              "week": "2026W36",
+              "low": 2.92
             },
             {
-              "week": "2026W39",
-              "low": 8.91
+              "week": "2026W40",
+              "low": 2.98
             }
           ],
-          "bottomStart": "20260126",
+          "bottomStart": "20260209",
           "bottomEnd": "20261026",
-          "distanceToAvailableHighPct": -34.11,
-          "pivot": 10.53,
-          "distPct": 9.5,
-          "invalidation": 8.49,
-          "volConfirm": 1000231.6,
+          "distanceToAvailableHighPct": -31.76,
+          "pivot": 3.36,
+          "distPct": 10.9,
+          "invalidation": 2.87,
+          "volConfirm": 2628190.0,
           "formed": true,
           "structureOnly": true,
-          "moneyflowStart": "20260126",
+          "moneyflowStart": "20260209",
           "moneyflowEnd": "20261026",
-          "moneyflowDays": 179,
-          "moneyflowCoveredDays": 179,
+          "moneyflowDays": 169,
+          "moneyflowCoveredDays": 169,
           "moneyflowCoveragePct": 100.0,
-          "intervalNetInflow": -29.3504,
+          "intervalNetInflow": -16.926,
           "moneyflowUnit": "亿元",
           "moneyflowPass": false,
           "moneyflowReason": "区间累计净流入未大于0",
-          "valuationPass": false,
+          "valuationPass": true,
           "valuationBasis": "dual",
-          "valuationScorePct": 46.6667,
+          "valuationScorePct": 29.5833,
           "valuationDate": "20260930",
           "valuationMetrics": [
             {
               "metric": "peTtm",
-              "value": 6.1631,
-              "percentile": 65.0,
+              "value": 5.4571,
+              "percentile": 56.6667,
               "samples": 120,
               "historyStart": "20161031",
               "historyEnd": "20260930",
@@ -4559,8 +4583,8 @@
             },
             {
               "metric": "pb",
-              "value": 0.4188,
-              "percentile": 28.3333,
+              "value": 0.3539,
+              "percentile": 2.5,
               "samples": 120,
               "historyStart": "20161031",
               "historyEnd": "20260930",
@@ -4568,7 +4592,7 @@
             }
           ],
           "valuationMinSamples": 24,
-          "valuationReason": "个股自身PE/PB历史分位未通过30%门",
+          "valuationReason": "双指标历史分位均值≤40%",
           "bottomShape": true,
           "bottomPattern": "底部整理",
           "shapeRecognized": true,
@@ -4578,25 +4602,35 @@
           "qualificationStatus": "excluded",
           "qualificationLabel": "底部形态观察·资格排除",
           "patternReasons": [
-            "区间累计净流入未大于0",
-            "个股自身PE/PB历史分位未通过30%门"
+            "区间累计净流入未大于0"
           ]
         }
       }
     ],
     "bottomShapeWatchCount": 6,
-    "bottomShapeWatchNote": "仅证明通用周线底部价格结构成立；不等于正式入选。正式底部仍须区间资金100%覆盖且累计净流入>0、个股自身PE/PB历史分位≤30%；缺证据只列资格待核验。",
+    "bottomShapeWatchNote": "仅证明通用周线底部价格结构成立（最少12周）；不等于正式入选。正式底部仍须区间资金100%覆盖且累计净流入>0、个股自身PE/PB历史分位≤40%；缺证据只列资格待核验。",
     "droppedByTrendTemplate": [],
     "droppedByWeeklyMA": [],
     "droppedByWeeklyMACount": 0,
     "droppedByPatternEvidence": [
+      {
+        "code": "600926.SH",
+        "name": "杭州银行",
+        "pattern": "平台整理",
+        "reasons": [
+          "一年分位73.2%、距一年高点-5.3%，触发平台高位门"
+        ],
+        "moneyflowCoveragePct": 100.0,
+        "intervalNetInflow": 5.232,
+        "valuationScorePct": null
+      },
       {
         "code": "600795.SH",
         "name": "国电电力",
         "pattern": "底部整理",
         "reasons": [
           "区间累计净流入未大于0",
-          "个股自身PE/PB历史分位未通过30%门"
+          "个股自身PE/PB历史分位未通过40%门"
         ],
         "moneyflowCoveragePct": 100.0,
         "intervalNetInflow": -22.5517,
@@ -4605,36 +4639,36 @@
       {
         "code": "002648.SZ",
         "name": "卫星化学",
+        "pattern": "平台整理",
+        "reasons": [
+          "区间累计净流入未大于0"
+        ],
+        "moneyflowCoveragePct": 100.0,
+        "intervalNetInflow": -8.3919,
+        "valuationScorePct": null
+      },
+      {
+        "code": "002648.SZ",
+        "name": "卫星化学",
         "pattern": "底部整理",
         "reasons": [
-          "区间累计净流入未大于0",
-          "个股自身PE/PB历史分位未通过30%门"
+          "区间累计净流入未大于0"
         ],
         "moneyflowCoveragePct": 100.0,
         "intervalNetInflow": -56.0076,
         "valuationScorePct": 31.9253
       },
       {
-        "code": "601818.SH",
-        "name": "光大银行",
+        "code": "600000.SH",
+        "name": "浦发银行",
         "pattern": "底部整理",
         "reasons": [
-          "区间累计净流入未大于0"
+          "区间累计净流入未大于0",
+          "个股自身PE/PB历史分位未通过40%门"
         ],
         "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": -16.926,
-        "valuationScorePct": 29.5833
-      },
-      {
-        "code": "601916.SH",
-        "name": "浙商银行",
-        "pattern": "底部整理",
-        "reasons": [
-          "个股自身PE/PB历史分位未通过30%门"
-        ],
-        "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": 14.3435,
-        "valuationScorePct": 33.7349
+        "intervalNetInflow": -29.3504,
+        "valuationScorePct": 46.6667
       },
       {
         "code": "000895.SZ",
@@ -4644,18 +4678,7 @@
           "区间累计净流入未大于0"
         ],
         "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": -2.1792,
-        "valuationScorePct": null
-      },
-      {
-        "code": "000895.SZ",
-        "name": "双汇发展",
-        "pattern": "长平台整理",
-        "reasons": [
-          "区间累计净流入未大于0"
-        ],
-        "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": -2.9368,
+        "intervalNetInflow": -3.7693,
         "valuationScorePct": null
       },
       {
@@ -4670,43 +4693,20 @@
         "valuationScorePct": 12.0833
       },
       {
-        "code": "600926.SH",
-        "name": "杭州银行",
-        "pattern": "平台整理",
-        "reasons": [
-          "一年分位73.2%、距一年高点-5.3%，触发平台高位门"
-        ],
-        "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": 0.451,
-        "valuationScorePct": null
-      },
-      {
-        "code": "600926.SH",
-        "name": "杭州银行",
-        "pattern": "长平台整理",
-        "reasons": [
-          "一年分位73.2%、距一年高点-5.3%，触发平台高位门"
-        ],
-        "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": 5.232,
-        "valuationScorePct": null
-      },
-      {
-        "code": "600000.SH",
-        "name": "浦发银行",
+        "code": "601818.SH",
+        "name": "光大银行",
         "pattern": "底部整理",
         "reasons": [
-          "区间累计净流入未大于0",
-          "个股自身PE/PB历史分位未通过30%门"
+          "区间累计净流入未大于0"
         ],
         "moneyflowCoveragePct": 100.0,
-        "intervalNetInflow": -29.3504,
-        "valuationScorePct": 46.6667
+        "intervalNetInflow": -16.926,
+        "valuationScorePct": 29.5833
       }
     ],
-    "droppedByPatternEvidenceCount": 10,
+    "droppedByPatternEvidenceCount": 8,
     "scanScope": "指数成分全覆盖",
-    "note": "池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由\"积聚/信号板块龙头\"扩为指数成分全覆盖，当前口径=指数成分全覆盖）；形态口径（任务111平台/底部证据门，保留任务97周MA状态门）：全部形态先查最近已完成周MA150/200：MA150<MA200为明确空头，直接从形态精扫及漏斗第3步剔除，不再作为fuzzy瑕疵展示；MA150=MA200不被本门硬删，仍按原周MA未多头fuzzy；MA150>MA200不因此误杀；不足200根完成周或均线缺失不伪造MA安全通过，沿用各形态原有数据审慎门（杯柄仍拒绝不足）；本门不看价格与均线关系、不新增MA50条件，既有周BOLL深度回踩包容与有效破位门不变；VCP收缩型（任务103十例人工标签校准）=严格摆动证据须≥3次收缩、每次≤前次1.10且末次<首次、末段均量<首段；务实反复序列只留证据、不再独立成型。严格摆动另须近期量未出现5日/10日>1.08且最近3日/10日>1.10的同步重新放大、近10日无持续下滑（下跌日≥70%+漂移≤-2.5%+20日位置≤25%）或剧烈起伏（单日绝对涨跌≥5%+年化波动≥35%），识别日距枢轴-5%~+4%；不强制MA10≤MA20≤MA50，多窗口短长均量比≤1.20仅作异常放量门；已突破日只审突破前基底量，不用突破大量或后续结果反判。新增固定区间路径=15~50日+振幅≤10.5%+三段务实价格收缩+区间/前20日均量<1且末段量<首段+相同近期量/右侧质量/枢轴门；按当时紧致度、阶段量比、枢轴距离选最佳，可接近一年新高，不套用摆动Stage2/高位门；平台型VCP属性（任务103）保留旧10~50日短平台作为VCP几何/量能属性证据，不直接产生平台整理或底部整理标签；属性首日/内部单日完整性门只作用于VCP属性，不得反向改写新平台或底部资格；杯柄型（任务99双背景与柄质量分级）=杯身背景满足前置250日涨幅≥15%（uptrend）或60~120日震荡修复（range_repair：区间跨度≥15%+首末净漂移绝对值≤15%+中位穿越≥2次+杯沿相对区间上沿-15%~+10%）之一，仍须最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净柄须净漂移绝对值≤5%+全程回归趋势绝对值≤6%+振幅≤8%+10日/全柄均量≤1.05+5日/10日均量≤1.10；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点、35~50%柄位或8~10%振幅/温和漂移/多窗口量能瑕疵进入fuzzy，但不得换局部杯身绕过全局杯的杯深/U底/双底/杯身背景/右侧/缩量等独立硬门；持续滑梯（净漂移≤-4%+回归趋势≤-4%+下跌日≥60%+末端处柄区间下45%）硬拒绝；结构或柄质量fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；任务110统一历史高位资格门=几何formed后，以识别日前全部可得日线最高收盘为历史高点，最新收盘距其>-8%直接eligible/display=false且不作为fuzzy展示，恰好-8%及更深回撤通过；输出历史起止/样本数/高点日期与收盘/距离，达到1200根缓存上限明确非上市全史；VCP和底部平台不适用此门；用户习惯·早期杯柄信号（任务92新鲜度+任务99干净柄硬门+任务101等待期失效门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯、50~80%柄位与干净柄，不用局部/35~50%结构fuzzy或柄质量fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01；柄锚点后、首个有效信号前任一收盘跌破初始失效位即永久放弃该锚点并继续检查其他锚点，不得收回后复活旧柄；信号后当前跌破同样剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；正式平台整理（任务111）=15~44日、振幅≤10%、首末漂移绝对值≤6%；长平台整理=45~120日、振幅≤12%、首末漂移绝对值≤6%；两者均须平台前40日回归斜率>0且平台前MA20较前一20日上升并高于MA60，平台日均量严格低于前20日（允许律动但不接受整体放量），区间每日主力资金覆盖100%且累计净流入>0；平台/长平台/正式底部共同保留一年高位排除门，平台任一资金或结构失败均不正式展示；底部形态观察与正式底部入选分层（任务111）：价格结构=26~104周、振幅≤45%、首末漂移绝对值≤15%、全窗回归变化绝对值≤20%，距全部可得历史收盘高点至少10%且最近4周不继续创新低；支持周线走平/多重底/底部抬升，结构优先走平、同级取更长窗，不以资金或估值倒选窗口；bottomShapeWatch只证明此层成立，资格失败不反向否认形态。正式入选另须区间资金100%覆盖且累计净流入>0，以及个股自身月末PE_TTM/PB各至少24个正有效样本、双指标有效取历史分位均值、单指标有效明确标注、分位≤30%；缺证据列资格待核验，负流入或估值超门列资格排除，均不得进入正式底部items/formed计数；旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85，允许末段≤1.35温和放量；买点参数：枢轴价/失效位/距枢轴%/形态对应的突破确认——均为形态参数，非操作建议；普通形态只展示距枢轴-5~+8（干净杯柄+5、结构fuzzy杯柄/平台+12）；杯柄首次早期/强确认信号另按当前位置离枢轴≤15%且年龄0~5个交易日展示，早期允许贴近枢轴下方且不等于收盘强确认；任务101回退=recent/普通杯柄因年龄、当前失效或距离等展示门失败后，重新选择已经形成且自身可展示的长平台/旗形/底部或平台整理，不回选旧杯柄、不放宽其他形态门；主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用）；无瑕疵名单按VCP/杯柄（前端细分🚀突破初期）/底部整理/长平台/平台整理/旗形分组，组内资金确认优先→距枢轴升序；杯柄瑕疵档独立分组沉底弱展示，不参与无瑕疵资金确认排序；建议=水温×板块合适度×资金确认，仅供关注优先级参考"
+    "note": "池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由\"积聚/信号板块龙头\"扩为指数成分全覆盖，当前口径=指数成分全覆盖）；形态口径（任务112统一平台/底部证据门，保留任务97周MA状态门）：全部形态先查最近已完成周MA150/200：MA150<MA200为明确空头，直接从形态精扫及漏斗第3步剔除，不再作为fuzzy瑕疵展示；MA150=MA200不被本门硬删，仍按原周MA未多头fuzzy；MA150>MA200不因此误杀；不足200根完成周或均线缺失不伪造MA安全通过，沿用各形态原有数据审慎门（杯柄仍拒绝不足）；本门不看价格与均线关系、不新增MA50条件，既有周BOLL深度回踩包容与有效破位门不变；VCP收缩型（任务103十例人工标签校准）=严格摆动证据须≥3次收缩、每次≤前次1.10且末次<首次、末段均量<首段；务实反复序列只留证据、不再独立成型。严格摆动另须近期量未出现5日/10日>1.08且最近3日/10日>1.10的同步重新放大、近10日无持续下滑（下跌日≥70%+漂移≤-2.5%+20日位置≤25%）或剧烈起伏（单日绝对涨跌≥5%+年化波动≥35%），识别日距枢轴-5%~+4%；不强制MA10≤MA20≤MA50，多窗口短长均量比≤1.20仅作异常放量门；已突破日只审突破前基底量，不用突破大量或后续结果反判。新增固定区间路径=15~50日+振幅≤10.5%+三段务实价格收缩+区间/前20日均量<1且末段量<首段+相同近期量/右侧质量/枢轴门；按当时紧致度、阶段量比、枢轴距离选最佳，可接近一年新高，不套用摆动Stage2/高位门；平台型VCP属性（任务103）保留旧10~50日短平台作为VCP几何/量能属性证据，不直接产生平台整理或底部整理标签；属性首日/内部单日完整性门只作用于VCP属性，不得反向改写新平台或底部资格；杯柄型（任务99双背景与柄质量分级）=杯身背景满足前置250日涨幅≥15%（uptrend）或60~120日震荡修复（range_repair：区间跨度≥15%+首末净漂移绝对值≤15%+中位穿越≥2次+杯沿相对区间上沿-15%~+10%）之一，仍须最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净柄须净漂移绝对值≤5%+全程回归趋势绝对值≤6%+振幅≤8%+10日/全柄均量≤1.05+5日/10日均量≤1.10；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点、35~50%柄位或8~10%振幅/温和漂移/多窗口量能瑕疵进入fuzzy，但不得换局部杯身绕过全局杯的杯深/U底/双底/杯身背景/右侧/缩量等独立硬门；持续滑梯（净漂移≤-4%+回归趋势≤-4%+下跌日≥60%+末端处柄区间下45%）硬拒绝；结构或柄质量fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；任务110统一历史高位资格门=几何formed后，以识别日前全部可得日线最高收盘为历史高点，最新收盘距其>-8%直接eligible/display=false且不作为fuzzy展示，恰好-8%及更深回撤通过；输出历史起止/样本数/高点日期与收盘/距离，达到1200根缓存上限明确非上市全史；VCP和底部平台不适用此门；用户习惯·早期杯柄信号（任务92新鲜度+任务99干净柄硬门+任务101等待期失效门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯、50~80%柄位与干净柄，不用局部/35~50%结构fuzzy或柄质量fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01；柄锚点后、首个有效信号前任一收盘跌破初始失效位即永久放弃该锚点并继续检查其他锚点，不得收回后复活旧柄；信号后当前跌破同样剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；统一平台整理（任务112）=15~120交易日、固定区间振幅≤15%、首末漂移绝对值≤6%，不再区分长短档；平台前40日回归斜率>0且平台前MA20较前一20日上升并高于MA60，平台日均量严格低于前20日（允许律动但不接受整体放量），区间每日主力资金覆盖100%且累计净流入>0；平台与正式底部共同保留一年高位排除门，主分支与杯柄失败回退复用同一证据对象，任一资金、趋势或位置门失败均不正式展示；底部形态观察与正式底部入选分层（任务112）：价格结构=12~104周、振幅≤45%、首末漂移绝对值≤15%、全窗回归变化绝对值≤20%，距全部可得历史收盘高点至少10%且最近4周不继续创新低；支持周线走平/多重底/底部抬升，结构优先走平、同级取更长窗，不以资金或估值倒选窗口；bottomShapeWatch只证明此层成立，资格失败不反向否认形态。正式入选另须区间资金100%覆盖且累计净流入>0，以及个股自身月末PE_TTM/PB各至少24个正有效样本、双指标有效取历史分位均值、单指标有效明确标注、分位≤40%；缺证据列资格待核验，负流入或估值超门列资格排除，均不得进入正式底部items/formed计数；旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85，允许末段≤1.35温和放量；买点参数：枢轴价/失效位/距枢轴%/形态对应的突破确认——均为形态参数，非操作建议；普通形态只展示距枢轴-5~+8（干净杯柄+5、结构fuzzy杯柄/平台+12）；杯柄首次早期/强确认信号另按当前位置离枢轴≤15%且年龄0~5个交易日展示，早期允许贴近枢轴下方且不等于收盘强确认；任务101回退=recent/普通杯柄因年龄、当前失效或距离等展示门失败后，重新选择已经形成且自身可展示的统一平台/旗形/底部，不回选旧杯柄、不放宽其他形态门；主力资金确认=近10个缓存交易日主力净流入≥6天（MINE_MF缓存，0新增调用）；无瑕疵名单按VCP/杯柄（前端细分🚀突破初期）/底部整理/平台整理/旗形分组，组内资金确认优先→距枢轴升序；杯柄瑕疵档独立分组沉底弱展示，不参与无瑕疵资金确认排序；建议=水温×板块合适度×资金确认，仅供关注优先级参考"
   },
   "dataSha256Before": {
     "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",

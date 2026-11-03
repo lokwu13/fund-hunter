@@ -44,10 +44,10 @@ export function completeMoneyflow(evidence?: PatternEvidence | null) {
 
 export function completeBottomEvidence(evidence?: PatternEvidence | null) {
   return completeMoneyflow(evidence) && evidence?.displayEligible === true
-    && evidence.valuationPass === true && (evidence.valuationScorePct ?? 101) <= 30;
+    && evidence.valuationPass === true && (evidence.valuationScorePct ?? 101) <= 40;
 }
 
-/** 旧缓存或缺证据对象不得在前端继续伪装成正式平台/底部。 */
+/** 旧缓存或缺证据对象不得在前端继续伪装成正式平台/底部；旧标签仅作快照兼容。 */
 export function formalPatternDisplayable(item: { pattern?: string; patternEvidence?: PatternEvidence | null }) {
   if (!item.pattern || !FORMAL_PATTERNS.has(item.pattern)) return true;
   if (!item.patternEvidence || item.patternEvidence.displayEligible !== true) return false;
@@ -65,7 +65,8 @@ export function patternEvidenceText(evidence?: PatternEvidence | null) {
     const metrics = (evidence.valuationMetrics || []).map((m) =>
       `${m.metric === 'peTtm' ? 'PE_TTM' : 'PB'}分位${m.percentile ?? '—'}%·样本${m.samples}个${m.sufficient ? '' : '（不足）'}`
     ).join('；');
-    return `底部${evidence.weeks ?? '—'}周·${evidence.weeklyStructureLabel ?? '结构缺失'}·回归${evidence.trendSlopePct ?? '—'}%·振幅${evidence.amplitude ?? '—'}%·${flow}·估值${basis}${evidence.valuationScorePct ?? '—'}%·${metrics || 'PE/PB明细缺失'}`;
+    return `底部${evidence.weeks ?? '—'}周（最少12周）·${evidence.weeklyStructureLabel ?? '结构缺失'}·回归${evidence.trendSlopePct ?? '—'}%·振幅${evidence.amplitude ?? '—'}%·${flow}·估值${basis}${evidence.valuationScorePct ?? '—'}%（≤40%）·${metrics || 'PE/PB明细缺失'}`;
   }
-  return `${evidence.type ?? '平台'}${evidence.days ?? '—'}日·平台前40日斜率${evidence.trendSlopePct ?? '—'}%·MA20 ${evidence.ma20 ?? '—'}（前窗${evidence.ma20Previous ?? '—'}）>MA60 ${evidence.ma60 ?? '—'}·振幅${evidence.amplitude ?? '—'}%·漂移${evidence.drift ?? '—'}%·平台/前20日总体量比${evidence.volRatio ?? '—'}·${flow}`;
+  const platformLabel = evidence.type === '长平台整理' ? '平台整理（旧快照）' : '平台整理';
+  return `${platformLabel}${evidence.days ?? '—'}日·统一振幅≤15%·平台前40日斜率${evidence.trendSlopePct ?? '—'}%·MA20 ${evidence.ma20 ?? '—'}（前窗${evidence.ma20Previous ?? '—'}）>MA60 ${evidence.ma60 ?? '—'}·振幅${evidence.amplitude ?? '—'}%·漂移${evidence.drift ?? '—'}%·平台/前20日总体量比${evidence.volRatio ?? '—'}·${flow}`;
 }

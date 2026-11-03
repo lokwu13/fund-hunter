@@ -1,0 +1,98 @@
+{
+  "task": 112,
+  "asOf": "20261030",
+  "allPassed": true,
+  "releaseReady": true,
+  "taskRegression": {
+    "command": "PYTHONIOENCODING=utf-8 PYTHONPATH=scripts python zz_regress112.py",
+    "success": true,
+    "checksPassed": 61,
+    "checksTotal": 61,
+    "corePositivePassed": 4,
+    "corePositiveTotal": 4,
+    "coreEligiblePassed": 1,
+    "coreEligibleTotal": 4,
+    "releaseEligible": true,
+    "failed": [],
+    "fatalErrors": [],
+    "output": "zz_regress112_summary.json"
+  },
+  "task111Regression": {
+    "command": "PYTHONIOENCODING=utf-8 PYTHONPATH=scripts python zz_regress111.py",
+    "success": true,
+    "checksPassed": 59,
+    "checksTotal": 59,
+    "corePositivePassed": 4,
+    "corePositiveTotal": 4,
+    "coreEligiblePassed": 1,
+    "coreEligibleTotal": 4,
+    "releaseEligible": true,
+    "failed": [],
+    "fatalErrors": [],
+    "output": "zz_regress111_summary.json"
+  },
+  "task110Regression": {
+    "command": "PYTHONIOENCODING=utf-8 PYTHONPATH=scripts python zz_regress110.py",
+    "success": true,
+    "checksPassed": 28,
+    "checksTotal": 28,
+    "failed": [],
+    "log": "zz_regress110_task112_core.log"
+  },
+  "task103Regression": {
+    "command": "PYTHONIOENCODING=utf-8 PYTHONPATH=scripts python zz_regress105.py",
+    "script": "zz_regress105.py",
+    "success": true,
+    "checksPassed": 40,
+    "checksTotal": 40,
+    "casePassed": 10,
+    "caseTotal": 10,
+    "failed": [],
+    "log": "zz_regress105_task112_core.log"
+  },
+  "jointRegression": {
+    "success": true,
+    "passed": 13,
+    "total": 13,
+    "tasks": [92, 95, 96, 99, 101, 102, 104, 105, 106, 107, 108, 109, 110],
+    "output": "zz_joint_regress112.json",
+    "allReturncodesZero": true
+  },
+  "build": {
+    "command": "npm run build",
+    "success": true,
+    "returncode": 0,
+    "modulesTransformed": 2362,
+    "warning": "Some chunks are larger than 500 kB after minification",
+    "log": "zz_build112.log",
+    "machineOutput": "zz_build112.json",
+    "js": {
+      "path": "dist/assets/index-C3QzACFH-v25.js",
+      "bytes": 1406816,
+      "sha256": "264ed5f65060e0e9a5026058054e84cec0bf01b4fd36d7f82d2b4bd8fa710778"
+    },
+    "css": {
+      "path": "dist/assets/index-DIF-ROR-.css",
+      "bytes": 109869,
+      "sha256": "5d5adce1b2bcf117dc0291ad895d4480a460c0a9b9d679edf3707b337f8ff055"
+    }
+  },
+  "localFundData": {
+    "public/fund_data.json": {
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "unchangedFromTask112Regression": true
+  },
+  "productionDataRegenerated": false,
+  "manualDispatch": false,
+  "nightlyExecuted": false,
+  "workflowModified": false,
+  "scheduleModified": false,
+  "productionListRefreshed": false,
+  "note": "allPassed仅表示发布前本地必需测试与最新真实构建全部通过；自动push run和线上结果另见任务112线上核验JSON。"
+}

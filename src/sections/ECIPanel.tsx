@@ -897,7 +897,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
       {/* ===== ② 第3步 · 个股形态工具（服务第3步「看形态」选股与第4步跟踪） ===== */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-dashed border-violet-300 bg-violet-50/40 px-3 py-2 text-xs text-violet-800">
         <span className="text-sm font-bold">② 第3步 · 个股形态工具</span>
-        <span className="text-violet-700/80">形态精扫 / 逆行流水——从第2步圈定的板块里挑形态过硬的个股（VCP收缩/杯柄·奥尼尔CANSLIM/底部整理/长平台/平台整理/旗形整理；平台路径高位硬拒）</span>
+        <span className="text-violet-700/80">形态精扫 / 逆行流水——从第2步圈定的板块里挑形态过硬的个股（VCP收缩/杯柄·奥尼尔CANSLIM/底部整理/统一平台/旗形整理；平台路径高位硬拒）</span>
       </div>
 
       {/* 形态精扫（原个股 VCP 精扫，2026-10-01 多形态并列：VCP收缩/杯柄/平台整理/旗形整理；上证50∪中证500∪沪深300∪科创50∪创业板50∪中证1000 池） */}
@@ -908,7 +908,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <Waves className="w-4 h-4 text-violet-500" />
                 形态精扫
-                <span className="text-[10px] font-normal text-violet-400">VCP收缩 / 杯柄·CANSLIM / 底部整理 / 长平台 / 平台整理 / 旗形整理</span>
+                <span className="text-[10px] font-normal text-violet-400">VCP收缩 / 杯柄·CANSLIM / 底部整理 / 统一平台 / 旗形整理</span>
                 <span className="text-[10px] font-normal text-slate-400">
                   {data.vcpStocks.poolRaw
                     ? `池${data.vcpStocks.poolRaw}→${data.vcpStocks.poolSize ?? '—'}只(≥250亿) · 精扫${data.vcpStocks.scanned ?? 0}只`
@@ -957,7 +957,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                     {data.vcpStocks.items.filter(formalPatternDisplayable).map((it: any, idx: number) => {
                       const grpOf = (x: any) => x.defects?.length
                         ? `⚠ 模糊入围（有瑕疵） · ${x.pattern === '杯柄型' ? '杯柄' : x.pattern} · 独立沉底`
-                        : `${(x.mfDays ?? 0) >= 6 ? '✅ 资金确认 · ' : ''}${x.pattern === 'VCP收缩型' ? 'VCP 收缩' : x.pattern === '杯柄型' ? (x.cupHandle?.breakout ? '🚀 杯柄突破初期' : '杯柄') : x.pattern === '旗形整理' ? '旗形整理' : x.pattern === '底部整理' ? '底部整理 · 26~104周+资金估值双门' : x.pattern === '长平台整理' ? '平台整理 · 长平台（45~120日）' : '平台整理 · 15~44日'}`;
+                        : `${(x.mfDays ?? 0) >= 6 ? '✅ 资金确认 · ' : ''}${x.pattern === 'VCP收缩型' ? 'VCP 收缩' : x.pattern === '杯柄型' ? (x.cupHandle?.breakout ? '🚀 杯柄突破初期' : '杯柄') : x.pattern === '旗形整理' ? '旗形整理' : x.pattern === '底部整理' ? '底部整理 · 最少12周（12~104周）+资金估值双门' : x.pattern === '长平台整理' ? '平台整理（旧快照）' : '统一平台 · 15~120日 · 振幅≤15%'}`;
                       const grp = grpOf(it);
                       const prevGrp = idx > 0 ? grpOf(data.vcpStocks!.items.filter(formalPatternDisplayable)[idx - 1]) : null;
                       const isDefect = !!it.defects?.length;
@@ -1002,7 +1002,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                               <div>
                                 <span
                                   className={`text-[10px] font-bold text-white rounded px-1.5 py-0.5 ${
-                                    isDefect ? 'bg-amber-600' : it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : it.pattern === '旗形整理' ? 'bg-sky-500' : it.pattern === '底部整理' ? 'bg-slate-500' : it.pattern === '长平台整理' ? 'bg-indigo-500' : it.pattern === '高位平台⚠️' ? 'bg-amber-500' : 'bg-teal-500'
+                                    isDefect ? 'bg-amber-600' : it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : it.pattern === '旗形整理' ? 'bg-sky-500' : it.pattern === '底部整理' ? 'bg-slate-500' : it.pattern === '高位平台⚠️' ? 'bg-amber-500' : 'bg-teal-500'
                                   }`}
                                   title={isFixedBase
                                     ? (it.patternNote || `固定区间VCP：${it.fixedBase.days}日振幅${it.fixedBase.amplitude}%·三段振幅${(it.fixedBase.segAmps || []).join('→')}%·区间/前20日均量${it.fixedBase.volRatio}·仅使用识别日当时数据`)
@@ -1048,9 +1048,9 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                 )}
                                 {it.longPlat && it.pattern !== '长平台整理' && (
                                   <span
-                                    className="inline-block text-[9px] font-bold text-indigo-700 bg-indigo-100 rounded px-1 py-0.5 mt-0.5 ml-0.5"
-                                    title={`同时成型长平台；${patternEvidenceText(it.longPlat)}`}
-                                  >兼长平台{it.longPlat.days}日</span>
+                                    className="inline-block text-[9px] font-bold text-slate-600 bg-slate-100 rounded px-1 py-0.5 mt-0.5 ml-0.5"
+                                    title={`旧快照同时成型平台；${patternEvidenceText(it.longPlat)}`}
+                                  >旧快照兼平台{it.longPlat.days}日</span>
                                 )}
                               </div>
                             ) : (
