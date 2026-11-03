@@ -1,0 +1,40 @@
+{
+  "task": 110,
+  "stage": "preRelease",
+  "allPassed": true,
+  "regressions": {
+    "task110": {"passed": 28, "total": 28, "realPitSamples": ["C07", "C08", "C09", "C11"]},
+    "task103": {"passed": 40, "total": 40, "casesPassed": 10, "casesTotal": 10, "windowsPassed": 6, "windowsTotal": 6},
+    "task99": {"passed": 21, "total": 21},
+    "task96Boundary": {"passed": 8, "total": 8},
+    "task95": {"passed": 38, "total": 38},
+    "task92": {"passed": 21, "total": 21},
+    "task107": {"passed": 29, "total": 29},
+    "task108": {"passed": 40, "total": 40},
+    "task109": {"passed": 21, "total": 21}
+  },
+  "historicalSampleAudit": {
+    "sampleCount": 38,
+    "strictCup": {"valid": 6, "total": 11},
+    "validForm": {"valid": 10, "total": 15},
+    "negative": {"valid": 11, "total": 12},
+    "note": "样本审计完成，不代表38个人工标签全部命中"
+  },
+  "build": {
+    "command": "npm run build",
+    "success": true,
+    "warning": "仅既有大chunk提示",
+    "js": {"path": "dist/assets/index-DmRl5SXh-v25.js", "bytes": 1400443, "sha256": "5629942381b1ec181b4534e20df36f56dc6b9fd6a90c09d105611f15e6e86d3d"},
+    "css": {"path": "dist/assets/index-CAAZ_2W_.css", "bytes": 109684, "sha256": "f360bc63d4f5797e191c48a8a41716ddb6fa8870d0a9390b42a930a8885237c9"}
+  },
+  "localFundData": {
+    "public/fund_data.json": {"bytes": 594886, "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"},
+    "src/data/fund_data.json": {"bytes": 594886, "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"}
+  },
+  "productionDataRegenerated": false,
+  "manualDispatch": false,
+  "workflowModified": false,
+  "cacheLimit": 1200,
+  "historyScopeLimitation": "识别日前全部可得缓存日线；达到1200根上限时非上市全史，必须披露截断",
+  "uniformDisplayEligibility": ["普通杯柄", "早期杯柄", "模糊杯柄", "指数杯柄", "总览第3步", "工具精扫", "漏斗"]
+}

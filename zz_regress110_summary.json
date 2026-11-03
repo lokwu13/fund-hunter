@@ -1,0 +1,322 @@
+{
+  "task": 110,
+  "checksPassed": 28,
+  "checksTotal": 28,
+  "failed": [],
+  "checks": [
+    {
+      "name": "7.99%排除",
+      "passed": true,
+      "evidence": {
+        "historyGatePass": false,
+        "historyExclusionReason": "距历史高点不足8%",
+        "historicalHighClose": 100,
+        "historicalHighDate": "20260000",
+        "distanceToHistoricalHighPct": -7.99,
+        "historyStart": "20260000",
+        "historyEnd": "20260000",
+        "historyBars": 21,
+        "historyMayBeTruncated": false,
+        "historyScope": "识别日前全部可得日线收盘（20260000~20260000，21根）"
+      }
+    },
+    {
+      "name": "恰好8%通过",
+      "passed": true,
+      "evidence": {
+        "historyGatePass": true,
+        "historyExclusionReason": null,
+        "historicalHighClose": 100,
+        "historicalHighDate": "20260000",
+        "distanceToHistoricalHighPct": -8.0,
+        "historyStart": "20260000",
+        "historyEnd": "20260000",
+        "historyBars": 21,
+        "historyMayBeTruncated": false,
+        "historyScope": "识别日前全部可得日线收盘（20260000~20260000，21根）"
+      }
+    },
+    {
+      "name": "超过8%通过",
+      "passed": true,
+      "evidence": {
+        "historyGatePass": true,
+        "historyExclusionReason": null,
+        "historicalHighClose": 100,
+        "historicalHighDate": "20260000",
+        "distanceToHistoricalHighPct": -8.01,
+        "historyStart": "20260000",
+        "historyEnd": "20260000",
+        "historyBars": 21,
+        "historyMayBeTruncated": false,
+        "historyScope": "识别日前全部可得日线收盘（20260000~20260000，21根）"
+      }
+    },
+    {
+      "name": "突破创可得历史新高排除",
+      "passed": true,
+      "evidence": {
+        "historyGatePass": false,
+        "historyExclusionReason": "距历史高点不足8%",
+        "historicalHighClose": 100,
+        "historicalHighDate": "20260000",
+        "distanceToHistoricalHighPct": 1.0,
+        "historyStart": "20260000",
+        "historyEnd": "20260000",
+        "historyBars": 21,
+        "historyMayBeTruncated": false,
+        "historyScope": "识别日前全部可得日线收盘（20260000~20260000，21根）"
+      }
+    },
+    {
+      "name": "一年高但远低于历史高不误杀",
+      "passed": true,
+      "evidence": {
+        "historyGatePass": true,
+        "historyExclusionReason": null,
+        "historicalHighClose": 200.0,
+        "historicalHighDate": "20260000",
+        "distanceToHistoricalHighPct": -54.0,
+        "historyStart": "20260000",
+        "historyEnd": "20260002",
+        "historyBars": 299,
+        "historyMayBeTruncated": false,
+        "historyScope": "识别日前全部可得日线收盘（20260000~20260002，299根）"
+      }
+    },
+    {
+      "name": "历史高为前一交易日最高收盘而非最高价",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "只用当时历史且未来更高点不影响过去",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "ordinary:formed保留但eligible/display均false",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "ordinary:排除原因不降级为fuzzy瑕疵",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "fuzzy:formed保留但eligible/display均false",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "fuzzy:排除原因不降级为fuzzy瑕疵",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "早期突破当前距历史高点>=8%可通过",
+      "passed": true,
+      "evidence": {
+        "formed": true,
+        "displayEligible": true,
+        "distPct": -1.1,
+        "pivot": 90.0,
+        "days": 10,
+        "brkNeedVol": 450.0,
+        "rimDate": "20260000",
+        "cupStart": "20260000",
+        "cupEnd": "20260001",
+        "cupHigh": 100.0,
+        "cupLow": 100.0,
+        "cupDepth": 0.0,
+        "totalDays": 130,
+        "rimHigh": 100.0,
+        "doubleBottom": {
+          "firstDate": "20260000",
+          "firstPrice": 100.0,
+          "secondDate": "20260001",
+          "secondPrice": 100.0,
+          "secondVsFirstPct": 0.0
+        },
+        "anchorDate": "20260001",
+        "anchorDistPct": 0.0,
+        "handleStart": "20260001",
+        "handleEnd": "20260001",
+        "handleHigh": 90.0,
+        "handleLow": 90.0,
+        "handleVol": 300.0,
+        "initialStop": 89.99,
+        "invalidation": 89.99,
+        "signalDate": "20260001",
+        "signalType": "strong",
+        "signalLabel": "收盘强确认",
+        "signalClose": 91.0,
+        "signalHigh": 91.0,
+        "signalVolX": 1.5,
+        "firstSignal": true,
+        "breakout": true,
+        "breakoutDate": "20260001",
+        "breakoutAge": 0,
+        "breakoutVolX": 1.5,
+        "breakoutVol50X": 1.49,
+        "currentDist": 1.1,
+        "currentValid": true,
+        "historyGatePass": true,
+        "historyExclusionReason": null,
+        "historicalHighClose": 100.0,
+        "historicalHighDate": "20260000",
+        "distanceToHistoricalHighPct": -9.0,
+        "historyStart": "20260000",
+        "historyEnd": "20260001",
+        "historyBars": 175,
+        "historyMayBeTruncated": false,
+        "historyScope": "识别日前全部可得日线收盘（20260000~20260001，175根）",
+        "eligible": true
+      }
+    },
+    {
+      "name": "早期突破创新高直接排除",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "VCP/底部平台不走历史高位资格过滤",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "普通生产入口核验displayEligible",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "指数杯柄与漏斗核验displayEligible",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "前后端证据字段:historicalHighClose",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "前后端证据字段:historicalHighDate",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "前后端证据字段:distanceToHistoricalHighPct",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "前后端证据字段:historyScope",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "前后端证据字段:historyExclusionReason",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "总览tooltip披露历史范围与原因",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "精扫tooltip披露历史范围与原因",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "真实杯柄样本PIT:C07",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "真实杯柄样本PIT:C08",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "真实杯柄样本PIT:C09",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "真实杯柄样本PIT:C11",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "真实杯柄样本至少覆盖一例",
+      "passed": true,
+      "evidence": [
+        {
+          "id": "C07",
+          "asOf": "20261012",
+          "historyEnd": "20261009",
+          "eligible": true,
+          "reason": null
+        },
+        {
+          "id": "C08",
+          "asOf": "20260924",
+          "historyEnd": "20260923",
+          "eligible": true,
+          "reason": null
+        },
+        {
+          "id": "C09",
+          "asOf": "20261008",
+          "historyEnd": "20260930",
+          "eligible": true,
+          "reason": null
+        },
+        {
+          "id": "C11",
+          "asOf": "20260819",
+          "historyEnd": "20260818",
+          "eligible": true,
+          "reason": null
+        }
+      ]
+    }
+  ],
+  "realCupEvidence": [
+    {
+      "id": "C07",
+      "asOf": "20261012",
+      "historyEnd": "20261009",
+      "eligible": true,
+      "reason": null
+    },
+    {
+      "id": "C08",
+      "asOf": "20260924",
+      "historyEnd": "20260923",
+      "eligible": true,
+      "reason": null
+    },
+    {
+      "id": "C09",
+      "asOf": "20261008",
+      "historyEnd": "20260930",
+      "eligible": true,
+      "reason": null
+    },
+    {
+      "id": "C11",
+      "asOf": "20260819",
+      "historyEnd": "20260818",
+      "eligible": true,
+      "reason": null
+    }
+  ],
+  "dataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  }
+}

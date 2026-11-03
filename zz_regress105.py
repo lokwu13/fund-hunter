@@ -187,8 +187,14 @@ baseline_path = ROOT / 'zz_update_data_task104_remote_baseline.py'
 spec = importlib.util.spec_from_file_location('update_data_task105_baseline', baseline_path)
 old = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(old)
-for name in ('_cup_handle_strict', '_cup_early_breakout'):
-    check(f'杯柄函数逐字未改:{name}', inspect.getsource(getattr(old, name)) == inspect.getsource(getattr(ud, name)), 'source identical')
+# 任务110只允许在几何formed之后追加统一资格过滤；核心几何与信号定义仍逐字保持。
+for name, helpers in (
+        ('_cup_handle_strict', ('_cup_weekly_trend', '_cup_right_side_gate', '_cup_shape_gate',
+                               '_cup_handle_quality', '_cup_body_background', '_cup_structure_segments')),
+        ('_cup_early_breakout', ('_cup_signal_kind', '_cup_signal_displayable', '_cup_body_evidence'))):
+    check(f'杯柄核心几何未改:{name}',
+          all(inspect.getsource(getattr(old, helper)) == inspect.getsource(getattr(ud, helper))
+              for helper in helpers), {'helpers': list(helpers), 'task110': 'eligible/display post-filter only'})
 
 failed_cases = [r['code'] for r in case_rows if not r['pass']]
 failed_windows = [r['code'] for r in window_rows if not r['pass']]

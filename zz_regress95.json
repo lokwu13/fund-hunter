@@ -1,0 +1,2625 @@
+{
+  "passed": 38,
+  "total": 38,
+  "results": [
+    {
+      "name": "枢轴收复92%边界通过",
+      "pass": true,
+      "evidence": {
+        "pass": true,
+        "pivotRecovery": 92.0,
+        "rightSideHigh": 100.0,
+        "rightSideOvershootPct": 0.0,
+        "rejectReasons": [],
+        "structureGate": {
+          "pivotRecoveryMin": 92.0,
+          "rightSideOvershootMax": 5.0
+        }
+      }
+    },
+    {
+      "name": "枢轴收复91.99%透明拒绝",
+      "pass": true,
+      "evidence": {
+        "pass": false,
+        "pivotRecovery": 91.99,
+        "rightSideHigh": 100.0,
+        "rightSideOvershootPct": 0.0,
+        "rejectReasons": [
+          "枢轴收复原杯沿仅91.99%，低于92%"
+        ],
+        "structureGate": {
+          "pivotRecoveryMin": 92.0,
+          "rightSideOvershootMax": 5.0
+        }
+      }
+    },
+    {
+      "name": "柄前右侧超沿5%边界通过",
+      "pass": true,
+      "evidence": {
+        "pass": true,
+        "pivotRecovery": 100.0,
+        "rightSideHigh": 105.0,
+        "rightSideOvershootPct": 5.0,
+        "rejectReasons": [],
+        "structureGate": {
+          "pivotRecoveryMin": 92.0,
+          "rightSideOvershootMax": 5.0
+        }
+      }
+    },
+    {
+      "name": "柄前右侧超沿5.01%透明拒绝",
+      "pass": true,
+      "evidence": {
+        "pass": false,
+        "pivotRecovery": 100.0,
+        "rightSideHigh": 105.01,
+        "rightSideOvershootPct": 5.01,
+        "rejectReasons": [
+          "柄前右侧超原杯沿5.01%，超过5%"
+        ],
+        "structureGate": {
+          "pivotRecoveryMin": 92.0,
+          "rightSideOvershootMax": 5.0
+        }
+      }
+    },
+    {
+      "name": "右侧无效段不得通过",
+      "pass": true,
+      "evidence": "empty right side"
+    },
+    {
+      "name": "002648.SZ改门前普通杯柄可复现",
+      "pass": true,
+      "evidence": {
+        "days": 11,
+        "totalDays": 117,
+        "rimDate": "20260511",
+        "rimHigh": 27.26,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": null,
+        "handleEnd": null,
+        "handlePosition": 0.512,
+        "pivot": 26.12,
+        "pivotRecovery": null,
+        "rightSideHigh": null,
+        "rightSideOvershootPct": null,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      }
+    },
+    {
+      "name": "002648.SZ新门拒绝原因为右侧先于柄明显超沿",
+      "pass": true,
+      "evidence": {
+        "pass": false,
+        "pivotRecovery": 95.82,
+        "rightSideHigh": 29.33,
+        "rightSideOvershootPct": 7.59,
+        "rejectReasons": [
+          "柄前右侧超原杯沿7.59%，超过5%"
+        ],
+        "structureGate": {
+          "pivotRecoveryMin": 92.0,
+          "rightSideOvershootMax": 5.0
+        }
+      }
+    },
+    {
+      "name": "002648.SZ普通杯柄新链拒绝",
+      "pass": true,
+      "evidence": null
+    },
+    {
+      "name": "002648.SZearly不得绕过同一结构门",
+      "pass": true,
+      "evidence": null
+    },
+    {
+      "name": "600985.SH改门前普通杯柄可复现",
+      "pass": true,
+      "evidence": {
+        "days": 10,
+        "totalDays": 123,
+        "rimDate": "20260428",
+        "rimHigh": 15.19,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": null,
+        "handleEnd": null,
+        "handlePosition": 0.553,
+        "pivot": 15.37,
+        "pivotRecovery": null,
+        "rightSideHigh": null,
+        "rightSideOvershootPct": null,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      }
+    },
+    {
+      "name": "600985.SH新门拒绝原因为右侧先于柄明显超沿",
+      "pass": true,
+      "evidence": {
+        "pass": false,
+        "pivotRecovery": 101.18,
+        "rightSideHigh": 18.77,
+        "rightSideOvershootPct": 23.57,
+        "rejectReasons": [
+          "柄前右侧超原杯沿23.57%，超过5%"
+        ],
+        "structureGate": {
+          "pivotRecoveryMin": 92.0,
+          "rightSideOvershootMax": 5.0
+        }
+      }
+    },
+    {
+      "name": "600985.SH普通杯柄新链拒绝",
+      "pass": true,
+      "evidence": null
+    },
+    {
+      "name": "600985.SHearly不得绕过同一结构门",
+      "pass": true,
+      "evidence": null
+    },
+    {
+      "name": "渤海改门前真实早期信号可复现",
+      "pass": true,
+      "evidence": {
+        "days": 20,
+        "totalDays": 109,
+        "rimDate": "20260520",
+        "rimHigh": 4.75,
+        "cupStart": "20260520",
+        "cupEnd": "20260922",
+        "handleStart": "20260923",
+        "handleEnd": "20261028",
+        "handlePosition": 0.5,
+        "pivot": 4.21,
+        "pivotRecovery": null,
+        "rightSideHigh": null,
+        "rightSideOvershootPct": null,
+        "signalDate": "20261029",
+        "signalType": "strong",
+        "breakoutAge": 0,
+        "currentDist": 2.4,
+        "currentValid": true,
+        "initialStop": 3.93
+      }
+    },
+    {
+      "name": "渤海展示杯沿4.75对应枢轴收复不足92%",
+      "pass": true,
+      "evidence": {
+        "bodyEvidenceRimHigh": 4.75,
+        "pivot": 4.21,
+        "displayedPivotRecovery": 88.63,
+        "strictLeftRimHigh": 4.26,
+        "strictGate": {
+          "pass": false,
+          "pivotRecovery": 98.83,
+          "rightSideHigh": 4.75,
+          "rightSideOvershootPct": 11.5,
+          "rejectReasons": [
+            "柄前右侧超原杯沿11.50%，超过5%"
+          ],
+          "structureGate": {
+            "pivotRecoveryMin": 92.0,
+            "rightSideOvershootMax": 5.0
+          }
+        }
+      }
+    },
+    {
+      "name": "000415.SZ新门拒绝原因为右侧先于柄明显超沿",
+      "pass": true,
+      "evidence": {
+        "pass": false,
+        "pivotRecovery": 98.83,
+        "rightSideHigh": 4.75,
+        "rightSideOvershootPct": 11.5,
+        "rejectReasons": [
+          "柄前右侧超原杯沿11.50%，超过5%"
+        ],
+        "structureGate": {
+          "pivotRecoveryMin": 92.0,
+          "rightSideOvershootMax": 5.0
+        }
+      }
+    },
+    {
+      "name": "000415.SZ普通杯柄新链拒绝",
+      "pass": true,
+      "evidence": null
+    },
+    {
+      "name": "000415.SZearly不得绕过同一结构门",
+      "pass": true,
+      "evidence": null
+    },
+    {
+      "name": "指定历史案例仅出现96b改进与任务97明确空头剔除",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "三个新增剔除均有周MA空头证据",
+      "pass": true,
+      "evidence": [
+        {
+          "case": "VCP|600583.SH|2022-08-22",
+          "before": "底部整理",
+          "after": null,
+          "beforeCup": null,
+          "afterCup": null,
+          "afterReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        },
+        {
+          "case": "CUP|601808.SH|20190507|20190816|近似杯柄",
+          "before": "底部整理",
+          "after": null,
+          "beforeCup": null,
+          "afterCup": null,
+          "afterReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        },
+        {
+          "case": "CUP|600028.SH|20220307|20220526|双底杯柄",
+          "before": "长平台整理",
+          "after": null,
+          "beforeCup": null,
+          "afterCup": null,
+          "afterReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "平高买点窗仅保留任务110前既有分类差异",
+      "pass": true,
+      "evidence": [
+        {
+          "date": "20260921",
+          "before": "杯柄型",
+          "after": "长平台整理",
+          "cup": null,
+          "historyGate": {
+            "historyGatePass": true,
+            "historyExclusionReason": null,
+            "historicalHighClose": 24.55,
+            "historicalHighDate": "20260309",
+            "distanceToHistoricalHighPct": -21.5479,
+            "historyStart": "20180102",
+            "historyEnd": "20260918",
+            "historyBars": 2116,
+            "historyMayBeTruncated": true,
+            "historyScope": "识别日前全部可得日线收盘（20180102~20260918，2116根）；达到1200根缓存上限，非上市全史"
+          }
+        },
+        {
+          "date": "20260922",
+          "before": "杯柄型",
+          "after": "杯柄型",
+          "cup": {
+            "days": 10,
+            "totalDays": 80,
+            "rimDate": "20260602",
+            "rimHigh": 20.94,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": "20260909",
+            "handleEnd": "20260922",
+            "handlePosition": 0.5,
+            "pivot": 19.7,
+            "pivotRecovery": 94.08,
+            "rightSideHigh": 21.29,
+            "rightSideOvershootPct": 1.67,
+            "signalDate": null,
+            "signalType": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "initialStop": null
+          },
+          "historyGate": {
+            "historyGatePass": true,
+            "historyExclusionReason": null,
+            "historicalHighClose": 24.55,
+            "historicalHighDate": "20260309",
+            "distanceToHistoricalHighPct": -22.3218,
+            "historyStart": "20180102",
+            "historyEnd": "20260921",
+            "historyBars": 2117,
+            "historyMayBeTruncated": true,
+            "historyScope": "识别日前全部可得日线收盘（20180102~20260921，2117根）；达到1200根缓存上限，非上市全史"
+          }
+        },
+        {
+          "date": "20260923",
+          "before": "杯柄型",
+          "after": "杯柄型",
+          "cup": {
+            "days": 10,
+            "totalDays": 81,
+            "rimDate": "20260602",
+            "rimHigh": 20.94,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": "20260910",
+            "handleEnd": "20260923",
+            "handlePosition": 0.5,
+            "pivot": 19.38,
+            "pivotRecovery": 92.55,
+            "rightSideHigh": 21.29,
+            "rightSideOvershootPct": 1.67,
+            "signalDate": null,
+            "signalType": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "initialStop": null
+          },
+          "historyGate": {
+            "historyGatePass": true,
+            "historyExclusionReason": null,
+            "historicalHighClose": 24.55,
+            "historicalHighDate": "20260309",
+            "distanceToHistoricalHighPct": -23.8289,
+            "historyStart": "20180102",
+            "historyEnd": "20260922",
+            "historyBars": 2118,
+            "historyMayBeTruncated": true,
+            "historyScope": "识别日前全部可得日线收盘（20180102~20260922，2118根）；达到1200根缓存上限，非上市全史"
+          }
+        },
+        {
+          "date": "20260924",
+          "before": "杯柄型",
+          "after": "杯柄型",
+          "cup": {
+            "days": 11,
+            "totalDays": 82,
+            "rimDate": "20260602",
+            "rimHigh": 20.94,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": "20260910",
+            "handleEnd": "20260924",
+            "handlePosition": 0.5,
+            "pivot": 19.38,
+            "pivotRecovery": 92.55,
+            "rightSideHigh": 21.29,
+            "rightSideOvershootPct": 1.67,
+            "signalDate": null,
+            "signalType": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "initialStop": null
+          },
+          "historyGate": {
+            "historyGatePass": true,
+            "historyExclusionReason": null,
+            "historicalHighClose": 24.55,
+            "historicalHighDate": "20260309",
+            "distanceToHistoricalHighPct": -23.7882,
+            "historyStart": "20180102",
+            "historyEnd": "20260923",
+            "historyBars": 2119,
+            "historyMayBeTruncated": true,
+            "historyScope": "识别日前全部可得日线收盘（20180102~20260923，2119根）；达到1200根缓存上限，非上市全史"
+          }
+        },
+        {
+          "date": "20260928",
+          "before": "杯柄型",
+          "after": "杯柄型",
+          "cup": {
+            "days": 11,
+            "totalDays": 82,
+            "rimDate": "20260602",
+            "rimHigh": 21.29,
+            "cupStart": "20260602",
+            "cupEnd": "20260909",
+            "handleStart": "20260910",
+            "handleEnd": "20260924",
+            "handlePosition": 0.5,
+            "pivot": 19.38,
+            "pivotRecovery": 92.55,
+            "rightSideHigh": 21.29,
+            "rightSideOvershootPct": 1.67,
+            "signalDate": "20260928",
+            "signalType": "strong",
+            "breakoutAge": 0,
+            "currentDist": 0.2,
+            "currentValid": true,
+            "initialStop": 18.37
+          },
+          "historyGate": {
+            "historyGatePass": true,
+            "historyExclusionReason": null,
+            "historicalHighClose": 24.55,
+            "historicalHighDate": "20260309",
+            "distanceToHistoricalHighPct": -20.8961,
+            "historyStart": "20180102",
+            "historyEnd": "20260924",
+            "historyBars": 2120,
+            "historyMayBeTruncated": true,
+            "historyScope": "识别日前全部可得日线收盘（20180102~20260924，2120根）；达到1200根缓存上限，非上市全史"
+          }
+        },
+        {
+          "date": "20260929",
+          "before": "杯柄型",
+          "after": "杯柄型",
+          "cup": {
+            "days": 11,
+            "totalDays": 82,
+            "rimDate": "20260602",
+            "rimHigh": 21.29,
+            "cupStart": "20260602",
+            "cupEnd": "20260909",
+            "handleStart": "20260910",
+            "handleEnd": "20260924",
+            "handlePosition": 0.5,
+            "pivot": 19.38,
+            "pivotRecovery": 92.55,
+            "rightSideHigh": 21.29,
+            "rightSideOvershootPct": 1.67,
+            "signalDate": "20260928",
+            "signalType": "strong",
+            "breakoutAge": 1,
+            "currentDist": 1.7,
+            "currentValid": true,
+            "initialStop": 18.37
+          },
+          "historyGate": {
+            "historyGatePass": true,
+            "historyExclusionReason": null,
+            "historicalHighClose": 24.55,
+            "historicalHighDate": "20260309",
+            "distanceToHistoricalHighPct": -19.7149,
+            "historyStart": "20180102",
+            "historyEnd": "20260928",
+            "historyBars": 2121,
+            "historyMayBeTruncated": true,
+            "historyScope": "识别日前全部可得日线收盘（20180102~20260928，2121根）；达到1200根缓存上限，非上市全史"
+          }
+        },
+        {
+          "date": "20260930",
+          "before": "杯柄型",
+          "after": "杯柄型",
+          "cup": {
+            "days": 11,
+            "totalDays": 82,
+            "rimDate": "20260602",
+            "rimHigh": 21.29,
+            "cupStart": "20260602",
+            "cupEnd": "20260909",
+            "handleStart": "20260910",
+            "handleEnd": "20260924",
+            "handlePosition": 0.5,
+            "pivot": 19.38,
+            "pivotRecovery": 92.55,
+            "rightSideHigh": 21.29,
+            "rightSideOvershootPct": 1.67,
+            "signalDate": "20260928",
+            "signalType": "strong",
+            "breakoutAge": 2,
+            "currentDist": 3.5,
+            "currentValid": true,
+            "initialStop": 18.37
+          },
+          "historyGate": {
+            "historyGatePass": true,
+            "historyExclusionReason": null,
+            "historicalHighClose": 24.55,
+            "historicalHighDate": "20260309",
+            "distanceToHistoricalHighPct": -18.3299,
+            "historyStart": "20180102",
+            "historyEnd": "20260929",
+            "historyBars": 2122,
+            "historyMayBeTruncated": true,
+            "historyScope": "识别日前全部可得日线收盘（20180102~20260929，2122根）；达到1200根缓存上限，非上市全史"
+          }
+        }
+      ]
+    },
+    {
+      "name": "平高0921分类差异非历史高位门造成",
+      "pass": true,
+      "evidence": {
+        "date": "20260921",
+        "before": "杯柄型",
+        "after": "长平台整理",
+        "cup": null,
+        "historyGate": {
+          "historyGatePass": true,
+          "historyExclusionReason": null,
+          "historicalHighClose": 24.55,
+          "historicalHighDate": "20260309",
+          "distanceToHistoricalHighPct": -21.5479,
+          "historyStart": "20180102",
+          "historyEnd": "20260918",
+          "historyBars": 2116,
+          "historyMayBeTruncated": true,
+          "historyScope": "识别日前全部可得日线收盘（20180102~20260918，2116根）；达到1200根缓存上限，非上市全史"
+        }
+      }
+    },
+    {
+      "name": "平高50%柄位及92%以上收复仍识别",
+      "pass": true,
+      "evidence": {
+        "date": "20260924",
+        "before": "杯柄型",
+        "after": "杯柄型",
+        "cup": {
+          "days": 11,
+          "totalDays": 82,
+          "rimDate": "20260602",
+          "rimHigh": 20.94,
+          "cupStart": null,
+          "cupEnd": null,
+          "handleStart": "20260910",
+          "handleEnd": "20260924",
+          "handlePosition": 0.5,
+          "pivot": 19.38,
+          "pivotRecovery": 92.55,
+          "rightSideHigh": 21.29,
+          "rightSideOvershootPct": 1.67,
+          "signalDate": null,
+          "signalType": null,
+          "breakoutAge": null,
+          "currentDist": null,
+          "currentValid": null,
+          "initialStop": null
+        },
+        "historyGate": {
+          "historyGatePass": true,
+          "historyExclusionReason": null,
+          "historicalHighClose": 24.55,
+          "historicalHighDate": "20260309",
+          "distanceToHistoricalHighPct": -23.7882,
+          "historyStart": "20180102",
+          "historyEnd": "20260923",
+          "historyBars": 2119,
+          "historyMayBeTruncated": true,
+          "historyScope": "识别日前全部可得日线收盘（20180102~20260923，2119根）；达到1200根缓存上限，非上市全史"
+        }
+      }
+    },
+    {
+      "name": "惠泰大结构与买点窗仅保留任务110前既有改进",
+      "pass": true,
+      "evidence": [
+        {
+          "date": "20260916",
+          "before": "杯柄型",
+          "after": "杯柄型",
+          "cup": {
+            "days": 13,
+            "totalDays": 111,
+            "rimDate": "20260409",
+            "rimHigh": 263.62,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": "20260831",
+            "handleEnd": "20260916",
+            "handlePosition": 0.474,
+            "pivot": 254.0,
+            "pivotRecovery": 96.35,
+            "rightSideHigh": 271.0,
+            "rightSideOvershootPct": 2.8,
+            "signalDate": null,
+            "signalType": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "initialStop": null
+          }
+        },
+        {
+          "date": "20260918",
+          "before": null,
+          "after": "杯柄型",
+          "cup": {
+            "days": 15,
+            "totalDays": 113,
+            "rimDate": "20260409",
+            "rimHigh": 263.62,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": "20260831",
+            "handleEnd": "20260918",
+            "handlePosition": 0.474,
+            "pivot": 254.0,
+            "pivotRecovery": 96.35,
+            "rightSideHigh": 271.0,
+            "rightSideOvershootPct": 2.8,
+            "signalDate": null,
+            "signalType": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "initialStop": null
+          }
+        },
+        {
+          "date": "20260922",
+          "before": "杯柄型",
+          "after": "杯柄型",
+          "cup": {
+            "days": 17,
+            "totalDays": 115,
+            "rimDate": "20260409",
+            "rimHigh": 263.62,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": "20260831",
+            "handleEnd": "20260922",
+            "handlePosition": 0.474,
+            "pivot": 254.0,
+            "pivotRecovery": 96.35,
+            "rightSideHigh": 271.0,
+            "rightSideOvershootPct": 2.8,
+            "signalDate": null,
+            "signalType": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "initialStop": null
+          }
+        },
+        {
+          "date": "20260924",
+          "before": null,
+          "after": "杯柄型",
+          "cup": {
+            "days": 19,
+            "totalDays": 117,
+            "rimDate": "20260409",
+            "rimHigh": 263.62,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": "20260831",
+            "handleEnd": "20260924",
+            "handlePosition": 0.474,
+            "pivot": 254.0,
+            "pivotRecovery": 96.35,
+            "rightSideHigh": 271.0,
+            "rightSideOvershootPct": 2.8,
+            "signalDate": null,
+            "signalType": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "initialStop": null
+          }
+        },
+        {
+          "date": "20260930",
+          "before": "杯柄型",
+          "after": "杯柄型",
+          "cup": {
+            "days": 20,
+            "totalDays": 120,
+            "rimDate": "20260409",
+            "rimHigh": 263.62,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": "20260902",
+            "handleEnd": "20260930",
+            "handlePosition": 0.474,
+            "pivot": 253.78,
+            "pivotRecovery": 96.27,
+            "rightSideHigh": 271.0,
+            "rightSideOvershootPct": 2.8,
+            "signalDate": null,
+            "signalType": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "initialStop": null
+          }
+        },
+        {
+          "date": "20261009",
+          "before": "杯柄型",
+          "after": "杯柄型",
+          "cup": {
+            "days": 11,
+            "totalDays": 118,
+            "rimDate": "20260415",
+            "rimHigh": 261.19,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": "20260917",
+            "handleEnd": "20261009",
+            "handlePosition": 0.699,
+            "pivot": 251.5,
+            "pivotRecovery": 96.29,
+            "rightSideHigh": 271.0,
+            "rightSideOvershootPct": 3.76,
+            "signalDate": null,
+            "signalType": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "initialStop": null
+          }
+        },
+        {
+          "date": "20261012",
+          "before": "杯柄型",
+          "after": "杯柄型",
+          "cup": {
+            "days": 14,
+            "totalDays": 119,
+            "rimDate": "20260415",
+            "rimHigh": 261.19,
+            "cupStart": null,
+            "cupEnd": null,
+            "handleStart": "20260915",
+            "handleEnd": "20261012",
+            "handlePosition": 0.699,
+            "pivot": 256.8,
+            "pivotRecovery": 98.32,
+            "rightSideHigh": 271.0,
+            "rightSideOvershootPct": 3.76,
+            "signalDate": null,
+            "signalType": null,
+            "breakoutAge": null,
+            "currentDist": null,
+            "currentValid": null,
+            "initialStop": null
+          }
+        },
+        {
+          "date": "20261026",
+          "before": null,
+          "after": null,
+          "cup": null
+        }
+      ]
+    },
+    {
+      "name": "惠泰确认买点仍模糊杯柄且右侧双门通过",
+      "pass": true,
+      "evidence": {
+        "date": "20261012",
+        "before": "杯柄型",
+        "after": "杯柄型",
+        "cup": {
+          "days": 14,
+          "totalDays": 119,
+          "rimDate": "20260415",
+          "rimHigh": 261.19,
+          "cupStart": null,
+          "cupEnd": null,
+          "handleStart": "20260915",
+          "handleEnd": "20261012",
+          "handlePosition": 0.699,
+          "pivot": 256.8,
+          "pivotRecovery": 98.32,
+          "rightSideHigh": 271.0,
+          "rightSideOvershootPct": 3.76,
+          "signalDate": null,
+          "signalType": null,
+          "breakoutAge": null,
+          "currentDist": null,
+          "currentValid": null,
+          "initialStop": null
+        }
+      }
+    },
+    {
+      "name": "003816.SZ 20261008真实首次信号及新右侧门保留",
+      "pass": true,
+      "evidence": {
+        "days": 18,
+        "totalDays": 75,
+        "rimDate": "20260616",
+        "rimHigh": 4.51,
+        "cupStart": "20260616",
+        "cupEnd": "20260903",
+        "handleStart": "20260904",
+        "handleEnd": "20260930",
+        "handlePosition": 0.5,
+        "pivot": 4.42,
+        "pivotRecovery": 97.36,
+        "rightSideHigh": 4.47,
+        "rightSideOvershootPct": -1.54,
+        "signalDate": "20261008",
+        "signalType": "early",
+        "breakoutAge": 0,
+        "currentDist": -0.2,
+        "currentValid": true,
+        "initialStop": 4.15
+      }
+    },
+    {
+      "name": "003816.SZ 20261015真实首次信号及新右侧门保留",
+      "pass": true,
+      "evidence": {
+        "days": 18,
+        "totalDays": 75,
+        "rimDate": "20260616",
+        "rimHigh": 4.51,
+        "cupStart": "20260616",
+        "cupEnd": "20260903",
+        "handleStart": "20260904",
+        "handleEnd": "20260930",
+        "handlePosition": 0.5,
+        "pivot": 4.42,
+        "pivotRecovery": 97.36,
+        "rightSideHigh": 4.47,
+        "rightSideOvershootPct": -1.54,
+        "signalDate": "20261008",
+        "signalType": "early",
+        "breakoutAge": 5,
+        "currentDist": 2.9,
+        "currentValid": true,
+        "initialStop": 4.15
+      }
+    },
+    {
+      "name": "003816.SZ 20261016真实首次信号及新右侧门保留",
+      "pass": true,
+      "evidence": {
+        "days": 18,
+        "totalDays": 75,
+        "rimDate": "20260616",
+        "rimHigh": 4.51,
+        "cupStart": "20260616",
+        "cupEnd": "20260903",
+        "handleStart": "20260904",
+        "handleEnd": "20260930",
+        "handlePosition": 0.5,
+        "pivot": 4.42,
+        "pivotRecovery": 97.36,
+        "rightSideHigh": 4.47,
+        "rightSideOvershootPct": -1.54,
+        "signalDate": "20261008",
+        "signalType": "early",
+        "breakoutAge": 6,
+        "currentDist": 3.8,
+        "currentValid": true,
+        "initialStop": 4.15
+      }
+    },
+    {
+      "name": "003816.SZ首次信号age5/6门不回退",
+      "pass": true,
+      "evidence": [
+        {
+          "code": "003816.SZ",
+          "asOf": "20261015",
+          "signal": {
+            "days": 18,
+            "totalDays": 75,
+            "rimDate": "20260616",
+            "rimHigh": 4.51,
+            "cupStart": "20260616",
+            "cupEnd": "20260903",
+            "handleStart": "20260904",
+            "handleEnd": "20260930",
+            "handlePosition": 0.5,
+            "pivot": 4.42,
+            "pivotRecovery": 97.36,
+            "rightSideHigh": 4.47,
+            "rightSideOvershootPct": -1.54,
+            "signalDate": "20261008",
+            "signalType": "early",
+            "breakoutAge": 5,
+            "currentDist": 2.9,
+            "currentValid": true,
+            "initialStop": 4.15
+          },
+          "displayable": true
+        },
+        {
+          "code": "003816.SZ",
+          "asOf": "20261016",
+          "signal": {
+            "days": 18,
+            "totalDays": 75,
+            "rimDate": "20260616",
+            "rimHigh": 4.51,
+            "cupStart": "20260616",
+            "cupEnd": "20260903",
+            "handleStart": "20260904",
+            "handleEnd": "20260930",
+            "handlePosition": 0.5,
+            "pivot": 4.42,
+            "pivotRecovery": 97.36,
+            "rightSideHigh": 4.47,
+            "rightSideOvershootPct": -1.54,
+            "signalDate": "20261008",
+            "signalType": "early",
+            "breakoutAge": 6,
+            "currentDist": 3.8,
+            "currentValid": true,
+            "initialStop": 4.15
+          },
+          "displayable": false
+        }
+      ]
+    },
+    {
+      "name": "600795.SH 20260902真实首次信号及新右侧门保留",
+      "pass": true,
+      "evidence": {
+        "days": 10,
+        "totalDays": 62,
+        "rimDate": "20260605",
+        "rimHigh": 5.23,
+        "cupStart": "20260605",
+        "cupEnd": "20260818",
+        "handleStart": "20260819",
+        "handleEnd": "20260901",
+        "handlePosition": 0.538,
+        "pivot": 5.3,
+        "pivotRecovery": 98.7,
+        "rightSideHigh": 5.15,
+        "rightSideOvershootPct": -4.1,
+        "signalDate": "20260902",
+        "signalType": "strong",
+        "breakoutAge": 0,
+        "currentDist": 1.9,
+        "currentValid": true,
+        "initialStop": 5.0
+      }
+    },
+    {
+      "name": "600795.SH 20260909真实首次信号及新右侧门保留",
+      "pass": true,
+      "evidence": {
+        "days": 10,
+        "totalDays": 62,
+        "rimDate": "20260605",
+        "rimHigh": 5.23,
+        "cupStart": "20260605",
+        "cupEnd": "20260818",
+        "handleStart": "20260819",
+        "handleEnd": "20260901",
+        "handlePosition": 0.538,
+        "pivot": 5.3,
+        "pivotRecovery": 98.7,
+        "rightSideHigh": 5.15,
+        "rightSideOvershootPct": -4.1,
+        "signalDate": "20260902",
+        "signalType": "strong",
+        "breakoutAge": 5,
+        "currentDist": 0.2,
+        "currentValid": true,
+        "initialStop": 5.0
+      }
+    },
+    {
+      "name": "600795.SH 20260910真实首次信号及新右侧门保留",
+      "pass": true,
+      "evidence": {
+        "days": 10,
+        "totalDays": 62,
+        "rimDate": "20260605",
+        "rimHigh": 5.23,
+        "cupStart": "20260605",
+        "cupEnd": "20260818",
+        "handleStart": "20260819",
+        "handleEnd": "20260901",
+        "handlePosition": 0.538,
+        "pivot": 5.3,
+        "pivotRecovery": 98.7,
+        "rightSideHigh": 5.15,
+        "rightSideOvershootPct": -4.1,
+        "signalDate": "20260902",
+        "signalType": "strong",
+        "breakoutAge": 6,
+        "currentDist": -0.6,
+        "currentValid": true,
+        "initialStop": 5.0
+      }
+    },
+    {
+      "name": "600795.SH首次信号age5/6门不回退",
+      "pass": true,
+      "evidence": [
+        {
+          "code": "600795.SH",
+          "asOf": "20260909",
+          "signal": {
+            "days": 10,
+            "totalDays": 62,
+            "rimDate": "20260605",
+            "rimHigh": 5.23,
+            "cupStart": "20260605",
+            "cupEnd": "20260818",
+            "handleStart": "20260819",
+            "handleEnd": "20260901",
+            "handlePosition": 0.538,
+            "pivot": 5.3,
+            "pivotRecovery": 98.7,
+            "rightSideHigh": 5.15,
+            "rightSideOvershootPct": -4.1,
+            "signalDate": "20260902",
+            "signalType": "strong",
+            "breakoutAge": 5,
+            "currentDist": 0.2,
+            "currentValid": true,
+            "initialStop": 5.0
+          },
+          "displayable": true
+        },
+        {
+          "code": "600795.SH",
+          "asOf": "20260910",
+          "signal": {
+            "days": 10,
+            "totalDays": 62,
+            "rimDate": "20260605",
+            "rimHigh": 5.23,
+            "cupStart": "20260605",
+            "cupEnd": "20260818",
+            "handleStart": "20260819",
+            "handleEnd": "20260901",
+            "handlePosition": 0.538,
+            "pivot": 5.3,
+            "pivotRecovery": 98.7,
+            "rightSideHigh": 5.15,
+            "rightSideOvershootPct": -4.1,
+            "signalDate": "20260902",
+            "signalType": "strong",
+            "breakoutAge": 6,
+            "currentDist": -0.6,
+            "currentValid": true,
+            "initialStop": 5.0
+          },
+          "displayable": false
+        }
+      ]
+    },
+    {
+      "name": "中国石油早期正样本结构仍返回且信号未被96b重置",
+      "pass": true,
+      "evidence": {
+        "case": "CUP|601857.SH|20250120|20250603|双底杯柄",
+        "before": null,
+        "after": "杯柄型",
+        "beforeCup": {
+          "days": 13,
+          "totalDays": 35,
+          "rimDate": "20250403",
+          "rimHigh": 8.17,
+          "cupStart": "20250403",
+          "cupEnd": "20250508",
+          "handleStart": "20250509",
+          "handleEnd": "20250527",
+          "handlePosition": 0.51,
+          "pivot": 8.35,
+          "pivotRecovery": null,
+          "rightSideHigh": null,
+          "rightSideOvershootPct": null,
+          "signalDate": "20250528",
+          "signalType": "early",
+          "breakoutAge": 3,
+          "currentDist": -0.6,
+          "currentValid": true,
+          "initialStop": 8.08
+        },
+        "afterCup": {
+          "days": 13,
+          "totalDays": 35,
+          "rimDate": "20250403",
+          "rimHigh": 8.17,
+          "cupStart": "20250403",
+          "cupEnd": "20250508",
+          "handleStart": "20250509",
+          "handleEnd": "20250527",
+          "handlePosition": 0.51,
+          "pivot": 8.35,
+          "pivotRecovery": 94.67,
+          "rightSideHigh": 8.14,
+          "rightSideOvershootPct": -7.71,
+          "signalDate": "20250528",
+          "signalType": "early",
+          "breakoutAge": 3,
+          "currentDist": -0.6,
+          "currentValid": true,
+          "initialStop": 8.08
+        },
+        "afterReasons": []
+      }
+    },
+    {
+      "name": "23案例仅出现96b及任务97逐项审核变化",
+      "pass": true,
+      "evidence": [
+        {
+          "case": "VCP|000625.SZ|2023-09-27",
+          "before": "杯柄型",
+          "after": "平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|000708.SZ|2025-06-10",
+          "before": "底部整理",
+          "after": null,
+          "changed": true,
+          "afterReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        },
+        {
+          "case": "VCP|000725.SZ|2026-04-17",
+          "before": null,
+          "after": "平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|002028.SZ|2025-07-11",
+          "before": null,
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|688012.SH|2023-03-01",
+          "before": "底部整理",
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|688041.SH|2024-09-24",
+          "before": null,
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|688047.SH|2024-09-26",
+          "before": null,
+          "after": "底部整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|601000.SH|2026-01-19",
+          "before": "底部整理",
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|002155.SZ|2026-01-09",
+          "before": "杯柄型",
+          "after": null,
+          "changed": true,
+          "afterReasons": [
+            "各候选未同时满足完整结构与展示门"
+          ]
+        },
+        {
+          "case": "VCP|600583.SH|2022-08-22",
+          "before": "底部整理",
+          "after": null,
+          "changed": true,
+          "afterReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        },
+        {
+          "case": "CUP|601808.SH|20190507|20190816|近似杯柄",
+          "before": "底部整理",
+          "after": null,
+          "changed": true,
+          "afterReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        },
+        {
+          "case": "CUP|600583.SH|20250901|20260107|杯柄",
+          "before": null,
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "CUP|601857.SH|20250120|20250603|双底杯柄",
+          "before": null,
+          "after": "杯柄型",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "CUP|600028.SH|20220307|20220526|双底杯柄",
+          "before": "长平台整理",
+          "after": null,
+          "changed": true,
+          "afterReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        },
+        {
+          "case": "LP|海光段①|688041.SH|20240909",
+          "before": null,
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        }
+      ]
+    },
+    {
+      "name": "23案例四个新增空头剔除证据完整",
+      "pass": true,
+      "evidence": [
+        {
+          "case": "VCP|000625.SZ|2023-09-27",
+          "before": "杯柄型",
+          "after": "平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|000708.SZ|2025-06-10",
+          "before": "底部整理",
+          "after": null,
+          "changed": true,
+          "afterReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        },
+        {
+          "case": "VCP|000725.SZ|2026-04-17",
+          "before": null,
+          "after": "平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|002028.SZ|2025-07-11",
+          "before": null,
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|688012.SH|2023-03-01",
+          "before": "底部整理",
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|688041.SH|2024-09-24",
+          "before": null,
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|688047.SH|2024-09-26",
+          "before": null,
+          "after": "底部整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|601000.SH|2026-01-19",
+          "before": "底部整理",
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "VCP|002155.SZ|2026-01-09",
+          "before": "杯柄型",
+          "after": null,
+          "changed": true,
+          "afterReasons": [
+            "各候选未同时满足完整结构与展示门"
+          ]
+        },
+        {
+          "case": "VCP|600583.SH|2022-08-22",
+          "before": "底部整理",
+          "after": null,
+          "changed": true,
+          "afterReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        },
+        {
+          "case": "CUP|601808.SH|20190507|20190816|近似杯柄",
+          "before": "底部整理",
+          "after": null,
+          "changed": true,
+          "afterReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        },
+        {
+          "case": "CUP|600583.SH|20250901|20260107|杯柄",
+          "before": null,
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "CUP|601857.SH|20250120|20250603|双底杯柄",
+          "before": null,
+          "after": "杯柄型",
+          "changed": true,
+          "afterReasons": []
+        },
+        {
+          "case": "CUP|600028.SH|20220307|20220526|双底杯柄",
+          "before": "长平台整理",
+          "after": null,
+          "changed": true,
+          "afterReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        },
+        {
+          "case": "LP|海光段①|688041.SH|20240909",
+          "before": null,
+          "after": "长平台整理",
+          "changed": true,
+          "afterReasons": []
+        }
+      ]
+    },
+    {
+      "name": "页面note包含右侧双门及早期干净链",
+      "pass": true,
+      "evidence": "vcpStocks.note source"
+    },
+    {
+      "name": "early生产锚点仍调用共用strict结构函数",
+      "pass": true,
+      "evidence": "_cup_early_breakout shared strict anchor"
+    }
+  ],
+  "negativeEvidence": {
+    "002648.SZ": {
+      "beforeStrict": {
+        "days": 11,
+        "totalDays": 117,
+        "rimDate": "20260511",
+        "rimHigh": 27.26,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": null,
+        "handleEnd": null,
+        "handlePosition": 0.512,
+        "pivot": 26.12,
+        "pivotRecovery": null,
+        "rightSideHigh": null,
+        "rightSideOvershootPct": null,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      },
+      "beforeEarly": null,
+      "afterStrict": null,
+      "afterEarly": null,
+      "newGateOnOldCandidate": {
+        "pass": false,
+        "pivotRecovery": 95.82,
+        "rightSideHigh": 29.33,
+        "rightSideOvershootPct": 7.59,
+        "rejectReasons": [
+          "柄前右侧超原杯沿7.59%，超过5%"
+        ],
+        "structureGate": {
+          "pivotRecoveryMin": 92.0,
+          "rightSideOvershootMax": 5.0
+        }
+      }
+    },
+    "600985.SH": {
+      "beforeStrict": {
+        "days": 10,
+        "totalDays": 123,
+        "rimDate": "20260428",
+        "rimHigh": 15.19,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": null,
+        "handleEnd": null,
+        "handlePosition": 0.553,
+        "pivot": 15.37,
+        "pivotRecovery": null,
+        "rightSideHigh": null,
+        "rightSideOvershootPct": null,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      },
+      "beforeEarly": null,
+      "afterStrict": null,
+      "afterEarly": null,
+      "newGateOnOldCandidate": {
+        "pass": false,
+        "pivotRecovery": 101.18,
+        "rightSideHigh": 18.77,
+        "rightSideOvershootPct": 23.57,
+        "rejectReasons": [
+          "柄前右侧超原杯沿23.57%，超过5%"
+        ],
+        "structureGate": {
+          "pivotRecoveryMin": 92.0,
+          "rightSideOvershootMax": 5.0
+        }
+      }
+    },
+    "000415.SZ": {
+      "beforeStrict": null,
+      "beforeEarly": {
+        "days": 20,
+        "totalDays": 109,
+        "rimDate": "20260520",
+        "rimHigh": 4.75,
+        "cupStart": "20260520",
+        "cupEnd": "20260922",
+        "handleStart": "20260923",
+        "handleEnd": "20261028",
+        "handlePosition": 0.5,
+        "pivot": 4.21,
+        "pivotRecovery": null,
+        "rightSideHigh": null,
+        "rightSideOvershootPct": null,
+        "signalDate": "20261029",
+        "signalType": "strong",
+        "breakoutAge": 0,
+        "currentDist": 2.4,
+        "currentValid": true,
+        "initialStop": 3.93
+      },
+      "afterStrict": null,
+      "afterEarly": null,
+      "newGateOnOldCandidate": {
+        "pass": false,
+        "pivotRecovery": 98.83,
+        "rightSideHigh": 4.75,
+        "rightSideOvershootPct": 11.5,
+        "rejectReasons": [
+          "柄前右侧超原杯沿11.50%，超过5%"
+        ],
+        "structureGate": {
+          "pivotRecoveryMin": 92.0,
+          "rightSideOvershootMax": 5.0
+        }
+      }
+    }
+  },
+  "positiveComparisons": [
+    {
+      "case": "VCP|600583.SH|2022-08-22",
+      "before": "底部整理",
+      "after": null,
+      "beforeCup": null,
+      "afterCup": null,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|601808.SH|20190507|20190816|近似杯柄",
+      "before": "底部整理",
+      "after": null,
+      "beforeCup": null,
+      "afterCup": null,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|600583.SH|20250901|20260107|杯柄",
+      "before": null,
+      "after": "长平台整理",
+      "beforeCup": null,
+      "afterCup": null,
+      "afterReasons": []
+    },
+    {
+      "case": "CUP|601857.SH|20250120|20250603|双底杯柄",
+      "before": null,
+      "after": "杯柄型",
+      "beforeCup": {
+        "days": 13,
+        "totalDays": 35,
+        "rimDate": "20250403",
+        "rimHigh": 8.17,
+        "cupStart": "20250403",
+        "cupEnd": "20250508",
+        "handleStart": "20250509",
+        "handleEnd": "20250527",
+        "handlePosition": 0.51,
+        "pivot": 8.35,
+        "pivotRecovery": null,
+        "rightSideHigh": null,
+        "rightSideOvershootPct": null,
+        "signalDate": "20250528",
+        "signalType": "early",
+        "breakoutAge": 3,
+        "currentDist": -0.6,
+        "currentValid": true,
+        "initialStop": 8.08
+      },
+      "afterCup": {
+        "days": 13,
+        "totalDays": 35,
+        "rimDate": "20250403",
+        "rimHigh": 8.17,
+        "cupStart": "20250403",
+        "cupEnd": "20250508",
+        "handleStart": "20250509",
+        "handleEnd": "20250527",
+        "handlePosition": 0.51,
+        "pivot": 8.35,
+        "pivotRecovery": 94.67,
+        "rightSideHigh": 8.14,
+        "rightSideOvershootPct": -7.71,
+        "signalDate": "20250528",
+        "signalType": "early",
+        "breakoutAge": 3,
+        "currentDist": -0.6,
+        "currentValid": true,
+        "initialStop": 8.08
+      },
+      "afterReasons": []
+    },
+    {
+      "case": "CUP|600028.SH|20220307|20220526|双底杯柄",
+      "before": "长平台整理",
+      "after": null,
+      "beforeCup": null,
+      "afterCup": null,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|600309.SH|20250403|20250820|趋势反转型圣杯",
+      "before": null,
+      "after": null,
+      "beforeCup": null,
+      "afterCup": null,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|09987.HK|20240919",
+      "before": null,
+      "after": null,
+      "beforeCup": null,
+      "afterCup": null,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|惠泰医疗|20261012",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "beforeCup": {
+        "days": 14,
+        "totalDays": 119,
+        "rimDate": "20260415",
+        "rimHigh": 261.19,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": null,
+        "handleEnd": null,
+        "handlePosition": 0.699,
+        "pivot": 256.8,
+        "pivotRecovery": null,
+        "rightSideHigh": null,
+        "rightSideOvershootPct": null,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      },
+      "afterCup": {
+        "days": 14,
+        "totalDays": 119,
+        "rimDate": "20260415",
+        "rimHigh": 261.19,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260915",
+        "handleEnd": "20261012",
+        "handlePosition": 0.699,
+        "pivot": 256.8,
+        "pivotRecovery": 98.32,
+        "rightSideHigh": 271.0,
+        "rightSideOvershootPct": 3.76,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      },
+      "afterReasons": []
+    },
+    {
+      "case": "CUP|平高电气|20260924",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "beforeCup": {
+        "days": 11,
+        "totalDays": 82,
+        "rimDate": "20260602",
+        "rimHigh": 20.94,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": null,
+        "handleEnd": null,
+        "handlePosition": 0.5,
+        "pivot": 19.38,
+        "pivotRecovery": null,
+        "rightSideHigh": null,
+        "rightSideOvershootPct": null,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      },
+      "afterCup": {
+        "days": 11,
+        "totalDays": 82,
+        "rimDate": "20260602",
+        "rimHigh": 20.94,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260910",
+        "handleEnd": "20260924",
+        "handlePosition": 0.5,
+        "pivot": 19.38,
+        "pivotRecovery": 92.55,
+        "rightSideHigh": 21.29,
+        "rightSideOvershootPct": 1.67,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      },
+      "afterReasons": []
+    }
+  ],
+  "pinggaoReplay": [
+    {
+      "date": "20260921",
+      "before": "杯柄型",
+      "after": "长平台整理",
+      "cup": null,
+      "historyGate": {
+        "historyGatePass": true,
+        "historyExclusionReason": null,
+        "historicalHighClose": 24.55,
+        "historicalHighDate": "20260309",
+        "distanceToHistoricalHighPct": -21.5479,
+        "historyStart": "20180102",
+        "historyEnd": "20260918",
+        "historyBars": 2116,
+        "historyMayBeTruncated": true,
+        "historyScope": "识别日前全部可得日线收盘（20180102~20260918，2116根）；达到1200根缓存上限，非上市全史"
+      }
+    },
+    {
+      "date": "20260922",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "cup": {
+        "days": 10,
+        "totalDays": 80,
+        "rimDate": "20260602",
+        "rimHigh": 20.94,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260909",
+        "handleEnd": "20260922",
+        "handlePosition": 0.5,
+        "pivot": 19.7,
+        "pivotRecovery": 94.08,
+        "rightSideHigh": 21.29,
+        "rightSideOvershootPct": 1.67,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      },
+      "historyGate": {
+        "historyGatePass": true,
+        "historyExclusionReason": null,
+        "historicalHighClose": 24.55,
+        "historicalHighDate": "20260309",
+        "distanceToHistoricalHighPct": -22.3218,
+        "historyStart": "20180102",
+        "historyEnd": "20260921",
+        "historyBars": 2117,
+        "historyMayBeTruncated": true,
+        "historyScope": "识别日前全部可得日线收盘（20180102~20260921，2117根）；达到1200根缓存上限，非上市全史"
+      }
+    },
+    {
+      "date": "20260923",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "cup": {
+        "days": 10,
+        "totalDays": 81,
+        "rimDate": "20260602",
+        "rimHigh": 20.94,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260910",
+        "handleEnd": "20260923",
+        "handlePosition": 0.5,
+        "pivot": 19.38,
+        "pivotRecovery": 92.55,
+        "rightSideHigh": 21.29,
+        "rightSideOvershootPct": 1.67,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      },
+      "historyGate": {
+        "historyGatePass": true,
+        "historyExclusionReason": null,
+        "historicalHighClose": 24.55,
+        "historicalHighDate": "20260309",
+        "distanceToHistoricalHighPct": -23.8289,
+        "historyStart": "20180102",
+        "historyEnd": "20260922",
+        "historyBars": 2118,
+        "historyMayBeTruncated": true,
+        "historyScope": "识别日前全部可得日线收盘（20180102~20260922，2118根）；达到1200根缓存上限，非上市全史"
+      }
+    },
+    {
+      "date": "20260924",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "cup": {
+        "days": 11,
+        "totalDays": 82,
+        "rimDate": "20260602",
+        "rimHigh": 20.94,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260910",
+        "handleEnd": "20260924",
+        "handlePosition": 0.5,
+        "pivot": 19.38,
+        "pivotRecovery": 92.55,
+        "rightSideHigh": 21.29,
+        "rightSideOvershootPct": 1.67,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      },
+      "historyGate": {
+        "historyGatePass": true,
+        "historyExclusionReason": null,
+        "historicalHighClose": 24.55,
+        "historicalHighDate": "20260309",
+        "distanceToHistoricalHighPct": -23.7882,
+        "historyStart": "20180102",
+        "historyEnd": "20260923",
+        "historyBars": 2119,
+        "historyMayBeTruncated": true,
+        "historyScope": "识别日前全部可得日线收盘（20180102~20260923，2119根）；达到1200根缓存上限，非上市全史"
+      }
+    },
+    {
+      "date": "20260928",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "cup": {
+        "days": 11,
+        "totalDays": 82,
+        "rimDate": "20260602",
+        "rimHigh": 21.29,
+        "cupStart": "20260602",
+        "cupEnd": "20260909",
+        "handleStart": "20260910",
+        "handleEnd": "20260924",
+        "handlePosition": 0.5,
+        "pivot": 19.38,
+        "pivotRecovery": 92.55,
+        "rightSideHigh": 21.29,
+        "rightSideOvershootPct": 1.67,
+        "signalDate": "20260928",
+        "signalType": "strong",
+        "breakoutAge": 0,
+        "currentDist": 0.2,
+        "currentValid": true,
+        "initialStop": 18.37
+      },
+      "historyGate": {
+        "historyGatePass": true,
+        "historyExclusionReason": null,
+        "historicalHighClose": 24.55,
+        "historicalHighDate": "20260309",
+        "distanceToHistoricalHighPct": -20.8961,
+        "historyStart": "20180102",
+        "historyEnd": "20260924",
+        "historyBars": 2120,
+        "historyMayBeTruncated": true,
+        "historyScope": "识别日前全部可得日线收盘（20180102~20260924，2120根）；达到1200根缓存上限，非上市全史"
+      }
+    },
+    {
+      "date": "20260929",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "cup": {
+        "days": 11,
+        "totalDays": 82,
+        "rimDate": "20260602",
+        "rimHigh": 21.29,
+        "cupStart": "20260602",
+        "cupEnd": "20260909",
+        "handleStart": "20260910",
+        "handleEnd": "20260924",
+        "handlePosition": 0.5,
+        "pivot": 19.38,
+        "pivotRecovery": 92.55,
+        "rightSideHigh": 21.29,
+        "rightSideOvershootPct": 1.67,
+        "signalDate": "20260928",
+        "signalType": "strong",
+        "breakoutAge": 1,
+        "currentDist": 1.7,
+        "currentValid": true,
+        "initialStop": 18.37
+      },
+      "historyGate": {
+        "historyGatePass": true,
+        "historyExclusionReason": null,
+        "historicalHighClose": 24.55,
+        "historicalHighDate": "20260309",
+        "distanceToHistoricalHighPct": -19.7149,
+        "historyStart": "20180102",
+        "historyEnd": "20260928",
+        "historyBars": 2121,
+        "historyMayBeTruncated": true,
+        "historyScope": "识别日前全部可得日线收盘（20180102~20260928，2121根）；达到1200根缓存上限，非上市全史"
+      }
+    },
+    {
+      "date": "20260930",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "cup": {
+        "days": 11,
+        "totalDays": 82,
+        "rimDate": "20260602",
+        "rimHigh": 21.29,
+        "cupStart": "20260602",
+        "cupEnd": "20260909",
+        "handleStart": "20260910",
+        "handleEnd": "20260924",
+        "handlePosition": 0.5,
+        "pivot": 19.38,
+        "pivotRecovery": 92.55,
+        "rightSideHigh": 21.29,
+        "rightSideOvershootPct": 1.67,
+        "signalDate": "20260928",
+        "signalType": "strong",
+        "breakoutAge": 2,
+        "currentDist": 3.5,
+        "currentValid": true,
+        "initialStop": 18.37
+      },
+      "historyGate": {
+        "historyGatePass": true,
+        "historyExclusionReason": null,
+        "historicalHighClose": 24.55,
+        "historicalHighDate": "20260309",
+        "distanceToHistoricalHighPct": -18.3299,
+        "historyStart": "20180102",
+        "historyEnd": "20260929",
+        "historyBars": 2122,
+        "historyMayBeTruncated": true,
+        "historyScope": "识别日前全部可得日线收盘（20180102~20260929，2122根）；达到1200根缓存上限，非上市全史"
+      }
+    }
+  ],
+  "huitaiReplay": [
+    {
+      "date": "20260916",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "cup": {
+        "days": 13,
+        "totalDays": 111,
+        "rimDate": "20260409",
+        "rimHigh": 263.62,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260831",
+        "handleEnd": "20260916",
+        "handlePosition": 0.474,
+        "pivot": 254.0,
+        "pivotRecovery": 96.35,
+        "rightSideHigh": 271.0,
+        "rightSideOvershootPct": 2.8,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      }
+    },
+    {
+      "date": "20260918",
+      "before": null,
+      "after": "杯柄型",
+      "cup": {
+        "days": 15,
+        "totalDays": 113,
+        "rimDate": "20260409",
+        "rimHigh": 263.62,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260831",
+        "handleEnd": "20260918",
+        "handlePosition": 0.474,
+        "pivot": 254.0,
+        "pivotRecovery": 96.35,
+        "rightSideHigh": 271.0,
+        "rightSideOvershootPct": 2.8,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      }
+    },
+    {
+      "date": "20260922",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "cup": {
+        "days": 17,
+        "totalDays": 115,
+        "rimDate": "20260409",
+        "rimHigh": 263.62,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260831",
+        "handleEnd": "20260922",
+        "handlePosition": 0.474,
+        "pivot": 254.0,
+        "pivotRecovery": 96.35,
+        "rightSideHigh": 271.0,
+        "rightSideOvershootPct": 2.8,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      }
+    },
+    {
+      "date": "20260924",
+      "before": null,
+      "after": "杯柄型",
+      "cup": {
+        "days": 19,
+        "totalDays": 117,
+        "rimDate": "20260409",
+        "rimHigh": 263.62,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260831",
+        "handleEnd": "20260924",
+        "handlePosition": 0.474,
+        "pivot": 254.0,
+        "pivotRecovery": 96.35,
+        "rightSideHigh": 271.0,
+        "rightSideOvershootPct": 2.8,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      }
+    },
+    {
+      "date": "20260930",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "cup": {
+        "days": 20,
+        "totalDays": 120,
+        "rimDate": "20260409",
+        "rimHigh": 263.62,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260902",
+        "handleEnd": "20260930",
+        "handlePosition": 0.474,
+        "pivot": 253.78,
+        "pivotRecovery": 96.27,
+        "rightSideHigh": 271.0,
+        "rightSideOvershootPct": 2.8,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      }
+    },
+    {
+      "date": "20261009",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "cup": {
+        "days": 11,
+        "totalDays": 118,
+        "rimDate": "20260415",
+        "rimHigh": 261.19,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260917",
+        "handleEnd": "20261009",
+        "handlePosition": 0.699,
+        "pivot": 251.5,
+        "pivotRecovery": 96.29,
+        "rightSideHigh": 271.0,
+        "rightSideOvershootPct": 3.76,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      }
+    },
+    {
+      "date": "20261012",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "cup": {
+        "days": 14,
+        "totalDays": 119,
+        "rimDate": "20260415",
+        "rimHigh": 261.19,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": "20260915",
+        "handleEnd": "20261012",
+        "handlePosition": 0.699,
+        "pivot": 256.8,
+        "pivotRecovery": 98.32,
+        "rightSideHigh": 271.0,
+        "rightSideOvershootPct": 3.76,
+        "signalDate": null,
+        "signalType": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "initialStop": null
+      }
+    },
+    {
+      "date": "20261026",
+      "before": null,
+      "after": null,
+      "cup": null
+    }
+  ],
+  "signalReplay": [
+    {
+      "code": "003816.SZ",
+      "asOf": "20261008",
+      "signal": {
+        "days": 18,
+        "totalDays": 75,
+        "rimDate": "20260616",
+        "rimHigh": 4.51,
+        "cupStart": "20260616",
+        "cupEnd": "20260903",
+        "handleStart": "20260904",
+        "handleEnd": "20260930",
+        "handlePosition": 0.5,
+        "pivot": 4.42,
+        "pivotRecovery": 97.36,
+        "rightSideHigh": 4.47,
+        "rightSideOvershootPct": -1.54,
+        "signalDate": "20261008",
+        "signalType": "early",
+        "breakoutAge": 0,
+        "currentDist": -0.2,
+        "currentValid": true,
+        "initialStop": 4.15
+      },
+      "displayable": true
+    },
+    {
+      "code": "003816.SZ",
+      "asOf": "20261015",
+      "signal": {
+        "days": 18,
+        "totalDays": 75,
+        "rimDate": "20260616",
+        "rimHigh": 4.51,
+        "cupStart": "20260616",
+        "cupEnd": "20260903",
+        "handleStart": "20260904",
+        "handleEnd": "20260930",
+        "handlePosition": 0.5,
+        "pivot": 4.42,
+        "pivotRecovery": 97.36,
+        "rightSideHigh": 4.47,
+        "rightSideOvershootPct": -1.54,
+        "signalDate": "20261008",
+        "signalType": "early",
+        "breakoutAge": 5,
+        "currentDist": 2.9,
+        "currentValid": true,
+        "initialStop": 4.15
+      },
+      "displayable": true
+    },
+    {
+      "code": "003816.SZ",
+      "asOf": "20261016",
+      "signal": {
+        "days": 18,
+        "totalDays": 75,
+        "rimDate": "20260616",
+        "rimHigh": 4.51,
+        "cupStart": "20260616",
+        "cupEnd": "20260903",
+        "handleStart": "20260904",
+        "handleEnd": "20260930",
+        "handlePosition": 0.5,
+        "pivot": 4.42,
+        "pivotRecovery": 97.36,
+        "rightSideHigh": 4.47,
+        "rightSideOvershootPct": -1.54,
+        "signalDate": "20261008",
+        "signalType": "early",
+        "breakoutAge": 6,
+        "currentDist": 3.8,
+        "currentValid": true,
+        "initialStop": 4.15
+      },
+      "displayable": false
+    },
+    {
+      "code": "600795.SH",
+      "asOf": "20260902",
+      "signal": {
+        "days": 10,
+        "totalDays": 62,
+        "rimDate": "20260605",
+        "rimHigh": 5.23,
+        "cupStart": "20260605",
+        "cupEnd": "20260818",
+        "handleStart": "20260819",
+        "handleEnd": "20260901",
+        "handlePosition": 0.538,
+        "pivot": 5.3,
+        "pivotRecovery": 98.7,
+        "rightSideHigh": 5.15,
+        "rightSideOvershootPct": -4.1,
+        "signalDate": "20260902",
+        "signalType": "strong",
+        "breakoutAge": 0,
+        "currentDist": 1.9,
+        "currentValid": true,
+        "initialStop": 5.0
+      },
+      "displayable": true
+    },
+    {
+      "code": "600795.SH",
+      "asOf": "20260909",
+      "signal": {
+        "days": 10,
+        "totalDays": 62,
+        "rimDate": "20260605",
+        "rimHigh": 5.23,
+        "cupStart": "20260605",
+        "cupEnd": "20260818",
+        "handleStart": "20260819",
+        "handleEnd": "20260901",
+        "handlePosition": 0.538,
+        "pivot": 5.3,
+        "pivotRecovery": 98.7,
+        "rightSideHigh": 5.15,
+        "rightSideOvershootPct": -4.1,
+        "signalDate": "20260902",
+        "signalType": "strong",
+        "breakoutAge": 5,
+        "currentDist": 0.2,
+        "currentValid": true,
+        "initialStop": 5.0
+      },
+      "displayable": true
+    },
+    {
+      "code": "600795.SH",
+      "asOf": "20260910",
+      "signal": {
+        "days": 10,
+        "totalDays": 62,
+        "rimDate": "20260605",
+        "rimHigh": 5.23,
+        "cupStart": "20260605",
+        "cupEnd": "20260818",
+        "handleStart": "20260819",
+        "handleEnd": "20260901",
+        "handlePosition": 0.538,
+        "pivot": 5.3,
+        "pivotRecovery": 98.7,
+        "rightSideHigh": 5.15,
+        "rightSideOvershootPct": -4.1,
+        "signalDate": "20260902",
+        "signalType": "strong",
+        "breakoutAge": 6,
+        "currentDist": -0.6,
+        "currentValid": true,
+        "initialStop": 5.0
+      },
+      "displayable": false
+    }
+  ],
+  "all23": [
+    {
+      "case": "VCP|000100.SZ|2026-05-20",
+      "before": null,
+      "after": null,
+      "changed": false,
+      "afterReasons": [
+        "各候选未同时满足完整结构与展示门"
+      ]
+    },
+    {
+      "case": "VCP|000625.SZ|2023-09-27",
+      "before": "杯柄型",
+      "after": "平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|000708.SZ|2025-06-10",
+      "before": "底部整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "VCP|000725.SZ|2026-04-17",
+      "before": null,
+      "after": "平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|000977.SZ|2024-09-23",
+      "before": null,
+      "after": null,
+      "changed": false,
+      "afterReasons": [
+        "各候选未同时满足完整结构与展示门"
+      ]
+    },
+    {
+      "case": "VCP|002028.SZ|2025-07-11",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|688012.SH|2023-03-01",
+      "before": "底部整理",
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|688041.SH|2024-09-24",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|688047.SH|2024-09-26",
+      "before": null,
+      "after": "底部整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|601000.SH|2026-01-19",
+      "before": "底部整理",
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|002155.SZ|2026-01-09",
+      "before": "杯柄型",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "各候选未同时满足完整结构与展示门"
+      ]
+    },
+    {
+      "case": "VCP|600583.SH|2022-08-22",
+      "before": "底部整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|601808.SH|20190507|20190816|近似杯柄",
+      "before": "底部整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|600583.SH|20250901|20260107|杯柄",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "CUP|601857.SH|20250120|20250603|双底杯柄",
+      "before": null,
+      "after": "杯柄型",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "CUP|600028.SH|20220307|20220526|双底杯柄",
+      "before": "长平台整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|600309.SH|20250403|20250820|趋势反转型圣杯",
+      "before": null,
+      "after": null,
+      "changed": false,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|09987.HK|20240919",
+      "before": null,
+      "after": null,
+      "changed": false,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "LP|海光段①|688041.SH|20240909",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "LP|海光段②|688041.SH|20250812",
+      "before": "长平台整理",
+      "after": "长平台整理",
+      "changed": false,
+      "afterReasons": []
+    },
+    {
+      "case": "LP|中微段③|688012.SH|20250722",
+      "before": "长平台整理",
+      "after": "长平台整理",
+      "changed": false,
+      "afterReasons": []
+    },
+    {
+      "case": "CUP|惠泰医疗|20261012",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "changed": false,
+      "afterReasons": []
+    },
+    {
+      "case": "CUP|平高电气|20260924",
+      "before": "杯柄型",
+      "after": "杯柄型",
+      "changed": false,
+      "afterReasons": []
+    }
+  ],
+  "changes23": [
+    {
+      "case": "VCP|000625.SZ|2023-09-27",
+      "before": "杯柄型",
+      "after": "平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|000708.SZ|2025-06-10",
+      "before": "底部整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "VCP|000725.SZ|2026-04-17",
+      "before": null,
+      "after": "平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|002028.SZ|2025-07-11",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|688012.SH|2023-03-01",
+      "before": "底部整理",
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|688041.SH|2024-09-24",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|688047.SH|2024-09-26",
+      "before": null,
+      "after": "底部整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|601000.SH|2026-01-19",
+      "before": "底部整理",
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|002155.SZ|2026-01-09",
+      "before": "杯柄型",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "各候选未同时满足完整结构与展示门"
+      ]
+    },
+    {
+      "case": "VCP|600583.SH|2022-08-22",
+      "before": "底部整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|601808.SH|20190507|20190816|近似杯柄",
+      "before": "底部整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|600583.SH|20250901|20260107|杯柄",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "CUP|601857.SH|20250120|20250603|双底杯柄",
+      "before": null,
+      "after": "杯柄型",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "CUP|600028.SH|20220307|20220526|双底杯柄",
+      "before": "长平台整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "LP|海光段①|688041.SH|20240909",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    }
+  ],
+  "handlePositionCalibration": "保留0.50~0.80；平高/中国广核0.50，未采用会误杀正样本的60/65%",
+  "freshness": "CUP_SIGNAL_MAX_AGE=5，age5通过/age6拒绝",
+  "data": "三只1026前为真实vcp_cache，20261027~29用Tushare pro.daily补齐；其余为既有真实历史fixtures"
+}

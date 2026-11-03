@@ -1,0 +1,2770 @@
+{
+  "sampleLibraryVersion": 96,
+  "sampleCount": 38,
+  "productionSha256": "7a710f6f8c92dc5221ace27230e28b71eaba4ba67a92702f59a91b9c82662701",
+  "pitOnly": true,
+  "notMarketWinRate": true,
+  "pitMarketCapPolicy": "sourceCase使用样本自带历史市值；其他样本无PIT市值时长平台保守拒绝，不倒填后续快照",
+  "structuralConflicts": [
+    {
+      "id": "C11",
+      "handlePositionPct": 38.46,
+      "reason": "指定12日柄含20260818低点4.89；杯沿5.37/杯底4.59下低于50%硬门，未放宽"
+    }
+  ],
+  "stats": {
+    "杯柄严格样本": {
+      "total": 11,
+      "valid": 6,
+      "invalid": 5,
+      "unverified": 0
+    },
+    "形态有效但可不同标签": {
+      "total": 15,
+      "valid": 10,
+      "invalid": 5,
+      "unverified": 0
+    },
+    "明确反例": {
+      "total": 12,
+      "valid": 11,
+      "invalid": 1,
+      "unverified": 0
+    }
+  },
+  "confusion": {
+    "strictCupMisses": [
+      "C01",
+      "C02",
+      "C04",
+      "C05",
+      "C06"
+    ],
+    "strictCupMislabeledVcp": [],
+    "validFormMisses": [
+      "A01",
+      "A03",
+      "A05",
+      "A11",
+      "A12"
+    ],
+    "validFormAsVcp": [],
+    "negativeViolations": [
+      "N01"
+    ],
+    "categoryCounts": {
+      "null": 20,
+      "平台整理": 2,
+      "长平台整理": 8,
+      "底部整理": 1,
+      "杯柄型": 7
+    }
+  },
+  "missingData": [],
+  "rows": [
+    {
+      "id": "A01",
+      "code": "000100.SZ",
+      "name": "TCL科技",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20260520",
+      "dateRange": "20260409~20260520",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3758,
+      "firstBar": "20100104",
+      "lastBar": "20260520",
+      "currentCategory": null,
+      "valid": false,
+      "keyEvidence": {
+        "pct": 11.6,
+        "distHigh250": -17.06,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "各候选未同时满足完整结构与展示门"
+      ]
+    },
+    {
+      "id": "A02",
+      "code": "000625.SZ",
+      "name": "长安汽车",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20230927",
+      "dateRange": "20230828~20230927",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3238,
+      "firstBar": "20100104",
+      "lastBar": "20230927",
+      "currentCategory": "平台整理",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 56.0,
+        "distHigh250": -18.65,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": {
+          "type": "杯柄型",
+          "days": 22,
+          "amplitude": 11.9,
+          "riseFromLow": 19.5,
+          "tailRatio": 0.64,
+          "volRatio": 0.8,
+          "segAmps": [
+            11.9,
+            6.9,
+            6.5
+          ],
+          "contractionMode": "strict",
+          "pivot": 13.85,
+          "distPct": 6.2,
+          "formed": true
+        },
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "A03",
+      "code": "000708.SZ",
+      "name": "中信特钢",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20250610",
+      "dateRange": "20250422~20250610",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3629,
+      "firstBar": "20100104",
+      "lastBar": "20250610",
+      "currentCategory": null,
+      "valid": false,
+      "keyEvidence": {
+        "pct": null,
+        "distHigh250": null,
+        "trendPass": null,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "id": "A04",
+      "code": "000725.SZ",
+      "name": "京东方A",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20260417",
+      "dateRange": "20260324~20260417",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3938,
+      "firstBar": "20100104",
+      "lastBar": "20260417",
+      "currentCategory": "平台整理",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 44.8,
+        "distHigh250": -12.61,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": {
+          "type": "底部平台型",
+          "days": 16,
+          "amplitude": 4.9,
+          "riseFromLow": 2.3,
+          "tailRatio": 1.02,
+          "volRatio": 0.58,
+          "segAmps": [
+            4.4,
+            3.9,
+            2.5
+          ],
+          "contractionMode": "strict",
+          "pivot": 4.08,
+          "distPct": 1.5,
+          "formed": true,
+          "vcpAttribute": {
+            "formed": true,
+            "style": "platform_vcp",
+            "rejectReasons": [],
+            "histPct": 44.8,
+            "distHigh250": -12.61,
+            "platformDays": 16,
+            "amplitudePct": 4.9,
+            "segAmpsPct": [
+              4.4,
+              3.9,
+              2.5
+            ],
+            "contractionMode": "strict",
+            "narrowIntegrity": {
+              "pass": true,
+              "limitPct": -5.0,
+              "firstDayPct": -1.25,
+              "worstDayPct": -1.5,
+              "worstDate": "20260402",
+              "breaches": [],
+              "scope": "仅VCP属性，不修改底层平台标签"
+            },
+            "platformToRallyVol": 0.58,
+            "volumeMA": {
+              "pass": true,
+              "ma5": 4215053.2,
+              "ma10": 4190718.4,
+              "ma20": 4541352.6,
+              "maBase": 5911990.1,
+              "baseWindow": 50,
+              "ma10ToBase": 0.709,
+              "sequenceOk": true,
+              "ratioMax": 1.2,
+              "reason": null
+            },
+            "recentVolumeQuality": {
+              "pass": true,
+              "ma5ToMa10": 1.006,
+              "last3ToMa10": 1.002,
+              "reexpanded": false,
+              "basisExcludesBreakout": false,
+              "reason": null
+            },
+            "trend60Pct": -12.61,
+            "platformDriftPct": 2.03,
+            "note": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；一年分位44.8%≤60%、距一年高点-12.6%≤-8%；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制均线排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。"
+          }
+        },
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "A05",
+      "code": "000977.SZ",
+      "name": "浪潮信息",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20240923",
+      "dateRange": "20240822~20240923",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3494,
+      "firstBar": "20100104",
+      "lastBar": "20240923",
+      "currentCategory": null,
+      "valid": false,
+      "keyEvidence": {
+        "pct": 24.8,
+        "distHigh250": -27.37,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "各候选未同时满足完整结构与展示门"
+      ]
+    },
+    {
+      "id": "A06",
+      "code": "002028.SZ",
+      "name": "思源电气",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20250711",
+      "dateRange": "20250220~20250711",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3763,
+      "firstBar": "20100104",
+      "lastBar": "20250711",
+      "currentCategory": "长平台整理",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 26.4,
+        "distHigh250": -13.36,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": {
+          "type": "长平台整理",
+          "days": 97,
+          "amplitude": 13.7,
+          "drift": -3.0,
+          "volRatio": 0.79,
+          "segAmps": [
+            13.7,
+            13.1,
+            7.5
+          ],
+          "pivot": 77.88,
+          "distPct": 11.3,
+          "invalidation": 68.48,
+          "volConfirm": 60753.6,
+          "formed": true
+        },
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "A07",
+      "code": "688012.SH",
+      "name": "中微公司",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20230301",
+      "dateRange": "20221107~20230301",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 876,
+      "firstBar": "20190722",
+      "lastBar": "20230301",
+      "currentCategory": "长平台整理",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 28.8,
+        "distHigh250": -27.95,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": {
+          "type": "杯柄型",
+          "days": 13,
+          "amplitude": 10.1,
+          "riseFromLow": 15.0,
+          "tailRatio": 0.67,
+          "volRatio": 0.88,
+          "segAmps": [
+            6.4,
+            6.0,
+            6.2
+          ],
+          "contractionMode": "strict",
+          "pivot": 113.99,
+          "distPct": 7.3,
+          "formed": true
+        },
+        "flag": null,
+        "longPlatform": {
+          "type": "长平台整理",
+          "days": 76,
+          "amplitude": 20.4,
+          "drift": -2.5,
+          "volRatio": 0.81,
+          "segAmps": [
+            18.7,
+            19.4,
+            10.1
+          ],
+          "pivot": 115.0,
+          "distPct": 8.2,
+          "invalidation": 95.5,
+          "volConfirm": 74950.4,
+          "formed": true
+        },
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "A08",
+      "code": "688041.SH",
+      "name": "海光信息",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20240924",
+      "dateRange": "20240716~20240924",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 514,
+      "firstBar": "20220812",
+      "lastBar": "20240924",
+      "currentCategory": "长平台整理",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 82.4,
+        "distHigh250": -11.23,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": {
+          "type": "长平台整理",
+          "days": 120,
+          "amplitude": 20.8,
+          "drift": 1.1,
+          "volRatio": 0.69,
+          "segAmps": [
+            20.2,
+            19.1,
+            15.3
+          ],
+          "pivot": 81.3,
+          "distPct": 4.1,
+          "invalidation": 67.3,
+          "volConfirm": 173048.7,
+          "formed": true
+        },
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "A09",
+      "code": "688047.SH",
+      "name": "龙芯中科",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20240926",
+      "dateRange": "20240206~20240926",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 551,
+      "firstBar": "20220624",
+      "lastBar": "20240926",
+      "currentCategory": "底部整理",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 58.4,
+        "distHigh250": -28.06,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": {
+          "type": "底部平台型",
+          "days": 18,
+          "amplitude": 11.1,
+          "riseFromLow": 8.9,
+          "tailRatio": 1.03,
+          "volRatio": 0.81,
+          "segAmps": [
+            10.9,
+            10.3,
+            8.8
+          ],
+          "contractionMode": "strict",
+          "pivot": 95.76,
+          "distPct": 1.4,
+          "formed": true
+        },
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "A10",
+      "code": "601000.SH",
+      "name": "唐山港",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20260119",
+      "dateRange": "20251202~20260119",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3686,
+      "firstBar": "20100705",
+      "lastBar": "20260119",
+      "currentCategory": "长平台整理",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 33.6,
+        "distHigh250": -15.93,
+        "trendPass": false,
+        "vcpDaily": {
+          "contractions": [
+            3.8,
+            1.5,
+            2.8,
+            2.0,
+            1.3
+          ],
+          "contractionsOk": [
+            true,
+            true,
+            false,
+            true,
+            true
+          ],
+          "count": 5,
+          "decreasing": false,
+          "practicalDecreasing": false,
+          "priceMode": "未递减",
+          "structurePath": "swing_evidence_only",
+          "volTrend": "递减",
+          "volFirst": 411422.0,
+          "volLast": 366587.8,
+          "volumeMA": {
+            "pass": true,
+            "ma5": 356307.9,
+            "ma10": 372436.5,
+            "ma20": 366528.5,
+            "maBase": 387688.9,
+            "baseWindow": 50,
+            "ma10ToBase": 0.961,
+            "sequenceOk": false,
+            "ratioMax": 1.2,
+            "reason": null
+          },
+          "recentVolumeQuality": {
+            "pass": true,
+            "ma5ToMa10": 0.983,
+            "last3ToMa10": 0.881,
+            "reexpanded": false,
+            "basisExcludesBreakout": true,
+            "reason": null
+          },
+          "rightSideQuality": {
+            "pass": true,
+            "drift10Pct": 4.156,
+            "downDayRatio10": 0.3,
+            "position20Pct": 100.0,
+            "annualVolatility10Pct": 15.785,
+            "maxAbsDay10Pct": 1.818,
+            "persistentDownslide": false,
+            "violent": false,
+            "rejectReasons": []
+          },
+          "rejectReasons": [],
+          "practical": true,
+          "pivot": 4.0,
+          "distPct": -0.2,
+          "invalidation": 3.87,
+          "volConfirm": 542764.5,
+          "formed": false
+        },
+        "vcpWeekly": null,
+        "platform": {
+          "type": "底部平台型",
+          "days": 45,
+          "amplitude": 8.5,
+          "riseFromLow": 8.0,
+          "tailRatio": 0.91,
+          "volRatio": 0.96,
+          "segAmps": [
+            7.9,
+            5.0,
+            5.0
+          ],
+          "contractionMode": "strict",
+          "pivot": 4.1,
+          "distPct": 2.2,
+          "formed": true
+        },
+        "flag": null,
+        "longPlatform": {
+          "type": "长平台整理",
+          "days": 120,
+          "amplitude": 9.8,
+          "drift": -2.7,
+          "volRatio": 1.05,
+          "segAmps": [
+            6.4,
+            9.5,
+            6.1
+          ],
+          "pivot": 4.14,
+          "distPct": 3.2,
+          "invalidation": 3.77,
+          "volConfirm": 542764.5,
+          "formed": true
+        },
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "A11",
+      "code": "002155.SZ",
+      "name": "湖南黄金",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20260109",
+      "dateRange": "20251113~20260109",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3813,
+      "firstBar": "20100104",
+      "lastBar": "20260109",
+      "currentCategory": null,
+      "valid": false,
+      "keyEvidence": {
+        "pct": 81.2,
+        "distHigh250": -12.69,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "各候选未同时满足完整结构与展示门"
+      ]
+    },
+    {
+      "id": "A12",
+      "code": "600583.SH",
+      "name": "海油工程",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20220822",
+      "dateRange": "20220718~20220822",
+      "expectedCategories": [
+        "VCP收缩型",
+        "旗形整理",
+        "底部整理",
+        "平台整理",
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3056,
+      "firstBar": "20100104",
+      "lastBar": "20220822",
+      "currentCategory": null,
+      "valid": false,
+      "keyEvidence": {
+        "pct": null,
+        "distHigh250": null,
+        "trendPass": null,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "id": "C01",
+      "code": "601808.SH",
+      "name": "中信出版",
+      "sampleClass": "杯柄严格样本",
+      "labelMode": "strict",
+      "asOf": "20190816",
+      "dateRange": "20190507~20190816",
+      "expectedCategories": [
+        "杯柄型"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 2336,
+      "firstBar": "20100104",
+      "lastBar": "20190816",
+      "currentCategory": null,
+      "valid": false,
+      "keyEvidence": {
+        "pct": null,
+        "distHigh250": null,
+        "trendPass": null,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "id": "C02",
+      "code": "600583.SH",
+      "name": "海油工程",
+      "sampleClass": "杯柄严格样本",
+      "labelMode": "strict",
+      "asOf": "20260107",
+      "dateRange": "20250901~20260107",
+      "expectedCategories": [
+        "杯柄型"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3874,
+      "firstBar": "20100104",
+      "lastBar": "20260107",
+      "currentCategory": "长平台整理",
+      "valid": false,
+      "keyEvidence": {
+        "pct": 80.4,
+        "distHigh250": -10.69,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": {
+          "type": "杯柄型",
+          "days": 37,
+          "amplitude": 11.4,
+          "riseFromLow": 11.4,
+          "tailRatio": 1.0,
+          "volRatio": 0.63,
+          "segAmps": [
+            9.7,
+            7.6,
+            6.2
+          ],
+          "contractionMode": "strict",
+          "pivot": 5.88,
+          "distPct": 5.0,
+          "formed": true
+        },
+        "flag": null,
+        "longPlatform": {
+          "type": "长平台整理",
+          "days": 90,
+          "amplitude": 14.9,
+          "drift": -1.6,
+          "volRatio": 0.61,
+          "segAmps": [
+            11.0,
+            11.8,
+            7.6
+          ],
+          "pivot": 5.95,
+          "distPct": 6.2,
+          "invalidation": 5.18,
+          "volConfirm": 591316.8,
+          "formed": true
+        },
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "C03",
+      "code": "601857.SH",
+      "name": "中国石油",
+      "sampleClass": "杯柄严格样本",
+      "labelMode": "strict",
+      "asOf": "20250603",
+      "dateRange": "20250120~20250603",
+      "expectedCategories": [
+        "杯柄型"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3736,
+      "firstBar": "20100104",
+      "lastBar": "20250603",
+      "currentCategory": "杯柄型",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 47.6,
+        "distHigh250": -22.21,
+        "trendPass": false,
+        "vcpDaily": {
+          "contractions": [
+            1.9,
+            1.9,
+            2.6,
+            1.7,
+            2.0
+          ],
+          "contractionsOk": [
+            true,
+            true,
+            false,
+            true,
+            false
+          ],
+          "count": 5,
+          "decreasing": false,
+          "practicalDecreasing": false,
+          "priceMode": "未递减",
+          "structurePath": "swing_evidence_only",
+          "volTrend": "递减",
+          "volFirst": 964828.2,
+          "volLast": 869549.8,
+          "volumeMA": {
+            "pass": true,
+            "ma5": 911147.3,
+            "ma10": 817148.4,
+            "ma20": 893597.8,
+            "maBase": 1247734.2,
+            "baseWindow": 50,
+            "ma10ToBase": 0.655,
+            "sequenceOk": true,
+            "ratioMax": 1.2,
+            "reason": null
+          },
+          "recentVolumeQuality": {
+            "pass": true,
+            "ma5ToMa10": 1.115,
+            "last3ToMa10": 1.039,
+            "reexpanded": false,
+            "basisExcludesBreakout": false,
+            "reason": null
+          },
+          "rightSideQuality": {
+            "pass": true,
+            "drift10Pct": 1.467,
+            "downDayRatio10": 0.4,
+            "position20Pct": 78.846,
+            "annualVolatility10Pct": 14.388,
+            "maxAbsDay10Pct": 2.081,
+            "persistentDownslide": false,
+            "violent": false,
+            "rejectReasons": []
+          },
+          "rejectReasons": [],
+          "practical": true,
+          "pivot": 8.41,
+          "distPct": 1.3,
+          "invalidation": 8.15,
+          "volConfirm": 1746827.9,
+          "formed": false
+        },
+        "vcpWeekly": null,
+        "platform": {
+          "type": "底部平台型",
+          "days": 33,
+          "amplitude": 11.4,
+          "riseFromLow": 4.9,
+          "tailRatio": 0.88,
+          "volRatio": 0.55,
+          "segAmps": [
+            7.0,
+            5.8,
+            3.2
+          ],
+          "contractionMode": "strict",
+          "pivot": 8.41,
+          "distPct": 1.3,
+          "formed": true,
+          "vcpAttribute": {
+            "formed": true,
+            "style": "platform_vcp",
+            "rejectReasons": [],
+            "histPct": 47.6,
+            "distHigh250": -22.21,
+            "platformDays": 33,
+            "amplitudePct": 11.4,
+            "segAmpsPct": [
+              7.0,
+              5.8,
+              3.2
+            ],
+            "contractionMode": "strict",
+            "narrowIntegrity": {
+              "pass": true,
+              "limitPct": -5.0,
+              "firstDayPct": 1.72,
+              "worstDayPct": -1.57,
+              "worstDate": "20250516",
+              "breaches": [],
+              "scope": "仅VCP属性，不修改底层平台标签"
+            },
+            "platformToRallyVol": 0.55,
+            "volumeMA": {
+              "pass": true,
+              "ma5": 911147.3,
+              "ma10": 817148.4,
+              "ma20": 893597.8,
+              "maBase": 1247734.2,
+              "baseWindow": 50,
+              "ma10ToBase": 0.655,
+              "sequenceOk": true,
+              "ratioMax": 1.2,
+              "reason": null
+            },
+            "recentVolumeQuality": {
+              "pass": true,
+              "ma5ToMa10": 1.115,
+              "last3ToMa10": 1.039,
+              "reexpanded": false,
+              "basisExcludesBreakout": false,
+              "reason": null
+            },
+            "trend60Pct": 8.92,
+            "platformDriftPct": 7.93,
+            "note": "平台型VCP属性：33日振幅11.4%≤12%，三段振幅7.0→5.8→3.2%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；一年分位47.6%≤60%、距一年高点-22.2%≤-8%；平台/拉升段均量0.55≤0.75，MA10/MA20/MA50=817148/893598/1247734，MA10/MA50=0.655≤1.20（不强制均线排列）；60日趋势8.9%、平台漂移7.9%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。"
+          }
+        },
+        "flag": null,
+        "longPlatform": {
+          "type": "长平台整理",
+          "days": 86,
+          "amplitude": 20.3,
+          "drift": -3.2,
+          "volRatio": 0.52,
+          "segAmps": [
+            16.7,
+            13.2,
+            6.6
+          ],
+          "pivot": 8.82,
+          "distPct": 6.3,
+          "invalidation": 7.33,
+          "volConfirm": 1746827.9,
+          "formed": true
+        },
+        "regularCup": {
+          "days": 13,
+          "totalDays": 35,
+          "cupDepth": 10.3,
+          "amplitude": 3.2,
+          "tailRatio": 0.9,
+          "volRatio": 0.52,
+          "rimDate": "20250403",
+          "rimHigh": 8.17,
+          "bottomDate": "20250407",
+          "cupLow": 7.33,
+          "segmentBasis": "global_lowest_low",
+          "bottomZoneDays": 5,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 7.5499,
+          "handlePosition": 0.51,
+          "pivotRecovery": 94.67,
+          "rightSideOvershootPct": -7.71,
+          "pivot": 8.35,
+          "distPct": 0.6,
+          "defects": [],
+          "structureFuzzy": false,
+          "qualified": true,
+          "anchorDate": "20250527",
+          "cupStart": "20250403",
+          "cupEnd": "20250508",
+          "handleStart": "20250509",
+          "handleEnd": "20250527",
+          "signalDate": "20250528",
+          "signalType": "early",
+          "breakoutAge": 3,
+          "currentDist": -0.6,
+          "currentValid": true
+        },
+        "recentCup": {
+          "days": 13,
+          "totalDays": 35,
+          "cupDepth": 10.3,
+          "amplitude": 3.2,
+          "tailRatio": 0.9,
+          "volRatio": 0.52,
+          "rimDate": "20250403",
+          "rimHigh": 8.17,
+          "bottomDate": "20250407",
+          "cupLow": 7.33,
+          "segmentBasis": "global_lowest_low",
+          "bottomZoneDays": 5,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 7.5499,
+          "handlePosition": 0.51,
+          "pivotRecovery": 94.67,
+          "rightSideOvershootPct": -7.71,
+          "pivot": 8.35,
+          "distPct": 0.6,
+          "defects": [],
+          "structureFuzzy": false,
+          "qualified": true,
+          "anchorDate": "20250527",
+          "cupStart": "20250403",
+          "cupEnd": "20250508",
+          "handleStart": "20250509",
+          "handleEnd": "20250527",
+          "signalDate": "20250528",
+          "signalType": "early",
+          "breakoutAge": 3,
+          "currentDist": -0.6,
+          "currentValid": true
+        },
+        "signalDisplayable": true
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "C04",
+      "code": "600028.SH",
+      "name": "中国石化",
+      "sampleClass": "杯柄严格样本",
+      "labelMode": "strict",
+      "asOf": "20220526",
+      "dateRange": "20220307~20220526",
+      "expectedCategories": [
+        "杯柄型"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3005,
+      "firstBar": "20100104",
+      "lastBar": "20220526",
+      "currentCategory": null,
+      "valid": false,
+      "keyEvidence": {
+        "pct": null,
+        "distHigh250": null,
+        "trendPass": null,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "id": "C05",
+      "code": "600309.SH",
+      "name": "万华化学",
+      "sampleClass": "杯柄严格样本",
+      "labelMode": "strict",
+      "asOf": "20250820",
+      "dateRange": "20250403~20250820",
+      "expectedCategories": [
+        "杯柄型"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 3658,
+      "firstBar": "20100104",
+      "lastBar": "20250820",
+      "currentCategory": null,
+      "valid": false,
+      "keyEvidence": {
+        "pct": null,
+        "distHigh250": null,
+        "trendPass": null,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "id": "C06",
+      "code": "09987.HK",
+      "name": "百胜中国",
+      "sampleClass": "杯柄严格样本",
+      "labelMode": "strict",
+      "asOf": "20240919",
+      "dateRange": "20240715~20240808杯身；20240809~20240919标准杯柄",
+      "expectedCategories": [
+        "杯柄型"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 992,
+      "firstBar": "20200910",
+      "lastBar": "20240919",
+      "currentCategory": null,
+      "valid": false,
+      "keyEvidence": {
+        "pct": null,
+        "distHigh250": null,
+        "trendPass": null,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "id": "C07",
+      "code": "688617.SH",
+      "name": "惠泰医疗",
+      "sampleClass": "杯柄严格样本",
+      "labelMode": "strict",
+      "asOf": "20261012",
+      "dateRange": "20260408~20261026杯柄+突破；20260916~20261012买点",
+      "expectedCategories": [
+        "杯柄型"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 1393,
+      "firstBar": "20210107",
+      "lastBar": "20261012",
+      "currentCategory": "杯柄型",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 72.8,
+        "distHigh250": -23.98,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": {
+          "days": 14,
+          "totalDays": 119,
+          "cupDepth": 32.5,
+          "amplitude": 9.0,
+          "tailRatio": 1.15,
+          "volRatio": 0.86,
+          "rimDate": "20260415",
+          "rimHigh": 261.19,
+          "bottomDate": "20260629",
+          "cupLow": 176.28,
+          "segmentBasis": "global_lowest_low",
+          "bottomZoneDays": 4,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 181.5684,
+          "handlePosition": 0.699,
+          "pivotRecovery": 98.32,
+          "rightSideOvershootPct": 3.76,
+          "pivot": 256.8,
+          "distPct": 2.2,
+          "defects": [
+            "周BOLL深度回踩（包容）",
+            "柄质量近似（漂移2.4%·振幅9.0%·5/10日量1.01x·10/全柄量1.11x）"
+          ],
+          "structureFuzzy": true,
+          "qualified": false,
+          "handleStart": "20260915",
+          "handleEnd": "20261012"
+        },
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "C08",
+      "code": "600312.SH",
+      "name": "平高电气",
+      "sampleClass": "杯柄严格样本",
+      "labelMode": "strict",
+      "asOf": "20260924",
+      "dateRange": "20260602~20260804杯身；20260805~20260928柄；20260911~20260924缩量买点",
+      "expectedCategories": [
+        "杯柄型"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 2120,
+      "firstBar": "20180102",
+      "lastBar": "20260924",
+      "currentCategory": "杯柄型",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 42.8,
+        "distHigh250": -23.79,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": {
+          "days": 11,
+          "totalDays": 82,
+          "cupDepth": 24.5,
+          "amplitude": 5.4,
+          "tailRatio": 0.73,
+          "volRatio": 0.49,
+          "rimDate": "20260602",
+          "rimHigh": 20.94,
+          "bottomDate": "20260709",
+          "cupLow": 15.82,
+          "segmentBasis": "global_lowest_low",
+          "bottomZoneDays": 5,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 16.2946,
+          "handlePosition": 0.5,
+          "pivotRecovery": 92.55,
+          "rightSideOvershootPct": 1.67,
+          "pivot": 19.38,
+          "distPct": 3.6,
+          "defects": [],
+          "structureFuzzy": false,
+          "qualified": true,
+          "handleStart": "20260910",
+          "handleEnd": "20260924"
+        },
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "C09",
+      "code": "003816.SZ",
+      "name": "中国广核",
+      "sampleClass": "杯柄严格样本",
+      "labelMode": "strict",
+      "asOf": "20261008",
+      "dateRange": "20260616~20260903双底杯身；20260904~20260930柄",
+      "expectedCategories": [
+        "杯柄型"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 1188,
+      "firstBar": "20211111",
+      "lastBar": "20261008",
+      "currentCategory": "杯柄型",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 81.2,
+        "distHigh250": -9.82,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": {
+          "days": 18,
+          "totalDays": 75,
+          "cupDepth": 16.2,
+          "amplitude": 6.2,
+          "tailRatio": 0.87,
+          "volRatio": 0.87,
+          "rimDate": "20260616",
+          "rimHigh": 4.51,
+          "bottomDate": "20260710",
+          "cupLow": 3.78,
+          "segmentBasis": "global_lowest_low",
+          "bottomZoneDays": 25,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 3.8934,
+          "handlePosition": 0.5,
+          "pivotRecovery": 97.36,
+          "rightSideOvershootPct": -1.54,
+          "pivot": 4.42,
+          "distPct": 0.2,
+          "defects": [],
+          "structureFuzzy": false,
+          "qualified": true,
+          "anchorDate": "20260930",
+          "cupStart": "20260616",
+          "cupEnd": "20260903",
+          "handleStart": "20260904",
+          "handleEnd": "20260930",
+          "signalDate": "20261008",
+          "signalType": "early",
+          "breakoutAge": 0,
+          "currentDist": -0.2,
+          "currentValid": true
+        },
+        "recentCup": {
+          "days": 18,
+          "totalDays": 75,
+          "cupDepth": 16.2,
+          "amplitude": 6.2,
+          "tailRatio": 0.87,
+          "volRatio": 0.87,
+          "rimDate": "20260616",
+          "rimHigh": 4.51,
+          "bottomDate": "20260710",
+          "cupLow": 3.78,
+          "segmentBasis": "global_lowest_low",
+          "bottomZoneDays": 25,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 3.8934,
+          "handlePosition": 0.5,
+          "pivotRecovery": 97.36,
+          "rightSideOvershootPct": -1.54,
+          "pivot": 4.42,
+          "distPct": 0.2,
+          "defects": [],
+          "structureFuzzy": false,
+          "qualified": true,
+          "anchorDate": "20260930",
+          "cupStart": "20260616",
+          "cupEnd": "20260903",
+          "handleStart": "20260904",
+          "handleEnd": "20260930",
+          "signalDate": "20261008",
+          "signalType": "early",
+          "breakoutAge": 0,
+          "currentDist": -0.2,
+          "currentValid": true
+        },
+        "signalDisplayable": true
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "C10",
+      "code": "600795.SH",
+      "name": "国电电力",
+      "sampleClass": "杯柄严格样本",
+      "labelMode": "strict",
+      "asOf": "20260902",
+      "dateRange": "20260602~20260724或20260804杯身；20260804~20260819柄；杯沿约5.2",
+      "expectedCategories": [
+        "杯柄型"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 1168,
+      "firstBar": "20211111",
+      "lastBar": "20260902",
+      "currentCategory": "杯柄型",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 88.4,
+        "distHigh250": -9.85,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": {
+          "days": 10,
+          "totalDays": 62,
+          "cupDepth": 12.2,
+          "amplitude": 5.8,
+          "tailRatio": 0.65,
+          "volRatio": 0.8,
+          "rimDate": "20260605",
+          "rimHigh": 5.23,
+          "bottomDate": "20260629",
+          "cupLow": 4.59,
+          "segmentBasis": "global_lowest_low",
+          "bottomZoneDays": 20,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 4.7277,
+          "handlePosition": 0.538,
+          "pivotRecovery": 98.7,
+          "rightSideOvershootPct": -4.1,
+          "pivot": 5.3,
+          "distPct": -1.9,
+          "defects": [],
+          "structureFuzzy": false,
+          "qualified": true,
+          "anchorDate": "20260901",
+          "cupStart": "20260605",
+          "cupEnd": "20260818",
+          "handleStart": "20260819",
+          "handleEnd": "20260901",
+          "signalDate": "20260902",
+          "signalType": "strong",
+          "breakoutAge": 0,
+          "currentDist": 1.9,
+          "currentValid": true
+        },
+        "recentCup": {
+          "days": 10,
+          "totalDays": 62,
+          "cupDepth": 12.2,
+          "amplitude": 5.8,
+          "tailRatio": 0.65,
+          "volRatio": 0.8,
+          "rimDate": "20260605",
+          "rimHigh": 5.23,
+          "bottomDate": "20260629",
+          "cupLow": 4.59,
+          "segmentBasis": "global_lowest_low",
+          "bottomZoneDays": 20,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 4.7277,
+          "handlePosition": 0.538,
+          "pivotRecovery": 98.7,
+          "rightSideOvershootPct": -4.1,
+          "pivot": 5.3,
+          "distPct": -1.9,
+          "defects": [],
+          "structureFuzzy": false,
+          "qualified": true,
+          "anchorDate": "20260901",
+          "cupStart": "20260605",
+          "cupEnd": "20260818",
+          "handleStart": "20260819",
+          "handleEnd": "20260901",
+          "signalDate": "20260902",
+          "signalType": "strong",
+          "breakoutAge": 0,
+          "currentDist": 1.9,
+          "currentValid": true
+        },
+        "signalDisplayable": true
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "C11",
+      "code": "600795.SH",
+      "name": "国电电力",
+      "sampleClass": "杯柄严格样本",
+      "labelMode": "strict",
+      "asOf": "20260819",
+      "dateRange": "20260602~20260804杯身；20260804~20260819柄；杯沿约5.2",
+      "expectedCategories": [
+        "杯柄型"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 1158,
+      "firstBar": "20211111",
+      "lastBar": "20260819",
+      "currentCategory": "杯柄型",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 73.6,
+        "distHigh250": -14.36,
+        "trendPass": false,
+        "vcpDaily": {
+          "contractions": [
+            3.3,
+            2.6,
+            4.8,
+            3.9,
+            2.2
+          ],
+          "contractionsOk": [
+            true,
+            true,
+            false,
+            true,
+            true
+          ],
+          "count": 5,
+          "decreasing": false,
+          "practicalDecreasing": false,
+          "priceMode": "未递减",
+          "structurePath": "swing_evidence_only",
+          "volTrend": "递减",
+          "volFirst": 1654689.5,
+          "volLast": 970191.1,
+          "volumeMA": {
+            "pass": true,
+            "ma5": 1464486.1,
+            "ma10": 1204074.5,
+            "ma20": 1342423.3,
+            "maBase": 1432291.6,
+            "baseWindow": 50,
+            "ma10ToBase": 0.841,
+            "sequenceOk": true,
+            "ratioMax": 1.2,
+            "reason": null
+          },
+          "recentVolumeQuality": {
+            "pass": true,
+            "ma5ToMa10": 1.074,
+            "last3ToMa10": 1.209,
+            "reexpanded": false,
+            "basisExcludesBreakout": true,
+            "reason": null
+          },
+          "rightSideQuality": {
+            "pass": true,
+            "drift10Pct": 2.6,
+            "downDayRatio10": 0.4,
+            "position20Pct": 94.118,
+            "annualVolatility10Pct": 14.648,
+            "maxAbsDay10Pct": 1.988,
+            "persistentDownslide": false,
+            "violent": false,
+            "rejectReasons": []
+          },
+          "rejectReasons": [],
+          "practical": true,
+          "pivot": 5.09,
+          "distPct": -0.8,
+          "invalidation": 4.99,
+          "volConfirm": 2005208.3,
+          "formed": false
+        },
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": {
+          "days": 12,
+          "totalDays": 56,
+          "cupDepth": 14.5,
+          "amplitude": 5.3,
+          "tailRatio": 1.32,
+          "volRatio": 0.7,
+          "rimDate": "20260602",
+          "rimHigh": 5.37,
+          "bottomDate": "20260629",
+          "cupLow": 4.59,
+          "segmentBasis": "local_swing_low",
+          "bottomZoneDays": 20,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 4.7277,
+          "handlePosition": 0.385,
+          "pivotRecovery": 95.9,
+          "rightSideOvershootPct": -4.28,
+          "pivot": 5.15,
+          "distPct": 0.4,
+          "defects": [
+            "柄底位置38.5%（低于50%·近似）",
+            "柄质量近似（漂移1.6%·振幅5.3%·5/10日量1.22x·10/全柄量1.01x）"
+          ],
+          "structureFuzzy": true,
+          "qualified": false,
+          "handleStart": "20260804",
+          "handleEnd": "20260819"
+        },
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "L01",
+      "code": "688041.SH",
+      "name": "海光信息",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20240909",
+      "dateRange": "20240507~20240909",
+      "expectedCategories": [
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 505,
+      "firstBar": "20220812",
+      "lastBar": "20240909",
+      "currentCategory": "长平台整理",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 74.4,
+        "distHigh250": -13.18,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": {
+          "type": "长平台整理",
+          "days": 114,
+          "amplitude": 20.8,
+          "drift": 0.1,
+          "volRatio": 0.76,
+          "segAmps": [
+            15.6,
+            16.9,
+            15.3
+          ],
+          "pivot": 81.3,
+          "distPct": 6.4,
+          "invalidation": 67.3,
+          "volConfirm": 176954.9,
+          "formed": true
+        },
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "L02",
+      "code": "688041.SH",
+      "name": "海光信息",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20250812",
+      "dateRange": "20250610~20250812",
+      "expectedCategories": [
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 717,
+      "firstBar": "20220812",
+      "lastBar": "20250812",
+      "currentCategory": "长平台整理",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 63.6,
+        "distHigh250": -18.35,
+        "trendPass": false,
+        "vcpDaily": {
+          "contractions": [
+            1.8,
+            2.8,
+            2.4,
+            2.5,
+            5.5
+          ],
+          "contractionsOk": [
+            true,
+            false,
+            true,
+            true,
+            false
+          ],
+          "count": 5,
+          "decreasing": false,
+          "practicalDecreasing": false,
+          "priceMode": "未递减",
+          "structurePath": "swing_evidence_only",
+          "volTrend": "未递减",
+          "volFirst": 115705.9,
+          "volLast": 261288.8,
+          "volumeMA": {
+            "pass": false,
+            "ma5": 294538.3,
+            "ma10": 267363.8,
+            "ma20": 235213.1,
+            "maBase": 186619.3,
+            "baseWindow": 50,
+            "ma10ToBase": 1.433,
+            "sequenceOk": false,
+            "ratioMax": 1.2,
+            "reason": "10日/长均量超过1.20，近期量能异常放大"
+          },
+          "recentVolumeQuality": {
+            "pass": true,
+            "ma5ToMa10": 1.102,
+            "last3ToMa10": 1.024,
+            "reexpanded": false,
+            "basisExcludesBreakout": false,
+            "reason": null
+          },
+          "rightSideQuality": {
+            "pass": true,
+            "drift10Pct": -2.937,
+            "downDayRatio10": 0.8,
+            "position20Pct": 38.802,
+            "annualVolatility10Pct": 31.056,
+            "maxAbsDay10Pct": 3.594,
+            "persistentDownslide": false,
+            "violent": false,
+            "rejectReasons": []
+          },
+          "rejectReasons": [
+            "10日/长均量超过1.20，近期量能异常放大",
+            "距枢轴4.5%超出VCP就绪窗-5%~+4%"
+          ],
+          "practical": true,
+          "pivot": 145.03,
+          "distPct": 4.5,
+          "invalidation": 137.0,
+          "volConfirm": 261267.0,
+          "formed": false
+        },
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": {
+          "type": "长平台整理",
+          "days": 49,
+          "amplitude": 12.1,
+          "drift": -0.0,
+          "volRatio": 1.38,
+          "segAmps": [
+            12.1,
+            6.3,
+            7.5
+          ],
+          "pivot": 148.0,
+          "distPct": 6.6,
+          "invalidation": 132.01,
+          "volConfirm": 261267.0,
+          "formed": true
+        },
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "L03",
+      "code": "688012.SH",
+      "name": "中微公司",
+      "sampleClass": "形态有效但可不同标签",
+      "labelMode": "valid_form",
+      "asOf": "20250722",
+      "dateRange": "20250515~20250722",
+      "expectedCategories": [
+        "长平台整理"
+      ],
+      "forbiddenCategories": [],
+      "dataAvailable": true,
+      "rows": 1456,
+      "firstBar": "20190722",
+      "lastBar": "20250722",
+      "currentCategory": "长平台整理",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 59.6,
+        "distHigh250": -23.87,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": {
+          "type": "长平台整理",
+          "days": 83,
+          "amplitude": 19.0,
+          "drift": -2.0,
+          "volRatio": 0.86,
+          "segAmps": [
+            17.7,
+            13.7,
+            14.9
+          ],
+          "pivot": 196.2,
+          "distPct": 4.6,
+          "invalidation": 164.88,
+          "volConfirm": 72378.8,
+          "formed": true
+        },
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "N01",
+      "code": "688029.SH",
+      "name": "南微医学",
+      "sampleClass": "明确反例",
+      "labelMode": "strict_and_forbid",
+      "asOf": "20260908",
+      "dateRange": "20260908附近",
+      "expectedCategories": [
+        "底部整理"
+      ],
+      "forbiddenCategories": [
+        "杯柄型",
+        "VCP收缩型"
+      ],
+      "dataAvailable": true,
+      "rows": 1172,
+      "firstBar": "20211111",
+      "lastBar": "20260908",
+      "currentCategory": null,
+      "valid": false,
+      "keyEvidence": {
+        "pct": null,
+        "distHigh250": null,
+        "trendPass": null,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "id": "N02",
+      "code": "000429.SZ",
+      "name": "粤高速A",
+      "sampleClass": "明确反例",
+      "labelMode": "forbid_only",
+      "asOf": "20260930",
+      "dateRange": "20260930口径",
+      "expectedCategories": [],
+      "forbiddenCategories": [
+        "VCP收缩型"
+      ],
+      "dataAvailable": true,
+      "rows": 1187,
+      "firstBar": "20211111",
+      "lastBar": "20260930",
+      "currentCategory": null,
+      "valid": true,
+      "keyEvidence": {
+        "pct": 41.6,
+        "distHigh250": -17.26,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "各候选未同时满足完整结构与展示门"
+      ]
+    },
+    {
+      "id": "N03",
+      "code": "688271.SH",
+      "name": "联影医疗",
+      "sampleClass": "明确反例",
+      "labelMode": "forbid_only",
+      "asOf": "20260930",
+      "dateRange": "20260930口径",
+      "expectedCategories": [],
+      "forbiddenCategories": [
+        "VCP收缩型"
+      ],
+      "dataAvailable": true,
+      "rows": 997,
+      "firstBar": "20220822",
+      "lastBar": "20260930",
+      "currentCategory": null,
+      "valid": true,
+      "keyEvidence": {
+        "pct": null,
+        "distHigh250": null,
+        "trendPass": null,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "id": "N04",
+      "code": "601998.SH",
+      "name": "中信银行",
+      "sampleClass": "明确反例",
+      "labelMode": "forbid_only",
+      "asOf": "20260930",
+      "dateRange": "20260930口径",
+      "expectedCategories": [],
+      "forbiddenCategories": [
+        "杯柄型"
+      ],
+      "dataAvailable": true,
+      "rows": 1187,
+      "firstBar": "20211111",
+      "lastBar": "20260930",
+      "currentCategory": null,
+      "valid": true,
+      "keyEvidence": {
+        "pct": 100.0,
+        "distHigh250": 0.0,
+        "trendPass": true,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "平台/旗形被一年极高位或贴新高中高位门拦截"
+      ]
+    },
+    {
+      "id": "N05",
+      "code": "000729.SZ",
+      "name": "燕京啤酒",
+      "sampleClass": "明确反例",
+      "labelMode": "forbid_only",
+      "asOf": "20260930",
+      "dateRange": "20260930口径",
+      "expectedCategories": [],
+      "forbiddenCategories": [
+        "底部整理"
+      ],
+      "dataAvailable": true,
+      "rows": 1187,
+      "firstBar": "20211111",
+      "lastBar": "20260930",
+      "currentCategory": null,
+      "valid": true,
+      "keyEvidence": {
+        "pct": null,
+        "distHigh250": null,
+        "trendPass": null,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "id": "N06",
+      "code": "600483.SH",
+      "name": "福能股份",
+      "sampleClass": "明确反例",
+      "labelMode": "forbid_only",
+      "asOf": "20260930",
+      "dateRange": "20260930口径",
+      "expectedCategories": [],
+      "forbiddenCategories": [
+        "底部整理"
+      ],
+      "dataAvailable": true,
+      "rows": 1187,
+      "firstBar": "20211111",
+      "lastBar": "20260930",
+      "currentCategory": null,
+      "valid": true,
+      "keyEvidence": {
+        "pct": null,
+        "distHigh250": null,
+        "trendPass": null,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "id": "N07",
+      "code": "600642.SH",
+      "name": "申能股份",
+      "sampleClass": "明确反例",
+      "labelMode": "forbid_only",
+      "asOf": "20260930",
+      "dateRange": "20260930口径",
+      "expectedCategories": [],
+      "forbiddenCategories": [
+        "底部整理"
+      ],
+      "dataAvailable": true,
+      "rows": 1187,
+      "firstBar": "20211111",
+      "lastBar": "20260930",
+      "currentCategory": null,
+      "valid": true,
+      "keyEvidence": {
+        "pct": 65.6,
+        "distHigh250": -18.4,
+        "trendPass": false,
+        "vcpDaily": {
+          "contractions": [
+            2.9,
+            3.0,
+            2.5,
+            3.5,
+            2.3
+          ],
+          "contractionsOk": [
+            true,
+            true,
+            true,
+            false,
+            true
+          ],
+          "count": 5,
+          "decreasing": false,
+          "practicalDecreasing": false,
+          "priceMode": "未递减",
+          "structurePath": "swing_evidence_only",
+          "volTrend": "递减",
+          "volFirst": 267840.6,
+          "volLast": 163679.8,
+          "volumeMA": {
+            "pass": true,
+            "ma5": 183556.1,
+            "ma10": 172020.3,
+            "ma20": 165857.3,
+            "maBase": 224183.5,
+            "baseWindow": 50,
+            "ma10ToBase": 0.767,
+            "sequenceOk": false,
+            "ratioMax": 1.2,
+            "reason": null
+          },
+          "recentVolumeQuality": {
+            "pass": true,
+            "ma5ToMa10": 1.067,
+            "last3ToMa10": 1.235,
+            "reexpanded": false,
+            "basisExcludesBreakout": false,
+            "reason": null
+          },
+          "rightSideQuality": {
+            "pass": true,
+            "drift10Pct": 0.804,
+            "downDayRatio10": 0.4,
+            "position20Pct": 70.0,
+            "annualVolatility10Pct": 11.764,
+            "maxAbsDay10Pct": 1.512,
+            "persistentDownslide": false,
+            "violent": false,
+            "rejectReasons": []
+          },
+          "rejectReasons": [],
+          "practical": true,
+          "pivot": 8.79,
+          "distPct": 0.1,
+          "invalidation": 8.5,
+          "volConfirm": 313856.9,
+          "formed": false
+        },
+        "vcpWeekly": null,
+        "platform": {
+          "type": "底部平台型",
+          "days": 45,
+          "amplitude": 8.6,
+          "riseFromLow": 6.1,
+          "tailRatio": 0.81,
+          "volRatio": 0.77,
+          "segAmps": [
+            5.8,
+            4.9,
+            5.1
+          ],
+          "contractionMode": "strict",
+          "pivot": 8.93,
+          "distPct": 1.7,
+          "formed": true
+        },
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "窄幅平台被分位>60门拦截"
+      ]
+    },
+    {
+      "id": "N08",
+      "code": "601288.SH",
+      "name": "农业银行",
+      "sampleClass": "明确反例",
+      "labelMode": "forbid_only",
+      "asOf": "20260930",
+      "dateRange": "20260930口径",
+      "expectedCategories": [],
+      "forbiddenCategories": [
+        "底部整理"
+      ],
+      "dataAvailable": true,
+      "rows": 1187,
+      "firstBar": "20211111",
+      "lastBar": "20260930",
+      "currentCategory": "杯柄型",
+      "valid": true,
+      "keyEvidence": {
+        "pct": 67.6,
+        "distHigh250": -18.86,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": {
+          "type": "杯柄型",
+          "days": 49,
+          "amplitude": 11.8,
+          "riseFromLow": 13.8,
+          "tailRatio": 0.75,
+          "volRatio": 0.91,
+          "segAmps": [
+            11.8,
+            10.4,
+            5.8
+          ],
+          "contractionMode": "strict",
+          "pivot": 7.11,
+          "distPct": 2.0,
+          "formed": true
+        },
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": {
+          "days": 20,
+          "totalDays": 112,
+          "cupDepth": 20.6,
+          "amplitude": 6.0,
+          "tailRatio": 1.03,
+          "volRatio": 0.75,
+          "rimDate": "20260421",
+          "rimHigh": 7.29,
+          "bottomDate": "20260706",
+          "cupLow": 5.79,
+          "segmentBasis": "global_lowest_low",
+          "bottomZoneDays": 4,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 5.9637,
+          "handlePosition": 0.607,
+          "pivotRecovery": 97.39,
+          "rightSideOvershootPct": -2.47,
+          "pivot": 7.1,
+          "distPct": 1.9,
+          "defects": [],
+          "structureFuzzy": false,
+          "qualified": true,
+          "handleStart": "20260902",
+          "handleEnd": "20260930"
+        },
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": []
+    },
+    {
+      "id": "N09",
+      "code": "002648.SZ",
+      "name": "卫星化学",
+      "sampleClass": "明确反例",
+      "labelMode": "forbid_only",
+      "asOf": "20261029",
+      "dateRange": "截至20261029",
+      "expectedCategories": [],
+      "forbiddenCategories": [
+        "杯柄型"
+      ],
+      "dataAvailable": true,
+      "rows": 1203,
+      "firstBar": "20211111",
+      "lastBar": "20261029",
+      "currentCategory": null,
+      "valid": true,
+      "keyEvidence": {
+        "pct": 63.2,
+        "distHigh250": -15.35,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": {
+          "type": "杯柄型",
+          "days": 12,
+          "amplitude": 11.3,
+          "riseFromLow": 15.8,
+          "tailRatio": 0.86,
+          "volRatio": 0.74,
+          "segAmps": [
+            9.9,
+            5.6,
+            4.2
+          ],
+          "contractionMode": "strict",
+          "pivot": 27.05,
+          "distPct": 5.5,
+          "formed": true
+        },
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "窄幅平台被分位>60门拦截"
+      ]
+    },
+    {
+      "id": "N10",
+      "code": "600985.SH",
+      "name": "淮北矿业",
+      "sampleClass": "明确反例",
+      "labelMode": "forbid_only",
+      "asOf": "20261029",
+      "dateRange": "截至20261029",
+      "expectedCategories": [],
+      "forbiddenCategories": [
+        "杯柄型"
+      ],
+      "dataAvailable": true,
+      "rows": 1203,
+      "firstBar": "20211111",
+      "lastBar": "20261029",
+      "currentCategory": null,
+      "valid": true,
+      "keyEvidence": {
+        "pct": 72.0,
+        "distHigh250": -19.74,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "各候选未同时满足完整结构与展示门"
+      ]
+    },
+    {
+      "id": "N11",
+      "code": "000415.SZ",
+      "name": "渤海租赁",
+      "sampleClass": "明确反例",
+      "labelMode": "forbid_only",
+      "asOf": "20261029",
+      "dateRange": "截至20261029",
+      "expectedCategories": [],
+      "forbiddenCategories": [
+        "杯柄型"
+      ],
+      "dataAvailable": true,
+      "rows": 1203,
+      "firstBar": "20211111",
+      "lastBar": "20261029",
+      "currentCategory": null,
+      "valid": true,
+      "keyEvidence": {
+        "pct": 53.2,
+        "distHigh250": -20.04,
+        "trendPass": false,
+        "vcpDaily": null,
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": null,
+        "recentCup": null,
+        "signalDisplayable": null
+      },
+      "rejectReasons": [
+        "各候选未同时满足完整结构与展示门"
+      ]
+    },
+    {
+      "id": "N12",
+      "code": "600795.SH",
+      "name": "国电电力",
+      "sampleClass": "明确反例",
+      "labelMode": "forbid_only",
+      "asOf": "20261027",
+      "dateRange": "截至20261027",
+      "expectedCategories": [],
+      "forbiddenCategories": [
+        "杯柄型"
+      ],
+      "dataAvailable": true,
+      "rows": 1200,
+      "firstBar": "20211111",
+      "lastBar": "20261026",
+      "currentCategory": null,
+      "valid": true,
+      "keyEvidence": {
+        "pct": 64.4,
+        "distHigh250": -14.02,
+        "trendPass": false,
+        "vcpDaily": {
+          "contractions": [
+            1.9,
+            5.5,
+            5.4,
+            3.5,
+            4.7
+          ],
+          "contractionsOk": [
+            true,
+            false,
+            true,
+            true,
+            false
+          ],
+          "count": 5,
+          "decreasing": false,
+          "practicalDecreasing": false,
+          "priceMode": "未递减",
+          "structurePath": "swing_evidence_only",
+          "volTrend": "未递减",
+          "volFirst": 1157476.7,
+          "volLast": 1314053.9,
+          "volumeMA": {
+            "pass": false,
+            "ma5": 1741417.8,
+            "ma10": 1533042.9,
+            "ma20": 1343234.9,
+            "maBase": 1224054.2,
+            "baseWindow": 50,
+            "ma10ToBase": 1.252,
+            "sequenceOk": false,
+            "ratioMax": 1.2,
+            "reason": "10日/长均量超过1.20，近期量能异常放大"
+          },
+          "recentVolumeQuality": {
+            "pass": false,
+            "ma5ToMa10": 1.136,
+            "last3ToMa10": 1.185,
+            "reexpanded": true,
+            "basisExcludesBreakout": false,
+            "reason": "5日与最近3日均量同步重新放大"
+          },
+          "rightSideQuality": {
+            "pass": true,
+            "drift10Pct": -5.157,
+            "downDayRatio10": 0.7,
+            "position20Pct": 35.088,
+            "annualVolatility10Pct": 27.479,
+            "maxAbsDay10Pct": 3.414,
+            "persistentDownslide": false,
+            "violent": false,
+            "rejectReasons": []
+          },
+          "rejectReasons": [
+            "5日与最近3日均量同步重新放大",
+            "10日/长均量超过1.20，近期量能异常放大",
+            "距枢轴6.4%超出VCP就绪窗-5%~+4%"
+          ],
+          "practical": true,
+          "pivot": 5.48,
+          "distPct": 6.4,
+          "invalidation": 5.26,
+          "volConfirm": 1713675.9,
+          "formed": false
+        },
+        "vcpWeekly": null,
+        "platform": null,
+        "flag": null,
+        "longPlatform": null,
+        "regularCup": {
+          "days": 10,
+          "totalDays": 62,
+          "cupDepth": 12.2,
+          "amplitude": 5.8,
+          "tailRatio": 0.65,
+          "volRatio": 0.8,
+          "rimDate": "20260605",
+          "rimHigh": 5.23,
+          "bottomDate": "20260629",
+          "cupLow": 4.59,
+          "segmentBasis": "global_lowest_low",
+          "bottomZoneDays": 20,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 4.7277,
+          "handlePosition": 0.538,
+          "pivotRecovery": 98.7,
+          "rightSideOvershootPct": -4.1,
+          "pivot": 5.3,
+          "distPct": 2.9,
+          "defects": [],
+          "structureFuzzy": false,
+          "qualified": true,
+          "anchorDate": "20260901",
+          "cupStart": "20260605",
+          "cupEnd": "20260818",
+          "handleStart": "20260819",
+          "handleEnd": "20260901",
+          "signalDate": "20260902",
+          "signalType": "strong",
+          "breakoutAge": 32,
+          "currentDist": -2.8,
+          "currentValid": true
+        },
+        "recentCup": {
+          "days": 10,
+          "totalDays": 62,
+          "cupDepth": 12.2,
+          "amplitude": 5.8,
+          "tailRatio": 0.65,
+          "volRatio": 0.8,
+          "rimDate": "20260605",
+          "rimHigh": 5.23,
+          "bottomDate": "20260629",
+          "cupLow": 4.59,
+          "segmentBasis": "global_lowest_low",
+          "bottomZoneDays": 20,
+          "bottomZonePct": 3.0,
+          "bottomZoneLimit": 4.7277,
+          "handlePosition": 0.538,
+          "pivotRecovery": 98.7,
+          "rightSideOvershootPct": -4.1,
+          "pivot": 5.3,
+          "distPct": 2.9,
+          "defects": [],
+          "structureFuzzy": false,
+          "qualified": true,
+          "anchorDate": "20260901",
+          "cupStart": "20260605",
+          "cupEnd": "20260818",
+          "handleStart": "20260819",
+          "handleEnd": "20260901",
+          "signalDate": "20260902",
+          "signalType": "strong",
+          "breakoutAge": 32,
+          "currentDist": -2.8,
+          "currentValid": true
+        },
+        "signalDisplayable": false
+      },
+      "rejectReasons": [
+        "首次信号年龄32或失效位/距离不满足当前展示门"
+      ]
+    }
+  ],
+  "boundaryChecks": {
+    "passed": 8,
+    "total": 8,
+    "checks": {
+      "cupBottomTwoDaysRejected": true,
+      "cupBottomThreeDaysAccepted": true,
+      "platformTolerance110Accepted": true,
+      "platformAbove110Rejected": true,
+      "platformLastMustContract": true,
+      "tailVolume135Accepted": true,
+      "tailVolumeAbove135Rejected": true,
+      "sharedTailVolumeConstant": true
+    },
+    "tailAtCapRatio": 1.35,
+    "tailAboveCapRatio": 1.353,
+    "shape2": {
+      "pass": false,
+      "bottomZoneDays": 2,
+      "bottomZonePct": 3.0,
+      "bottomZoneLimit": 9.991,
+      "bottomZoneDates": [
+        "d1",
+        "d2"
+      ],
+      "rejectReasons": [
+        "杯底3%区域仅2日，少于3日，属于尖V而非充分筑底"
+      ],
+      "structureGate": {
+        "bottomZonePct": 3.0,
+        "bottomZoneMinDays": 3
+      }
+    },
+    "shape3": {
+      "pass": true,
+      "bottomZoneDays": 3,
+      "bottomZonePct": 3.0,
+      "bottomZoneLimit": 9.991,
+      "bottomZoneDates": [
+        "d1",
+        "d2",
+        "d3"
+      ],
+      "rejectReasons": [],
+      "structureGate": {
+        "bottomZonePct": 3.0,
+        "bottomZoneMinDays": 3
+      }
+    }
+  },
+  "beforeAfter": [
+    {
+      "id": "A03",
+      "before": "底部整理",
+      "after": null,
+      "beforeValid": true,
+      "afterValid": false
+    },
+    {
+      "id": "A04",
+      "before": null,
+      "after": "平台整理",
+      "beforeValid": false,
+      "afterValid": true
+    },
+    {
+      "id": "A06",
+      "before": null,
+      "after": "长平台整理",
+      "beforeValid": false,
+      "afterValid": true
+    },
+    {
+      "id": "A07",
+      "before": "底部整理",
+      "after": "长平台整理",
+      "beforeValid": true,
+      "afterValid": true
+    },
+    {
+      "id": "A08",
+      "before": null,
+      "after": "长平台整理",
+      "beforeValid": false,
+      "afterValid": true
+    },
+    {
+      "id": "A09",
+      "before": null,
+      "after": "底部整理",
+      "beforeValid": false,
+      "afterValid": true
+    },
+    {
+      "id": "A10",
+      "before": "底部整理",
+      "after": "长平台整理",
+      "beforeValid": true,
+      "afterValid": true
+    },
+    {
+      "id": "A12",
+      "before": "底部整理",
+      "after": null,
+      "beforeValid": true,
+      "afterValid": false
+    },
+    {
+      "id": "C01",
+      "before": "底部整理",
+      "after": null,
+      "beforeValid": false,
+      "afterValid": false
+    },
+    {
+      "id": "C02",
+      "before": null,
+      "after": "长平台整理",
+      "beforeValid": false,
+      "afterValid": false
+    },
+    {
+      "id": "C04",
+      "before": "长平台整理",
+      "after": null,
+      "beforeValid": false,
+      "afterValid": false
+    },
+    {
+      "id": "C11",
+      "before": null,
+      "after": "杯柄型",
+      "beforeValid": false,
+      "afterValid": true
+    },
+    {
+      "id": "L01",
+      "before": null,
+      "after": "长平台整理",
+      "beforeValid": false,
+      "afterValid": true
+    },
+    {
+      "id": "N01",
+      "before": "杯柄型",
+      "after": null,
+      "beforeValid": false,
+      "afterValid": false
+    },
+    {
+      "id": "N05",
+      "before": "底部整理",
+      "after": null,
+      "beforeValid": false,
+      "afterValid": true
+    },
+    {
+      "id": "N11",
+      "before": "长平台整理",
+      "after": null,
+      "beforeValid": true,
+      "afterValid": true
+    }
+  ],
+  "baselineStats": {
+    "杯柄严格样本": {
+      "total": 11,
+      "valid": 5,
+      "invalid": 6,
+      "unverified": 0
+    },
+    "形态有效但可不同标签": {
+      "total": 15,
+      "valid": 7,
+      "invalid": 8,
+      "unverified": 0
+    },
+    "明确反例": {
+      "total": 12,
+      "valid": 10,
+      "invalid": 2,
+      "unverified": 0
+    }
+  },
+  "baselineConfusion": {
+    "strictCupMisses": [
+      "C01",
+      "C02",
+      "C04",
+      "C05",
+      "C06",
+      "C11"
+    ],
+    "strictCupMislabeledVcp": [],
+    "validFormMisses": [
+      "A01",
+      "A04",
+      "A05",
+      "A06",
+      "A08",
+      "A09",
+      "A11",
+      "L01"
+    ],
+    "validFormAsVcp": [],
+    "negativeViolations": [
+      "N01",
+      "N05"
+    ],
+    "categoryCounts": {
+      "null": 20,
+      "平台整理": 1,
+      "底部整理": 6,
+      "杯柄型": 7,
+      "长平台整理": 4
+    }
+  }
+}

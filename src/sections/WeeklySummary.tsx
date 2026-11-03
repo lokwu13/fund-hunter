@@ -468,7 +468,9 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                               <Badge className={`text-[10px] h-[18px] px-1.5 border-0 ${
                                 r.pattern === '杯柄型' ? 'bg-violet-500 text-white' :
                                 r.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-slate-500 text-white'
-                              }`}>{r.pattern}</Badge>
+                              }`} title={r.pattern === '杯柄型'
+                                ? `历史最高收盘${r.historicalHighClose ?? '—'}(${r.historicalHighDate ?? '—'})·距历史高点${r.distanceToHistoricalHighPct ?? '—'}%·${r.historyScope ?? '历史范围缺失'}·排除原因=${r.historyExclusionReason ?? '无，历史高位门通过'}`
+                                : undefined}>{r.pattern}</Badge>
                               <span className="text-[11px] text-slate-600">枢轴{r.pivot ?? '—'}</span>
                               <span className="text-[11px] text-slate-600">距枢轴{r.distPct ?? '—'}%</span>
                               <span className="text-[10px] text-slate-500">资金{r.smartMoneyPosDays ?? 0}/10天</span>

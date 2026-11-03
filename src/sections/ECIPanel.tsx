@@ -1008,7 +1008,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     : isContract
                                     ? `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}（首${lv?.volFirst ?? '—'}→末${lv?.volLast ?? '—'}）·枢轴=末次收缩高点`
                                     : it.cupHandle
-                                    ? `杯柄·CANSLIM：杯深${it.cupHandle.cupDepth}%·前置涨幅${it.cupHandle.preGain ?? '—'}%·柄${it.cupHandle.days}天振幅${it.cupHandle.amplitude ?? '—'}%·柄/杯量比${it.cupHandle.volRatio ?? '—'}·柄末段量比${it.cupHandle.tailRatio ?? '—'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点${it.cupHandle.breakout ? `·锚点${it.cupHandle.anchorDate}` : ''}`
+                                    ? `杯柄·CANSLIM：杯深${it.cupHandle.cupDepth}%·前置涨幅${it.cupHandle.preGain ?? '—'}%·柄${it.cupHandle.days}天振幅${it.cupHandle.amplitude ?? '—'}%·柄/杯量比${it.cupHandle.volRatio ?? '—'}·柄末段量比${it.cupHandle.tailRatio ?? '—'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点${it.cupHandle.breakout ? `·锚点${it.cupHandle.anchorDate}` : ''}·历史最高收盘${it.cupHandle.historicalHighClose ?? '—'}(${it.cupHandle.historicalHighDate ?? '—'})·距历史高点${it.cupHandle.distanceToHistoricalHighPct ?? '—'}%·${it.cupHandle.historyScope ?? '历史范围缺失'}·排除原因=${it.cupHandle.historyExclusionReason ?? '无，历史高位门通过'}`
                                     : isFlag
                                     ? `旗面${it.flag.days}天·振幅${it.flag.amplitude}%·旗杆+${it.flag.polePct}%·量比${it.flag.volRatio}·一年分位${it.histPct ?? '—'}%`
                                     : it.longPlat && !it.platform

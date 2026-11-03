@@ -2066,14 +2066,14 @@ def _sector_pattern(hist, name):
     patterns = []
     if vcp and vcp['formed']:
         patterns.append('VCP收缩')
-    if cup and cup['formed']:
+    if cup and cup['formed'] and cup.get('displayEligible'):
         patterns.append('杯柄')
     if bottom:
         patterns.append('底部')
     ev = []
     if vcp and vcp['formed']:
         ev.append(f"VCP {vcp['count']}次收缩{vcp['contractions']}·距枢轴{vcp['distPct']}%")
-    if cup and cup['formed']:
+    if cup and cup['formed'] and cup.get('displayEligible'):
         ev.append(f"指数放宽杯柄·杯深{cup['cupDepth']}%·柄{cup['days']}日")
     if bottom:
         ev.append(f"一年分位{pct1y}%")
@@ -3093,6 +3093,15 @@ def build_funnel(data):
                            'defects': list(it.get('defects') or []),
                            'reserveReasons': reserve_reasons,
                            'histPct': it.get('histPct'), 'distHigh250': it.get('distHigh250'),
+                           'historicalHighClose': (it.get('cupHandle') or {}).get('historicalHighClose'),
+                           'historicalHighDate': (it.get('cupHandle') or {}).get('historicalHighDate'),
+                           'distanceToHistoricalHighPct': (it.get('cupHandle') or {}).get('distanceToHistoricalHighPct'),
+                           'historyStart': (it.get('cupHandle') or {}).get('historyStart'),
+                           'historyEnd': (it.get('cupHandle') or {}).get('historyEnd'),
+                           'historyBars': (it.get('cupHandle') or {}).get('historyBars'),
+                           'historyMayBeTruncated': (it.get('cupHandle') or {}).get('historyMayBeTruncated'),
+                           'historyScope': (it.get('cupHandle') or {}).get('historyScope'),
+                           'historyExclusionReason': (it.get('cupHandle') or {}).get('historyExclusionReason'),
                            'mine': it['code'] in mine_codes, 'star': bool(it.get('star'))})
     track_rank = {'reson': 0, 'cherry': 1, 'reserve': 2}
     step3_rows.sort(key=lambda r: (track_rank[r['track']], 1 if r.get('defects') else 0,
@@ -5396,7 +5405,7 @@ def fetch_vcp_watch(pro, trade_date, data):
                          if len(c['index_daily'].get(x['code'], [])) < 60]
         cup_items = [{'code': r['code'], 'name': r['name'], 'kind': r['kind'],
                       'historyDays': r['historyDays'], 'shortHistory': r['shortHistory'],
-                      **r['cup']} for r in res if r.get('cup')]
+                      **r['cup']} for r in res if r.get('cup') and r['cup'].get('displayEligible')]
         cup_items.sort(key=lambda x: abs(x.get('distPct', 999)))
         td = c['trade_date']
         data['vcpWatch'] = {
@@ -7355,6 +7364,52 @@ def _cup_structure_segments(cup, h_lo, fuzzy=False):
     return out
 
 
+CUP_HISTORY_NEAR_HIGH_EXCLUSION = '距历史高点不足8%'
+
+
+def _cup_history_position_gate(bars):
+    """任务110：使用识别日前全部可得日线收盘，排除距可得历史高点不足8%的杯柄。
+
+    最新收盘不参与历史高点；只用当时bars，未来数据不会影响过去识别。距高点>-8%拒绝，
+    恰好-8%及更深回撤通过。缓存达到1200根时明确披露区间可能被截断，不冒充上市全史。
+    """
+    if not bars or len(bars) < 2 or bars[-1][3] <= 0:
+        return {'historyGatePass': False, 'historyExclusionReason': '历史数据不足'}
+    previous = bars[:-1]
+    high_bar = max(previous, key=lambda b: b[3])
+    high = high_bar[3]
+    if high <= 0:
+        return {'historyGatePass': False, 'historyExclusionReason': '历史数据不足'}
+    close = bars[-1][3]
+    distance = (close / high - 1) * 100
+    passed = distance <= -8.0 + 1e-12
+    truncated = len(bars) >= 1200
+    return {
+        'historyGatePass': passed,
+        'historyExclusionReason': None if passed else CUP_HISTORY_NEAR_HIGH_EXCLUSION,
+        'historicalHighClose': round(high, 4),
+        'historicalHighDate': high_bar[0],
+        'distanceToHistoricalHighPct': round(distance, 4),
+        'historyStart': previous[0][0],
+        'historyEnd': previous[-1][0],
+        'historyBars': len(previous),
+        'historyMayBeTruncated': truncated,
+        'historyScope': (f'识别日前全部可得日线收盘（{previous[0][0]}~{previous[-1][0]}，'
+                         f'{len(previous)}根）' + ('；达到1200根缓存上限，非上市全史' if truncated else '')),
+    }
+
+
+def _apply_cup_history_eligibility(cup, bars):
+    """保留formed几何证据；生产资格与展示统一由本门决定，不改成fuzzy瑕疵。"""
+    if not cup:
+        return cup
+    gate = _cup_history_position_gate(bars)
+    cup.update(gate)
+    cup['eligible'] = bool(gate['historyGatePass'])
+    cup['displayEligible'] = bool(gate['historyGatePass'])
+    return cup
+
+
 def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None,
                        allow_weekly_defect=False, allow_structure_defect=None):
     """杯柄·CANSLIM v6（任务99：趋势/区间修复双背景，柄质量干净与fuzzy分级）。
@@ -7483,6 +7538,7 @@ def _cup_handle_strict(bars, market_weak=False, dist_high250=None, hist_pct=None
                              'rightSideOvershootPct': right['rightSideOvershootPct'],
                              'structureGate': {**right['structureGate'], **shape['structureGate']},
                              'brkNeedVol': round(hv * CUP_BRK_VOL_X, 1), 'formed': True}
+                candidate = _apply_cup_history_eligibility(candidate, bars)
                 dist_limit = 12.0 if fuzzy else CUP_SHOW_DIST
                 if not fuzzy and VCP_SHOW_DIST_LO <= dist <= dist_limit:
                     return candidate
@@ -7631,7 +7687,7 @@ def _cup_early_breakout(bars, lookback=CUP_EARLY_SIGNAL_LOOKBACK,
                 hist_pct = _pct_rank100(win, closes[-1])
                 dist_high = (closes[-1] / max(win) - 1) * 100
                 ch = _cup_handle_strict(anchor, True, dist_high250=dist_high, hist_pct=hist_pct)
-                if (not ch or not ch.get('formed')
+                if (not ch or not ch.get('formed') or not ch.get('displayEligible')
                         or not (VCP_SHOW_DIST_LO <= ch['distPct'] <= CUP_SHOW_DIST)
                         or (dist_high > -7 and hist_pct is not None and hist_pct > 60)):
                     ch = None
@@ -7661,7 +7717,10 @@ def _cup_early_breakout(bars, lookback=CUP_EARLY_SIGNAL_LOOKBACK,
                 history = bars[:j + 1]
                 vol50 = sum(x[4] for x in history[-50:]) / min(50, len(history))
                 body_ev = _cup_body_evidence(bars, anchor_i, ch['days'], ch.get('rimDate'))
-                candidates.append((j, -anchor_i, -ch['days'], {
+                # 当前识别日也须重新过门：突破创可得历史新高时直接取消，不保留早期/fuzzy入口。
+                if not _cup_history_position_gate(bars)['historyGatePass']:
+                    break
+                candidate = _apply_cup_history_eligibility({
                     **ch, **body_ev,
                     'anchorDate': anchor[-1][0], 'anchorDistPct': ch['distPct'],
                     'handleStart': bars[handle_start][0], 'handleEnd': anchor[-1][0],
@@ -7681,7 +7740,8 @@ def _cup_early_breakout(bars, lookback=CUP_EARLY_SIGNAL_LOOKBACK,
                     'breakoutVol50X': round(signal_bar[4] / vol50, 2),
                     'currentDist': round(current_dist, 1),
                     'currentValid': current_close >= initial_stop,
-                    'distPct': round((pivot / current_close - 1) * 100, 1)}))
+                    'distPct': round((pivot / current_close - 1) * 100, 1)}, bars)
+                candidates.append((j, -anchor_i, -ch['days'], candidate))
                 break
     if not candidates:
         return None
@@ -7771,14 +7831,15 @@ def _index_cup_handle(bars):
         vol_confirm = h_vol * 1.5
         breakout = bool(close >= h_hi and bars[-1][4] >= vol_confirm)
         dist = (h_hi / close - 1) * 100
-        return {'type': '指数放宽杯柄', 'days': n, 'totalDays': total_days,
+        return _apply_cup_history_eligibility({
+                'type': '指数放宽杯柄', 'days': n, 'totalDays': total_days,
                 'cupDepth': round(depth, 1), 'amplitude': round(amp * 100, 1),
                 'volRatio': round(h_vol / cup_vol, 2),
                 'pivot': round(h_hi, 2), 'distPct': round(dist, 1),
                 'invalidation': round(h_lo, 2), 'preGain': round(pre_gain * 100, 1),
                 'weeklyUp': True, 'volConfirm': round(vol_confirm, 1),
                 'breakout': breakout, 'breakoutVolX': round(bars[-1][4] / h_vol, 2),
-                'priceBasis': '收盘近似OHLC', 'formed': True}
+                'priceBasis': '收盘近似OHLC', 'formed': True}, bars)
     return None
 
 
@@ -8150,10 +8211,10 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                         raw, main_lv = 'VCP收缩型', swing_lv
                     else:
                         dropped_tt.append(f"{info.get(code, {}).get('name', code)}:VCP收缩型")
-                if raw is None and recent:
+                if raw is None and recent and recent.get('displayEligible'):
                     raw, main_lv = '杯柄型', recent
                     ch = recent
-                elif raw is None and (ch and ch['formed']
+                elif raw is None and (ch and ch['formed'] and ch.get('displayEligible')
                       and not (dist_high250 > -7 and hist_pct is not None and hist_pct > 60)):
                     raw, main_lv = '杯柄型', ch
                 elif raw is None and f_c3:
@@ -8310,7 +8371,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     '全部形态先查最近已完成周MA150/200：MA150<MA200为明确空头，直接从形态精扫及漏斗第3步剔除，不再作为fuzzy瑕疵展示；MA150=MA200不被本门硬删，仍按原周MA未多头fuzzy；MA150>MA200不因此误杀；不足200根完成周或均线缺失不伪造MA安全通过，沿用各形态原有数据审慎门（杯柄仍拒绝不足）；本门不看价格与均线关系、不新增MA50条件，既有周BOLL深度回踩包容与有效破位门不变；'
                     'VCP收缩型（任务103十例人工标签校准）=严格摆动证据须≥3次收缩、每次≤前次1.10且末次<首次、末段均量<首段；务实反复序列只留证据、不再独立成型。严格摆动另须近期量未出现5日/10日>1.08且最近3日/10日>1.10的同步重新放大、近10日无持续下滑（下跌日≥70%+漂移≤-2.5%+20日位置≤25%）或剧烈起伏（单日绝对涨跌≥5%+年化波动≥35%），识别日距枢轴-5%~+4%；不强制MA10≤MA20≤MA50，多窗口短长均量比≤1.20仅作异常放量门；已突破日只审突破前基底量，不用突破大量或后续结果反判。新增固定区间路径=15~50日+振幅≤10.5%+三段务实价格收缩+区间/前20日均量<1且末段量<首段+相同近期量/右侧质量/枢轴门；按当时紧致度、阶段量比、枢轴距离选最佳，可接近一年新高，不套用摆动Stage2/高位门；'
                     '平台型VCP属性（任务103量能口径）=个股平台候选先取最长严格三段收缩，无严格候选才走务实路径（最多一次温和反复、该次≤前次1.25、其余≤1.10且末段<首段）；属性另须振幅≤12%+平台首日相对前收及内部任一单日收跌均<5%（仅拒VCP属性，绝不修改底层平台标签）+一年分位≤60且距一年高点≥8%+平台日均量≤前20日拉升段75%+多窗口短长均量比≤1.20且近期量未同步重新放大，不再机械要求MA10≤MA20≤MA50；60日跌幅>10%时仍须平台漂移|≤3%|且显著缩量；属性写入vcpAttribute/patternNote，单标签仍为底部整理或平台整理，不伪造双标签；'
-                    '杯柄型（任务99双背景与柄质量分级）=杯身背景满足前置250日涨幅≥15%（uptrend）或60~120日震荡修复（range_repair：区间跨度≥15%+首末净漂移绝对值≤15%+中位穿越≥2次+杯沿相对区间上沿-15%~+10%）之一，仍须最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净柄须净漂移绝对值≤5%+全程回归趋势绝对值≤6%+振幅≤8%+10日/全柄均量≤1.05+5日/10日均量≤1.10；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点、35~50%柄位或8~10%振幅/温和漂移/多窗口量能瑕疵进入fuzzy，但不得换局部杯身绕过全局杯的杯深/U底/双底/杯身背景/右侧/缩量等独立硬门；持续滑梯（净漂移≤-4%+回归趋势≤-4%+下跌日≥60%+末端处柄区间下45%）硬拒绝；结构或柄质量fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；'
+                    '杯柄型（任务99双背景与柄质量分级）=杯身背景满足前置250日涨幅≥15%（uptrend）或60~120日震荡修复（range_repair：区间跨度≥15%+首末净漂移绝对值≤15%+中位穿越≥2次+杯沿相对区间上沿-15%~+10%）之一，仍须最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净柄须净漂移绝对值≤5%+全程回归趋势绝对值≤6%+振幅≤8%+10日/全柄均量≤1.05+5日/10日均量≤1.10；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点、35~50%柄位或8~10%振幅/温和漂移/多窗口量能瑕疵进入fuzzy，但不得换局部杯身绕过全局杯的杯深/U底/双底/杯身背景/右侧/缩量等独立硬门；持续滑梯（净漂移≤-4%+回归趋势≤-4%+下跌日≥60%+末端处柄区间下45%）硬拒绝；结构或柄质量fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；任务110统一历史高位资格门=几何formed后，以识别日前全部可得日线最高收盘为历史高点，最新收盘距其>-8%直接eligible/display=false且不作为fuzzy展示，恰好-8%及更深回撤通过；输出历史起止/样本数/高点日期与收盘/距离，达到1200根缓存上限明确非上市全史；VCP和底部平台不适用此门；'
                     '用户习惯·早期杯柄信号（任务92新鲜度+任务99干净柄硬门+任务101等待期失效门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯、50~80%柄位与干净柄，不用局部/35~50%结构fuzzy或柄质量fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01；柄锚点后、首个有效信号前任一收盘跌破初始失效位即永久放弃该锚点并继续检查其他锚点，不得收回后复活旧柄；信号后当前跌破同样剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；'
                     '底部整理/平台整理=普通路径沿用10~50日窄幅缩量平台、个股精扫振幅≤12%、严格三段收缩优先及任务98b务实候选；另增内部底部律动路径：距一年高点≥15%回撤+10~50日+振幅≤15%+平台未破前低，平台/前20日均量≤1.15且末段/首段≤1.40，允许量能律动与温和放大，不强制VCP式总体缩量或机械三段价格收缩；内部底部平台即使一年分位>60也可归底部整理，属性专属单日门不撤销底层平台标签；'
                     '长平台整理=45~120日+振幅≤21%+首末漂移≤6%+末段量≤首段1.4+市值≥800亿+一年分位25~85+距枢轴≤12%；分位>65且距高-20~-8%或分位>80时，必须三段收缩且末段量未增，极高位另须距一年高点≤15%；'
