@@ -150,8 +150,9 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
           {data.oversoldValueDirections?.visible && (
             <div className="mt-2 rounded-md border border-emerald-200 bg-white/60 px-2.5 py-2">
               <p className="text-[11px] leading-relaxed">{oversoldValueDirectionsText(data)}</p>
-              <button type="button" className="mt-1 text-[10px] font-semibold underline underline-offset-2"
-                      onClick={() => onNavigate?.('tools', 'oversold-value-directions')}>
+              <button type="button" aria-controls="oversold-value-directions"
+                      className="mt-1 text-[10px] font-semibold underline underline-offset-2"
+                      onClick={() => onNavigate?.('sectors', 'oversold-value-directions')}>
                 查看行业/大概念自身历史估值、双龙头与数据限制 →
               </button>
             </div>
@@ -159,8 +160,9 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
           {data.dividendWatch?.rsi6Top20?.visible && (
             <div className="mt-2 rounded-md border border-cyan-200 bg-white/60 px-2.5 py-2">
               <p className="text-[11px] leading-relaxed">{dividendTop20Text(data)}</p>
-              <button type="button" className="mt-1 text-[10px] font-semibold underline underline-offset-2"
-                      onClick={() => onNavigate?.('tools', 'rsi6-dividend-top20')}>
+              <button type="button" aria-controls="rsi6-dividend-top20"
+                      className="mt-1 text-[10px] font-semibold underline underline-offset-2"
+                      onClick={() => onNavigate?.('sectors', 'rsi6-dividend-top20')}>
                 查看全A股息率TTM Top20完整原榜 →
               </button>
             </div>

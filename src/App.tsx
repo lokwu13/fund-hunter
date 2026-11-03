@@ -8,6 +8,7 @@ import {
   Banknote, Wrench
 } from 'lucide-react';
 import { useFundData } from './hooks/useFundData';
+import { scrollToRenderedAnchor } from './navigation';
 
 // Section imports
 import WeeklySummary from './sections/WeeklySummary';
@@ -109,7 +110,7 @@ function App() {
             <WeeklySummary onNavigate={(tab, anchor, highlight) => {
               setActiveTab(tab);
               setHlSector(highlight || null);
-              if (anchor) setTimeout(() => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+              if (anchor) scrollToRenderedAnchor(anchor);
             }} />
             <SectorHeatmap />
           </TabsContent>
@@ -139,7 +140,7 @@ function App() {
           <TabsContent value="tools" className="space-y-6">
             <ECIPanel data={data} highlightSector={hlSector} onNavigate={(tab, anchor) => {
               setActiveTab(tab);
-              if (anchor) setTimeout(() => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+              if (anchor) scrollToRenderedAnchor(anchor);
             }} />
           </TabsContent>
         </Tabs>
