@@ -3093,6 +3093,8 @@ def build_funnel(data):
                            'defects': list(it.get('defects') or []),
                            'reserveReasons': reserve_reasons,
                            'histPct': it.get('histPct'), 'distHigh250': it.get('distHigh250'),
+                           'patternEvidence': it.get('patternEvidence'),
+                           'patternNote': it.get('patternNote'),
                            'historicalHighClose': (it.get('cupHandle') or {}).get('historicalHighClose'),
                            'historicalHighDate': (it.get('cupHandle') or {}).get('historicalHighDate'),
                            'distanceToHistoricalHighPct': (it.get('cupHandle') or {}).get('distanceToHistoricalHighPct'),
@@ -3109,11 +3111,23 @@ def build_funnel(data):
     n_reson = sum(1 for r in step3_rows if r['track'] == 'reson')
     n_cherry = sum(1 for r in step3_rows if r['track'] == 'cherry')
     n_reserve = sum(1 for r in step3_rows if r['track'] == 'reserve')
+    bottom_shape_rows = [{
+        'code': r['code'], 'name': r['name'], 'sector': r.get('sector'),
+        'star': bool(r.get('star')), 'inPool': bool(r.get('inPool')),
+        'bottomShape': True, 'bottomPattern': '底部整理',
+        'qualificationStatus': r.get('qualificationStatus'),
+        'qualificationLabel': r.get('qualificationLabel'),
+        'eligible': bool(r.get('eligible')), 'formalAdmission': bool(r.get('formalAdmission')),
+        'patternReasons': list(r.get('patternReasons') or []),
+        'patternEvidence': r.get('patternEvidence')}
+        for r in (data.get('vcpStocks') or {}).get('bottomShapeWatch') or []]
     lamp3 = ('🟢' if any(r['distPct'] is not None and r['distPct'] <= 3 for r in step3_rows)
-             else '🟡' if step3_rows else '🔴')
-    concl3 = (f"形态{len(step3_rows)}只：🔗共振{n_reson} + ⭐精选{n_cherry} + 储备{n_reserve}"
-              if step3_rows else '今日无形态筛出股')
-    guide3 = ('本步展示全部形态筛出股：共振/精选/储备仅表示板块与资金配合层级；'
+             else '🟡' if step3_rows or bottom_shape_rows else '🔴')
+    concl3 = ((f"正式形态{len(step3_rows)}只：🔗共振{n_reson} + ⭐精选{n_cherry} + 储备{n_reserve}"
+               if step3_rows else '今日无正式形态入选股')
+              + f"；底部价格结构观察{len(bottom_shape_rows)}只（不计正式入选）")
+    guide3 = ('本步正式名单与底部价格结构观察分层：观察只证明通用周线结构，资格排除/待核验不等于形态不成立，也不等于正式入选；'
+              '正式底部仍须区间净流入>0且自身估值历史分位≤30%。共振/精选/储备仅表示板块与资金配合层级；'
               'defects为具体形态或位置瑕疵，储备原因不与瑕疵混写；高股息防御独立分组，最后统一排雷。')
 
     # ── 第4步 排雷（范围=第2步龙头∪第3步入围∪持仓观察股）──
@@ -3152,7 +3166,7 @@ def build_funnel(data):
              'collapsed': collapsed, 'dropped': dropped2},
             {'n': 3, 'key': 'vcp', 'title': '个股形态', 'lamp': lamp3,
              'conclusion': concl3, 'guide': guide3, 'rows': step3_rows,
-             'excluded': step3_excluded},
+             'bottomShapeRows': bottom_shape_rows, 'excluded': step3_excluded},
             {'n': 4, 'key': 'mine', 'title': '排雷', 'lamp': lamp4,
              'conclusion': concl4, 'guide': guide4, 'rows': mw_items},
         ],
@@ -6724,6 +6738,324 @@ def _vcp_platform_once(bars, min_days=10, max_days=50, max_amp=0.14, min_rise=0.
     return best
 
 
+# ── 任务111：平台与周线底部的独立展示资格；旧短平台仅保留给VCP几何，不再冒充底部 ──
+PLATFORM_MIN_DAYS, PLATFORM_MAX_DAYS = 15, 44
+PLATFORM_LONG_MAX_AMP = 0.12
+PLATFORM_MAX_DRIFT = 0.06
+BOTTOM_MIN_WEEKS, BOTTOM_MAX_WEEKS = 26, 104
+BOTTOM_MAX_AMP = 0.45
+BOTTOM_MAX_DRIFT = 0.15
+BOTTOM_MAX_REGRESSION = 0.20
+STOCK_VALUATION_MIN_SAMPLES = 24
+STOCK_VALUATION_MAX_PCT = 30.0
+
+
+def _linear_regression_change_pct(closes):
+    """ closes 回归斜率折算为全窗相对均值的百分比；正负方向透明。 """
+    if len(closes) < 3 or any(x <= 0 for x in closes):
+        return None
+    mean = sum(closes) / len(closes)
+    xm = (len(closes) - 1) / 2
+    den = sum((i - xm) ** 2 for i in range(len(closes)))
+    if mean <= 0 or den <= 0:
+        return None
+    slope = sum((i - xm) * (value - mean) for i, value in enumerate(closes)) / den
+    return slope * (len(closes) - 1) / mean * 100
+
+
+def _platform_price_pattern(bars, long=False):
+    """ 先验证平台之前的上升趋势，再验证固定区间和总体缩量；不读取资金。 """
+    min_days, max_days = ((LP_MIN_DAYS, LP_MAX_DAYS) if long else
+                          (PLATFORM_MIN_DAYS, PLATFORM_MAX_DAYS))
+    max_amp = PLATFORM_LONG_MAX_AMP if long else 0.10
+    if len(bars) < max_days + 60 or bars[-1][3] <= 0:
+        return None
+    for n in range(max_days, min_days - 1, -1):
+        plat = bars[-n:]
+        prior = bars[-(n + 60):-n]
+        if len(prior) < 60:
+            continue
+        hi, lo = max(b[1] for b in plat), min(b[2] for b in plat)
+        if lo <= 0:
+            continue
+        amp = (hi - lo) / lo
+        drift = plat[-1][3] / plat[0][3] - 1
+        if amp > max_amp or abs(drift) > PLATFORM_MAX_DRIFT:
+            continue
+        trend_closes = [b[3] for b in prior[-40:]]
+        slope = _linear_regression_change_pct(trend_closes)
+        ma20 = sum(b[3] for b in prior[-20:]) / 20
+        ma20_previous = sum(b[3] for b in prior[-40:-20]) / 20
+        ma60 = sum(b[3] for b in prior) / 60
+        # 平台自身不用于证明上升趋势；三项必须同时成立。
+        if slope is None or not (slope > 0 and ma20 > ma20_previous and ma20 > ma60):
+            continue
+        rally = bars[-(n + 20):-n]
+        plat_vol = sum(b[4] for b in plat) / n
+        prior_vol = sum(b[4] for b in rally) / len(rally)
+        if prior_vol <= 0 or plat_vol >= prior_vol:
+            continue
+        dist = (hi / plat[-1][3] - 1) * 100
+        return {'type': '长平台整理' if long else '平台整理', 'days': n,
+                'amplitude': round(amp * 100, 2), 'drift': round(drift * 100, 2),
+                'volRatio': round(plat_vol / prior_vol, 4),
+                'trendSlopePct': round(slope, 4), 'ma20': round(ma20, 4),
+                'ma20Previous': round(ma20_previous, 4), 'ma60': round(ma60, 4),
+                'trendWindowDays': 40, 'trendEvidence': '平台前40日回归斜率>0且MA20上升并高于MA60',
+                'pivot': round(hi, 2), 'distPct': round(dist, 1),
+                'invalidation': round(lo, 2),
+                'volConfirm': round(sum(b[4] for b in bars[-50:]) / min(50, len(bars)) * BREAKOUT_VOL_X, 1),
+                'formed': True, 'structureOnly': True}
+    return None
+
+
+def _pattern_moneyflow_evidence(candidate, bars, flows):
+    """ 区间每日主力净流入必须完整覆盖且累计>0；资金只是必要门，不补救价格结构。 """
+    if not candidate:
+        return None
+    out = dict(candidate)
+    days = [b[0] for b in bars[-candidate['days']:]]
+    values = [(flows or {}).get(date) for date in days]
+    covered = sum(isinstance(v, (int, float)) and not isinstance(v, bool) for v in values)
+    net = sum(v for v in values if isinstance(v, (int, float)) and not isinstance(v, bool)) if covered else None
+    complete = bool(days) and covered == len(days)
+    passed = bool(complete and net is not None and net > 0)
+    out.update({'moneyflowStart': days[0] if days else None,
+                'moneyflowEnd': days[-1] if days else None,
+                'moneyflowDays': len(days), 'moneyflowCoveredDays': covered,
+                'moneyflowCoveragePct': round(covered / len(days) * 100, 2) if days else 0,
+                'intervalNetInflow': round(net, 4) if net is not None else None,
+                'moneyflowUnit': '亿元', 'moneyflowPass': passed,
+                'moneyflowReason': ('区间累计净流入>0' if passed else
+                                    ('资金历史覆盖不足' if not complete else '区间累计净流入未大于0'))})
+    return out
+
+
+def _bottom_weekly_price_pattern(bars):
+    """ 26~104周走平/多重底/抬升低点；排除明显回归下跌、创新低及近历史高位。 """
+    if len(bars) < BOTTOM_MIN_WEEKS * 5 + 2 or bars[-1][3] <= 0:
+        return None
+    rows = [[b[0], b[3], b[1], b[2], b[4]] for b in bars]
+    weeks = _resample_weekly(rows)
+    if len(weeks) < BOTTOM_MIN_WEEKS:
+        return None
+    all_closes = [b[3] for b in bars]
+    previous_high = max(all_closes[:-1]) if len(all_closes) > 1 else 0
+    dist_high = (all_closes[-1] / previous_high - 1) * 100 if previous_high > 0 else None
+    if dist_high is None or dist_high > -10:
+        return None
+    week_start = {}
+    for b in bars:
+        d = datetime.strptime(b[0], '%Y%m%d')
+        key = f'{d.isocalendar()[0]}W{d.isocalendar()[1]:02d}'
+        week_start.setdefault(key, b[0])
+    max_weeks = min(BOTTOM_MAX_WEEKS, len(weeks))
+    best, best_rank = None, None
+    for n in range(max_weeks, BOTTOM_MIN_WEEKS - 1, -1):
+        window = weeks[-n:]
+        hi, lo = max(b[1] for b in window), min(b[2] for b in window)
+        if lo <= 0:
+            continue
+        amp = (hi - lo) / lo
+        drift = window[-1][3] / window[0][3] - 1
+        regression = _linear_regression_change_pct([b[3] for b in window])
+        if (amp > BOTTOM_MAX_AMP or abs(drift) > BOTTOM_MAX_DRIFT
+                or regression is None or abs(regression) > BOTTOM_MAX_REGRESSION * 100):
+            continue
+        # 最近四周不得仍在有效创新低；允许形成更高一级的新基底，但不接受下跌中继。
+        if min(b[2] for b in window[-4:]) < lo * 1.01:
+            continue
+        swing = []
+        for i in range(2, len(window) - 2):
+            if window[i][2] == min(b[2] for b in window[i - 2:i + 3]):
+                if not swing or i - swing[-1][0] >= 3:
+                    swing.append((i, window[i][0], window[i][2]))
+                elif window[i][2] < swing[-1][2]:
+                    swing[-1] = (i, window[i][0], window[i][2])
+        multi = False
+        for i, first in enumerate(swing):
+            for second in swing[i + 1:]:
+                if second[0] - first[0] >= 3 and abs(second[2] / first[2] - 1) <= 0.08:
+                    multi = True
+                    break
+            if multi:
+                break
+        higher = bool(len(swing) >= 2 and swing[-1][0] - swing[-2][0] >= 3
+                      and swing[-1][2] >= swing[-2][2] * 1.02)
+        flat = abs(drift) <= 0.08 and abs(regression) <= 10
+        if not (flat or multi or higher):
+            continue
+        structure = ('weekly_flat' if flat else ('multi_bottom' if multi else 'higher_lows'))
+        start_date = week_start[window[0][0]]
+        daily = [b for b in bars if b[0] >= start_date]
+        dist = (hi / bars[-1][3] - 1) * 100
+        candidate = {'type': '底部整理', 'weeks': n, 'days': len(daily),
+                     'amplitude': round(amp * 100, 2), 'drift': round(drift * 100, 2),
+                     'trendSlopePct': round(regression, 4), 'weeklyStructure': structure,
+                     'weeklyStructureLabel': {'weekly_flat': '周线长期走平', 'multi_bottom': '周线双底/多重底',
+                                               'higher_lows': '周线底部抬升'}[structure],
+                     'swingLows': [{'week': x[1], 'low': round(x[2], 4)} for x in swing],
+                     'bottomStart': daily[0][0], 'bottomEnd': daily[-1][0],
+                     'distanceToAvailableHighPct': round(dist_high, 2),
+                     'pivot': round(hi, 2), 'distPct': round(dist, 1),
+                     'invalidation': round(lo, 2),
+                     'volConfirm': round(sum(b[4] for b in bars[-50:]) / min(50, len(bars)) * BREAKOUT_VOL_X, 1),
+                     'formed': True, 'structureOnly': True}
+        # 先选结构更明确的走平，再选多重底/抬升；同级取更长窗，不用资金或估值倒选。
+        rank = (0 if flat else 1, -n)
+        if best is None or rank < best_rank:
+            best, best_rank = candidate, rank
+    return best
+
+
+def _stock_valuation_evidence(history, as_of):
+    """ 个股自身月末PE_TTM/PB历史分位；双有效取均值，单有效须明确标记。 """
+    rows = {d: r for d, r in (history or {}).items() if d <= as_of}
+    latest_date = max(rows) if rows else None
+    latest = rows.get(latest_date) or {}
+    metrics = []
+    for key in ('peTtm', 'pb'):
+        current = latest.get(key)
+        values = [(d, r.get(key)) for d, r in sorted(rows.items())
+                  if isinstance(r.get(key), (int, float)) and r.get(key) > 0]
+        sufficient = isinstance(current, (int, float)) and current > 0 and len(values) >= STOCK_VALUATION_MIN_SAMPLES
+        percentile = (sum(v <= current for _, v in values) / len(values) * 100) if sufficient else None
+        metrics.append({'metric': key, 'value': current if isinstance(current, (int, float)) else None,
+                        'percentile': round(percentile, 4) if percentile is not None else None,
+                        'samples': len(values), 'historyStart': values[0][0] if values else None,
+                        'historyEnd': values[-1][0] if values else None,
+                        'sufficient': bool(sufficient)})
+    valid = [m['percentile'] for m in metrics if m['sufficient']]
+    score = sum(valid) / len(valid) if valid else None
+    basis = 'dual' if len(valid) == 2 else ('single' if len(valid) == 1 else 'insufficient')
+    passed = score is not None and score <= STOCK_VALUATION_MAX_PCT + 1e-12
+    return {'valuationPass': passed, 'valuationBasis': basis,
+            'valuationScorePct': round(score, 4) if score is not None else None,
+            'valuationDate': latest_date, 'valuationMetrics': metrics,
+            'valuationMinSamples': STOCK_VALUATION_MIN_SAMPLES,
+            'valuationReason': ('双指标历史分位均值≤30%' if passed and basis == 'dual' else
+                                '单指标历史分位≤30%' if passed else
+                                '个股估值历史不足24个有效月末样本' if basis == 'insufficient' else
+                                '个股自身PE/PB历史分位未通过30%门')}
+
+
+def _apply_bottom_eligibility(candidate, bars, flows, valuation_history):
+    if not candidate:
+        return None
+    out = _pattern_moneyflow_evidence(candidate, bars, flows)
+    valuation = _stock_valuation_evidence(valuation_history, bars[-1][0])
+    out.update(valuation)
+    reasons = []
+    if not out['moneyflowPass']:
+        reasons.append(out['moneyflowReason'])
+    if not out['valuationPass']:
+        reasons.append(out['valuationReason'])
+    eligible = not reasons
+    pending = (out.get('moneyflowCoveragePct') != 100
+               or out.get('valuationBasis') == 'insufficient')
+    status = 'eligible' if eligible else ('pending' if pending else 'excluded')
+    out.update({
+        # 价格结构与正式入选是两层事实：资格失败绝不反向否认已成立的周线形态。
+        'bottomShape': True, 'bottomPattern': '底部整理', 'shapeRecognized': True,
+        'eligible': eligible, 'displayEligible': eligible, 'formalAdmission': eligible,
+        'qualificationStatus': status,
+        'qualificationLabel': ('正式底部入选' if eligible else
+                               '底部形态观察·资格待核验' if status == 'pending' else
+                               '底部形态观察·资格排除'),
+        'patternReasons': reasons or ['周线底部结构、区间资金与个股历史估值全部通过']})
+    return out
+
+
+def _apply_platform_eligibility(candidate, bars, flows):
+    out = _pattern_moneyflow_evidence(candidate, bars, flows)
+    if not out:
+        return None
+    reasons = [] if out['moneyflowPass'] else [out['moneyflowReason']]
+    out.update({'eligible': not reasons, 'displayEligible': not reasons,
+                'patternReasons': reasons or ['前期上升趋势、固定窄幅、总体缩量与区间资金全部通过']})
+    return out
+
+
+def _update_pattern_moneyflow_cache(pro, trade_date, codes):
+    """ 仅对价格结构候选按股增量回补，独立缓存，失败保留旧数据。 """
+    import vcp_preview as vcp
+    container = vcp.load_cache()
+    cache = dict(container.get('patternMoneyflow') or {})
+    rows_by_code = dict(cache.get('rows') or {})
+    cache.update({'version': 1, 'source': 'Tushare moneyflow.net_mf_amount', 'unit': '亿元',
+                  'errors': dict(cache.get('errors') or {})})
+    start_all = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=3 * 365)).strftime('%Y%m%d')
+    for code in sorted(set(codes)):
+        rows = dict(rows_by_code.get(code) or {})
+        if rows and max(rows) >= trade_date:
+            continue
+        try:
+            start = max(start_all, max(rows) if rows else start_all)
+            time.sleep(API_DELAY)
+            frame = pro.moneyflow(ts_code=code, start_date=start, end_date=trade_date)
+            if frame is None or not len(frame):
+                raise RuntimeError('moneyflow为空')
+            for _, r in frame.iterrows():
+                if pd.notna(r['net_mf_amount']):
+                    rows[str(r['trade_date'])] = round(float(r['net_mf_amount']) / 1e4, 6)
+            rows_by_code[code] = rows
+            cache['errors'].pop(code, None)
+        except Exception as exc:
+            cache['errors'][code] = str(exc)[:240]
+        cache['rows'] = rows_by_code
+        cache['updated'] = trade_date
+        container['patternMoneyflow'] = cache
+        vcp.save_cache(container)
+    return cache
+
+
+def _update_stock_valuation_cache(pro, trade_date, codes):
+    """ 个股十年daily_basic增量抓取后取真实月末；每只有效候选最多一次调用。 """
+    import vcp_preview as vcp
+    container = vcp.load_cache()
+    cache = dict(container.get('stockValuationHistory') or {})
+    rows_by_code = dict(cache.get('rows') or {})
+    latest_by_code = dict(cache.get('latest') or {})
+    cache.update({'version': 1, 'source': 'Tushare daily_basic', 'frequency': 'month_end',
+                  'minSamples': STOCK_VALUATION_MIN_SAMPLES, 'errors': dict(cache.get('errors') or {})})
+    start_all = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=10 * 365)).strftime('%Y%m%d')
+    for code in sorted(set(codes)):
+        rows = dict(rows_by_code.get(code) or {})
+        latest = latest_by_code.get(code) or {}
+        if latest.get('tradeDate', '') >= trade_date:
+            continue
+        try:
+            start = max(start_all, latest.get('tradeDate', start_all))
+            time.sleep(API_DELAY)
+            frame = pro.daily_basic(ts_code=code, start_date=start, end_date=trade_date,
+                                    fields='ts_code,trade_date,pe_ttm,pb')
+            if frame is None or not len(frame):
+                raise RuntimeError('daily_basic为空')
+            daily = {}
+            for _, r in frame.iterrows():
+                date = str(r['trade_date'])
+                daily[date] = {
+                    'peTtm': float(r['pe_ttm']) if pd.notna(r['pe_ttm']) and float(r['pe_ttm']) > 0 else None,
+                    'pb': float(r['pb']) if pd.notna(r['pb']) and float(r['pb']) > 0 else None}
+            month_ends = {}
+            for date in sorted(daily):
+                month_ends[date[:6]] = date
+            for date in month_ends.values():
+                rows[date] = daily[date]
+            if daily:
+                latest_date = max(daily)
+                latest = dict(daily[latest_date], tradeDate=latest_date)
+            rows_by_code[code] = rows
+            latest_by_code[code] = latest
+            cache['errors'].pop(code, None)
+        except Exception as exc:
+            cache['errors'][code] = str(exc)[:240]
+        cache.update({'rows': rows_by_code, 'latest': latest_by_code, 'updated': trade_date})
+        container['stockValuationHistory'] = cache
+        vcp.save_cache(container)
+    return cache
+
+
 # ══════════ Minervini 精修（2026-09-26 月底大改版①，用户拍板口径） ══════════
 MINERVINI_VCP_TOL = 1.10    # 收缩严格递减容差：每次收缩必须小于前一次（允许 ≤前次×1.10），且末次<首次
 MINERVINI_MIN_CONTR = 3     # VCP 收缩次数下限
@@ -8130,6 +8462,10 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         items = []
         dropped_tt = []
         dropped_weekly_ma = []
+        dropped_pattern_evidence = []
+        bottom_shape_watch = []
+        pattern_mf_cache = c.get('patternMoneyflow') or {}
+        pattern_val_cache = c.get('stockValuationHistory') or {}
         for code, meta in targets.items():
             try:
                 rows = stock_daily.get(code) or []
@@ -8174,34 +8510,73 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
                                         hist_pct=hist_pct, allow_weekly_defect=True)
                 recent = _cup_early_breakout(bars) if not (d_c3 or w_c3) else None
-                lp = _long_platform(bars, circ_mv=(mv.get(code, 0) / 1e4 if mv else None),
-                                    hist_pct=hist_pct, dist_high250=dist_high250)
+                # 任务111：旧pf仅供任务103 VCP属性；正式平台/底部改走独立证据链。
+                platform_structure = _platform_price_pattern(bars)
+                long_structure = _platform_price_pattern(bars, long=True)
+                bottom_structure = _bottom_weekly_price_pattern(bars)
+                flows = {}
+                if platform_structure or long_structure or bottom_structure:
+                    mf_rows = (pattern_mf_cache.get('rows') or {}).get(code) or {}
+                    if not mf_rows or max(mf_rows) < eff:
+                        pattern_mf_cache = _update_pattern_moneyflow_cache(pro, eff, [code])
+                    flows = (pattern_mf_cache.get('rows') or {}).get(code) or {}
+                plat = _apply_platform_eligibility(platform_structure, bars, flows)
+                lp = _apply_platform_eligibility(long_structure, bars, flows)
+                valuation_rows = {}
+                if bottom_structure:
+                    latest = ((pattern_val_cache.get('latest') or {}).get(code) or {}).get('tradeDate', '')
+                    if latest < eff:
+                        pattern_val_cache = _update_stock_valuation_cache(pro, eff, [code])
+                    valuation_rows = (pattern_val_cache.get('rows') or {}).get(code) or {}
+                bottom = _apply_bottom_eligibility(bottom_structure, bars, flows, valuation_rows)
+                if bottom:
+                    # 独立观察层：资格被排除或待核验也可展示，但不进入正式items/formed计数。
+                    bottom_shape_watch.append({
+                        'code': code, 'name': info.get(code, {}).get('name', code),
+                        'sector': meta['sector'], 'star': meta['star'],
+                        'inPool': bool(meta.get('inPool')), 'asOf': bars[-1][0],
+                        'bottomShape': True, 'bottomPattern': '底部整理',
+                        'qualificationStatus': bottom['qualificationStatus'],
+                        'qualificationLabel': bottom['qualificationLabel'],
+                        'eligible': bottom['eligible'], 'displayEligible': bottom['displayEligible'],
+                        'formalAdmission': bottom['formalAdmission'],
+                        'patternReasons': bottom['patternReasons'],
+                        'patternEvidence': bottom})
+                for evidence in (plat, lp, bottom):
+                    if evidence and not evidence.get('displayEligible'):
+                        dropped_pattern_evidence.append({
+                            'code': code, 'name': info.get(code, {}).get('name', code),
+                            'pattern': evidence['type'], 'reasons': evidence.get('patternReasons') or [],
+                            'moneyflowCoveragePct': evidence.get('moneyflowCoveragePct'),
+                            'intervalNetInflow': evidence.get('intervalNetInflow'),
+                            'valuationScorePct': evidence.get('valuationScorePct')})
+                # 一年高位是平台/底部共同的位置门；长平台主分支与杯柄失败回退不得绕过。
+                ext_high = ((hist_pct is not None and hist_pct > 85)
+                            or (dist_high250 > -7
+                                and hist_pct is not None and hist_pct > 60))
+                if ext_high:
+                    for evidence in (plat, lp, bottom):
+                        if evidence and evidence.get('displayEligible'):
+                            dropped_pattern_evidence.append({
+                                'code': code, 'name': info.get(code, {}).get('name', code),
+                                'pattern': evidence['type'],
+                                'reasons': [f'一年分位{hist_pct:.1f}%、距一年高点{dist_high250:.1f}%，触发平台高位门'],
+                                'moneyflowCoveragePct': evidence.get('moneyflowCoveragePct'),
+                                'intervalNetInflow': evidence.get('intervalNetInflow'),
+                                'valuationScorePct': evidence.get('valuationScorePct')})
                 def non_cup_fallback(after_cup=False):
-                    """杯柄展示失败时复用既有非杯柄门；不修改任何候选结构或阈值。"""
-                    if (after_cup and lp and lp['formed']
+                    """杯柄失败后只回退到已完整通过新证据门且位置合格的非杯柄候选。"""
+                    if (after_cup and not ext_high and lp and lp.get('displayEligible')
                             and VCP_SHOW_DIST_LO <= lp['distPct'] <= VCP_SHOW_DIST_PLAT):
                         return '长平台整理', lp
-                    ext_high = ((hist_pct is not None and hist_pct > 85)
-                                or (dist_high250 > -7
-                                    and hist_pct is not None and hist_pct > 60))
                     if ext_high:
                         return None, None
                     if fl and fl['formed'] and VCP_SHOW_DIST_LO <= fl['distPct'] <= VCP_SHOW_DIST:
                         return '旗形整理', fl
-                    if pf and pf['formed']:
-                        internal_bottom = pf.get('type') == '底部平台型' and dist_high250 <= -15
-                        if (hist_pct is not None and hist_pct <= 40) or dist_high250 <= -20 or internal_bottom:
-                            fallback_pattern = '底部整理'
-                        elif hist_pct is not None and hist_pct <= 60:
-                            fallback_pattern = '平台整理'
-                        else:
-                            return None, None
-                        plat = bars[-pf['days']:]
-                        vol50 = sum(b[4] for b in bars[-50:]) / min(50, len(bars))
-                        fallback_lv = dict(pf)
-                        fallback_lv['invalidation'] = round(min(b[2] for b in plat), 2)
-                        fallback_lv['volConfirm'] = round(vol50 * BREAKOUT_VOL_X, 1)
-                        return fallback_pattern, fallback_lv
+                    if plat and plat.get('displayEligible'):
+                        return '平台整理', plat
+                    if bottom and bottom.get('displayEligible'):
+                        return '底部整理', bottom
                     return None, None
 
                 raw, main_lv = None, None
@@ -8220,7 +8595,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 elif raw is None and f_c3:
                     # 固定区间VCP不抢占已经成立的杯柄；自身仍独立于摆动Stage2/高位门。
                     raw, main_lv = 'VCP收缩型', fixed_lv
-                elif raw is None and lp and lp['formed']:
+                elif raw is None and not ext_high and lp and lp.get('displayEligible'):
                     raw, main_lv = '长平台整理', lp
                 if raw is None:
                     pattern, main_lv = non_cup_fallback()
@@ -8303,28 +8678,44 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                              'volConfirm': main_lv.get('volConfirm'),
                              'breakoutConfirm': brk_txt,
                              **{k: main_lv.get(k) for k in signal_fields if main_lv.get(k) is not None}}
+                evidence_note = None
+                if pattern in ('平台整理', '长平台整理'):
+                    evidence_note = (f"{pattern}：前期40日斜率{main_lv.get('trendSlopePct')}%，"
+                                     f"MA20 {main_lv.get('ma20')} > MA60 {main_lv.get('ma60')}；"
+                                     f"{main_lv.get('days')}日、振幅{main_lv.get('amplitude')}%、"
+                                     f"总体量比{main_lv.get('volRatio')}；区间净流入"
+                                     f"{main_lv.get('intervalNetInflow')}亿元，覆盖{main_lv.get('moneyflowCoveragePct')}%。")
+                elif pattern == '底部整理':
+                    metric_note = '；'.join(
+                        f"{m['metric']}分位{m['percentile']}%/样本{m['samples']}" for m in main_lv.get('valuationMetrics') or [])
+                    evidence_note = (f"底部整理：{main_lv.get('weeks')}周{main_lv.get('weeklyStructureLabel')}，"
+                                     f"回归变化{main_lv.get('trendSlopePct')}%、振幅{main_lv.get('amplitude')}%；"
+                                     f"区间净流入{main_lv.get('intervalNetInflow')}亿元，"
+                                     f"估值{main_lv.get('valuationBasis')}={main_lv.get('valuationScorePct')}%；{metric_note}。")
                 items.append({'code': code,
                               'name': info.get(code, {}).get('name', code),
                               'sector': sec, 'star': meta['star'],
                               'inPool': bool(meta.get('inPool')),
                               'close': round(close, 2), 'tag': tag,
-                              'pattern': pattern, 'platform': pf,
+                              'pattern': pattern,
+                              'platform': main_lv if pattern in ('平台整理', '长平台整理', '底部整理') else plat,
+                              'patternEvidence': main_lv if pattern in ('平台整理', '长平台整理', '底部整理') else None,
                               'entryTier': 'fuzzy' if main_lv.get('defects') else 'qualified',
                               'defects': main_lv.get('defects') or [],
                               'cupHandle': ch if pattern == '杯柄型' else None,
                               'flag': fl if pattern == '旗形整理' else None,
                               'fixedBase': fixed_lv if main_lv is fixed_lv else None,
                               'vcpAttribute': main_lv.get('vcpAttribute'),
-                              'patternNote': ((main_lv.get('vcpAttribute') or {}).get('note')
-                                              if main_lv.get('vcpAttribute') else
-                                              (f"固定区间VCP：{main_lv.get('days')}日振幅{main_lv.get('amplitude')}%≤10.5%，"
-                                               f"三段振幅{'→'.join(str(x) for x in main_lv.get('segAmps') or [])}%，"
-                                               f"平台/前段量{main_lv.get('volRatio')}，总体缩量且近期量未同步放大；"
-                                               "右侧无持续下滑或剧烈起伏，仅使用识别日当时可见数据。"
-                                               if main_lv.get('structurePath') == 'fixed_base' else None)),
-                              # 长平台共标（2026-10-01 晚）：杯柄/其他形态命中时若长平台也成型，
-                              # 一并挂上供前端「兼长平台」标注（中微段③=杯柄+长平台双命中类）
-                              'longPlat': lp if (lp and lp.get('formed')) else None,
+                              'patternNote': (evidence_note if evidence_note else
+                                              ((main_lv.get('vcpAttribute') or {}).get('note')
+                                               if main_lv.get('vcpAttribute') else
+                                               (f"固定区间VCP：{main_lv.get('days')}日振幅{main_lv.get('amplitude')}%≤10.5%，"
+                                                f"三段振幅{'→'.join(str(x) for x in main_lv.get('segAmps') or [])}%，"
+                                                f"平台/前段量{main_lv.get('volRatio')}，总体缩量且近期量未同步放大；"
+                                                "右侧无持续下滑或剧烈起伏，仅使用识别日当时可见数据。"
+                                                if main_lv.get('structurePath') == 'fixed_base' else None))),
+                              # 只有完整通过趋势/窄幅/缩量/资金门的长平台才共标。
+                              'longPlat': lp if (lp and lp.get('displayEligible')) else None,
                               'trendTemplate': tt, 'stage': stage,
                               'buyPoint': buy_point,
                               'histPct': hist_pct,
@@ -8362,19 +8753,24 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'qualifiedCount': sum(not x.get('defects') for x in items),
             'fuzzyCount': sum(bool(x.get('defects')) for x in items),
             'items': grouped,
+            'bottomShapeWatch': bottom_shape_watch[:100],
+            'bottomShapeWatchCount': len(bottom_shape_watch),
+            'bottomShapeWatchNote': '仅证明通用周线底部价格结构成立；不等于正式入选。正式底部仍须区间资金100%覆盖且累计净流入>0、个股自身PE/PB历史分位≤30%；缺证据只列资格待核验。',
             'droppedByTrendTemplate': dropped_tt[:50],
             'droppedByWeeklyMA': dropped_weekly_ma[:50],
             'droppedByWeeklyMACount': len(dropped_weekly_ma),
+            'droppedByPatternEvidence': dropped_pattern_evidence[:100],
+            'droppedByPatternEvidenceCount': len(dropped_pattern_evidence),
             'scanScope': scan_scope,
             'note': f'池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由"积聚/信号板块龙头"扩为指数成分全覆盖，当前口径={scan_scope}）；'
-                    '形态口径（任务97·2026-10-30周MA状态门）：'
+                    '形态口径（任务111平台/底部证据门，保留任务97周MA状态门）：'
                     '全部形态先查最近已完成周MA150/200：MA150<MA200为明确空头，直接从形态精扫及漏斗第3步剔除，不再作为fuzzy瑕疵展示；MA150=MA200不被本门硬删，仍按原周MA未多头fuzzy；MA150>MA200不因此误杀；不足200根完成周或均线缺失不伪造MA安全通过，沿用各形态原有数据审慎门（杯柄仍拒绝不足）；本门不看价格与均线关系、不新增MA50条件，既有周BOLL深度回踩包容与有效破位门不变；'
                     'VCP收缩型（任务103十例人工标签校准）=严格摆动证据须≥3次收缩、每次≤前次1.10且末次<首次、末段均量<首段；务实反复序列只留证据、不再独立成型。严格摆动另须近期量未出现5日/10日>1.08且最近3日/10日>1.10的同步重新放大、近10日无持续下滑（下跌日≥70%+漂移≤-2.5%+20日位置≤25%）或剧烈起伏（单日绝对涨跌≥5%+年化波动≥35%），识别日距枢轴-5%~+4%；不强制MA10≤MA20≤MA50，多窗口短长均量比≤1.20仅作异常放量门；已突破日只审突破前基底量，不用突破大量或后续结果反判。新增固定区间路径=15~50日+振幅≤10.5%+三段务实价格收缩+区间/前20日均量<1且末段量<首段+相同近期量/右侧质量/枢轴门；按当时紧致度、阶段量比、枢轴距离选最佳，可接近一年新高，不套用摆动Stage2/高位门；'
-                    '平台型VCP属性（任务103量能口径）=个股平台候选先取最长严格三段收缩，无严格候选才走务实路径（最多一次温和反复、该次≤前次1.25、其余≤1.10且末段<首段）；属性另须振幅≤12%+平台首日相对前收及内部任一单日收跌均<5%（仅拒VCP属性，绝不修改底层平台标签）+一年分位≤60且距一年高点≥8%+平台日均量≤前20日拉升段75%+多窗口短长均量比≤1.20且近期量未同步重新放大，不再机械要求MA10≤MA20≤MA50；60日跌幅>10%时仍须平台漂移|≤3%|且显著缩量；属性写入vcpAttribute/patternNote，单标签仍为底部整理或平台整理，不伪造双标签；'
+                    '平台型VCP属性（任务103）保留旧10~50日短平台作为VCP几何/量能属性证据，不直接产生平台整理或底部整理标签；属性首日/内部单日完整性门只作用于VCP属性，不得反向改写新平台或底部资格；'
                     '杯柄型（任务99双背景与柄质量分级）=杯身背景满足前置250日涨幅≥15%（uptrend）或60~120日震荡修复（range_repair：区间跨度≥15%+首末净漂移绝对值≤15%+中位穿越≥2次+杯沿相对区间上沿-15%~+10%）之一，仍须最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净柄须净漂移绝对值≤5%+全程回归趋势绝对值≤6%+振幅≤8%+10日/全柄均量≤1.05+5日/10日均量≤1.10；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点、35~50%柄位或8~10%振幅/温和漂移/多窗口量能瑕疵进入fuzzy，但不得换局部杯身绕过全局杯的杯深/U底/双底/杯身背景/右侧/缩量等独立硬门；持续滑梯（净漂移≤-4%+回归趋势≤-4%+下跌日≥60%+末端处柄区间下45%）硬拒绝；结构或柄质量fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；任务110统一历史高位资格门=几何formed后，以识别日前全部可得日线最高收盘为历史高点，最新收盘距其>-8%直接eligible/display=false且不作为fuzzy展示，恰好-8%及更深回撤通过；输出历史起止/样本数/高点日期与收盘/距离，达到1200根缓存上限明确非上市全史；VCP和底部平台不适用此门；'
                     '用户习惯·早期杯柄信号（任务92新鲜度+任务99干净柄硬门+任务101等待期失效门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯、50~80%柄位与干净柄，不用局部/35~50%结构fuzzy或柄质量fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01；柄锚点后、首个有效信号前任一收盘跌破初始失效位即永久放弃该锚点并继续检查其他锚点，不得收回后复活旧柄；信号后当前跌破同样剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；'
-                    '底部整理/平台整理=普通路径沿用10~50日窄幅缩量平台、个股精扫振幅≤12%、严格三段收缩优先及任务98b务实候选；另增内部底部律动路径：距一年高点≥15%回撤+10~50日+振幅≤15%+平台未破前低，平台/前20日均量≤1.15且末段/首段≤1.40，允许量能律动与温和放大，不强制VCP式总体缩量或机械三段价格收缩；内部底部平台即使一年分位>60也可归底部整理，属性专属单日门不撤销底层平台标签；'
-                    '长平台整理=45~120日+振幅≤21%+首末漂移≤6%+末段量≤首段1.4+市值≥800亿+一年分位25~85+距枢轴≤12%；分位>65且距高-20~-8%或分位>80时，必须三段收缩且末段量未增，极高位另须距一年高点≤15%；'
+                    '正式平台整理（任务111）=15~44日、振幅≤10%、首末漂移绝对值≤6%；长平台整理=45~120日、振幅≤12%、首末漂移绝对值≤6%；两者均须平台前40日回归斜率>0且平台前MA20较前一20日上升并高于MA60，平台日均量严格低于前20日（允许律动但不接受整体放量），区间每日主力资金覆盖100%且累计净流入>0；平台/长平台/正式底部共同保留一年高位排除门，平台任一资金或结构失败均不正式展示；'
+                    '底部形态观察与正式底部入选分层（任务111）：价格结构=26~104周、振幅≤45%、首末漂移绝对值≤15%、全窗回归变化绝对值≤20%，距全部可得历史收盘高点至少10%且最近4周不继续创新低；支持周线走平/多重底/底部抬升，结构优先走平、同级取更长窗，不以资金或估值倒选窗口；bottomShapeWatch只证明此层成立，资格失败不反向否认形态。正式入选另须区间资金100%覆盖且累计净流入>0，以及个股自身月末PE_TTM/PB各至少24个正有效样本、双指标有效取历史分位均值、单指标有效明确标注、分位≤30%；缺证据列资格待核验，负流入或估值超门列资格排除，均不得进入正式底部items/formed计数；'
                     '旗形整理=旗杆急涨≥15%后5~15日窄幅下飘/横盘旗面（振幅≤9%+旗面均量<旗杆均量+大比例缩量③）；'
                     '大比例缩量③=5段均量递减对≥60% 或 末段/区间均量≤0.85，允许末段≤1.35温和放量；'
                     '买点参数：枢轴价/失效位/距枢轴%/形态对应的突破确认——均为形态参数，非操作建议；'

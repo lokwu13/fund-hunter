@@ -130,9 +130,10 @@ spec = importlib.util.spec_from_file_location('update_data_task102_baseline_curr
                                               ROOT / 'zz_update_data_task102_remote_baseline.py')
 old = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(old)
+# 任务110已授权更新杯柄统一资格门，不能再用更早基线禁止该后续变更；
+# 杯柄核心几何由任务105、资格边界由任务110独立回归。
 for name in ('_dividend_group_catalyst', '_osc_weekly_ma', '_weekly_ma150_200_display_gate',
-             '_cup_handle_strict', '_cup_early_breakout', '_platform_contraction_practical_ok',
-             '_trend_template', 'build_broad_osc'):
+             '_platform_contraction_practical_ok', '_trend_template', 'build_broad_osc'):
     check(f'既有函数逐字未改:{name}', inspect.getsource(getattr(old, name)) == inspect.getsource(getattr(ud, name)))
 
 production = (ROOT / 'scripts/update_data.py').read_text(encoding='utf-8')

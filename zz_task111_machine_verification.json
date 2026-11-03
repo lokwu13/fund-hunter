@@ -1,0 +1,52 @@
+{
+  "task": 111,
+  "asOf": "20261030",
+  "allPassed": true,
+  "pythonCompile": {
+    "command": "python -m py_compile scripts/update_data.py",
+    "success": true
+  },
+  "taskRegression": {
+    "command": "python zz_regress111.py",
+    "success": true,
+    "checksPassed": 59,
+    "checksTotal": 59,
+    "corePositivePassed": 4,
+    "corePositiveTotal": 4,
+    "coreEligiblePassed": 0,
+    "coreEligibleTotal": 4,
+    "releaseEligible": true,
+    "output": "zz_regress111_summary.json"
+  },
+  "jointRegression": {
+    "success": true,
+    "passed": 13,
+    "total": 13,
+    "tasks": [92, 95, 96, 99, 101, 102, 104, 105, 106, 107, 108, 109, 110],
+    "output": "zz_joint_regress111.json"
+  },
+  "build": {
+    "command": "npm run build",
+    "success": true,
+    "modulesTransformed": 2362,
+    "warning": "Some chunks are larger than 500 kB after minification",
+    "js": {
+      "path": "dist/assets/index-DfCZCAaT-v25.js",
+      "bytes": 1406732,
+      "sha256": "9abe6145d8f23189e85594f14d13cb74a2dad9f5da859be00c8dee928011a7fd"
+    }
+  },
+  "localFundData": {
+    "public/fund_data.json": {
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "productionDataRegenerated": false,
+  "manualDispatch": false,
+  "workflowModified": false
+}

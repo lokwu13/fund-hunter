@@ -1,0 +1,123 @@
+{
+  "allPassed": true,
+  "passed": 13,
+  "total": 13,
+  "pythonPath": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts",
+  "testHarnessCompatibility": "101受控mock补充displayEligible；101旧共享扫描器基线不再强制None；102/104/106移除被任务110合法更新的杯柄源逐字旧基线，保留105几何与110资格回归。",
+  "results": [
+    {
+      "task": 92,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "UTF-8联合运行器已完成，随后因后续长任务超时终止"
+    },
+    {
+      "task": 95,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "UTF-8联合运行器已完成，随后因后续长任务超时终止"
+    },
+    {
+      "task": 96,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "UTF-8联合运行器已完成，随后因后续长任务超时终止"
+    },
+    {
+      "task": 99,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "UTF-8联合运行器已完成，随后因后续长任务超时终止"
+    },
+    {
+      "task": 101,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "zz_regress101_task111.log",
+      "checksPassed": 19,
+      "checksTotal": 19,
+      "failed": [],
+      "stdoutTail": ".09,\n        \"distPct\": -4.9,\n        \"defects\": [],\n        \"structureFuzzy\": false,\n        \"qualified\": true,\n        \"anchorDate\": \"20261009\",\n        \"cupStart\": \"20260522\",\n        \"cupEnd\": \"20260910\",\n        \"handleStart\": \"20260911\",\n        \"handleEnd\": \"20261009\",\n        \"signalDate\": \"20261014\",\n        \"signalType\": \"early\",\n        \"breakoutAge\": 12,\n        \"currentDist\": 5.1,\n        \"currentValid\": true,\n        \"backgroundMode\": \"uptrend\",\n        \"handleQuality\": {\n          \"clean\": true,\n          \"persistentDownslide\": false,\n          \"multiWindowClean\": true,\n          \"driftPct\": -0.25,\n          \"trendPct\": -1.9,\n          \"downDayRatio\": 0.357,\n          \"endPosition\": 0.593,\n          \"amplitudePct\": 7.07,\n          \"ma5ToMa10\": 1.078,\n          \"ma10ToFull\": 0.952,\n          \"cleanGate\": {\n            \"absDriftPctMax\": 5.0,\n            \"absTrendPctMax\": 6.0,\n            \"amplitudePctMax\": 8.0,\n            \"ma10ToFullMax\": 1.05,\n            \"ma5ToMa10Max\": 1.1\n          }\n        },\n        \"handleFuzzy\": false\n      }\n    },\n    {\n      \"code\": \"600985.SH\",\n      \"name\": \"淮北矿业\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601018.SH\",\n      \"name\": \"宁波港\",\n      \"before\": \"底部整理\",\n      \"after\": \"杯柄型\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601216.SH\",\n      \"name\": \"君正集团\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601233.SH\",\n      \"name\": \"桐昆股份\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601318.SH\",\n      \"name\": \"中国平安\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601555.SH\",\n      \"name\": \"东吴证券\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601600.SH\",\n      \"name\": \"中国铝业\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601717.SH\",\n      \"name\": \"中创智领\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601766.SH\",\n      \"name\": \"中国中车\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601777.SH\",\n      \"name\": \"千里科技\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601872.SH\",\n      \"name\": \"招商轮船\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601898.SH\",\n      \"name\": \"中煤能源\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601899.SH\",\n      \"name\": \"紫金矿业\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"601901.SH\",\n      \"name\": \"方正证券\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"688009.SH\",\n      \"name\": \"中国通号\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"688187.SH\",\n      \"name\": \"时代电气\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    },\n    {\n      \"code\": \"688578.SH\",\n      \"name\": \"艾力斯\",\n      \"before\": null,\n      \"after\": \"底部整理\",\n      \"fallbackUsed\": false,\n      \"attributeFormed\": false,\n      \"vcpPath\": null,\n      \"recent\": null\n    }\n  ],\n  \"currentCups\": [\n    {\n      \"code\": \"600803.SH\",\n      \"name\": \"新奥股份\"\n    },\n    {\n      \"code\": \"600938.SH\",\n      \"name\": \"中国海油\"\n    },\n    {\n      \"code\": \"601018.SH\",\n      \"name\": \"宁波港\"\n    }\n  ],\n  \"currentAttributes\": [\n    {\n      \"code\": \"000807.SZ\",\n      \"name\": \"云铝股份\",\n      \"pattern\": \"底部整理\"\n    }\n  ]\n}\n"
+    },
+    {
+      "task": 102,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "zz_regress102_task111.log",
+      "checksPassed": 32,
+      "checksTotal": 32,
+      "failed": [],
+      "stdoutTail": "  longWindow: open（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；当周动态RSI6进入20以下区域，强制开窗：上证50 20261030 当周动态RSI6=20.00≤20；周内会变化，不是趋势反转或买点；当周动态RSI6进入20以下区域：1只=上证50；周内会变化）\n  longWindow: closed（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；六宽基当周动态RSI6均未处于20以下区域，或行情缺失/不新鲜；不开窗且不延续旧active状态；六宽基当周动态RSI6均未进入20以下区域，不开窗）\n{\n  \"checksPassed\": 32,\n  \"checksTotal\": 32,\n  \"failed\": []\n}\n"
+    },
+    {
+      "task": 104,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "zz_regress104_task111.log",
+      "checksPassed": 18,
+      "checksTotal": 18,
+      "failed": [],
+      "stdoutTail": "  oversoldValueDirections hidden: 当周动态RSI6未进入20以下区域，未请求估值数据\n  oversoldValueDirections: 行业2组/概念1组，历史估值可排1组，缓存月末23个，估值ok（20261030）\n  oversoldValueDirections: 行业2组/概念1组，历史估值可排0组，缓存月末0个，估值stale（20261030）\n  Warning: sector historical valuation current snapshot failed: 受控估值API失败\n  oversoldValueDirections: 行业2组/概念1组，历史估值可排0组，缓存月末0个，估值missing（20261030）\n{\n  \"checksPassed\": 18,\n  \"checksTotal\": 18,\n  \"failed\": []\n}\n"
+    },
+    {
+      "task": 105,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "zz_regress105_task111.log",
+      "checksPassed": 40,
+      "checksTotal": 40,
+      "failed": [],
+      "stdoutTail": "{\n  \"task\": 103,\n  \"dataSha256\": \"f77eb8dcfcd11c0d582ea44eec9b25b67b859fd9c1de383c4dde6cbb4fa25d45\",\n  \"pitOnly\": true,\n  \"notMarketWinRate\": true,\n  \"checksPassed\": 40,\n  \"checksTotal\": 40,\n  \"failed\": [],\n  \"casePassed\": 10,\n  \"caseTotal\": 10,\n  \"failedCases\": [],\n  \"failedWindows\": [],\n  \"casePatterns\": {\n    \"002371.SZ\": null,\n    \"000776.SZ\": \"VCP收缩型\",\n    \"600118.SH\": \"底部整理\",\n    \"002027.SZ\": null,\n    \"600030.SH\": \"底部整理\",\n    \"600919.SH\": null,\n    \"000651.SZ\": null,\n    \"603392.SH\": \"VCP收缩型\",\n    \"002252.SZ\": null,\n    \"601328.SH\": null\n  },\n  \"windowFirstBest\": {\n    \"000776.SZ\": {\n      \"first\": \"20250403\",\n      \"best\": \"20250403\",\n      \"pass\": true\n    },\n    \"603392.SH\": {\n      \"first\": \"20240715\",\n      \"best\": \"20240715\",\n      \"pass\": true\n    },\n    \"002027.SZ\": {\n      \"first\": \"20250801\",\n      \"best\": \"20250801\",\n      \"pass\": true\n    },\n    \"600030.SH\": {\n      \"first\": \"20240823\",\n      \"best\": \"20240823\",\n      \"pass\": true\n    },\n    \"601328.SH\": {\n      \"first\": \"20230920\",\n      \"best\": \"20231127\",\n      \"pass\": true\n    },\n    \"600118.SH\": {\n      \"first\": \"20250402\",\n      \"best\": null,\n      \"pass\": true\n    }\n  }\n}\n"
+    },
+    {
+      "task": 106,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "zz_regress106_task111.log",
+      "checksPassed": 17,
+      "checksTotal": 17,
+      "failed": [],
+      "stdoutTail": "  longWindow: open（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；当周动态RSI6进入20以下区域，强制开窗：沪深300 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点；当周动态RSI6进入20以下区域：1只=沪深300；周内会变化）\n  longWindow: closed（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；六宽基当周动态RSI6均未处于20以下区域，或行情缺失/不新鲜；不开窗且不延续旧active状态；六宽基当周动态RSI6均未进入20以下区域，不开窗）\n{\n  \"checksPassed\": 17,\n  \"checksTotal\": 17,\n  \"failed\": []\n}\n"
+    },
+    {
+      "task": 107,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "zz_regress107_task111.log",
+      "checksPassed": 29,
+      "checksTotal": 29,
+      "failed": [],
+      "stdoutTail": "  rsi6DividendTop20 hidden: 非现行RSI6极端强制开窗，未请求daily_basic\n  rsi6DividendTop20 hidden: 非现行RSI6极端强制开窗，未请求daily_basic\n  rsi6DividendTop20 hidden: 非现行RSI6极端强制开窗，未请求daily_basic\n  rsi6DividendTop20 hidden: 非现行RSI6极端强制开窗，未请求daily_basic\n  rsi6DividendTop20: 20只（原始有效23只，排雷剔除2只，剩余候选21只，20261030）\n  rsi6DividendTop20: 3只（原始有效3只，排雷剔除0只，剩余候选3只，20261030）\n  rsi6DividendTop20: 20只（原始有效23只，排雷剔除0只，剩余候选23只，20261030）\n  Warning: rsi6DividendTop20 daily_basic failed (locked): 受控全A快照失败\n  funnel: 当周动态RSI6≤20临时窗 → 宽基：无形态 → 板块：0个入选 → 个股：0只成型 → 排雷：0只\n  funnel 生命周期分布: {}\n  funnel 板块形态: 达标0个/0个有数据；第2步入选0，形态卡掉0（[]）；第3步 共振0/精选0/储备0/剔除0\n{\n  \"checksPassed\": 29,\n  \"checksTotal\": 29,\n  \"failed\": [],\n  \"dataSha256\": {\n    \"public/fund_data.json\": \"3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1\",\n    \"src/data/fund_data.json\": \"3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1\"\n  }\n}\n"
+    },
+    {
+      "task": 108,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "zz_regress108_task111.log",
+      "checksPassed": 40,
+      "checksTotal": 40,
+      "failed": [],
+      "stdoutTail": "  longWindow: open（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；当周动态RSI6进入20以下区域，强制开窗：中证A500 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点；当周动态RSI6进入20以下区域：1只=中证A500；周内会变化）\n  longWindow: open（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；当周动态RSI6进入20以下区域，强制开窗：中证A500 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点；当周动态RSI6进入20以下区域：1只=中证A500；周内会变化）\n  longWindow: open（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；当周动态RSI6进入20以下区域，强制开窗：中证A500 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点；当周动态RSI6进入20以下区域：1只=中证A500；周内会变化）\n  longWindow: closed（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；六宽基当周动态RSI6均未处于20以下区域，或行情缺失/不新鲜；不开窗且不延续旧active状态；六宽基当周动态RSI6均未进入20以下区域，不开窗）\n  oversoldValueDirections: 行业2组/概念1组，历史估值可排2组，缓存月末23个，估值ok（20261030）\n  oversoldValueDirections: 行业2组/概念1组，历史估值可排0组，缓存月末0个，估值stale（20261030）\n  rsi6DividendTop20: 2只（原始有效2只，排雷剔除0只，剩余候选2只，20261030）\n  Warning: sector historical valuation current snapshot failed: 受控板块估值失败\n  oversoldValueDirections: 行业1组/概念0组，历史估值可排0组，缓存月末0个，估值missing（20261030）\n  funnel: 当周动态RSI6≤20临时窗 → 宽基：无形态 → 板块：0个入选 → 个股：0只成型 → 排雷：0只\n  funnel 生命周期分布: {}\n  funnel 板块形态: 达标0个/0个有数据；第2步入选0，形态卡掉0（[]）；第3步 共振0/精选0/储备0/剔除0\n{\n  \"checksPassed\": 40,\n  \"checksTotal\": 40,\n  \"failed\": [],\n  \"dataSha256\": {\n    \"public/fund_data.json\": \"3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1\",\n    \"src/data/fund_data.json\": \"3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1\"\n  }\n}\n"
+    },
+    {
+      "task": 109,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "zz_regress109_task111.log",
+      "checksPassed": 21,
+      "checksTotal": 21,
+      "failed": [],
+      "stdoutTail": "{\n  \"task\": 109,\n  \"checksPassed\": 21,\n  \"checksTotal\": 21,\n  \"failed\": [],\n  \"checks\": [\n    {\n      \"name\": \"oversold-value-directions:目标tab为sectors\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"oversold-value-directions:不再误跳tools\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"oversold-value-directions:原生键盘按钮\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"oversold-value-directions:目标id全局唯一\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"oversold-value-directions:目标有滚动边距\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"oversold-value-directions:按钮文案保留\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"rsi6-dividend-top20:目标tab为sectors\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"rsi6-dividend-top20:不再误跳tools\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"rsi6-dividend-top20:原生键盘按钮\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"rsi6-dividend-top20:目标id全局唯一\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"rsi6-dividend-top20:目标有滚动边距\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"rsi6-dividend-top20:按钮文案保留\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"板块详细组件实际承接目标\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"估值卡与按钮使用同一显示条件\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"Top20卡与按钮使用同一显示条件\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"切换tab后使用渲染感知滚动\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"相关工具返回链路共用可靠滚动\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"无固定150ms竞态\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"等待DOM且验证可见\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"支持prefers-reduced-motion\",\n      \"passed\": true\n    },\n    {\n      \"name\": \"可执行DOM延迟挂载/可见/滚动测试\",\n      \"passed\": true\n    }\n  ],\n  \"domTestOutput\": \"navigation DOM tests: 6/6 passed\"\n}\n"
+    },
+    {
+      "task": 110,
+      "returncode": 0,
+      "passed": true,
+      "evidence": "zz_regress110_task111.log",
+      "checksPassed": 28,
+      "checksTotal": 28,
+      "failed": [],
+      "stdoutTail": "{\n  \"checksPassed\": 28,\n  \"checksTotal\": 28,\n  \"failed\": [],\n  \"realCupEvidence\": [\n    {\n      \"id\": \"C07\",\n      \"asOf\": \"20261012\",\n      \"historyEnd\": \"20261009\",\n      \"eligible\": true,\n      \"reason\": null\n    },\n    {\n      \"id\": \"C08\",\n      \"asOf\": \"20260924\",\n      \"historyEnd\": \"20260923\",\n      \"eligible\": true,\n      \"reason\": null\n    },\n    {\n      \"id\": \"C09\",\n      \"asOf\": \"20261008\",\n      \"historyEnd\": \"20260930\",\n      \"eligible\": true,\n      \"reason\": null\n    },\n    {\n      \"id\": \"C11\",\n      \"asOf\": \"20260819\",\n      \"historyEnd\": \"20260818\",\n      \"eligible\": true,\n      \"reason\": null\n    }\n  ]\n}\n"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import {
   Crown, Trophy, TrendingDown as TrendDown, Radar, Sprout, Swords
 } from 'lucide-react';
 import type { FundData } from '@/hooks/useFundData';
+import { formalPatternDisplayable, patternEvidenceText } from './patternEvidence';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from 'recharts';
@@ -953,14 +954,14 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.vcpStocks.items.map((it: any, idx: number) => {
+                    {data.vcpStocks.items.filter(formalPatternDisplayable).map((it: any, idx: number) => {
                       const grpOf = (x: any) => x.defects?.length
                         ? `⚠ 模糊入围（有瑕疵） · ${x.pattern === '杯柄型' ? '杯柄' : x.pattern} · 独立沉底`
-                        : `${(x.mfDays ?? 0) >= 6 ? '✅ 资金确认 · ' : ''}${x.pattern === 'VCP收缩型' ? 'VCP 收缩' : x.pattern === '杯柄型' ? (x.cupHandle?.breakout ? '🚀 杯柄突破初期' : '杯柄') : x.pattern === '旗形整理' ? '旗形整理' : x.pattern === '底部整理' ? '平台整理 · 底部（分位≤40）' : x.pattern === '长平台整理' ? '平台整理 · 长平台（45~120日大市值）' : x.pattern === '高位平台⚠️' ? '⚠️ 高位平台（分位>60，沉底展示）' : '平台整理 · 中位（分位40~60）'}`;
+                        : `${(x.mfDays ?? 0) >= 6 ? '✅ 资金确认 · ' : ''}${x.pattern === 'VCP收缩型' ? 'VCP 收缩' : x.pattern === '杯柄型' ? (x.cupHandle?.breakout ? '🚀 杯柄突破初期' : '杯柄') : x.pattern === '旗形整理' ? '旗形整理' : x.pattern === '底部整理' ? '底部整理 · 26~104周+资金估值双门' : x.pattern === '长平台整理' ? '平台整理 · 长平台（45~120日）' : '平台整理 · 15~44日'}`;
                       const grp = grpOf(it);
-                      const prevGrp = idx > 0 ? grpOf(data.vcpStocks!.items[idx - 1]) : null;
+                      const prevGrp = idx > 0 ? grpOf(data.vcpStocks!.items.filter(formalPatternDisplayable)[idx - 1]) : null;
                       const isDefect = !!it.defects?.length;
-                      const isPlatform = !!it.platform || !!it.longPlat;
+                      const isPlatform = !!it.patternEvidence;
                       const isContract = it.pattern === 'VCP收缩型';
                       const isFixedBase = isContract && !!it.fixedBase;
                       const isCup = it.pattern === '杯柄型' && !!it.cupHandle;
@@ -970,7 +971,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                         : isContract
                         ? ((it.daily?.formed && it.daily?.count >= 3) ? it.daily : it.weekly)
                         : (it.daily?.formed ? it.daily : it.weekly);
-                      const pv = isFixedBase ? it.fixedBase : isCup ? it.cupHandle : isFlag ? it.flag : (isPlatform ? (it.platform || it.longPlat) : lv);
+                      const pv = isFixedBase ? it.fixedBase : isCup ? it.cupHandle : isFlag ? it.flag : (isPlatform ? it.patternEvidence : lv);
                       return (
                         <Fragment key={it.code}>
                         {grp !== prevGrp && (
@@ -1011,9 +1012,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     ? `杯柄·CANSLIM：杯深${it.cupHandle.cupDepth}%·前置涨幅${it.cupHandle.preGain ?? '—'}%·柄${it.cupHandle.days}天振幅${it.cupHandle.amplitude ?? '—'}%·柄/杯量比${it.cupHandle.volRatio ?? '—'}·柄末段量比${it.cupHandle.tailRatio ?? '—'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点${it.cupHandle.breakout ? `·锚点${it.cupHandle.anchorDate}` : ''}·历史最高收盘${it.cupHandle.historicalHighClose ?? '—'}(${it.cupHandle.historicalHighDate ?? '—'})·距历史高点${it.cupHandle.distanceToHistoricalHighPct ?? '—'}%·${it.cupHandle.historyScope ?? '历史范围缺失'}·排除原因=${it.cupHandle.historyExclusionReason ?? '无，历史高位门通过'}`
                                     : isFlag
                                     ? `旗面${it.flag.days}天·振幅${it.flag.amplitude}%·旗杆+${it.flag.polePct}%·量比${it.flag.volRatio}·一年分位${it.histPct ?? '—'}%`
-                                    : it.longPlat && !it.platform
-                                    ? `长平台${it.longPlat.days}天·振幅${it.longPlat.amplitude}%·首末漂移${it.longPlat.drift}%·末/首量比${it.longPlat.volRatio}·一年分位${it.histPct ?? '—'}%`
-                                    : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·较低点抬升${it.platform.riseFromLow}%·量比${it.platform.volRatio}·末段量比${it.platform.tailRatio ?? '—'}·分段振幅${(it.platform.segAmps || []).join('→')}%·一年分位${it.histPct ?? '—'}%`}
+                                    : patternEvidenceText(it.patternEvidence)}
                                 >{isDefect ? `模糊·${it.pattern}` : it.cupHandle?.breakout ? ((it.cupHandle.breakoutAge ?? 0) <= 3 ? '🚀 杯柄突破初期' : '杯柄首次信号后观察') : it.pattern}</span>
                                 {isDefect && (
                                   <p className="text-[9px] font-semibold text-amber-700 bg-amber-100/70 rounded px-1 py-0.5 mt-1">
@@ -1031,9 +1030,9 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     ? `杯深${it.cupHandle.cupDepth}%·柄${it.cupHandle.days}天`
                                     : isFlag
                                     ? `旗面${it.flag.days}天·旗杆+${it.flag.polePct}%·量比${it.flag.volRatio}`
-                                    : it.longPlat && !it.platform
-                                    ? `长平台${it.longPlat.days}天·振幅${it.longPlat.amplitude}%·漂移${it.longPlat.drift}%`
-                                    : `平台${it.platform.days}天·振幅${it.platform.amplitude}%·末段量${it.platform.tailRatio ?? '—'}`}
+                                    : isPlatform
+                                    ? `${it.patternEvidence.days ?? it.patternEvidence.weeks}${it.pattern === '底部整理' ? '周' : '日'}·振幅${it.patternEvidence.amplitude}%·区间净流入${it.patternEvidence.intervalNetInflow}亿`
+                                    : '—'}
                                 </p>
                                 {it.vcpAttribute?.formed && (
                                   <span
@@ -1050,7 +1049,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                 {it.longPlat && it.pattern !== '长平台整理' && (
                                   <span
                                     className="inline-block text-[9px] font-bold text-indigo-700 bg-indigo-100 rounded px-1 py-0.5 mt-0.5 ml-0.5"
-                                    title={`同时成型长平台：${it.longPlat.days}天·振幅${it.longPlat.amplitude}%·首末漂移${it.longPlat.drift}%`}
+                                    title={`同时成型长平台；${patternEvidenceText(it.longPlat)}`}
                                   >兼长平台{it.longPlat.days}日</span>
                                 )}
                               </div>
@@ -1126,6 +1125,46 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
               </div>
             ) : (
               <p className="text-xs text-slate-400 py-3 text-center">本期形态精扫无成型或临近成型个股</p>
+            )}
+            {(data.vcpStocks.bottomShapeWatch?.length ?? 0) > 0 && (
+              <details open className="mt-3 rounded-lg border border-teal-300 bg-teal-50/50 px-3 py-2">
+                <summary className="cursor-pointer text-[11px] font-bold text-teal-800">
+                  底部价格结构观察 {data.vcpStocks.bottomShapeWatchCount} 只（不等于正式底部入选）
+                </summary>
+                <p className="mt-1 text-[10px] text-teal-800">{data.vcpStocks.bottomShapeWatchNote}</p>
+                <div className="mt-2 grid gap-2">
+                  {data.vcpStocks.bottomShapeWatch!.map((w) => (
+                    <div key={w.code} className="rounded-md border border-teal-200 bg-white/80 px-2.5 py-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-bold text-slate-800">{w.name}</span>
+                        <span className="text-[9px] text-slate-400">{w.code}</span>
+                        <Badge className="text-[9px] h-4 px-1.5 border-0 bg-teal-600 text-white">底部形态观察</Badge>
+                        <Badge className={`text-[9px] h-4 px-1.5 border-0 ${w.formalAdmission ? 'bg-emerald-600 text-white' : w.qualificationStatus === 'pending' ? 'bg-slate-500 text-white' : 'bg-amber-500 text-white'}`}>
+                          {w.qualificationLabel}
+                        </Badge>
+                      </div>
+                      <p className="mt-1 text-[10px] text-slate-600">{patternEvidenceText(w.patternEvidence)}</p>
+                      <p className="mt-1 text-[10px] font-semibold text-amber-700">
+                        正式资格：{w.formalAdmission ? '通过' : '未通过'}；{w.patternReasons.join('；')}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            )}
+            {(data.vcpStocks.droppedByPatternEvidence?.length ?? 0) > 0 && (
+              <details className="mt-3 rounded-lg border border-amber-200 bg-amber-50/50 px-3 py-2">
+                <summary className="cursor-pointer text-[10px] font-semibold text-amber-800">
+                  价格结构有候选但证据门未通过 {data.vcpStocks.droppedByPatternEvidenceCount} 项（不作为正式平台/底部）
+                </summary>
+                <div className="mt-2 space-y-1 text-[10px] text-amber-800">
+                  {data.vcpStocks.droppedByPatternEvidence!.map((d, i) => (
+                    <p key={`${d.code}-${d.pattern}-${i}`}>
+                      {d.name}·{d.pattern}：{d.reasons.join('；')}；净流入{d.intervalNetInflow ?? '—'}亿·覆盖{d.moneyflowCoveragePct ?? 0}%{d.valuationScorePct != null ? `·估值分位${d.valuationScorePct}%` : ''}
+                    </p>
+                  ))}
+                </div>
+              </details>
             )}
           </CardContent>
         </Card>

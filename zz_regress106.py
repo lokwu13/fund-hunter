@@ -71,8 +71,9 @@ spec = importlib.util.spec_from_file_location('update_data_task106_baseline_curr
                                               ROOT / 'zz_update_data_task106_rsi6_baseline.py')
 old = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(old)
-for name in ('_vcp_level_strict', '_vcp_fixed_base', '_vcp_right_side_quality',
-             '_cup_handle_strict', '_cup_early_breakout'):
+# 任务110允许杯柄追加统一资格过滤，旧基线逐字门不再适用于这两个函数；
+# 核心几何仍由任务105约束，资格边界由任务110约束。
+for name in ('_vcp_level_strict', '_vcp_fixed_base', '_vcp_right_side_quality'):
     check(f'任务103函数逐字未改:{name}', inspect.getsource(getattr(old, name)) == inspect.getsource(getattr(ud, name)))
 
 production = (ROOT / 'scripts/update_data.py').read_text(encoding='utf-8')

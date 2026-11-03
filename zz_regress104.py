@@ -158,8 +158,9 @@ spec = importlib.util.spec_from_file_location('update_data_task104_baseline_curr
                                               ROOT / 'zz_update_data_task104_remote_baseline.py')
 old = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(old)
+# 杯柄统一资格门已在任务110授权更新；核心几何与资格分别由105/110回归。
 for name in ('_broad_valuation_gate', '_dividend_group_catalyst', 'build_broad_osc',
-             '_cup_handle_strict', '_cup_early_breakout', '_trend_template'):
+             '_trend_template'):
     check(f'既有函数逐字未改:{name}', inspect.getsource(getattr(old, name)) == inspect.getsource(getattr(ud, name)))
 
 ui = ''.join((ROOT / p).read_text(encoding='utf-8') for p in (

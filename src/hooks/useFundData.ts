@@ -569,6 +569,20 @@ export interface FundData {
     fuzzyCount?: number;
     note?: string;
     droppedByTrendTemplate?: string[];
+    droppedByPatternEvidenceCount?: number;
+    droppedByPatternEvidence?: Array<{
+      code: string; name: string; pattern: string; reasons: string[];
+      moneyflowCoveragePct?: number; intervalNetInflow?: number | null; valuationScorePct?: number | null;
+    }>;
+    bottomShapeWatchCount?: number;
+    bottomShapeWatchNote?: string;
+    bottomShapeWatch?: Array<{
+      code: string; name: string; sector: string; star?: boolean; inPool?: boolean; asOf: string;
+      bottomShape: true; bottomPattern: '底部整理';
+      qualificationStatus: 'eligible' | 'pending' | 'excluded'; qualificationLabel: string;
+      eligible: boolean; displayEligible: boolean; formalAdmission: boolean; patternReasons: string[];
+      patternEvidence: import('../sections/patternEvidence').PatternEvidence;
+    }>;
     items: Array<{
       code: string;
       name: string;
@@ -576,7 +590,7 @@ export interface FundData {
       star?: boolean;
       close: number;
       tag: string;
-      pattern?: '杯柄型' | '底部平台型' | '底部整理' | '收缩型' | 'VCP收缩型' | '旗形整理';
+      pattern?: '杯柄型' | '底部平台型' | '底部整理' | '收缩型' | 'VCP收缩型' | '旗形整理' | '平台整理' | '长平台整理';
       stage?: string;
       entryTier?: 'qualified' | 'fuzzy';
       defects?: string[];
@@ -613,9 +627,15 @@ export interface FundData {
       sectorFit?: string;
       advice?: string;
       platform?: {
-        days: number; amplitude: number; riseFromLow: number;
+        days: number; amplitude: number; riseFromLow?: number;
         volRatio: number; tailRatio?: number; segAmps?: number[]; pivot: number; distPct: number; formed: boolean;
       } | null;
+      patternEvidence?: (import('../sections/patternEvidence').PatternEvidence & {
+        pivot: number; distPct: number; invalidation?: number; volConfirm?: number; formed: boolean;
+      }) | null;
+      longPlat?: (import('../sections/patternEvidence').PatternEvidence & {
+        pivot: number; distPct: number; invalidation?: number; volConfirm?: number; formed: boolean;
+      }) | null;
       vcpAttribute?: {
         formed: boolean; style?: 'platform_vcp'; note?: string | null;
         platformDays?: number; amplitudePct?: number; segAmpsPct?: number[];
@@ -1093,6 +1113,7 @@ export interface FundData {
       dropped?: Array<any>;
       excluded?: number;
       rows?: Array<any>;
+      bottomShapeRows?: Array<any>;
     }>;
   };
   // 板块聪明钱超额榜（2026-09-27 样表产品化：45只主动基金×12板块，并入漏斗第2步）

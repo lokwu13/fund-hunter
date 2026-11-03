@@ -6,6 +6,7 @@ import { Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from
 import { useState } from 'react';
 import { useFundData } from '@/hooks/useFundData';
 import { broadOscFor, buildFunnelStepViews, dividendTop20Text, extremeReboundActive, oversoldValueDirectionsText, sectorEtfFor } from './funnelConclusions';
+import { formalPatternDisplayable, patternEvidenceText } from './patternEvidence';
 
 const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
 const DEFENSIVE_SECTORS = new Set(['中证医药', '中证消费', '中证公用', '中证能源']);
@@ -455,7 +456,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
 
                       {/* 第3步：普通形态随窗口灰显；高股息由行业/概念独立催化控制。 */}
                       {st.key === 'vcp' && (() => {
-                        const rows = st.rows || [];
+                        const rows = (st.rows || []).filter(formalPatternDisplayable);
                         const reson = rows.filter((r: any) => r.track === 'reson');
                         const cherry = rows.filter((r: any) => r.track === 'cherry');
                         const reserve = rows.filter((r: any) => r.track === 'reserve');
@@ -470,13 +471,16 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                 r.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-slate-500 text-white'
                               }`} title={r.pattern === '杯柄型'
                                 ? `历史最高收盘${r.historicalHighClose ?? '—'}(${r.historicalHighDate ?? '—'})·距历史高点${r.distanceToHistoricalHighPct ?? '—'}%·${r.historyScope ?? '历史范围缺失'}·排除原因=${r.historyExclusionReason ?? '无，历史高位门通过'}`
-                                : undefined}>{r.pattern}</Badge>
+                                : r.patternEvidence ? patternEvidenceText(r.patternEvidence) : undefined}>{r.pattern}</Badge>
                               <span className="text-[11px] text-slate-600">枢轴{r.pivot ?? '—'}</span>
                               <span className="text-[11px] text-slate-600">距枢轴{r.distPct ?? '—'}%</span>
                               <span className="text-[10px] text-slate-500">资金{r.smartMoneyPosDays ?? 0}/10天</span>
                               <span className="text-[10px] text-slate-500">{r.sectorFit || r.sector || '板块—'}</span>
                               {r.entryTier === 'fuzzy' && <Badge className="text-[9px] h-4 px-1 border-0 bg-amber-500 text-white">瑕疵沉底</Badge>}
                             </div>
+                            {r.patternEvidence && (
+                              <p className="mt-1 text-[10px] leading-relaxed text-slate-500">{patternEvidenceText(r.patternEvidence)}</p>
+                            )}
                             {r.signalDate && (
                               <p className={`mt-1 rounded px-2 py-1 text-[10px] font-semibold ${r.signalType === 'early' ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-700'}`}>
                                 首次信号{r.signalDate} · 枢轴{r.pivot ?? '—'} · 初始失效位{r.initialStop ?? '—'} · 已{r.breakoutAge ?? '—'}日
@@ -502,6 +506,27 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                 <div className="mt-1 space-y-1">{reserve.map(renderRow)}</div>
                               </details>
                             </div>
+                            {(st.bottomShapeRows || []).length > 0 && (
+                              <details open className="rounded-lg border border-teal-300 bg-teal-50/60 px-2 py-1.5">
+                                <summary className="cursor-pointer text-[10px] font-bold text-teal-800">
+                                  底部价格结构观察 {(st.bottomShapeRows || []).length} 只（不计正式入选）
+                                </summary>
+                                <p className="mt-1 text-[9px] text-teal-800">这里只验证通用周线价格结构；正式底部仍须区间净流入&gt;0且自身估值历史分位≤30%。资格排除不表示形态不成立。</p>
+                                <div className="mt-1 space-y-1.5">
+                                  {(st.bottomShapeRows || []).map((w: any) => (
+                                    <div key={w.code} className="rounded border border-teal-200 bg-white/80 px-2 py-1.5">
+                                      <div className="flex items-center gap-x-2 gap-y-1 flex-wrap">
+                                        <span className="text-xs font-semibold text-slate-800">{w.name}</span>
+                                        <Badge className="text-[9px] h-4 px-1 border-0 bg-teal-600 text-white">底部形态观察</Badge>
+                                        <Badge className={`text-[9px] h-4 px-1 border-0 ${w.formalAdmission ? 'bg-emerald-600 text-white' : w.qualificationStatus === 'pending' ? 'bg-slate-500 text-white' : 'bg-amber-500 text-white'}`}>{w.qualificationLabel}</Badge>
+                                      </div>
+                                      <p className="mt-1 text-[10px] text-slate-600">{patternEvidenceText(w.patternEvidence)}</p>
+                                      <p className="mt-0.5 text-[10px] font-semibold text-amber-700">正式资格：{w.formalAdmission ? '通过' : '未通过'}；{(w.patternReasons || []).join('；')}</p>
+                                    </div>
+                                  ))}
+                                </div>
+                              </details>
+                            )}
                             <details open={dw?.visible ? true : undefined} className={`rounded-lg border px-2 py-1.5 ${dw?.visible ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-slate-50/70'}`}>
                               <summary className={`cursor-pointer text-[10px] font-semibold ${dw?.visible ? 'text-emerald-800' : 'text-slate-600'}`}>
                                 高股息防御 {dw?.visible ? `${dw.count}只` : '未展示'}（行业/概念独立催化 · {dw?.catalystGroupCount ?? 0}组）

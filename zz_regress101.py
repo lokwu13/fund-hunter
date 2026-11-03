@@ -109,7 +109,7 @@ def controlled_bars(breach_date=None):
 def controlled_strict(anchor_dates):
     def strict(bars, *args, **kwargs):
         if bars[-1][0] in anchor_dates:
-            return {'formed': True, 'days': 10, 'pivot': 10.0, 'distPct': 0.0,
+            return {'formed': True, 'displayEligible': True, 'days': 10, 'pivot': 10.0, 'distPct': 0.0,
                     'brkNeedVol': 1000.0, 'rimDate': 'd170'}
         return None
     return strict
@@ -165,11 +165,13 @@ check('N12旧信号仍不可展示且不得保留杯柄', n12 and n12['signalDat
        'fallback': after_by_id['N12']['fallbackUsed']})
 
 # 云铝真实案例：旧杯柄年龄/当前失效后回退底部整理，属性完整保留。
+# 后续任务已更新共享扫描器，旧基线自身也可直接落底部；核心契约是当前回退及属性不丢失，
+# 不再把“旧基线必须为None”误当业务门。
 cloud_rows = current['rows']['000807.SZ']
 cloud_before, cloud_diag_before = zz_scan99.scan(old, cloud_rows, current['mv']['000807.SZ'] / 1e4)
 cloud_after, cloud_diag = zz_scan101.scan(ud, cloud_rows, current['mv']['000807.SZ'] / 1e4)
 cloud_attr = (cloud_diag.get('main') or {}).get('vcpAttribute') or {}
-check('云铝真实旧杯柄回退平台属性', cloud_before is None and cloud_after == '底部整理'
+check('云铝真实旧杯柄回退平台属性', cloud_after == '底部整理'
       and cloud_diag.get('fallbackUsed') and cloud_attr.get('formed')
       and cloud_attr.get('style') == 'platform_vcp'
       and not cloud_diag.get('signalDisplayable'),
