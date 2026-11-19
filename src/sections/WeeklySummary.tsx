@@ -6,7 +6,7 @@ import { Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from
 import { useState } from 'react';
 import { useFundData } from '@/hooks/useFundData';
 import { broadOscFor, buildFunnelStepViews, dividendTop20Text, extremeReboundActive, oversoldValueDirectionsText, sectorEtfFor } from './funnelConclusions';
-import { formalPatternDisplayable, patternEvidenceText } from './patternEvidence';
+import { formalPatternDisplayable, patternEvidenceText, vcpDailyTrendText } from './patternEvidence';
 
 const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
 const DEFENSIVE_SECTORS = new Set(['中证医药', '中证消费', '中证公用', '中证能源']);
@@ -471,6 +471,7 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                 r.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-slate-500 text-white'
                               }`} title={r.pattern === '杯柄型'
                                 ? `历史最高收盘${r.historicalHighClose ?? '—'}(${r.historicalHighDate ?? '—'})·距历史高点${r.distanceToHistoricalHighPct ?? '—'}%·${r.historyScope ?? '历史范围缺失'}·排除原因=${r.historyExclusionReason ?? '无，历史高位门通过'}`
+                                : r.pattern === 'VCP收缩型' ? vcpDailyTrendText(r.vcpDailyTrend)
                                 : r.patternEvidence ? patternEvidenceText(r.patternEvidence) : undefined}>{r.pattern}</Badge>
                               <span className="text-[11px] text-slate-600">枢轴{r.pivot ?? '—'}</span>
                               <span className="text-[11px] text-slate-600">距枢轴{r.distPct ?? '—'}%</span>

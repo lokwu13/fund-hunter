@@ -64,9 +64,14 @@ wide_reversal = practical([8, 6, 7.8, 5, 4])
 check('单次扩张超过25%即宽幅发散拒绝', wide_reversal and not wide_reversal['formed']
       and not wide_reversal['practicalDecreasing'], wide_reversal)
 check('单次收缩超过8%仍硬拒绝', practical([8.1, 7, 6, 5, 4]) is None, 'max_contraction=8')
-check('临近一年新高仍硬拒绝', practical([8, 7, 7.8, 6, 5], dist_high250=-7.99) is None,
-      'dist_high250=-7.99')
-check('一年极高位仍硬拒绝', practical([8, 7, 7.8, 6, 5], hist_pct=85.01) is None, 'hist_pct=85.01')
+near_high = practical([8, 7, 7.8, 6, 5], dist_high250=-7.99)
+high_pct = practical([8, 7, 7.8, 6, 5], hist_pct=85.01)
+check('任务113临近一年新高不再位置硬拒绝', near_high is not None
+      and near_high['contractions'] == one_reversal['contractions']
+      and not near_high['dailyTrendPass'], near_high)
+check('任务113一年极高位不再位置硬拒绝', high_pct is not None
+      and high_pct['contractions'] == one_reversal['contractions']
+      and not high_pct['dailyTrendPass'], high_pct)
 ma_failure = practical([8, 7, 7.8, 6, 5], vols=(500, 100, 120, 600, 450))
 check('首尾量缩但均量序列上行仍不得走务实路径', ma_failure and not ma_failure['formed']
       and ma_failure['volFirst'] > ma_failure['volLast'] and not ma_failure['volumeMA']['pass'], ma_failure)
@@ -88,8 +93,11 @@ sample = next(x for x in library['samples'] if x['id'] == 'A04')
 rows, mv = case_map[sample['sourceCase']]
 pattern, diag = r96.scan(u, rows, mv)
 pf = diag['platform']
-attr = pf.get('vcpAttribute')
-check('A04单标签保持平台整理且明确具有VCP属性', pattern == '平台整理' and attr and attr['formed']
+# 任务113后不合格的平台型VCP不再挂载正式属性；直接读取结构证据以核验新趋势门。
+attr = u._platform_vcp_attribute(r96.bars_of(rows), pf, 44.8, -12.61)
+check('A04平台结构保留但任务113日线趋势门排除正式VCP属性', pattern == '平台整理'
+      and not pf.get('vcpAttribute') and attr and attr['structureFormed']
+      and not attr['formed'] and not attr['dailyTrendPass']
       and not diag['trendTemplate']['pass'], {'pattern': pattern, 'attribute': attr})
 check('A04实际平台区间与窄幅收缩证据', pf['days'] == 16 and rows[-16][0] == '20260326'
       and rows[-1][0] == '20260417' and pf['amplitude'] == 4.9
@@ -107,7 +115,10 @@ check('A04证据note明确平台型VCP而非伪造双标签', '平台型VCP属�
 
 high_attr = u._platform_vcp_attribute(r96.bars_of(rows), pf, 60.01, -12.61)
 near_high_attr = u._platform_vcp_attribute(r96.bars_of(rows), pf, 44.8, -7.99)
-check('平台VCP属性高位与临近新高边界', not high_attr['formed'] and not near_high_attr['formed'],
+check('任务113平台VCP属性取消高位与临近新高排除', high_attr['structureFormed']
+      and near_high_attr['structureFormed']
+      and not any('一年分位' in x or '一年高点' in x
+                  for x in high_attr['rejectReasons'] + near_high_attr['rejectReasons']),
       {'high': high_attr['rejectReasons'], 'nearHigh': near_high_attr['rejectReasons']})
 bad_stage = copy.deepcopy(pf)
 bad_stage['volRatio'] = 0.76
@@ -115,7 +126,7 @@ stage_attr = u._platform_vcp_attribute(r96.bars_of(rows), bad_stage, 44.8, -12.6
 check('平台VCP阶段量超过75%拒绝', not stage_attr['formed'], stage_attr['rejectReasons'])
 constant_bars = [(d, h, l, c, 100.0) for d, h, l, c, _ in r96.bars_of(rows)]
 ma_attr = u._platform_vcp_attribute(constant_bars, pf, 44.8, -12.61)
-check('任务103不再以机械均量排列拒绝平台属性', ma_attr['formed'] and ma_attr['volumeMA']['pass']
+check('任务103不再以机械均量排列拒绝平台属性', ma_attr['structureFormed'] and ma_attr['volumeMA']['pass']
       and ma_attr['volumeMA']['ma10ToBase'] == 1.0 and ma_attr['recentVolumeQuality']['pass'],
       {'rejectReasons': ma_attr['rejectReasons'], 'volumeMA': ma_attr['volumeMA']})
 unstable_bars = r96.bars_of(rows)
@@ -137,9 +148,9 @@ check('南微仍先被任务97周MA空头门硬删', negative['N01']['pattern'] 
       and negative['N01']['rejectReasons'] == ['周MA150<MA200空头排列'], negative['N01'])
 
 source = (ROOT / 'scripts/update_data.py').read_text(encoding='utf-8')
-check('生产note量化任务103 VCP与平台属性', all(x in source for x in (
-    '任务103十例人工标签校准', '务实反复序列只留证据', '不强制MA10≤MA20≤MA50',
-    '平台日均量≤前20日拉升段75%', '不伪造双标签')), 'task103 note')
+check('生产note量化任务103结构及任务113统一趋势门', all(x in source for x in (
+    '保留任务103结构校准', '务实反复序列只留证据', '不强制MA10≤MA20≤MA50',
+    '日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高', '不伪造双标签')), 'task113 note')
 check('生产分类保留VCP优先且固定区间不抢占杯柄', "raw, main_lv = 'VCP收缩型', swing_lv" in source
       and '固定区间VCP不抢占已经成立的杯柄' in source
       and source.index('if d_c3 or w_c3:') < source.index('pattern, main_lv = non_cup_fallback()'),

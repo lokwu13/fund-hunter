@@ -36,6 +36,27 @@ export interface PatternEvidence {
 
 const FORMAL_PATTERNS = new Set(['平台整理', '长平台整理', '底部整理']);
 
+export interface VcpDailyTrendEvidence {
+  close: number | null;
+  ma50: number | null;
+  ma150: number | null;
+  ma200: number | null;
+  samples: number;
+  closeAboveMA50: boolean;
+  bullish: boolean;
+  bullishStatus: 'strict_bullish' | 'not_strict_bullish' | 'insufficient_samples';
+  pass: boolean;
+  reasons: string[];
+  asOf: string | null;
+  source: 'daily';
+}
+
+export function vcpDailyTrendText(evidence?: VcpDailyTrendEvidence | null) {
+  if (!evidence) return 'VCP日线趋势证据缺失';
+  const state = evidence.pass ? '通过' : '未通过';
+  return `VCP日线趋势${state}（${evidence.asOf ?? '—'}·${evidence.source ?? 'daily'}）：收盘${evidence.close ?? '—'} > MA50 ${evidence.ma50 ?? '—'}；MA50 ${evidence.ma50 ?? '—'} > MA150 ${evidence.ma150 ?? '—'} > MA200 ${evidence.ma200 ?? '—'}；样本${evidence.samples}根；严格多头=${evidence.bullish ? '是' : '否'}；原因=${evidence.reasons?.join('、') || '无'}。日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高`;
+}
+
 export function completeMoneyflow(evidence?: PatternEvidence | null) {
   return !!evidence && evidence.moneyflowPass === true
     && evidence.moneyflowCoveragePct === 100
@@ -47,8 +68,16 @@ export function completeBottomEvidence(evidence?: PatternEvidence | null) {
     && evidence.valuationPass === true && (evidence.valuationScorePct ?? 101) <= 40;
 }
 
-/** 旧缓存或缺证据对象不得在前端继续伪装成正式平台/底部；旧标签仅作快照兼容。 */
-export function formalPatternDisplayable(item: { pattern?: string; patternEvidence?: PatternEvidence | null }) {
+/** 旧缓存或缺证据对象不得在前端继续伪装成正式VCP/平台/底部；旧标签仅作快照兼容。 */
+export function formalPatternDisplayable(item: {
+  pattern?: string;
+  patternEvidence?: PatternEvidence | null;
+  vcpDailyTrend?: VcpDailyTrendEvidence | null;
+  dailyTrendPass?: boolean | null;
+}) {
+  if (item.pattern === 'VCP收缩型') {
+    return item.vcpDailyTrend?.pass === true && item.dailyTrendPass === true;
+  }
   if (!item.pattern || !FORMAL_PATTERNS.has(item.pattern)) return true;
   if (!item.patternEvidence || item.patternEvidence.displayEligible !== true) return false;
   return item.pattern === '底部整理'

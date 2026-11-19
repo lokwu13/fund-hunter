@@ -1,0 +1,1427 @@
+{
+  "task": 98,
+  "passed": 30,
+  "total": 30,
+  "results": [
+    {
+      "name": "任务103务实反复仅保留证据且不独立成型",
+      "pass": true,
+      "evidence": {
+        "contractions": [
+          8.0,
+          7.0,
+          7.8,
+          6.0,
+          5.0
+        ],
+        "contractionsOk": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "count": 5,
+        "decreasing": false,
+        "practicalDecreasing": true,
+        "priceMode": "practical",
+        "structurePath": "swing_evidence_only",
+        "volTrend": "递减",
+        "volFirst": 909.1,
+        "volLast": 581.8,
+        "volumeMA": {
+          "pass": true,
+          "ma5": 600.0,
+          "ma10": 590.0,
+          "ma20": 610.0,
+          "maBase": 730.0,
+          "baseWindow": 50,
+          "ma10ToBase": 0.808,
+          "sequenceOk": true,
+          "ratioMax": 1.2,
+          "reason": null
+        },
+        "recentVolumeQuality": {
+          "pass": true,
+          "ma5ToMa10": 1.017,
+          "last3ToMa10": 1.017,
+          "reexpanded": false,
+          "basisExcludesBreakout": false,
+          "reason": null
+        },
+        "rightSideQuality": {
+          "pass": false,
+          "drift10Pct": 1.671,
+          "downDayRatio10": 0.1,
+          "position20Pct": 4.917,
+          "annualVolatility10Pct": 43.493,
+          "maxAbsDay10Pct": 6.721,
+          "persistentDownslide": false,
+          "violent": true,
+          "rejectReasons": [
+            "近10日单日剧烈波动且年化波动过高"
+          ]
+        },
+        "rejectReasons": [
+          "近10日单日剧烈波动且年化波动过高",
+          "距枢轴6.1%超出VCP就绪窗-5%~+4%",
+          "日线样本不足200根（当前60根）"
+        ],
+        "practical": true,
+        "pivot": 100.0,
+        "distPct": 6.1,
+        "invalidation": 95.0,
+        "volConfirm": 1022.0,
+        "formed": false,
+        "structureFormed": false,
+        "dailyTrend": {
+          "close": null,
+          "ma50": null,
+          "ma150": null,
+          "ma200": null,
+          "samples": 60,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "insufficient_samples",
+          "pass": false,
+          "reasons": [
+            "日线样本不足200根（当前60根）"
+          ],
+          "asOf": "d59",
+          "source": "daily"
+        },
+        "dailyTrendPass": false,
+        "eligible": false,
+        "displayEligible": false
+      }
+    },
+    {
+      "name": "同一宽松价格序列不会被旧严格路径误收",
+      "pass": true,
+      "evidence": {
+        "contractions": [
+          8.0,
+          7.0,
+          7.8,
+          6.0,
+          5.0
+        ],
+        "contractionsOk": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "count": 5,
+        "decreasing": false,
+        "practicalDecreasing": true,
+        "priceMode": "practical",
+        "structurePath": "swing_evidence_only",
+        "volTrend": "递减",
+        "volFirst": 909.1,
+        "volLast": 581.8,
+        "volumeMA": {
+          "pass": true,
+          "ma5": 600.0,
+          "ma10": 590.0,
+          "ma20": 610.0,
+          "maBase": 730.0,
+          "baseWindow": 50,
+          "ma10ToBase": 0.808,
+          "sequenceOk": true,
+          "ratioMax": 1.2,
+          "reason": null
+        },
+        "recentVolumeQuality": {
+          "pass": true,
+          "ma5ToMa10": 1.017,
+          "last3ToMa10": 1.017,
+          "reexpanded": false,
+          "basisExcludesBreakout": false,
+          "reason": null
+        },
+        "rightSideQuality": {
+          "pass": false,
+          "drift10Pct": 1.671,
+          "downDayRatio10": 0.1,
+          "position20Pct": 4.917,
+          "annualVolatility10Pct": 43.493,
+          "maxAbsDay10Pct": 6.721,
+          "persistentDownslide": false,
+          "violent": true,
+          "rejectReasons": [
+            "近10日单日剧烈波动且年化波动过高"
+          ]
+        },
+        "rejectReasons": [
+          "近10日单日剧烈波动且年化波动过高",
+          "距枢轴6.1%超出VCP就绪窗-5%~+4%",
+          "日线样本不足200根（当前60根）"
+        ],
+        "practical": false,
+        "pivot": 100.0,
+        "distPct": 6.1,
+        "invalidation": 95.0,
+        "volConfirm": 1022.0,
+        "formed": false,
+        "structureFormed": false,
+        "dailyTrend": {
+          "close": null,
+          "ma50": null,
+          "ma150": null,
+          "ma200": null,
+          "samples": 60,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "insufficient_samples",
+          "pass": false,
+          "reasons": [
+            "日线样本不足200根（当前60根）"
+          ],
+          "asOf": "d59",
+          "source": "daily"
+        },
+        "dailyTrendPass": false,
+        "eligible": false,
+        "displayEligible": false
+      }
+    },
+    {
+      "name": "两次温和扩张仍拒绝",
+      "pass": true,
+      "evidence": {
+        "contractions": [
+          8.0,
+          6.0,
+          6.9,
+          5.0,
+          5.8
+        ],
+        "contractionsOk": [
+          true,
+          true,
+          false,
+          true,
+          false
+        ],
+        "count": 5,
+        "decreasing": false,
+        "practicalDecreasing": false,
+        "priceMode": "未递减",
+        "structurePath": "swing_evidence_only",
+        "volTrend": "递减",
+        "volFirst": 909.1,
+        "volLast": 581.8,
+        "volumeMA": {
+          "pass": true,
+          "ma5": 600.0,
+          "ma10": 590.0,
+          "ma20": 610.0,
+          "maBase": 730.0,
+          "baseWindow": 50,
+          "ma10ToBase": 0.808,
+          "sequenceOk": true,
+          "ratioMax": 1.2,
+          "reason": null
+        },
+        "recentVolumeQuality": {
+          "pass": true,
+          "ma5ToMa10": 1.017,
+          "last3ToMa10": 1.017,
+          "reexpanded": false,
+          "basisExcludesBreakout": false,
+          "reason": null
+        },
+        "rightSideQuality": {
+          "pass": false,
+          "drift10Pct": 2.112,
+          "downDayRatio10": 0.1,
+          "position20Pct": 1.638,
+          "annualVolatility10Pct": 45.451,
+          "maxAbsDay10Pct": 7.183,
+          "persistentDownslide": false,
+          "violent": true,
+          "rejectReasons": [
+            "近10日单日剧烈波动且年化波动过高"
+          ]
+        },
+        "rejectReasons": [
+          "近10日单日剧烈波动且年化波动过高",
+          "距枢轴6.1%超出VCP就绪窗-5%~+4%",
+          "日线样本不足200根（当前60根）"
+        ],
+        "practical": true,
+        "pivot": 100.0,
+        "distPct": 6.1,
+        "invalidation": 94.2,
+        "volConfirm": 1022.0,
+        "formed": false,
+        "structureFormed": false,
+        "dailyTrend": {
+          "close": null,
+          "ma50": null,
+          "ma150": null,
+          "ma200": null,
+          "samples": 60,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "insufficient_samples",
+          "pass": false,
+          "reasons": [
+            "日线样本不足200根（当前60根）"
+          ],
+          "asOf": "d59",
+          "source": "daily"
+        },
+        "dailyTrendPass": false,
+        "eligible": false,
+        "displayEligible": false
+      }
+    },
+    {
+      "name": "单次扩张超过25%即宽幅发散拒绝",
+      "pass": true,
+      "evidence": {
+        "contractions": [
+          8.0,
+          6.0,
+          7.8,
+          5.0,
+          4.0
+        ],
+        "contractionsOk": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "count": 5,
+        "decreasing": false,
+        "practicalDecreasing": false,
+        "priceMode": "未递减",
+        "structurePath": "swing_evidence_only",
+        "volTrend": "递减",
+        "volFirst": 909.1,
+        "volLast": 581.8,
+        "volumeMA": {
+          "pass": true,
+          "ma5": 600.0,
+          "ma10": 590.0,
+          "ma20": 610.0,
+          "maBase": 730.0,
+          "baseWindow": 50,
+          "ma10ToBase": 0.808,
+          "sequenceOk": true,
+          "ratioMax": 1.2,
+          "reason": null
+        },
+        "recentVolumeQuality": {
+          "pass": true,
+          "ma5ToMa10": 1.017,
+          "last3ToMa10": 1.017,
+          "reexpanded": false,
+          "basisExcludesBreakout": false,
+          "reason": null
+        },
+        "rightSideQuality": {
+          "pass": false,
+          "drift10Pct": 1.126,
+          "downDayRatio10": 0.1,
+          "position20Pct": -14.1,
+          "annualVolatility10Pct": 41.121,
+          "maxAbsDay10Pct": 6.149,
+          "persistentDownslide": false,
+          "violent": true,
+          "rejectReasons": [
+            "近10日单日剧烈波动且年化波动过高"
+          ]
+        },
+        "rejectReasons": [
+          "近10日单日剧烈波动且年化波动过高",
+          "距枢轴6.1%超出VCP就绪窗-5%~+4%",
+          "日线样本不足200根（当前60根）"
+        ],
+        "practical": true,
+        "pivot": 100.0,
+        "distPct": 6.1,
+        "invalidation": 96.0,
+        "volConfirm": 1022.0,
+        "formed": false,
+        "structureFormed": false,
+        "dailyTrend": {
+          "close": null,
+          "ma50": null,
+          "ma150": null,
+          "ma200": null,
+          "samples": 60,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "insufficient_samples",
+          "pass": false,
+          "reasons": [
+            "日线样本不足200根（当前60根）"
+          ],
+          "asOf": "d59",
+          "source": "daily"
+        },
+        "dailyTrendPass": false,
+        "eligible": false,
+        "displayEligible": false
+      }
+    },
+    {
+      "name": "单次收缩超过8%仍硬拒绝",
+      "pass": true,
+      "evidence": "max_contraction=8"
+    },
+    {
+      "name": "任务113临近一年新高不再位置硬拒绝",
+      "pass": true,
+      "evidence": {
+        "contractions": [
+          8.0,
+          7.0,
+          7.8,
+          6.0,
+          5.0
+        ],
+        "contractionsOk": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "count": 5,
+        "decreasing": false,
+        "practicalDecreasing": true,
+        "priceMode": "practical",
+        "structurePath": "swing_evidence_only",
+        "volTrend": "递减",
+        "volFirst": 909.1,
+        "volLast": 581.8,
+        "volumeMA": {
+          "pass": true,
+          "ma5": 600.0,
+          "ma10": 590.0,
+          "ma20": 610.0,
+          "maBase": 730.0,
+          "baseWindow": 50,
+          "ma10ToBase": 0.808,
+          "sequenceOk": true,
+          "ratioMax": 1.2,
+          "reason": null
+        },
+        "recentVolumeQuality": {
+          "pass": true,
+          "ma5ToMa10": 1.017,
+          "last3ToMa10": 1.017,
+          "reexpanded": false,
+          "basisExcludesBreakout": false,
+          "reason": null
+        },
+        "rightSideQuality": {
+          "pass": false,
+          "drift10Pct": 1.671,
+          "downDayRatio10": 0.1,
+          "position20Pct": 4.917,
+          "annualVolatility10Pct": 43.493,
+          "maxAbsDay10Pct": 6.721,
+          "persistentDownslide": false,
+          "violent": true,
+          "rejectReasons": [
+            "近10日单日剧烈波动且年化波动过高"
+          ]
+        },
+        "rejectReasons": [
+          "近10日单日剧烈波动且年化波动过高",
+          "距枢轴6.1%超出VCP就绪窗-5%~+4%",
+          "日线样本不足200根（当前60根）"
+        ],
+        "practical": true,
+        "pivot": 100.0,
+        "distPct": 6.1,
+        "invalidation": 95.0,
+        "volConfirm": 1022.0,
+        "formed": false,
+        "structureFormed": false,
+        "dailyTrend": {
+          "close": null,
+          "ma50": null,
+          "ma150": null,
+          "ma200": null,
+          "samples": 60,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "insufficient_samples",
+          "pass": false,
+          "reasons": [
+            "日线样本不足200根（当前60根）"
+          ],
+          "asOf": "d59",
+          "source": "daily"
+        },
+        "dailyTrendPass": false,
+        "eligible": false,
+        "displayEligible": false
+      }
+    },
+    {
+      "name": "任务113一年极高位不再位置硬拒绝",
+      "pass": true,
+      "evidence": {
+        "contractions": [
+          8.0,
+          7.0,
+          7.8,
+          6.0,
+          5.0
+        ],
+        "contractionsOk": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "count": 5,
+        "decreasing": false,
+        "practicalDecreasing": true,
+        "priceMode": "practical",
+        "structurePath": "swing_evidence_only",
+        "volTrend": "递减",
+        "volFirst": 909.1,
+        "volLast": 581.8,
+        "volumeMA": {
+          "pass": true,
+          "ma5": 600.0,
+          "ma10": 590.0,
+          "ma20": 610.0,
+          "maBase": 730.0,
+          "baseWindow": 50,
+          "ma10ToBase": 0.808,
+          "sequenceOk": true,
+          "ratioMax": 1.2,
+          "reason": null
+        },
+        "recentVolumeQuality": {
+          "pass": true,
+          "ma5ToMa10": 1.017,
+          "last3ToMa10": 1.017,
+          "reexpanded": false,
+          "basisExcludesBreakout": false,
+          "reason": null
+        },
+        "rightSideQuality": {
+          "pass": false,
+          "drift10Pct": 1.671,
+          "downDayRatio10": 0.1,
+          "position20Pct": 4.917,
+          "annualVolatility10Pct": 43.493,
+          "maxAbsDay10Pct": 6.721,
+          "persistentDownslide": false,
+          "violent": true,
+          "rejectReasons": [
+            "近10日单日剧烈波动且年化波动过高"
+          ]
+        },
+        "rejectReasons": [
+          "近10日单日剧烈波动且年化波动过高",
+          "距枢轴6.1%超出VCP就绪窗-5%~+4%",
+          "日线样本不足200根（当前60根）"
+        ],
+        "practical": true,
+        "pivot": 100.0,
+        "distPct": 6.1,
+        "invalidation": 95.0,
+        "volConfirm": 1022.0,
+        "formed": false,
+        "structureFormed": false,
+        "dailyTrend": {
+          "close": null,
+          "ma50": null,
+          "ma150": null,
+          "ma200": null,
+          "samples": 60,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "insufficient_samples",
+          "pass": false,
+          "reasons": [
+            "日线样本不足200根（当前60根）"
+          ],
+          "asOf": "d59",
+          "source": "daily"
+        },
+        "dailyTrendPass": false,
+        "eligible": false,
+        "displayEligible": false
+      }
+    },
+    {
+      "name": "首尾量缩但均量序列上行仍不得走务实路径",
+      "pass": true,
+      "evidence": {
+        "contractions": [
+          8.0,
+          7.0,
+          7.8,
+          6.0,
+          5.0
+        ],
+        "contractionsOk": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "count": 5,
+        "decreasing": false,
+        "practicalDecreasing": true,
+        "priceMode": "practical",
+        "structurePath": "swing_evidence_only",
+        "volTrend": "递减",
+        "volFirst": 500.0,
+        "volLast": 459.1,
+        "volumeMA": {
+          "pass": false,
+          "ma5": 450.0,
+          "ma10": 455.0,
+          "ma20": 485.0,
+          "maBase": 363.6,
+          "baseWindow": 50,
+          "ma10ToBase": 1.251,
+          "sequenceOk": false,
+          "ratioMax": 1.2,
+          "reason": "10日/长均量超过1.20，近期量能异常放大"
+        },
+        "recentVolumeQuality": {
+          "pass": true,
+          "ma5ToMa10": 0.989,
+          "last3ToMa10": 0.989,
+          "reexpanded": false,
+          "basisExcludesBreakout": false,
+          "reason": null
+        },
+        "rightSideQuality": {
+          "pass": false,
+          "drift10Pct": 1.671,
+          "downDayRatio10": 0.1,
+          "position20Pct": 4.917,
+          "annualVolatility10Pct": 43.493,
+          "maxAbsDay10Pct": 6.721,
+          "persistentDownslide": false,
+          "violent": true,
+          "rejectReasons": [
+            "近10日单日剧烈波动且年化波动过高"
+          ]
+        },
+        "rejectReasons": [
+          "近10日单日剧烈波动且年化波动过高",
+          "10日/长均量超过1.20，近期量能异常放大",
+          "距枢轴6.1%超出VCP就绪窗-5%~+4%",
+          "日线样本不足200根（当前60根）"
+        ],
+        "practical": true,
+        "pivot": 100.0,
+        "distPct": 6.1,
+        "invalidation": 95.0,
+        "volConfirm": 509.0,
+        "formed": false,
+        "structureFormed": false,
+        "dailyTrend": {
+          "close": null,
+          "ma50": null,
+          "ma150": null,
+          "ma200": null,
+          "samples": 60,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "insufficient_samples",
+          "pass": false,
+          "reasons": [
+            "日线样本不足200根（当前60根）"
+          ],
+          "asOf": "d59",
+          "source": "daily"
+        },
+        "dailyTrendPass": false,
+        "eligible": false,
+        "displayEligible": false
+      }
+    },
+    {
+      "name": "阶段量能未萎缩不能仅靠均线或价格入围",
+      "pass": true,
+      "evidence": {
+        "contractions": [
+          8.0,
+          7.0,
+          7.8,
+          6.0,
+          5.0
+        ],
+        "contractionsOk": [
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "count": 5,
+        "decreasing": false,
+        "practicalDecreasing": true,
+        "priceMode": "practical",
+        "structurePath": "swing_evidence_only",
+        "volTrend": "未递减",
+        "volFirst": 172.7,
+        "volLast": 500.0,
+        "volumeMA": {
+          "pass": false,
+          "ma5": 500.0,
+          "ma10": 500.0,
+          "ma20": 480.0,
+          "maBase": 360.0,
+          "baseWindow": 50,
+          "ma10ToBase": 1.389,
+          "sequenceOk": false,
+          "ratioMax": 1.2,
+          "reason": "10日/长均量超过1.20，近期量能异常放大"
+        },
+        "recentVolumeQuality": {
+          "pass": true,
+          "ma5ToMa10": 1.0,
+          "last3ToMa10": 1.0,
+          "reexpanded": false,
+          "basisExcludesBreakout": false,
+          "reason": null
+        },
+        "rightSideQuality": {
+          "pass": false,
+          "drift10Pct": 1.671,
+          "downDayRatio10": 0.1,
+          "position20Pct": 4.917,
+          "annualVolatility10Pct": 43.493,
+          "maxAbsDay10Pct": 6.721,
+          "persistentDownslide": false,
+          "violent": true,
+          "rejectReasons": [
+            "近10日单日剧烈波动且年化波动过高"
+          ]
+        },
+        "rejectReasons": [
+          "近10日单日剧烈波动且年化波动过高",
+          "10日/长均量超过1.20，近期量能异常放大",
+          "距枢轴6.1%超出VCP就绪窗-5%~+4%",
+          "日线样本不足200根（当前60根）"
+        ],
+        "practical": true,
+        "pivot": 100.0,
+        "distPct": 6.1,
+        "invalidation": 95.0,
+        "volConfirm": 504.0,
+        "formed": false,
+        "structureFormed": false,
+        "dailyTrend": {
+          "close": null,
+          "ma50": null,
+          "ma150": null,
+          "ma200": null,
+          "samples": 60,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "insufficient_samples",
+          "pass": false,
+          "reasons": [
+            "日线样本不足200根（当前60根）"
+          ],
+          "asOf": "d59",
+          "source": "daily"
+        },
+        "dailyTrendPass": false,
+        "eligible": false,
+        "displayEligible": false
+      }
+    },
+    {
+      "name": "严格价格证据保留但旧合成夹具被新增质量门拒绝",
+      "pass": true,
+      "evidence": {
+        "contractions": [
+          8.0,
+          7.0,
+          6.0,
+          5.0,
+          4.0
+        ],
+        "contractionsOk": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "count": 5,
+        "decreasing": true,
+        "practicalDecreasing": true,
+        "priceMode": "strict",
+        "structurePath": "swing_strict",
+        "volTrend": "递减",
+        "volFirst": 909.1,
+        "volLast": 581.8,
+        "volumeMA": {
+          "pass": true,
+          "ma5": 600.0,
+          "ma10": 590.0,
+          "ma20": 610.0,
+          "maBase": 730.0,
+          "baseWindow": 50,
+          "ma10ToBase": 0.808,
+          "sequenceOk": true,
+          "ratioMax": 1.2,
+          "reason": null
+        },
+        "recentVolumeQuality": {
+          "pass": true,
+          "ma5ToMa10": 1.017,
+          "last3ToMa10": 1.017,
+          "reexpanded": false,
+          "basisExcludesBreakout": false,
+          "reason": null
+        },
+        "rightSideQuality": {
+          "pass": false,
+          "drift10Pct": 1.126,
+          "downDayRatio10": 0.1,
+          "position20Pct": -14.1,
+          "annualVolatility10Pct": 41.121,
+          "maxAbsDay10Pct": 6.149,
+          "persistentDownslide": false,
+          "violent": true,
+          "rejectReasons": [
+            "近10日单日剧烈波动且年化波动过高"
+          ]
+        },
+        "rejectReasons": [
+          "近10日单日剧烈波动且年化波动过高",
+          "距枢轴6.1%超出VCP就绪窗-5%~+4%",
+          "日线样本不足200根（当前60根）"
+        ],
+        "practical": false,
+        "pivot": 100.0,
+        "distPct": 6.1,
+        "invalidation": 96.0,
+        "volConfirm": 1022.0,
+        "formed": false,
+        "structureFormed": false,
+        "dailyTrend": {
+          "close": null,
+          "ma50": null,
+          "ma150": null,
+          "ma200": null,
+          "samples": 60,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "insufficient_samples",
+          "pass": false,
+          "reasons": [
+            "日线样本不足200根（当前60根）"
+          ],
+          "asOf": "d59",
+          "source": "daily"
+        },
+        "dailyTrendPass": false,
+        "eligible": false,
+        "displayEligible": false
+      }
+    },
+    {
+      "name": "多窗口均量校准独立量化",
+      "pass": true,
+      "evidence": {
+        "pass": true,
+        "ma5": 600.0,
+        "ma10": 590.0,
+        "ma20": 610.0,
+        "maBase": 730.0,
+        "baseWindow": 50,
+        "ma10ToBase": 0.808,
+        "sequenceOk": true,
+        "ratioMax": 1.2,
+        "reason": null
+      }
+    },
+    {
+      "name": "A04平台结构保留但任务113日线趋势门排除正式VCP属性",
+      "pass": true,
+      "evidence": {
+        "pattern": "平台整理",
+        "attribute": {
+          "formed": false,
+          "style": "platform_vcp",
+          "rejectReasons": [
+            "识别日收盘价未严格高于日线MA50"
+          ],
+          "histPct": 44.8,
+          "distHigh250": -12.61,
+          "platformDays": 16,
+          "amplitudePct": 4.9,
+          "segAmpsPct": [
+            4.4,
+            3.9,
+            2.5
+          ],
+          "contractionMode": "strict",
+          "narrowIntegrity": {
+            "pass": true,
+            "limitPct": -5.0,
+            "firstDayPct": -1.25,
+            "worstDayPct": -1.5,
+            "worstDate": "20260402",
+            "breaches": [],
+            "scope": "仅VCP属性，不修改底层平台标签"
+          },
+          "platformToRallyVol": 0.58,
+          "volumeMA": {
+            "pass": true,
+            "ma5": 4215053.2,
+            "ma10": 4190718.4,
+            "ma20": 4541352.6,
+            "maBase": 5911990.1,
+            "baseWindow": 50,
+            "ma10ToBase": 0.709,
+            "sequenceOk": true,
+            "ratioMax": 1.2,
+            "reason": null
+          },
+          "recentVolumeQuality": {
+            "pass": true,
+            "ma5ToMa10": 1.006,
+            "last3ToMa10": 1.002,
+            "reexpanded": false,
+            "basisExcludesBreakout": false,
+            "reason": null
+          },
+          "trend60Pct": -12.61,
+          "platformDriftPct": 2.03,
+          "note": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制短长均量排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。",
+          "structureFormed": true,
+          "dailyTrend": {
+            "close": 4.02,
+            "ma50": 4.1902,
+            "ma150": 4.1551,
+            "ma200": 4.1249,
+            "samples": 3938,
+            "closeAboveMA50": false,
+            "bullish": true,
+            "bullishStatus": "strict_bullish",
+            "pass": false,
+            "reasons": [
+              "识别日收盘价未严格高于日线MA50"
+            ],
+            "asOf": "20260417",
+            "source": "daily"
+          },
+          "dailyTrendPass": false,
+          "eligible": false,
+          "displayEligible": false
+        }
+      }
+    },
+    {
+      "name": "A04实际平台区间与窄幅收缩证据",
+      "pass": true,
+      "evidence": {
+        "first": "20260326",
+        "last": "20260417",
+        "platform": {
+          "type": "底部平台型",
+          "days": 16,
+          "amplitude": 4.9,
+          "riseFromLow": 2.3,
+          "tailRatio": 1.02,
+          "volRatio": 0.58,
+          "segAmps": [
+            4.4,
+            3.9,
+            2.5
+          ],
+          "contractionMode": "strict",
+          "pivot": 4.08,
+          "distPct": 1.5,
+          "formed": true
+        }
+      }
+    },
+    {
+      "name": "A04低位且非临近新高",
+      "pass": true,
+      "evidence": {
+        "histPct": 44.8,
+        "distHigh250": -12.61
+      }
+    },
+    {
+      "name": "A04阶段缩量与量能均线证据",
+      "pass": true,
+      "evidence": {
+        "pass": true,
+        "ma5": 4215053.2,
+        "ma10": 4190718.4,
+        "ma20": 4541352.6,
+        "maBase": 5911990.1,
+        "baseWindow": 50,
+        "ma10ToBase": 0.709,
+        "sequenceOk": true,
+        "ratioMax": 1.2,
+        "reason": null
+      }
+    },
+    {
+      "name": "A04下跌中继稳定例外透明且未取消",
+      "pass": true,
+      "evidence": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制短长均量排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。"
+    },
+    {
+      "name": "A04证据note明确平台型VCP而非伪造双标签",
+      "pass": true,
+      "evidence": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制短长均量排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。"
+    },
+    {
+      "name": "任务113平台VCP属性取消高位与临近新高排除",
+      "pass": true,
+      "evidence": {
+        "high": [
+          "识别日收盘价未严格高于日线MA50"
+        ],
+        "nearHigh": [
+          "识别日收盘价未严格高于日线MA50"
+        ]
+      }
+    },
+    {
+      "name": "平台VCP阶段量超过75%拒绝",
+      "pass": true,
+      "evidence": [
+        "平台/拉升段均量比>0.75",
+        "近60日明显下跌且平台未稳定",
+        "识别日收盘价未严格高于日线MA50"
+      ]
+    },
+    {
+      "name": "任务103不再以机械均量排列拒绝平台属性",
+      "pass": true,
+      "evidence": {
+        "rejectReasons": [
+          "识别日收盘价未严格高于日线MA50"
+        ],
+        "volumeMA": {
+          "pass": true,
+          "ma5": 100.0,
+          "ma10": 100.0,
+          "ma20": 100.0,
+          "maBase": 100.0,
+          "baseWindow": 50,
+          "ma10ToBase": 1.0,
+          "sequenceOk": true,
+          "ratioMax": 1.2,
+          "reason": null
+        }
+      }
+    },
+    {
+      "name": "明显下跌且平台漂移超过3%不得附VCP属性",
+      "pass": true,
+      "evidence": {
+        "formed": false,
+        "style": "platform_vcp",
+        "rejectReasons": [
+          "平台首日相对前收或内部单日收跌≥5%（仅拒VCP属性）",
+          "近60日明显下跌且平台未稳定",
+          "识别日收盘价未严格高于日线MA50"
+        ],
+        "histPct": 44.8,
+        "distHigh250": -12.61,
+        "platformDays": 16,
+        "amplitudePct": 4.9,
+        "segAmpsPct": [
+          4.4,
+          3.9,
+          2.5
+        ],
+        "contractionMode": "strict",
+        "narrowIntegrity": {
+          "pass": false,
+          "limitPct": -5.0,
+          "firstDayPct": -1.25,
+          "worstDayPct": -7.12,
+          "worstDate": "20260417",
+          "breaches": [
+            {
+              "date": "20260417",
+              "first": false,
+              "pct": -7.12
+            }
+          ],
+          "scope": "仅VCP属性，不修改底层平台标签"
+        },
+        "platformToRallyVol": 0.58,
+        "volumeMA": {
+          "pass": true,
+          "ma5": 4215053.2,
+          "ma10": 4190718.4,
+          "ma20": 4541352.6,
+          "maBase": 5911990.1,
+          "baseWindow": 50,
+          "ma10ToBase": 0.709,
+          "sequenceOk": true,
+          "ratioMax": 1.2,
+          "reason": null
+        },
+        "recentVolumeQuality": {
+          "pass": true,
+          "ma5ToMa10": 1.006,
+          "last3ToMa10": 1.002,
+          "reexpanded": false,
+          "basisExcludesBreakout": false,
+          "reason": null
+        },
+        "trend60Pct": -18.63,
+        "platformDriftPct": -5.0,
+        "note": null,
+        "structureFormed": false,
+        "dailyTrend": {
+          "close": 3.743,
+          "ma50": 4.1847,
+          "ma150": 4.1532,
+          "ma200": 4.1235,
+          "samples": 3938,
+          "closeAboveMA50": false,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": false,
+          "reasons": [
+            "识别日收盘价未严格高于日线MA50"
+          ],
+          "asOf": "20260417",
+          "source": "daily"
+        },
+        "dailyTrendPass": false,
+        "eligible": false,
+        "displayEligible": false
+      }
+    },
+    {
+      "name": "N02与N03不得回归为VCP",
+      "pass": true,
+      "evidence": {
+        "N01": {
+          "pattern": null,
+          "rejectReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        },
+        "N02": {
+          "pattern": null,
+          "rejectReasons": [
+            "各候选未同时满足完整结构与展示门"
+          ]
+        },
+        "N03": {
+          "pattern": null,
+          "rejectReasons": [
+            "周MA150<MA200空头排列"
+          ]
+        }
+      }
+    },
+    {
+      "name": "南微仍先被任务97周MA空头门硬删",
+      "pass": true,
+      "evidence": {
+        "pattern": null,
+        "rejectReasons": [
+          "周MA150<MA200空头排列"
+        ]
+      }
+    },
+    {
+      "name": "生产note量化任务103结构及任务113统一趋势门",
+      "pass": true,
+      "evidence": "task113 note"
+    },
+    {
+      "name": "生产分类保留VCP优先且固定区间不抢占杯柄",
+      "pass": true,
+      "evidence": "classification priority preserved"
+    },
+    {
+      "name": "生产输出包含属性、固定区间与证据note",
+      "pass": true,
+      "evidence": "item evidence"
+    },
+    {
+      "name": "未加入002648平台单日破位规则",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "任务98历史固定池审计证据保持可读",
+      "pass": true,
+      "evidence": {
+        "poolSize": 739,
+        "asOf": "20261026",
+        "beforeCounts": {
+          "null": 722,
+          "底部整理": 12,
+          "平台整理": 3,
+          "杯柄型": 2
+        },
+        "afterCounts": {
+          "null": 722,
+          "底部整理": 12,
+          "平台整理": 3,
+          "杯柄型": 2
+        },
+        "beforeVcpCount": 0,
+        "afterVcpCount": 0,
+        "newVcpCount": 0,
+        "newVcp": [],
+        "lostVcpCount": 0,
+        "lostVcp": [],
+        "platformVcpAttributeCount": 4,
+        "platformVcpAttributes": [
+          {
+            "code": "000876.SZ",
+            "before": "底部整理",
+            "after": "底部整理",
+            "beforeVcp": false,
+            "afterVcp": false,
+            "platformVcpAttribute": {
+              "formed": true,
+              "style": "platform_vcp",
+              "rejectReasons": [],
+              "histPct": 8.8,
+              "distHigh250": -32.34,
+              "platformDays": 10,
+              "amplitudePct": 6.3,
+              "segAmpsPct": [
+                6.2,
+                4.6,
+                3.4
+              ],
+              "contractionMode": "strict",
+              "narrowIntegrity": {
+                "pass": true,
+                "limitPct": -5.0,
+                "firstDayPct": -0.58,
+                "worstDayPct": -2.81,
+                "worstDate": "20261015",
+                "breaches": [],
+                "scope": "仅VCP属性，不修改底层平台标签"
+              },
+              "platformToRallyVol": 0.4,
+              "volumeMA": {
+                "pass": true,
+                "ma5": 247924.6,
+                "ma10": 227831.8,
+                "ma20": 264979.7,
+                "maBase": 404789.9,
+                "baseWindow": 50,
+                "ma10ToBase": 0.563,
+                "sequenceOk": true,
+                "ratioMax": 0.85,
+                "reason": null
+              },
+              "trend60Pct": -3.82,
+              "platformDriftPct": -0.15,
+              "note": "平台型VCP属性：10日振幅6.3%≤12%，三段振幅6.2→4.6→3.4%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；一年分位8.8%≤60%、距一年高点-32.3%≤-8%；平台/拉升段均量0.40≤0.75，MA10/MA20/MA50=227832/264980/404790，MA10/MA50=0.563≤0.85；60日趋势-3.8%、平台漂移-0.1%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。"
+            },
+            "weeklyMAGate": null
+          },
+          {
+            "code": "600258.SH",
+            "before": "底部整理",
+            "after": "底部整理",
+            "beforeVcp": false,
+            "afterVcp": false,
+            "platformVcpAttribute": {
+              "formed": true,
+              "style": "platform_vcp",
+              "rejectReasons": [],
+              "histPct": 11.2,
+              "distHigh250": -36.19,
+              "platformDays": 21,
+              "amplitudePct": 9.1,
+              "segAmpsPct": [
+                6.5,
+                7.1,
+                6.0
+              ],
+              "contractionMode": "strict",
+              "narrowIntegrity": {
+                "pass": true,
+                "limitPct": -5.0,
+                "firstDayPct": -2.13,
+                "worstDayPct": -2.45,
+                "worstDate": "20261008",
+                "breaches": [],
+                "scope": "仅VCP属性，不修改底层平台标签"
+              },
+              "platformToRallyVol": 0.71,
+              "volumeMA": {
+                "pass": true,
+                "ma5": 106153.3,
+                "ma10": 116327.4,
+                "ma20": 122340.8,
+                "maBase": 159201.9,
+                "baseWindow": 50,
+                "ma10ToBase": 0.731,
+                "sequenceOk": true,
+                "ratioMax": 0.85,
+                "reason": null
+              },
+              "trend60Pct": -0.52,
+              "platformDriftPct": -0.09,
+              "note": "平台型VCP属性：21日振幅9.1%≤12%，三段振幅6.5→7.1→6.0%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；一年分位11.2%≤60%、距一年高点-36.2%≤-8%；平台/拉升段均量0.71≤0.75，MA10/MA20/MA50=116327/122341/159202，MA10/MA50=0.731≤0.85；60日趋势-0.5%、平台漂移-0.1%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。"
+            },
+            "weeklyMAGate": null
+          },
+          {
+            "code": "600299.SH",
+            "before": "底部整理",
+            "after": "底部整理",
+            "beforeVcp": false,
+            "afterVcp": false,
+            "platformVcpAttribute": {
+              "formed": true,
+              "style": "platform_vcp",
+              "rejectReasons": [],
+              "histPct": 0.4,
+              "distHigh250": -49.68,
+              "platformDays": 24,
+              "amplitudePct": 11.3,
+              "segAmpsPct": [
+                6.5,
+                6.8,
+                6.1
+              ],
+              "contractionMode": "strict",
+              "narrowIntegrity": {
+                "pass": true,
+                "limitPct": -5.0,
+                "firstDayPct": -2.81,
+                "worstDayPct": -3.46,
+                "worstDate": "20260924",
+                "breaches": [],
+                "scope": "仅VCP属性，不修改底层平台标签"
+              },
+              "platformToRallyVol": 0.63,
+              "volumeMA": {
+                "pass": true,
+                "ma5": 178111.6,
+                "ma10": 193267.9,
+                "ma20": 234007.4,
+                "maBase": 319494.1,
+                "baseWindow": 50,
+                "ma10ToBase": 0.605,
+                "sequenceOk": true,
+                "ratioMax": 0.85,
+                "reason": null
+              },
+              "trend60Pct": -2.38,
+              "platformDriftPct": -6.27,
+              "note": "平台型VCP属性：24日振幅11.3%≤12%，三段振幅6.5→6.8→6.1%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；一年分位0.4%≤60%、距一年高点-49.7%≤-8%；平台/拉升段均量0.63≤0.75，MA10/MA20/MA50=193268/234007/319494，MA10/MA50=0.605≤0.85；60日趋势-2.4%、平台漂移-6.3%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。"
+            },
+            "weeklyMAGate": null
+          },
+          {
+            "code": "600916.SH",
+            "before": "底部整理",
+            "after": "底部整理",
+            "beforeVcp": false,
+            "afterVcp": false,
+            "platformVcpAttribute": {
+              "formed": true,
+              "style": "platform_vcp",
+              "rejectReasons": [],
+              "histPct": 8.8,
+              "distHigh250": -51.5,
+              "platformDays": 19,
+              "amplitudePct": 11.6,
+              "segAmpsPct": [
+                9.2,
+                4.9,
+                4.4
+              ],
+              "contractionMode": "strict",
+              "narrowIntegrity": {
+                "pass": true,
+                "limitPct": -5.0,
+                "firstDayPct": -1.82,
+                "worstDayPct": -4.99,
+                "worstDate": "20260924",
+                "breaches": [],
+                "scope": "仅VCP属性，不修改底层平台标签"
+              },
+              "platformToRallyVol": 0.27,
+              "volumeMA": {
+                "pass": true,
+                "ma5": 140050.2,
+                "ma10": 139192.3,
+                "ma20": 158294.9,
+                "maBase": 389211.5,
+                "baseWindow": 50,
+                "ma10ToBase": 0.358,
+                "sequenceOk": true,
+                "ratioMax": 0.85,
+                "reason": null
+              },
+              "trend60Pct": 0.85,
+              "platformDriftPct": -5.7,
+              "note": "平台型VCP属性：19日振幅11.6%≤12%，三段振幅9.2→4.9→4.4%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；一年分位8.8%≤60%、距一年高点-51.5%≤-8%；平台/拉升段均量0.27≤0.75，MA10/MA20/MA50=139192/158295/389212，MA10/MA50=0.358≤0.85；60日趋势0.8%、平台漂移-5.7%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。"
+            },
+            "weeklyMAGate": null
+          }
+        ],
+        "changes": []
+      }
+    },
+    {
+      "name": "任务98历史平台VCP属性仅4个且标签不变",
+      "pass": true,
+      "evidence": [
+        [
+          "000876.SZ",
+          "底部整理",
+          "底部整理"
+        ],
+        [
+          "600258.SH",
+          "底部整理",
+          "底部整理"
+        ],
+        [
+          "600299.SH",
+          "底部整理",
+          "底部整理"
+        ],
+        [
+          "600916.SH",
+          "底部整理",
+          "底部整理"
+        ]
+      ]
+    },
+    {
+      "name": "任务98历史38样本审计证据保持可读",
+      "pass": true,
+      "evidence": []
+    }
+  ],
+  "notMarketWinRate": true,
+  "sampleExpectationsChanged": false
+}

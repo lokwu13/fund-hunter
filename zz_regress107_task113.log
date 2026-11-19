@@ -1,0 +1,20 @@
+  rsi6DividendTop20 hidden: 非现行RSI6极端强制开窗，未请求daily_basic
+  rsi6DividendTop20 hidden: 非现行RSI6极端强制开窗，未请求daily_basic
+  rsi6DividendTop20 hidden: 非现行RSI6极端强制开窗，未请求daily_basic
+  rsi6DividendTop20 hidden: 非现行RSI6极端强制开窗，未请求daily_basic
+  rsi6DividendTop20: 20只（原始有效23只，排雷剔除2只，剩余候选21只，20261030）
+  rsi6DividendTop20: 3只（原始有效3只，排雷剔除0只，剩余候选3只，20261030）
+  rsi6DividendTop20: 20只（原始有效23只，排雷剔除0只，剩余候选23只，20261030）
+  Warning: rsi6DividendTop20 daily_basic failed (locked): 受控全A快照失败
+  funnel: 当周动态RSI6≤20临时窗 → 宽基：无形态 → 板块：0个入选 → 个股：0只成型 → 排雷：0只
+  funnel 生命周期分布: {}
+  funnel 板块形态: 达标0个/0个有数据；第2步入选0，形态卡掉0（[]）；第3步 共振0/精选0/储备0/剔除0
+{
+  "checksPassed": 29,
+  "checksTotal": 29,
+  "failed": [],
+  "dataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  }
+}

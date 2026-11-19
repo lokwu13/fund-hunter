@@ -569,6 +569,12 @@ export interface FundData {
     fuzzyCount?: number;
     note?: string;
     droppedByTrendTemplate?: string[];
+    droppedByVcpDailyTrendCount?: number;
+    droppedByVcpDailyTrend?: Array<{
+      code: string; name: string; path: 'daily_swing' | 'weekly_swing_daily_trend' | 'fixed_base' | 'platform_attribute';
+      asOf: string | null; close: number | null; ma50: number | null; ma150: number | null; ma200: number | null;
+      samples: number; reasons: string[];
+    }>;
     droppedByPatternEvidenceCount?: number;
     droppedByPatternEvidence?: Array<{
       code: string; name: string; pattern: string; reasons: string[];
@@ -636,14 +642,20 @@ export interface FundData {
       longPlat?: (import('../sections/patternEvidence').PatternEvidence & {
         pivot: number; distPct: number; invalidation?: number; volConfirm?: number; formed: boolean;
       }) | null;
+      vcpDailyTrend?: import('../sections/patternEvidence').VcpDailyTrendEvidence | null;
+      dailyTrendPass?: boolean | null;
       vcpAttribute?: {
-        formed: boolean; style?: 'platform_vcp'; note?: string | null;
+        formed: boolean; structureFormed?: boolean; eligible?: boolean; displayEligible?: boolean;
+        dailyTrendPass?: boolean; dailyTrend?: import('../sections/patternEvidence').VcpDailyTrendEvidence;
+        rejectReasons?: string[]; style?: 'platform_vcp'; note?: string | null;
         platformDays?: number; amplitudePct?: number; segAmpsPct?: number[];
       } | null;
       fixedBase?: {
         days: number; amplitude: number; segAmps: number[]; volRatio: number;
         volFirst: number; volLast: number; pivot: number; distPct: number;
         invalidation?: number; volConfirm?: number; formed: boolean;
+        structureFormed?: boolean; eligible?: boolean; displayEligible?: boolean; dailyTrendPass?: boolean;
+        dailyTrend?: import('../sections/patternEvidence').VcpDailyTrendEvidence; rejectReasons?: string[];
         structurePath?: 'fixed_base'; startDate?: string; endDate?: string;
       } | null;
       patternNote?: string | null;
@@ -651,11 +663,15 @@ export interface FundData {
         contractions: number[]; contractionsOk?: boolean[]; count: number; decreasing: boolean;
         volTrend: string; volFirst?: number; volLast?: number;
         pivot: number; distPct: number; invalidation?: number; volConfirm?: number; formed: boolean;
+        structureFormed?: boolean; eligible?: boolean; displayEligible?: boolean; dailyTrendPass?: boolean;
+        dailyTrend?: import('../sections/patternEvidence').VcpDailyTrendEvidence; rejectReasons?: string[];
       } | null;
       weekly?: {
         contractions: number[]; contractionsOk?: boolean[]; count: number; decreasing: boolean;
         volTrend: string; volFirst?: number; volLast?: number;
         pivot: number; distPct: number; invalidation?: number; volConfirm?: number; formed: boolean;
+        structureFormed?: boolean; eligible?: boolean; displayEligible?: boolean; dailyTrendPass?: boolean;
+        dailyTrend?: import('../sections/patternEvidence').VcpDailyTrendEvidence; rejectReasons?: string[];
       } | null;
     }>;
   };

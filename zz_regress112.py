@@ -310,8 +310,11 @@ try:
     fake_vcp = {'formed': True, 'distPct': 0.0, 'pivot': 100.0, 'invalidation': 90.0,
                 'volConfirm': 100.0, 'count': 3, 'contractions': [8, 6, 4],
                 'contractionsOk': [True, True, True], 'decreasing': True}
+    # 任务113：本例只测分类优先级；真实杭州银行未过新日线门，故用受控通过证据隔离该变量。
+    controlled_daily_trend = {'pass': True, 'reasons': [], 'source': 'daily'}
     priority = run_production(['600926.SH'], [
         patch.object(ud, '_vcp_level_strict', side_effect=[dict(fake_vcp), None]),
+        patch.object(ud, '_vcp_daily_trend_gate', return_value=controlled_daily_trend),
         patch.object(ud, '_trend_template', return_value={'pass': True, 'evidence': []})])
     check('VCP分类优先且不被统一平台抢占', any(it['pattern'] == 'VCP收缩型'
           for it in priority.get('items', [])), [it['pattern'] for it in priority.get('items', [])])

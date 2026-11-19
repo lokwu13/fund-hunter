@@ -14,10 +14,15 @@ import zz_scan99
 import zz_scan101
 
 ROOT = Path(__file__).resolve().parent
-spec = importlib.util.spec_from_file_location('update_data_task101_remote_baseline',
-                                              ROOT / 'zz_update_data_task101_remote_baseline.py')
+# 任务113联合回归以当前已发布任务112为before，避免把102~112的既定变化混为本任务回退。
+spec = importlib.util.spec_from_file_location('update_data_task113_remote_baseline',
+                                              ROOT / 'zz_update_data_task113_remote_baseline.py')
 old = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(old)
+legacy_spec = importlib.util.spec_from_file_location('update_data_task101_remote_baseline',
+                                                     ROOT / 'zz_update_data_task101_remote_baseline.py')
+legacy_old = importlib.util.module_from_spec(legacy_spec)
+legacy_spec.loader.exec_module(legacy_old)
 library = json.loads(r96.SAMPLE_PATH.read_text(encoding='utf-8'))
 case_map, cache, real95, rows600795 = r96.load_inputs()
 current = json.loads((ROOT / 'zz_audit100_current_rows_full.json').read_text(encoding='utf-8'))
@@ -80,7 +85,7 @@ def sample_audit(module, scanner):
 # 真实600323：首日及内部破位均不得收回后复活；旧基线用于证明测试有区分度。
 rows600323 = current['rows']['600323.SH']
 bars600323 = r96.bars_of(rows600323)
-old600323 = old._cup_early_breakout(bars600323)
+old600323 = legacy_old._cup_early_breakout(bars600323)
 new600323 = ud._cup_early_breakout(bars600323)
 check('600323旧基线有信号新门硬剔除', old600323 and old600323['anchorDate'] == '20260827'
       and old600323['signalDate'] == '20261026' and new600323 is None,
@@ -117,14 +122,14 @@ def controlled_strict(anchor_dates):
 
 for label, date in (('首日', 'd191'), ('内部', 'd195')):
     fixture = controlled_bars(date)
-    old_strict, new_strict = old._cup_handle_strict, ud._cup_handle_strict
+    old_strict, new_strict = legacy_old._cup_handle_strict, ud._cup_handle_strict
     try:
-        old._cup_handle_strict = controlled_strict({'d190'})
+        legacy_old._cup_handle_strict = controlled_strict({'d190'})
         ud._cup_handle_strict = controlled_strict({'d190'})
-        before = old._cup_early_breakout(fixture)
+        before = legacy_old._cup_early_breakout(fixture)
         after = ud._cup_early_breakout(fixture)
     finally:
-        old._cup_handle_strict, ud._cup_handle_strict = old_strict, new_strict
+        legacy_old._cup_handle_strict, ud._cup_handle_strict = old_strict, new_strict
     check(f'{label}收盘破位后收回不得复活', before and before['signalDate'] == 'd199' and after is None,
           {'breachDate': date, 'oldSignal': (before or {}).get('signalDate'), 'new': after})
 
@@ -139,7 +144,7 @@ check('失效锚点后另锚续检', later and later['anchorDate'] == 'd195'
       and later['signalDate'] == 'd199', cup_view(later))
 
 # C10首次信号与N12时效。
-before_report = sample_audit(old, zz_scan99.scan)
+before_report = sample_audit(old, zz_scan101.scan)
 after_report = sample_audit(ud, zz_scan101.scan)
 before_by_id = {r['id']: r for r in before_report['rows']}
 after_by_id = {r['id']: r for r in after_report['rows']}
@@ -168,18 +173,24 @@ check('N12旧信号仍不可展示且不得保留杯柄', n12 and n12['signalDat
 # 后续任务已更新共享扫描器，旧基线自身也可直接落底部；核心契约是当前回退及属性不丢失，
 # 不再把“旧基线必须为None”误当业务门。
 cloud_rows = current['rows']['000807.SZ']
-cloud_before, cloud_diag_before = zz_scan99.scan(old, cloud_rows, current['mv']['000807.SZ'] / 1e4)
+cloud_before, cloud_diag_before = zz_scan101.scan(old, cloud_rows, current['mv']['000807.SZ'] / 1e4)
 cloud_after, cloud_diag = zz_scan101.scan(ud, cloud_rows, current['mv']['000807.SZ'] / 1e4)
 cloud_attr = (cloud_diag.get('main') or {}).get('vcpAttribute') or {}
-check('云铝真实旧杯柄回退平台属性', cloud_after == '底部整理'
-      and cloud_diag.get('fallbackUsed') and cloud_attr.get('formed')
-      and cloud_attr.get('style') == 'platform_vcp'
+cloud_structure_attr = ud._platform_vcp_attribute(
+    r96.bars_of(cloud_rows), cloud_diag.get('platform'), cloud_diag.get('pct'),
+    cloud_diag.get('distHigh250')) or {}
+check('云铝真实旧杯柄回退且VCP结构被任务113趋势门排除', cloud_after == '底部整理'
+      and cloud_diag.get('fallbackUsed') and not cloud_attr.get('formed')
+      and cloud_structure_attr.get('structureFormed')
+      and not cloud_structure_attr.get('dailyTrendPass')
+      and cloud_structure_attr.get('style') == 'platform_vcp'
       and not cloud_diag.get('signalDisplayable'),
       {'before': cloud_before, 'after': cloud_after, 'attribute': cloud_attr,
+       'structureAttribute': cloud_structure_attr,
        'recent': cup_view(cloud_diag.get('recentCup')), 'reasons': cloud_diag['rejectReasons']})
-check('云铝属性单日门与量能门未放宽', cloud_attr['narrowIntegrity']['pass']
-      and cloud_attr['platformToRallyVol'] <= ud.PLATFORM_VCP_STAGE_VOL_MAX
-      and cloud_attr['volumeMA']['pass'], cloud_attr)
+check('云铝属性单日门与量能门未放宽', cloud_structure_attr['narrowIntegrity']['pass']
+      and cloud_structure_attr['platformToRallyVol'] <= ud.PLATFORM_VCP_STAGE_VOL_MAX
+      and cloud_structure_attr['volumeMA']['pass'], cloud_structure_attr)
 
 # 普通非突破杯柄距离失败也回退；构造只替换杯柄返回值，平台仍由真实云铝行情计算。
 original_recent = ud._cup_early_breakout
@@ -195,7 +206,7 @@ finally:
     ud._cup_early_breakout = original_recent
     ud._cup_handle_strict = original_strict
 check('普通杯柄距离展示失败回退', ordinary_after == '底部整理' and ordinary_diag.get('fallbackUsed')
-      and ((ordinary_diag.get('main') or {}).get('vcpAttribute') or {}).get('formed'),
+      and not ((ordinary_diag.get('main') or {}).get('vcpAttribute') or {}).get('formed'),
       {'pattern': ordinary_after, 'fallback': ordinary_diag.get('fallbackUsed')})
 
 # 任务103仅有意修改VCP三函数；趋势模板和价格务实收缩辅助函数保持逐字一致。
@@ -208,7 +219,7 @@ for function_name in ('_trend_template', '_platform_contraction_practical_ok'):
 pool_rows = []
 for code in sorted(cache):
     rows = cache[code]
-    before, _ = zz_scan99.scan(old, rows, 0)
+    before, _ = zz_scan101.scan(old, rows, 0)
     after, diag = zz_scan101.scan(ud, rows, 0)
     pool_rows.append({'code': code, 'before': before, 'after': after,
                       'fallbackUsed': diag.get('fallbackUsed'),
@@ -222,11 +233,13 @@ current_rows = []
 for code in sorted(current['rows']):
     rows = current['rows'][code]
     mv = current['mv'].get(code, 0) / 1e4
-    before, _ = zz_scan99.scan(old, rows, mv)
+    before, _ = zz_scan101.scan(old, rows, mv)
     after, diag = zz_scan101.scan(ud, rows, mv)
     current_rows.append({'code': code, 'name': current['stockInfo'].get(code, {}).get('name', code),
                          'before': before, 'after': after, 'fallbackUsed': diag.get('fallbackUsed'),
                          'attributeFormed': bool(((diag.get('main') or {}).get('vcpAttribute') or {}).get('formed')),
+                         'fixedBaseStructureFormed': bool((diag.get('fixedBase') or {}).get('structureFormed')),
+                         'fixedBaseDailyTrendPass': bool((diag.get('fixedBase') or {}).get('dailyTrendPass')),
                          'vcpPath': ((diag.get('main') or {}).get('structurePath') if after == 'VCP收缩型' else None),
                          'recent': cup_view(diag.get('recentCup'))})
 current_changes = [r for r in current_rows if r['before'] != r['after']]
@@ -238,16 +251,19 @@ current_attrs = [{'code': r['code'], 'name': r['name'], 'pattern': r['after']}
 check('当前600323与601963剔除', next(r for r in current_rows if r['code'] == '600323.SH')['after'] is None
       and next(r for r in current_rows if r['code'] == '601963.SH')['after'] is None,
       [r for r in current_changes if r['code'] in ('600323.SH', '601963.SH')])
-check('当前云铝恢复底部整理属性', next(r for r in current_rows if r['code'] == '000807.SZ')['after'] == '底部整理'
-      and next(r for r in current_rows if r['code'] == '000807.SZ')['attributeFormed'],
+check('当前云铝恢复底部整理但任务113排除正式VCP属性',
+      next(r for r in current_rows if r['code'] == '000807.SZ')['after'] == '底部整理'
+      and not next(r for r in current_rows if r['code'] == '000807.SZ')['attributeFormed'],
       next(r for r in current_rows if r['code'] == '000807.SZ'))
-check('任务103当前固定区间VCP均有结构路径', {r['code'] for r in current_vcps} == {
-      '000100.SZ', '600015.SH', '600019.SH', '600031.SH', '600066.SH'}
-      and all(r['path'] == 'fixed_base' for r in current_vcps),
-      {'vcps': current_vcps, 'counts': dict(Counter(r['after'] for r in current_rows))})
-check('当前杯柄与属性名单目标', {r['code'] for r in current_cups} == {'600938.SH', '600803.SH', '601018.SH'}
-      and {r['code'] for r in current_attrs} == {'000807.SZ'},
-      {'cups': current_cups, 'attributes': current_attrs})
+legacy_fixed = [r for r in current_rows if r['code'] in {
+    '000100.SZ', '600015.SH', '600019.SH', '600031.SH', '600066.SH'}]
+check('任务113旧固定区间结构保留且新日线趋势均不通过', not current_vcps
+      and all(r['fixedBaseStructureFormed'] and not r['fixedBaseDailyTrendPass'] for r in legacy_fixed),
+      {'vcps': current_vcps, 'legacyFixed': legacy_fixed,
+       'counts': dict(Counter(r['after'] for r in current_rows))})
+check('当前杯柄不变且平台VCP正式属性均被任务113趋势门排除',
+      {r['code'] for r in current_cups} == {'600938.SH', '600803.SH', '601018.SH'}
+      and not current_attrs, {'cups': current_cups, 'attributes': current_attrs})
 
 # UI静态契约；实际bundle在nightly后另行核验。
 types = (ROOT / 'src/hooks/useFundData.ts').read_text(encoding='utf-8')

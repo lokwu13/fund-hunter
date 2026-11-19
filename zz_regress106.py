@@ -71,10 +71,15 @@ spec = importlib.util.spec_from_file_location('update_data_task106_baseline_curr
                                               ROOT / 'zz_update_data_task106_rsi6_baseline.py')
 old = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(old)
-# 任务110允许杯柄追加统一资格过滤，旧基线逐字门不再适用于这两个函数；
-# 核心几何仍由任务105约束，资格边界由任务110约束。
-for name in ('_vcp_level_strict', '_vcp_fixed_base', '_vcp_right_side_quality'):
-    check(f'任务103函数逐字未改:{name}', inspect.getsource(getattr(old, name)) == inspect.getsource(getattr(ud, name)))
+# 任务110允许杯柄追加统一资格过滤；任务113明确授权strict/fixed接入统一日线门并移除VCP高位排除。
+# 右侧质量函数仍逐字保护，任务113的strict/fixed边界由zz_regress113真实执行。
+check('任务103右侧质量函数逐字未改:_vcp_right_side_quality',
+      inspect.getsource(old._vcp_right_side_quality) == inspect.getsource(ud._vcp_right_side_quality))
+for name in ('_vcp_level_strict', '_vcp_fixed_base'):
+    current = inspect.getsource(getattr(ud, name))
+    check(f'任务113授权函数接入统一日线门:{name}',
+          '_apply_vcp_daily_trend_eligibility' in current
+          and not ('dist_high250 > -8' in current or 'hist_pct > 85' in current))
 
 production = (ROOT / 'scripts/update_data.py').read_text(encoding='utf-8')
 ui = ''.join((ROOT / p).read_text(encoding='utf-8') for p in (

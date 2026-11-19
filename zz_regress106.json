@@ -1,0 +1,894 @@
+{
+  "task": 106,
+  "updatedForTask": 108,
+  "asOf": "20261030",
+  "checks": {
+    "当周动态值不超20直接通过": {
+      "pass": true,
+      "evidence": {
+        "dailyDate": "20261030",
+        "weeklyRsiDate": "20261023",
+        "previousWeeklyRsiDate": "20261016",
+        "weeklyRsi": 0.0,
+        "previousWeeklyRsi": 0.0,
+        "weeklyRsi6": 0.0,
+        "previousWeeklyRsi6": 0.0,
+        "dynamicWeeklyRsi6": 0.0,
+        "dynamicWeeklyRsiDate": "20261030",
+        "weeklyFresh": true,
+        "dynamicWeeklyFresh": true,
+        "rsiPass": true,
+        "inOversoldZone": true,
+        "weeklyCross20": false,
+        "dynamicWatch": false,
+        "completedWeekCount": 30,
+        "rsiReason": "当周动态RSI6进入20以下区域：20261030 RSI6=0.00≤20；周内会变化"
+      }
+    },
+    "完成周上穿不再替代动态区域条件": {
+      "pass": true,
+      "evidence": {
+        "dailyDate": "20261030",
+        "weeklyRsiDate": "20261023",
+        "previousWeeklyRsiDate": "20261016",
+        "weeklyRsi": 53.41,
+        "previousWeeklyRsi": 0.0,
+        "weeklyRsi6": 53.41,
+        "previousWeeklyRsi6": 0.0,
+        "dynamicWeeklyRsi6": 53.41,
+        "dynamicWeeklyRsiDate": "20261030",
+        "weeklyFresh": true,
+        "dynamicWeeklyFresh": true,
+        "rsiPass": false,
+        "inOversoldZone": false,
+        "weeklyCross20": true,
+        "dynamicWatch": true,
+        "completedWeekCount": 30,
+        "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20"
+      }
+    },
+    "六宽基含A500且沪深300唯一": {
+      "pass": true,
+      "evidence": [
+        [
+          "000016.SH",
+          "上证50"
+        ],
+        [
+          "000300.SH",
+          "沪深300"
+        ],
+        [
+          "000510.SH",
+          "中证A500"
+        ],
+        [
+          "000905.SH",
+          "中证500"
+        ],
+        [
+          "000688.SH",
+          "科创50"
+        ],
+        [
+          "399673.SZ",
+          "创业板50"
+        ]
+      ]
+    },
+    "任一指数单独开窗:000016.SH": {
+      "pass": true,
+      "evidence": {
+        "active": true,
+        "qualified": true,
+        "expired": false,
+        "pendingConfirmation": false,
+        "extremeEvidence": [
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerDetails": [
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerIndices": [
+          "上证50"
+        ],
+        "topRisks": [],
+        "blockedBy": [],
+        "startedDate": "2026-10-30",
+        "tradeDate": "20261030",
+        "elapsedDays": 0,
+        "remainingDays": 1,
+        "maxDays": null,
+        "lookbackDays": null,
+        "reason": "当周动态RSI6进入20以下区域，强制开窗：上证50 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点"
+      }
+    },
+    "任一指数单独开窗:000300.SH": {
+      "pass": true,
+      "evidence": {
+        "active": true,
+        "qualified": true,
+        "expired": false,
+        "pendingConfirmation": false,
+        "extremeEvidence": [
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerDetails": [
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerIndices": [
+          "沪深300"
+        ],
+        "topRisks": [],
+        "blockedBy": [],
+        "startedDate": "2026-10-30",
+        "tradeDate": "20261030",
+        "elapsedDays": 0,
+        "remainingDays": 1,
+        "maxDays": null,
+        "lookbackDays": null,
+        "reason": "当周动态RSI6进入20以下区域，强制开窗：沪深300 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点"
+      }
+    },
+    "任一指数单独开窗:000510.SH": {
+      "pass": true,
+      "evidence": {
+        "active": true,
+        "qualified": true,
+        "expired": false,
+        "pendingConfirmation": false,
+        "extremeEvidence": [
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerDetails": [
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerIndices": [
+          "中证A500"
+        ],
+        "topRisks": [],
+        "blockedBy": [],
+        "startedDate": "2026-10-30",
+        "tradeDate": "20261030",
+        "elapsedDays": 0,
+        "remainingDays": 1,
+        "maxDays": null,
+        "lookbackDays": null,
+        "reason": "当周动态RSI6进入20以下区域，强制开窗：中证A500 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点"
+      }
+    },
+    "任一指数单独开窗:000905.SH": {
+      "pass": true,
+      "evidence": {
+        "active": true,
+        "qualified": true,
+        "expired": false,
+        "pendingConfirmation": false,
+        "extremeEvidence": [
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerDetails": [
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerIndices": [
+          "中证500"
+        ],
+        "topRisks": [],
+        "blockedBy": [],
+        "startedDate": "2026-10-30",
+        "tradeDate": "20261030",
+        "elapsedDays": 0,
+        "remainingDays": 1,
+        "maxDays": null,
+        "lookbackDays": null,
+        "reason": "当周动态RSI6进入20以下区域，强制开窗：中证500 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点"
+      }
+    },
+    "任一指数单独开窗:000688.SH": {
+      "pass": true,
+      "evidence": {
+        "active": true,
+        "qualified": true,
+        "expired": false,
+        "pendingConfirmation": false,
+        "extremeEvidence": [
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerDetails": [
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerIndices": [
+          "科创50"
+        ],
+        "topRisks": [],
+        "blockedBy": [],
+        "startedDate": "2026-10-30",
+        "tradeDate": "20261030",
+        "elapsedDays": 0,
+        "remainingDays": 1,
+        "maxDays": null,
+        "lookbackDays": null,
+        "reason": "当周动态RSI6进入20以下区域，强制开窗：科创50 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点"
+      }
+    },
+    "任一指数单独开窗:399673.SZ": {
+      "pass": true,
+      "evidence": {
+        "active": true,
+        "qualified": true,
+        "expired": false,
+        "pendingConfirmation": false,
+        "extremeEvidence": [
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerDetails": [
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerIndices": [
+          "创业板50"
+        ],
+        "topRisks": [],
+        "blockedBy": [],
+        "startedDate": "2026-10-30",
+        "tradeDate": "20261030",
+        "elapsedDays": 0,
+        "remainingDays": 1,
+        "maxDays": null,
+        "lookbackDays": null,
+        "reason": "当周动态RSI6进入20以下区域，强制开窗：创业板50 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点"
+      }
+    },
+    "旧风险债券估值门不否决且保留普通窗": {
+      "pass": true,
+      "evidence": {
+        "window": "open",
+        "standardWindow": "closed",
+        "windowType": "extreme_rebound",
+        "temporary": true,
+        "temp": "🔴冷",
+        "verdict": "",
+        "broadStates": {
+          "上证50": "无数据",
+          "沪深300": "无数据",
+          "中证500": "无数据"
+        },
+        "nearPivot": false,
+        "allHigh": true,
+        "bondY10_1m": 30,
+        "bondNote": "10Y收益率近1月+30bp快速上行=资金趋紧，窗口降一档",
+        "oscSellAlerts": [
+          "上证50"
+        ],
+        "oscBuyWindows": [],
+        "oscReboundWatch": [],
+        "oscNote": "🚨 强硬减仓警报：上证50；⚡当周动态RSI6进入20以下区域，强制开窗：沪深300 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点",
+        "extremeEvidence": [
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "triggerIndices": [
+          "沪深300"
+        ],
+        "triggerDetails": [
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "dynamicWeeklyRsi6": 0.0,
+            "dynamicWeeklyRsiDate": "20261030",
+            "previousWeeklyRsi6": 0.0,
+            "weeklyRsi6": 0.0,
+            "previousWeeklyRsiDate": "20261016",
+            "weeklyRsiDate": "20261023",
+            "dailyDate": "20261030"
+          }
+        ],
+        "startedDate": "2026-10-30",
+        "remainingDays": 1,
+        "extremeRebound": {
+          "active": true,
+          "qualified": true,
+          "expired": false,
+          "pendingConfirmation": false,
+          "extremeEvidence": [
+            {
+              "indexCode": "000300.SH",
+              "indexName": "沪深300",
+              "dynamicWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsiDate": "20261030",
+              "previousWeeklyRsi6": 0.0,
+              "weeklyRsi6": 0.0,
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsiDate": "20261023",
+              "dailyDate": "20261030"
+            }
+          ],
+          "triggerDetails": [
+            {
+              "indexCode": "000300.SH",
+              "indexName": "沪深300",
+              "dynamicWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsiDate": "20261030",
+              "previousWeeklyRsi6": 0.0,
+              "weeklyRsi6": 0.0,
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsiDate": "20261023",
+              "dailyDate": "20261030"
+            }
+          ],
+          "triggerIndices": [
+            "沪深300"
+          ],
+          "topRisks": [],
+          "blockedBy": [],
+          "startedDate": "2026-10-30",
+          "tradeDate": "20261030",
+          "elapsedDays": 0,
+          "remainingDays": 1,
+          "maxDays": null,
+          "lookbackDays": null,
+          "reason": "当周动态RSI6进入20以下区域，强制开窗：沪深300 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点"
+        },
+        "oversoldValuationWatch": {
+          "active": true,
+          "label": "当周动态RSI6进入20以下区域",
+          "tradeDate": "20261030",
+          "requiredCount": 1,
+          "qualifiedCount": 1,
+          "qualifiedIndices": [
+            "沪深300"
+          ],
+          "items": [
+            {
+              "indexCode": "000016.SH",
+              "indexName": "上证50",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 53.41,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 53.41,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 53.41,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": false,
+              "inOversoldZone": false,
+              "weeklyCross20": true,
+              "dynamicWatch": true,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": false
+            },
+            {
+              "indexCode": "000300.SH",
+              "indexName": "沪深300",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 0.0,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 0.0,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": true,
+              "inOversoldZone": true,
+              "weeklyCross20": false,
+              "dynamicWatch": false,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6进入20以下区域：20261030 RSI6=0.00≤20；周内会变化",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6进入20以下区域：20261030 RSI6=0.00≤20；周内会变化",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": true
+            },
+            {
+              "indexCode": "000510.SH",
+              "indexName": "中证A500",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 53.41,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 53.41,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 53.41,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": false,
+              "inOversoldZone": false,
+              "weeklyCross20": true,
+              "dynamicWatch": true,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": false
+            },
+            {
+              "indexCode": "000905.SH",
+              "indexName": "中证500",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 53.41,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 53.41,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 53.41,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": false,
+              "inOversoldZone": false,
+              "weeklyCross20": true,
+              "dynamicWatch": true,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": false
+            },
+            {
+              "indexCode": "000688.SH",
+              "indexName": "科创50",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 53.41,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 53.41,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 53.41,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": false,
+              "inOversoldZone": false,
+              "weeklyCross20": true,
+              "dynamicWatch": true,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": false
+            },
+            {
+              "indexCode": "399673.SZ",
+              "indexName": "创业板50",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 53.41,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 53.41,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 53.41,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": false,
+              "inOversoldZone": false,
+              "weeklyCross20": true,
+              "dynamicWatch": true,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": false
+            }
+          ],
+          "reason": "当周动态RSI6进入20以下区域：1只=沪深300；周内会变化",
+          "note": "上证50、沪深300、中证A500、中证500、科创50、创业板50；任一指数包含最新交易日所在未完结周的Wilder RSI6≤20且行情日等于本批有效日即满足；399300/000300不重复。开窗只看当前是否处于≤20区域；全部>20即关闭，不延续旧active状态。PE/PB仅参考，不参与开窗；本证据不是趋势反转或买点。",
+          "effectiveActive": true,
+          "blockedBy": []
+        },
+        "reason": "🚨 强硬减仓警报：上证50；⚡当周动态RSI6进入20以下区域，强制开窗：沪深300 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点；水温🔴冷（—）；宽基形态：上证50无数据，沪深300无数据，中证500无数据；10Y收益率近1月+30bp快速上行=资金趋紧，窗口降一档；当周动态RSI6进入20以下区域，不是普通趋势开窗；周内会变化",
+        "note": "普通standardWindow规则不变：水温、宽基形态、10Y收益率及BOLL99·RSI14仍先照常计算。随后仅检查上证50、沪深300、中证A500、中证500、科创50、创业板50包含最新交易日所在未完结周的Wilder RSI6：任一指数当周动态RSI6≤20且行情日等于本批有效日，即最后覆盖为open，标extreme_rebound/temporary；冷水温、债券降级、旧顶部风险、强硬减仓、指数数量与PE/PB均不否决此新门。只有处于≤20区域时active，全部>20即关闭，不延续旧active状态。周内数值会变化。所有信号仅供研究，非投资建议。"
+      }
+    },
+    "离开区域旧active不延续": {
+      "pass": true,
+      "evidence": {
+        "window": "closed",
+        "standardWindow": "closed",
+        "windowType": "standard",
+        "temporary": false,
+        "temp": "🔴冷",
+        "verdict": "",
+        "broadStates": {
+          "上证50": "无数据",
+          "沪深300": "无数据",
+          "中证500": "无数据"
+        },
+        "nearPivot": false,
+        "allHigh": true,
+        "bondY10_1m": 30,
+        "bondNote": "10Y收益率近1月+30bp快速上行=资金趋紧，窗口降一档",
+        "oscSellAlerts": [
+          "上证50"
+        ],
+        "oscBuyWindows": [],
+        "oscReboundWatch": [],
+        "oscNote": "🚨 强硬减仓警报：上证50",
+        "extremeEvidence": [],
+        "triggerIndices": [],
+        "triggerDetails": [],
+        "startedDate": null,
+        "remainingDays": 0,
+        "extremeRebound": {
+          "active": false,
+          "qualified": false,
+          "expired": false,
+          "pendingConfirmation": false,
+          "extremeEvidence": [],
+          "triggerDetails": [],
+          "triggerIndices": [],
+          "topRisks": [],
+          "blockedBy": [],
+          "startedDate": null,
+          "tradeDate": "20261030",
+          "elapsedDays": 0,
+          "remainingDays": 0,
+          "maxDays": null,
+          "lookbackDays": null,
+          "reason": "六宽基当周动态RSI6均未处于20以下区域，或行情缺失/不新鲜；不开窗且不延续旧active状态"
+        },
+        "oversoldValuationWatch": {
+          "active": false,
+          "label": "当周动态RSI6进入20以下区域",
+          "tradeDate": "20261030",
+          "requiredCount": 1,
+          "qualifiedCount": 0,
+          "qualifiedIndices": [],
+          "items": [
+            {
+              "indexCode": "000016.SH",
+              "indexName": "上证50",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 53.41,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 53.41,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 53.41,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": false,
+              "inOversoldZone": false,
+              "weeklyCross20": true,
+              "dynamicWatch": true,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": false
+            },
+            {
+              "indexCode": "000300.SH",
+              "indexName": "沪深300",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 53.41,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 53.41,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 53.41,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": false,
+              "inOversoldZone": false,
+              "weeklyCross20": true,
+              "dynamicWatch": true,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": false
+            },
+            {
+              "indexCode": "000510.SH",
+              "indexName": "中证A500",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 53.41,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 53.41,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 53.41,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": false,
+              "inOversoldZone": false,
+              "weeklyCross20": true,
+              "dynamicWatch": true,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": false
+            },
+            {
+              "indexCode": "000905.SH",
+              "indexName": "中证500",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 53.41,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 53.41,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 53.41,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": false,
+              "inOversoldZone": false,
+              "weeklyCross20": true,
+              "dynamicWatch": true,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": false
+            },
+            {
+              "indexCode": "000688.SH",
+              "indexName": "科创50",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 53.41,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 53.41,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 53.41,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": false,
+              "inOversoldZone": false,
+              "weeklyCross20": true,
+              "dynamicWatch": true,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": false
+            },
+            {
+              "indexCode": "399673.SZ",
+              "indexName": "创业板50",
+              "dailyDate": "20261030",
+              "weeklyRsiDate": "20261023",
+              "previousWeeklyRsiDate": "20261016",
+              "weeklyRsi": 53.41,
+              "previousWeeklyRsi": 0.0,
+              "weeklyRsi6": 53.41,
+              "previousWeeklyRsi6": 0.0,
+              "dynamicWeeklyRsi6": 53.41,
+              "dynamicWeeklyRsiDate": "20261030",
+              "weeklyFresh": true,
+              "dynamicWeeklyFresh": true,
+              "rsiPass": false,
+              "inOversoldZone": false,
+              "weeklyCross20": true,
+              "dynamicWatch": true,
+              "completedWeekCount": 30,
+              "rsiReason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "pePct10y": null,
+              "pbPct10y": null,
+              "valuationLow": false,
+              "reason": "当周动态RSI6=53.41>20，不在20以下区域，不开窗；完成周上穿仅作历史证据：20261016 0.00≤20 → 20261023 53.41>20",
+              "valuationReason": "估值缺失（仅参考）",
+              "qualified": false
+            }
+          ],
+          "reason": "六宽基当周动态RSI6均未进入20以下区域，不开窗",
+          "note": "上证50、沪深300、中证A500、中证500、科创50、创业板50；任一指数包含最新交易日所在未完结周的Wilder RSI6≤20且行情日等于本批有效日即满足；399300/000300不重复。开窗只看当前是否处于≤20区域；全部>20即关闭，不延续旧active状态。PE/PB仅参考，不参与开窗；本证据不是趋势反转或买点。",
+          "effectiveActive": false,
+          "blockedBy": []
+        },
+        "reason": "🚨 强硬减仓警报：上证50；水温🔴冷（—）；宽基形态：上证50无数据，沪深300无数据，中证500无数据；10Y收益率近1月+30bp快速上行=资金趋紧，窗口降一档；大级别无做多窗口，下级信号降级为观察",
+        "note": "普通standardWindow规则不变：水温、宽基形态、10Y收益率及BOLL99·RSI14仍先照常计算。随后仅检查上证50、沪深300、中证A500、中证500、科创50、创业板50包含最新交易日所在未完结周的Wilder RSI6：任一指数当周动态RSI6≤20且行情日等于本批有效日，即最后覆盖为open，标extreme_rebound/temporary；冷水温、债券降级、旧顶部风险、强硬减仓、指数数量与PE/PB均不否决此新门。只有处于≤20区域时active，全部>20即关闭，不延续旧active状态。周内数值会变化。所有信号仅供研究，非投资建议。"
+      }
+    },
+    "任务103右侧质量函数逐字未改:_vcp_right_side_quality": {
+      "pass": true,
+      "evidence": null
+    },
+    "任务113授权函数接入统一日线门:_vcp_level_strict": {
+      "pass": true,
+      "evidence": null
+    },
+    "任务113授权函数接入统一日线门:_vcp_fixed_base": {
+      "pass": true,
+      "evidence": null
+    },
+    "动态开窗全链路新文案": {
+      "pass": true,
+      "evidence": null
+    },
+    "旧实时口径已清理": {
+      "pass": true,
+      "evidence": null
+    },
+    "独立RSI14高股息模块未误删": {
+      "pass": true,
+      "evidence": null
+    }
+  }
+}

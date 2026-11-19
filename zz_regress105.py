@@ -51,7 +51,8 @@ def check(name, condition, evidence=None):
 def candidate_view(main):
     if not main:
         return None
-    keys = ('formed', 'structurePath', 'priceMode', 'days', 'amplitude', 'segAmps',
+    keys = ('formed', 'structureFormed', 'eligible', 'displayEligible', 'dailyTrendPass', 'dailyTrend',
+            'structurePath', 'priceMode', 'days', 'amplitude', 'segAmps',
             'contractions', 'distPct', 'pivot', 'volFirst', 'volLast', 'volRatio',
             'rightSideQuality', 'recentVolumeQuality', 'volumeMA', 'rejectReasons', 'reasons')
     return {k: main[k] for k in keys if k in main}
@@ -82,7 +83,9 @@ for case in CASES:
     result = scan_asof(case['code'], case['asOf'])
     result.update({'name': case['name'], 'humanLabel': case['label']})
     if case['code'] in ('000776.SZ', '603392.SH'):
-        result['pass'] = result['pattern'] == VCP
+        # 任务113将人工结构标签与正式资格分层；结构正例不得因新趋势门被改写为结构不成立。
+        result['pass'] = any((result.get(path) or {}).get('structureFormed')
+                             for path in ('daily', 'weekly', 'fixedBase'))
     elif case['code'] == '600118.SH':
         result['pass'] = result['pattern'] in PLATFORMS and result['pattern'] != VCP
     else:
@@ -104,7 +107,11 @@ for spec in WINDOWS:
     positives = [r for r in records if r['pattern'] == VCP]
     platforms = [r for r in records if r['pattern'] in PLATFORMS]
     if spec['kind'] == 'vcp':
-        passed = bool(positives) and all(r['lastInputDate'] == r['asOf'] for r in positives)
+        # 不再预设每个旧窗口必须仍有正式阳性；逐日核验PIT与任务113正式资格证据。
+        passed = bool(records) and all(r['lastInputDate'] == r['asOf'] for r in records) and all(
+            (r.get('main') or {}).get('dailyTrendPass') is True
+            and ((r.get('main') or {}).get('dailyTrend') or {}).get('pass') is True
+            for r in positives)
         first = positives[0] if positives else None
         # 最佳日仅按当时结构证据：紧致度优先，其次量缩和枢轴距离；绝不使用后续收益。
         def score(r):
@@ -159,10 +166,12 @@ check('右侧剧烈起伏通用边界拒绝', not violent['pass'] and violent['v
 bf = next(r for r in case_rows if r['code'] == '002371.SZ')
 check('务实摆动序列不独立成型', (bf.get('daily') or {}).get('priceMode') == 'practical'
       and not (bf.get('daily') or {}).get('formed'), bf.get('daily'))
-fz_positive = next(r for r in window_rows if r['code'] == '002027.SZ')['first']
-check('固定区间中继允许接近一年新高', fz_positive['pattern'] == VCP
-      and (fz_positive.get('main') or {}).get('structurePath') == 'fixed_base'
-      and fz_positive['trendPass'] is False, fz_positive.get('main'))
+fz_records = next(r for r in window_rows if r['code'] == '002027.SZ')['records']
+fz_structures = [r for r in fz_records if (r.get('fixedBase') or {}).get('structureFormed')]
+check('固定区间中继结构保留且由任务113日线门决定正式资格', bool(fz_structures)
+      and all(r['fixedBase']['formed'] == r['fixedBase']['dailyTrendPass'] for r in fz_structures)
+      and all((r['fixedBase'].get('dailyTrend') or {}).get('source') == 'daily' for r in fz_structures),
+      [{'asOf': r['asOf'], 'fixedBase': r['fixedBase']} for r in fz_structures])
 platform_bars = [(f'b{i:02d}', 10.05, 9.95, 10.0, 100.0 if i < 40 else 110.0) for i in range(90)]
 rhythmic = ud._bottom_platform_rhythmic(platform_bars, dist_gate=(-5, 12))
 check('底部平台允许量能律动及温和放大', rhythmic and rhythmic['formed']

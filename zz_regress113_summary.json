@@ -1,0 +1,50 @@
+{
+  "task": 113,
+  "allPassed": true,
+  "checksPassed": 309,
+  "checksTotal": 309,
+  "failed": [],
+  "dataSha256": "f77eb8dcfcd11c0d582ea44eec9b25b67b859fd9c1de383c4dde6cbb4fa25d45",
+  "caseChangedCount": 0,
+  "windowChangedCount": 8,
+  "windowPositiveCounts": {
+    "000776.SZ": {
+      "before": 1,
+      "after": 1,
+      "changedDays": 0
+    },
+    "603392.SH": {
+      "before": 1,
+      "after": 1,
+      "changedDays": 0
+    },
+    "002027.SZ": {
+      "before": 1,
+      "after": 0,
+      "changedDays": 1
+    },
+    "600030.SH": {
+      "before": 6,
+      "after": 0,
+      "changedDays": 6
+    },
+    "601328.SH": {
+      "before": 24,
+      "after": 23,
+      "changedDays": 1
+    },
+    "600118.SH": {
+      "before": 0,
+      "after": 0,
+      "changedDays": 0
+    }
+  },
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "pitOnly": true,
+  "notMarketWinRate": true,
+  "manualDispatch": false,
+  "productionDataRegenerated": false
+}

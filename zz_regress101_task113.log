@@ -1,0 +1,33 @@
+{
+  "output": "zz_regress101.json",
+  "checksPassed": 19,
+  "checksTotal": 19,
+  "failed": [],
+  "sampleChanges": [
+    {
+      "id": "N04",
+      "before": null,
+      "after": "VCP收缩型",
+      "beforeValid": true,
+      "afterValid": true,
+      "fallbackUsed": false
+    }
+  ],
+  "fixedPoolChanges": [],
+  "currentPoolChanges": [],
+  "currentCups": [
+    {
+      "code": "600803.SH",
+      "name": "新奥股份"
+    },
+    {
+      "code": "600938.SH",
+      "name": "中国海油"
+    },
+    {
+      "code": "601018.SH",
+      "name": "宁波港"
+    }
+  ],
+  "currentAttributes": []
+}

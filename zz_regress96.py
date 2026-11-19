@@ -40,9 +40,12 @@ def scan(ud, rows, mv_yi=None):
         d_lv = ud._vcp_level_strict(bars, ud.VCP_DAILY_WIN, ud.VCP_DAILY_K, max_dd=0.15,
                                     max_contraction=8.0, dist_high250=dist_high250, hist_pct=hist_pct,
                                     practical=True)
+        # 任务113只有现行模块支持周线结构读取原始日线；历史基线保持其旧函数签名。
+        daily_trend_kwargs = {'trend_bars': bars} if hasattr(ud, '_vcp_daily_trend_gate') else {}
         w_lv = ud._vcp_level_strict(ud._resample_weekly(rows), ud.VCP_WEEK_WIN, ud.VCP_WEEK_K,
                                     max_dd=0.15, max_contraction=8.0,
-                                    dist_high250=dist_high250, hist_pct=hist_pct, practical=True)
+                                    dist_high250=dist_high250, hist_pct=hist_pct, practical=True,
+                                    **daily_trend_kwargs)
         platform_vcp = ud._platform_vcp_attribute(bars, pf, hist_pct, dist_high250)
         if platform_vcp and platform_vcp['formed']:
             pf = dict(pf)
@@ -102,7 +105,8 @@ def scan(ud, rows, mv_yi=None):
     else:
         pattern = raw
     if main_lv:
-        ud._apply_post_breakout_position_defect(main_lv, hist_pct, dist_high250)
+        if pattern != 'VCP收缩型' or not hasattr(ud, '_vcp_daily_trend_gate'):
+            ud._apply_post_breakout_position_defect(main_lv, hist_pct, dist_high250)
         if main_lv.get('breakout'):
             if not ud._cup_signal_displayable(main_lv):
                 reasons.append(f"首次信号年龄{main_lv.get('breakoutAge')}或失效位/距离不满足当前展示门")

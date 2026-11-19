@@ -8,7 +8,7 @@ import {
   Crown, Trophy, TrendingDown as TrendDown, Radar, Sprout, Swords
 } from 'lucide-react';
 import type { FundData } from '@/hooks/useFundData';
-import { formalPatternDisplayable, patternEvidenceText } from './patternEvidence';
+import { formalPatternDisplayable, patternEvidenceText, vcpDailyTrendText } from './patternEvidence';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from 'recharts';
@@ -1005,9 +1005,9 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     isDefect ? 'bg-amber-600' : it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : it.pattern === '旗形整理' ? 'bg-sky-500' : it.pattern === '底部整理' ? 'bg-slate-500' : it.pattern === '高位平台⚠️' ? 'bg-amber-500' : 'bg-teal-500'
                                   }`}
                                   title={isFixedBase
-                                    ? (it.patternNote || `固定区间VCP：${it.fixedBase.days}日振幅${it.fixedBase.amplitude}%·三段振幅${(it.fixedBase.segAmps || []).join('→')}%·区间/前20日均量${it.fixedBase.volRatio}·仅使用识别日当时数据`)
+                                    ? `${it.patternNote || `固定区间VCP：${it.fixedBase.days}日振幅${it.fixedBase.amplitude}%·三段振幅${(it.fixedBase.segAmps || []).join('→')}%·区间/前20日均量${it.fixedBase.volRatio}·仅使用识别日当时数据`}\n${vcpDailyTrendText(it.vcpDailyTrend)}`
                                     : isContract
-                                    ? `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}（首${lv?.volFirst ?? '—'}→末${lv?.volLast ?? '—'}）·枢轴=末次收缩高点`
+                                    ? `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}（首${lv?.volFirst ?? '—'}→末${lv?.volLast ?? '—'}）·枢轴=末次收缩高点\n${vcpDailyTrendText(it.vcpDailyTrend)}`
                                     : it.cupHandle
                                     ? `杯柄·CANSLIM：杯深${it.cupHandle.cupDepth}%·前置涨幅${it.cupHandle.preGain ?? '—'}%·柄${it.cupHandle.days}天振幅${it.cupHandle.amplitude ?? '—'}%·柄/杯量比${it.cupHandle.volRatio ?? '—'}·柄末段量比${it.cupHandle.tailRatio ?? '—'}·杯柄共${it.cupHandle.totalDays}天·枢轴=柄部高点${it.cupHandle.breakout ? `·锚点${it.cupHandle.anchorDate}` : ''}·历史最高收盘${it.cupHandle.historicalHighClose ?? '—'}(${it.cupHandle.historicalHighDate ?? '—'})·距历史高点${it.cupHandle.distanceToHistoricalHighPct ?? '—'}%·${it.cupHandle.historyScope ?? '历史范围缺失'}·排除原因=${it.cupHandle.historyExclusionReason ?? '无，历史高位门通过'}`
                                     : isFlag
@@ -1040,7 +1040,7 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     title={it.patternNote || it.vcpAttribute.note || '平台型VCP属性；仅为阶段性证据，不计入正式VCP'}
                                   >平台型VCP属性（非正式VCP）</span>
                                 )}
-                                {(it.histPct ?? 0) > 60 && (
+                                {!isContract && (it.histPct ?? 0) > 60 && (
                                   <span
                                     className="inline-block text-[9px] font-bold text-amber-700 bg-amber-100 rounded px-1 py-0.5 mt-0.5"
                                     title={`一年分位 ${it.histPct}%——高位${it.pattern === '旗形整理' ? '旗形' : '平台'}，形态成立但位置偏高，风险自担`}

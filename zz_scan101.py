@@ -23,17 +23,24 @@ def scan(ud, rows, mv_yi=None):
     d_lv = ud._vcp_level_strict(bars, ud.VCP_DAILY_WIN, ud.VCP_DAILY_K, max_dd=0.15,
                                 max_contraction=8.0, dist_high250=dist_high250, hist_pct=hist_pct,
                                 practical=True)
+    daily_trend_kwargs = {'trend_bars': bars} if hasattr(ud, '_vcp_daily_trend_gate') else {}
     w_lv = ud._vcp_level_strict(ud._resample_weekly(rows), ud.VCP_WEEK_WIN, ud.VCP_WEEK_K,
                                 max_dd=0.15, max_contraction=8.0,
-                                dist_high250=dist_high250, hist_pct=hist_pct, practical=True)
+                                dist_high250=dist_high250, hist_pct=hist_pct, practical=True,
+                                **daily_trend_kwargs)
     fixed_lv = ud._vcp_fixed_base(bars)
     platform_vcp = ud._platform_vcp_attribute(bars, pf, hist_pct, dist_high250)
+    if hasattr(ud, '_vcp_daily_trend_gate'):
+        d_lv = ud._apply_vcp_daily_trend_eligibility(d_lv, bars)
+        w_lv = ud._apply_vcp_daily_trend_eligibility(w_lv, bars)
+        fixed_lv = ud._apply_vcp_daily_trend_eligibility(fixed_lv, bars)
+        platform_vcp = ud._apply_vcp_daily_trend_eligibility(platform_vcp, bars)
     if platform_vcp and platform_vcp['formed']:
         pf = dict(pf)
         pf['vcpAttribute'] = platform_vcp
-    d_c3 = bool(d_lv and d_lv['formed'])
-    w_c3 = bool(w_lv and w_lv['formed'])
-    f_c3 = bool(fixed_lv and fixed_lv['formed'])
+    d_c3 = bool(d_lv and d_lv.get('displayEligible'))
+    w_c3 = bool(w_lv and w_lv.get('displayEligible'))
+    f_c3 = bool(fixed_lv and fixed_lv.get('displayEligible'))
     ch = ud._cup_handle_strict(bars, True, dist_high250=dist_high250,
                                hist_pct=hist_pct, allow_weekly_defect=True)
     recent = ud._cup_early_breakout(bars) if not (d_c3 or w_c3) else None
@@ -96,7 +103,8 @@ def scan(ud, rows, mv_yi=None):
     fallback_used = False
     if main_lv:
         for attempt in range(2):
-            ud._apply_post_breakout_position_defect(main_lv, hist_pct, dist_high250)
+            if pattern != 'VCP收缩型' or not hasattr(ud, '_vcp_daily_trend_gate'):
+                ud._apply_post_breakout_position_defect(main_lv, hist_pct, dist_high250)
             if main_lv.get('breakout'):
                 display_ok = ud._cup_signal_displayable(main_lv)
                 if not display_ok:

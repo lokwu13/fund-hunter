@@ -1,0 +1,83 @@
+{
+  "task": 113,
+  "allPassed": true,
+  "releaseReady": true,
+  "rules": {
+    "minimumDailySamples": 200,
+    "strictTrend": "close > MA50 > MA150 > MA200",
+    "paths": ["daily_swing", "weekly_swing_daily_trend", "fixed_base", "platform_attribute"],
+    "vcpNearHighExclusionRemoved": true,
+    "vcpAnnualPercentileExclusionRemoved": true,
+    "cupHistoryGatePreserved": true,
+    "platformAndBottomPositionGatesPreserved": true,
+    "structureVolumeRightSidePivotAndTrendTemplatePreserved": true
+  },
+  "taskRegression": {
+    "command": "PYTHONIOENCODING=utf-8 PYTHONPATH=scripts python zz_regress113.py",
+    "success": true,
+    "checksPassed": 309,
+    "checksTotal": 309,
+    "failed": [],
+    "output": "zz_regress113_summary.json",
+    "fullEvidence": "zz_regress113_report.json",
+    "log": "zz_regress113_task113.log"
+  },
+  "jointRegression": {
+    "success": true,
+    "passed": 16,
+    "total": 16,
+    "tasks": [95, 96, 98, 99, 101, 102, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113],
+    "output": "zz_joint_regress113.json",
+    "allReturncodesZero": true,
+    "freshBatches": true
+  },
+  "pitComparison": {
+    "pitOnly": true,
+    "notMarketWinRate": true,
+    "sampleSha256": "f77eb8dcfcd11c0d582ea44eec9b25b67b859fd9c1de383c4dde6cbb4fa25d45",
+    "designatedCaseChangedCount": 0,
+    "windowChangedCount": 8,
+    "windows": [
+      {"name": "广发证券", "before": 1, "after": 1, "changedDays": 0},
+      {"name": "万泰生物", "before": 1, "after": 1, "changedDays": 0},
+      {"name": "分众传媒", "before": 1, "after": 0, "changedDays": 1, "changes": [{"asOf": "20250801", "before": "VCP收缩型", "after": null}]},
+      {"name": "中信证券", "before": 6, "after": 0, "changedDays": 6, "changes": [
+        {"asOf": "20240823", "before": "VCP收缩型", "after": "底部整理"},
+        {"asOf": "20240913", "before": "VCP收缩型", "after": "底部整理"},
+        {"asOf": "20240918", "before": "VCP收缩型", "after": "底部整理"},
+        {"asOf": "20240919", "before": "VCP收缩型", "after": "底部整理"},
+        {"asOf": "20240920", "before": "VCP收缩型", "after": "平台整理"},
+        {"asOf": "20240923", "before": "VCP收缩型", "after": "平台整理"}
+      ]},
+      {"name": "交通银行", "before": 24, "after": 23, "changedDays": 1, "changes": [{"asOf": "20231129", "before": "VCP收缩型", "after": null}]},
+      {"name": "中国卫星", "before": 0, "after": 0, "changedDays": 0}
+    ],
+    "allChangedDaysHaveFixedBaseStructureAndFailedDailyTrend": true
+  },
+  "build": {
+    "command": "npm run build",
+    "success": true,
+    "returncode": 0,
+    "modulesTransformed": 2362,
+    "warning": "Some chunks are larger than 500 kB after minification",
+    "log": "zz_build113.log",
+    "machineOutput": "zz_build113.json",
+    "js": {"path": "dist/assets/index-CKlECBPz-v25.js", "bytes": 1407442, "sha256": "2b6db71909067c204736edd4ce47a3e7bf594ff3826baa6c152d2db518ceb136"},
+    "css": {"path": "dist/assets/index-DIF-ROR-.css", "bytes": 109869, "sha256": "5d5adce1b2bcf117dc0291ad895d4480a460c0a9b9d679edf3707b337f8ff055"},
+    "developmentServerStarted": false
+  },
+  "localFundData": {
+    "public/fund_data.json": {"bytes": 594886, "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"},
+    "src/data/fund_data.json": {"bytes": 594886, "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"},
+    "unchangedFromTask113Regression": true,
+    "unchangedByBuild": true,
+    "includedInReleaseWhitelist": false
+  },
+  "productionDataRegenerated": false,
+  "manualDispatch": false,
+  "nightlyExecuted": false,
+  "workflowModified": false,
+  "scheduleModified": false,
+  "productionListRefreshed": false,
+  "note": "allPassed仅表示发布前本地必需测试与最新真实构建全部通过；自动push run和线上结果另见任务113线上核验JSON。本次只发布代码，未重算线上生产名单。"
+}
