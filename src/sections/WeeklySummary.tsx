@@ -5,7 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from 'lucide-react';
 import { useState } from 'react';
 import { useFundData } from '@/hooks/useFundData';
-import { broadOscFor, buildFunnelStepViews, dividendTop20Text, extremeReboundActive, oversoldValueDirectionsText, sectorEtfFor } from './funnelConclusions';
+import { broadOscFor, buildFunnelStepViews, dividendDefenseText, extremeReboundActive, oversoldValueDirectionsText, sectorEtfFor } from './funnelConclusions';
 import { formalPatternDisplayable, patternEvidenceText, vcpDailyTrendText, vcpGestationText, vcpLowVolTightText } from './patternEvidence';
 import PatternHistoryLabel from './PatternHistoryLabel';
 
@@ -159,13 +159,13 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
               </button>
             </div>
           )}
-          {data.dividendWatch?.rsi6Top20?.visible && (
+          {data.dividendWatch?.visible && (
             <div className="mt-2 rounded-md border border-cyan-200 bg-white/60 px-2.5 py-2">
-              <p className="text-[11px] leading-relaxed">{dividendTop20Text(data)}</p>
-              <button type="button" aria-controls="rsi6-dividend-top20"
+              <p className="text-[11px] leading-relaxed">{dividendDefenseText(data)}</p>
+              <button type="button" aria-controls="index-dividend-defensive"
                       className="mt-1 text-[10px] font-semibold underline underline-offset-2"
-                      onClick={() => onNavigate?.('sectors', 'rsi6-dividend-top20')}>
-                查看全A股息率TTM Top20完整原榜 →
+                      onClick={() => onNavigate?.('sectors', 'index-dividend-defensive')}>
+                查看逐指数高股息防御完整榜与数据覆盖 →
               </button>
             </div>
           )}
@@ -455,14 +455,14 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                         </div>
                       )}
 
-                      {/* 第3步：普通形态随窗口灰显；高股息由行业/概念独立催化控制。 */}
+                      {/* 第3步：高股息仅由每个宽基自身周RSI6独立控制。 */}
                       {st.key === 'vcp' && (() => {
                         const rows = (st.rows || []).filter(formalPatternDisplayable);
                         const reson = rows.filter((r: any) => r.track === 'reson');
                         const cherry = rows.filter((r: any) => r.track === 'cherry');
                         const reserve = rows.filter((r: any) => r.track === 'reserve');
                         const dw = data.dividendWatch;
-                        const dividendGroups = dw?.groups || [];
+                        const dividendBoards = (dw?.indexBoards || []).filter((board) => board.open);
                         const renderRow = (r: any) => (
                           <div key={r.code} className={`rounded-lg border px-2 py-1.5 hover:bg-slate-50 ${r.defects?.length ? 'border-amber-200 bg-amber-50/40' : 'border-transparent'} ${r.track === 'reserve' && (r.breakoutAge ?? 0) > 3 ? 'opacity-60' : ''}`}>
                             <div className="flex items-center gap-x-2 gap-y-1 flex-wrap">
@@ -546,36 +546,29 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                 </div>
                               </details>
                             )}
-                            <details open={dw?.visible ? true : undefined} className={`rounded-lg border px-2 py-1.5 ${dw?.visible ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-slate-50/70'}`}>
-                              <summary className={`cursor-pointer text-[10px] font-semibold ${dw?.visible ? 'text-emerald-800' : 'text-slate-600'}`}>
-                                高股息防御 {dw?.visible ? `${dw.count}只` : '未展示'}（行业/概念独立催化 · {dw?.catalystGroupCount ?? 0}组）
+                            <details open={dw?.visible ? true : undefined} className={`rounded-lg border px-2 py-1.5 ${dw?.visible ? 'border-cyan-300 bg-cyan-50' : 'border-slate-200 bg-slate-50/70'}`}>
+                              <summary className={`cursor-pointer text-[10px] font-semibold ${dw?.visible ? 'text-cyan-800' : 'text-slate-600'}`}>
+                                高股息防御 {dw?.visible ? `${dw.triggeredCount}个指数独立触发` : '未展示'}（自身周RSI6严格&lt;20 · 20整不触发）
                               </summary>
-                              <div className="mt-1 space-y-1 text-[10px] text-slate-600">
-                                <p>{(dw?.reasons || []).join('；') || '暂无行业/概念催化'}</p>
-                                <p className="text-[9px] text-slate-500">{dw?.note || '近4个完成周曾周RSI14<20，且缩量后出现首次量价催化才开门。'}</p>
-                              </div>
+                              <p className="mt-1 text-[9px] text-slate-500">每榜仅本指数成分正TTM股息率降序前10；缺失/非正值不入榜，不足10只显示实际数量；无形态、位置、估值、缩量、均线或资金流门。</p>
                               <div className="mt-1 grid gap-1.5">
-                                {dividendGroups.map((g) => (
-                                  <details key={`${g.type}-${g.code}`} open={g.count > 0 ? true : undefined} className="rounded border border-emerald-200 bg-white/60 px-2 py-1">
-                                    <summary className="cursor-pointer text-[10px] font-semibold text-emerald-800">
-                                      {g.type === 'industry' ? '行业' : '概念'}·{g.name}（{g.count}只）· 催化{g.catalystDate} · 已{g.signalAge}日
-                                    </summary>
-                                    <div className="mt-1 space-y-1 text-[9px] text-slate-500">
-                                      <p>近4周RSI：{g.rsiEvidence.map((r) => `${r.date} ${r.rsi ?? '—'}${r.below20 ? '<20' : ''}`).join(' · ')}</p>
-                                      <p>缩量：前10日/60日成交额比{g.shrinkEvidence.ratio}≤{g.shrinkEvidence.threshold}；量价：涨{g.priceVolumeEvidence.pctChange}% · 收复5日线{g.priceVolumeEvidence.ma5} · 成交额{g.priceVolumeEvidence.amountRatio}×此前5日均量</p>
-                                    </div>
+                                {dividendBoards.map((board) => (
+                                  <div key={board.indexCode} className="rounded border border-cyan-200 bg-white/70 px-2 py-1">
+                                    <p className="text-[10px] font-semibold text-cyan-800">{board.indexName} · 周RSI6 {board.weeklyRsi6 ?? '—'} · asOf {board.asOf || '缺失'} · 实际{board.count}只</p>
+                                    <p className="text-[9px] text-slate-500">成分{board.coverage.memberCount}只（快照{board.coverage.membershipAsOf || '日期未知'}）· 正股息率{board.coverage.validDividendCount} · 缺失{board.coverage.missingDividendCount} · 零/负{board.coverage.nonPositiveDividendCount}</p>
                                     <div className="mt-1 grid gap-1">
-                                      {g.items.map((r) => (
+                                      {board.items.map((r) => (
                                         <div key={r.code} className="flex items-center gap-x-2 gap-y-1 flex-wrap rounded bg-white/80 px-2 py-1">
+                                          <span className="text-[10px] font-bold text-cyan-700">#{r.rank}</span>
                                           <span className="text-xs font-semibold text-slate-800">{r.name}</span>
-                                          <span className="text-[10px] text-slate-500">{r.indexMembership.join('/')}</span>
+                                          <span className="text-[10px] text-slate-400">{r.code}</span>
                                           <span className="text-[11px] font-semibold text-cyan-700">TTM股息率{r.dvTtm}%</span>
-                                          <span className="text-[10px] text-slate-500">收盘{r.close ?? '—'}·总市值{(r.totalMv / 10000).toFixed(0)}亿·{r.trade_date}</span>
+                                          <span className="text-[10px] text-slate-500">{r.tradeDate}</span>
                                         </div>
                                       ))}
-                                      {g.count === 0 && <p className="text-[10px] text-slate-400">该催化组暂无同时满足股票池、市值和股息率条件的股票</p>}
+                                      {board.count === 0 && <p className="text-[10px] text-amber-700">{board.reasons.join('；')}</p>}
                                     </div>
-                                  </details>
+                                  </div>
                                 ))}
                               </div>
                             </details>

@@ -412,9 +412,9 @@ check('前端统一动态区域日期周内变化和历史估值字段', '当周
       and 'dynamicWeeklyRsiDate' in ui and '周内会变化' in ui
       and 'peHistoryPct' in ui and 'pbHistoryPct' in ui and 'compositeHistoryPct' in ui
       and 'historySampling.cachedMonthEnds' in ui and '非PIT' in ui and '生存者偏差' in ui)
-check('任务107完整Top20卡片与排雷顺延保留', 'rsi6-dividend-top20' in ui
-      and '明确命中排雷剔除并顺延补足' in ui and '未覆盖仅标未核验' in ui
-      and 'build_rsi6_dividend_top20' in production)
+check('任务116逐指数卡片替代全A Top20与排雷顺延', 'index-dividend-defensive' in ui
+      and 'board.items.map' in ui and 'rsi6Top20' not in ui
+      and 'build_index_dividend_watch' in production)
 
 # 后端第0步只输出新口径；普通VCP/高股息独立块不被删除。
 funnel_data = extreme_data()

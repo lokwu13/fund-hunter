@@ -1,0 +1,77 @@
+{
+  "task": 116,
+  "generatedAt": "2026-11-22T13:08:33+08:00",
+  "checks": {
+    "task116AllPassed": true,
+    "jointAllPassed": true,
+    "jointExactTasks": true,
+    "jointLogsPresent": true,
+    "task107ExplicitlySuperseded": true,
+    "buildPassed": true,
+    "productionDataUnchangedAcrossSuites": true,
+    "sixIndependentStrictRsiBoards": true,
+    "rankingAndSnapshotCoverage": true,
+    "oldProductionEntryRemoved": true,
+    "oldFunctionsProtected": true,
+    "frontendSharedIndexBoards": true,
+    "legacyFrontendRemoved": true,
+    "noProductionOrWorkflowActions": true
+  },
+  "allPassed": true,
+  "releaseReady": true,
+  "task116": {
+    "allPassed": true,
+    "checksPassed": 34,
+    "checksTotal": 34,
+    "pitOnly": true,
+    "oldFunctionsChanged": []
+  },
+  "jointRegression": {
+    "complete": true,
+    "allPassed": true,
+    "passed": 18,
+    "executed": 18,
+    "total": 18,
+    "superseded": {
+      "107": "zz_regress107_task116_superseded.json"
+    }
+  },
+  "build": {
+    "success": true,
+    "returncode": 0,
+    "modulesTransformed": 2363,
+    "warning": "Some chunks are larger than 500 kB after minification",
+    "assets": [
+      {
+        "path": "dist/assets/index-ZEQjHA0--v25.js",
+        "bytes": 1411257,
+        "sha256": "143ec60b359a2801028f3ef08a9c35e74f2419d0112c93f4c002441e3ad78096"
+      },
+      {
+        "path": "dist/assets/index-BQVIX0KR.css",
+        "bytes": 109945,
+        "sha256": "d43d5e880554f5d815f08c0975a3a0a0b8296a21ab847ba61b3eabd9ae077daa"
+      }
+    ]
+  },
+  "sourceSha256": {
+    "scripts/update_data.py": "d5981a907de6b407f242241badc1a8e3278a72cae6aea6225eb824d12424dda5",
+    "src/hooks/useFundData.ts": "153aa905d72cf19799252dc63b1da51c9e46e13ec2fb39d86653a26a153ec040",
+    "src/sections/funnelConclusions.ts": "7a2b345d62511610c555f064c090c133ef9b048b08d19db6a83832da55a70122",
+    "src/sections/WeeklySummary.tsx": "cb992e390afb5f787ee08fe87f57514ba830372260fc7cabeadae27f2b4c2699",
+    "src/sections/SectorHeatmap.tsx": "1a57dc3be494901733e49a864a7e971859e6008b5075009b6e1a96587ac7ec9f",
+    "zz_regress116.py": "a01fdc44025cf5d56dca48978a9e5ba9e964379bfadbf8ce184f551f84421104",
+    "zz_run_joint116.py": "1015e0815d805f304d7dd66b20a88a11bede44288b22b071b7a66fb4db26074f",
+    "zz_build116.py": "c13e03160c0b8fd91b33e03d3c9460024d2bb5cdb6e1095ca3df5a9dcd023374"
+  },
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "workflowModified": false,
+  "scheduleModified": false,
+  "developmentServerStarted": false,
+  "testsReexecutedByThisVerification": false
+}

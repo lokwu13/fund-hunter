@@ -2887,13 +2887,13 @@ def build_funnel(data):
               {'open': '窗口打开：水温偏暖+宽基临近买点，可以做多',
                'half': '半窗：只看不动，仓位与信号降档',
                'closed': '窗口关闭：今天到此为止'}[w])
-    # 只承接极端强制开窗结果；历史估值排序与全A股息率Top20均不反向开门。
+    # 高股息逐指数榜和超跌估值只读现有证据，均不反向修改0步窗口。
     value_directions_summary = _oversold_value_directions_summary(data)
     if value_directions_summary:
         concl0 += '；' + value_directions_summary
-    dividend_top20_summary = _rsi6_dividend_top20_summary(data)
-    if dividend_top20_summary:
-        concl0 += '；' + dividend_top20_summary
+    dividend_summary = _index_dividend_summary(data)
+    if dividend_summary:
+        concl0 += '；' + dividend_summary
     guide0 = ('本步回答：今天能不能做多？' + concl0 +
               ('。下级全部标灰"窗口未开"，无需往下翻' if w == 'closed'
                else '。可以继续看第1步，但只观察不动手' if w == 'half'
@@ -3191,7 +3191,7 @@ def build_funnel(data):
                  '被卡掉的积聚/启动板块在 dropped 字段如实列出）。'
                  '→3个股形态三轨全量展示（任务87）：🔗共振=第2步入选板块；⭐精选=原池内VCP/杯柄且近10缓存日主力净流入≥6天；'
                  '其余全部进入形态储备，不再excluded。储备原因只写板块未共振/资金未确认，defects单列具体形态或位置瑕疵。'
-                 '高股息防御独立组先过任务90双门（六宽基最近完成周RSI14全<20且沪深全A月度中位数PE/PB十年分位均≤30%），未过门强制空名单；过门后才取沪深300/中证A500/上证50/科创50/创业板50并集∩总市值≥250亿∩TTM股息率≥4%，不与形态资金或极端修复临时窗混排。'
+                 '高股息防御按六宽基自身新鲜当周动态Wilder RSI6严格<20逐指数开门；每榜只取本指数成分正TTM股息率原始值降序前10，20整不触发，不做全市场混排或行业概念分组，也不叠加形态、位置、估值分位、缩量、均线、市值或资金流门。'
                  '→4排雷（范围=第2步龙头∪第3步全部实际展示股∪持仓观察股，复用mineWatch缓存）。'
                  '状态灯🟢可看/🟡谨慎/🔴停；窗口🔴时下级全部降级为观察但绝不隐藏。'),
     }
@@ -5551,37 +5551,38 @@ def ensure_index_members(pro, trade_date):
     return c
 
 
-# 高股息防御独立池（任务87）：中证A500=000510.SH；绝不改写VCP六指数形态池。
-DIVIDEND_POOL_INDICES = ['000300.SH', '000510.SH', '000016.SH', '000688.SH', '399673.SZ']
-DIVIDEND_INDEX_NAMES = {'000300.SH': '沪深300', '000510.SH': '中证A500',
-                        '000016.SH': '上证50', '000688.SH': '科创50', '399673.SZ': '创业板50'}
+# 任务116：六宽基各自独立高股息榜；成分缓存不得与VCP形态池混用。
+DIVIDEND_POOL_INDICES = [code for code, _ in OBSERVATION_INDICES]
+DIVIDEND_INDEX_NAMES = dict(OBSERVATION_INDICES)
 DIVIDEND_MEMBERS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                      'cache', 'dividend_index_members.json')
-DIVIDEND_MIN_DV_TTM = 4.0
+DIVIDEND_MIN_DV_TTM = 4.0  # 旧函数保留常量；任务116新榜无4%门槛。
 
 
 def ensure_dividend_members(pro, trade_date):
-    """高股息五指数并集：成分周缓存；A500独立键，不与六指数index_members混用。"""
+    """六指数成分周缓存；记录每指数真实index_weight快照日，未知日期不伪造。"""
     c = _load_json_cache(DIVIDEND_MEMBERS_PATH, {})
     friday = datetime.strptime(trade_date, '%Y%m%d').weekday() == 4
     if (not friday and c.get('members') and c.get('names')
             and sorted(c['members'].keys()) == sorted(DIVIDEND_POOL_INDICES)):
         return c
     members = dict(c.get('members') or {})
+    member_snapshots = dict(c.get('memberSnapshots') or {})
     wide_start = (datetime.strptime(trade_date, '%Y%m%d') - timedelta(days=70)).strftime('%Y%m%d')
     for idx in DIVIDEND_POOL_INDICES:
         try:
             time.sleep(API_DELAY)
             df = pro.index_weight(index_code=idx, start_date=wide_start, end_date=trade_date)
             if df is not None and len(df):
-                snap = df['trade_date'].max()
-                cur = df[df['trade_date'] == snap]
+                snap = str(df['trade_date'].max())
+                cur = df[df['trade_date'] == df['trade_date'].max()]
                 members[idx] = sorted(set(cur['con_code'].tolist()))
+                member_snapshots[idx] = snap
                 print(f'  dividend members {idx}: {len(members[idx])} (snapshot {snap})')
         except Exception as e:
             print(f'  Warning: dividend index_weight {idx} failed (keep cached): {str(e)[:60]}')
     if sorted(members.keys()) != sorted(DIVIDEND_POOL_INDICES):
-        raise RuntimeError('高股息五指数成分不完整，保留上一有效dividendWatch')
+        raise RuntimeError('高股息六指数成分不完整，清空旧dividendWatch并锁定触发榜')
     names = dict(c.get('names') or {})
     try:
         time.sleep(API_DELAY)
@@ -5591,7 +5592,8 @@ def ensure_dividend_members(pro, trade_date):
     except Exception as e:
         print(f'  Warning: dividend stock_basic failed (keep cached names): {str(e)[:60]}')
     c = {'updated': trade_date, 'members': members, 'names': names,
-         'indices': list(DIVIDEND_POOL_INDICES)}
+         'memberSnapshots': member_snapshots, 'indices': list(DIVIDEND_POOL_INDICES),
+         'source': 'Tushare index_weight最新可见成分快照；stock_basic名称缓存'}
     _save_json_cache(DIVIDEND_MEMBERS_PATH, c)
     return c
 
@@ -5996,6 +5998,183 @@ def build_dividend_watch(pro, trade_date, data):
                              'poolSize': len(membership), 'count': len(items), 'items': items}
     print(f'  dividendWatch {"visible" if visible else "hidden"}: 催化{len(groups)}组，'
           f'跨组唯一高股息{len(items)}只（{snapshot_date}）')
+
+
+# 任务116：只按各宽基自身当周动态Wilder RSI6<20开对应成分股股息率榜。
+INDEX_DIVIDEND_TOP_N = 10
+INDEX_DIVIDEND_RSI_THRESHOLD = 20.0
+
+
+def _index_dividend_boards(observation, member_cache, records, trade_date,
+                           snapshot_status='ok', snapshot_error=None):
+    """六指数独立资格、隔离成分和原始dv_ttm严格降序；无其它股票资格门。"""
+    effective = str(trade_date).replace('-', '')
+    observed = {x.get('indexCode'): x for x in (observation or {}).get('items') or []}
+    members = (member_cache or {}).get('members') or {}
+    names = (member_cache or {}).get('names') or {}
+    member_snapshots = (member_cache or {}).get('memberSnapshots') or {}
+    boards = []
+    for code, name in OBSERVATION_INDICES:
+        evidence = observed.get(code) or {}
+        rsi = evidence.get('dynamicWeeklyRsi6')
+        as_of = evidence.get('dynamicWeeklyRsiDate')
+        fresh = evidence.get('dynamicWeeklyFresh') is True
+        # 不复用0步rsiPass（其边界为<=20）；本榜自身严格<20且日期必须等于本批有效日。
+        opened = bool(fresh and rsi is not None and as_of == effective and rsi < INDEX_DIVIDEND_RSI_THRESHOLD)
+        constituents = sorted(set(members.get(code) or []))
+        coverage = {
+            'memberCount': len(constituents), 'membershipAsOf': member_snapshots.get(code),
+            'membershipCacheUpdated': (member_cache or {}).get('updated'),
+            'membershipSource': 'Tushare index_weight最新可见成分快照',
+            'snapshotMatchedCount': 0, 'validDividendCount': 0,
+            'missingDividendCount': 0, 'nonPositiveDividendCount': 0,
+            'dividendCoveragePct': None,
+            'dividendSource': 'Tushare daily_basic.dv_ttm（股息率TTM，%）',
+            'missingPolicy': '成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构',
+        }
+        board = {
+            'indexCode': code, 'indexName': name, 'open': opened, 'visible': opened,
+            'weeklyRsi6': rsi, 'dynamicWeeklyRsi6': rsi, 'asOf': as_of,
+            'dynamicWeeklyFresh': fresh, 'rsiOperator': '<20', 'rsi20Excluded': True,
+            'triggerReason': (f'{name}自身当周动态Wilder RSI6={rsi}<20，打开本指数榜' if opened else
+                              f'{name}自身当周动态Wilder RSI6={rsi if rsi is not None else "缺失"}；严格<20才开，20整及其他指数触发均不开本榜'),
+            'tradeDate': effective, 'snapshotDate': effective if opened and snapshot_status == 'ok' else None,
+            'status': 'missing' if opened else 'not_requested',
+            'rankingLocked': opened, 'snapshotError': snapshot_error if opened else None,
+            'requestedCount': INDEX_DIVIDEND_TOP_N, 'count': 0, 'items': [], 'coverage': coverage,
+            'source': '指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm',
+            'rankingMethod': '仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量',
+            'reasons': ([] if opened else ['本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜']),
+        }
+        if not opened:
+            boards.append(board)
+            continue
+        if snapshot_status != 'ok':
+            board['status'] = snapshot_status
+            board['reasons'] = [f'本指数已触发，但股息率快照{snapshot_status}：{snapshot_error or "数据不可用"}；锁空旧项，不伪装新榜']
+            boards.append(board)
+            continue
+
+        eligible = []
+        for constituent in constituents:
+            record = (records or {}).get(constituent)
+            try:
+                raw_dv = record.get('dvTtm') if record else None
+                dv = None if raw_dv is None or pd.isna(raw_dv) else float(raw_dv)
+                if dv is not None and (not pd.notna(dv) or dv in (float('inf'), float('-inf'))):
+                    dv = None
+            except (TypeError, ValueError):
+                dv = None
+            if dv is None:
+                coverage['missingDividendCount'] += 1
+                continue
+            coverage['snapshotMatchedCount'] += 1
+            if dv <= 0:
+                coverage['nonPositiveDividendCount'] += 1
+                continue
+            eligible.append({
+                'indexCode': code, 'indexName': name, 'code': constituent,
+                'name': str(names.get(constituent) or constituent), 'dvTtmRaw': dv,
+                'tradeDate': record.get('tradeDate'), 'source': 'Tushare daily_basic.dv_ttm',
+            })
+        eligible.sort(key=lambda x: (-x['dvTtmRaw'], x['code']))
+        coverage['validDividendCount'] = len(eligible)
+        coverage['dividendCoveragePct'] = round(len(eligible) / len(constituents) * 100, 2) if constituents else None
+        items = []
+        for rank, item in enumerate(eligible[:INDEX_DIVIDEND_TOP_N], 1):
+            items.append({k: v for k, v in {**item, 'rank': rank,
+                                            'dvTtm': round(item['dvTtmRaw'], 4)}.items() if k != 'dvTtmRaw'})
+        board.update({'status': 'ok', 'rankingLocked': False, 'count': len(items), 'items': items})
+        board['reasons'] = [
+            f'本指数成分{len(constituents)}只；有效正股息率{len(eligible)}只，缺失{coverage["missingDividendCount"]}只，零/负{coverage["nonPositiveDividendCount"]}只；实际展示{len(items)}只',
+            '只使用本指数成分与正dv_ttm排序；不叠加形态、价格位置、估值分位、缩量、均线、市值、资金流或排雷门',
+        ]
+        if len(items) < INDEX_DIVIDEND_TOP_N:
+            board['reasons'].append(f'有效候选不足10只，实际{len(items)}只，不凑数')
+        boards.append(board)
+    return boards
+
+
+def _index_dividend_base(trade_date, data, member_cache=None, records=None,
+                         snapshot_status='ok', snapshot_error=None):
+    effective = _effective_batch_trade_date(trade_date, data)
+    boards = _index_dividend_boards(data.get('broadObservation'), member_cache, records,
+                                    effective, snapshot_status, snapshot_error)
+    opened = [x for x in boards if x['open']]
+    items = [item for board in boards for item in board['items']]
+    return {
+        'version': 116, 'tradeDate': effective, 'trade_date': effective,
+        'visible': bool(opened), 'triggeredCount': len(opened),
+        'triggeredIndices': [x['indexName'] for x in opened],
+        'count': len(items), 'poolSize': sum(x['coverage']['memberCount'] for x in boards),
+        'items': items, 'indexBoards': boards, 'requestedCountPerIndex': INDEX_DIVIDEND_TOP_N,
+        'source': 'RSI6：既有六宽基同批行情与Wilder口径；成分：Tushare index_weight；股息率：Tushare daily_basic.dv_ttm',
+        'rankingMethod': '逐指数独立严格RSI6<20开门；各榜只取本指数成分正dv_ttm原始值降序前10，代码升序破并列',
+        'reasons': ([f'{len(opened)}个宽基独立触发；只打开对应指数榜'] if opened else
+                    ['六宽基各自均未严格满足新鲜当周动态RSI6<20；清空全部旧高股息项']),
+        'note': ('20整不触发，其他指数触发不打开本指数榜。缺失/非数值/非正股息率不入选、不补0；不足10只显示实际数量。'
+                 '无VCP/杯柄/平台/底部形态、价格位置、估值历史分位、阶段缩量、均线、市值、资金流或排雷门；'
+                 '不做全市场混排或行业/概念分组。成分缓存快照日逐指数披露，历史成分未知时不伪造；TTM股息率非预测，高股息不等于安全或买点。'),
+    }
+
+
+def build_index_dividend_watch(pro, trade_date, data):
+    """高股息唯一生产入口；失败/陈旧清旧，0步窗口及超跌估值模块不参与。"""
+    effective = _effective_batch_trade_date(trade_date, data)
+    base = _index_dividend_base(effective, data)
+    data['dividendWatch'] = base
+    if not base['visible']:
+        print('  indexDividendWatch hidden: 六宽基均未严格RSI6<20，未请求成分或daily_basic')
+        return
+    mc = ensure_dividend_members(pro, effective)
+    time.sleep(API_DELAY)
+    try:
+        snap = pro.daily_basic(trade_date=effective, fields='ts_code,trade_date,dv_ttm')
+    except Exception as exc:
+        data['dividendWatch'] = _index_dividend_base(
+            effective, data, mc, {}, 'missing', f'daily_basic失败：{str(exc)[:220]}')
+        return
+    if snap is None or not len(snap):
+        data['dividendWatch'] = _index_dividend_base(effective, data, mc, {}, 'missing', 'daily_basic为空')
+        return
+    records, snapshot_dates = {}, set()
+    for _, row in snap.iterrows():
+        code = str(row.get('ts_code') or '').upper()
+        raw_date = row.get('trade_date')
+        date = '' if raw_date is None or pd.isna(raw_date) else str(raw_date).replace('-', '')
+        if date:
+            snapshot_dates.add(date)
+        try:
+            raw_dv = row.get('dv_ttm')
+            dv = None if raw_dv is None or pd.isna(raw_dv) else float(raw_dv)
+            if dv is not None and (not pd.notna(dv) or dv in (float('inf'), float('-inf'))):
+                dv = None
+        except (TypeError, ValueError):
+            dv = None
+        if code:
+            records[code] = {'tradeDate': date, 'dvTtm': dv}
+    if snapshot_dates != {effective}:
+        actual = '、'.join(sorted(snapshot_dates)) or '缺失'
+        data['dividendWatch'] = _index_dividend_base(
+            effective, data, mc, records, 'stale',
+            f'股息率快照日期{actual}不等于本批有效日{effective}')
+        return
+    data['dividendWatch'] = _index_dividend_base(effective, data, mc, records)
+    print(f'  indexDividendWatch: {data["dividendWatch"]["triggeredCount"]}个独立触发，'
+          f'各榜合计展示{data["dividendWatch"]["count"]}只（{effective}）')
+
+
+def _index_dividend_summary(data):
+    block = data.get('dividendWatch') or {}
+    boards = [x for x in block.get('indexBoards') or [] if x.get('open')]
+    if not boards:
+        return ''
+    parts = []
+    for board in boards:
+        leaders = '、'.join(f"{x['name']}{x['dvTtm']}%" for x in board['items'][:3]) or '暂无有效正股息率项'
+        parts.append(f"{board['indexName']}周RSI6={board['weeklyRsi6']}（{board['asOf'] or '日期缺失'}）"
+                     f"实际{board['count']}只：{leaders}")
+    return '逐指数高股息防御（严格RSI6<20）｜' + '｜'.join(parts) + '；高股息≠安全/买点'
 
 
 # 任务108：RSI6进入20以下区域后，行业/概念按自身历史估值分位从低到高展示。
@@ -10835,11 +11014,6 @@ def main():
     except Exception as e:
         print(f"  Warning: broadWatch failed: {e}")
 
-    # ── 16b1. 高股息防御独立池：必须后于宽基缓存更新，读取同晚统一有效日 ──
-    try:
-        build_dividend_watch(pro, trade_date, data)
-    except Exception as e:
-        print(f"  Warning: dividendWatch failed (keep old): {e}")
     try:
         build_dual_axes(pro, trade_date, data, _today_map)
     except Exception as e:
@@ -10881,18 +11055,14 @@ def main():
         build_long_window(data)
     except Exception as e:
         print(f"  Warning: longWindow failed: {e}")
-    # RSI6全A股息率Top20与超跌方向均在longWindow之后；任何异常都不得保留旧清单。
+    # 任务116高股息在本批RSI6证据之后独立构建；任何异常清旧，超跌估值仍走原模块。
     try:
-        build_rsi6_dividend_top20(pro, trade_date, data)
+        build_index_dividend_watch(pro, trade_date, data)
     except Exception as e:
-        dividend_watch = dict(data.get('dividendWatch') or {})
-        dividend_top20 = _rsi6_dividend_top20_base(
-            _effective_batch_trade_date(trade_date, data), _oversold_value_extreme_active(data))
-        dividend_top20['reasons'] = [f'本批全A股息率Top20计算异常，锁榜并清空旧清单：{str(e)[:240]}']
-        dividend_top20['snapshotError'] = str(e)[:240]
-        dividend_watch['rsi6Top20'] = dividend_top20
-        data['dividendWatch'] = dividend_watch
-        print(f'  Warning: rsi6DividendTop20 failed (locked): {e}')
+        data['dividendWatch'] = _index_dividend_base(
+            _effective_batch_trade_date(trade_date, data), data,
+            snapshot_status='missing', snapshot_error=f'本批高股息计算异常：{str(e)[:240]}')
+        print(f'  Warning: indexDividendWatch failed (locked and cleared): {e}')
     try:
         build_oversold_value_directions(pro, trade_date, data)
     except Exception as e:

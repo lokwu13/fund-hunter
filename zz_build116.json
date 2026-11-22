@@ -1,0 +1,80 @@
+{
+  "task": 116,
+  "command": "npm run build",
+  "startedAt": "2026-11-22T13:07:03+08:00",
+  "durationSeconds": 11.406,
+  "success": true,
+  "returncode": 0,
+  "modulesTransformed": 2363,
+  "warning": "Some chunks are larger than 500 kB after minification",
+  "log": "zz_build116.log",
+  "assets": [
+    {
+      "path": "dist/assets/index-ZEQjHA0--v25.js",
+      "bytes": 1411257,
+      "sha256": "143ec60b359a2801028f3ef08a9c35e74f2419d0112c93f4c002441e3ad78096"
+    },
+    {
+      "path": "dist/assets/index-BQVIX0KR.css",
+      "bytes": 109945,
+      "sha256": "d43d5e880554f5d815f08c0975a3a0a0b8296a21ab847ba61b3eabd9ae077daa"
+    }
+  ],
+  "bundleMarkers": {
+    "高股息防御 · 逐指数独立榜": true,
+    "20整不触发": true,
+    "其他宽基触发不打开本榜": true,
+    "每榜最多10只": true,
+    "有效正股息率": true,
+    "index-dividend-defensive": true,
+    "board.coverage.membershipAsOf": true,
+    "无形态、价格位置、估值历史分位、阶段缩量、均线、市值或资金流门": true
+  },
+  "legacyBundleMarkersPresent": {
+    "全A股息率TTM Top20": false,
+    "rsi6Top20": false,
+    "rsi6-dividend-top20": false
+  },
+  "viewportMetaPresent": true,
+  "localFundDataBefore": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "localFundDataAfter": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "localFundData": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "fundDataUnchanged": true,
+  "matchesTask116RegressionDataSha": true,
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "developmentServerStarted": false
+}

@@ -271,54 +271,53 @@ export interface OversoldValueDirections {
   note: string;
 }
 
-export interface Rsi6DividendTop20Item {
+export interface IndexDividendItem {
   rank: number;
-  originalRank: number;
+  indexCode: string;
+  indexName: string;
   code: string;
   name: string;
-  industry: string;
   dvTtm: number;
-  peTtm: number | null;
-  pb: number | null;
-  close: number | null;
-  totalMv: number | null;
-  totalMvYi: number | null;
   tradeDate: string;
-  isST: boolean;
-  mineCovered: boolean;
-  mineTypes: string[];
-  mineDetails: Array<{ type: string; detail: string; date: string }>;
-  mineStatus: 'hit' | 'clear' | 'unchecked';
-  mineNote: string;
   source: string;
 }
 
-export interface Rsi6DividendExcludedItem extends Omit<Rsi6DividendTop20Item, 'rank'> {
-  reason: string;
-}
-
-export interface Rsi6DividendTop20 {
+export interface IndexDividendBoard {
+  indexCode: string;
+  indexName: string;
+  open: boolean;
   visible: boolean;
+  weeklyRsi6: number | null;
+  dynamicWeeklyRsi6: number | null;
+  asOf: string | null;
+  dynamicWeeklyFresh: boolean;
+  rsiOperator: '<20';
+  rsi20Excluded: true;
+  triggerReason: string;
   tradeDate: string;
   snapshotDate: string | null;
-  snapshotDates: string[];
   status: 'ok' | 'missing' | 'stale' | 'not_requested';
   rankingLocked: boolean;
   snapshotError: string | null;
-  requestedCount: number;
+  requestedCount: 10;
   count: number;
-  eligibleCount: number;
-  excludedCount: number;
-  excludedItems: Rsi6DividendExcludedItem[];
-  remainingCandidateCount: number;
-  mineCoverageStatus: 'ok' | 'missing';
-  snapshotRows: number;
-  items: Rsi6DividendTop20Item[];
-  marketScope: string;
+  items: IndexDividendItem[];
+  coverage: {
+    memberCount: number;
+    membershipAsOf: string | null;
+    membershipCacheUpdated: string | null;
+    membershipSource: string;
+    snapshotMatchedCount: number;
+    validDividendCount: number;
+    missingDividendCount: number;
+    nonPositiveDividendCount: number;
+    dividendCoveragePct: number | null;
+    dividendSource: string;
+    missingPolicy: string;
+  };
   source: string;
   rankingMethod: string;
   reasons: string[];
-  note: string;
 }
 
 export interface FundData {
@@ -703,43 +702,21 @@ export interface FundData {
     }>;
   };
   dividendWatch?: {
+    version: 116;
+    tradeDate: string;
     trade_date: string;
     visible: boolean;
-    evaluatedGroupCount: number;
-    catalystGroupCount: number;
-    reasons: string[];
-    poolSize: number;
-    poolIndices: string[];
-    minTotalMv: number;
-    minDvTtm: number;
+    triggeredCount: number;
+    triggeredIndices: string[];
     count: number;
+    poolSize: number;
+    requestedCountPerIndex: 10;
+    indexBoards: IndexDividendBoard[];
+    items: IndexDividendItem[];
     source: string;
+    rankingMethod: string;
+    reasons: string[];
     note: string;
-    groups: Array<{
-      type: 'industry' | 'concept'; code: string; name: string;
-      catalyzed: boolean; catalystDate: string; signalAge: number; dailyDate: string;
-      weeklyRsiPass: boolean; weeklyFresh: boolean; reason: string;
-      rsiEvidence: Array<{ date: string; rsi: number | null; below20: boolean }>;
-      shrinkEvidence: { avg10Amount: number; avg60Amount: number; ratio: number; threshold: number; pass: boolean };
-      priceVolumeEvidence: {
-        date: string; prevClose: number; close: number; pctChange: number;
-        prevMa5: number; ma5: number; reclaimedMa5: boolean;
-        amount: number; prev5AvgAmount: number; amountRatio: number;
-        pctThreshold: number; amountThreshold: number; pass: boolean; previousDayCatalyzed: boolean;
-      };
-      count: number;
-      items: Array<{
-        code: string; name: string; indexMembership: string[];
-        close: number | null; totalMv: number; dvTtm: number;
-        trade_date: string; source: string;
-      }>;
-    }>;
-    items: Array<{
-      code: string; name: string; indexMembership: string[]; groupMembership: string[];
-      close: number | null; totalMv: number; dvTtm: number;
-      trade_date: string; source: string;
-    }>;
-    rsi6Top20?: Rsi6DividendTop20;
   };
   oversoldValueDirections?: OversoldValueDirections;
   stockRS?: {

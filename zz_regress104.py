@@ -168,8 +168,8 @@ ui = ''.join((ROOT / p).read_text(encoding='utf-8') for p in (
     'src/sections/SectorHeatmap.tsx', 'src/hooks/useFundData.ts'))
 check('前端历史估值类型和展示全链路', all(x in ui for x in ('peHistoryPct', 'pbHistoryPct',
       'compositeHistoryPct', 'historySampling.cachedMonthEnds', 'mineCovered')))
-check('任务107完整榜单不被估值模块覆盖', 'rsi6-dividend-top20' in ui
-      and '明确命中排雷剔除并顺延补足' in ui)
+check('任务116逐指数榜单不被估值模块覆盖', 'index-dividend-defensive' in ui
+      and 'board.items.map' in ui and 'rsi6Top20' not in ui)
 
 out = {'task': 104, 'updatedForTask': 108, 'asOf': AS_OF, 'checks': checks,
        'testIsolation': 'TemporaryDirectory + FakePro；未调用真实API或写正式缓存'}

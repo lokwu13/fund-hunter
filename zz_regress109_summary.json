@@ -1,7 +1,7 @@
 {
   "task": 109,
-  "checksPassed": 21,
-  "checksTotal": 21,
+  "checksPassed": 22,
+  "checksTotal": 22,
   "failed": [],
   "checks": [
     {
@@ -29,27 +29,27 @@
       "passed": true
     },
     {
-      "name": "rsi6-dividend-top20:目标tab为sectors",
+      "name": "index-dividend-defensive:目标tab为sectors",
       "passed": true
     },
     {
-      "name": "rsi6-dividend-top20:不再误跳tools",
+      "name": "index-dividend-defensive:不再误跳tools",
       "passed": true
     },
     {
-      "name": "rsi6-dividend-top20:原生键盘按钮",
+      "name": "index-dividend-defensive:原生键盘按钮",
       "passed": true
     },
     {
-      "name": "rsi6-dividend-top20:目标id全局唯一",
+      "name": "index-dividend-defensive:目标id全局唯一",
       "passed": true
     },
     {
-      "name": "rsi6-dividend-top20:目标有滚动边距",
+      "name": "index-dividend-defensive:目标有滚动边距",
       "passed": true
     },
     {
-      "name": "rsi6-dividend-top20:按钮文案保留",
+      "name": "index-dividend-defensive:按钮文案保留",
       "passed": true
     },
     {
@@ -61,7 +61,11 @@
       "passed": true
     },
     {
-      "name": "Top20卡与按钮使用同一显示条件",
+      "name": "逐指数卡与按钮使用同一显示条件",
+      "passed": true
+    },
+    {
+      "name": "旧Top20入口已经移除",
       "passed": true
     },
     {

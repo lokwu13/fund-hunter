@@ -1,0 +1,28 @@
+{
+  "task": 116,
+  "head": "a4420145c666b884f62157ac6c759d4b49c68912",
+  "headTree": "edcaaa448b3332f6f8c1033d5ceb6762e53112d5",
+  "headMessage": "任务115：低量窄幅独立VCP入口",
+  "remoteTask115SourceSha256": "4ec9aadca74e575bf3f8f0ac2746e36e62a5a9ab0cde5f56ae1254e211772974",
+  "remoteSourceBlob": "d8d0c7e0e73725471f36c21f5dd860ab068af2fa",
+  "task115SourceBaselineMatched": true,
+  "fundData": {
+    "public/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "manualDispatch": false,
+  "workflowModified": false,
+  "scheduleModified": false
+}

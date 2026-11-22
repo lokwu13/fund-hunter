@@ -1,0 +1,74 @@
+# -*- coding: utf-8 -*-
+"""任务116生产构建证据；只构建，不启动开发服务器、不生成生产数据。"""
+import hashlib
+import json
+from pathlib import Path
+import re
+import subprocess
+import time
+from datetime import datetime
+
+ROOT = Path(__file__).resolve().parent
+DATA = ['public/fund_data.json', 'src/data/fund_data.json']
+MARKERS = {
+    '高股息防御 · 逐指数独立榜': '高股息防御 · 逐指数独立榜',
+    '20整不触发': '20整不触发',
+    '其他宽基触发不打开本榜': '其他宽基触发不打开本榜',
+    '每榜最多10只': '每榜最多10只',
+    '有效正股息率': '有效正股息率',
+    'index-dividend-defensive': 'index-dividend-defensive',
+    'board.coverage.membershipAsOf': 'membershipAsOf',
+    '无形态、价格位置、估值历史分位、阶段缩量、均线、市值或资金流门': '无形态、价格位置、估值历史分位、阶段缩量、均线、市值或资金流门',
+}
+LEGACY_MARKERS = ['全A股息率TTM Top20', 'rsi6Top20', 'rsi6-dividend-top20']
+
+
+def now():
+    return datetime.now().astimezone().isoformat(timespec='seconds')
+
+
+def data_state():
+    return {name: {'path': name, 'bytes': (ROOT / name).stat().st_size,
+                   'sha256': hashlib.sha256((ROOT / name).read_bytes()).hexdigest()} for name in DATA}
+
+
+before = data_state()
+started_at = now()
+started = time.monotonic()
+completed = subprocess.run('npm run build', cwd=ROOT, shell=True, text=True,
+                           encoding='utf-8', errors='replace', capture_output=True, check=False)
+log = completed.stdout + completed.stderr
+(ROOT / 'zz_build116.log').write_text(log, encoding='utf-8')
+after = data_state()
+assets = []
+for pattern in ('dist/assets/*.js', 'dist/assets/*.css'):
+    for path in sorted(ROOT.glob(pattern)):
+        raw = path.read_bytes()
+        assets.append({'path': path.relative_to(ROOT).as_posix(), 'bytes': len(raw),
+                       'sha256': hashlib.sha256(raw).hexdigest()})
+regression = json.loads((ROOT / 'zz_regress116_summary.json').read_text(encoding='utf-8'))
+expected = regression['productionFundDataSha256']
+match = all(after[name]['sha256'] == expected[name] for name in DATA)
+modules = re.search(r'(\d+) modules transformed', log)
+warning = 'Some chunks are larger than 500 kB after minification' if (
+    'Some chunks are larger than 500 kB after minification' in log) else None
+js_text = '\n'.join(p.read_text(encoding='utf-8') for p in (ROOT / 'dist/assets').glob('*.js'))
+markers = {name: marker in js_text for name, marker in MARKERS.items()}
+legacy = {marker: marker in js_text for marker in LEGACY_MARKERS}
+viewport = '<meta name="viewport"' in (ROOT / 'dist/index.html').read_text(encoding='utf-8')
+result = {
+    'task': 116, 'command': 'npm run build', 'startedAt': started_at,
+    'durationSeconds': round(time.monotonic() - started, 3),
+    'success': bool(completed.returncode == 0 and assets and before == after and match
+                    and all(markers.values()) and not any(legacy.values()) and viewport),
+    'returncode': completed.returncode,
+    'modulesTransformed': int(modules.group(1)) if modules else None,
+    'warning': warning, 'log': 'zz_build116.log', 'assets': assets,
+    'bundleMarkers': markers, 'legacyBundleMarkersPresent': legacy, 'viewportMetaPresent': viewport,
+    'localFundDataBefore': before, 'localFundDataAfter': after, 'localFundData': after,
+    'fundDataUnchanged': before == after, 'matchesTask116RegressionDataSha': match,
+    'manualDispatch': False, 'productionDataRegenerated': False, 'developmentServerStarted': False,
+}
+(ROOT / 'zz_build116.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+print(json.dumps(result, ensure_ascii=False, indent=2))
+raise SystemExit(0 if result['success'] else 1)

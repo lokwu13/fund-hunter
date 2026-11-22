@@ -1,0 +1,41 @@
+  dividend members 000016.SH: 15 (snapshot 20261023)
+  dividend members 000300.SH: 15 (snapshot 20261023)
+  dividend members 000510.SH: 15 (snapshot 20261023)
+  dividend members 000905.SH: 15 (snapshot 20261023)
+  dividend members 000688.SH: 15 (snapshot 20261023)
+  dividend members 399673.SZ: 15 (snapshot 20261023)
+  indexDividendWatch: 1个独立触发，各榜合计展示10只（20261030）
+  indexDividendWatch hidden: 六宽基均未严格RSI6<20，未请求成分或daily_basic
+  dividend members 000016.SH: 15 (snapshot 20261023)
+  dividend members 000300.SH: 15 (snapshot 20261023)
+  dividend members 000510.SH: 15 (snapshot 20261023)
+  dividend members 000905.SH: 15 (snapshot 20261023)
+  dividend members 000688.SH: 15 (snapshot 20261023)
+  dividend members 399673.SZ: 15 (snapshot 20261023)
+  dividend members 000016.SH: 15 (snapshot 20261023)
+  dividend members 000300.SH: 15 (snapshot 20261023)
+  dividend members 000510.SH: 15 (snapshot 20261023)
+  dividend members 000905.SH: 15 (snapshot 20261023)
+  dividend members 000688.SH: 15 (snapshot 20261023)
+  dividend members 399673.SZ: 15 (snapshot 20261023)
+  dividend members 000016.SH: 15 (snapshot 20261023)
+  dividend members 000300.SH: 15 (snapshot 20261023)
+  dividend members 000510.SH: 15 (snapshot 20261023)
+  dividend members 000905.SH: 15 (snapshot 20261023)
+  dividend members 000688.SH: 15 (snapshot 20261023)
+  dividend members 399673.SZ: 15 (snapshot 20261023)
+{
+  "task": 116,
+  "allPassed": true,
+  "checksPassed": 34,
+  "checksTotal": 34,
+  "failed": [],
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "pitOnly": true,
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "oldFunctionsChanged": []
+}

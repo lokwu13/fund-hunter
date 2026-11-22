@@ -1,0 +1,2605 @@
+{
+  "task": 116,
+  "asOf": "20261030",
+  "checks": {
+    "六宽基完整且含中证500": {
+      "pass": true,
+      "evidence": [
+        "000016.SH",
+        "000300.SH",
+        "000510.SH",
+        "000905.SH",
+        "000688.SH",
+        "399673.SZ"
+      ]
+    },
+    "逐指数独立触发且成分隔离:000016.SH": {
+      "pass": true,
+      "evidence": {
+        "indexCode": "000016.SH",
+        "indexName": "上证50",
+        "open": true,
+        "visible": true,
+        "weeklyRsi6": 19.99,
+        "dynamicWeeklyRsi6": 19.99,
+        "asOf": "20261030",
+        "dynamicWeeklyFresh": true,
+        "rsiOperator": "<20",
+        "rsi20Excluded": true,
+        "triggerReason": "上证50自身当周动态Wilder RSI6=19.99<20，打开本指数榜",
+        "tradeDate": "20261030",
+        "snapshotDate": "20261030",
+        "status": "ok",
+        "rankingLocked": false,
+        "snapshotError": null,
+        "requestedCount": 10,
+        "count": 10,
+        "items": [
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100000.SZ",
+            "name": "上证50成分0",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 1,
+            "dvTtm": 30.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100001.SZ",
+            "name": "上证50成分1",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 2,
+            "dvTtm": 29.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100002.SZ",
+            "name": "上证50成分2",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 3,
+            "dvTtm": 28.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100003.SZ",
+            "name": "上证50成分3",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 4,
+            "dvTtm": 27.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100004.SZ",
+            "name": "上证50成分4",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 5,
+            "dvTtm": 26.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100005.SZ",
+            "name": "上证50成分5",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 6,
+            "dvTtm": 25.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100006.SZ",
+            "name": "上证50成分6",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 7,
+            "dvTtm": 24.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100007.SZ",
+            "name": "上证50成分7",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 8,
+            "dvTtm": 23.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100008.SZ",
+            "name": "上证50成分8",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 9,
+            "dvTtm": 22.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100009.SZ",
+            "name": "上证50成分9",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 10,
+            "dvTtm": 21.0
+          }
+        ],
+        "coverage": {
+          "memberCount": 15,
+          "membershipAsOf": "20261023",
+          "membershipCacheUpdated": "20261030",
+          "membershipSource": "Tushare index_weight最新可见成分快照",
+          "snapshotMatchedCount": 14,
+          "validDividendCount": 12,
+          "missingDividendCount": 1,
+          "nonPositiveDividendCount": 2,
+          "dividendCoveragePct": 80.0,
+          "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+          "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+        },
+        "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+        "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+        "reasons": [
+          "本指数成分15只；有效正股息率12只，缺失1只，零/负2只；实际展示10只",
+          "只使用本指数成分与正dv_ttm排序；不叠加形态、价格位置、估值分位、缩量、均线、市值、资金流或排雷门"
+        ]
+      }
+    },
+    "逐指数独立触发且成分隔离:000300.SH": {
+      "pass": true,
+      "evidence": {
+        "indexCode": "000300.SH",
+        "indexName": "沪深300",
+        "open": true,
+        "visible": true,
+        "weeklyRsi6": 19.99,
+        "dynamicWeeklyRsi6": 19.99,
+        "asOf": "20261030",
+        "dynamicWeeklyFresh": true,
+        "rsiOperator": "<20",
+        "rsi20Excluded": true,
+        "triggerReason": "沪深300自身当周动态Wilder RSI6=19.99<20，打开本指数榜",
+        "tradeDate": "20261030",
+        "snapshotDate": "20261030",
+        "status": "ok",
+        "rankingLocked": false,
+        "snapshotError": null,
+        "requestedCount": 10,
+        "count": 10,
+        "items": [
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "code": "200000.SZ",
+            "name": "沪深300成分0",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 1,
+            "dvTtm": 30.0
+          },
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "code": "200001.SZ",
+            "name": "沪深300成分1",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 2,
+            "dvTtm": 29.0
+          },
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "code": "200002.SZ",
+            "name": "沪深300成分2",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 3,
+            "dvTtm": 28.0
+          },
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "code": "200003.SZ",
+            "name": "沪深300成分3",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 4,
+            "dvTtm": 27.0
+          },
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "code": "200004.SZ",
+            "name": "沪深300成分4",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 5,
+            "dvTtm": 26.0
+          },
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "code": "200005.SZ",
+            "name": "沪深300成分5",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 6,
+            "dvTtm": 25.0
+          },
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "code": "200006.SZ",
+            "name": "沪深300成分6",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 7,
+            "dvTtm": 24.0
+          },
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "code": "200007.SZ",
+            "name": "沪深300成分7",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 8,
+            "dvTtm": 23.0
+          },
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "code": "200008.SZ",
+            "name": "沪深300成分8",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 9,
+            "dvTtm": 22.0
+          },
+          {
+            "indexCode": "000300.SH",
+            "indexName": "沪深300",
+            "code": "200009.SZ",
+            "name": "沪深300成分9",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 10,
+            "dvTtm": 21.0
+          }
+        ],
+        "coverage": {
+          "memberCount": 15,
+          "membershipAsOf": "20261023",
+          "membershipCacheUpdated": "20261030",
+          "membershipSource": "Tushare index_weight最新可见成分快照",
+          "snapshotMatchedCount": 14,
+          "validDividendCount": 12,
+          "missingDividendCount": 1,
+          "nonPositiveDividendCount": 2,
+          "dividendCoveragePct": 80.0,
+          "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+          "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+        },
+        "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+        "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+        "reasons": [
+          "本指数成分15只；有效正股息率12只，缺失1只，零/负2只；实际展示10只",
+          "只使用本指数成分与正dv_ttm排序；不叠加形态、价格位置、估值分位、缩量、均线、市值、资金流或排雷门"
+        ]
+      }
+    },
+    "逐指数独立触发且成分隔离:000510.SH": {
+      "pass": true,
+      "evidence": {
+        "indexCode": "000510.SH",
+        "indexName": "中证A500",
+        "open": true,
+        "visible": true,
+        "weeklyRsi6": 19.99,
+        "dynamicWeeklyRsi6": 19.99,
+        "asOf": "20261030",
+        "dynamicWeeklyFresh": true,
+        "rsiOperator": "<20",
+        "rsi20Excluded": true,
+        "triggerReason": "中证A500自身当周动态Wilder RSI6=19.99<20，打开本指数榜",
+        "tradeDate": "20261030",
+        "snapshotDate": "20261030",
+        "status": "ok",
+        "rankingLocked": false,
+        "snapshotError": null,
+        "requestedCount": 10,
+        "count": 10,
+        "items": [
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "code": "300000.SZ",
+            "name": "中证A500成分0",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 1,
+            "dvTtm": 30.0
+          },
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "code": "300001.SZ",
+            "name": "中证A500成分1",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 2,
+            "dvTtm": 29.0
+          },
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "code": "300002.SZ",
+            "name": "中证A500成分2",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 3,
+            "dvTtm": 28.0
+          },
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "code": "300003.SZ",
+            "name": "中证A500成分3",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 4,
+            "dvTtm": 27.0
+          },
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "code": "300004.SZ",
+            "name": "中证A500成分4",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 5,
+            "dvTtm": 26.0
+          },
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "code": "300005.SZ",
+            "name": "中证A500成分5",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 6,
+            "dvTtm": 25.0
+          },
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "code": "300006.SZ",
+            "name": "中证A500成分6",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 7,
+            "dvTtm": 24.0
+          },
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "code": "300007.SZ",
+            "name": "中证A500成分7",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 8,
+            "dvTtm": 23.0
+          },
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "code": "300008.SZ",
+            "name": "中证A500成分8",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 9,
+            "dvTtm": 22.0
+          },
+          {
+            "indexCode": "000510.SH",
+            "indexName": "中证A500",
+            "code": "300009.SZ",
+            "name": "中证A500成分9",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 10,
+            "dvTtm": 21.0
+          }
+        ],
+        "coverage": {
+          "memberCount": 15,
+          "membershipAsOf": "20261023",
+          "membershipCacheUpdated": "20261030",
+          "membershipSource": "Tushare index_weight最新可见成分快照",
+          "snapshotMatchedCount": 14,
+          "validDividendCount": 12,
+          "missingDividendCount": 1,
+          "nonPositiveDividendCount": 2,
+          "dividendCoveragePct": 80.0,
+          "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+          "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+        },
+        "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+        "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+        "reasons": [
+          "本指数成分15只；有效正股息率12只，缺失1只，零/负2只；实际展示10只",
+          "只使用本指数成分与正dv_ttm排序；不叠加形态、价格位置、估值分位、缩量、均线、市值、资金流或排雷门"
+        ]
+      }
+    },
+    "逐指数独立触发且成分隔离:000905.SH": {
+      "pass": true,
+      "evidence": {
+        "indexCode": "000905.SH",
+        "indexName": "中证500",
+        "open": true,
+        "visible": true,
+        "weeklyRsi6": 19.99,
+        "dynamicWeeklyRsi6": 19.99,
+        "asOf": "20261030",
+        "dynamicWeeklyFresh": true,
+        "rsiOperator": "<20",
+        "rsi20Excluded": true,
+        "triggerReason": "中证500自身当周动态Wilder RSI6=19.99<20，打开本指数榜",
+        "tradeDate": "20261030",
+        "snapshotDate": "20261030",
+        "status": "ok",
+        "rankingLocked": false,
+        "snapshotError": null,
+        "requestedCount": 10,
+        "count": 10,
+        "items": [
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "code": "400000.SZ",
+            "name": "中证500成分0",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 1,
+            "dvTtm": 30.0
+          },
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "code": "400001.SZ",
+            "name": "中证500成分1",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 2,
+            "dvTtm": 29.0
+          },
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "code": "400002.SZ",
+            "name": "中证500成分2",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 3,
+            "dvTtm": 28.0
+          },
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "code": "400003.SZ",
+            "name": "中证500成分3",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 4,
+            "dvTtm": 27.0
+          },
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "code": "400004.SZ",
+            "name": "中证500成分4",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 5,
+            "dvTtm": 26.0
+          },
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "code": "400005.SZ",
+            "name": "中证500成分5",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 6,
+            "dvTtm": 25.0
+          },
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "code": "400006.SZ",
+            "name": "中证500成分6",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 7,
+            "dvTtm": 24.0
+          },
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "code": "400007.SZ",
+            "name": "中证500成分7",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 8,
+            "dvTtm": 23.0
+          },
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "code": "400008.SZ",
+            "name": "中证500成分8",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 9,
+            "dvTtm": 22.0
+          },
+          {
+            "indexCode": "000905.SH",
+            "indexName": "中证500",
+            "code": "400009.SZ",
+            "name": "中证500成分9",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 10,
+            "dvTtm": 21.0
+          }
+        ],
+        "coverage": {
+          "memberCount": 15,
+          "membershipAsOf": "20261023",
+          "membershipCacheUpdated": "20261030",
+          "membershipSource": "Tushare index_weight最新可见成分快照",
+          "snapshotMatchedCount": 14,
+          "validDividendCount": 12,
+          "missingDividendCount": 1,
+          "nonPositiveDividendCount": 2,
+          "dividendCoveragePct": 80.0,
+          "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+          "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+        },
+        "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+        "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+        "reasons": [
+          "本指数成分15只；有效正股息率12只，缺失1只，零/负2只；实际展示10只",
+          "只使用本指数成分与正dv_ttm排序；不叠加形态、价格位置、估值分位、缩量、均线、市值、资金流或排雷门"
+        ]
+      }
+    },
+    "逐指数独立触发且成分隔离:000688.SH": {
+      "pass": true,
+      "evidence": {
+        "indexCode": "000688.SH",
+        "indexName": "科创50",
+        "open": true,
+        "visible": true,
+        "weeklyRsi6": 19.99,
+        "dynamicWeeklyRsi6": 19.99,
+        "asOf": "20261030",
+        "dynamicWeeklyFresh": true,
+        "rsiOperator": "<20",
+        "rsi20Excluded": true,
+        "triggerReason": "科创50自身当周动态Wilder RSI6=19.99<20，打开本指数榜",
+        "tradeDate": "20261030",
+        "snapshotDate": "20261030",
+        "status": "ok",
+        "rankingLocked": false,
+        "snapshotError": null,
+        "requestedCount": 10,
+        "count": 10,
+        "items": [
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "code": "500000.SZ",
+            "name": "科创50成分0",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 1,
+            "dvTtm": 30.0
+          },
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "code": "500001.SZ",
+            "name": "科创50成分1",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 2,
+            "dvTtm": 29.0
+          },
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "code": "500002.SZ",
+            "name": "科创50成分2",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 3,
+            "dvTtm": 28.0
+          },
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "code": "500003.SZ",
+            "name": "科创50成分3",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 4,
+            "dvTtm": 27.0
+          },
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "code": "500004.SZ",
+            "name": "科创50成分4",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 5,
+            "dvTtm": 26.0
+          },
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "code": "500005.SZ",
+            "name": "科创50成分5",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 6,
+            "dvTtm": 25.0
+          },
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "code": "500006.SZ",
+            "name": "科创50成分6",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 7,
+            "dvTtm": 24.0
+          },
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "code": "500007.SZ",
+            "name": "科创50成分7",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 8,
+            "dvTtm": 23.0
+          },
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "code": "500008.SZ",
+            "name": "科创50成分8",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 9,
+            "dvTtm": 22.0
+          },
+          {
+            "indexCode": "000688.SH",
+            "indexName": "科创50",
+            "code": "500009.SZ",
+            "name": "科创50成分9",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 10,
+            "dvTtm": 21.0
+          }
+        ],
+        "coverage": {
+          "memberCount": 15,
+          "membershipAsOf": "20261023",
+          "membershipCacheUpdated": "20261030",
+          "membershipSource": "Tushare index_weight最新可见成分快照",
+          "snapshotMatchedCount": 14,
+          "validDividendCount": 12,
+          "missingDividendCount": 1,
+          "nonPositiveDividendCount": 2,
+          "dividendCoveragePct": 80.0,
+          "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+          "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+        },
+        "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+        "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+        "reasons": [
+          "本指数成分15只；有效正股息率12只，缺失1只，零/负2只；实际展示10只",
+          "只使用本指数成分与正dv_ttm排序；不叠加形态、价格位置、估值分位、缩量、均线、市值、资金流或排雷门"
+        ]
+      }
+    },
+    "逐指数独立触发且成分隔离:399673.SZ": {
+      "pass": true,
+      "evidence": {
+        "indexCode": "399673.SZ",
+        "indexName": "创业板50",
+        "open": true,
+        "visible": true,
+        "weeklyRsi6": 19.99,
+        "dynamicWeeklyRsi6": 19.99,
+        "asOf": "20261030",
+        "dynamicWeeklyFresh": true,
+        "rsiOperator": "<20",
+        "rsi20Excluded": true,
+        "triggerReason": "创业板50自身当周动态Wilder RSI6=19.99<20，打开本指数榜",
+        "tradeDate": "20261030",
+        "snapshotDate": "20261030",
+        "status": "ok",
+        "rankingLocked": false,
+        "snapshotError": null,
+        "requestedCount": 10,
+        "count": 10,
+        "items": [
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "code": "600000.SZ",
+            "name": "创业板50成分0",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 1,
+            "dvTtm": 30.0
+          },
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "code": "600001.SZ",
+            "name": "创业板50成分1",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 2,
+            "dvTtm": 29.0
+          },
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "code": "600002.SZ",
+            "name": "创业板50成分2",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 3,
+            "dvTtm": 28.0
+          },
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "code": "600003.SZ",
+            "name": "创业板50成分3",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 4,
+            "dvTtm": 27.0
+          },
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "code": "600004.SZ",
+            "name": "创业板50成分4",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 5,
+            "dvTtm": 26.0
+          },
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "code": "600005.SZ",
+            "name": "创业板50成分5",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 6,
+            "dvTtm": 25.0
+          },
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "code": "600006.SZ",
+            "name": "创业板50成分6",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 7,
+            "dvTtm": 24.0
+          },
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "code": "600007.SZ",
+            "name": "创业板50成分7",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 8,
+            "dvTtm": 23.0
+          },
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "code": "600008.SZ",
+            "name": "创业板50成分8",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 9,
+            "dvTtm": 22.0
+          },
+          {
+            "indexCode": "399673.SZ",
+            "indexName": "创业板50",
+            "code": "600009.SZ",
+            "name": "创业板50成分9",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 10,
+            "dvTtm": 21.0
+          }
+        ],
+        "coverage": {
+          "memberCount": 15,
+          "membershipAsOf": "20261023",
+          "membershipCacheUpdated": "20261030",
+          "membershipSource": "Tushare index_weight最新可见成分快照",
+          "snapshotMatchedCount": 14,
+          "validDividendCount": 12,
+          "missingDividendCount": 1,
+          "nonPositiveDividendCount": 2,
+          "dividendCoveragePct": 80.0,
+          "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+          "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+        },
+        "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+        "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+        "reasons": [
+          "本指数成分15只；有效正股息率12只，缺失1只，零/负2只；实际展示10只",
+          "只使用本指数成分与正dv_ttm排序；不叠加形态、价格位置、估值分位、缩量、均线、市值、资金流或排雷门"
+        ]
+      }
+    },
+    "RSI6等于20整六榜均不触发": {
+      "pass": true,
+      "evidence": [
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 20.0,
+          "dynamicWeeklyRsi6": 20.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "上证50自身当周动态Wilder RSI6=20.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000300.SH",
+          "indexName": "沪深300",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 20.0,
+          "dynamicWeeklyRsi6": 20.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "沪深300自身当周动态Wilder RSI6=20.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000510.SH",
+          "indexName": "中证A500",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 20.0,
+          "dynamicWeeklyRsi6": 20.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "中证A500自身当周动态Wilder RSI6=20.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000905.SH",
+          "indexName": "中证500",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 20.0,
+          "dynamicWeeklyRsi6": 20.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "中证500自身当周动态Wilder RSI6=20.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000688.SH",
+          "indexName": "科创50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 20.0,
+          "dynamicWeeklyRsi6": 20.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "科创50自身当周动态Wilder RSI6=20.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "399673.SZ",
+          "indexName": "创业板50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 20.0,
+          "dynamicWeeklyRsi6": 20.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "创业板50自身当周动态Wilder RSI6=20.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        }
+      ]
+    },
+    "0步窗口原20整可触发未被误改": {
+      "pass": true,
+      "evidence": 6
+    },
+    "行情不新鲜不得伪装新触发": {
+      "pass": true,
+      "evidence": [
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": false,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "上证50自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000300.SH",
+          "indexName": "沪深300",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": false,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "沪深300自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000510.SH",
+          "indexName": "中证A500",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": false,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "中证A500自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000905.SH",
+          "indexName": "中证500",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": false,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "中证500自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000688.SH",
+          "indexName": "科创50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": false,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "科创50自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "399673.SZ",
+          "indexName": "创业板50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": false,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "创业板50自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        }
+      ]
+    },
+    "RSI日期陈旧不得伪装新触发": {
+      "pass": true,
+      "evidence": [
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261029",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "上证50自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000300.SH",
+          "indexName": "沪深300",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261029",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "沪深300自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000510.SH",
+          "indexName": "中证A500",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261029",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "中证A500自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000905.SH",
+          "indexName": "中证500",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261029",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "中证500自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000688.SH",
+          "indexName": "科创50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261029",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "科创50自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "399673.SZ",
+          "indexName": "创业板50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261029",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "创业板50自身当周动态Wilder RSI6=18.0；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        }
+      ]
+    },
+    "RSI缺失不得伪装新触发": {
+      "pass": true,
+      "evidence": [
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": null,
+          "dynamicWeeklyRsi6": null,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "上证50自身当周动态Wilder RSI6=缺失；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000300.SH",
+          "indexName": "沪深300",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": null,
+          "dynamicWeeklyRsi6": null,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "沪深300自身当周动态Wilder RSI6=缺失；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000510.SH",
+          "indexName": "中证A500",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": null,
+          "dynamicWeeklyRsi6": null,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "中证A500自身当周动态Wilder RSI6=缺失；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000905.SH",
+          "indexName": "中证500",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": null,
+          "dynamicWeeklyRsi6": null,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "中证500自身当周动态Wilder RSI6=缺失；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "000688.SH",
+          "indexName": "科创50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": null,
+          "dynamicWeeklyRsi6": null,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "科创50自身当周动态Wilder RSI6=缺失；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        },
+        {
+          "indexCode": "399673.SZ",
+          "indexName": "创业板50",
+          "open": false,
+          "visible": false,
+          "weeklyRsi6": null,
+          "dynamicWeeklyRsi6": null,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "创业板50自身当周动态Wilder RSI6=缺失；严格<20才开，20整及其他指数触发均不开本榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "not_requested",
+          "rankingLocked": false,
+          "snapshotError": null,
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数自身未严格满足周RSI6<20或行情日期不新鲜：清空旧项，不展示本指数榜"
+          ]
+        }
+      ]
+    },
+    "股息率原始值严格降序前10且代码破并列": {
+      "pass": true,
+      "evidence": [
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "100000.SZ",
+          "name": "上证50成分0",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 1,
+          "dvTtm": 30.0
+        },
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "100001.SZ",
+          "name": "上证50成分1",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 2,
+          "dvTtm": 29.0
+        },
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "100002.SZ",
+          "name": "上证50成分2",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 3,
+          "dvTtm": 28.0
+        },
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "100003.SZ",
+          "name": "上证50成分3",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 4,
+          "dvTtm": 27.0
+        },
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "100004.SZ",
+          "name": "上证50成分4",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 5,
+          "dvTtm": 26.0
+        },
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "100005.SZ",
+          "name": "上证50成分5",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 6,
+          "dvTtm": 25.0
+        },
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "100006.SZ",
+          "name": "上证50成分6",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 7,
+          "dvTtm": 24.0
+        },
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "100007.SZ",
+          "name": "上证50成分7",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 8,
+          "dvTtm": 23.0
+        },
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "100008.SZ",
+          "name": "上证50成分8",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 9,
+          "dvTtm": 22.0
+        },
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "100009.SZ",
+          "name": "上证50成分9",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 10,
+          "dvTtm": 21.0
+        }
+      ]
+    },
+    "缺失无穷零零负股息率均不混入且覆盖如实": {
+      "pass": true,
+      "evidence": {
+        "memberCount": 15,
+        "membershipAsOf": "20261023",
+        "membershipCacheUpdated": "20261030",
+        "membershipSource": "Tushare index_weight最新可见成分快照",
+        "snapshotMatchedCount": 14,
+        "validDividendCount": 12,
+        "missingDividendCount": 1,
+        "nonPositiveDividendCount": 2,
+        "dividendCoveragePct": 80.0,
+        "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+        "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+      }
+    },
+    "成分与股息来源asOf和缺失处理完整": {
+      "pass": true,
+      "evidence": {
+        "indexCode": "000016.SH",
+        "indexName": "上证50",
+        "open": true,
+        "visible": true,
+        "weeklyRsi6": 19.0,
+        "dynamicWeeklyRsi6": 19.0,
+        "asOf": "20261030",
+        "dynamicWeeklyFresh": true,
+        "rsiOperator": "<20",
+        "rsi20Excluded": true,
+        "triggerReason": "上证50自身当周动态Wilder RSI6=19.0<20，打开本指数榜",
+        "tradeDate": "20261030",
+        "snapshotDate": "20261030",
+        "status": "ok",
+        "rankingLocked": false,
+        "snapshotError": null,
+        "requestedCount": 10,
+        "count": 10,
+        "items": [
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100000.SZ",
+            "name": "上证50成分0",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 1,
+            "dvTtm": 30.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100001.SZ",
+            "name": "上证50成分1",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 2,
+            "dvTtm": 29.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100002.SZ",
+            "name": "上证50成分2",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 3,
+            "dvTtm": 28.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100003.SZ",
+            "name": "上证50成分3",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 4,
+            "dvTtm": 27.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100004.SZ",
+            "name": "上证50成分4",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 5,
+            "dvTtm": 26.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100005.SZ",
+            "name": "上证50成分5",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 6,
+            "dvTtm": 25.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100006.SZ",
+            "name": "上证50成分6",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 7,
+            "dvTtm": 24.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100007.SZ",
+            "name": "上证50成分7",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 8,
+            "dvTtm": 23.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100008.SZ",
+            "name": "上证50成分8",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 9,
+            "dvTtm": 22.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100009.SZ",
+            "name": "上证50成分9",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 10,
+            "dvTtm": 21.0
+          }
+        ],
+        "coverage": {
+          "memberCount": 15,
+          "membershipAsOf": "20261023",
+          "membershipCacheUpdated": "20261030",
+          "membershipSource": "Tushare index_weight最新可见成分快照",
+          "snapshotMatchedCount": 14,
+          "validDividendCount": 12,
+          "missingDividendCount": 1,
+          "nonPositiveDividendCount": 2,
+          "dividendCoveragePct": 80.0,
+          "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+          "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+        },
+        "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+        "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+        "reasons": [
+          "本指数成分15只；有效正股息率12只，缺失1只，零/负2只；实际展示10只",
+          "只使用本指数成分与正dv_ttm排序；不叠加形态、价格位置、估值分位、缩量、均线、市值、资金流或排雷门"
+        ]
+      }
+    },
+    "不足10只显示实际数量不凑数": {
+      "pass": true,
+      "evidence": {
+        "indexCode": "000016.SH",
+        "indexName": "上证50",
+        "open": true,
+        "visible": true,
+        "weeklyRsi6": 19.0,
+        "dynamicWeeklyRsi6": 19.0,
+        "asOf": "20261030",
+        "dynamicWeeklyFresh": true,
+        "rsiOperator": "<20",
+        "rsi20Excluded": true,
+        "triggerReason": "上证50自身当周动态Wilder RSI6=19.0<20，打开本指数榜",
+        "tradeDate": "20261030",
+        "snapshotDate": "20261030",
+        "status": "ok",
+        "rankingLocked": false,
+        "snapshotError": null,
+        "requestedCount": 10,
+        "count": 3,
+        "items": [
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100000.SZ",
+            "name": "上证50成分0",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 1,
+            "dvTtm": 30.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100001.SZ",
+            "name": "上证50成分1",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 2,
+            "dvTtm": 29.0
+          },
+          {
+            "indexCode": "000016.SH",
+            "indexName": "上证50",
+            "code": "100002.SZ",
+            "name": "上证50成分2",
+            "tradeDate": "20261030",
+            "source": "Tushare daily_basic.dv_ttm",
+            "rank": 3,
+            "dvTtm": 28.0
+          }
+        ],
+        "coverage": {
+          "memberCount": 3,
+          "membershipAsOf": "20261023",
+          "membershipCacheUpdated": "20261030",
+          "membershipSource": "Tushare index_weight最新可见成分快照",
+          "snapshotMatchedCount": 3,
+          "validDividendCount": 3,
+          "missingDividendCount": 0,
+          "nonPositiveDividendCount": 0,
+          "dividendCoveragePct": 100.0,
+          "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+          "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+        },
+        "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+        "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+        "reasons": [
+          "本指数成分3只；有效正股息率3只，缺失0只，零/负0只；实际展示3只",
+          "只使用本指数成分与正dv_ttm排序；不叠加形态、价格位置、估值分位、缩量、均线、市值、资金流或排雷门",
+          "有效候选不足10只，实际3只，不凑数"
+        ]
+      }
+    },
+    "排序使用原始dv而非显示四舍五入值": {
+      "pass": true,
+      "evidence": [
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "000002.SZ",
+          "name": "B",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 1,
+          "dvTtm": 8.0
+        },
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "code": "000001.SZ",
+          "name": "A",
+          "tradeDate": "20261030",
+          "source": "Tushare daily_basic.dv_ttm",
+          "rank": 2,
+          "dvTtm": 8.0
+        }
+      ]
+    },
+    "快照陈旧只锁触发榜且清旧不影响未触发榜": {
+      "pass": true,
+      "evidence": [
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "open": true,
+          "visible": true,
+          "weeklyRsi6": 19.0,
+          "dynamicWeeklyRsi6": 19.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "上证50自身当周动态Wilder RSI6=19.0<20，打开本指数榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "stale",
+          "rankingLocked": true,
+          "snapshotError": "旧日期20261029",
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数已触发，但股息率快照stale：旧日期20261029；锁空旧项，不伪装新榜"
+          ]
+        },
+        {
+          "indexCode": "000300.SH",
+          "indexName": "沪深300",
+          "open": true,
+          "visible": true,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "沪深300自身当周动态Wilder RSI6=18.0<20，打开本指数榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "stale",
+          "rankingLocked": true,
+          "snapshotError": "旧日期20261029",
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数已触发，但股息率快照stale：旧日期20261029；锁空旧项，不伪装新榜"
+          ]
+        }
+      ]
+    },
+    "生产入口只请求一次同批股息快照并读六指数成分": {
+      "pass": true,
+      "evidence": [
+        {
+          "trade_date": "20261030",
+          "fields": "ts_code,trade_date,dv_ttm"
+        }
+      ]
+    },
+    "生产入口独立开门不依赖0步窗且清旧结构": {
+      "pass": true,
+      "evidence": [
+        "1个宽基独立触发；只打开对应指数榜"
+      ]
+    },
+    "生产成分快照日期真实落证据": {
+      "pass": true,
+      "evidence": {
+        "memberCount": 15,
+        "membershipAsOf": "20261023",
+        "membershipCacheUpdated": "20261030",
+        "membershipSource": "Tushare index_weight最新可见成分快照",
+        "snapshotMatchedCount": 14,
+        "validDividendCount": 12,
+        "missingDividendCount": 1,
+        "nonPositiveDividendCount": 2,
+        "dividendCoveragePct": 80.0,
+        "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+        "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+      }
+    },
+    "总览摘要逐指数含RSI日期实际数量和严格边界": {
+      "pass": true,
+      "evidence": "逐指数高股息防御（严格RSI6<20）｜上证50周RSI6=19.0（20261030）实际10只：上证50成分030.0%、上证50成分129.0%、上证50成分228.0%；高股息≠安全/买点"
+    },
+    "无指数触发时成分和股息均零请求且旧榜清空": {
+      "pass": true,
+      "evidence": [
+        "六宽基各自均未严格满足新鲜当周动态RSI6<20；清空全部旧高股息项"
+      ]
+    },
+    "生产陈旧快照两触发榜分别锁空": {
+      "pass": true,
+      "evidence": [
+        {
+          "indexCode": "000016.SH",
+          "indexName": "上证50",
+          "open": true,
+          "visible": true,
+          "weeklyRsi6": 19.0,
+          "dynamicWeeklyRsi6": 19.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "上证50自身当周动态Wilder RSI6=19.0<20，打开本指数榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "stale",
+          "rankingLocked": true,
+          "snapshotError": "股息率快照日期20261029不等于本批有效日20261030",
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数已触发，但股息率快照stale：股息率快照日期20261029不等于本批有效日20261030；锁空旧项，不伪装新榜"
+          ]
+        },
+        {
+          "indexCode": "000300.SH",
+          "indexName": "沪深300",
+          "open": true,
+          "visible": true,
+          "weeklyRsi6": 18.0,
+          "dynamicWeeklyRsi6": 18.0,
+          "asOf": "20261030",
+          "dynamicWeeklyFresh": true,
+          "rsiOperator": "<20",
+          "rsi20Excluded": true,
+          "triggerReason": "沪深300自身当周动态Wilder RSI6=18.0<20，打开本指数榜",
+          "tradeDate": "20261030",
+          "snapshotDate": null,
+          "status": "stale",
+          "rankingLocked": true,
+          "snapshotError": "股息率快照日期20261029不等于本批有效日20261030",
+          "requestedCount": 10,
+          "count": 0,
+          "items": [],
+          "coverage": {
+            "memberCount": 15,
+            "membershipAsOf": "20261023",
+            "membershipCacheUpdated": "20261030",
+            "membershipSource": "Tushare index_weight最新可见成分快照",
+            "snapshotMatchedCount": 0,
+            "validDividendCount": 0,
+            "missingDividendCount": 0,
+            "nonPositiveDividendCount": 0,
+            "dividendCoveragePct": null,
+            "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+            "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+          },
+          "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+          "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+          "reasons": [
+            "本指数已触发，但股息率快照stale：股息率快照日期20261029不等于本批有效日20261030；锁空旧项，不伪装新榜"
+          ]
+        }
+      ]
+    },
+    "股息API失败锁空而非沿用旧榜": {
+      "pass": true,
+      "evidence": {
+        "indexCode": "000016.SH",
+        "indexName": "上证50",
+        "open": true,
+        "visible": true,
+        "weeklyRsi6": 19.0,
+        "dynamicWeeklyRsi6": 19.0,
+        "asOf": "20261030",
+        "dynamicWeeklyFresh": true,
+        "rsiOperator": "<20",
+        "rsi20Excluded": true,
+        "triggerReason": "上证50自身当周动态Wilder RSI6=19.0<20，打开本指数榜",
+        "tradeDate": "20261030",
+        "snapshotDate": null,
+        "status": "missing",
+        "rankingLocked": true,
+        "snapshotError": "daily_basic失败：受控股息快照失败",
+        "requestedCount": 10,
+        "count": 0,
+        "items": [],
+        "coverage": {
+          "memberCount": 15,
+          "membershipAsOf": "20261023",
+          "membershipCacheUpdated": "20261030",
+          "membershipSource": "Tushare index_weight最新可见成分快照",
+          "snapshotMatchedCount": 0,
+          "validDividendCount": 0,
+          "missingDividendCount": 0,
+          "nonPositiveDividendCount": 0,
+          "dividendCoveragePct": null,
+          "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+          "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+        },
+        "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+        "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+        "reasons": [
+          "本指数已触发，但股息率快照missing：daily_basic失败：受控股息快照失败；锁空旧项，不伪装新榜"
+        ]
+      }
+    },
+    "空股息快照锁空": {
+      "pass": true,
+      "evidence": {
+        "indexCode": "000016.SH",
+        "indexName": "上证50",
+        "open": true,
+        "visible": true,
+        "weeklyRsi6": 19.0,
+        "dynamicWeeklyRsi6": 19.0,
+        "asOf": "20261030",
+        "dynamicWeeklyFresh": true,
+        "rsiOperator": "<20",
+        "rsi20Excluded": true,
+        "triggerReason": "上证50自身当周动态Wilder RSI6=19.0<20，打开本指数榜",
+        "tradeDate": "20261030",
+        "snapshotDate": null,
+        "status": "missing",
+        "rankingLocked": true,
+        "snapshotError": "daily_basic为空",
+        "requestedCount": 10,
+        "count": 0,
+        "items": [],
+        "coverage": {
+          "memberCount": 15,
+          "membershipAsOf": "20261023",
+          "membershipCacheUpdated": "20261030",
+          "membershipSource": "Tushare index_weight最新可见成分快照",
+          "snapshotMatchedCount": 0,
+          "validDividendCount": 0,
+          "missingDividendCount": 0,
+          "nonPositiveDividendCount": 0,
+          "dividendCoveragePct": null,
+          "dividendSource": "Tushare daily_basic.dv_ttm（股息率TTM，%）",
+          "missingPolicy": "成分无当日快照或dv_ttm缺失/非数值计缺失；零/负值单列；均不入选、不补0、不虚构"
+        },
+        "source": "指数行情与成分：Tushare；股息率：Tushare daily_basic.dv_ttm",
+        "rankingMethod": "仅本指数成分中dv_ttm>0者按原始值严格降序、代码升序打破并列，最多前10；不足10显示实际数量",
+        "reasons": [
+          "本指数已触发，但股息率快照missing：daily_basic为空；锁空旧项，不伪装新榜"
+        ]
+      }
+    },
+    "沿用同一Wilder周RSI6函数且asOf新鲜": {
+      "pass": true,
+      "evidence": {
+        "dailyDate": "20261030",
+        "weeklyRsiDate": "20261023",
+        "previousWeeklyRsiDate": "20261016",
+        "weeklyRsi": 0.0,
+        "previousWeeklyRsi": 0.0,
+        "weeklyRsi6": 0.0,
+        "previousWeeklyRsi6": 0.0,
+        "dynamicWeeklyRsi6": 0.0,
+        "dynamicWeeklyRsiDate": "20261030",
+        "weeklyFresh": true,
+        "dynamicWeeklyFresh": true,
+        "rsiPass": true,
+        "inOversoldZone": true,
+        "weeklyCross20": false,
+        "dynamicWatch": false,
+        "completedWeekCount": 30,
+        "rsiReason": "当周动态RSI6进入20以下区域：20261030 RSI6=0.00≤20；周内会变化"
+      }
+    },
+    "PIT未来行情不改变当前RSI证据": {
+      "pass": true,
+      "evidence": {
+        "current": {
+          "dailyDate": "20261030",
+          "weeklyRsiDate": "20261023",
+          "previousWeeklyRsiDate": "20261016",
+          "weeklyRsi": 0.0,
+          "previousWeeklyRsi": 0.0,
+          "weeklyRsi6": 0.0,
+          "previousWeeklyRsi6": 0.0,
+          "dynamicWeeklyRsi6": 0.0,
+          "dynamicWeeklyRsiDate": "20261030",
+          "weeklyFresh": true,
+          "dynamicWeeklyFresh": true,
+          "rsiPass": true,
+          "inOversoldZone": true,
+          "weeklyCross20": false,
+          "dynamicWatch": false,
+          "completedWeekCount": 30,
+          "rsiReason": "当周动态RSI6进入20以下区域：20261030 RSI6=0.00≤20；周内会变化"
+        },
+        "withFuture": {
+          "dailyDate": "20261030",
+          "weeklyRsiDate": "20261023",
+          "previousWeeklyRsiDate": "20261016",
+          "weeklyRsi": 0.0,
+          "previousWeeklyRsi": 0.0,
+          "weeklyRsi6": 0.0,
+          "previousWeeklyRsi6": 0.0,
+          "dynamicWeeklyRsi6": 0.0,
+          "dynamicWeeklyRsiDate": "20261030",
+          "weeklyFresh": true,
+          "dynamicWeeklyFresh": true,
+          "rsiPass": true,
+          "inOversoldZone": true,
+          "weeklyCross20": false,
+          "dynamicWatch": false,
+          "completedWeekCount": 30,
+          "rsiReason": "当周动态RSI6进入20以下区域：20261030 RSI6=0.00≤20；周内会变化"
+        }
+      }
+    },
+    "生产main移除旧分组和全A Top20调用只接新榜": {
+      "pass": true,
+      "evidence": [
+        "_index_dividend_base",
+        "build_index_dividend_watch"
+      ]
+    },
+    "超跌估值与0步窗口生产调用仍保留": {
+      "pass": true,
+      "evidence": [
+        "build_broad_observation",
+        "build_long_window",
+        "build_oversold_value_directions"
+      ]
+    },
+    "0步窗口其他超跌低估值和旧函数未误改": {
+      "pass": true,
+      "evidence": []
+    },
+    "前端逐指数统一入口覆盖来源边界和无附加门": {
+      "pass": true,
+      "evidence": "UI contract"
+    },
+    "旧全A混排Top20及行业概念高股息UI彻底移除": {
+      "pass": true,
+      "evidence": "legacy removed"
+    },
+    "两份生产fund_data字节未变": {
+      "pass": true,
+      "evidence": {
+        "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+        "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+      }
+    }
+  },
+  "testIsolation": "FakePro + TemporaryDirectory；无真实API、无生产fund_data写入",
+  "superseded": {
+    "107": "全A Top20由任务116逐指数Top10明确替代"
+  },
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "oldFunctionsChanged": []
+}

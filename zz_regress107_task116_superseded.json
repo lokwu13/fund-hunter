@@ -1,0 +1,7 @@
+{
+  "task": 107,
+  "status": "superseded_by_task_116",
+  "reason": "任务107要求全A股息率TTM Top20及排雷顺延，和用户任务116明确要求的逐指数成分股独立前10、无排雷门、移除全市场混排直接冲突。保留历史脚本作审计，不纳入任务116联合通过数；由zz_regress116.py完整替代现行契约。",
+  "replacement": "zz_regress116.py",
+  "productionDataRegenerated": false
+}

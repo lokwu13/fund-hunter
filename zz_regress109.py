@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""任务109：两个总览入口的源码/DOM契约与真实滚动函数可执行回归。"""
+"""任务109（任务116现行契约）：两个总览入口的源码/DOM与真实滚动回归。"""
 import json
 import re
 import subprocess
@@ -17,7 +17,7 @@ def check(name, condition):
 
 links = {
     'oversold-value-directions': '查看行业/大概念自身历史估值、双龙头与数据限制',
-    'rsi6-dividend-top20': '查看全A股息率TTM Top20完整原榜',
+    'index-dividend-defensive': '查看逐指数高股息防御完整榜与数据覆盖',
 }
 for anchor, text in links.items():
     check(f'{anchor}:目标tab为sectors', f"onNavigate?.('sectors', '{anchor}')" in weekly)
@@ -31,8 +31,9 @@ for anchor, text in links.items():
 check('板块详细组件实际承接目标', '<TabsContent value="sectors"' in app and '<SectorHeatmap detailed />' in app)
 check('估值卡与按钮使用同一显示条件', 'detailed && extremeReboundActive(data) && data.oversoldValueDirections?.visible' in sector
       and '{data.oversoldValueDirections?.visible && (' in weekly)
-check('Top20卡与按钮使用同一显示条件', 'detailed && extremeReboundActive(data) && data.dividendWatch?.rsi6Top20?.visible' in sector
-      and '{data.dividendWatch?.rsi6Top20?.visible && (' in weekly)
+check('逐指数卡与按钮使用同一显示条件', 'detailed && data.dividendWatch?.visible' in sector
+      and '{data.dividendWatch?.visible && (' in weekly)
+check('旧Top20入口已经移除', 'rsi6Top20' not in weekly + sector and 'rsi6-dividend-top20' not in weekly + sector)
 check('切换tab后使用渲染感知滚动', 'setActiveTab(tab);' in app and 'if (anchor) scrollToRenderedAnchor(anchor);' in app)
 check('相关工具返回链路共用可靠滚动', app.count('if (anchor) scrollToRenderedAnchor(anchor);') == 2)
 check('无固定150ms竞态', 'setTimeout' not in app)

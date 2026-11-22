@@ -42,18 +42,14 @@ export const oversoldValueDirectionsText = (data: any) => {
   return `板块估值（PE/PB自身历史分位低→高，非横截面）｜行业：${groupsText(block.industries || [])}｜大概念：${groupsText(block.concepts || [])}${suffix}｜现行成分回溯非PIT、有生存者偏差；估值仅参考，非操作买卖建议`;
 };
 
-export const dividendTop20Text = (data: any) => {
-  const block = data.dividendWatch?.rsi6Top20;
-  if (!extremeReboundActive(data) || !block?.visible) return '';
-  if (block.status !== 'ok') {
-    return `全A股息率TTM Top20：${(block.reasons || ['快照缺失，Top20锁榜']).join('；')}｜高股息≠安全/买点`;
-  }
-  const leaders = (block.items || []).slice(0, 3).map((r: any) => `${r.name}${r.dvTtm}%`).join('、') || '无有效项';
-  const excluded = block.excludedCount || 0;
-  const filterText = block.mineCoverageStatus === 'missing'
-    ? '排雷数据整体缺失，未剔除且全部标未核验'
-    : excluded > 0 ? `明确命中排雷剔除${excluded}只并顺延补足` : '无明确排雷命中剔除；未覆盖仅标未核验';
-  return `全A股息率TTM Top20（${block.snapshotDate || '日期缺失'}，实际${block.count || 0}只）：${leaders}｜${filterText}；高股息≠安全/买点`;
+export const dividendDefenseText = (data: any) => {
+  const boards = (data.dividendWatch?.indexBoards || []).filter((board: any) => board.open);
+  if (!boards.length) return '';
+  const parts = boards.map((board: any) => {
+    const leaders = (board.items || []).slice(0, 3).map((r: any) => `${r.name}${r.dvTtm}%`).join('、') || '暂无有效正股息率项';
+    return `${board.indexName}周RSI6=${board.weeklyRsi6 ?? '—'}（${board.asOf || '日期缺失'}）实际${board.count || 0}只：${leaders}`;
+  });
+  return `逐指数高股息防御（严格RSI6<20，20整不触发）｜${parts.join('｜')}｜仅本指数成分正股息率降序前10，不足10不凑数；高股息≠安全/买点`;
 };
 
 const oversoldWait = (items: any[]) => {
@@ -111,8 +107,8 @@ function windowConclusion(data: any) {
   }
   const valueDirections = oversoldValueDirectionsText(data);
   if (valueDirections) signals.push(valueDirections);
-  const dividendTop20 = dividendTop20Text(data);
-  if (dividendTop20) signals.push(dividendTop20);
+  const dividendDefense = dividendDefenseText(data);
+  if (dividendDefense) signals.push(dividendDefense);
   if (signals.length === 0) signals.push('宽基无超买超卖触发');
   const bulls = items.filter((r: any) => r.weeklyMaBull).map((r: any) => r.indexName);
   const ma = items.length > 0
@@ -168,7 +164,7 @@ const GUIDES: Record<string, string> = {
   window: 'standardWindow照常计算；任一六宽基当周动态RSI6≤20且行情新鲜即最后覆盖open；周内会变化',
   broad: '宽基形态＋超买超卖＋ETF，只点触发项',
   sector: '主线入选＋VCP强共振＋杯柄；ETF仅用可靠映射',
-  vcp: '杯柄仅紧凑展示首次信号；高股息按行业/概念近4周RSI、缩量与首次量价催化独立开门',
+  vcp: '杯柄仅紧凑展示首次信号；高股息仅按各宽基自身周RSI6<20开对应成分正股息率前10榜，20整不触发',
   mine: '入围标的资金、消息与交易风险排查',
 };
 
@@ -196,8 +192,8 @@ export function buildFunnelStepViews(data: any): FunnelStepView[] {
       const count = (track: string) => rows.filter((r: any) => r.track === track).length;
       const dw = data.dividendWatch;
       const dividendText = dw?.visible
-        ? `高股息防御${dw.count || 0}只（${dw.catalystGroupCount || 0}个催化组）`
-        : `高股息未展示（行业/概念首次催化${dw?.catalystGroupCount ?? 0}组）`;
+        ? `高股息${dw.triggeredCount || 0}个指数独立触发，各榜前10（合计展示${dw.count || 0}项）`
+        : '高股息未展示（无指数自身严格周RSI6<20）';
       conclusion = `形态${rows.length}只｜共振${count('reson')}·精选${count('cherry')}·储备${count('reserve')}｜${dividendText}`;
     }
     return { ...step, conclusion, guide: GUIDES[step.key] || step.guide };
