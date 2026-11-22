@@ -51,10 +51,72 @@ export interface VcpDailyTrendEvidence {
   source: 'daily';
 }
 
+export interface VcpGestationEvidence {
+  pass: boolean;
+  status: 'pass' | 'premature_new_high' | 'insufficient_samples';
+  startDate: string;
+  endDate: string;
+  referenceHigh: number | null;
+  referenceDate: string | null;
+  referenceSamples: number;
+  referenceDays: number;
+  anchorHigh?: number | null;
+  prematureNewHighs?: Array<{ date: string; high: number; close: number; referenceHigh: number; finalBreakout: boolean }>;
+  finalBreakout?: { date: string; high: number; close: number; referenceHigh: number; finalBreakout: true } | null;
+  nearHighAllowed: true;
+  sidewaysPreferred: boolean;
+  sidewaysPreferenceOnly: true;
+  sidewaysDriftPct: number | null;
+  sidewaysScore: number;
+  sidewaysLabel: string;
+  rejectReasons: string[];
+}
+
+export interface PatternEpisode {
+  episodeId: string;
+  code: string;
+  name: string;
+  patternType: string;
+  structurePath?: string | null;
+  gestationStart: string;
+  gestationEnd: string;
+  pivot: number;
+  breakoutPoint: number;
+  referenceHigh: number;
+  referenceDate?: string | null;
+  breakoutDate: string;
+  breakoutHigh: number;
+  breakoutClose: number;
+  breakoutVolume?: number;
+  breakoutDefinition?: string;
+  exitAfterTradingDays: 10;
+  originFormalAdmission: boolean;
+  originQualificationNote: string;
+  sidewaysLabel?: string | null;
+  sidewaysScore?: number | null;
+  dailyTrend?: VcpDailyTrendEvidence | null;
+  vcpGestation?: VcpGestationEvidence | null;
+}
+
+export interface PatternHistoryCoverage {
+  kind: string;
+  fullMarketComplete: false;
+  note: string;
+  sourceFile?: string;
+  sourceSha256?: string;
+  sampleEnd?: string;
+  originFormalAdmission?: boolean;
+}
+
 export function vcpDailyTrendText(evidence?: VcpDailyTrendEvidence | null) {
   if (!evidence) return 'VCP日线趋势证据缺失';
   const state = evidence.pass ? '通过' : '未通过';
-  return `VCP日线趋势${state}（${evidence.asOf ?? '—'}·${evidence.source ?? 'daily'}）：收盘${evidence.close ?? '—'} > MA50 ${evidence.ma50 ?? '—'}；MA50 ${evidence.ma50 ?? '—'} > MA150 ${evidence.ma150 ?? '—'} > MA200 ${evidence.ma200 ?? '—'}；样本${evidence.samples}根；严格多头=${evidence.bullish ? '是' : '否'}；原因=${evidence.reasons?.join('、') || '无'}。日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高`;
+  return `VCP日线趋势${state}（${evidence.asOf ?? '—'}·${evidence.source ?? 'daily'}）：收盘${evidence.close ?? '—'} > MA50 ${evidence.ma50 ?? '—'}；MA50 ${evidence.ma50 ?? '—'} > MA150 ${evidence.ma150 ?? '—'} > MA200 ${evidence.ma200 ?? '—'}；样本${evidence.samples}根；严格多头=${evidence.bullish ? '是' : '否'}；原因=${evidence.reasons?.join('、') || '无'}。日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高（即接近新高允许），但孕育期内不得先于最终突破创出新高；横盘仅为优选，非完全横盘不硬排除`;
+}
+
+export function vcpGestationText(evidence?: VcpGestationEvidence | null) {
+  if (!evidence) return 'VCP孕育期新高证据缺失';
+  return `孕育${evidence.startDate}～${evidence.endDate}·参考高${evidence.referenceHigh ?? '—'}(${evidence.referenceDate ?? '—'})·参考样本${evidence.referenceSamples}根·${evidence.pass ? '通过' : '未通过'}·${evidence.sidewaysLabel}·提前新高${evidence.prematureNewHighs?.length ?? 0}次·原因=${evidence.rejectReasons?.join('、') || '无'}`;
 }
 
 export function completeMoneyflow(evidence?: PatternEvidence | null) {
@@ -74,9 +136,12 @@ export function formalPatternDisplayable(item: {
   patternEvidence?: PatternEvidence | null;
   vcpDailyTrend?: VcpDailyTrendEvidence | null;
   dailyTrendPass?: boolean | null;
+  vcpGestation?: VcpGestationEvidence | null;
+  gestationPass?: boolean | null;
 }) {
   if (item.pattern === 'VCP收缩型') {
-    return item.vcpDailyTrend?.pass === true && item.dailyTrendPass === true;
+    const dailyPassed = item.vcpDailyTrend?.pass === true && item.dailyTrendPass === true;
+    return dailyPassed && item.vcpGestation?.pass === true && item.gestationPass === true;
   }
   if (!item.pattern || !FORMAL_PATTERNS.has(item.pattern)) return true;
   if (!item.patternEvidence || item.patternEvidence.displayEligible !== true) return false;

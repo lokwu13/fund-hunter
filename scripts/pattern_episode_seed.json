@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "coverage": {
+    "kind": "runtime_plus_verified_seed",
+    "fullMarketComplete": false,
+    "note": "首批仅含中国核电已验证底部平台型结构突破事件；不是全市场全历史归档，未覆盖区间不伪造历史。",
+    "sourceFile": "zz_audit100_current_rows_full.json",
+    "sourceSha256": "f77eb8dcfcd11c0d582ea44eec9b25b67b859fd9c1de383c4dde6cbb4fa25d45",
+    "sampleStart": "20211117",
+    "sampleEnd": "20261030",
+    "originFormalAdmission": false,
+    "replayMethod": "register_gestation + advance_stock；同一通用函数适用于全部股票"
+  },
+  "stocks": {
+    "601985.SH": {
+      "pending": [],
+      "episodes": [
+        {
+          "episodeId": "601985.SH|20260828|20261013|20261015",
+          "code": "601985.SH",
+          "name": "中国核电",
+          "patternType": "底部平台型",
+          "structurePath": "fixed_base_plus_platform_structure_replay",
+          "gestationStart": "20260828",
+          "gestationEnd": "20261013",
+          "pivot": 9.21,
+          "breakoutPoint": 9.21,
+          "referenceHigh": 9.51,
+          "referenceDate": "20251029",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceSamples": 250,
+          "breakoutDate": "20261015",
+          "breakoutHigh": 9.52,
+          "breakoutClose": 9.41,
+          "breakoutVolume": 1420606.81,
+          "breakoutDefinition": "孕育结束后首个盘中最高价>参考高点且收盘价>枢轴的交易日",
+          "exitAfterTradingDays": 10,
+          "originFormalAdmission": false,
+          "originQualificationNote": "底部平台型结构突破回放；仅价格结构回放，不冒充当时正式入选。20261013任务113日线严格多头门未通过，正式底部资金/估值资格也未据此认定。",
+          "invalidation": 8.74,
+          "sidewaysLabel": "横盘优选",
+          "sidewaysScore": 100,
+          "dailyTrend": {
+            "close": 9.13,
+            "ma50": 8.9378,
+            "ma150": 8.9609,
+            "ma200": 8.9053,
+            "samples": 1187,
+            "closeAboveMA50": true,
+            "bullish": false,
+            "bullishStatus": "not_strict_bullish",
+            "pass": false,
+            "reasons": [
+              "日线MA50>MA150>MA200严格多头排列不成立"
+            ],
+            "asOf": "20261013",
+            "source": "daily"
+          },
+          "vcpGestation": {
+            "pass": true,
+            "status": "pass",
+            "startDate": "20260828",
+            "endDate": "20261013",
+            "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+            "referenceDays": 250,
+            "referenceSamples": 250,
+            "referenceHigh": 9.51,
+            "referenceDate": "20251029",
+            "anchorHigh": 8.93,
+            "prematureNewHighs": [],
+            "finalBreakout": null,
+            "nearHighAllowed": true,
+            "sidewaysPreferred": true,
+            "sidewaysPreferenceOnly": true,
+            "sidewaysDriftPct": 2.354,
+            "sidewaysScore": 100,
+            "sidewaysLabel": "横盘优选",
+            "rejectReasons": []
+          },
+          "originPatternEvidence": null
+        }
+      ]
+    }
+  },
+  "generatedBy": "zz_generate114_seed.py"
+}

@@ -189,6 +189,8 @@
           "source": "daily"
         },
         "dailyTrendPass": true,
+        "vcpGestation": null,
+        "gestationPass": true,
         "eligible": true,
         "displayEligible": true,
         "rejectReasons": []
@@ -219,6 +221,8 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": null,
+        "gestationPass": true,
         "eligible": false,
         "displayEligible": false,
         "rejectReasons": [
@@ -284,6 +288,11 @@
         "distPct": 0.0,
         "invalidation": 96.0,
         "volConfirm": 1022.0,
+        "startDate": "s004",
+        "endDate": "s059",
+        "anchorHigh": 100.0,
+        "structureStartDate": "s004",
+        "structureEndDate": "s059",
         "formed": true,
         "structureFormed": true,
         "dailyTrend": {
@@ -301,6 +310,28 @@
           "source": "daily"
         },
         "dailyTrendPass": true,
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "s004",
+          "endDate": "s059",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 144,
+          "referenceHigh": 100.0,
+          "referenceDate": "s004",
+          "anchorHigh": 100.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 1.01,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "gestationPass": true,
         "eligible": true,
         "displayEligible": true
       }
@@ -359,6 +390,11 @@
           "distPct": 0.0,
           "invalidation": 96.0,
           "volConfirm": 1022.0,
+          "startDate": "s004",
+          "endDate": "s059",
+          "anchorHigh": 100.0,
+          "structureStartDate": "s004",
+          "structureEndDate": "s059",
           "formed": true,
           "structureFormed": true,
           "dailyTrend": {
@@ -376,6 +412,28 @@
             "source": "daily"
           },
           "dailyTrendPass": true,
+          "vcpGestation": {
+            "pass": true,
+            "status": "pass",
+            "startDate": "s004",
+            "endDate": "s059",
+            "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+            "referenceDays": 250,
+            "referenceSamples": 144,
+            "referenceHigh": 100.0,
+            "referenceDate": "s004",
+            "anchorHigh": 100.0,
+            "prematureNewHighs": [],
+            "finalBreakout": null,
+            "nearHighAllowed": true,
+            "sidewaysPreferred": true,
+            "sidewaysPreferenceOnly": true,
+            "sidewaysDriftPct": 1.01,
+            "sidewaysScore": 100,
+            "sidewaysLabel": "横盘优选",
+            "rejectReasons": []
+          },
+          "gestationPass": true,
           "eligible": true,
           "displayEligible": true
         },
@@ -429,6 +487,11 @@
           "distPct": 0.0,
           "invalidation": 96.0,
           "volConfirm": 1022.0,
+          "startDate": "s004",
+          "endDate": "s059",
+          "anchorHigh": 100.0,
+          "structureStartDate": "s004",
+          "structureEndDate": "s059",
           "formed": true,
           "structureFormed": true,
           "dailyTrend": {
@@ -446,6 +509,28 @@
             "source": "daily"
           },
           "dailyTrendPass": true,
+          "vcpGestation": {
+            "pass": true,
+            "status": "pass",
+            "startDate": "s004",
+            "endDate": "s059",
+            "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+            "referenceDays": 250,
+            "referenceSamples": 144,
+            "referenceHigh": 100.0,
+            "referenceDate": "s004",
+            "anchorHigh": 100.0,
+            "prematureNewHighs": [],
+            "finalBreakout": null,
+            "nearHighAllowed": true,
+            "sidewaysPreferred": true,
+            "sidewaysPreferenceOnly": true,
+            "sidewaysDriftPct": 1.01,
+            "sidewaysScore": 100,
+            "sidewaysLabel": "横盘优选",
+            "rejectReasons": []
+          },
+          "gestationPass": true,
           "eligible": true,
           "displayEligible": true
         }
@@ -504,6 +589,11 @@
         "distPct": 0.0,
         "invalidation": 96.0,
         "volConfirm": 1022.0,
+        "startDate": "s004",
+        "endDate": "s059",
+        "anchorHigh": 100.0,
+        "structureStartDate": "s004",
+        "structureEndDate": "s059",
         "formed": true,
         "structureFormed": true,
         "dailyTrend": {
@@ -521,6 +611,28 @@
           "source": "daily"
         },
         "dailyTrendPass": true,
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "s004",
+          "endDate": "s059",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 144,
+          "referenceHigh": 100.0,
+          "referenceDate": "s004",
+          "anchorHigh": 100.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 1.01,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "gestationPass": true,
         "eligible": true,
         "displayEligible": true
       }
@@ -548,6 +660,10 @@
           3.9,
           2.5
         ],
+        "startDate": "20260326",
+        "endDate": "20260417",
+        "anchorHigh": 4.01,
+        "pivot": 4.08,
         "contractionMode": "strict",
         "narrowIntegrity": {
           "pass": true,
@@ -581,7 +697,7 @@
         },
         "trend60Pct": -12.61,
         "platformDriftPct": 2.03,
-        "note": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制短长均量排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。",
+        "note": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP孕育期内不得先于最终突破创出新高，接近新高允许；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制短长均量排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；横盘仅为优选标签；单标签仍为平台整理，不伪造双标签。",
         "structureFormed": true,
         "dailyTrend": {
           "close": 4.02,
@@ -600,6 +716,28 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260326",
+          "endDate": "20260417",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 250,
+          "referenceHigh": 4.6,
+          "referenceDate": "20260114",
+          "anchorHigh": 4.01,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 2.03,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "gestationPass": true,
         "eligible": false,
         "displayEligible": false
       }
@@ -3318,7 +3456,8 @@
             "volLast": 971222.1,
             "rejectReasons": [
               "5日与最近3日均量同步重新放大",
-              "10日/长均量超过1.20，近期量能异常放大"
+              "10日/长均量超过1.20，近期量能异常放大",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -3383,7 +3522,8 @@
             "rejectReasons": [
               "5日与最近3日均量同步重新放大",
               "10日/长均量超过1.20，近期量能异常放大",
-              "距枢轴-5.8%超出VCP就绪窗-5%~+4%"
+              "距枢轴-5.8%超出VCP就绪窗-5%~+4%",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -3447,7 +3587,8 @@
             "volLast": 971222.1,
             "rejectReasons": [
               "5日与最近3日均量同步重新放大",
-              "10日/长均量超过1.20，近期量能异常放大"
+              "10日/长均量超过1.20，近期量能异常放大",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -3511,7 +3652,8 @@
             "volLast": 971222.1,
             "rejectReasons": [
               "10日/长均量超过1.20，近期量能异常放大",
-              "距枢轴-5.7%超出VCP就绪窗-5%~+4%"
+              "距枢轴-5.7%超出VCP就绪窗-5%~+4%",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -3575,7 +3717,8 @@
             "volLast": 971222.1,
             "rejectReasons": [
               "10日/长均量超过1.20，近期量能异常放大",
-              "距枢轴-5.8%超出VCP就绪窗-5%~+4%"
+              "距枢轴-5.8%超出VCP就绪窗-5%~+4%",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -3638,7 +3781,8 @@
             "volFirst": 768584.9,
             "volLast": 1367750.7,
             "rejectReasons": [
-              "10日/长均量超过1.20，近期量能异常放大"
+              "10日/长均量超过1.20，近期量能异常放大",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -3702,7 +3846,8 @@
             "volLast": 1367750.7,
             "rejectReasons": [
               "10日/长均量超过1.20，近期量能异常放大",
-              "距枢轴4.2%超出VCP就绪窗-5%~+4%"
+              "距枢轴4.2%超出VCP就绪窗-5%~+4%",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -3766,7 +3911,8 @@
             "volLast": 1367750.7,
             "rejectReasons": [
               "10日/长均量超过1.20，近期量能异常放大",
-              "距枢轴4.8%超出VCP就绪窗-5%~+4%"
+              "距枢轴4.8%超出VCP就绪窗-5%~+4%",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -3833,7 +3979,8 @@
             "rejectReasons": [
               "10日/长均量超过1.20，近期量能异常放大",
               "距枢轴4.8%超出VCP就绪窗-5%~+4%",
-              "日线MA50>MA150>MA200严格多头排列不成立"
+              "日线MA50>MA150>MA200严格多头排列不成立",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -3899,7 +4046,8 @@
             "volLast": 1367750.7,
             "rejectReasons": [
               "距枢轴4.1%超出VCP就绪窗-5%~+4%",
-              "日线MA50>MA150>MA200严格多头排列不成立"
+              "日线MA50>MA150>MA200严格多头排列不成立",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -3964,7 +4112,8 @@
             "volFirst": 768584.9,
             "volLast": 1367750.7,
             "rejectReasons": [
-              "日线MA50>MA150>MA200严格多头排列不成立"
+              "日线MA50>MA150>MA200严格多头排列不成立",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -4029,7 +4178,8 @@
             "volFirst": 768584.9,
             "volLast": 1367750.7,
             "rejectReasons": [
-              "日线MA50>MA150>MA200严格多头排列不成立"
+              "日线MA50>MA150>MA200严格多头排列不成立",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -4094,7 +4244,8 @@
             "volFirst": 768584.9,
             "volLast": 1367750.7,
             "rejectReasons": [
-              "日线MA50>MA150>MA200严格多头排列不成立"
+              "日线MA50>MA150>MA200严格多头排列不成立",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -4160,7 +4311,8 @@
             "volLast": 1367750.7,
             "rejectReasons": [
               "距枢轴4.8%超出VCP就绪窗-5%~+4%",
-              "日线MA50>MA150>MA200严格多头排列不成立"
+              "日线MA50>MA150>MA200严格多头排列不成立",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -4225,7 +4377,8 @@
             "volFirst": 889411.6,
             "volLast": 1009290.1,
             "rejectReasons": [
-              "日线MA50>MA150>MA200严格多头排列不成立"
+              "日线MA50>MA150>MA200严格多头排列不成立",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -4291,7 +4444,8 @@
             "volLast": 1224250.6,
             "rejectReasons": [
               "5日与最近3日均量同步重新放大",
-              "日线MA50>MA150>MA200严格多头排列不成立"
+              "日线MA50>MA150>MA200严格多头排列不成立",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -4356,7 +4510,8 @@
             "volFirst": 1004891.0,
             "volLast": 1224250.6,
             "rejectReasons": [
-              "日线MA50>MA150>MA200严格多头排列不成立"
+              "日线MA50>MA150>MA200严格多头排列不成立",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -4421,7 +4576,8 @@
             "volFirst": 1004891.0,
             "volLast": 1224250.6,
             "rejectReasons": [
-              "日线MA50>MA150>MA200严格多头排列不成立"
+              "日线MA50>MA150>MA200严格多头排列不成立",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -4501,7 +4657,8 @@
             "volFirst": 971222.1,
             "volLast": 1073160.8,
             "rejectReasons": [
-              "日线MA50>MA150>MA200严格多头排列不成立"
+              "日线MA50>MA150>MA200严格多头排列不成立",
+              "VCP孕育期内20250707盘中7.77先于最终突破创出新高（参考7.6500）"
             ]
           },
           "weekly": null,
@@ -19132,6 +19289,6 @@
       ]
     }
   ],
-  "productionSha256": "42b16da5e4a4ef27e84a147001ba07d283de388e8590f08bea4bbcea3e708445",
+  "productionSha256": "169b12b2c8e2b01e4269ffa777b69da59d0f970e7284c18d5ad53bb535f92105",
   "baselineFile": "zz_task113_before103.json"
 }

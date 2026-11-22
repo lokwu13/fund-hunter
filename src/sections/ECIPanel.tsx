@@ -8,7 +8,8 @@ import {
   Crown, Trophy, TrendingDown as TrendDown, Radar, Sprout, Swords
 } from 'lucide-react';
 import type { FundData } from '@/hooks/useFundData';
-import { formalPatternDisplayable, patternEvidenceText, vcpDailyTrendText } from './patternEvidence';
+import { formalPatternDisplayable, patternEvidenceText, vcpDailyTrendText, vcpGestationText } from './patternEvidence';
+import PatternHistoryLabel from './PatternHistoryLabel';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from 'recharts';
@@ -971,7 +972,9 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                         : isContract
                         ? ((it.daily?.formed && it.daily?.count >= 3) ? it.daily : it.weekly)
                         : (it.daily?.formed ? it.daily : it.weekly);
-                      const pv = isFixedBase ? it.fixedBase : isCup ? it.cupHandle : isFlag ? it.flag : (isPlatform ? it.patternEvidence : lv);
+                      const pv = it.patternEpisode
+                        ? { pivot: it.buyPoint?.pivot, distPct: it.buyPoint?.distanceToPivotPct }
+                        : isFixedBase ? it.fixedBase : isCup ? it.cupHandle : isFlag ? it.flag : (isPlatform ? it.patternEvidence : lv);
                       return (
                         <Fragment key={it.code}>
                         {grp !== prevGrp && (
@@ -1056,6 +1059,13 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                             ) : (
                               <span className="text-[10px] text-violet-600">{it.pattern || '—'}</span>
                             )}
+                            {it.patternEpisode && (
+                              <p className="mt-1 max-w-[220px] text-left text-[9px] leading-relaxed text-amber-700"
+                                 title={it.pattern === 'VCP收缩型' ? vcpGestationText(it.vcpGestation) : undefined}>
+                                {it.patternNote}
+                              </p>
+                            )}
+                            <PatternHistoryLabel records={it.patternHistory} coverage={it.patternHistoryCoverage} />
                           </td>
                           <td className="font-mono text-[11px]">
                             {it.daily ? (

@@ -1,0 +1,119 @@
+{
+  "task": 114,
+  "generatedAt": "2026-11-22T11:50:44+08:00",
+  "checks": {
+    "task113AllPassed": true,
+    "task114AllPassed": true,
+    "jointAllPassed": true,
+    "jointExactTasks": true,
+    "jointLogsPresent": true,
+    "buildPassed": true,
+    "productionDataUnchangedAcrossSuites": true,
+    "gestationRuleMarkers": true,
+    "historyLifecycleMarkers": true,
+    "frontendSharedHistoryAndGate": true,
+    "nuclearBreakoutAndExpiry": true,
+    "honestOriginQualification": true,
+    "noProductionOrWorkflowActions": true
+  },
+  "allPassed": true,
+  "releaseReady": true,
+  "task113": {
+    "task": 113,
+    "allPassed": true,
+    "checksPassed": 309,
+    "checksTotal": 309,
+    "failed": [],
+    "dataSha256": "f77eb8dcfcd11c0d582ea44eec9b25b67b859fd9c1de383c4dde6cbb4fa25d45",
+    "caseChangedCount": 0,
+    "windowChangedCount": 8,
+    "windowPositiveCounts": {
+      "000776.SZ": {
+        "before": 1,
+        "after": 1,
+        "changedDays": 0
+      },
+      "603392.SH": {
+        "before": 1,
+        "after": 1,
+        "changedDays": 0
+      },
+      "002027.SZ": {
+        "before": 1,
+        "after": 0,
+        "changedDays": 1
+      },
+      "600030.SH": {
+        "before": 6,
+        "after": 0,
+        "changedDays": 6
+      },
+      "601328.SH": {
+        "before": 24,
+        "after": 23,
+        "changedDays": 1
+      },
+      "600118.SH": {
+        "before": 0,
+        "after": 0,
+        "changedDays": 0
+      }
+    },
+    "productionFundDataSha256": {
+      "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+      "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "pitOnly": true,
+    "notMarketWinRate": true,
+    "manualDispatch": false,
+    "productionDataRegenerated": false
+  },
+  "task114": {
+    "task": 114,
+    "allPassed": true,
+    "checksPassed": 34,
+    "checksTotal": 34,
+    "failed": [],
+    "dataSha256": "f77eb8dcfcd11c0d582ea44eec9b25b67b859fd9c1de383c4dde6cbb4fa25d45",
+    "productionFundDataSha256": {
+      "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+      "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "pitOnly": true,
+    "manualDispatch": false,
+    "productionDataRegenerated": false,
+    "seed": "scripts/pattern_episode_seed.json",
+    "seedSha256": "8260d60ceabcffe3ca78e6f6e66615a18515c75204fcd65c80bdb7e5fec19a97"
+  },
+  "jointRegression": {
+    "complete": true,
+    "allPassed": true,
+    "passed": 17,
+    "total": 17
+  },
+  "build": {
+    "success": true,
+    "returncode": 0,
+    "modulesTransformed": 2363,
+    "warning": "Some chunks are larger than 500 kB after minification"
+  },
+  "sourceSha256": {
+    "scripts/update_data.py": "169b12b2c8e2b01e4269ffa777b69da59d0f970e7284c18d5ad53bb535f92105",
+    "scripts/pattern_history.py": "561e0f9c4832c48b634ce290a7f0e5a37588c75cfc96751f30204758fe59a15e",
+    "scripts/pattern_episode_seed.json": "8260d60ceabcffe3ca78e6f6e66615a18515c75204fcd65c80bdb7e5fec19a97",
+    "src/hooks/useFundData.ts": "629a9ae54822c0ba2753e818677bb8412ecdf51d065f3c17e45797dc963beb72",
+    "src/sections/patternEvidence.ts": "3003a291e0dd5809461c613e9bd376be6621d9264dbf8c4d79eb8a6027de3214",
+    "src/sections/PatternHistoryLabel.tsx": "d44dbbceb7d1262d8971ce250b346e081f424f27d83a92ccc3db18bd3d71f97c",
+    "src/sections/ECIPanel.tsx": "2649f8095bb1393eea0d6997272a2a5d9c929b5abfe1dd8c011656f6dc7246c6",
+    "src/sections/WeeklySummary.tsx": "c1378704741007de6226004cb28dd8951071896edf3102ba70f68f4cce02cb36",
+    "zz_regress114.py": "9a26d1d6354e56d68abcc242d1a7fc7b9c8c4c0879f3f8f7a8c4794f80bf0837",
+    "zz_generate114_seed.py": "85d9322aa49631824a0103aa615586e92d4fbe3b289fa5f99116816e8fd19b91",
+    "zz_run_joint114.py": "6a33b0828be4d7163136dd5d0286d03b46350000ff34f1251347f3d22e90b546",
+    "zz_build114.py": "c609fc710d0750925a3ae8dcf36a40b2c345417136f876601ac1fb4ff9061aa0"
+  },
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "workflowModified": false,
+  "scheduleModified": false,
+  "developmentServerStarted": false
+}

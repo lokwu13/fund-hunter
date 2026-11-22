@@ -1,0 +1,210 @@
+{
+  "task": 113,
+  "allPassed": true,
+  "checksPassed": 309,
+  "checksTotal": 309,
+  "failed": [],
+  "dataSha256": "f77eb8dcfcd11c0d582ea44eec9b25b67b859fd9c1de383c4dde6cbb4fa25d45",
+  "caseChangedCount": 0,
+  "windowChangedCount": 8,
+  "windowPositiveCounts": {
+    "000776.SZ": {
+      "before": 1,
+      "after": 1,
+      "changedDays": 0
+    },
+    "603392.SH": {
+      "before": 1,
+      "after": 1,
+      "changedDays": 0
+    },
+    "002027.SZ": {
+      "before": 1,
+      "after": 0,
+      "changedDays": 1
+    },
+    "600030.SH": {
+      "before": 6,
+      "after": 0,
+      "changedDays": 6
+    },
+    "601328.SH": {
+      "before": 24,
+      "after": 23,
+      "changedDays": 1
+    },
+    "600118.SH": {
+      "before": 0,
+      "after": 0,
+      "changedDays": 0
+    }
+  },
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "pitOnly": true,
+  "notMarketWinRate": true,
+  "manualDispatch": false,
+  "productionDataRegenerated": false
+}
+指定日变化: []
+窗口变化: [
+  {
+    "name": "广发证券",
+    "start": "20250403",
+    "end": "20250403",
+    "beforePositiveCount": 1,
+    "afterPositiveCount": 1,
+    "changedCount": 0,
+    "changes": []
+  },
+  {
+    "name": "万泰生物",
+    "start": "20240715",
+    "end": "20240715",
+    "beforePositiveCount": 1,
+    "afterPositiveCount": 1,
+    "changedCount": 0,
+    "changes": []
+  },
+  {
+    "name": "分众传媒",
+    "start": "20250707",
+    "end": "20250801",
+    "beforePositiveCount": 1,
+    "afterPositiveCount": 0,
+    "changedCount": 1,
+    "changes": [
+      {
+        "asOf": "20250801",
+        "before": "VCP收缩型",
+        "after": null,
+        "structurePaths": {
+          "daily": false,
+          "weekly": false,
+          "fixedBase": true
+        },
+        "trendPass": false,
+        "reasons": [
+          "平台/旗形被一年极高位或贴新高中高位门拦截"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "中信证券",
+    "start": "20240722",
+    "end": "20240923",
+    "beforePositiveCount": 6,
+    "afterPositiveCount": 0,
+    "changedCount": 6,
+    "changes": [
+      {
+        "asOf": "20240823",
+        "before": "VCP收缩型",
+        "after": "底部整理",
+        "structurePaths": {
+          "daily": false,
+          "weekly": false,
+          "fixedBase": true
+        },
+        "trendPass": false,
+        "reasons": []
+      },
+      {
+        "asOf": "20240913",
+        "before": "VCP收缩型",
+        "after": "底部整理",
+        "structurePaths": {
+          "daily": false,
+          "weekly": false,
+          "fixedBase": true
+        },
+        "trendPass": false,
+        "reasons": []
+      },
+      {
+        "asOf": "20240918",
+        "before": "VCP收缩型",
+        "after": "底部整理",
+        "structurePaths": {
+          "daily": false,
+          "weekly": false,
+          "fixedBase": true
+        },
+        "trendPass": false,
+        "reasons": []
+      },
+      {
+        "asOf": "20240919",
+        "before": "VCP收缩型",
+        "after": "底部整理",
+        "structurePaths": {
+          "daily": false,
+          "weekly": false,
+          "fixedBase": true
+        },
+        "trendPass": false,
+        "reasons": []
+      },
+      {
+        "asOf": "20240920",
+        "before": "VCP收缩型",
+        "after": "平台整理",
+        "structurePaths": {
+          "daily": false,
+          "weekly": false,
+          "fixedBase": true
+        },
+        "trendPass": false,
+        "reasons": []
+      },
+      {
+        "asOf": "20240923",
+        "before": "VCP收缩型",
+        "after": "平台整理",
+        "structurePaths": {
+          "daily": false,
+          "weekly": false,
+          "fixedBase": true
+        },
+        "trendPass": false,
+        "reasons": []
+      }
+    ]
+  },
+  {
+    "name": "交通银行",
+    "start": "20230905",
+    "end": "20231229",
+    "beforePositiveCount": 24,
+    "afterPositiveCount": 23,
+    "changedCount": 1,
+    "changes": [
+      {
+        "asOf": "20231129",
+        "before": "VCP收缩型",
+        "after": null,
+        "structurePaths": {
+          "daily": false,
+          "weekly": false,
+          "fixedBase": true
+        },
+        "trendPass": false,
+        "reasons": [
+          "各候选未同时满足完整结构与展示门"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "中国卫星",
+    "start": "20250402",
+    "end": "20250822",
+    "beforePositiveCount": 0,
+    "afterPositiveCount": 0,
+    "changedCount": 0,
+    "changes": []
+  }
+]

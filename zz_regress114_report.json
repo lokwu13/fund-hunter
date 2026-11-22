@@ -1,0 +1,1493 @@
+{
+  "summary": {
+    "task": 114,
+    "allPassed": true,
+    "checksPassed": 34,
+    "checksTotal": 34,
+    "failed": [],
+    "dataSha256": "f77eb8dcfcd11c0d582ea44eec9b25b67b859fd9c1de383c4dde6cbb4fa25d45",
+    "productionFundDataSha256": {
+      "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+      "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "pitOnly": true,
+    "manualDispatch": false,
+    "productionDataRegenerated": false,
+    "seed": "scripts/pattern_episode_seed.json",
+    "seedSha256": "8260d60ceabcffe3ca78e6f6e66615a18515c75204fcd65c80bdb7e5fec19a97"
+  },
+  "checks": [
+    {
+      "name": "中国神华20251104孕育期提前新高拒绝正式VCP",
+      "passed": true,
+      "evidence": {
+        "formed": false,
+        "structureFormed": true,
+        "eligible": false,
+        "displayEligible": false,
+        "dailyTrendPass": true,
+        "gestationPass": false,
+        "vcpGestation": {
+          "pass": false,
+          "status": "premature_new_high",
+          "startDate": "20251015",
+          "endDate": "20251104",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 250,
+          "referenceHigh": 43.6,
+          "referenceDate": "20240930",
+          "anchorHigh": 41.12,
+          "prematureNewHighs": [
+            {
+              "date": "20251030",
+              "high": 43.81,
+              "close": 43.04,
+              "referenceHigh": 43.6,
+              "finalBreakout": false
+            },
+            {
+              "date": "20251103",
+              "high": 43.95,
+              "close": 43.42,
+              "referenceHigh": 43.6,
+              "finalBreakout": false
+            },
+            {
+              "date": "20251104",
+              "high": 43.95,
+              "close": 43.52,
+              "referenceHigh": 43.6,
+              "finalBreakout": false
+            }
+          ],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 6.51,
+          "sidewaysScore": 65,
+          "sidewaysLabel": "非完全横盘但可入（仅降低优选分）",
+          "rejectReasons": [
+            "VCP孕育期内20251030盘中43.81先于最终突破创出新高（参考43.6000）"
+          ]
+        },
+        "startDate": "20251015",
+        "endDate": "20251104",
+        "pivot": 43.95,
+        "structurePath": "fixed_base"
+      }
+    },
+    {
+      "name": "中国神华20251104结构证据保留但不入选VCP",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "中国神华20251202接近新高但未破可入",
+      "passed": true,
+      "evidence": {
+        "formed": true,
+        "structureFormed": true,
+        "eligible": true,
+        "displayEligible": true,
+        "dailyTrendPass": true,
+        "gestationPass": true,
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20251111",
+          "endDate": "20251202",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 250,
+          "referenceHigh": 43.99,
+          "referenceDate": "20251106",
+          "anchorHigh": 43.21,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": -2.804,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "startDate": "20251111",
+        "endDate": "20251202",
+        "pivot": 43.25,
+        "structurePath": "fixed_base"
+      }
+    },
+    {
+      "name": "合成内部提前新高硬拒绝",
+      "passed": true,
+      "evidence": {
+        "pass": false,
+        "status": "premature_new_high",
+        "startDate": "d020",
+        "endDate": "d025",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceDays": 250,
+        "referenceSamples": 20,
+        "referenceHigh": 105.0,
+        "referenceDate": "d020",
+        "anchorHigh": 105.0,
+        "prematureNewHighs": [
+          {
+            "date": "d022",
+            "high": 105.01,
+            "close": 100.0,
+            "referenceHigh": 105.0,
+            "finalBreakout": false
+          }
+        ],
+        "finalBreakout": null,
+        "nearHighAllowed": true,
+        "sidewaysPreferred": true,
+        "sidewaysPreferenceOnly": true,
+        "sidewaysDriftPct": 0.0,
+        "sidewaysScore": 100,
+        "sidewaysLabel": "横盘优选",
+        "rejectReasons": [
+          "VCP孕育期内d022盘中105.01先于最终突破创出新高（参考105.0000）"
+        ]
+      }
+    },
+    {
+      "name": "最后一天实际收盘高于枢轴的正常突破豁免",
+      "passed": true,
+      "evidence": {
+        "pass": true,
+        "status": "pass",
+        "startDate": "d020",
+        "endDate": "d025",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceDays": 250,
+        "referenceSamples": 20,
+        "referenceHigh": 105.0,
+        "referenceDate": "d020",
+        "anchorHigh": 105.0,
+        "prematureNewHighs": [],
+        "finalBreakout": {
+          "date": "d025",
+          "high": 106.0,
+          "close": 104.01,
+          "referenceHigh": 105.0,
+          "finalBreakout": true
+        },
+        "nearHighAllowed": true,
+        "sidewaysPreferred": false,
+        "sidewaysPreferenceOnly": true,
+        "sidewaysDriftPct": 4.01,
+        "sidewaysScore": 90,
+        "sidewaysLabel": "非完全横盘但可入（仅降低优选分）",
+        "rejectReasons": []
+      }
+    },
+    {
+      "name": "最后一天收盘未严格高于枢轴不得豁免",
+      "passed": true,
+      "evidence": {
+        "pass": false,
+        "status": "premature_new_high",
+        "startDate": "d020",
+        "endDate": "d025",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceDays": 250,
+        "referenceSamples": 20,
+        "referenceHigh": 105.0,
+        "referenceDate": "d020",
+        "anchorHigh": 105.0,
+        "prematureNewHighs": [
+          {
+            "date": "d025",
+            "high": 106.0,
+            "close": 104.0,
+            "referenceHigh": 105.0,
+            "finalBreakout": false
+          }
+        ],
+        "finalBreakout": null,
+        "nearHighAllowed": true,
+        "sidewaysPreferred": false,
+        "sidewaysPreferenceOnly": true,
+        "sidewaysDriftPct": 4.0,
+        "sidewaysScore": 90,
+        "sidewaysLabel": "非完全横盘但可入（仅降低优选分）",
+        "rejectReasons": [
+          "VCP孕育期内d025盘中106.0先于最终突破创出新高（参考105.0000）"
+        ]
+      }
+    },
+    {
+      "name": "恰好接近参考高但未破不拒绝",
+      "passed": true,
+      "evidence": {
+        "pass": true,
+        "status": "pass",
+        "startDate": "d020",
+        "endDate": "d025",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceDays": 250,
+        "referenceSamples": 20,
+        "referenceHigh": 105.0,
+        "referenceDate": "d020",
+        "anchorHigh": 105.0,
+        "prematureNewHighs": [],
+        "finalBreakout": null,
+        "nearHighAllowed": true,
+        "sidewaysPreferred": true,
+        "sidewaysPreferenceOnly": true,
+        "sidewaysDriftPct": 0.0,
+        "sidewaysScore": 100,
+        "sidewaysLabel": "横盘优选",
+        "rejectReasons": []
+      }
+    },
+    {
+      "name": "新高参考样本不足明确拒绝并披露",
+      "passed": true,
+      "evidence": {
+        "pass": false,
+        "status": "insufficient_samples",
+        "startDate": "d005",
+        "endDate": "d010",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceDays": 250,
+        "referenceSamples": 5,
+        "referenceHigh": null,
+        "referenceDate": null,
+        "anchorHigh": 105.0,
+        "prematureNewHighs": [],
+        "finalBreakout": null,
+        "nearHighAllowed": true,
+        "sidewaysPreferred": false,
+        "sidewaysPreferenceOnly": true,
+        "sidewaysDriftPct": null,
+        "sidewaysScore": 0,
+        "sidewaysLabel": "样本不足",
+        "rejectReasons": [
+          "VCP新高参考样本不足20根（当前5根）"
+        ]
+      }
+    },
+    {
+      "name": "横盘与非完全横盘仅差优选标签不改变资格",
+      "passed": true,
+      "evidence": {
+        "flat": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "d020",
+          "endDate": "d025",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 20,
+          "referenceHigh": 110.0,
+          "referenceDate": "d020",
+          "anchorHigh": 110.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 2.0,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "drifty": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "d020",
+          "endDate": "d025",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 20,
+          "referenceHigh": 110.0,
+          "referenceDate": "d020",
+          "anchorHigh": 110.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 10.0,
+          "sidewaysScore": 30,
+          "sidewaysLabel": "非完全横盘但可入（仅降低优选分）",
+          "rejectReasons": []
+        }
+      }
+    },
+    {
+      "name": "任务113等号和至少200根硬门不变",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "任务113严格多头门不变",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "strict与daily路径均含通过的孕育证据",
+      "passed": true,
+      "evidence": {
+        "formed": true,
+        "structureFormed": true,
+        "eligible": true,
+        "displayEligible": true,
+        "dailyTrendPass": true,
+        "gestationPass": true,
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20250217",
+          "endDate": "20250403",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 250,
+          "referenceHigh": 18.37,
+          "referenceDate": "20241008",
+          "anchorHigh": 16.16,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 1.187,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "startDate": "20250217",
+        "endDate": "20250403",
+        "pivot": 16.59,
+        "structurePath": "swing_strict"
+      }
+    },
+    {
+      "name": "fixed路径含孕育证据",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "周线结构含孕育证据且周键映射原始日线",
+      "passed": true,
+      "evidence": {
+        "formed": false,
+        "structureFormed": false,
+        "eligible": false,
+        "displayEligible": false,
+        "dailyTrendPass": true,
+        "gestationPass": false,
+        "vcpGestation": {
+          "pass": false,
+          "status": "premature_new_high",
+          "startDate": "20260824",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 150,
+          "referenceHigh": 90.0,
+          "referenceDate": "20260824",
+          "anchorHigh": 90.0,
+          "prematureNewHighs": [
+            {
+              "date": "20260825",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260826",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260827",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260828",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260831",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260901",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260902",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260903",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260904",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260907",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260908",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260909",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260910",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260911",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260914",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260915",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260916",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260917",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260918",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260921",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260922",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260923",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260924",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260925",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260928",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260929",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20260930",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261001",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261002",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261005",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261006",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261007",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261008",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261009",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261012",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261013",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261014",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261015",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261016",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261019",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261020",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261021",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261022",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261023",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261026",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261027",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261028",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            },
+            {
+              "date": "20261029",
+              "high": 130.13,
+              "close": 130.0,
+              "referenceHigh": 90.0,
+              "finalBreakout": false
+            }
+          ],
+          "finalBreakout": {
+            "date": "20261030",
+            "high": 131.131,
+            "close": 131.0,
+            "referenceHigh": 90.0,
+            "finalBreakout": true
+          },
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.769,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": [
+            "VCP孕育期内20260825盘中130.13先于最终突破创出新高（参考90.0000）"
+          ]
+        },
+        "startDate": "20260824",
+        "endDate": "20261030",
+        "pivot": 90.0,
+        "structurePath": "swing_evidence_only"
+      }
+    },
+    {
+      "name": "平台型VCP属性含孕育证据且高位不硬拒",
+      "passed": true,
+      "evidence": {
+        "formed": false,
+        "structureFormed": true,
+        "eligible": false,
+        "displayEligible": false,
+        "dailyTrendPass": false,
+        "gestationPass": true,
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260326",
+          "endDate": "20260417",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 250,
+          "referenceHigh": 4.6,
+          "referenceDate": "20260114",
+          "anchorHigh": 4.01,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 2.03,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "startDate": "20260326",
+        "endDate": "20260417",
+        "pivot": 4.08
+      }
+    },
+    {
+      "name": "中国核电20261013仅结构成立不伪称正式VCP",
+      "passed": true,
+      "evidence": {
+        "formed": false,
+        "structureFormed": true,
+        "eligible": false,
+        "displayEligible": false,
+        "dailyTrendPass": false,
+        "gestationPass": true,
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260828",
+          "endDate": "20261013",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 250,
+          "referenceHigh": 9.51,
+          "referenceDate": "20251029",
+          "anchorHigh": 8.93,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 2.354,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "startDate": "20260828",
+        "endDate": "20261013",
+        "pivot": 9.21,
+        "structurePath": "fixed_base"
+      }
+    },
+    {
+      "name": "中国核电孕育枢轴9.21参考高9.51",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "中国核电20261014尚未突破20261015才突破",
+      "passed": true,
+      "evidence": {
+        "episodeId": "601985.SH|20260828|20261013|20261015",
+        "code": "601985.SH",
+        "name": "中国核电",
+        "patternType": "底部平台型",
+        "structurePath": "fixed_base_plus_platform_structure_replay",
+        "gestationStart": "20260828",
+        "gestationEnd": "20261013",
+        "pivot": 9.21,
+        "breakoutPoint": 9.21,
+        "referenceHigh": 9.51,
+        "referenceDate": "20251029",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceSamples": 250,
+        "breakoutDate": "20261015",
+        "breakoutHigh": 9.52,
+        "breakoutClose": 9.41,
+        "breakoutVolume": 1420606.81,
+        "breakoutDefinition": "孕育结束后首个盘中最高价>参考高点且收盘价>枢轴的交易日",
+        "exitAfterTradingDays": 10,
+        "originFormalAdmission": false,
+        "originQualificationNote": "底部平台型结构突破回放；仅价格结构回放，不冒充当时正式入选。",
+        "invalidation": 8.74,
+        "sidewaysLabel": "横盘优选",
+        "sidewaysScore": 100,
+        "dailyTrend": {
+          "close": 9.13,
+          "ma50": 8.9378,
+          "ma150": 8.9609,
+          "ma200": 8.9053,
+          "samples": 1187,
+          "closeAboveMA50": true,
+          "bullish": false,
+          "bullishStatus": "not_strict_bullish",
+          "pass": false,
+          "reasons": [
+            "日线MA50>MA150>MA200严格多头排列不成立"
+          ],
+          "asOf": "20261013",
+          "source": "daily"
+        },
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260828",
+          "endDate": "20261013",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 250,
+          "referenceHigh": 9.51,
+          "referenceDate": "20251029",
+          "anchorHigh": 8.93,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 2.354,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "originPatternEvidence": null
+      }
+    },
+    {
+      "name": "中国核电20261028年龄9仍active",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "中国核电20261029年龄10退出",
+      "passed": true,
+      "evidence": {
+        "known": true,
+        "active": false,
+        "expired": true,
+        "breakoutAge": 10,
+        "remainingDays": 0,
+        "exitDate": "20261029",
+        "maxTradingDays": 10
+      }
+    },
+    {
+      "name": "同PIT前缀与全量未来数据重放首个突破一致",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "持久化种子字段完整且明确非正式入选",
+      "passed": true,
+      "evidence": {
+        "episodeId": "601985.SH|20260828|20261013|20261015",
+        "code": "601985.SH",
+        "name": "中国核电",
+        "patternType": "底部平台型",
+        "structurePath": "fixed_base_plus_platform_structure_replay",
+        "gestationStart": "20260828",
+        "gestationEnd": "20261013",
+        "pivot": 9.21,
+        "breakoutPoint": 9.21,
+        "referenceHigh": 9.51,
+        "referenceDate": "20251029",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceSamples": 250,
+        "breakoutDate": "20261015",
+        "breakoutHigh": 9.52,
+        "breakoutClose": 9.41,
+        "breakoutVolume": 1420606.81,
+        "breakoutDefinition": "孕育结束后首个盘中最高价>参考高点且收盘价>枢轴的交易日",
+        "exitAfterTradingDays": 10,
+        "originFormalAdmission": false,
+        "originQualificationNote": "底部平台型结构突破回放；仅价格结构回放，不冒充当时正式入选。20261013任务113日线严格多头门未通过，正式底部资金/估值资格也未据此认定。",
+        "invalidation": 8.74,
+        "sidewaysLabel": "横盘优选",
+        "sidewaysScore": 100,
+        "dailyTrend": {
+          "close": 9.13,
+          "ma50": 8.9378,
+          "ma150": 8.9609,
+          "ma200": 8.9053,
+          "samples": 1187,
+          "closeAboveMA50": true,
+          "bullish": false,
+          "bullishStatus": "not_strict_bullish",
+          "pass": false,
+          "reasons": [
+            "日线MA50>MA150>MA200严格多头排列不成立"
+          ],
+          "asOf": "20261013",
+          "source": "daily"
+        },
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260828",
+          "endDate": "20261013",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 250,
+          "referenceHigh": 9.51,
+          "referenceDate": "20251029",
+          "anchorHigh": 8.93,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 2.354,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "originPatternEvidence": null
+      }
+    },
+    {
+      "name": "种子与运行缓存合并不重复事件",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "同锚点pending只推进可见终点",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "已突破同锚点不得重复登记",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "当前首次突破不显示成历史",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "再次入选返回完整历史标签和覆盖边界",
+      "passed": true,
+      "evidence": {
+        "code": "601985.SH",
+        "patternEpisode": null,
+        "buyPoint": {},
+        "patternHistory": [
+          {
+            "episodeId": "601985.SH|20260828|20261013|20261015",
+            "code": "601985.SH",
+            "name": "中国核电",
+            "patternType": "底部平台型",
+            "structurePath": "fixed_base_plus_platform_structure_replay",
+            "gestationStart": "20260828",
+            "gestationEnd": "20261013",
+            "pivot": 9.21,
+            "breakoutPoint": 9.21,
+            "referenceHigh": 9.51,
+            "referenceDate": "20251029",
+            "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+            "referenceSamples": 250,
+            "breakoutDate": "20261015",
+            "breakoutHigh": 9.52,
+            "breakoutClose": 9.41,
+            "breakoutVolume": 1420606.81,
+            "breakoutDefinition": "孕育结束后首个盘中最高价>参考高点且收盘价>枢轴的交易日",
+            "exitAfterTradingDays": 10,
+            "originFormalAdmission": false,
+            "originQualificationNote": "底部平台型结构突破回放；仅价格结构回放，不冒充当时正式入选。20261013任务113日线严格多头门未通过，正式底部资金/估值资格也未据此认定。",
+            "invalidation": 8.74,
+            "sidewaysLabel": "横盘优选",
+            "sidewaysScore": 100,
+            "dailyTrend": {
+              "close": 9.13,
+              "ma50": 8.9378,
+              "ma150": 8.9609,
+              "ma200": 8.9053,
+              "samples": 1187,
+              "closeAboveMA50": true,
+              "bullish": false,
+              "bullishStatus": "not_strict_bullish",
+              "pass": false,
+              "reasons": [
+                "日线MA50>MA150>MA200严格多头排列不成立"
+              ],
+              "asOf": "20261013",
+              "source": "daily"
+            },
+            "vcpGestation": {
+              "pass": true,
+              "status": "pass",
+              "startDate": "20260828",
+              "endDate": "20261013",
+              "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+              "referenceDays": 250,
+              "referenceSamples": 250,
+              "referenceHigh": 9.51,
+              "referenceDate": "20251029",
+              "anchorHigh": 8.93,
+              "prematureNewHighs": [],
+              "finalBreakout": null,
+              "nearHighAllowed": true,
+              "sidewaysPreferred": true,
+              "sidewaysPreferenceOnly": true,
+              "sidewaysDriftPct": 2.354,
+              "sidewaysScore": 100,
+              "sidewaysLabel": "横盘优选",
+              "rejectReasons": []
+            },
+            "originPatternEvidence": null
+          }
+        ],
+        "patternHistoryCoverage": {
+          "kind": "runtime_plus_verified_seed",
+          "fullMarketComplete": false,
+          "note": "首批仅含中国核电已验证底部平台型结构突破事件；不是全市场全历史归档，未覆盖区间不伪造历史。",
+          "sourceFile": "zz_audit100_current_rows_full.json",
+          "sourceSha256": "f77eb8dcfcd11c0d582ea44eec9b25b67b859fd9c1de383c4dde6cbb4fa25d45",
+          "sampleStart": "20211117",
+          "sampleEnd": "20261030",
+          "originFormalAdmission": false,
+          "replayMethod": "register_gestation + advance_stock；同一通用函数适用于全部股票"
+        }
+      }
+    },
+    {
+      "name": "漏斗传递事件历史孕育与退出字段",
+      "passed": true,
+      "evidence": {
+        "code": "601985.SH",
+        "name": "中国核电",
+        "pattern": "底部平台型",
+        "stage": null,
+        "sector": "电力",
+        "sectorFit": "板块未共振",
+        "pivot": 9.21,
+        "distPct": -2.2,
+        "invalidation": null,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": null,
+        "handleEnd": null,
+        "doubleBottom": null,
+        "signalDate": null,
+        "signalType": null,
+        "signalLabel": null,
+        "signalClose": null,
+        "signalHigh": null,
+        "signalVolX": null,
+        "initialStop": null,
+        "firstSignal": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "breakoutDate": null,
+        "breakoutRemainingDays": 1,
+        "breakoutExitDate": null,
+        "track": "reserve",
+        "smartMoneyPosDays": 5,
+        "inPool": true,
+        "reson": false,
+        "entryTier": "qualified",
+        "defects": [],
+        "reserveReasons": [
+          "板块未共振",
+          "资金未确认（5/10天）"
+        ],
+        "histPct": null,
+        "distHigh250": null,
+        "patternEvidence": null,
+        "patternNote": null,
+        "patternEpisode": null,
+        "patternHistory": [
+          {
+            "episodeId": "601985.SH|20260828|20261013|20261015",
+            "code": "601985.SH",
+            "name": "中国核电",
+            "patternType": "底部平台型",
+            "structurePath": "fixed_base_plus_platform_structure_replay",
+            "gestationStart": "20260828",
+            "gestationEnd": "20261013",
+            "pivot": 9.21,
+            "breakoutPoint": 9.21,
+            "referenceHigh": 9.51,
+            "referenceDate": "20251029",
+            "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+            "referenceSamples": 250,
+            "breakoutDate": "20261015",
+            "breakoutHigh": 9.52,
+            "breakoutClose": 9.41,
+            "breakoutVolume": 1420606.81,
+            "breakoutDefinition": "孕育结束后首个盘中最高价>参考高点且收盘价>枢轴的交易日",
+            "exitAfterTradingDays": 10,
+            "originFormalAdmission": false,
+            "originQualificationNote": "底部平台型结构突破回放；仅价格结构回放，不冒充当时正式入选。20261013任务113日线严格多头门未通过，正式底部资金/估值资格也未据此认定。",
+            "invalidation": 8.74,
+            "sidewaysLabel": "横盘优选",
+            "sidewaysScore": 100,
+            "dailyTrend": {
+              "close": 9.13,
+              "ma50": 8.9378,
+              "ma150": 8.9609,
+              "ma200": 8.9053,
+              "samples": 1187,
+              "closeAboveMA50": true,
+              "bullish": false,
+              "bullishStatus": "not_strict_bullish",
+              "pass": false,
+              "reasons": [
+                "日线MA50>MA150>MA200严格多头排列不成立"
+              ],
+              "asOf": "20261013",
+              "source": "daily"
+            },
+            "vcpGestation": {
+              "pass": true,
+              "status": "pass",
+              "startDate": "20260828",
+              "endDate": "20261013",
+              "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+              "referenceDays": 250,
+              "referenceSamples": 250,
+              "referenceHigh": 9.51,
+              "referenceDate": "20251029",
+              "anchorHigh": 8.93,
+              "prematureNewHighs": [],
+              "finalBreakout": null,
+              "nearHighAllowed": true,
+              "sidewaysPreferred": true,
+              "sidewaysPreferenceOnly": true,
+              "sidewaysDriftPct": 2.354,
+              "sidewaysScore": 100,
+              "sidewaysLabel": "横盘优选",
+              "rejectReasons": []
+            },
+            "originPatternEvidence": null
+          }
+        ],
+        "patternHistoryCoverage": {
+          "kind": "runtime_plus_verified_seed",
+          "fullMarketComplete": false,
+          "note": "首批仅含中国核电已验证底部平台型结构突破事件；不是全市场全历史归档，未覆盖区间不伪造历史。",
+          "sourceFile": "zz_audit100_current_rows_full.json",
+          "sourceSha256": "f77eb8dcfcd11c0d582ea44eec9b25b67b859fd9c1de383c4dde6cbb4fa25d45",
+          "sampleStart": "20211117",
+          "sampleEnd": "20261030",
+          "originFormalAdmission": false,
+          "replayMethod": "register_gestation + advance_stock；同一通用函数适用于全部股票"
+        },
+        "vcpDailyTrend": null,
+        "dailyTrendPass": null,
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260828",
+          "endDate": "20261013",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 250,
+          "referenceHigh": 9.51,
+          "referenceDate": "20251029",
+          "anchorHigh": 8.93,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 2.354,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "gestationPass": true,
+        "historicalHighClose": null,
+        "historicalHighDate": null,
+        "distanceToHistoricalHighPct": null,
+        "historyStart": null,
+        "historyEnd": null,
+        "historyBars": null,
+        "historyMayBeTruncated": null,
+        "historyScope": null,
+        "historyExclusionReason": null,
+        "mine": false,
+        "star": false
+      }
+    },
+    {
+      "name": "杯柄历史高位门与平台底部一年高位门保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "杯柄5日门未被VCP底部10日门替换",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "前端旧VCP缺孕育证据不得展示",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "总览工具共用历史组件且包含全部指定字段",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "公开文案保留旧趋势文本并追加新高横盘规则",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "生产两份fund_data测试前后SHA不变",
+      "passed": true,
+      "evidence": {
+        "before": {
+          "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+          "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+        },
+        "after": {
+          "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+          "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+        }
+      }
+    }
+  ],
+  "productionSha256": "169b12b2c8e2b01e4269ffa777b69da59d0f970e7284c18d5ad53bb535f92105",
+  "historySha256": "561e0f9c4832c48b634ce290a7f0e5a37588c75cfc96751f30204758fe59a15e",
+  "realCases": {
+    "shenhuaReject": {
+      "formed": false,
+      "structureFormed": true,
+      "eligible": false,
+      "displayEligible": false,
+      "dailyTrendPass": true,
+      "gestationPass": false,
+      "vcpGestation": {
+        "pass": false,
+        "status": "premature_new_high",
+        "startDate": "20251015",
+        "endDate": "20251104",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceDays": 250,
+        "referenceSamples": 250,
+        "referenceHigh": 43.6,
+        "referenceDate": "20240930",
+        "anchorHigh": 41.12,
+        "prematureNewHighs": [
+          {
+            "date": "20251030",
+            "high": 43.81,
+            "close": 43.04,
+            "referenceHigh": 43.6,
+            "finalBreakout": false
+          },
+          {
+            "date": "20251103",
+            "high": 43.95,
+            "close": 43.42,
+            "referenceHigh": 43.6,
+            "finalBreakout": false
+          },
+          {
+            "date": "20251104",
+            "high": 43.95,
+            "close": 43.52,
+            "referenceHigh": 43.6,
+            "finalBreakout": false
+          }
+        ],
+        "finalBreakout": null,
+        "nearHighAllowed": true,
+        "sidewaysPreferred": false,
+        "sidewaysPreferenceOnly": true,
+        "sidewaysDriftPct": 6.51,
+        "sidewaysScore": 65,
+        "sidewaysLabel": "非完全横盘但可入（仅降低优选分）",
+        "rejectReasons": [
+          "VCP孕育期内20251030盘中43.81先于最终突破创出新高（参考43.6000）"
+        ]
+      },
+      "startDate": "20251015",
+      "endDate": "20251104",
+      "pivot": 43.95,
+      "structurePath": "fixed_base"
+    },
+    "shenhuaNear": {
+      "formed": true,
+      "structureFormed": true,
+      "eligible": true,
+      "displayEligible": true,
+      "dailyTrendPass": true,
+      "gestationPass": true,
+      "vcpGestation": {
+        "pass": true,
+        "status": "pass",
+        "startDate": "20251111",
+        "endDate": "20251202",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceDays": 250,
+        "referenceSamples": 250,
+        "referenceHigh": 43.99,
+        "referenceDate": "20251106",
+        "anchorHigh": 43.21,
+        "prematureNewHighs": [],
+        "finalBreakout": null,
+        "nearHighAllowed": true,
+        "sidewaysPreferred": true,
+        "sidewaysPreferenceOnly": true,
+        "sidewaysDriftPct": -2.804,
+        "sidewaysScore": 100,
+        "sidewaysLabel": "横盘优选",
+        "rejectReasons": []
+      },
+      "startDate": "20251111",
+      "endDate": "20251202",
+      "pivot": 43.25,
+      "structurePath": "fixed_base"
+    },
+    "nuclearOrigin": {
+      "formed": false,
+      "structureFormed": true,
+      "eligible": false,
+      "displayEligible": false,
+      "dailyTrendPass": false,
+      "gestationPass": true,
+      "vcpGestation": {
+        "pass": true,
+        "status": "pass",
+        "startDate": "20260828",
+        "endDate": "20261013",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceDays": 250,
+        "referenceSamples": 250,
+        "referenceHigh": 9.51,
+        "referenceDate": "20251029",
+        "anchorHigh": 8.93,
+        "prematureNewHighs": [],
+        "finalBreakout": null,
+        "nearHighAllowed": true,
+        "sidewaysPreferred": true,
+        "sidewaysPreferenceOnly": true,
+        "sidewaysDriftPct": 2.354,
+        "sidewaysScore": 100,
+        "sidewaysLabel": "横盘优选",
+        "rejectReasons": []
+      },
+      "startDate": "20260828",
+      "endDate": "20261013",
+      "pivot": 9.21,
+      "structurePath": "fixed_base"
+    },
+    "nuclearEpisode": {
+      "episodeId": "601985.SH|20260828|20261013|20261015",
+      "code": "601985.SH",
+      "name": "中国核电",
+      "patternType": "底部平台型",
+      "structurePath": "fixed_base_plus_platform_structure_replay",
+      "gestationStart": "20260828",
+      "gestationEnd": "20261013",
+      "pivot": 9.21,
+      "breakoutPoint": 9.21,
+      "referenceHigh": 9.51,
+      "referenceDate": "20251029",
+      "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+      "referenceSamples": 250,
+      "breakoutDate": "20261015",
+      "breakoutHigh": 9.52,
+      "breakoutClose": 9.41,
+      "breakoutVolume": 1420606.81,
+      "breakoutDefinition": "孕育结束后首个盘中最高价>参考高点且收盘价>枢轴的交易日",
+      "exitAfterTradingDays": 10,
+      "originFormalAdmission": false,
+      "originQualificationNote": "底部平台型结构突破回放；仅价格结构回放，不冒充当时正式入选。20261013任务113日线严格多头门未通过，正式底部资金/估值资格也未据此认定。",
+      "invalidation": 8.74,
+      "sidewaysLabel": "横盘优选",
+      "sidewaysScore": 100,
+      "dailyTrend": {
+        "close": 9.13,
+        "ma50": 8.9378,
+        "ma150": 8.9609,
+        "ma200": 8.9053,
+        "samples": 1187,
+        "closeAboveMA50": true,
+        "bullish": false,
+        "bullishStatus": "not_strict_bullish",
+        "pass": false,
+        "reasons": [
+          "日线MA50>MA150>MA200严格多头排列不成立"
+        ],
+        "asOf": "20261013",
+        "source": "daily"
+      },
+      "vcpGestation": {
+        "pass": true,
+        "status": "pass",
+        "startDate": "20260828",
+        "endDate": "20261013",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceDays": 250,
+        "referenceSamples": 250,
+        "referenceHigh": 9.51,
+        "referenceDate": "20251029",
+        "anchorHigh": 8.93,
+        "prematureNewHighs": [],
+        "finalBreakout": null,
+        "nearHighAllowed": true,
+        "sidewaysPreferred": true,
+        "sidewaysPreferenceOnly": true,
+        "sidewaysDriftPct": 2.354,
+        "sidewaysScore": 100,
+        "sidewaysLabel": "横盘优选",
+        "rejectReasons": []
+      },
+      "originPatternEvidence": null
+    }
+  }
+}

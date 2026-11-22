@@ -3,7 +3,7 @@
   "pitOnly": true,
   "notMarketWinRate": true,
   "baselineProductionSha256": "c0cd09304419267e8babedc005a8830656d9cd019e8c61345a906a9c7917a0db",
-  "productionSha256": "42b16da5e4a4ef27e84a147001ba07d283de388e8590f08bea4bbcea3e708445",
+  "productionSha256": "169b12b2c8e2b01e4269ffa777b69da59d0f970e7284c18d5ad53bb535f92105",
   "sampleExpectationsChanged": false,
   "boundaryChecks": {
     "600323旧基线有信号新门硬剔除": {
@@ -265,6 +265,10 @@
             7.5,
             5.5
           ],
+          "startDate": "20261012",
+          "endDate": "20261030",
+          "anchorHigh": 26.8,
+          "pivot": 26.8,
           "contractionMode": "strict",
           "narrowIntegrity": {
             "pass": true,
@@ -298,7 +302,7 @@
           },
           "trend60Pct": -4.3,
           "platformDriftPct": -2.27,
-          "note": "平台型VCP属性：15日振幅11.3%≤12%，三段振幅8.1→7.5→5.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高；平台/拉升段均量0.75≤0.75，MA10/MA20/MA50=398000/437328/545474，MA10/MA50=0.730≤1.20（不强制短长均量排列）；60日趋势-4.3%、平台漂移-2.3%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。",
+          "note": "平台型VCP属性：15日振幅11.3%≤12%，三段振幅8.1→7.5→5.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP孕育期内不得先于最终突破创出新高，接近新高允许；平台/拉升段均量0.75≤0.75，MA10/MA20/MA50=398000/437328/545474，MA10/MA50=0.730≤1.20（不强制短长均量排列）；60日趋势-4.3%、平台漂移-2.3%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；横盘仅为优选标签；单标签仍为平台整理，不伪造双标签。",
           "structureFormed": true,
           "dailyTrend": {
             "close": 25.36,
@@ -318,6 +322,28 @@
             "source": "daily"
           },
           "dailyTrendPass": false,
+          "vcpGestation": {
+            "pass": true,
+            "status": "pass",
+            "startDate": "20261012",
+            "endDate": "20261030",
+            "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+            "referenceDays": 250,
+            "referenceSamples": 250,
+            "referenceHigh": 37.0,
+            "referenceDate": "20260129",
+            "anchorHigh": 26.8,
+            "prematureNewHighs": [],
+            "finalBreakout": null,
+            "nearHighAllowed": true,
+            "sidewaysPreferred": true,
+            "sidewaysPreferenceOnly": true,
+            "sidewaysDriftPct": -2.274,
+            "sidewaysScore": 100,
+            "sidewaysLabel": "横盘优选",
+            "rejectReasons": []
+          },
+          "gestationPass": true,
           "eligible": false,
           "displayEligible": false
         },
@@ -399,6 +425,10 @@
           7.5,
           5.5
         ],
+        "startDate": "20261012",
+        "endDate": "20261030",
+        "anchorHigh": 26.8,
+        "pivot": 26.8,
         "contractionMode": "strict",
         "narrowIntegrity": {
           "pass": true,
@@ -432,7 +462,7 @@
         },
         "trend60Pct": -4.3,
         "platformDriftPct": -2.27,
-        "note": "平台型VCP属性：15日振幅11.3%≤12%，三段振幅8.1→7.5→5.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高；平台/拉升段均量0.75≤0.75，MA10/MA20/MA50=398000/437328/545474，MA10/MA50=0.730≤1.20（不强制短长均量排列）；60日趋势-4.3%、平台漂移-2.3%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。",
+        "note": "平台型VCP属性：15日振幅11.3%≤12%，三段振幅8.1→7.5→5.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP孕育期内不得先于最终突破创出新高，接近新高允许；平台/拉升段均量0.75≤0.75，MA10/MA20/MA50=398000/437328/545474，MA10/MA50=0.730≤1.20（不强制短长均量排列）；60日趋势-4.3%、平台漂移-2.3%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；横盘仅为优选标签；单标签仍为平台整理，不伪造双标签。",
         "structureFormed": true,
         "dailyTrend": {
           "close": 25.36,
@@ -452,6 +482,28 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20261012",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 250,
+          "referenceHigh": 37.0,
+          "referenceDate": "20260129",
+          "anchorHigh": 26.8,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": -2.274,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "gestationPass": true,
         "eligible": false,
         "displayEligible": false
       }
@@ -688,16 +740,7 @@
       "unverified": 0
     }
   },
-  "sampleChanges": [
-    {
-      "id": "N04",
-      "before": null,
-      "after": "VCP收缩型",
-      "beforeValid": true,
-      "afterValid": true,
-      "fallbackUsed": false
-    }
-  ],
+  "sampleChanges": [],
   "sampleRowsAfter": [
     {
       "id": "A01",
@@ -1884,7 +1927,7 @@
       "sampleClass": "明确反例",
       "asOf": "20260930",
       "rows": 1187,
-      "currentCategory": "VCP收缩型",
+      "currentCategory": null,
       "valid": true,
       "regularCup": null,
       "recentCup": null,
@@ -1892,7 +1935,9 @@
       "mainVcpAttribute": null,
       "fallbackUsed": false,
       "signalDisplayable": null,
-      "rejectReasons": []
+      "rejectReasons": [
+        "平台/旗形被一年极高位或贴新高中高位门拦截"
+      ]
     },
     {
       "id": "N05",

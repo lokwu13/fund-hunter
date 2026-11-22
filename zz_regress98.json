@@ -65,13 +65,19 @@
         "rejectReasons": [
           "近10日单日剧烈波动且年化波动过高",
           "距枢轴6.1%超出VCP就绪窗-5%~+4%",
-          "日线样本不足200根（当前60根）"
+          "日线样本不足200根（当前60根）",
+          "VCP新高参考样本不足20根（当前4根）"
         ],
         "practical": true,
         "pivot": 100.0,
         "distPct": 6.1,
         "invalidation": 95.0,
         "volConfirm": 1022.0,
+        "startDate": "d04",
+        "endDate": "d59",
+        "anchorHigh": 100.0,
+        "structureStartDate": "d04",
+        "structureEndDate": "d59",
         "formed": false,
         "structureFormed": false,
         "dailyTrend": {
@@ -91,6 +97,30 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": false,
+          "status": "insufficient_samples",
+          "startDate": "d04",
+          "endDate": "d59",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 4,
+          "referenceHigh": null,
+          "referenceDate": null,
+          "anchorHigh": 100.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": null,
+          "sidewaysScore": 0,
+          "sidewaysLabel": "样本不足",
+          "rejectReasons": [
+            "VCP新高参考样本不足20根（当前4根）"
+          ]
+        },
+        "gestationPass": false,
         "eligible": false,
         "displayEligible": false
       }
@@ -157,13 +187,19 @@
         "rejectReasons": [
           "近10日单日剧烈波动且年化波动过高",
           "距枢轴6.1%超出VCP就绪窗-5%~+4%",
-          "日线样本不足200根（当前60根）"
+          "日线样本不足200根（当前60根）",
+          "VCP新高参考样本不足20根（当前4根）"
         ],
         "practical": false,
         "pivot": 100.0,
         "distPct": 6.1,
         "invalidation": 95.0,
         "volConfirm": 1022.0,
+        "startDate": "d04",
+        "endDate": "d59",
+        "anchorHigh": 100.0,
+        "structureStartDate": "d04",
+        "structureEndDate": "d59",
         "formed": false,
         "structureFormed": false,
         "dailyTrend": {
@@ -183,6 +219,30 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": false,
+          "status": "insufficient_samples",
+          "startDate": "d04",
+          "endDate": "d59",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 4,
+          "referenceHigh": null,
+          "referenceDate": null,
+          "anchorHigh": 100.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": null,
+          "sidewaysScore": 0,
+          "sidewaysLabel": "样本不足",
+          "rejectReasons": [
+            "VCP新高参考样本不足20根（当前4根）"
+          ]
+        },
+        "gestationPass": false,
         "eligible": false,
         "displayEligible": false
       }
@@ -249,13 +309,19 @@
         "rejectReasons": [
           "近10日单日剧烈波动且年化波动过高",
           "距枢轴6.1%超出VCP就绪窗-5%~+4%",
-          "日线样本不足200根（当前60根）"
+          "日线样本不足200根（当前60根）",
+          "VCP新高参考样本不足20根（当前4根）"
         ],
         "practical": true,
         "pivot": 100.0,
         "distPct": 6.1,
         "invalidation": 94.2,
         "volConfirm": 1022.0,
+        "startDate": "d04",
+        "endDate": "d59",
+        "anchorHigh": 100.0,
+        "structureStartDate": "d04",
+        "structureEndDate": "d59",
         "formed": false,
         "structureFormed": false,
         "dailyTrend": {
@@ -275,6 +341,30 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": false,
+          "status": "insufficient_samples",
+          "startDate": "d04",
+          "endDate": "d59",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 4,
+          "referenceHigh": null,
+          "referenceDate": null,
+          "anchorHigh": 100.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": null,
+          "sidewaysScore": 0,
+          "sidewaysLabel": "样本不足",
+          "rejectReasons": [
+            "VCP新高参考样本不足20根（当前4根）"
+          ]
+        },
+        "gestationPass": false,
         "eligible": false,
         "displayEligible": false
       }
@@ -341,13 +431,19 @@
         "rejectReasons": [
           "近10日单日剧烈波动且年化波动过高",
           "距枢轴6.1%超出VCP就绪窗-5%~+4%",
-          "日线样本不足200根（当前60根）"
+          "日线样本不足200根（当前60根）",
+          "VCP新高参考样本不足20根（当前4根）"
         ],
         "practical": true,
         "pivot": 100.0,
         "distPct": 6.1,
         "invalidation": 96.0,
         "volConfirm": 1022.0,
+        "startDate": "d04",
+        "endDate": "d59",
+        "anchorHigh": 100.0,
+        "structureStartDate": "d04",
+        "structureEndDate": "d59",
         "formed": false,
         "structureFormed": false,
         "dailyTrend": {
@@ -367,6 +463,30 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": false,
+          "status": "insufficient_samples",
+          "startDate": "d04",
+          "endDate": "d59",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 4,
+          "referenceHigh": null,
+          "referenceDate": null,
+          "anchorHigh": 100.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": null,
+          "sidewaysScore": 0,
+          "sidewaysLabel": "样本不足",
+          "rejectReasons": [
+            "VCP新高参考样本不足20根（当前4根）"
+          ]
+        },
+        "gestationPass": false,
         "eligible": false,
         "displayEligible": false
       }
@@ -438,13 +558,19 @@
         "rejectReasons": [
           "近10日单日剧烈波动且年化波动过高",
           "距枢轴6.1%超出VCP就绪窗-5%~+4%",
-          "日线样本不足200根（当前60根）"
+          "日线样本不足200根（当前60根）",
+          "VCP新高参考样本不足20根（当前4根）"
         ],
         "practical": true,
         "pivot": 100.0,
         "distPct": 6.1,
         "invalidation": 95.0,
         "volConfirm": 1022.0,
+        "startDate": "d04",
+        "endDate": "d59",
+        "anchorHigh": 100.0,
+        "structureStartDate": "d04",
+        "structureEndDate": "d59",
         "formed": false,
         "structureFormed": false,
         "dailyTrend": {
@@ -464,6 +590,30 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": false,
+          "status": "insufficient_samples",
+          "startDate": "d04",
+          "endDate": "d59",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 4,
+          "referenceHigh": null,
+          "referenceDate": null,
+          "anchorHigh": 100.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": null,
+          "sidewaysScore": 0,
+          "sidewaysLabel": "样本不足",
+          "rejectReasons": [
+            "VCP新高参考样本不足20根（当前4根）"
+          ]
+        },
+        "gestationPass": false,
         "eligible": false,
         "displayEligible": false
       }
@@ -530,13 +680,19 @@
         "rejectReasons": [
           "近10日单日剧烈波动且年化波动过高",
           "距枢轴6.1%超出VCP就绪窗-5%~+4%",
-          "日线样本不足200根（当前60根）"
+          "日线样本不足200根（当前60根）",
+          "VCP新高参考样本不足20根（当前4根）"
         ],
         "practical": true,
         "pivot": 100.0,
         "distPct": 6.1,
         "invalidation": 95.0,
         "volConfirm": 1022.0,
+        "startDate": "d04",
+        "endDate": "d59",
+        "anchorHigh": 100.0,
+        "structureStartDate": "d04",
+        "structureEndDate": "d59",
         "formed": false,
         "structureFormed": false,
         "dailyTrend": {
@@ -556,6 +712,30 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": false,
+          "status": "insufficient_samples",
+          "startDate": "d04",
+          "endDate": "d59",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 4,
+          "referenceHigh": null,
+          "referenceDate": null,
+          "anchorHigh": 100.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": null,
+          "sidewaysScore": 0,
+          "sidewaysLabel": "样本不足",
+          "rejectReasons": [
+            "VCP新高参考样本不足20根（当前4根）"
+          ]
+        },
+        "gestationPass": false,
         "eligible": false,
         "displayEligible": false
       }
@@ -623,13 +803,19 @@
           "近10日单日剧烈波动且年化波动过高",
           "10日/长均量超过1.20，近期量能异常放大",
           "距枢轴6.1%超出VCP就绪窗-5%~+4%",
-          "日线样本不足200根（当前60根）"
+          "日线样本不足200根（当前60根）",
+          "VCP新高参考样本不足20根（当前4根）"
         ],
         "practical": true,
         "pivot": 100.0,
         "distPct": 6.1,
         "invalidation": 95.0,
         "volConfirm": 509.0,
+        "startDate": "d04",
+        "endDate": "d59",
+        "anchorHigh": 100.0,
+        "structureStartDate": "d04",
+        "structureEndDate": "d59",
         "formed": false,
         "structureFormed": false,
         "dailyTrend": {
@@ -649,6 +835,30 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": false,
+          "status": "insufficient_samples",
+          "startDate": "d04",
+          "endDate": "d59",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 4,
+          "referenceHigh": null,
+          "referenceDate": null,
+          "anchorHigh": 100.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": null,
+          "sidewaysScore": 0,
+          "sidewaysLabel": "样本不足",
+          "rejectReasons": [
+            "VCP新高参考样本不足20根（当前4根）"
+          ]
+        },
+        "gestationPass": false,
         "eligible": false,
         "displayEligible": false
       }
@@ -716,13 +926,19 @@
           "近10日单日剧烈波动且年化波动过高",
           "10日/长均量超过1.20，近期量能异常放大",
           "距枢轴6.1%超出VCP就绪窗-5%~+4%",
-          "日线样本不足200根（当前60根）"
+          "日线样本不足200根（当前60根）",
+          "VCP新高参考样本不足20根（当前4根）"
         ],
         "practical": true,
         "pivot": 100.0,
         "distPct": 6.1,
         "invalidation": 95.0,
         "volConfirm": 504.0,
+        "startDate": "d04",
+        "endDate": "d59",
+        "anchorHigh": 100.0,
+        "structureStartDate": "d04",
+        "structureEndDate": "d59",
         "formed": false,
         "structureFormed": false,
         "dailyTrend": {
@@ -742,6 +958,30 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": false,
+          "status": "insufficient_samples",
+          "startDate": "d04",
+          "endDate": "d59",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 4,
+          "referenceHigh": null,
+          "referenceDate": null,
+          "anchorHigh": 100.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": null,
+          "sidewaysScore": 0,
+          "sidewaysLabel": "样本不足",
+          "rejectReasons": [
+            "VCP新高参考样本不足20根（当前4根）"
+          ]
+        },
+        "gestationPass": false,
         "eligible": false,
         "displayEligible": false
       }
@@ -808,13 +1048,19 @@
         "rejectReasons": [
           "近10日单日剧烈波动且年化波动过高",
           "距枢轴6.1%超出VCP就绪窗-5%~+4%",
-          "日线样本不足200根（当前60根）"
+          "日线样本不足200根（当前60根）",
+          "VCP新高参考样本不足20根（当前4根）"
         ],
         "practical": false,
         "pivot": 100.0,
         "distPct": 6.1,
         "invalidation": 96.0,
         "volConfirm": 1022.0,
+        "startDate": "d04",
+        "endDate": "d59",
+        "anchorHigh": 100.0,
+        "structureStartDate": "d04",
+        "structureEndDate": "d59",
         "formed": false,
         "structureFormed": false,
         "dailyTrend": {
@@ -834,6 +1080,30 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": false,
+          "status": "insufficient_samples",
+          "startDate": "d04",
+          "endDate": "d59",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 4,
+          "referenceHigh": null,
+          "referenceDate": null,
+          "anchorHigh": 100.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": null,
+          "sidewaysScore": 0,
+          "sidewaysLabel": "样本不足",
+          "rejectReasons": [
+            "VCP新高参考样本不足20根（当前4根）"
+          ]
+        },
+        "gestationPass": false,
         "eligible": false,
         "displayEligible": false
       }
@@ -874,6 +1144,10 @@
             3.9,
             2.5
           ],
+          "startDate": "20260326",
+          "endDate": "20260417",
+          "anchorHigh": 4.01,
+          "pivot": 4.08,
           "contractionMode": "strict",
           "narrowIntegrity": {
             "pass": true,
@@ -907,7 +1181,7 @@
           },
           "trend60Pct": -12.61,
           "platformDriftPct": 2.03,
-          "note": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制短长均量排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。",
+          "note": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP孕育期内不得先于最终突破创出新高，接近新高允许；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制短长均量排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；横盘仅为优选标签；单标签仍为平台整理，不伪造双标签。",
           "structureFormed": true,
           "dailyTrend": {
             "close": 4.02,
@@ -926,6 +1200,28 @@
             "source": "daily"
           },
           "dailyTrendPass": false,
+          "vcpGestation": {
+            "pass": true,
+            "status": "pass",
+            "startDate": "20260326",
+            "endDate": "20260417",
+            "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+            "referenceDays": 250,
+            "referenceSamples": 250,
+            "referenceHigh": 4.6,
+            "referenceDate": "20260114",
+            "anchorHigh": 4.01,
+            "prematureNewHighs": [],
+            "finalBreakout": null,
+            "nearHighAllowed": true,
+            "sidewaysPreferred": true,
+            "sidewaysPreferenceOnly": true,
+            "sidewaysDriftPct": 2.03,
+            "sidewaysScore": 100,
+            "sidewaysLabel": "横盘优选",
+            "rejectReasons": []
+          },
+          "gestationPass": true,
           "eligible": false,
           "displayEligible": false
         }
@@ -983,12 +1279,12 @@
     {
       "name": "A04下跌中继稳定例外透明且未取消",
       "pass": true,
-      "evidence": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制短长均量排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。"
+      "evidence": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP孕育期内不得先于最终突破创出新高，接近新高允许；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制短长均量排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；横盘仅为优选标签；单标签仍为平台整理，不伪造双标签。"
     },
     {
       "name": "A04证据note明确平台型VCP而非伪造双标签",
       "pass": true,
-      "evidence": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制短长均量排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。"
+      "evidence": "平台型VCP属性：16日振幅4.9%≤12%，三段振幅4.4→3.9→2.5%，务实收缩最多一次≤前次1.25的温和反复且末段<首段；平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；日线收盘>MA50且MA50>MA150>MA200；VCP孕育期内不得先于最终突破创出新高，接近新高允许；平台/拉升段均量0.58≤0.75，MA10/MA20/MA50=4190718/4541353/5911990，MA10/MA50=0.709≤1.20（不强制短长均量排列）；60日趋势-12.6%、平台漂移2.0%，若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；横盘仅为优选标签；单标签仍为平台整理，不伪造双标签。"
     },
     {
       "name": "任务113平台VCP属性取消高位与临近新高排除",
@@ -1052,6 +1348,10 @@
           3.9,
           2.5
         ],
+        "startDate": "20260326",
+        "endDate": "20260417",
+        "anchorHigh": 4.01,
+        "pivot": 4.08,
         "contractionMode": "strict",
         "narrowIntegrity": {
           "pass": false,
@@ -1110,6 +1410,28 @@
           "source": "daily"
         },
         "dailyTrendPass": false,
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260326",
+          "endDate": "20260417",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 250,
+          "referenceHigh": 4.6,
+          "referenceDate": "20260114",
+          "anchorHigh": 4.01,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": -5.0,
+          "sidewaysScore": 80,
+          "sidewaysLabel": "非完全横盘但可入（仅降低优选分）",
+          "rejectReasons": []
+        },
+        "gestationPass": true,
         "eligible": false,
         "displayEligible": false
       }

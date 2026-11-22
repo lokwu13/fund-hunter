@@ -575,6 +575,14 @@ export interface FundData {
       asOf: string | null; close: number | null; ma50: number | null; ma150: number | null; ma200: number | null;
       samples: number; reasons: string[];
     }>;
+    droppedByVcpGestationCount?: number;
+    droppedByVcpGestation?: Array<{
+      code: string; name: string; path: 'daily_swing' | 'weekly_swing_daily_trend' | 'fixed_base' | 'platform_attribute';
+      asOf: string; startDate?: string; endDate?: string; referenceHigh?: number | null;
+      prematureNewHighs?: Array<{ date: string; high: number; close: number; referenceHigh: number; finalBreakout: boolean }>;
+      reasons: string[];
+    }>;
+    patternHistoryCoverage?: import('../sections/patternEvidence').PatternHistoryCoverage;
     droppedByPatternEvidenceCount?: number;
     droppedByPatternEvidence?: Array<{
       code: string; name: string; pattern: string; reasons: string[];
@@ -611,9 +619,10 @@ export interface FundData {
         volConfirm?: number | null; breakoutConfirm?: string;
         cupStart?: string; cupEnd?: string; handleStart?: string; handleEnd?: string;
         doubleBottom?: { firstDate: string; firstPrice: number; secondDate: string; secondPrice: number; secondVsFirstPct: number | null };
-        signalDate?: string; signalType?: 'early' | 'strong'; signalLabel?: string;
+        signalDate?: string; signalType?: 'early' | 'strong' | 'pattern_new_high'; signalLabel?: string;
         signalClose?: number; signalHigh?: number; signalVolX?: number;
         initialStop?: number; firstSignal?: boolean; breakoutAge?: number;
+        breakoutDate?: string; breakoutRemainingDays?: number; breakoutExitDate?: string | null;
         currentDist?: number; currentValid?: boolean;
       } | null;
       cupHandle?: {
@@ -642,11 +651,17 @@ export interface FundData {
       longPlat?: (import('../sections/patternEvidence').PatternEvidence & {
         pivot: number; distPct: number; invalidation?: number; volConfirm?: number; formed: boolean;
       }) | null;
+      patternEpisode?: import('../sections/patternEvidence').PatternEpisode | null;
+      patternHistory?: import('../sections/patternEvidence').PatternEpisode[];
+      patternHistoryCoverage?: import('../sections/patternEvidence').PatternHistoryCoverage;
       vcpDailyTrend?: import('../sections/patternEvidence').VcpDailyTrendEvidence | null;
       dailyTrendPass?: boolean | null;
+      vcpGestation?: import('../sections/patternEvidence').VcpGestationEvidence | null;
+      gestationPass?: boolean | null;
       vcpAttribute?: {
         formed: boolean; structureFormed?: boolean; eligible?: boolean; displayEligible?: boolean;
         dailyTrendPass?: boolean; dailyTrend?: import('../sections/patternEvidence').VcpDailyTrendEvidence;
+        vcpGestation?: import('../sections/patternEvidence').VcpGestationEvidence | null; gestationPass?: boolean;
         rejectReasons?: string[]; style?: 'platform_vcp'; note?: string | null;
         platformDays?: number; amplitudePct?: number; segAmpsPct?: number[];
       } | null;

@@ -3,16 +3,7 @@
   "checksPassed": 19,
   "checksTotal": 19,
   "failed": [],
-  "sampleChanges": [
-    {
-      "id": "N04",
-      "before": null,
-      "after": "VCP收缩型",
-      "beforeValid": true,
-      "afterValid": true,
-      "fallbackUsed": false
-    }
-  ],
+  "sampleChanges": [],
   "fixedPoolChanges": [],
   "currentPoolChanges": [],
   "currentCups": [

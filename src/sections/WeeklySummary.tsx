@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useFundData } from '@/hooks/useFundData';
 import { broadOscFor, buildFunnelStepViews, dividendTop20Text, extremeReboundActive, oversoldValueDirectionsText, sectorEtfFor } from './funnelConclusions';
 import { formalPatternDisplayable, patternEvidenceText, vcpDailyTrendText } from './patternEvidence';
+import PatternHistoryLabel from './PatternHistoryLabel';
 
 const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
 const DEFENSIVE_SECTORS = new Set(['中证医药', '中证消费', '中证公用', '中证能源']);
@@ -487,6 +488,12 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                 首次信号{r.signalDate} · 枢轴{r.pivot ?? '—'} · 初始失效位{r.initialStop ?? '—'} · 已{r.breakoutAge ?? '—'}日
                               </p>
                             )}
+                            {r.patternEpisode && (
+                              <p className="mt-1 rounded bg-amber-50 px-2 py-1 text-[10px] leading-relaxed text-amber-800">
+                                {r.patternNote} 剩余展示{r.breakoutRemainingDays ?? '—'}个交易日{r.breakoutExitDate ? `·退出日${r.breakoutExitDate}` : ''}
+                              </p>
+                            )}
+                            <PatternHistoryLabel records={r.patternHistory} coverage={r.patternHistoryCoverage} />
                             {r.defects?.length > 0 && (
                               <p className="text-[10px] text-amber-700 mt-1">具体瑕疵：{r.defects.join('；')}</p>
                             )}

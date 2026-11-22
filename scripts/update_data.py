@@ -3087,6 +3087,9 @@ def build_funnel(data):
                            'initialStop': bp.get('initialStop'), 'firstSignal': bp.get('firstSignal'),
                            'breakoutAge': bp.get('breakoutAge'), 'currentDist': bp.get('currentDist'),
                            'currentValid': bp.get('currentValid'),
+                           'breakoutDate': bp.get('breakoutDate'),
+                           'breakoutRemainingDays': bp.get('breakoutRemainingDays'),
+                           'breakoutExitDate': bp.get('breakoutExitDate'),
                            'track': track, 'smartMoneyPosDays': sm_days,
                            'inPool': bool(it.get('inPool')), 'reson': reson,
                            'entryTier': it.get('entryTier') or 'qualified',
@@ -3095,8 +3098,13 @@ def build_funnel(data):
                            'histPct': it.get('histPct'), 'distHigh250': it.get('distHigh250'),
                            'patternEvidence': it.get('patternEvidence'),
                            'patternNote': it.get('patternNote'),
+                           'patternEpisode': it.get('patternEpisode'),
+                           'patternHistory': it.get('patternHistory') or [],
+                           'patternHistoryCoverage': it.get('patternHistoryCoverage'),
                            'vcpDailyTrend': it.get('vcpDailyTrend'),
                            'dailyTrendPass': it.get('dailyTrendPass'),
+                           'vcpGestation': it.get('vcpGestation'),
+                           'gestationPass': it.get('gestationPass'),
                            'historicalHighClose': (it.get('cupHandle') or {}).get('historicalHighClose'),
                            'historicalHighDate': (it.get('cupHandle') or {}).get('historicalHighDate'),
                            'distanceToHistoricalHighPct': (it.get('cupHandle') or {}).get('distanceToHistoricalHighPct'),
@@ -7252,21 +7260,101 @@ def _vcp_daily_trend_gate(bars):
     return evidence
 
 
+VCP_GESTATION_REFERENCE_DAYS = 250
+VCP_GESTATION_MIN_REFERENCE_SAMPLES = 20
+VCP_SIDEWAYS_DRIFT_MAX = 3.0       # 横盘仅为优选标签，不是成型硬门
+
+
+def _vcp_gestation_new_high_gate(bars, start_date, pivot, end_date=None, anchor_high=None):
+    """任务114：孕育期内不得先于最终突破创出新高，接近新高始终允许。
+
+    参考=孕育起点前最多250个交易日的最高收盘与起点锚高孰高；只用识别日前数据。
+    最后一天仅在实际收盘严格高于枢轴时视为正常最终突破并豁免盘中新高；
+    其他孕育日盘中突破参考高点即留下反例证据。横盘漂移只生成优选分/标签。
+    """
+    ordered = list(bars or [])
+    end_date = end_date or (ordered[-1][0] if ordered else None)
+    start_idx = next((i for i, b in enumerate(ordered) if b[0] >= start_date), None)
+    end_idx = next((i for i in range(len(ordered) - 1, -1, -1) if ordered[i][0] <= end_date), None)
+    evidence = {
+        'pass': False, 'status': 'insufficient_samples', 'startDate': start_date, 'endDate': end_date,
+        'referenceBasis': 'prior_250d_highest_close_plus_anchor_high',
+        'referenceDays': VCP_GESTATION_REFERENCE_DAYS, 'referenceSamples': 0,
+        'referenceHigh': None, 'referenceDate': None, 'anchorHigh': anchor_high,
+        'prematureNewHighs': [], 'finalBreakout': None, 'nearHighAllowed': True,
+        'sidewaysPreferred': False, 'sidewaysPreferenceOnly': True,
+        'sidewaysDriftPct': None, 'sidewaysScore': 0, 'sidewaysLabel': '样本不足',
+        'rejectReasons': [],
+    }
+    if start_idx is None or end_idx is None or end_idx <= start_idx or pivot is None or pivot <= 0:
+        evidence['rejectReasons'].append('VCP孕育期起止或枢轴样本不足')
+        return evidence
+    prior = ordered[max(0, start_idx - VCP_GESTATION_REFERENCE_DAYS):start_idx]
+    evidence['referenceSamples'] = len(prior)
+    anchor = anchor_high if anchor_high is not None else ordered[start_idx][1]
+    evidence['anchorHigh'] = round(anchor, 4) if anchor is not None else None
+    if len(prior) < VCP_GESTATION_MIN_REFERENCE_SAMPLES or anchor is None or anchor <= 0:
+        evidence['rejectReasons'].append(
+            f'VCP新高参考样本不足{VCP_GESTATION_MIN_REFERENCE_SAMPLES}根（当前{len(prior)}根）')
+        return evidence
+    prior_high_bar = max(prior, key=lambda b: b[3])
+    reference = max(prior_high_bar[3], anchor)
+    reference_date = start_date if anchor >= prior_high_bar[3] else prior_high_bar[0]
+    base = ordered[start_idx:end_idx + 1]
+    drift = (base[-1][3] / base[0][3] - 1) * 100 if base[0][3] > 0 else None
+    sideways = drift is not None and abs(drift) <= VCP_SIDEWAYS_DRIFT_MAX
+    score = 100 if sideways else max(0, round(100 - (abs(drift or 100) - VCP_SIDEWAYS_DRIFT_MAX) * 10))
+    hits, final_breakout = [], None
+    for i in range(start_idx + 1, end_idx + 1):
+        bar = ordered[i]
+        if bar[1] <= reference + 1e-9:
+            continue
+        is_final = bool(i == end_idx and bar[3] > pivot)
+        item = {'date': bar[0], 'high': round(bar[1], 4), 'close': round(bar[3], 4),
+                'referenceHigh': round(reference, 4), 'finalBreakout': is_final}
+        if is_final:
+            final_breakout = item
+        else:
+            hits.append(item)
+    reasons = []
+    if hits:
+        first = hits[0]
+        reasons.append(f"VCP孕育期内{first['date']}盘中{first['high']}先于最终突破创出新高"
+                       f"（参考{reference:.4f}）")
+    evidence.update({
+        'pass': not hits, 'status': 'pass' if not hits else 'premature_new_high',
+        'referenceHigh': round(reference, 4), 'referenceDate': reference_date,
+        'prematureNewHighs': hits, 'finalBreakout': final_breakout,
+        'sidewaysPreferred': bool(sideways), 'sidewaysDriftPct': round(drift, 3) if drift is not None else None,
+        'sidewaysScore': score, 'sidewaysLabel': '横盘优选' if sideways else '非完全横盘但可入（仅降低优选分）',
+        'rejectReasons': reasons,
+    })
+    return evidence
+
+
 def _apply_vcp_daily_trend_eligibility(candidate, bars):
-    """保留价格结构判断，把统一日线趋势门幂等应用到每条VCP路径。"""
+    """保留几何结构，幂等应用任务113日线硬门与任务114孕育期新高门。"""
     if not candidate:
         return None
     result = dict(candidate)
     structure_formed = bool(result.get('structureFormed', result.get('formed')))
     trend = _vcp_daily_trend_gate(bars)
+    gestation = None
+    gestation_pass = True       # 无起点旧单元包装器兼容；正式生产四入口均显式提供起点
+    if result.get('startDate'):
+        gestation = _vcp_gestation_new_high_gate(
+            bars, result['startDate'], result.get('pivot'), result.get('endDate'), result.get('anchorHigh'))
+        gestation_pass = bool(gestation['pass'])
     result['structureFormed'] = structure_formed
     result['dailyTrend'] = trend
     result['dailyTrendPass'] = bool(trend['pass'])
-    result['formed'] = structure_formed and trend['pass']
+    result['vcpGestation'] = gestation
+    result['gestationPass'] = gestation_pass
+    result['formed'] = structure_formed and trend['pass'] and gestation_pass
     result['eligible'] = result['formed']
     result['displayEligible'] = result['formed']
     reasons = list(result.get('rejectReasons') or [])
-    for reason in trend['reasons']:
+    for reason in list(trend['reasons']) + list((gestation or {}).get('rejectReasons') or []):
         if reason not in reasons:
             reasons.append(reason)
     result['rejectReasons'] = reasons
@@ -7335,18 +7423,20 @@ def _platform_vcp_attribute(bars, platform, hist_pct, dist_high250):
                 f"三段振幅{'→'.join(f'{x:.1f}' for x in platform['segAmps'])}%，"
                 "务实收缩最多一次≤前次1.25的温和反复且末段<首段；"
                 "平台首日相对前收及内部单日收跌均<5%（仅属性门，不改底层平台标签）；"
-                "日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高；"
+                "日线收盘>MA50且MA50>MA150>MA200；VCP孕育期内不得先于最终突破创出新高，接近新高允许；"
                 f"平台/拉升段均量{vol_ratio:.2f}≤0.75，"
                 f"MA10/MA20/MA50={volume_ma['ma10']:.0f}/{volume_ma['ma20']:.0f}/{volume_ma['maBase']:.0f}，"
                 f"MA10/MA50={volume_ma['ma10ToBase']:.3f}≤1.20（不强制短长均量排列）；"
                 f"60日趋势{trend60 * 100:.1f}%、平台漂移{drift * 100:.1f}%，"
-                "若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；单标签仍为平台整理，不伪造双标签。")
+                "若60日跌幅超10%须同时满足|漂移|≤3%及上述阶段缩量；横盘仅为优选标签；单标签仍为平台整理，不伪造双标签。")
     return _apply_vcp_daily_trend_eligibility(
             {'formed': formed, 'style': 'platform_vcp', 'rejectReasons': reasons,
             'histPct': round(hist_pct, 1) if hist_pct is not None else None,
             'distHigh250': round(dist_high250, 2) if dist_high250 is not None else None,
             'platformDays': platform.get('days'), 'amplitudePct': platform.get('amplitude'),
             'segAmpsPct': platform.get('segAmps'),
+            'startDate': plat[0][0] if plat else None, 'endDate': bars[-1][0],
+            'anchorHigh': plat[0][1] if plat else None, 'pivot': platform.get('pivot'),
             'contractionMode': platform.get('contractionMode') or 'strict',
             'narrowIntegrity': narrow_integrity, 'platformToRallyVol': vol_ratio,
             'volumeMA': volume_ma, 'recentVolumeQuality': recent_volume,
@@ -7415,6 +7505,21 @@ def _vcp_level_strict(bars, win, k, max_dd=None, max_contraction=None,
     practical_formed = False
     vol50 = sum(x[4] for x in bars[-50:]) / min(50, len(bars))
     price_mode = 'strict' if dec_strict else ('practical' if dec_practical else '未递减')
+    structure_start = bars[sh[0]][0]
+    gestation_start, gestation_end = structure_start, bars[-1][0]
+    # 周线索引用YYYYWww；新高门和日线趋势一样必须映射回原始交易日，不能把周键当日期。
+    if 'W' in structure_start and trend_bars:
+        try:
+            year_text, week_text = structure_start.split('W', 1)
+            iso_year, iso_week = int(year_text), int(week_text)
+            daily_in_week = [b[0] for b in trend_bars
+                             if (lambda d: d.isocalendar().year == iso_year and d.isocalendar().week == iso_week)(
+                                 datetime.strptime(b[0], '%Y%m%d'))]
+            if daily_in_week:
+                gestation_start = daily_in_week[0]
+            gestation_end = trend_bars[-1][0]
+        except (ValueError, TypeError):
+            gestation_start, gestation_end = structure_start, trend_bars[-1][0]
     return _apply_vcp_daily_trend_eligibility(
             {'contractions': [round(x, 1) for x in depths],
             'contractionsOk': marks,
@@ -7429,6 +7534,8 @@ def _vcp_level_strict(bars, win, k, max_dd=None, max_contraction=None,
             'pivot': round(pivot, 2), 'distPct': round(dist, 1),
             'invalidation': round(seg_lows[-1], 2),
             'volConfirm': round(vol50 * BREAKOUT_VOL_X, 1),
+            'startDate': gestation_start, 'endDate': gestation_end, 'anchorHigh': bars[sh[0]][1],
+            'structureStartDate': structure_start, 'structureEndDate': bars[-1][0],
             'formed': bool(strict_formed or practical_formed)}, trend_bars)
 
 
@@ -7488,6 +7595,7 @@ def _vcp_fixed_base(bars, min_days=15, max_days=50, max_amp=0.105):
             'volConfirm': round(sum(x[4] for x in bars[-50:]) / min(50, len(bars)) * BREAKOUT_VOL_X, 1),
             'recentVolumeQuality': recent_volume, 'rightSideQuality': right_quality,
             'formed': True, 'startDate': base[0][0], 'endDate': base[-1][0],
+            'anchorHigh': base[0][1],
             'selectionScore': [round(amplitude, 6), round(vol_ratio, 6), round(abs(dist), 3), -n]})
     if not candidates:
         return None
@@ -8511,10 +8619,13 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
         dropped_tt = []
         dropped_weekly_ma = []
         dropped_vcp_daily_trend = []
+        dropped_vcp_gestation = []
         dropped_pattern_evidence = []
         bottom_shape_watch = []
         pattern_mf_cache = c.get('patternMoneyflow') or {}
         pattern_val_cache = c.get('stockValuationHistory') or {}
+        import pattern_history as ph
+        pattern_history = ph.load_history(c)
         for code, meta in targets.items():
             try:
                 rows = stock_daily.get(code) or []
@@ -8565,12 +8676,22 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                             'asOf': trend['asOf'], 'close': trend['close'], 'ma50': trend['ma50'],
                             'ma150': trend['ma150'], 'ma200': trend['ma200'],
                             'samples': trend['samples'], 'reasons': list(trend['reasons'])})
+                    if candidate and candidate.get('structureFormed') and not candidate.get('gestationPass', True):
+                        gestation = candidate.get('vcpGestation') or {}
+                        dropped_vcp_gestation.append({
+                            'code': code, 'name': info.get(code, {}).get('name', code), 'path': path,
+                            'asOf': bars[-1][0], 'startDate': gestation.get('startDate'),
+                            'endDate': gestation.get('endDate'), 'referenceHigh': gestation.get('referenceHigh'),
+                            'prematureNewHighs': gestation.get('prematureNewHighs') or [],
+                            'reasons': list(gestation.get('rejectReasons') or [])})
                 if platform_vcp and platform_vcp['formed']:
                     pf = dict(pf)
                     pf['vcpAttribute'] = platform_vcp
                 d_c3 = bool(d_lv and d_lv.get('displayEligible'))
                 w_c3 = bool(w_lv and w_lv.get('displayEligible'))
                 f_c3 = bool(fixed_lv and fixed_lv.get('displayEligible'))
+                active_episode = ph.advance_stock(
+                    pattern_history, code, info.get(code, {}).get('name', code), bars)
                 ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
                                         hist_pct=hist_pct, allow_weekly_defect=True)
                 recent = _cup_early_breakout(bars) if not (d_c3 or w_c3) else None
@@ -8659,10 +8780,18 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     raw, main_lv = '平台整理', plat
                 if raw is None:
                     pattern, main_lv = non_cup_fallback()
+                    if not main_lv and active_episode:
+                        pattern, main_lv = active_episode['patternType'], ph.active_candidate(active_episode, bars)
                     if not main_lv:
                         continue
                 else:
                     pattern = raw
+                # 任务114：突破当天也立即进入统一事件生命周期；不能因当日几何仍成型而绕过10日退出门。
+                # 杯柄继续使用自身5日信号门，不被持久化VCP/底部事件覆盖。
+                if (active_episode and pattern != '杯柄型'
+                        and not (main_lv and main_lv.get('patternEpisode'))):
+                    pattern = active_episode['patternType']
+                    main_lv = ph.active_candidate(active_episode, bars)
                 # 任务87：非VCP形态的突破后路径统一补查当前位置，不重写锚点或形态参数。
                 # 任务113：VCP不得再被一年位置瑕疵门排除或降级；其他形态位置门保持原样。
                 # 任务101：recent/普通杯柄展示失败后，允许回退到自身可展示的既有非杯柄候选；
@@ -8671,8 +8800,11 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 for display_attempt in range(2):
                     if pattern != 'VCP收缩型':
                         _apply_post_breakout_position_defect(main_lv, hist_pct, dist_high250)
-                    if main_lv.get('breakout'):
-                        # 早期/强确认共用：失效位与距枢轴门不变；首次有效信号超过5个交易日即旧信号。
+                    if main_lv.get('patternEpisode'):
+                        # 任务114：VCP/底部事件统一10个交易日退出，绝不错套杯柄5日门。
+                        display_ok = bool(main_lv.get('displayEligible')) and (main_lv.get('breakoutRemainingDays') or 0) > 0
+                    elif main_lv.get('breakout'):
+                        # 杯柄早期/强确认共用原5日新鲜度、失效位与距枢轴门。
                         display_ok = _cup_signal_displayable(main_lv)
                     else:
                         if pattern in ('底部整理', '平台整理', '高位平台⚠️'):
@@ -8716,7 +8848,13 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 brk_txt = (f"收盘>{main_lv['pivot']} 且成交量≥50日均量×1.4"
                            + (f"（≈{main_lv['volConfirm']:.0f}手）"
                               if main_lv.get('volConfirm') else ''))
-                if pattern == '杯柄型' and ch and ch.get('formed'):
+                if main_lv.get('patternEpisode'):
+                    episode = main_lv['patternEpisode']
+                    brk_txt = (f"{episode['breakoutDate']} 首个参考高点突破：高{episode['breakoutHigh']}>"
+                               f"参考{episode['referenceHigh']}，收{episode['breakoutClose']}>枢轴{episode['pivot']}；"
+                               f"已{main_lv['breakoutAge']}个交易日，满10个交易日后退出"
+                               + (f"，退出日{main_lv['breakoutExitDate']}" if main_lv.get('breakoutExitDate') else ''))
+                elif pattern == '杯柄型' and ch and ch.get('formed'):
                     if ch.get('breakout'):
                         if ch.get('signalType') == 'early':
                             brk_txt = (f"⚡ {ch['signalDate']} 首次·盘中突破·贴近枢轴：高{ch['signalHigh']}/"
@@ -8733,6 +8871,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 signal_fields = ('cupStart', 'cupEnd', 'handleStart', 'handleEnd', 'doubleBottom',
                                  'signalDate', 'signalType', 'signalLabel', 'signalClose', 'signalHigh',
                                  'signalVolX', 'initialStop', 'firstSignal', 'breakoutAge',
+                                 'breakoutDate', 'breakoutRemainingDays', 'breakoutExitDate',
                                  'currentDist', 'currentValid')
                 buy_point = {'pivot': main_lv['pivot'],
                              'distanceToPivotPct': main_lv['distPct'],
@@ -8741,7 +8880,16 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                              'breakoutConfirm': brk_txt,
                              **{k: main_lv.get(k) for k in signal_fields if main_lv.get(k) is not None}}
                 evidence_note = None
-                if pattern == '平台整理':
+                episode_note = None
+                if main_lv.get('patternEpisode'):
+                    episode = main_lv['patternEpisode']
+                    episode_note = (
+                        f"{episode['patternType']}结构突破回放：孕育{episode['gestationStart']}～{episode['gestationEnd']}，"
+                        f"突破日{episode['breakoutDate']}，突破点/枢轴{episode['pivot']}，"
+                        f"参考高{episode['referenceHigh']}；突破日起满10个交易日后退出。"
+                        f"{episode.get('originQualificationNote') or '原资格说明缺失，不补造正式入选结论'}；"
+                        f"横盘属性={episode.get('sidewaysLabel') or '未记录'}。")
+                elif pattern == '平台整理':
                     evidence_note = (f"{pattern}：前期40日斜率{main_lv.get('trendSlopePct')}%，"
                                      f"MA20 {main_lv.get('ma20')} > MA60 {main_lv.get('ma60')}；"
                                      f"{main_lv.get('days')}日、振幅{main_lv.get('amplitude')}%（统一≤15%）、"
@@ -8761,16 +8909,20 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                               'close': round(close, 2), 'tag': tag,
                               'pattern': pattern,
                               'platform': main_lv if pattern in ('平台整理', '底部整理') else plat,
-                              'patternEvidence': main_lv if pattern in ('平台整理', '底部整理') else None,
+                              'patternEvidence': ((main_lv.get('patternEvidence') or main_lv)
+                                                  if pattern in ('平台整理', '底部整理') else None),
                               'entryTier': 'fuzzy' if main_lv.get('defects') else 'qualified',
                               'defects': main_lv.get('defects') or [],
                               'cupHandle': ch if pattern == '杯柄型' else None,
                               'flag': fl if pattern == '旗形整理' else None,
                               'fixedBase': fixed_lv if main_lv is fixed_lv else None,
+                              'patternEpisode': main_lv.get('patternEpisode'),
+                              'vcpGestation': main_lv.get('vcpGestation'),
+                              'gestationPass': main_lv.get('gestationPass'),
                               'vcpDailyTrend': main_lv.get('dailyTrend') if pattern == 'VCP收缩型' else None,
                               'dailyTrendPass': bool(main_lv.get('dailyTrendPass')) if pattern == 'VCP收缩型' else None,
                               'vcpAttribute': main_lv.get('vcpAttribute'),
-                              'patternNote': (evidence_note if evidence_note else
+                              'patternNote': (episode_note or evidence_note or
                                               ((main_lv.get('vcpAttribute') or {}).get('note')
                                                if main_lv.get('vcpAttribute') else
                                                (f"固定区间VCP：{main_lv.get('days')}日振幅{main_lv.get('amplitude')}%≤10.5%，"
@@ -8786,6 +8938,23 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                               'mfDays': sm_days,
                               'sectorFit': fit_txt, 'advice': advice,
                               'daily': d_lv, 'weekly': w_lv})
+                # 只登记当前正式入选且尚未突破的VCP/底部孕育证据；资格门本身不因历史功能改变。
+                if (not main_lv.get('patternEpisode') and not main_lv.get('breakout')
+                        and pattern in ('VCP收缩型', '底部整理', '底部平台型')):
+                    history_input = main_lv
+                    if not history_input.get('vcpGestation'):
+                        history_input = dict(history_input)
+                        start = history_input.get('startDate') or history_input.get('bottomStart')
+                        end = history_input.get('endDate') or history_input.get('bottomEnd') or bars[-1][0]
+                        if start:
+                            history_input['historyGestation'] = _vcp_gestation_new_high_gate(
+                                bars, start, history_input.get('pivot'), end,
+                                next((b[1] for b in bars if b[0] == start), None))
+                    formal_candidate = ph.candidate_from_formal(pattern, history_input)
+                    if formal_candidate:
+                        ph.register_gestation(pattern_history, code,
+                                              info.get(code, {}).get('name', code),
+                                              formal_candidate, bars[-1][0], origin_formal=True)
             except Exception as e:
                 print(f'  Warning: vcpStocks scan {code} failed: {str(e)[:60]}')
                 continue   # 逐股防护：单票失败不拖垮全池扫描（2026-10-01 晚 全覆盖兜底）
@@ -8804,6 +8973,9 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 continue
             group_counts[g] = group_counts.get(g, 0) + 1
             grouped.append(it)
+        ph.attach_history(grouped, pattern_history, eff)
+        c['patternEpisodeHistory'] = pattern_history
+        vcp.save_cache(c)
         eff_d = f'{eff[:4]}-{eff[4:6]}-{eff[6:]}'
         data['vcpStocks'] = {
             'trade_date': eff_d, 'poolSize': len(pool), 'poolRaw': len(pool_raw),
@@ -8812,6 +8984,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'qualifiedCount': sum(not x.get('defects') for x in items),
             'fuzzyCount': sum(bool(x.get('defects')) for x in items),
             'items': grouped,
+            'patternHistoryCoverage': pattern_history.get('coverage'),
             'bottomShapeWatch': bottom_shape_watch[:100],
             'bottomShapeWatchCount': len(bottom_shape_watch),
             'bottomShapeWatchNote': '仅证明通用周线底部价格结构成立（最少12周）；不等于正式入选。正式底部仍须区间资金100%覆盖且累计净流入>0、个股自身PE/PB历史分位≤40%；缺证据只列资格待核验。',
@@ -8820,13 +8993,15 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'droppedByWeeklyMACount': len(dropped_weekly_ma),
             'droppedByVcpDailyTrend': dropped_vcp_daily_trend[:100],
             'droppedByVcpDailyTrendCount': len(dropped_vcp_daily_trend),
+            'droppedByVcpGestation': dropped_vcp_gestation[:100],
+            'droppedByVcpGestationCount': len(dropped_vcp_gestation),
             'droppedByPatternEvidence': dropped_pattern_evidence[:100],
             'droppedByPatternEvidenceCount': len(dropped_pattern_evidence),
             'scanScope': scan_scope,
             'note': f'池=沪深300∪中证500∪上证50(中证50)∪创业板50∪科创50∪中证1000 成分全覆盖（index_weight周五刷新）∩总市值≥250亿（daily_basic口径，随成分周更）；精扫=池内全部成分股+持仓观察股(★点名纳入,不受池限)（2026-10-01晚用户指令：由"积聚/信号板块龙头"扩为指数成分全覆盖，当前口径={scan_scope}）；'
                     '形态口径（任务112统一平台/底部证据门，保留任务97周MA状态门）：'
                     '全部形态先查最近已完成周MA150/200：MA150<MA200为明确空头，直接从形态精扫及漏斗第3步剔除，不再作为fuzzy瑕疵展示；MA150=MA200不被本门硬删，仍按原周MA未多头fuzzy；MA150>MA200不因此误杀；不足200根完成周或均线缺失不伪造MA安全通过，沿用各形态原有数据审慎门（杯柄仍拒绝不足）；本门不看价格与均线关系、不新增MA50条件，既有周BOLL深度回踩包容与有效破位门不变；'
-                    'VCP收缩型（任务113统一日线趋势门，保留任务103结构校准）=所有摆动、固定区间、周线结构和平台型VCP属性路径均须至少200根日线，日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高。等号不通过，周线结构的均线仍取原始日线，样本不足或趋势不符记录排除原因；严格摆动仍保留完整Stage 2趋势模板，固定区间不额外套用其他Stage 2条件。严格摆动证据须≥3次收缩、每次≤前次1.10且末次<首次、末段均量<首段；务实反复序列只留证据、不再独立成型。严格摆动另须近期量未出现5日/10日>1.08且最近3日/10日>1.10的同步重新放大、近10日无持续下滑（下跌日≥70%+漂移≤-2.5%+20日位置≤25%）或剧烈起伏（单日绝对涨跌≥5%+年化波动≥35%），识别日距枢轴-5%~+4%；不强制MA10≤MA20≤MA50，多窗口短长均量比≤1.20仅作异常放量门；已突破日只审突破前基底量，不用突破大量或后续结果反判。固定区间路径=15~50日+振幅≤10.5%+三段务实价格收缩+区间/前20日均量<1且末段量<首段+相同近期量/右侧质量/枢轴门；按当时紧致度、阶段量比、枢轴距离选最佳；VCP不再应用突破后一年位置瑕疵门；'
+                    'VCP收缩型（任务113统一日线趋势门，任务114孕育期新高门，保留任务103结构校准）=所有摆动、固定区间、周线结构和平台型VCP属性路径均须至少200根日线，日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高（即接近新高允许），但孕育期内不得先于最终突破创出新高；横盘仅为优选。参考高=孕育起点前最多250个交易日最高收盘与起点锚高孰高，不足20根参考样本明确拒绝；最后一天仅实际收盘>枢轴才可作为正常最终突破豁免；非完全横盘但可入，只降低优选分，不作资格硬门。等号不通过，周线结构的均线仍取原始日线，样本不足或趋势不符记录排除原因；突破事件=孕育结束后首个盘中最高>参考高且收盘>枢轴的交易日，突破日age=0，之后第10个交易日退出；再次入选展示此前不同episode的小字历史记录，首批历史仅为已验证结构回放，不是全市场全历史归档，originFormalAdmission=false时不冒充当时正式入选；严格摆动仍保留完整Stage 2趋势模板，固定区间不额外套用其他Stage 2条件。严格摆动证据须≥3次收缩、每次≤前次1.10且末次<首次、末段均量<首段；务实反复序列只留证据、不再独立成型。严格摆动另须近期量未出现5日/10日>1.08且最近3日/10日>1.10的同步重新放大、近10日无持续下滑（下跌日≥70%+漂移≤-2.5%+20日位置≤25%）或剧烈起伏（单日绝对涨跌≥5%+年化波动≥35%），识别日距枢轴-5%~+4%；不强制MA10≤MA20≤MA50，多窗口短长均量比≤1.20仅作异常放量门；已突破日只审突破前基底量，不用突破大量或后续结果反判。固定区间路径=15~50日+振幅≤10.5%+三段务实价格收缩+区间/前20日均量<1且末段量<首段+相同近期量/右侧质量/枢轴门；按当时紧致度、阶段量比、枢轴距离选最佳；VCP不再应用突破后一年位置瑕疵门；'
                     '平台型VCP属性（任务103）保留旧10~50日短平台作为VCP几何/量能属性证据，不直接产生平台整理或底部整理标签；属性首日/内部单日完整性门只作用于VCP属性，不得反向改写新平台或底部资格；'
                     '杯柄型（任务99双背景与柄质量分级）=杯身背景满足前置250日涨幅≥15%（uptrend）或60~120日震荡修复（range_repair：区间跨度≥15%+首末净漂移绝对值≤15%+中位穿越≥2次+杯沿相对区间上沿-15%~+10%）之一，仍须最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净柄须净漂移绝对值≤5%+全程回归趋势绝对值≤6%+振幅≤8%+10日/全柄均量≤1.05+5日/10日均量≤1.10；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点、35~50%柄位或8~10%振幅/温和漂移/多窗口量能瑕疵进入fuzzy，但不得换局部杯身绕过全局杯的杯深/U底/双底/杯身背景/右侧/缩量等独立硬门；持续滑梯（净漂移≤-4%+回归趋势≤-4%+下跌日≥60%+末端处柄区间下45%）硬拒绝；结构或柄质量fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；任务110统一历史高位资格门=几何formed后，以识别日前全部可得日线最高收盘为历史高点，最新收盘距其>-8%直接eligible/display=false且不作为fuzzy展示，恰好-8%及更深回撤通过；输出历史起止/样本数/高点日期与收盘/距离，达到1200根缓存上限明确非上市全史；VCP和底部平台不适用此门；'
                     '用户习惯·早期杯柄信号（任务92新鲜度+任务99干净柄硬门+任务101等待期失效门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯、50~80%柄位与干净柄，不用局部/35~50%结构fuzzy或柄质量fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01；柄锚点后、首个有效信号前任一收盘跌破初始失效位即永久放弃该锚点并继续检查其他锚点，不得收回后复活旧柄；信号后当前跌破同样剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；'

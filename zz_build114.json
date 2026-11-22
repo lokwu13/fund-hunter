@@ -1,0 +1,64 @@
+{
+  "task": 114,
+  "command": "npm run build",
+  "startedAt": "2026-11-22T11:50:33+08:00",
+  "durationSeconds": 11.0,
+  "success": true,
+  "returncode": 0,
+  "modulesTransformed": 2363,
+  "warning": "Some chunks are larger than 500 kB after minification",
+  "log": "zz_build114.log",
+  "assets": [
+    {
+      "path": "dist/assets/index-CJEkxgHA-v25.js",
+      "bytes": 1410922,
+      "sha256": "1e2e478e06f1bbde3b7281b61b27628ee090cc47df2d8753b1678c367a0f294a"
+    },
+    {
+      "path": "dist/assets/index-B1V1Xb-4.css",
+      "bytes": 109913,
+      "sha256": "e1be240873442d87d3d9d95a58064705e14f77374b890a09b51896e6809e0756"
+    }
+  ],
+  "localFundDataBefore": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "localFundDataAfter": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "localFundData": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "fundDataUnchanged": true,
+  "matchesTask114RegressionDataSha": true,
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "developmentServerStarted": false
+}
