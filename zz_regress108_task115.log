@@ -1,0 +1,21 @@
+  longWindow: open（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；当周动态RSI6进入20以下区域，强制开窗：中证A500 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点；当周动态RSI6进入20以下区域：1只=中证A500；周内会变化）
+  longWindow: open（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；当周动态RSI6进入20以下区域，强制开窗：中证A500 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点；当周动态RSI6进入20以下区域：1只=中证A500；周内会变化）
+  longWindow: open（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；当周动态RSI6进入20以下区域，强制开窗：中证A500 20261030 当周动态RSI6=0.00≤20；周内会变化，不是趋势反转或买点；当周动态RSI6进入20以下区域：1只=中证A500；周内会变化）
+  longWindow: closed（standard=closed；水温🔴冷；上证50无数据，沪深300无数据，中证500无数据；六宽基当周动态RSI6均未处于20以下区域，或行情缺失/不新鲜；不开窗且不延续旧active状态；六宽基当周动态RSI6均未进入20以下区域，不开窗）
+  oversoldValueDirections: 行业2组/概念1组，历史估值可排2组，缓存月末23个，估值ok（20261030）
+  oversoldValueDirections: 行业2组/概念1组，历史估值可排0组，缓存月末0个，估值stale（20261030）
+  rsi6DividendTop20: 2只（原始有效2只，排雷剔除0只，剩余候选2只，20261030）
+  Warning: sector historical valuation current snapshot failed: 受控板块估值失败
+  oversoldValueDirections: 行业1组/概念0组，历史估值可排0组，缓存月末0个，估值missing（20261030）
+  funnel: 当周动态RSI6≤20临时窗 → 宽基：无形态 → 板块：0个入选 → 个股：0只成型 → 排雷：0只
+  funnel 生命周期分布: {}
+  funnel 板块形态: 达标0个/0个有数据；第2步入选0，形态卡掉0（[]）；第3步 共振0/精选0/储备0/剔除0
+{
+  "checksPassed": 40,
+  "checksTotal": 40,
+  "failed": [],
+  "dataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  }
+}

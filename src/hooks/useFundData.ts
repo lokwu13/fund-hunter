@@ -571,13 +571,13 @@ export interface FundData {
     droppedByTrendTemplate?: string[];
     droppedByVcpDailyTrendCount?: number;
     droppedByVcpDailyTrend?: Array<{
-      code: string; name: string; path: 'daily_swing' | 'weekly_swing_daily_trend' | 'fixed_base' | 'platform_attribute';
+      code: string; name: string; path: 'daily_swing' | 'weekly_swing_daily_trend' | 'fixed_base' | 'platform_attribute' | 'low_vol_tight';
       asOf: string | null; close: number | null; ma50: number | null; ma150: number | null; ma200: number | null;
       samples: number; reasons: string[];
     }>;
     droppedByVcpGestationCount?: number;
     droppedByVcpGestation?: Array<{
-      code: string; name: string; path: 'daily_swing' | 'weekly_swing_daily_trend' | 'fixed_base' | 'platform_attribute';
+      code: string; name: string; path: 'daily_swing' | 'weekly_swing_daily_trend' | 'fixed_base' | 'platform_attribute' | 'low_vol_tight';
       asOf: string; startDate?: string; endDate?: string; referenceHigh?: number | null;
       prematureNewHighs?: Array<{ date: string; high: number; close: number; referenceHigh: number; finalBreakout: boolean }>;
       reasons: string[];
@@ -658,6 +658,9 @@ export interface FundData {
       dailyTrendPass?: boolean | null;
       vcpGestation?: import('../sections/patternEvidence').VcpGestationEvidence | null;
       gestationPass?: boolean | null;
+      vcpEntryId?: 'low_vol_tight' | null;
+      vcpEntryLabel?: '低量窄幅独立VCP' | null;
+      vcpStructure?: import('../sections/patternEvidence').VcpLowVolTightEvidence | null;
       vcpAttribute?: {
         formed: boolean; structureFormed?: boolean; eligible?: boolean; displayEligible?: boolean;
         dailyTrendPass?: boolean; dailyTrend?: import('../sections/patternEvidence').VcpDailyTrendEvidence;
@@ -672,6 +675,15 @@ export interface FundData {
         structureFormed?: boolean; eligible?: boolean; displayEligible?: boolean; dailyTrendPass?: boolean;
         dailyTrend?: import('../sections/patternEvidence').VcpDailyTrendEvidence; rejectReasons?: string[];
         structurePath?: 'fixed_base'; startDate?: string; endDate?: string;
+      } | null;
+      lowVolTight?: {
+        days: number; amplitude: number; pivot: number; distPct: number;
+        invalidation?: number; volConfirm?: number; formed: boolean;
+        structureFormed?: boolean; eligible?: boolean; displayEligible?: boolean; dailyTrendPass?: boolean;
+        dailyTrend?: import('../sections/patternEvidence').VcpDailyTrendEvidence;
+        vcpEntryId: 'low_vol_tight'; vcpEntryLabel: '低量窄幅独立VCP';
+        vcpStructure: import('../sections/patternEvidence').VcpLowVolTightEvidence;
+        structurePath?: 'low_vol_tight'; startDate?: string; endDate?: string;
       } | null;
       patternNote?: string | null;
       daily?: {

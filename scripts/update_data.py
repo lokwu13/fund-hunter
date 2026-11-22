@@ -3101,6 +3101,9 @@ def build_funnel(data):
                            'patternEpisode': it.get('patternEpisode'),
                            'patternHistory': it.get('patternHistory') or [],
                            'patternHistoryCoverage': it.get('patternHistoryCoverage'),
+                           'vcpEntryId': it.get('vcpEntryId'),
+                           'vcpEntryLabel': it.get('vcpEntryLabel'),
+                           'vcpStructure': it.get('vcpStructure'),
                            'vcpDailyTrend': it.get('vcpDailyTrend'),
                            'dailyTrendPass': it.get('dailyTrendPass'),
                            'vcpGestation': it.get('vcpGestation'),
@@ -7604,6 +7607,139 @@ def _vcp_fixed_base(bars, min_days=15, max_days=50, max_amp=0.105):
         min(candidates, key=lambda x: x['selectionScore']), bars)
 
 
+VCP_LOW_VOL_TIGHT_ENTRY_ID = 'low_vol_tight'
+VCP_LOW_VOL_TIGHT_MIN_DAYS = 31             # 持续>30交易日：至少31日，30日不通过
+VCP_LOW_VOL_TIGHT_MAX_DAYS = 250
+VCP_LOW_VOL_TIGHT_AMPLITUDE_MAX = 0.08      # 沿用(high-low)/low；严格<8%，8.00%不通过
+VCP_LOW_VOL_TIGHT_VOL20_MIN_RATIO = 0.90    # 严格>90%，恰好90%不通过
+VCP_LOW_VOL_TIGHT_VOL20_SAMPLES = 20
+
+
+def _vcp_pit_vol20_flags(bars):
+    """任务115逐日PIT VOL20证据；均线含当日及此前19根，绝不读取未来。
+
+    不足20根的日期保留在区间分母，但below=False，不得冒充缩量；等于VOL20也不算低于。
+    """
+    ordered = list(bars or [])
+    flags = []
+    for i, bar in enumerate(ordered):
+        samples = min(VCP_LOW_VOL_TIGHT_VOL20_SAMPLES, i + 1)
+        sufficient = i + 1 >= VCP_LOW_VOL_TIGHT_VOL20_SAMPLES
+        ma20 = (sum(x[4] for x in ordered[i - 19:i + 1]) / 20) if sufficient else None
+        below = bool(sufficient and ma20 is not None and bar[4] < ma20)
+        flags.append({'date': bar[0], 'volume': round(float(bar[4]), 4),
+                      'samples': samples, 'sufficient': sufficient,
+                      'ma20': round(ma20, 4) if ma20 is not None else None,
+                      'belowVol20': below})
+    return flags
+
+
+def _vcp_low_vol_tight_window(bars, days, volume_flags=None):
+    """任务115独立低量窄幅VCP单个窗口；除五项硬门外不加传统收缩条件。
+
+    振幅沿用固定区间口径=(区间最高价-区间最低价)/区间最低价；持续>30交易日；
+    期间低于当日PIT VOL20的天数/全部区间交易日严格>90%，不足20根不计缩量。
+    枢轴取最后一日之前的区间高点，避免正常最终突破被突破日自身高点误杀。
+    """
+    ordered = list(bars or [])
+    base = ordered[-days:] if days and len(ordered) >= days else []
+    evidence = {
+        'entryId': VCP_LOW_VOL_TIGHT_ENTRY_ID, 'entryLabel': '低量窄幅独立VCP',
+        'pass': False, 'startDate': base[0][0] if base else None,
+        'endDate': base[-1][0] if base else None, 'tradingDays': len(base),
+        'minTradingDays': VCP_LOW_VOL_TIGHT_MIN_DAYS, 'durationOperator': '>30',
+        'amplitudePct': None, 'amplitudeLimitPct': 8.0, 'amplitudeOperator': '<',
+        'amplitudeBasis': '(interval_max_high-interval_min_low)/interval_min_low*100',
+        'intervalHigh': None, 'intervalLow': None,
+        'belowVol20Days': 0, 'belowVol20RatioPct': 0.0,
+        'belowVol20ThresholdPct': 90.0, 'belowVol20Operator': '>',
+        'vol20Window': 20, 'vol20MinSamples': 20, 'vol20IncludesCurrentDay': True,
+        'vol20ValidDays': 0, 'vol20InsufficientDays': 0,
+        'insufficientNotCountedAsBelow': True, 'pitOnly': True,
+        'traditionalContractionsRequired': False, 'regularSwingRequired': False,
+        'pivotBasis': 'interval_high_before_final_day',
+        'volumeChecks': [], 'rejectReasons': [],
+    }
+    if not base:
+        evidence['rejectReasons'].append('低量窄幅VCP区间样本不足')
+        return _apply_vcp_daily_trend_eligibility({
+            'type': 'VCP收缩型', 'formed': False, 'structureFormed': False,
+            'structurePath': VCP_LOW_VOL_TIGHT_ENTRY_ID,
+            'vcpEntryId': VCP_LOW_VOL_TIGHT_ENTRY_ID, 'vcpEntryLabel': '低量窄幅独立VCP',
+            'vcpStructure': evidence, 'rejectReasons': list(evidence['rejectReasons'])}, ordered)
+
+    hi = max(x[1] for x in base)
+    lo = min(x[2] for x in base)
+    amplitude = (hi - lo) / lo if lo > 0 else None
+    flags = (volume_flags if volume_flags is not None else _vcp_pit_vol20_flags(ordered))[-days:]
+    low_days = sum(x['belowVol20'] for x in flags)
+    valid_days = sum(x['sufficient'] for x in flags)
+    ratio = low_days / len(base) if base else 0.0
+    pivot = max(x[1] for x in base[:-1]) if len(base) > 1 else hi
+    close = base[-1][3]
+    reasons = []
+    duration_ok = len(base) > 30
+    amplitude_ok = amplitude is not None and amplitude < VCP_LOW_VOL_TIGHT_AMPLITUDE_MAX
+    volume_ok = ratio > VCP_LOW_VOL_TIGHT_VOL20_MIN_RATIO
+    if not duration_ok:
+        reasons.append(f'持续{len(base)}个交易日未超过30日（至少31日，30日不通过）')
+    if not amplitude_ok:
+        reasons.append('区间振幅未达到严格<8%（8.00%不通过）' if amplitude is not None
+                       else '区间最低价为非正数，振幅不可计算')
+    if not volume_ok:
+        reasons.append(f'低于PIT VOL20占比{ratio * 100:.6f}%未严格超过90%（恰好90%不通过）')
+    evidence.update({
+        'pass': bool(duration_ok and amplitude_ok and volume_ok),
+        'amplitudePct': round(amplitude * 100, 6) if amplitude is not None else None,
+        'intervalHigh': round(hi, 4), 'intervalLow': round(lo, 4),
+        'belowVol20Days': low_days, 'belowVol20RatioPct': round(ratio * 100, 6),
+        'vol20ValidDays': valid_days, 'vol20InsufficientDays': len(base) - valid_days,
+        'volumeChecks': flags, 'rejectReasons': reasons,
+    })
+    structure = evidence['pass']
+    dist = (pivot / close - 1) * 100 if close > 0 else 999
+    note = None
+    if structure:
+        note = (f"低量窄幅独立VCP：{base[0][0]}～{base[-1][0]}，持续{len(base)}个交易日>30；"
+                f"区间高{hi:.4f}/低{lo:.4f}，振幅{amplitude * 100:.6f}%<8%"
+                "（振幅=(区间最高价-区间最低价)/区间最低价）；"
+                f"低于当日PIT VOL20共{low_days}/{len(base)}日，占{ratio * 100:.6f}%>90%，"
+                f"VOL20有效{valid_days}日/不足{len(base) - valid_days}日，不足样本不计缩量；"
+                "无需传统三次收缩或规律摆动，不另加阶段量比或右侧质量门；"
+                "仍须任务113日线严格多头与样本门、任务114孕育期新高门。")
+    candidate = {
+        'type': 'VCP收缩型', 'formed': structure, 'structureFormed': structure,
+        'structurePath': VCP_LOW_VOL_TIGHT_ENTRY_ID,
+        'vcpEntryId': VCP_LOW_VOL_TIGHT_ENTRY_ID, 'vcpEntryLabel': '低量窄幅独立VCP',
+        'vcpStructure': evidence, 'days': len(base), 'amplitude': evidence['amplitudePct'],
+        'pivot': round(pivot, 4), 'distPct': round(dist, 4),
+        'invalidation': round(lo, 4),
+        'volConfirm': round(sum(x[4] for x in ordered[-50:]) / min(50, len(ordered)) * BREAKOUT_VOL_X, 4),
+        'startDate': base[0][0], 'endDate': base[-1][0], 'anchorHigh': base[0][1],
+        'rejectReasons': reasons, 'note': note,
+        'selectionScore': [-len(base), amplitude if amplitude is not None else 999, -ratio],
+    }
+    return _apply_vcp_daily_trend_eligibility(candidate, ordered)
+
+
+def _vcp_low_vol_tight_base(bars, min_days=VCP_LOW_VOL_TIGHT_MIN_DAYS,
+                            max_days=VCP_LOW_VOL_TIGHT_MAX_DAYS):
+    """搜索当时可见的31~250日窗口；任一完整通过五门的窗口即可取得独立资格。"""
+    ordered = list(bars or [])
+    upper = min(max_days, VCP_LOW_VOL_TIGHT_MAX_DAYS, len(ordered) - 20)
+    lower = max(VCP_LOW_VOL_TIGHT_MIN_DAYS, min_days)
+    if upper < lower:
+        return None
+    volume_flags = _vcp_pit_vol20_flags(ordered)
+    candidates = [_vcp_low_vol_tight_window(ordered, n, volume_flags) for n in range(lower, upper + 1)]
+    eligible = [x for x in candidates if x.get('formed')]
+    # 若全部资格失败，保留一个结构成立的候选供日线/孕育排除证据使用。
+    pool = eligible or [x for x in candidates if x.get('structureFormed')]
+    if not pool:
+        return None
+    return min(pool, key=lambda x: x['selectionScore'])
+
+
 def _cup_weekly_trend(bars):
     """杯柄专用长期趋势门（任务86）；不触碰broadOsc的MA50>150>200规则。
 
@@ -8667,8 +8803,10 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 w_lv = _apply_vcp_daily_trend_eligibility(w_lv, bars)
                 fixed_lv = _apply_vcp_daily_trend_eligibility(fixed_lv, bars)
                 platform_vcp = _apply_vcp_daily_trend_eligibility(platform_vcp, bars)
+                low_vol_tight_lv = _vcp_low_vol_tight_base(bars)
                 for path, candidate in (('daily_swing', d_lv), ('weekly_swing_daily_trend', w_lv),
-                                        ('fixed_base', fixed_lv), ('platform_attribute', platform_vcp)):
+                                        ('fixed_base', fixed_lv), ('platform_attribute', platform_vcp),
+                                        ('low_vol_tight', low_vol_tight_lv)):
                     if candidate and candidate.get('structureFormed') and not candidate.get('dailyTrendPass'):
                         trend = candidate['dailyTrend']
                         dropped_vcp_daily_trend.append({
@@ -8690,6 +8828,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 d_c3 = bool(d_lv and d_lv.get('displayEligible'))
                 w_c3 = bool(w_lv and w_lv.get('displayEligible'))
                 f_c3 = bool(fixed_lv and fixed_lv.get('displayEligible'))
+                l_c3 = bool(low_vol_tight_lv and low_vol_tight_lv.get('displayEligible'))
                 active_episode = ph.advance_stock(
                     pattern_history, code, info.get(code, {}).get('name', code), bars)
                 ch = _cup_handle_strict(bars, market_weak, dist_high250=dist_high250,
@@ -8776,6 +8915,9 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 elif raw is None and f_c3:
                     # 固定区间VCP不抢占已经成立的杯柄；自身仍独立于摆动Stage2/高位门。
                     raw, main_lv = 'VCP收缩型', fixed_lv
+                elif raw is None and l_c3:
+                    # 任务115独立低量窄幅入口不抢占既有strict/fixed/周线或杯柄。
+                    raw, main_lv = 'VCP收缩型', low_vol_tight_lv
                 elif raw is None and not ext_high and plat and plat.get('displayEligible'):
                     raw, main_lv = '平台整理', plat
                 if raw is None:
@@ -8902,6 +9044,8 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                                      f"回归变化{main_lv.get('trendSlopePct')}%、振幅{main_lv.get('amplitude')}%；"
                                      f"区间净流入{main_lv.get('intervalNetInflow')}亿元，"
                                      f"估值{main_lv.get('valuationBasis')}={main_lv.get('valuationScorePct')}%（≤40%）；{metric_note}。")
+                elif main_lv.get('structurePath') == VCP_LOW_VOL_TIGHT_ENTRY_ID:
+                    evidence_note = main_lv.get('note')
                 items.append({'code': code,
                               'name': info.get(code, {}).get('name', code),
                               'sector': sec, 'star': meta['star'],
@@ -8916,6 +9060,10 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                               'cupHandle': ch if pattern == '杯柄型' else None,
                               'flag': fl if pattern == '旗形整理' else None,
                               'fixedBase': fixed_lv if main_lv is fixed_lv else None,
+                              'lowVolTight': low_vol_tight_lv if main_lv is low_vol_tight_lv else None,
+                              'vcpEntryId': main_lv.get('vcpEntryId'),
+                              'vcpEntryLabel': main_lv.get('vcpEntryLabel'),
+                              'vcpStructure': main_lv.get('vcpStructure'),
                               'patternEpisode': main_lv.get('patternEpisode'),
                               'vcpGestation': main_lv.get('vcpGestation'),
                               'gestationPass': main_lv.get('gestationPass'),
@@ -9002,6 +9150,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                     '形态口径（任务112统一平台/底部证据门，保留任务97周MA状态门）：'
                     '全部形态先查最近已完成周MA150/200：MA150<MA200为明确空头，直接从形态精扫及漏斗第3步剔除，不再作为fuzzy瑕疵展示；MA150=MA200不被本门硬删，仍按原周MA未多头fuzzy；MA150>MA200不因此误杀；不足200根完成周或均线缺失不伪造MA安全通过，沿用各形态原有数据审慎门（杯柄仍拒绝不足）；本门不看价格与均线关系、不新增MA50条件，既有周BOLL深度回踩包容与有效破位门不变；'
                     'VCP收缩型（任务113统一日线趋势门，任务114孕育期新高门，保留任务103结构校准）=所有摆动、固定区间、周线结构和平台型VCP属性路径均须至少200根日线，日线收盘>MA50且MA50>MA150>MA200；VCP不限制接近新高（即接近新高允许），但孕育期内不得先于最终突破创出新高；横盘仅为优选。参考高=孕育起点前最多250个交易日最高收盘与起点锚高孰高，不足20根参考样本明确拒绝；最后一天仅实际收盘>枢轴才可作为正常最终突破豁免；非完全横盘但可入，只降低优选分，不作资格硬门。等号不通过，周线结构的均线仍取原始日线，样本不足或趋势不符记录排除原因；突破事件=孕育结束后首个盘中最高>参考高且收盘>枢轴的交易日，突破日age=0，之后第10个交易日退出；再次入选展示此前不同episode的小字历史记录，首批历史仅为已验证结构回放，不是全市场全历史归档，originFormalAdmission=false时不冒充当时正式入选；严格摆动仍保留完整Stage 2趋势模板，固定区间不额外套用其他Stage 2条件。严格摆动证据须≥3次收缩、每次≤前次1.10且末次<首次、末段均量<首段；务实反复序列只留证据、不再独立成型。严格摆动另须近期量未出现5日/10日>1.08且最近3日/10日>1.10的同步重新放大、近10日无持续下滑（下跌日≥70%+漂移≤-2.5%+20日位置≤25%）或剧烈起伏（单日绝对涨跌≥5%+年化波动≥35%），识别日距枢轴-5%~+4%；不强制MA10≤MA20≤MA50，多窗口短长均量比≤1.20仅作异常放量门；已突破日只审突破前基底量，不用突破大量或后续结果反判。固定区间路径=15~50日+振幅≤10.5%+三段务实价格收缩+区间/前20日均量<1且末段量<首段+相同近期量/右侧质量/枢轴门；按当时紧致度、阶段量比、枢轴距离选最佳；VCP不再应用突破后一年位置瑕疵门；'
+                    '任务115低量窄幅独立VCP入口（low_vol_tight）=任一当时可见的31~250日窗口同时满足：区间振幅严格<8%（沿用(区间最高价-区间最低价)/区间最低价，8.00%不通过）；持续>30个交易日（至少31日）；超过90%的区间交易日成交量严格低于当日可见VOL20（含当日及此前19根，恰好90%不通过，20日样本不足日留在分母但不计缩量，等于VOL20不计）；通过任务113日线样本及close>MA50>MA150>MA200严格门与任务114孕育期新高门，接近新高允许，最后正常突破不误杀。满足即取得新入口结构资格，不要求传统三次收缩、规律摆动、阶段量比或右侧质量门；枢轴取最后一日之前区间高点，strict/fixed/周线/平台属性全部保留，共同股票池、数据质量、普通展示窗、突破10日生命周期和历史标签复用；'
                     '平台型VCP属性（任务103）保留旧10~50日短平台作为VCP几何/量能属性证据，不直接产生平台整理或底部整理标签；属性首日/内部单日完整性门只作用于VCP属性，不得反向改写新平台或底部资格；'
                     '杯柄型（任务99双背景与柄质量分级）=杯身背景满足前置250日涨幅≥15%（uptrend）或60~120日震荡修复（range_repair：区间跨度≥15%+首末净漂移绝对值≤15%+中位穿越≥2次+杯沿相对区间上沿-15%~+10%）之一，仍须最近完成周BOLL99中轨附近/上方（周收≥中轨×0.97）+周MA150/200通用状态门+杯深12~33%+杯底3%区域至少3日排尖V+杯柄≥40日+双底第二坑最多低4%+柄10~20日振幅≤10%+柄底位于杯体50~80%+枢轴收复原杯沿≥92%+柄前右侧最高超原杯沿≤5%+柄均量<杯身且柄末量≤1.35+一年分位25~82+贴新高中高位拒；干净柄须净漂移绝对值≤5%+全程回归趋势绝对值≤6%+振幅≤8%+10日/全柄均量≤1.05+5日/10日均量≤1.10；干净杯只看全局杯底且展示距枢轴-5~+5；普通精扫在干净杯无候选后可用前后5日确认的局部摆动低点、35~50%柄位或8~10%振幅/温和漂移/多窗口量能瑕疵进入fuzzy，但不得换局部杯身绕过全局杯的杯深/U底/双底/杯身背景/右侧/缩量等独立硬门；持续滑梯（净漂移≤-4%+回归趋势≤-4%+下跌日≥60%+末端处柄区间下45%）硬拒绝；结构或柄质量fuzzy观察到12%时追加距离瑕疵，entryTier=fuzzy；任务86周线瑕疵与有效破位门不变；任务110统一历史高位资格门=几何formed后，以识别日前全部可得日线最高收盘为历史高点，最新收盘距其>-8%直接eligible/display=false且不作为fuzzy展示，恰好-8%及更深回撤通过；输出历史起止/样本数/高点日期与收盘/距离，达到1200根缓存上限明确非上市全史；VCP和底部平台不适用此门；'
                     '用户习惯·早期杯柄信号（任务92新鲜度+任务99干净柄硬门+任务101等待期失效门）=回看至少60交易日，先量价预筛再对候选日前1~3日记忆化运行完整杯柄；早期链只走干净全局杯、50~80%柄位与干净柄，不用局部/35~50%结构fuzzy或柄质量fuzzy重置首次信号；首个有效信号分早期（最高≥枢轴+收盘≥枢轴×0.99+量≥柄均量×1.4）与强确认（收盘≥枢轴+量≥柄均量×1.5）；初始失效位=柄低−A股最小价位0.01；柄锚点后、首个有效信号前任一收盘跌破初始失效位即永久放弃该锚点并继续检查其他锚点，不得收回后复活旧柄；信号后当前跌破同样剔除；首次有效信号后仅5个交易日内可入围，超过即旧信号；'

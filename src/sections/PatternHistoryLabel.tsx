@@ -18,6 +18,7 @@ export default function PatternHistoryLabel({ records, coverage }: PatternHistor
           <div key={record.episodeId} className="border-l-2 border-slate-200 pl-2">
             <p className="font-medium text-slate-600">
               {record.originFormalAdmission ? '当时正式入选' : '结构回放·非当时正式入选'} · {record.patternType}
+              {record.vcpEntryLabel ? ` · ${record.vcpEntryLabel}` : ''}
             </p>
             <p>
               孕育{record.gestationStart}～{record.gestationEnd}；形态类型{record.patternType}；

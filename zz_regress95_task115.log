@@ -1,0 +1,121 @@
+{
+  "passed": 38,
+  "total": 38,
+  "changes23": [
+    {
+      "case": "VCP|000625.SZ|2023-09-27",
+      "before": "杯柄型",
+      "after": "平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|000708.SZ|2025-06-10",
+      "before": "底部整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "VCP|000725.SZ|2026-04-17",
+      "before": null,
+      "after": "平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|002028.SZ|2025-07-11",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|688012.SH|2023-03-01",
+      "before": "底部整理",
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|688041.SH|2024-09-24",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|688047.SH|2024-09-26",
+      "before": null,
+      "after": "底部整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|601000.SH|2026-01-19",
+      "before": "底部整理",
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "VCP|002155.SZ|2026-01-09",
+      "before": "杯柄型",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "各候选未同时满足完整结构与展示门"
+      ]
+    },
+    {
+      "case": "VCP|600583.SH|2022-08-22",
+      "before": "底部整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|601808.SH|20190507|20190816|近似杯柄",
+      "before": "底部整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "CUP|600583.SH|20250901|20260107|杯柄",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "CUP|601857.SH|20250120|20250603|双底杯柄",
+      "before": null,
+      "after": "杯柄型",
+      "changed": true,
+      "afterReasons": []
+    },
+    {
+      "case": "CUP|600028.SH|20220307|20220526|双底杯柄",
+      "before": "长平台整理",
+      "after": null,
+      "changed": true,
+      "afterReasons": [
+        "周MA150<MA200空头排列"
+      ]
+    },
+    {
+      "case": "LP|海光段①|688041.SH|20240909",
+      "before": null,
+      "after": "长平台整理",
+      "changed": true,
+      "afterReasons": []
+    }
+  ]
+}

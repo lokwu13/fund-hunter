@@ -29,6 +29,7 @@ def scan(ud, rows, mv_yi=None):
                                 dist_high250=dist_high250, hist_pct=hist_pct, practical=True,
                                 **daily_trend_kwargs)
     fixed_lv = ud._vcp_fixed_base(bars)
+    low_vol_tight_lv = ud._vcp_low_vol_tight_base(bars) if hasattr(ud, '_vcp_low_vol_tight_base') else None
     platform_vcp = ud._platform_vcp_attribute(bars, pf, hist_pct, dist_high250)
     if hasattr(ud, '_vcp_daily_trend_gate'):
         d_lv = ud._apply_vcp_daily_trend_eligibility(d_lv, bars)
@@ -41,6 +42,7 @@ def scan(ud, rows, mv_yi=None):
     d_c3 = bool(d_lv and d_lv.get('displayEligible'))
     w_c3 = bool(w_lv and w_lv.get('displayEligible'))
     f_c3 = bool(fixed_lv and fixed_lv.get('displayEligible'))
+    l_c3 = bool(low_vol_tight_lv and low_vol_tight_lv.get('displayEligible'))
     ch = ud._cup_handle_strict(bars, True, dist_high250=dist_high250,
                                hist_pct=hist_pct, allow_weekly_defect=True)
     recent = ud._cup_early_breakout(bars) if not (d_c3 or w_c3) else None
@@ -88,6 +90,8 @@ def scan(ud, rows, mv_yi=None):
         reasons.append('普通杯柄被贴新高中高位位置门拦截')
     elif raw is None and f_c3:
         raw, main_lv = 'VCP收缩型', fixed_lv
+    elif raw is None and l_c3:
+        raw, main_lv = 'VCP收缩型', low_vol_tight_lv
     elif raw is None and lp and lp['formed']:
         raw, main_lv = '长平台整理', lp
     if raw is None:
@@ -128,7 +132,8 @@ def scan(ud, rows, mv_yi=None):
         pattern = None
     diag = {'pct': round(hist_pct, 1) if hist_pct is not None else None,
             'distHigh250': round(dist_high250, 2), 'trendTemplate': tt,
-            'vcpDaily': d_lv, 'vcpWeekly': w_lv, 'fixedBase': fixed_lv, 'platform': pf, 'flag': fl,
+            'vcpDaily': d_lv, 'vcpWeekly': w_lv, 'fixedBase': fixed_lv,
+            'lowVolTight': low_vol_tight_lv, 'platform': pf, 'flag': fl,
             'longPlatform': lp, 'regularCup': ch, 'recentCup': recent,
             'main': main_lv if pattern else None,
             'signalDisplayable': ud._cup_signal_displayable(recent) if recent else None,

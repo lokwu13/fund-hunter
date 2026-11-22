@@ -1,0 +1,323 @@
+{
+  "task": 115,
+  "requestedTasks": [
+    113,
+    114,
+    115
+  ],
+  "complete": true,
+  "allPassed": true,
+  "passed": 18,
+  "executed": 18,
+  "total": 18,
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "results": [
+    {
+      "task": 95,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress95.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress95_task115.log",
+      "startedAt": "2026-11-22T12:20:22+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 26.516,
+      "finishedAt": "2026-11-22T12:20:49+08:00",
+      "logBytes": 2884
+    },
+    {
+      "task": 96,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress96.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress96_task115.log",
+      "startedAt": "2026-11-22T12:20:49+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 6.953,
+      "finishedAt": "2026-11-22T12:20:55+08:00",
+      "logBytes": 5093
+    },
+    {
+      "task": 98,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress98.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress98_task115.log",
+      "startedAt": "2026-11-22T12:21:01+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 2.437,
+      "finishedAt": "2026-11-22T12:21:04+08:00",
+      "logBytes": 41
+    },
+    {
+      "task": 99,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress99.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress99_task115.log",
+      "startedAt": "2026-11-22T12:21:04+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 104.422,
+      "finishedAt": "2026-11-22T12:22:48+08:00",
+      "logBytes": 27653
+    },
+    {
+      "task": 101,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress101.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress101_task115.log",
+      "startedAt": "2026-11-22T12:22:53+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 251.203,
+      "finishedAt": "2026-11-22T12:27:04+08:00",
+      "logBytes": 451
+    },
+    {
+      "task": 102,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress102.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress102_task115.log",
+      "startedAt": "2026-11-22T12:27:04+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 1.063,
+      "finishedAt": "2026-11-22T12:27:06+08:00",
+      "logBytes": 717
+    },
+    {
+      "task": 104,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress104.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress104_task115.log",
+      "startedAt": "2026-11-22T12:27:15+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 0.719,
+      "finishedAt": "2026-11-22T12:27:15+08:00",
+      "logBytes": 619
+    },
+    {
+      "task": 105,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress105.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress105_task115.log",
+      "startedAt": "2026-11-22T12:27:15+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 35.625,
+      "finishedAt": "2026-11-22T12:27:51+08:00",
+      "logBytes": 1227
+    },
+    {
+      "task": 106,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress106.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress106_task115.log",
+      "startedAt": "2026-11-22T12:27:51+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 0.781,
+      "finishedAt": "2026-11-22T12:27:52+08:00",
+      "logBytes": 718
+    },
+    {
+      "task": 107,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress107.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress107_task115.log",
+      "startedAt": "2026-11-22T12:27:52+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 0.75,
+      "finishedAt": "2026-11-22T12:27:53+08:00",
+      "logBytes": 1303
+    },
+    {
+      "task": 108,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress108.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress108_task115.log",
+      "startedAt": "2026-11-22T12:27:53+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 0.875,
+      "finishedAt": "2026-11-22T12:27:53+08:00",
+      "logBytes": 2482
+    },
+    {
+      "task": 109,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress109.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress109_task115.log",
+      "startedAt": "2026-11-22T12:28:00+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 0.328,
+      "finishedAt": "2026-11-22T12:28:00+08:00",
+      "logBytes": 2150
+    },
+    {
+      "task": 110,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress110.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress110_task115.log",
+      "startedAt": "2026-11-22T12:28:00+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 2.328,
+      "finishedAt": "2026-11-22T12:28:03+08:00",
+      "logBytes": 664
+    },
+    {
+      "task": 111,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress111.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress111_task115.log",
+      "startedAt": "2026-11-22T12:28:03+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 6.0,
+      "finishedAt": "2026-11-22T12:28:09+08:00",
+      "logBytes": 17814
+    },
+    {
+      "task": 112,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress112.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress112_task115.log",
+      "startedAt": "2026-11-22T12:28:09+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 6.172,
+      "finishedAt": "2026-11-22T12:28:15+08:00",
+      "logBytes": 17966
+    },
+    {
+      "task": 113,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress113.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress113_task115.log",
+      "startedAt": "2026-11-22T12:28:20+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 37.203,
+      "finishedAt": "2026-11-22T12:28:58+08:00",
+      "logBytes": 4890
+    },
+    {
+      "task": 114,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress114.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress114_task115.log",
+      "startedAt": "2026-11-22T12:28:58+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 3.016,
+      "finishedAt": "2026-11-22T12:29:01+08:00",
+      "logBytes": 924
+    },
+    {
+      "task": 115,
+      "command": "C:\\Users\\Administrator\\AppData\\Roaming\\kimi-desktop\\daimon-share\\daimon\\runtime\\python\\.venv\\Scripts\\python.exe C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\zz_regress115.py",
+      "cwd": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter",
+      "environment": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "C:\\Users\\Administrator\\Documents\\kimi\\workspace\\fund-hunter\\scripts"
+      },
+      "log": "zz_regress115_task115.log",
+      "startedAt": "2026-11-22T12:29:01+08:00",
+      "timeoutSeconds": 300,
+      "returncode": 0,
+      "passed": true,
+      "durationSeconds": 2.109,
+      "finishedAt": "2026-11-22T12:29:03+08:00",
+      "logBytes": 767
+    }
+  ]
+}

@@ -6,7 +6,7 @@ import { Layers, FileText, Newspaper, BarChart3, Briefcase, Eye, PieChart } from
 import { useState } from 'react';
 import { useFundData } from '@/hooks/useFundData';
 import { broadOscFor, buildFunnelStepViews, dividendTop20Text, extremeReboundActive, oversoldValueDirectionsText, sectorEtfFor } from './funnelConclusions';
-import { formalPatternDisplayable, patternEvidenceText, vcpDailyTrendText } from './patternEvidence';
+import { formalPatternDisplayable, patternEvidenceText, vcpDailyTrendText, vcpGestationText, vcpLowVolTightText } from './patternEvidence';
 import PatternHistoryLabel from './PatternHistoryLabel';
 
 const GROWTH_SECTORS = new Set(['中证信息', '中证电信', '中证工业', '中证可选']);
@@ -472,8 +472,12 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                                 r.pattern === 'VCP收缩型' ? 'bg-orange-500 text-white' : 'bg-slate-500 text-white'
                               }`} title={r.pattern === '杯柄型'
                                 ? `历史最高收盘${r.historicalHighClose ?? '—'}(${r.historicalHighDate ?? '—'})·距历史高点${r.distanceToHistoricalHighPct ?? '—'}%·${r.historyScope ?? '历史范围缺失'}·排除原因=${r.historyExclusionReason ?? '无，历史高位门通过'}`
+                                : r.vcpEntryId === 'low_vol_tight'
+                                ? `${vcpLowVolTightText(r.vcpStructure)}\n${vcpDailyTrendText(r.vcpDailyTrend)}\n${vcpGestationText(r.vcpGestation)}`
                                 : r.pattern === 'VCP收缩型' ? vcpDailyTrendText(r.vcpDailyTrend)
-                                : r.patternEvidence ? patternEvidenceText(r.patternEvidence) : undefined}>{r.pattern}</Badge>
+                                : r.patternEvidence ? patternEvidenceText(r.patternEvidence) : undefined}>
+                                {r.vcpEntryId === 'low_vol_tight' ? 'VCP·低量窄幅' : r.pattern}
+                              </Badge>
                               <span className="text-[11px] text-slate-600">枢轴{r.pivot ?? '—'}</span>
                               <span className="text-[11px] text-slate-600">距枢轴{r.distPct ?? '—'}%</span>
                               <span className="text-[10px] text-slate-500">资金{r.smartMoneyPosDays ?? 0}/10天</span>
@@ -482,6 +486,13 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                             </div>
                             {r.patternEvidence && (
                               <p className="mt-1 text-[10px] leading-relaxed text-slate-500">{patternEvidenceText(r.patternEvidence)}</p>
+                            )}
+                            {r.vcpEntryId === 'low_vol_tight' && (
+                              <div className="mt-1 rounded bg-orange-50 px-2 py-1 text-[10px] leading-relaxed text-orange-800">
+                                <p>{vcpLowVolTightText(r.vcpStructure)}</p>
+                                <p className="mt-1">{vcpDailyTrendText(r.vcpDailyTrend)}</p>
+                                <p className="mt-1">{vcpGestationText(r.vcpGestation)}</p>
+                              </div>
                             )}
                             {r.signalDate && (
                               <p className={`mt-1 rounded px-2 py-1 text-[10px] font-semibold ${r.signalType === 'early' ? 'bg-amber-50 text-amber-800' : 'bg-red-50 text-red-700'}`}>

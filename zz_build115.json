@@ -1,0 +1,74 @@
+{
+  "task": 115,
+  "command": "npm run build",
+  "startedAt": "2026-11-22T12:29:46+08:00",
+  "durationSeconds": 11.25,
+  "success": true,
+  "returncode": 0,
+  "modulesTransformed": 2363,
+  "warning": "Some chunks are larger than 500 kB after minification",
+  "log": "zz_build115.log",
+  "assets": [
+    {
+      "path": "dist/assets/index-CkF8V49i-v25.js",
+      "bytes": 1413434,
+      "sha256": "c9eb6bfee00d9b5aff587f228e9db5ed812e1d85fcfc8c9faa775b87b413cfbb"
+    },
+    {
+      "path": "dist/assets/index-aK_Rphla.css",
+      "bytes": 109946,
+      "sha256": "512c786e31416bd2d9e1f6318c0c6f851401f411fd0577e1515fd0ab8f84f93b"
+    }
+  ],
+  "bundleMarkers": {
+    "低量窄幅独立VCP": true,
+    "low_vol_tight": true,
+    "8.00%不通过": true,
+    "恰好90%不通过": true,
+    "不足20日样本不得当作缩量": true,
+    "无需传统三次收缩或规律摆动": true,
+    "VCP·低量窄幅": true
+  },
+  "viewportMetaPresent": true,
+  "localFundDataBefore": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "localFundDataAfter": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "localFundData": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "fundDataUnchanged": true,
+  "matchesTask115RegressionDataSha": true,
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "developmentServerStarted": false
+}

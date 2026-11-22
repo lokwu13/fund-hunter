@@ -1,0 +1,28 @@
+{
+  "task": 115,
+  "head": "bf7d2b3e817351e02296887b106eb73200dc5268",
+  "headTree": "3ad6ff23d88c699d6a0dad73dae35377adf68d6e",
+  "headMessage": "任务114：VCP孕育期新高门与突破后历史记录",
+  "remoteTask114SourceSha256": "169b12b2c8e2b01e4269ffa777b69da59d0f970e7284c18d5ad53bb535f92105",
+  "remoteSourceBlob": "834ea8b5862fb9d25c84785d86e521b39f6ede69",
+  "task114SourceBaselineMatched": true,
+  "fundData": {
+    "public/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "manualDispatch": false,
+  "workflowModified": false,
+  "scheduleModified": false
+}

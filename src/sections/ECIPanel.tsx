@@ -8,7 +8,7 @@ import {
   Crown, Trophy, TrendingDown as TrendDown, Radar, Sprout, Swords
 } from 'lucide-react';
 import type { FundData } from '@/hooks/useFundData';
-import { formalPatternDisplayable, patternEvidenceText, vcpDailyTrendText, vcpGestationText } from './patternEvidence';
+import { formalPatternDisplayable, patternEvidenceText, vcpDailyTrendText, vcpGestationText, vcpLowVolTightText } from './patternEvidence';
 import PatternHistoryLabel from './PatternHistoryLabel';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
@@ -965,15 +965,19 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                       const isPlatform = !!it.patternEvidence;
                       const isContract = it.pattern === 'VCP收缩型';
                       const isFixedBase = isContract && !!it.fixedBase;
+                      const isLowVolTight = isContract && it.vcpEntryId === 'low_vol_tight' && !!it.vcpStructure;
                       const isCup = it.pattern === '杯柄型' && !!it.cupHandle;
                       const isFlag = it.pattern === '旗形整理' && !!it.flag;
-                      const lv = isFixedBase
+                      const lv = isLowVolTight
+                        ? (it.lowVolTight ?? it.vcpStructure)
+                        : isFixedBase
                         ? it.fixedBase
                         : isContract
                         ? ((it.daily?.formed && it.daily?.count >= 3) ? it.daily : it.weekly)
                         : (it.daily?.formed ? it.daily : it.weekly);
                       const pv = it.patternEpisode
                         ? { pivot: it.buyPoint?.pivot, distPct: it.buyPoint?.distanceToPivotPct }
+                        : isLowVolTight ? (it.lowVolTight ?? { pivot: it.buyPoint?.pivot, distPct: it.buyPoint?.distanceToPivotPct })
                         : isFixedBase ? it.fixedBase : isCup ? it.cupHandle : isFlag ? it.flag : (isPlatform ? it.patternEvidence : lv);
                       return (
                         <Fragment key={it.code}>
@@ -1007,7 +1011,9 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                   className={`text-[10px] font-bold text-white rounded px-1.5 py-0.5 ${
                                     isDefect ? 'bg-amber-600' : it.pattern === '杯柄型' ? 'bg-violet-500' : isContract ? 'bg-orange-500' : it.pattern === '旗形整理' ? 'bg-sky-500' : it.pattern === '底部整理' ? 'bg-slate-500' : it.pattern === '高位平台⚠️' ? 'bg-amber-500' : 'bg-teal-500'
                                   }`}
-                                  title={isFixedBase
+                                  title={isLowVolTight
+                                    ? `${vcpLowVolTightText(it.vcpStructure)}\n${vcpDailyTrendText(it.vcpDailyTrend)}\n${vcpGestationText(it.vcpGestation)}`
+                                    : isFixedBase
                                     ? `${it.patternNote || `固定区间VCP：${it.fixedBase.days}日振幅${it.fixedBase.amplitude}%·三段振幅${(it.fixedBase.segAmps || []).join('→')}%·区间/前20日均量${it.fixedBase.volRatio}·仅使用识别日当时数据`}\n${vcpDailyTrendText(it.vcpDailyTrend)}`
                                     : isContract
                                     ? `收缩${lv?.count ?? 0}次·${(lv?.contractions || []).join('→')}%·量能${lv?.volTrend ?? ''}（首${lv?.volFirst ?? '—'}→末${lv?.volLast ?? '—'}）·枢轴=末次收缩高点\n${vcpDailyTrendText(it.vcpDailyTrend)}`
@@ -1016,14 +1022,16 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     : isFlag
                                     ? `旗面${it.flag.days}天·振幅${it.flag.amplitude}%·旗杆+${it.flag.polePct}%·量比${it.flag.volRatio}·一年分位${it.histPct ?? '—'}%`
                                     : patternEvidenceText(it.patternEvidence)}
-                                >{isDefect ? `模糊·${it.pattern}` : it.cupHandle?.breakout ? ((it.cupHandle.breakoutAge ?? 0) <= 3 ? '🚀 杯柄突破初期' : '杯柄首次信号后观察') : it.pattern}</span>
+                                >{isDefect ? `模糊·${it.pattern}` : isLowVolTight ? 'VCP·低量窄幅' : it.cupHandle?.breakout ? ((it.cupHandle.breakoutAge ?? 0) <= 3 ? '🚀 杯柄突破初期' : '杯柄首次信号后观察') : it.pattern}</span>
                                 {isDefect && (
                                   <p className="text-[9px] font-semibold text-amber-700 bg-amber-100/70 rounded px-1 py-0.5 mt-1">
                                     瑕疵：{it.defects.join('、')}
                                   </p>
                                 )}
                                 <p className={`text-[9px] mt-0.5 ${isDefect ? 'text-slate-400' : 'text-violet-400'}`}>
-                                  {isFixedBase
+                                  {isLowVolTight
+                                    ? `${it.vcpStructure.tradingDays}日·振幅${it.vcpStructure.amplitudePct}%·低于VOL20 ${it.vcpStructure.belowVol20RatioPct}%`
+                                    : isFixedBase
                                     ? `固定区间${it.fixedBase.days}日·振幅${it.fixedBase.amplitude}%·三段${(it.fixedBase.segAmps || []).join('→')}%`
                                     : isContract
                                     ? `收缩${lv?.count ?? 0}次·量能${lv?.volTrend ?? '—'}`
@@ -1037,6 +1045,13 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     ? `${it.patternEvidence.days ?? it.patternEvidence.weeks}${it.pattern === '底部整理' ? '周' : '日'}·振幅${it.patternEvidence.amplitude}%·区间净流入${it.patternEvidence.intervalNetInflow}亿`
                                     : '—'}
                                 </p>
+                                {isLowVolTight && (
+                                  <div className="mt-1 max-w-[360px] rounded bg-orange-50 px-2 py-1 text-left text-[9px] leading-relaxed text-orange-800">
+                                    <p>{vcpLowVolTightText(it.vcpStructure)}</p>
+                                    <p className="mt-1">{vcpDailyTrendText(it.vcpDailyTrend)}</p>
+                                    <p className="mt-1">{vcpGestationText(it.vcpGestation)}</p>
+                                  </div>
+                                )}
                                 {it.vcpAttribute?.formed && (
                                   <span
                                     className="inline-block text-[9px] font-bold text-cyan-700 bg-cyan-50 border border-cyan-200 rounded px-1 py-0.5 mt-1"

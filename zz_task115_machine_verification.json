@@ -1,0 +1,81 @@
+{
+  "task": 115,
+  "generatedAt": "2026-11-22T12:30:40+08:00",
+  "checks": {
+    "task113AllPassed": true,
+    "task114AllPassed": true,
+    "task115AllPassed": true,
+    "jointAllPassed": true,
+    "jointExactTasks": true,
+    "jointLogsPresent": true,
+    "buildPassed": true,
+    "productionDataUnchangedAcrossSuites": true,
+    "independentEntryMarkers": true,
+    "strictBoundaryAndNoExtraStructureGate": true,
+    "historyEntryEvidenceLifecycle": true,
+    "frontendSharedEvidenceAllTracks": true,
+    "oldFunctionsUnchanged": true,
+    "noProductionOrWorkflowActions": true
+  },
+  "allPassed": true,
+  "releaseReady": true,
+  "task113": {
+    "allPassed": true,
+    "checksPassed": 309,
+    "checksTotal": 309
+  },
+  "task114": {
+    "allPassed": true,
+    "checksPassed": 34,
+    "checksTotal": 34
+  },
+  "task115": {
+    "allPassed": true,
+    "checksPassed": 23,
+    "checksTotal": 23
+  },
+  "jointRegression": {
+    "complete": true,
+    "allPassed": true,
+    "passed": 18,
+    "total": 18
+  },
+  "build": {
+    "success": true,
+    "returncode": 0,
+    "modulesTransformed": 2363,
+    "warning": "Some chunks are larger than 500 kB after minification",
+    "assets": [
+      {
+        "path": "dist/assets/index-CkF8V49i-v25.js",
+        "bytes": 1413434,
+        "sha256": "c9eb6bfee00d9b5aff587f228e9db5ed812e1d85fcfc8c9faa775b87b413cfbb"
+      },
+      {
+        "path": "dist/assets/index-aK_Rphla.css",
+        "bytes": 109946,
+        "sha256": "512c786e31416bd2d9e1f6318c0c6f851401f411fd0577e1515fd0ab8f84f93b"
+      }
+    ]
+  },
+  "sourceSha256": {
+    "scripts/update_data.py": "4ec9aadca74e575bf3f8f0ac2746e36e62a5a9ab0cde5f56ae1254e211772974",
+    "scripts/pattern_history.py": "f6c4ee76cb4afe4e4b8733f3b8f08508d4abb5b7afdae799912bca161c7254dd",
+    "scripts/pattern_episode_seed.json": "8260d60ceabcffe3ca78e6f6e66615a18515c75204fcd65c80bdb7e5fec19a97",
+    "src/hooks/useFundData.ts": "a6556ffcd68468fb73c6af901bf7e22b0a9a31d854f60f041ec6d4cbea1d779f",
+    "src/sections/patternEvidence.ts": "1655c1c3b902148ececdf680f8e090f70f9289ce89f5c870cb38ec5739bdcbcd",
+    "src/sections/PatternHistoryLabel.tsx": "3c9408685717869a1bb28d053e4a140c660908dba11b2bd459859abbeff153cf",
+    "src/sections/ECIPanel.tsx": "c8481274fa5f6e7692e71f4b9be57738b7b9c96e94b5a9914550e78658bf58f5",
+    "src/sections/WeeklySummary.tsx": "77ec4c2cf9cb771074a7e4d058550061f38684f7ff87db8cd3b4c879f6cbd8a3",
+    "zz_scan101.py": "4f53d355b5e52757fc7126bc88ce0c9f3b6acb8a44ef3fc7194f7f0477a5a1a2",
+    "zz_regress115.py": "ee7bb6565a39a5815457cb879eada23b9d738bde391fba1f22b732e0e35ea7cc",
+    "zz_run_joint115.py": "5490f651dc9112506c9644ac6acc008f7e05ee729e4eabe232206174eed1de67",
+    "zz_build115.py": "b0cca3f1312dd1db237c57b0d9cd027e637649c45e9202d747b0ade5396ae699"
+  },
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "workflowModified": false,
+  "scheduleModified": false,
+  "developmentServerStarted": false,
+  "testsReexecutedByThisVerification": false
+}

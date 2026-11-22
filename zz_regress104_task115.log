@@ -1,0 +1,10 @@
+  oversoldValueDirections hidden: 当周动态RSI6未进入20以下区域，未请求估值数据
+  oversoldValueDirections: 行业2组/概念1组，历史估值可排1组，缓存月末23个，估值ok（20261030）
+  oversoldValueDirections: 行业2组/概念1组，历史估值可排0组，缓存月末0个，估值stale（20261030）
+  Warning: sector historical valuation current snapshot failed: 受控估值API失败
+  oversoldValueDirections: 行业2组/概念1组，历史估值可排0组，缓存月末0个，估值missing（20261030）
+{
+  "checksPassed": 18,
+  "checksTotal": 18,
+  "failed": []
+}

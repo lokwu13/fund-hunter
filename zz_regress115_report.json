@@ -1,0 +1,2404 @@
+{
+  "summary": {
+    "task": 115,
+    "allPassed": true,
+    "checksPassed": 23,
+    "checksTotal": 23,
+    "failed": [],
+    "productionFundDataSha256": {
+      "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+      "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "pitOnly": true,
+    "manualDispatch": false,
+    "productionDataRegenerated": false,
+    "entryId": "low_vol_tight",
+    "oldFunctionsChanged": []
+  },
+  "checks": [
+    {
+      "name": "31日独立入口五门全部通过且证据完整",
+      "passed": true,
+      "evidence": {
+        "formed": true,
+        "structureFormed": true,
+        "displayEligible": true,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260918",
+        "endDate": "20261030",
+        "tradingDays": 31,
+        "amplitudePct": 0.2002,
+        "belowVol20Days": 31,
+        "belowVol20RatioPct": 100.0,
+        "vol20ValidDays": 31,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": 100.05,
+          "ma50": 100.001,
+          "ma150": 80.0003,
+          "ma200": 72.5002,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 209,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260918",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.05,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "rejectReasons": []
+      }
+    },
+    {
+      "name": "30日不通过且明确至少31日",
+      "passed": true,
+      "evidence": {
+        "formed": false,
+        "structureFormed": false,
+        "displayEligible": false,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260921",
+        "endDate": "20261030",
+        "tradingDays": 30,
+        "amplitudePct": 0.2002,
+        "belowVol20Days": 30,
+        "belowVol20RatioPct": 100.0,
+        "vol20ValidDays": 30,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": 100.05,
+          "ma50": 100.001,
+          "ma150": 80.0003,
+          "ma200": 72.5002,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260921",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 210,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260921",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.05,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "rejectReasons": [
+          "持续30个交易日未超过30日（至少31日，30日不通过）"
+        ]
+      }
+    },
+    {
+      "name": "振幅8.00%恰好不通过且沿用high-low除以low",
+      "passed": true,
+      "evidence": {
+        "formed": false,
+        "structureFormed": false,
+        "displayEligible": false,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260918",
+        "endDate": "20261030",
+        "tradingDays": 31,
+        "amplitudePct": 8.0,
+        "belowVol20Days": 31,
+        "belowVol20RatioPct": 100.0,
+        "vol20ValidDays": 31,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": 100.05,
+          "ma50": 100.001,
+          "ma150": 80.0003,
+          "ma200": 72.5002,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 209,
+          "referenceHigh": 108.0,
+          "referenceDate": "20260918",
+          "anchorHigh": 108.0,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.05,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "rejectReasons": [
+          "区间振幅未达到严格<8%（8.00%不通过）"
+        ]
+      }
+    },
+    {
+      "name": "振幅7.99%略低于8%通过结构振幅门",
+      "passed": true,
+      "evidence": {
+        "formed": true,
+        "structureFormed": true,
+        "displayEligible": true,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260918",
+        "endDate": "20261030",
+        "tradingDays": 31,
+        "amplitudePct": 7.99,
+        "belowVol20Days": 31,
+        "belowVol20RatioPct": 100.0,
+        "vol20ValidDays": 31,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": 100.05,
+          "ma50": 100.001,
+          "ma150": 80.0003,
+          "ma200": 72.5002,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 209,
+          "referenceHigh": 107.99,
+          "referenceDate": "20260918",
+          "anchorHigh": 107.99,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.05,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "rejectReasons": []
+      }
+    },
+    {
+      "name": "低于VOL20恰好90%不通过",
+      "passed": true,
+      "evidence": {
+        "formed": false,
+        "structureFormed": false,
+        "displayEligible": false,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260907",
+        "endDate": "20261030",
+        "tradingDays": 40,
+        "amplitudePct": 0.2002,
+        "belowVol20Days": 36,
+        "belowVol20RatioPct": 90.0,
+        "vol20ValidDays": 40,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": 100.05,
+          "ma50": 100.001,
+          "ma150": 80.0003,
+          "ma200": 72.5002,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260907",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 200,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260907",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.05,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "rejectReasons": [
+          "低于PIT VOL20占比90.000000%未严格超过90%（恰好90%不通过）"
+        ]
+      }
+    },
+    {
+      "name": "低于VOL20占比92.5%略高即通过量能门",
+      "passed": true,
+      "evidence": {
+        "formed": true,
+        "structureFormed": true,
+        "displayEligible": true,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260907",
+        "endDate": "20261030",
+        "tradingDays": 40,
+        "amplitudePct": 0.2002,
+        "belowVol20Days": 37,
+        "belowVol20RatioPct": 92.5,
+        "vol20ValidDays": 40,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": 100.05,
+          "ma50": 100.001,
+          "ma150": 80.0003,
+          "ma200": 72.5002,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260907",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 200,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260907",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.05,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "rejectReasons": []
+      }
+    },
+    {
+      "name": "VOL20不足20根不得计作缩量且留在区间分母",
+      "passed": true,
+      "evidence": {
+        "formed": false,
+        "structureFormed": false,
+        "displayEligible": false,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260918",
+        "endDate": "20261030",
+        "tradingDays": 31,
+        "amplitudePct": 0.2002,
+        "belowVol20Days": 12,
+        "belowVol20RatioPct": 38.709677,
+        "vol20ValidDays": 12,
+        "vol20InsufficientDays": 19,
+        "dailyTrend": {
+          "close": null,
+          "ma50": null,
+          "ma150": null,
+          "ma200": null,
+          "samples": 31,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "insufficient_samples",
+          "pass": false,
+          "reasons": [
+            "日线样本不足200根（当前31根）"
+          ],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": false,
+          "status": "insufficient_samples",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 0,
+          "referenceHigh": null,
+          "referenceDate": null,
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": false,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": null,
+          "sidewaysScore": 0,
+          "sidewaysLabel": "样本不足",
+          "rejectReasons": [
+            "VCP新高参考样本不足20根（当前0根）"
+          ]
+        },
+        "rejectReasons": [
+          "低于PIT VOL20占比38.709677%未严格超过90%（恰好90%不通过）",
+          "日线样本不足200根（当前31根）",
+          "VCP新高参考样本不足20根（当前0根）"
+        ]
+      }
+    },
+    {
+      "name": "VOL20含当日PIT计算且等于均线不算低于",
+      "passed": true,
+      "evidence": {
+        "declining": [
+          {
+            "date": "20261022",
+            "volume": 99100.0,
+            "samples": 19,
+            "sufficient": false,
+            "ma20": null,
+            "belowVol20": false
+          },
+          {
+            "date": "20261023",
+            "volume": 99050.0,
+            "samples": 20,
+            "sufficient": true,
+            "ma20": 99525.0,
+            "belowVol20": true
+          }
+        ],
+        "equal": {
+          "date": "20261023",
+          "volume": 1000.0,
+          "samples": 20,
+          "sufficient": true,
+          "ma20": 1000.0,
+          "belowVol20": false
+        }
+      }
+    },
+    {
+      "name": "均线等于不通过新入口正式资格",
+      "passed": true,
+      "evidence": {
+        "formed": false,
+        "structureFormed": true,
+        "displayEligible": false,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260918",
+        "endDate": "20261030",
+        "tradingDays": 31,
+        "amplitudePct": 0.2002,
+        "belowVol20Days": 31,
+        "belowVol20RatioPct": 100.0,
+        "vol20ValidDays": 31,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": 100.0,
+          "ma50": 100.0,
+          "ma150": 100.0,
+          "ma200": 100.0,
+          "samples": 200,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "not_strict_bullish",
+          "pass": false,
+          "reasons": [
+            "识别日收盘价未严格高于日线MA50",
+            "日线MA50>MA150>MA200严格多头排列不成立"
+          ],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 169,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260918",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.0,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "rejectReasons": [
+          "识别日收盘价未严格高于日线MA50",
+          "日线MA50>MA150>MA200严格多头排列不成立"
+        ]
+      }
+    },
+    {
+      "name": "任务113样本不足门在新入口不可绕过",
+      "passed": true,
+      "evidence": {
+        "formed": false,
+        "structureFormed": true,
+        "displayEligible": false,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260918",
+        "endDate": "20261030",
+        "tradingDays": 31,
+        "amplitudePct": 0.2002,
+        "belowVol20Days": 31,
+        "belowVol20RatioPct": 100.0,
+        "vol20ValidDays": 31,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": null,
+          "ma50": null,
+          "ma150": null,
+          "ma200": null,
+          "samples": 199,
+          "closeAboveMA50": false,
+          "bullish": false,
+          "bullishStatus": "insufficient_samples",
+          "pass": false,
+          "reasons": [
+            "日线样本不足200根（当前199根）"
+          ],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 168,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260918",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.0,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "rejectReasons": [
+          "日线样本不足200根（当前199根）"
+        ]
+      }
+    },
+    {
+      "name": "孕育期提前新高拒绝但保留结构证据",
+      "passed": true,
+      "evidence": {
+        "formed": false,
+        "structureFormed": true,
+        "displayEligible": false,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260918",
+        "endDate": "20261030",
+        "tradingDays": 31,
+        "amplitudePct": 5.105105,
+        "belowVol20Days": 31,
+        "belowVol20RatioPct": 100.0,
+        "vol20ValidDays": 31,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": 100.05,
+          "ma50": 100.001,
+          "ma150": 80.0003,
+          "ma200": 72.5002,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": false,
+          "status": "premature_new_high",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 209,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260918",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [
+            {
+              "date": "20260921",
+              "high": 105.0,
+              "close": 100.0,
+              "referenceHigh": 100.1,
+              "finalBreakout": false
+            }
+          ],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.05,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": [
+            "VCP孕育期内20260921盘中105.0先于最终突破创出新高（参考100.1000）"
+          ]
+        },
+        "rejectReasons": [
+          "VCP孕育期内20260921盘中105.0先于最终突破创出新高（参考100.1000）"
+        ]
+      }
+    },
+    {
+      "name": "最后正常突破不被误杀且枢轴不取突破日自身高点",
+      "passed": true,
+      "evidence": {
+        "formed": true,
+        "structureFormed": true,
+        "displayEligible": true,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260918",
+        "endDate": "20261030",
+        "tradingDays": 31,
+        "amplitudePct": 1.301301,
+        "belowVol20Days": 31,
+        "belowVol20RatioPct": 100.0,
+        "vol20ValidDays": 31,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": 101.0,
+          "ma50": 100.02,
+          "ma150": 80.0067,
+          "ma200": 72.505,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 209,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260918",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": {
+            "date": "20261030",
+            "high": 101.2,
+            "close": 101.0,
+            "referenceHigh": 100.1,
+            "finalBreakout": true
+          },
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 1.0,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "rejectReasons": []
+      }
+    },
+    {
+      "name": "新入口不要求三次收缩规律摆动或额外质量门",
+      "passed": true,
+      "evidence": {
+        "formed": true,
+        "structureFormed": true,
+        "displayEligible": true,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260918",
+        "endDate": "20261030",
+        "tradingDays": 31,
+        "amplitudePct": 0.2002,
+        "belowVol20Days": 31,
+        "belowVol20RatioPct": 100.0,
+        "vol20ValidDays": 31,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": 100.05,
+          "ma50": 100.001,
+          "ma150": 80.0003,
+          "ma200": 72.5002,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 209,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260918",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.05,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "rejectReasons": []
+      }
+    },
+    {
+      "name": "PIT无未来函数且附加未来数据不改历史候选",
+      "passed": true,
+      "evidence": {
+        "formed": true,
+        "structureFormed": true,
+        "displayEligible": true,
+        "entryId": "low_vol_tight",
+        "structurePath": "low_vol_tight",
+        "startDate": "20260918",
+        "endDate": "20261030",
+        "tradingDays": 31,
+        "amplitudePct": 0.2002,
+        "belowVol20Days": 31,
+        "belowVol20RatioPct": 100.0,
+        "vol20ValidDays": 31,
+        "vol20InsufficientDays": 0,
+        "dailyTrend": {
+          "close": 100.05,
+          "ma50": 100.001,
+          "ma150": 80.0003,
+          "ma200": 72.5002,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "gestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 209,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260918",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.05,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "rejectReasons": []
+      }
+    },
+    {
+      "name": "新入口历史事件登记及首个突破字段完整",
+      "passed": true,
+      "evidence": {
+        "episodeId": "TEST115.SH|20260918|20261030|20261102",
+        "code": "TEST115.SH",
+        "name": "任务115样本",
+        "patternType": "VCP收缩型",
+        "structurePath": "low_vol_tight",
+        "gestationStart": "20260918",
+        "gestationEnd": "20261030",
+        "vcpEntryId": "low_vol_tight",
+        "vcpEntryLabel": "低量窄幅独立VCP",
+        "vcpStructure": {
+          "entryId": "low_vol_tight",
+          "entryLabel": "低量窄幅独立VCP",
+          "pass": true,
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "tradingDays": 31,
+          "minTradingDays": 31,
+          "durationOperator": ">30",
+          "amplitudePct": 0.2002,
+          "amplitudeLimitPct": 8.0,
+          "amplitudeOperator": "<",
+          "amplitudeBasis": "(interval_max_high-interval_min_low)/interval_min_low*100",
+          "intervalHigh": 100.1,
+          "intervalLow": 99.9,
+          "belowVol20Days": 31,
+          "belowVol20RatioPct": 100.0,
+          "belowVol20ThresholdPct": 90.0,
+          "belowVol20Operator": ">",
+          "vol20Window": 20,
+          "vol20MinSamples": 20,
+          "vol20IncludesCurrentDay": true,
+          "vol20ValidDays": 31,
+          "vol20InsufficientDays": 0,
+          "insufficientNotCountedAsBelow": true,
+          "pitOnly": true,
+          "traditionalContractionsRequired": false,
+          "regularSwingRequired": false,
+          "pivotBasis": "interval_high_before_final_day",
+          "volumeChecks": [
+            {
+              "date": "20260918",
+              "volume": 89550.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 90025.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260921",
+              "volume": 89500.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89975.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260922",
+              "volume": 89450.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89925.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260923",
+              "volume": 89400.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89875.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260924",
+              "volume": 89350.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89825.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260925",
+              "volume": 89300.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89775.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260928",
+              "volume": 89250.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89725.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260929",
+              "volume": 89200.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89675.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260930",
+              "volume": 89150.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89625.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261001",
+              "volume": 89100.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89575.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261002",
+              "volume": 89050.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89525.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261005",
+              "volume": 89000.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89475.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261006",
+              "volume": 88950.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89425.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261007",
+              "volume": 88900.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89375.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261008",
+              "volume": 88850.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89325.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261009",
+              "volume": 88800.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89275.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261012",
+              "volume": 88750.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89225.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261013",
+              "volume": 88700.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89175.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261014",
+              "volume": 88650.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89125.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261015",
+              "volume": 88600.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89075.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261016",
+              "volume": 88550.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89025.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261019",
+              "volume": 88500.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88975.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261020",
+              "volume": 88450.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88925.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261021",
+              "volume": 88400.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88875.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261022",
+              "volume": 88350.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88825.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261023",
+              "volume": 88300.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88775.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261026",
+              "volume": 88250.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88725.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261027",
+              "volume": 88200.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88675.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261028",
+              "volume": 88150.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88625.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261029",
+              "volume": 88100.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88575.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261030",
+              "volume": 88050.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88525.0,
+              "belowVol20": true
+            }
+          ],
+          "rejectReasons": []
+        },
+        "pivot": 100.1,
+        "breakoutPoint": 100.1,
+        "referenceHigh": 100.1,
+        "referenceDate": "20260918",
+        "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+        "referenceSamples": 209,
+        "breakoutDate": "20261102",
+        "breakoutHigh": 100.2,
+        "breakoutClose": 100.15,
+        "breakoutVolume": 99999999.0,
+        "breakoutDefinition": "孕育结束后首个盘中最高价>参考高点且收盘价>枢轴的交易日",
+        "exitAfterTradingDays": 10,
+        "originFormalAdmission": true,
+        "originQualificationNote": "正式入选时登记",
+        "invalidation": 99.9,
+        "sidewaysLabel": "横盘优选",
+        "sidewaysScore": 100,
+        "dailyTrend": {
+          "close": 100.05,
+          "ma50": 100.001,
+          "ma150": 80.0003,
+          "ma200": 72.5002,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 209,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260918",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.05,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "originPatternEvidence": null
+      }
+    },
+    {
+      "name": "突破后age9保留且第10个交易日退出",
+      "passed": true,
+      "evidence": {
+        "known": true,
+        "active": false,
+        "expired": true,
+        "breakoutAge": 10,
+        "remainingDays": 0,
+        "exitDate": "20261116",
+        "maxTradingDays": 10
+      }
+    },
+    {
+      "name": "首次不冒充历史且再次入选显示入口及完整历史证据",
+      "passed": true,
+      "evidence": {
+        "code": "TEST115.SH",
+        "patternEpisode": null,
+        "buyPoint": {},
+        "patternHistory": [
+          {
+            "episodeId": "TEST115.SH|20260918|20261030|20261102",
+            "code": "TEST115.SH",
+            "name": "任务115样本",
+            "patternType": "VCP收缩型",
+            "structurePath": "low_vol_tight",
+            "gestationStart": "20260918",
+            "gestationEnd": "20261030",
+            "vcpEntryId": "low_vol_tight",
+            "vcpEntryLabel": "低量窄幅独立VCP",
+            "vcpStructure": {
+              "entryId": "low_vol_tight",
+              "entryLabel": "低量窄幅独立VCP",
+              "pass": true,
+              "startDate": "20260918",
+              "endDate": "20261030",
+              "tradingDays": 31,
+              "minTradingDays": 31,
+              "durationOperator": ">30",
+              "amplitudePct": 0.2002,
+              "amplitudeLimitPct": 8.0,
+              "amplitudeOperator": "<",
+              "amplitudeBasis": "(interval_max_high-interval_min_low)/interval_min_low*100",
+              "intervalHigh": 100.1,
+              "intervalLow": 99.9,
+              "belowVol20Days": 31,
+              "belowVol20RatioPct": 100.0,
+              "belowVol20ThresholdPct": 90.0,
+              "belowVol20Operator": ">",
+              "vol20Window": 20,
+              "vol20MinSamples": 20,
+              "vol20IncludesCurrentDay": true,
+              "vol20ValidDays": 31,
+              "vol20InsufficientDays": 0,
+              "insufficientNotCountedAsBelow": true,
+              "pitOnly": true,
+              "traditionalContractionsRequired": false,
+              "regularSwingRequired": false,
+              "pivotBasis": "interval_high_before_final_day",
+              "volumeChecks": [
+                {
+                  "date": "20260918",
+                  "volume": 89550.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 90025.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260921",
+                  "volume": 89500.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89975.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260922",
+                  "volume": 89450.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89925.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260923",
+                  "volume": 89400.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89875.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260924",
+                  "volume": 89350.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89825.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260925",
+                  "volume": 89300.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89775.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260928",
+                  "volume": 89250.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89725.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260929",
+                  "volume": 89200.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89675.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260930",
+                  "volume": 89150.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89625.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261001",
+                  "volume": 89100.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89575.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261002",
+                  "volume": 89050.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89525.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261005",
+                  "volume": 89000.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89475.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261006",
+                  "volume": 88950.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89425.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261007",
+                  "volume": 88900.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89375.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261008",
+                  "volume": 88850.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89325.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261009",
+                  "volume": 88800.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89275.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261012",
+                  "volume": 88750.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89225.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261013",
+                  "volume": 88700.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89175.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261014",
+                  "volume": 88650.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89125.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261015",
+                  "volume": 88600.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89075.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261016",
+                  "volume": 88550.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89025.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261019",
+                  "volume": 88500.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88975.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261020",
+                  "volume": 88450.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88925.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261021",
+                  "volume": 88400.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88875.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261022",
+                  "volume": 88350.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88825.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261023",
+                  "volume": 88300.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88775.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261026",
+                  "volume": 88250.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88725.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261027",
+                  "volume": 88200.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88675.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261028",
+                  "volume": 88150.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88625.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261029",
+                  "volume": 88100.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88575.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261030",
+                  "volume": 88050.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88525.0,
+                  "belowVol20": true
+                }
+              ],
+              "rejectReasons": []
+            },
+            "pivot": 100.1,
+            "breakoutPoint": 100.1,
+            "referenceHigh": 100.1,
+            "referenceDate": "20260918",
+            "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+            "referenceSamples": 209,
+            "breakoutDate": "20261102",
+            "breakoutHigh": 100.2,
+            "breakoutClose": 100.15,
+            "breakoutVolume": 99999999.0,
+            "breakoutDefinition": "孕育结束后首个盘中最高价>参考高点且收盘价>枢轴的交易日",
+            "exitAfterTradingDays": 10,
+            "originFormalAdmission": true,
+            "originQualificationNote": "正式入选时登记",
+            "invalidation": 99.9,
+            "sidewaysLabel": "横盘优选",
+            "sidewaysScore": 100,
+            "dailyTrend": {
+              "close": 100.05,
+              "ma50": 100.001,
+              "ma150": 80.0003,
+              "ma200": 72.5002,
+              "samples": 240,
+              "closeAboveMA50": true,
+              "bullish": true,
+              "bullishStatus": "strict_bullish",
+              "pass": true,
+              "reasons": [],
+              "asOf": "20261030",
+              "source": "daily"
+            },
+            "vcpGestation": {
+              "pass": true,
+              "status": "pass",
+              "startDate": "20260918",
+              "endDate": "20261030",
+              "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+              "referenceDays": 250,
+              "referenceSamples": 209,
+              "referenceHigh": 100.1,
+              "referenceDate": "20260918",
+              "anchorHigh": 100.1,
+              "prematureNewHighs": [],
+              "finalBreakout": null,
+              "nearHighAllowed": true,
+              "sidewaysPreferred": true,
+              "sidewaysPreferenceOnly": true,
+              "sidewaysDriftPct": 0.05,
+              "sidewaysScore": 100,
+              "sidewaysLabel": "横盘优选",
+              "rejectReasons": []
+            },
+            "originPatternEvidence": null
+          }
+        ],
+        "patternHistoryCoverage": {
+          "kind": "runtime_plus_verified_seed",
+          "fullMarketComplete": false,
+          "note": "每日正式入选孕育记录+首批可重放验证种子；不是全市场全历史归档，未覆盖区间不伪造历史。"
+        }
+      }
+    },
+    {
+      "name": "共振精选储备漏斗共用新入口证据字段",
+      "passed": true,
+      "evidence": {
+        "code": "TEST115.SH",
+        "name": "任务115样本",
+        "pattern": "VCP收缩型",
+        "stage": null,
+        "sector": "电力",
+        "sectorFit": "板块未共振",
+        "pivot": 100.1,
+        "distPct": 0.05,
+        "invalidation": null,
+        "cupStart": null,
+        "cupEnd": null,
+        "handleStart": null,
+        "handleEnd": null,
+        "doubleBottom": null,
+        "signalDate": null,
+        "signalType": null,
+        "signalLabel": null,
+        "signalClose": null,
+        "signalHigh": null,
+        "signalVolX": null,
+        "initialStop": null,
+        "firstSignal": null,
+        "breakoutAge": null,
+        "currentDist": null,
+        "currentValid": null,
+        "breakoutDate": null,
+        "breakoutRemainingDays": null,
+        "breakoutExitDate": null,
+        "track": "reserve",
+        "smartMoneyPosDays": 0,
+        "inPool": true,
+        "reson": false,
+        "entryTier": "qualified",
+        "defects": [],
+        "reserveReasons": [
+          "板块未共振",
+          "资金未确认（0/10天）"
+        ],
+        "histPct": null,
+        "distHigh250": null,
+        "patternEvidence": null,
+        "patternNote": null,
+        "patternEpisode": null,
+        "patternHistory": [
+          {
+            "episodeId": "TEST115.SH|20260918|20261030|20261102",
+            "code": "TEST115.SH",
+            "name": "任务115样本",
+            "patternType": "VCP收缩型",
+            "structurePath": "low_vol_tight",
+            "gestationStart": "20260918",
+            "gestationEnd": "20261030",
+            "vcpEntryId": "low_vol_tight",
+            "vcpEntryLabel": "低量窄幅独立VCP",
+            "vcpStructure": {
+              "entryId": "low_vol_tight",
+              "entryLabel": "低量窄幅独立VCP",
+              "pass": true,
+              "startDate": "20260918",
+              "endDate": "20261030",
+              "tradingDays": 31,
+              "minTradingDays": 31,
+              "durationOperator": ">30",
+              "amplitudePct": 0.2002,
+              "amplitudeLimitPct": 8.0,
+              "amplitudeOperator": "<",
+              "amplitudeBasis": "(interval_max_high-interval_min_low)/interval_min_low*100",
+              "intervalHigh": 100.1,
+              "intervalLow": 99.9,
+              "belowVol20Days": 31,
+              "belowVol20RatioPct": 100.0,
+              "belowVol20ThresholdPct": 90.0,
+              "belowVol20Operator": ">",
+              "vol20Window": 20,
+              "vol20MinSamples": 20,
+              "vol20IncludesCurrentDay": true,
+              "vol20ValidDays": 31,
+              "vol20InsufficientDays": 0,
+              "insufficientNotCountedAsBelow": true,
+              "pitOnly": true,
+              "traditionalContractionsRequired": false,
+              "regularSwingRequired": false,
+              "pivotBasis": "interval_high_before_final_day",
+              "volumeChecks": [
+                {
+                  "date": "20260918",
+                  "volume": 89550.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 90025.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260921",
+                  "volume": 89500.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89975.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260922",
+                  "volume": 89450.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89925.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260923",
+                  "volume": 89400.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89875.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260924",
+                  "volume": 89350.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89825.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260925",
+                  "volume": 89300.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89775.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260928",
+                  "volume": 89250.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89725.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260929",
+                  "volume": 89200.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89675.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20260930",
+                  "volume": 89150.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89625.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261001",
+                  "volume": 89100.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89575.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261002",
+                  "volume": 89050.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89525.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261005",
+                  "volume": 89000.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89475.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261006",
+                  "volume": 88950.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89425.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261007",
+                  "volume": 88900.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89375.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261008",
+                  "volume": 88850.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89325.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261009",
+                  "volume": 88800.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89275.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261012",
+                  "volume": 88750.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89225.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261013",
+                  "volume": 88700.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89175.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261014",
+                  "volume": 88650.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89125.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261015",
+                  "volume": 88600.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89075.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261016",
+                  "volume": 88550.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 89025.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261019",
+                  "volume": 88500.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88975.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261020",
+                  "volume": 88450.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88925.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261021",
+                  "volume": 88400.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88875.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261022",
+                  "volume": 88350.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88825.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261023",
+                  "volume": 88300.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88775.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261026",
+                  "volume": 88250.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88725.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261027",
+                  "volume": 88200.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88675.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261028",
+                  "volume": 88150.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88625.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261029",
+                  "volume": 88100.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88575.0,
+                  "belowVol20": true
+                },
+                {
+                  "date": "20261030",
+                  "volume": 88050.0,
+                  "samples": 20,
+                  "sufficient": true,
+                  "ma20": 88525.0,
+                  "belowVol20": true
+                }
+              ],
+              "rejectReasons": []
+            },
+            "pivot": 100.1,
+            "breakoutPoint": 100.1,
+            "referenceHigh": 100.1,
+            "referenceDate": "20260918",
+            "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+            "referenceSamples": 209,
+            "breakoutDate": "20261102",
+            "breakoutHigh": 100.2,
+            "breakoutClose": 100.15,
+            "breakoutVolume": 99999999.0,
+            "breakoutDefinition": "孕育结束后首个盘中最高价>参考高点且收盘价>枢轴的交易日",
+            "exitAfterTradingDays": 10,
+            "originFormalAdmission": true,
+            "originQualificationNote": "正式入选时登记",
+            "invalidation": 99.9,
+            "sidewaysLabel": "横盘优选",
+            "sidewaysScore": 100,
+            "dailyTrend": {
+              "close": 100.05,
+              "ma50": 100.001,
+              "ma150": 80.0003,
+              "ma200": 72.5002,
+              "samples": 240,
+              "closeAboveMA50": true,
+              "bullish": true,
+              "bullishStatus": "strict_bullish",
+              "pass": true,
+              "reasons": [],
+              "asOf": "20261030",
+              "source": "daily"
+            },
+            "vcpGestation": {
+              "pass": true,
+              "status": "pass",
+              "startDate": "20260918",
+              "endDate": "20261030",
+              "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+              "referenceDays": 250,
+              "referenceSamples": 209,
+              "referenceHigh": 100.1,
+              "referenceDate": "20260918",
+              "anchorHigh": 100.1,
+              "prematureNewHighs": [],
+              "finalBreakout": null,
+              "nearHighAllowed": true,
+              "sidewaysPreferred": true,
+              "sidewaysPreferenceOnly": true,
+              "sidewaysDriftPct": 0.05,
+              "sidewaysScore": 100,
+              "sidewaysLabel": "横盘优选",
+              "rejectReasons": []
+            },
+            "originPatternEvidence": null
+          }
+        ],
+        "patternHistoryCoverage": {
+          "kind": "runtime_plus_verified_seed",
+          "fullMarketComplete": false,
+          "note": "每日正式入选孕育记录+首批可重放验证种子；不是全市场全历史归档，未覆盖区间不伪造历史。"
+        },
+        "vcpEntryId": "low_vol_tight",
+        "vcpEntryLabel": "低量窄幅独立VCP",
+        "vcpStructure": {
+          "entryId": "low_vol_tight",
+          "entryLabel": "低量窄幅独立VCP",
+          "pass": true,
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "tradingDays": 31,
+          "minTradingDays": 31,
+          "durationOperator": ">30",
+          "amplitudePct": 0.2002,
+          "amplitudeLimitPct": 8.0,
+          "amplitudeOperator": "<",
+          "amplitudeBasis": "(interval_max_high-interval_min_low)/interval_min_low*100",
+          "intervalHigh": 100.1,
+          "intervalLow": 99.9,
+          "belowVol20Days": 31,
+          "belowVol20RatioPct": 100.0,
+          "belowVol20ThresholdPct": 90.0,
+          "belowVol20Operator": ">",
+          "vol20Window": 20,
+          "vol20MinSamples": 20,
+          "vol20IncludesCurrentDay": true,
+          "vol20ValidDays": 31,
+          "vol20InsufficientDays": 0,
+          "insufficientNotCountedAsBelow": true,
+          "pitOnly": true,
+          "traditionalContractionsRequired": false,
+          "regularSwingRequired": false,
+          "pivotBasis": "interval_high_before_final_day",
+          "volumeChecks": [
+            {
+              "date": "20260918",
+              "volume": 89550.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 90025.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260921",
+              "volume": 89500.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89975.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260922",
+              "volume": 89450.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89925.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260923",
+              "volume": 89400.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89875.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260924",
+              "volume": 89350.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89825.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260925",
+              "volume": 89300.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89775.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260928",
+              "volume": 89250.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89725.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260929",
+              "volume": 89200.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89675.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20260930",
+              "volume": 89150.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89625.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261001",
+              "volume": 89100.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89575.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261002",
+              "volume": 89050.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89525.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261005",
+              "volume": 89000.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89475.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261006",
+              "volume": 88950.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89425.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261007",
+              "volume": 88900.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89375.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261008",
+              "volume": 88850.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89325.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261009",
+              "volume": 88800.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89275.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261012",
+              "volume": 88750.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89225.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261013",
+              "volume": 88700.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89175.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261014",
+              "volume": 88650.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89125.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261015",
+              "volume": 88600.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89075.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261016",
+              "volume": 88550.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 89025.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261019",
+              "volume": 88500.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88975.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261020",
+              "volume": 88450.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88925.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261021",
+              "volume": 88400.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88875.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261022",
+              "volume": 88350.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88825.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261023",
+              "volume": 88300.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88775.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261026",
+              "volume": 88250.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88725.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261027",
+              "volume": 88200.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88675.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261028",
+              "volume": 88150.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88625.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261029",
+              "volume": 88100.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88575.0,
+              "belowVol20": true
+            },
+            {
+              "date": "20261030",
+              "volume": 88050.0,
+              "samples": 20,
+              "sufficient": true,
+              "ma20": 88525.0,
+              "belowVol20": true
+            }
+          ],
+          "rejectReasons": []
+        },
+        "vcpDailyTrend": {
+          "close": 100.05,
+          "ma50": 100.001,
+          "ma150": 80.0003,
+          "ma200": 72.5002,
+          "samples": 240,
+          "closeAboveMA50": true,
+          "bullish": true,
+          "bullishStatus": "strict_bullish",
+          "pass": true,
+          "reasons": [],
+          "asOf": "20261030",
+          "source": "daily"
+        },
+        "dailyTrendPass": true,
+        "vcpGestation": {
+          "pass": true,
+          "status": "pass",
+          "startDate": "20260918",
+          "endDate": "20261030",
+          "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+          "referenceDays": 250,
+          "referenceSamples": 209,
+          "referenceHigh": 100.1,
+          "referenceDate": "20260918",
+          "anchorHigh": 100.1,
+          "prematureNewHighs": [],
+          "finalBreakout": null,
+          "nearHighAllowed": true,
+          "sidewaysPreferred": true,
+          "sidewaysPreferenceOnly": true,
+          "sidewaysDriftPct": 0.05,
+          "sidewaysScore": 100,
+          "sidewaysLabel": "横盘优选",
+          "rejectReasons": []
+        },
+        "gestationPass": true,
+        "historicalHighClose": null,
+        "historicalHighDate": null,
+        "distanceToHistoricalHighPct": null,
+        "historyStart": null,
+        "historyEnd": null,
+        "historyBars": null,
+        "historyMayBeTruncated": null,
+        "historyScope": null,
+        "historyExclusionReason": null,
+        "mine": false,
+        "star": false
+      }
+    },
+    {
+      "name": "strict fixed 周线杯柄平台底部原函数未改",
+      "passed": true,
+      "evidence": {
+        "changed": []
+      }
+    },
+    {
+      "name": "生产扫描保留旧入口并在其后补入独立入口",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "总览工具共振精选储备统一可见新入口完整证据",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "前端严格边界文案与缺证据旧快照门完整",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "生产两份fund_data测试前后SHA不变",
+      "passed": true,
+      "evidence": {
+        "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+        "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+      }
+    }
+  ],
+  "productionSha256": "4ec9aadca74e575bf3f8f0ac2746e36e62a5a9ab0cde5f56ae1254e211772974",
+  "historySha256": "f6c4ee76cb4afe4e4b8733f3b8f08508d4abb5b7afdae799912bca161c7254dd",
+  "qualifiedExample": {
+    "formed": true,
+    "structureFormed": true,
+    "displayEligible": true,
+    "entryId": "low_vol_tight",
+    "structurePath": "low_vol_tight",
+    "startDate": "20260918",
+    "endDate": "20261030",
+    "tradingDays": 31,
+    "amplitudePct": 0.2002,
+    "belowVol20Days": 31,
+    "belowVol20RatioPct": 100.0,
+    "vol20ValidDays": 31,
+    "vol20InsufficientDays": 0,
+    "dailyTrend": {
+      "close": 100.05,
+      "ma50": 100.001,
+      "ma150": 80.0003,
+      "ma200": 72.5002,
+      "samples": 240,
+      "closeAboveMA50": true,
+      "bullish": true,
+      "bullishStatus": "strict_bullish",
+      "pass": true,
+      "reasons": [],
+      "asOf": "20261030",
+      "source": "daily"
+    },
+    "gestation": {
+      "pass": true,
+      "status": "pass",
+      "startDate": "20260918",
+      "endDate": "20261030",
+      "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+      "referenceDays": 250,
+      "referenceSamples": 209,
+      "referenceHigh": 100.1,
+      "referenceDate": "20260918",
+      "anchorHigh": 100.1,
+      "prematureNewHighs": [],
+      "finalBreakout": null,
+      "nearHighAllowed": true,
+      "sidewaysPreferred": true,
+      "sidewaysPreferenceOnly": true,
+      "sidewaysDriftPct": 0.05,
+      "sidewaysScore": 100,
+      "sidewaysLabel": "横盘优选",
+      "rejectReasons": []
+    },
+    "rejectReasons": []
+  },
+  "finalBreakoutExample": {
+    "formed": true,
+    "structureFormed": true,
+    "displayEligible": true,
+    "entryId": "low_vol_tight",
+    "structurePath": "low_vol_tight",
+    "startDate": "20260918",
+    "endDate": "20261030",
+    "tradingDays": 31,
+    "amplitudePct": 1.301301,
+    "belowVol20Days": 31,
+    "belowVol20RatioPct": 100.0,
+    "vol20ValidDays": 31,
+    "vol20InsufficientDays": 0,
+    "dailyTrend": {
+      "close": 101.0,
+      "ma50": 100.02,
+      "ma150": 80.0067,
+      "ma200": 72.505,
+      "samples": 240,
+      "closeAboveMA50": true,
+      "bullish": true,
+      "bullishStatus": "strict_bullish",
+      "pass": true,
+      "reasons": [],
+      "asOf": "20261030",
+      "source": "daily"
+    },
+    "gestation": {
+      "pass": true,
+      "status": "pass",
+      "startDate": "20260918",
+      "endDate": "20261030",
+      "referenceBasis": "prior_250d_highest_close_plus_anchor_high",
+      "referenceDays": 250,
+      "referenceSamples": 209,
+      "referenceHigh": 100.1,
+      "referenceDate": "20260918",
+      "anchorHigh": 100.1,
+      "prematureNewHighs": [],
+      "finalBreakout": {
+        "date": "20261030",
+        "high": 101.2,
+        "close": 101.0,
+        "referenceHigh": 100.1,
+        "finalBreakout": true
+      },
+      "nearHighAllowed": true,
+      "sidewaysPreferred": true,
+      "sidewaysPreferenceOnly": true,
+      "sidewaysDriftPct": 1.0,
+      "sidewaysScore": 100,
+      "sidewaysLabel": "横盘优选",
+      "rejectReasons": []
+    },
+    "rejectReasons": []
+  }
+}

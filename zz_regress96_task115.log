@@ -1,0 +1,140 @@
+A01 000100.SZ 20260520 rows 3758 last 20260520 pattern None valid False
+A02 000625.SZ 20230927 rows 3238 last 20230927 pattern 平台整理 valid True
+A03 000708.SZ 20250610 rows 3629 last 20250610 pattern None valid False
+A04 000725.SZ 20260417 rows 3938 last 20260417 pattern 平台整理 valid True
+A05 000977.SZ 20240923 rows 3494 last 20240923 pattern None valid False
+A06 002028.SZ 20250711 rows 3763 last 20250711 pattern 长平台整理 valid True
+A07 688012.SH 20230301 rows 876 last 20230301 pattern 长平台整理 valid True
+A08 688041.SH 20240924 rows 514 last 20240924 pattern 长平台整理 valid True
+A09 688047.SH 20240926 rows 551 last 20240926 pattern 底部整理 valid True
+A10 601000.SH 20260119 rows 3686 last 20260119 pattern 长平台整理 valid True
+A11 002155.SZ 20260109 rows 3813 last 20260109 pattern None valid False
+A12 600583.SH 20220822 rows 3056 last 20220822 pattern None valid False
+C01 601808.SH 20190816 rows 2336 last 20190816 pattern None valid False
+C02 600583.SH 20260107 rows 3874 last 20260107 pattern 长平台整理 valid False
+C03 601857.SH 20250603 rows 3736 last 20250603 pattern 杯柄型 valid True
+C04 600028.SH 20220526 rows 3005 last 20220526 pattern None valid False
+C05 600309.SH 20250820 rows 3658 last 20250820 pattern None valid False
+C06 09987.HK 20240919 rows 992 last 20240919 pattern None valid False
+C07 688617.SH 20261012 rows 1393 last 20261012 pattern 杯柄型 valid True
+C08 600312.SH 20260924 rows 2120 last 20260924 pattern 杯柄型 valid True
+C09 003816.SZ 20261008 rows 1188 last 20261008 pattern 杯柄型 valid True
+C10 600795.SH 20260902 rows 1168 last 20260902 pattern 杯柄型 valid True
+C11 600795.SH 20260819 rows 1158 last 20260819 pattern 杯柄型 valid True
+L01 688041.SH 20240909 rows 505 last 20240909 pattern 长平台整理 valid True
+L02 688041.SH 20250812 rows 717 last 20250812 pattern 长平台整理 valid True
+L03 688012.SH 20250722 rows 1456 last 20250722 pattern 长平台整理 valid True
+N01 688029.SH 20260908 rows 1172 last 20260908 pattern None valid False
+N02 000429.SZ 20260930 rows 1187 last 20260930 pattern None valid True
+N03 688271.SH 20260930 rows 997 last 20260930 pattern None valid True
+N04 601998.SH 20260930 rows 1187 last 20260930 pattern None valid True
+N05 000729.SZ 20260930 rows 1187 last 20260930 pattern None valid True
+N06 600483.SH 20260930 rows 1187 last 20260930 pattern None valid True
+N07 600642.SH 20260930 rows 1187 last 20260930 pattern None valid True
+N08 601288.SH 20260930 rows 1187 last 20260930 pattern 杯柄型 valid True
+N09 002648.SZ 20261029 rows 1203 last 20261029 pattern None valid True
+N10 600985.SH 20261029 rows 1203 last 20261029 pattern None valid True
+N11 000415.SZ 20261029 rows 1203 last 20261029 pattern None valid True
+N12 600795.SH 20261027 rows 1200 last 20261026 pattern None valid True
+{
+  "output": "zz_regress96.json",
+  "sampleCount": 38,
+  "stats": {
+    "杯柄严格样本": {
+      "total": 11,
+      "valid": 6,
+      "invalid": 5,
+      "unverified": 0
+    },
+    "形态有效但可不同标签": {
+      "total": 15,
+      "valid": 10,
+      "invalid": 5,
+      "unverified": 0
+    },
+    "明确反例": {
+      "total": 12,
+      "valid": 11,
+      "invalid": 1,
+      "unverified": 0
+    }
+  },
+  "confusion": {
+    "strictCupMisses": [
+      "C01",
+      "C02",
+      "C04",
+      "C05",
+      "C06"
+    ],
+    "strictCupMislabeledVcp": [],
+    "validFormMisses": [
+      "A01",
+      "A03",
+      "A05",
+      "A11",
+      "A12"
+    ],
+    "validFormAsVcp": [],
+    "negativeViolations": [
+      "N01"
+    ],
+    "categoryCounts": {
+      "null": 20,
+      "平台整理": 2,
+      "长平台整理": 8,
+      "底部整理": 1,
+      "杯柄型": 7
+    }
+  },
+  "missingData": [],
+  "boundaryChecks": {
+    "passed": 8,
+    "total": 8,
+    "checks": {
+      "cupBottomTwoDaysRejected": true,
+      "cupBottomThreeDaysAccepted": true,
+      "platformTolerance110Accepted": true,
+      "platformAbove110Rejected": true,
+      "platformLastMustContract": true,
+      "tailVolume135Accepted": true,
+      "tailVolumeAbove135Rejected": true,
+      "sharedTailVolumeConstant": true
+    },
+    "tailAtCapRatio": 1.35,
+    "tailAboveCapRatio": 1.353,
+    "shape2": {
+      "pass": false,
+      "bottomZoneDays": 2,
+      "bottomZonePct": 3.0,
+      "bottomZoneLimit": 9.991,
+      "bottomZoneDates": [
+        "d1",
+        "d2"
+      ],
+      "rejectReasons": [
+        "杯底3%区域仅2日，少于3日，属于尖V而非充分筑底"
+      ],
+      "structureGate": {
+        "bottomZonePct": 3.0,
+        "bottomZoneMinDays": 3
+      }
+    },
+    "shape3": {
+      "pass": true,
+      "bottomZoneDays": 3,
+      "bottomZonePct": 3.0,
+      "bottomZoneLimit": 9.991,
+      "bottomZoneDates": [
+        "d1",
+        "d2",
+        "d3"
+      ],
+      "rejectReasons": [],
+      "structureGate": {
+        "bottomZonePct": 3.0,
+        "bottomZoneMinDays": 3
+      }
+    }
+  }
+}

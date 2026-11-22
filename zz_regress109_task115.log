@@ -1,0 +1,93 @@
+{
+  "task": 109,
+  "checksPassed": 21,
+  "checksTotal": 21,
+  "failed": [],
+  "checks": [
+    {
+      "name": "oversold-value-directions:目标tab为sectors",
+      "passed": true
+    },
+    {
+      "name": "oversold-value-directions:不再误跳tools",
+      "passed": true
+    },
+    {
+      "name": "oversold-value-directions:原生键盘按钮",
+      "passed": true
+    },
+    {
+      "name": "oversold-value-directions:目标id全局唯一",
+      "passed": true
+    },
+    {
+      "name": "oversold-value-directions:目标有滚动边距",
+      "passed": true
+    },
+    {
+      "name": "oversold-value-directions:按钮文案保留",
+      "passed": true
+    },
+    {
+      "name": "rsi6-dividend-top20:目标tab为sectors",
+      "passed": true
+    },
+    {
+      "name": "rsi6-dividend-top20:不再误跳tools",
+      "passed": true
+    },
+    {
+      "name": "rsi6-dividend-top20:原生键盘按钮",
+      "passed": true
+    },
+    {
+      "name": "rsi6-dividend-top20:目标id全局唯一",
+      "passed": true
+    },
+    {
+      "name": "rsi6-dividend-top20:目标有滚动边距",
+      "passed": true
+    },
+    {
+      "name": "rsi6-dividend-top20:按钮文案保留",
+      "passed": true
+    },
+    {
+      "name": "板块详细组件实际承接目标",
+      "passed": true
+    },
+    {
+      "name": "估值卡与按钮使用同一显示条件",
+      "passed": true
+    },
+    {
+      "name": "Top20卡与按钮使用同一显示条件",
+      "passed": true
+    },
+    {
+      "name": "切换tab后使用渲染感知滚动",
+      "passed": true
+    },
+    {
+      "name": "相关工具返回链路共用可靠滚动",
+      "passed": true
+    },
+    {
+      "name": "无固定150ms竞态",
+      "passed": true
+    },
+    {
+      "name": "等待DOM且验证可见",
+      "passed": true
+    },
+    {
+      "name": "支持prefers-reduced-motion",
+      "passed": true
+    },
+    {
+      "name": "可执行DOM延迟挂载/可见/滚动测试",
+      "passed": true
+    }
+  ],
+  "domTestOutput": "navigation DOM tests: 6/6 passed"
+}

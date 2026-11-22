@@ -36,6 +36,47 @@ export interface PatternEvidence {
 
 const FORMAL_PATTERNS = new Set(['平台整理', '长平台整理', '底部整理']);
 
+export interface VcpLowVolTightEvidence {
+  entryId: 'low_vol_tight';
+  entryLabel: '低量窄幅独立VCP';
+  pass: boolean;
+  startDate: string;
+  endDate: string;
+  tradingDays: number;
+  minTradingDays: 31;
+  durationOperator: '>30';
+  amplitudePct: number | null;
+  amplitudeLimitPct: 8;
+  amplitudeOperator: '<';
+  amplitudeBasis: '(interval_max_high-interval_min_low)/interval_min_low*100';
+  intervalHigh: number | null;
+  intervalLow: number | null;
+  belowVol20Days: number;
+  belowVol20RatioPct: number;
+  belowVol20ThresholdPct: 90;
+  belowVol20Operator: '>';
+  vol20Window: 20;
+  vol20MinSamples: 20;
+  vol20IncludesCurrentDay: true;
+  vol20ValidDays: number;
+  vol20InsufficientDays: number;
+  insufficientNotCountedAsBelow: true;
+  pitOnly: true;
+  traditionalContractionsRequired: false;
+  regularSwingRequired: false;
+  pivotBasis: 'interval_high_before_final_day';
+  volumeChecks?: Array<{
+    date: string; volume: number; samples: number; sufficient: boolean;
+    ma20: number | null; belowVol20: boolean;
+  }>;
+  rejectReasons: string[];
+}
+
+export function vcpLowVolTightText(evidence?: VcpLowVolTightEvidence | null) {
+  if (!evidence) return '低量窄幅独立VCP证据缺失';
+  return `${evidence.entryLabel}（low_vol_tight）：区间${evidence.startDate}～${evidence.endDate}；持续${evidence.tradingDays}个交易日（>30，至少31日）；区间高${evidence.intervalHigh ?? '—'}/低${evidence.intervalLow ?? '—'}，振幅${evidence.amplitudePct ?? '—'}%<8%（沿用(区间最高价-区间最低价)/区间最低价，8.00%不通过）；低于当日PIT VOL20共${evidence.belowVol20Days}/${evidence.tradingDays}日，占${evidence.belowVol20RatioPct}%>90%（恰好90%不通过）；VOL20有效${evidence.vol20ValidDays}日/样本不足${evidence.vol20InsufficientDays}日，不足20日样本不得当作缩量，等于VOL20也不算低于；无需传统三次收缩或规律摆动。任务113日线严格多头门与任务114孕育期新高门照常复用，接近新高允许，最后正常突破不被误杀`;
+}
+
 export interface VcpDailyTrendEvidence {
   close: number | null;
   ma50: number | null;
@@ -78,6 +119,9 @@ export interface PatternEpisode {
   name: string;
   patternType: string;
   structurePath?: string | null;
+  vcpEntryId?: 'low_vol_tight' | null;
+  vcpEntryLabel?: '低量窄幅独立VCP' | null;
+  vcpStructure?: VcpLowVolTightEvidence | null;
   gestationStart: string;
   gestationEnd: string;
   pivot: number;
@@ -138,10 +182,14 @@ export function formalPatternDisplayable(item: {
   dailyTrendPass?: boolean | null;
   vcpGestation?: VcpGestationEvidence | null;
   gestationPass?: boolean | null;
+  vcpEntryId?: 'low_vol_tight' | null;
+  vcpStructure?: VcpLowVolTightEvidence | null;
 }) {
   if (item.pattern === 'VCP收缩型') {
     const dailyPassed = item.vcpDailyTrend?.pass === true && item.dailyTrendPass === true;
-    return dailyPassed && item.vcpGestation?.pass === true && item.gestationPass === true;
+    const independentPassed = item.vcpEntryId !== 'low_vol_tight' || item.vcpStructure?.pass === true;
+    return dailyPassed && independentPassed
+      && item.vcpGestation?.pass === true && item.gestationPass === true;
   }
   if (!item.pattern || !FORMAL_PATTERNS.has(item.pattern)) return true;
   if (!item.patternEvidence || item.patternEvidence.displayEligible !== true) return false;

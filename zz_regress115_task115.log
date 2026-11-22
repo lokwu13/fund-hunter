@@ -1,0 +1,19 @@
+  funnel: 窗口半开 → 宽基：无形态 → 板块：0个入选 → 个股：1只成型 → 排雷：0只
+  funnel 生命周期分布: {}
+  funnel 板块形态: 达标0个/0个有数据；第2步入选0，形态卡掉0（[]）；第3步 共振0/精选0/储备1/剔除0
+{
+  "task": 115,
+  "allPassed": true,
+  "checksPassed": 23,
+  "checksTotal": 23,
+  "failed": [],
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "pitOnly": true,
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "entryId": "low_vol_tight",
+  "oldFunctionsChanged": []
+}

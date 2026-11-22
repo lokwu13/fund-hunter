@@ -1,0 +1,35 @@
+{
+  "checksPassed": 28,
+  "checksTotal": 28,
+  "failed": [],
+  "realCupEvidence": [
+    {
+      "id": "C07",
+      "asOf": "20261012",
+      "historyEnd": "20261009",
+      "eligible": true,
+      "reason": null
+    },
+    {
+      "id": "C08",
+      "asOf": "20260924",
+      "historyEnd": "20260923",
+      "eligible": true,
+      "reason": null
+    },
+    {
+      "id": "C09",
+      "asOf": "20261008",
+      "historyEnd": "20260930",
+      "eligible": true,
+      "reason": null
+    },
+    {
+      "id": "C11",
+      "asOf": "20260819",
+      "historyEnd": "20260818",
+      "eligible": true,
+      "reason": null
+    }
+  ]
+}
