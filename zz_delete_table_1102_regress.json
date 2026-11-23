@@ -1,0 +1,185 @@
+{
+  "task": "delete-table-1102",
+  "generatedAt": "2026-11-23T11:09:52+08:00",
+  "allPassed": true,
+  "checksPassed": 29,
+  "checksTotal": 29,
+  "failed": [],
+  "checks": [
+    {
+      "name": "仅删除目标卡片、divergenceData、maxFlow 与 AlertTriangle，其他面板逐字保持",
+      "passed": true,
+      "evidence": {
+        "baselineChars": 34573,
+        "currentChars": 30137,
+        "removedChars": 4436
+      }
+    },
+    {
+      "name": "活动前端目标标记已删除：内外资分歧 — 个股双向流向对比",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "活动前端目标标记已删除：个股双向流向对比",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "活动前端目标标记已删除：同一标的上：南向资金买入 vs 国际中介卖出 · 单位：亿港元",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "活动前端目标标记已删除：左右两端长度代表金额大小 · 中间竖线为分界 · 两侧同时存在=激烈分歧",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "目标专属静态个股数组与比例计算全部移除",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "目标专属双向条样式与图标无残留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "独立内外资分歧 TOP10 表格保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "独立如何理解内外资分歧说明卡保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "CCASS 外资托管模块及锚点保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "外资机构增减仓模块及锚点保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "公告列及申报书外链保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "南下资金独立持股集中度表保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "北向资金独立净流入 TOP10 保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "外资机构买卖及详细表保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "此前删除的北向/南下本周摘要卡未恢复",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "共享 northbound/southbound 前端类型保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "本地生产 JSON 的共享 northbound/southbound 字段均保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "App 与实时 main 预检基线逐字节一致",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "共享数据 Hook 与实时 main 预检基线逐字节一致",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "后端取数脚本与实时 main 基线逐字节一致",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "本地生产 JSON 与预检逐字节一致",
+      "passed": true,
+      "evidence": {
+        "public/fund_data.json": {
+          "bytes": 594886,
+          "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+        },
+        "src/data/fund_data.json": {
+          "bytes": 594886,
+          "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+        }
+      }
+    },
+    {
+      "name": "实时 main 与线上生产 JSON 预检一致",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "移动静态规则：桌面看板 viewport 保留且本任务未改入口 HTML",
+      "passed": true,
+      "evidence": {
+        "existingZoomPolicyUnchanged": true
+      }
+    },
+    {
+      "name": "移动静态规则：当前面板无大于375px的固定元素宽度",
+      "passed": true,
+      "evidence": {
+        "oversized": []
+      }
+    },
+    {
+      "name": "移动静态规则：既有宽表最小宽度均由横向滚动容器承接",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "交互锚点：无空占位 href，所有静态页内锚点均有目标",
+      "passed": true,
+      "evidence": {
+        "hrefs": [
+          "eci-quadrant"
+        ]
+      }
+    },
+    {
+      "name": "交互锚点：CCASS/DI 目标全局唯一且未受删除影响",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "目标卡原本无独立锚点，本次未删除其他锚点",
+      "passed": true,
+      "evidence": null
+    }
+  ],
+  "panelSha256": "f98ccfc6f1c2368f03b7b9d2b626ed00e2402151347974f39187d1b3238b8aa4",
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "developmentServerStarted": false,
+  "browserConsoleVerified": false
+}

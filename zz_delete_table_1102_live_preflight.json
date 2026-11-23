@@ -1,0 +1,54 @@
+{
+  "task": "delete-table-1102",
+  "head": "40ca5a09dd9a912010303261f297585918da7006",
+  "headTree": "1568ef2408e6cf18165f7f38ebc32f4fe3e940b2",
+  "headMessage": "删除外资栏北向与南下本周摘要双卡",
+  "panelBaselineMatched": true,
+  "panelLineEndingOnlyDifference": false,
+  "remotePanelSha256": "c08379e88d3d9d71839eb8936225b4ce2baa0809d68b9e5b0ae4704be861930f",
+  "remotePanelBlob": "85bb560af9744beca9712dac7d0dd3409f67d01a",
+  "backendBaselineMatched": true,
+  "remoteBackendSha256": "ba9042b457cfe35562c4eb15ff739277e4fa4c38fa6f12d08ef16cd23bcb9116",
+  "remoteBackendBlob": "10f6feaadc50da260e62961dd1f03d374bac7141",
+  "protectedFrontend": {
+    "src/App.tsx": {
+      "remoteSha256": "80d5c0aa85cd6bac1ea4792ab0f84e9173e6b80d0678f03fc8401d172b74908c",
+      "remoteBlob": "a34fb235e1e03786d40a17a6611532d779d9be8e",
+      "localSha256": "80d5c0aa85cd6bac1ea4792ab0f84e9173e6b80d0678f03fc8401d172b74908c",
+      "matched": true
+    },
+    "src/hooks/useFundData.ts": {
+      "remoteSha256": "ad3342bc401f015f1df2e51de38815c94f88cc6a1a3b8b9a58564e879e44cfa3",
+      "remoteBlob": "357da684a68fc841a9b991bd9ed160eec6aca587",
+      "localSha256": "ad3342bc401f015f1df2e51de38815c94f88cc6a1a3b8b9a58564e879e44cfa3",
+      "matched": true
+    }
+  },
+  "fundData": {
+    "public/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "onlineFundDataSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+  "onlineEqualsRemoteMain": true,
+  "targetMarkers": [
+    "内外资分歧 — 个股双向流向对比",
+    "个股双向流向对比",
+    "同一标的上：南向资金买入 vs 国际中介卖出 · 单位：亿港元",
+    "左右两端长度代表金额大小 · 中间竖线为分界 · 两侧同时存在=激烈分歧"
+  ],
+  "manualDispatch": false,
+  "workflowModified": false,
+  "scheduleModified": false
+}

@@ -1,0 +1,71 @@
+{
+  "task": "delete-table-1102",
+  "generatedAt": "2026-11-23T11:19:04+08:00",
+  "checks": {
+    "targetedRegression29Passed": true,
+    "adjacentNavigation22AndDom6Passed": true,
+    "buildPassed": true,
+    "realEdgeVerificationPassed": true,
+    "targetMarkersAbsentInActivePanel": true,
+    "sharedAndAdjacentModulesRetained": true,
+    "backendUnchanged": true,
+    "protectedFrontendUnchanged": true,
+    "localProductionDataUnchanged": true,
+    "remoteAndOnlineProductionBaselineMatched": true,
+    "noForbiddenActions": true
+  },
+  "allPassed": true,
+  "releaseReady": true,
+  "regression": {
+    "allPassed": true,
+    "checksPassed": 29,
+    "checksTotal": 29
+  },
+  "adjacentRegression": {
+    "checksPassed": 22,
+    "checksTotal": 22,
+    "domTestOutput": "navigation DOM tests: 6/6 passed"
+  },
+  "build": {
+    "success": true,
+    "returncode": 0,
+    "modulesTransformed": 2363,
+    "warning": "Some chunks are larger than 500 kB after minification",
+    "assets": [
+      {
+        "path": "dist/assets/index-3N3quwnP-v25.js",
+        "bytes": 1398856,
+        "sha256": "a3c3432bcccad0b14b4f22074788a0f014a7dae562809c7c7c9ced50a455738b"
+      },
+      {
+        "path": "dist/assets/index-ocT7Y76F.css",
+        "bytes": 109028,
+        "sha256": "195343622b8167830bf6ed8ad8281750f787e1c5051dabccd960a58f67e3e521"
+      }
+    ]
+  },
+  "edge": {
+    "allPassed": true,
+    "selectedTabs": [
+      "外资"
+    ],
+    "browserConsoleVerified": false,
+    "limitation": "真实 Edge 渲染、外资页签点击和局部截图核验；未采集完整浏览器 Console，未做全站交互巡检。"
+  },
+  "sourceSha256": {
+    "src/sections/ForeignCapitalPanel.tsx": "f98ccfc6f1c2368f03b7b9d2b626ed00e2402151347974f39187d1b3238b8aa4",
+    "zz_delete_table_1102_regress.py": "70ec33cebdc1a49e1700b1e4ff13c02549fa19979e87f5444ea9d19f61192b2e",
+    "zz_delete_table_1102_build.py": "bb451d6fb7ecb0b4f266e957336cdbe0950d6c17f4d31f57640631cbd54cdc06",
+    "zz_delete_table_1102_edge_verify.py": "3b76506a54736806ede5cb294b58d88c902b1c7edb504e8c78cbe02c571e535a"
+  },
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "workflowModified": false,
+  "scheduleModified": false,
+  "developmentServerStarted": false,
+  "testsReexecutedByThisVerification": false
+}

@@ -1,31 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Globe, ChevronRight, Activity, TrendingUp, TrendingDown, AlertTriangle, FileText } from 'lucide-react';
+import { Globe, ChevronRight, Activity, TrendingUp, TrendingDown, FileText } from 'lucide-react';
 import { useFundData } from '@/hooks/useFundData';
 
 
 
-// 分歧数据 - 南向流入 vs 外资流出
-const divergenceData = [
-  { name: '腾讯控股', code: '00700', southInflow: 48.5, foreignOutflow: 205.6, concept: '互联网/游戏', sector: '港股科技' },
-  { name: '小米集团', code: '01810', southInflow: 35.2, foreignOutflow: 156.3, concept: '智能手机/IoT', sector: '消费电子' },
-  { name: '阿里巴巴', code: '09988', southInflow: 28.8, foreignOutflow: 86.6, concept: '电商/云计算', sector: '互联网' },
-  { name: '泡泡玛特', code: '09992', southInflow: 42.3, foreignOutflow: 25.4, concept: '潮玩/IP', sector: '新消费' },
-  { name: '快手-W', code: '01024', southInflow: 15.6, foreignOutflow: 52.8, concept: '短视频', sector: '互联网' },
-  { name: '中芯国际', code: '00981', southInflow: 38.5, foreignOutflow: 18.2, concept: '晶圆代工', sector: '半导体' },
-  { name: '康方生物', code: '09926', southInflow: 22.1, foreignOutflow: 13.3, concept: '创新药', sector: '生物科技' },
-  { name: '美团-W', code: '03690', southInflow: 116.2, foreignOutflow: 8.5, concept: '本地生活', sector: '互联网' },
-];
-
 export default function ForeignCapitalPanel() {
   const { data } = useFundData();
-
-  // 计算最大比例用于条形图
-  const maxFlow = Math.max(
-    ...divergenceData.map(d => d.foreignOutflow),
-    ...divergenceData.map(d => d.southInflow)
-  );
 
   // ── CCASS 外资托管持股月末快照（2026-09-30 用户指令：港交所月底月初公布的外资加减仓）──
   const cf = data.ccassForeign;
@@ -230,71 +212,6 @@ export default function ForeignCapitalPanel() {
           </CardContent>
         </Card>
       )}
-
-      {/* ====== 内外资分歧个股双向对比图 ====== */}
-      <Card>
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-base font-bold flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-amber-600" />
-                内外资分歧 — 个股双向流向对比
-              </CardTitle>
-              <CardDescription>同一标的上：南向资金买入 vs 国际中介卖出 · 单位：亿港元</CardDescription>
-            </div>
-            <div className="flex items-center gap-3 text-xs">
-              <span className="flex items-center gap-1"><span className="w-3 h-3 bg-emerald-400 rounded" />南向买入</span>
-              <span className="flex items-center gap-1"><span className="w-3 h-3 bg-red-400 rounded" />外资卖出</span>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {divergenceData.map((item) => {
-              const southPct = (item.southInflow / maxFlow) * 100;
-              const foreignPct = (item.foreignOutflow / maxFlow) * 100;
-              const divergenceTotal = item.southInflow + item.foreignOutflow;
-              return (
-                <div key={item.code} className="group">
-                  {/* 个股名称行 */}
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-sm text-slate-800">{item.name}</span>
-                      <span className="text-xs text-slate-400">{item.code}</span>
-                      <Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{item.concept}</Badge>
-                    </div>
-                    <span className="text-xs font-bold text-amber-700">
-                      分歧 {divergenceTotal.toFixed(1)}亿
-                    </span>
-                  </div>
-                  {/* 双向条形图 */}
-                  <div className="flex items-center gap-2 h-6">
-                    {/* 左侧：外资流出（红色，从右往左） */}
-                    <div className="flex-1 flex justify-end">
-                      <div className="flex items-center gap-1" style={{ width: `${foreignPct}%`, minWidth: '20px' }}>
-                        <span className="text-xs text-red-600 font-medium whitespace-nowrap">-{item.foreignOutflow}</span>
-                        <div className="h-3.5 bg-red-400 rounded-l-md w-full" />
-                      </div>
-                    </div>
-                    {/* 中线 */}
-                    <div className="w-px h-5 bg-slate-300 flex-shrink-0" />
-                    {/* 右侧：南向流入（绿色，从左往右） */}
-                    <div className="flex-1 flex justify-start">
-                      <div className="flex items-center gap-1" style={{ width: `${southPct}%`, minWidth: '20px' }}>
-                        <div className="h-3.5 bg-emerald-400 rounded-r-md w-full" />
-                        <span className="text-xs text-emerald-600 font-medium whitespace-nowrap">+{item.southInflow}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <p className="text-xs text-slate-400 mt-3 text-center">
-            左右两端长度代表金额大小 · 中间竖线为分界 · 两侧同时存在=激烈分歧
-          </p>
-        </CardContent>
-      </Card>
 
       {/* ====== 分歧TOP10详细表格 ====== */}
       <Card>
