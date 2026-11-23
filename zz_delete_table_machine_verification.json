@@ -1,0 +1,61 @@
+{
+  "task": "delete-table",
+  "generatedAt": "2026-11-23T10:54:19+08:00",
+  "checks": {
+    "targetedRegression24Passed": true,
+    "adjacentNavigation22AndDom6Passed": true,
+    "buildPassed": true,
+    "targetTitlesAbsentInActivePanel": true,
+    "sharedAndAdjacentModulesRetained": true,
+    "backendUnchanged": true,
+    "protectedFrontendUnchanged": true,
+    "localProductionDataUnchanged": true,
+    "remoteAndOnlineProductionBaselineMatched": true,
+    "noForbiddenActions": true
+  },
+  "allPassed": true,
+  "releaseReady": true,
+  "regression": {
+    "allPassed": true,
+    "checksPassed": 24,
+    "checksTotal": 24
+  },
+  "adjacentRegression": {
+    "checksPassed": 22,
+    "checksTotal": 22,
+    "domTestOutput": "navigation DOM tests: 6/6 passed"
+  },
+  "build": {
+    "success": true,
+    "returncode": 0,
+    "modulesTransformed": 2363,
+    "warning": "Some chunks are larger than 500 kB after minification",
+    "assets": [
+      {
+        "path": "dist/assets/index-Ck48SBPU-v25.js",
+        "bytes": 1404265,
+        "sha256": "1f673a6c04388f4b0d8d75a7e6f87276e91929046d5d9c763810bfa562b9b8fa"
+      },
+      {
+        "path": "dist/assets/index-C14BVJ2e.css",
+        "bytes": 109160,
+        "sha256": "f51768b7abfc6740818568ddbd6cffc93bdd4114ed0a9759dbbb076d2662a6a8"
+      }
+    ]
+  },
+  "sourceSha256": {
+    "src/sections/ForeignCapitalPanel.tsx": "c08379e88d3d9d71839eb8936225b4ce2baa0809d68b9e5b0ae4704be861930f",
+    "zz_delete_table_regress.py": "6de57680e510c87dcc7eda13e1522a9faf0efd7c27eabaf975a02e48697368de",
+    "zz_delete_table_build.py": "1efcbfbe4b528fc2a4c9ff163cd4343678301d1ae2ca7d795cba258c712ea7a1"
+  },
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "workflowModified": false,
+  "scheduleModified": false,
+  "developmentServerStarted": false,
+  "testsReexecutedByThisVerification": false
+}

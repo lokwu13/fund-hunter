@@ -1,0 +1,72 @@
+{
+  "task": "delete-table",
+  "command": "npm run build",
+  "startedAt": "2026-11-23T10:53:11+08:00",
+  "durationSeconds": 11.89,
+  "success": true,
+  "returncode": 0,
+  "modulesTransformed": 2363,
+  "warning": "Some chunks are larger than 500 kB after minification",
+  "log": "zz_delete_table_build.log",
+  "assets": [
+    {
+      "path": "dist/assets/index-Ck48SBPU-v25.js",
+      "bytes": 1404265,
+      "sha256": "1f673a6c04388f4b0d8d75a7e6f87276e91929046d5d9c763810bfa562b9b8fa"
+    },
+    {
+      "path": "dist/assets/index-C14BVJ2e.css",
+      "bytes": 109160,
+      "sha256": "f51768b7abfc6740818568ddbd6cffc93bdd4114ed0a9759dbbb076d2662a6a8"
+    }
+  ],
+  "retainedBundleMarkers": {
+    "外资托管持股动向（CCASS 月末快照）": true,
+    "ccass-foreign": true,
+    "外资机构增减仓（权益披露）": true,
+    "di-foreign": true,
+    "公告": true,
+    "申报书": true,
+    "南下资金（国内资金）持股集中度TOP10": true,
+    "北向资金近三个月净流入最多TOP10": true,
+    "内外资分歧最大十大标的": true,
+    "外资机构买入TOP10详细（A+H股全市场）": true
+  },
+  "removedBundleMarkersPresent": {
+    "北向成交 (本周)": false,
+    "南下资金 (本周)": false,
+    "北向成交（本周）": false,
+    "南下资金（本周）": false,
+    "官方2024-08起停披净买入，现为成交总额口径": false
+  },
+  "viewportMetaPresent": true,
+  "localFundDataBefore": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "localFundDataAfter": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "fundDataUnchanged": true,
+  "matchesRegressionDataSha": true,
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "developmentServerStarted": false
+}

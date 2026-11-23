@@ -1,0 +1,153 @@
+{
+  "task": "delete-table",
+  "generatedAt": "2026-11-23T10:52:13+08:00",
+  "allPassed": true,
+  "checksPassed": 24,
+  "checksTotal": 24,
+  "failed": [],
+  "checks": [
+    {
+      "name": "仅删除目标双卡组及其专属导入和局部变量，其他面板逐字保持",
+      "passed": true,
+      "evidence": {
+        "baselineChars": 36405,
+        "currentChars": 34573,
+        "removedChars": 1832
+      }
+    },
+    {
+      "name": "活动前端不再含目标标题：北向成交 (本周)",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "活动前端不再含目标标题：南下资金 (本周)",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "活动前端不再含目标标题：北向成交（本周）",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "活动前端不再含目标标题：南下资金（本周）",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "目标双卡容器与注释整体移除",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "目标卡专属局部变量和金额渲染移除",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "目标卡专属图标导入清理且无残留引用",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "CCASS 外资托管持股模块及锚点保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "外资机构增减仓模块及锚点保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "公告列与申报书外链保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "南下资金独立持股集中度表保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "北向资金独立净流入 TOP10 保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "内外资分歧图和独立详细表保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "外资机构买卖及详细表保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "共享 northbound/southbound 前端类型保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "两份本地生产 JSON 的共享 northbound/southbound 字段均保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "WeeklySummary 关于保留共享 northbound/southbound 数据的既有约定未破坏",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "App 与实时 main 预检基线逐字节一致",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "共享数据 Hook 与实时 main 预检基线逐字节一致",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "后端取数脚本与实时 main 基线逐字节一致",
+      "passed": true,
+      "evidence": {
+        "sha256": "ba9042b457cfe35562c4eb15ff739277e4fa4c38fa6f12d08ef16cd23bcb9116"
+      }
+    },
+    {
+      "name": "本地生产 JSON 与预检逐字节一致",
+      "passed": true,
+      "evidence": {
+        "public/fund_data.json": {
+          "bytes": 594886,
+          "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+        },
+        "src/data/fund_data.json": {
+          "bytes": 594886,
+          "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+        }
+      }
+    },
+    {
+      "name": "实时 main 与线上生产 JSON 预检一致",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "目标双卡没有独立锚点，未误删 CCASS/DI 锚点",
+      "passed": true,
+      "evidence": null
+    }
+  ],
+  "panelSha256": "c08379e88d3d9d71839eb8936225b4ce2baa0809d68b9e5b0ae4704be861930f",
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "developmentServerStarted": false
+}

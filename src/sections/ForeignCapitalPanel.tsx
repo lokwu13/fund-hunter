@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Globe, ArrowUpRight, ArrowDownRight, ChevronRight, Activity, TrendingUp, TrendingDown, AlertTriangle, FileText } from 'lucide-react';
+import { Globe, ChevronRight, Activity, TrendingUp, TrendingDown, AlertTriangle, FileText } from 'lucide-react';
 import { useFundData } from '@/hooks/useFundData';
 
 
@@ -20,8 +20,6 @@ const divergenceData = [
 
 export default function ForeignCapitalPanel() {
   const { data } = useFundData();
-  const nb = data.northbound;
-  const sb = data.southbound;
 
   // 计算最大比例用于条形图
   const maxFlow = Math.max(
@@ -51,40 +49,6 @@ export default function ForeignCapitalPanel() {
   return (
     <div className="space-y-6">
       <p className="text-[10px] text-slate-400 -mb-3">📌 本栏服务总览漏斗「第2步验证 · 北向态度」：外资流向佐证/证伪板块选择</p>
-      {/* Northbound & Southbound Summary */}
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="bg-gradient-to-br from-violet-50 to-violet-100 border-violet-200">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <ArrowUpRight className="w-5 h-5 text-violet-600" />
-              <h3 className="font-bold text-violet-800">北向成交 (本周)</h3>
-            </div>
-            <p className="text-2xl font-bold text-violet-900">{nb.week}亿</p>
-            <p className="text-sm text-violet-600">近5日成交总额</p>
-            <div className="mt-3 p-2 bg-white/60 rounded-lg">
-              <p className="text-xs text-violet-700">
-                官方2024-08起停披净买入，现为成交总额口径{nb.updateTime ? ` · 截至 ${nb.updateTime}` : ''}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <ArrowDownRight className="w-5 h-5 text-teal-600" />
-              <h3 className="font-bold text-teal-800">南下资金 (本周)</h3>
-            </div>
-            <p className="text-2xl font-bold text-teal-900">{sb.week > 0 ? '+' : ''}{sb.week}亿港元</p>
-            <p className="text-sm text-teal-600">近5日{sb.week > 0 ? '净买入' : '净卖出'}{sb.updateTime ? ` · 截至 ${sb.updateTime}` : ''}</p>
-            <div className="mt-3 flex gap-2">
-              <Badge className={sb.week < 0 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}>
-                本周: {sb.week > 0 ? '+' : ''}{sb.week}亿
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* ====== CCASS 外资托管持股月末快照（港交所 SDW，月底/月初双触发；2026-09-30 用户指令） ====== */}
       {cf && (
         <Card id="ccass-foreign" className="border-indigo-200 shadow-sm">

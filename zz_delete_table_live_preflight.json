@@ -1,0 +1,52 @@
+{
+  "task": "delete-table",
+  "head": "92947db9bc9d22dafc100c6de84949aa33f72b5e",
+  "headTree": "8b9090e3c497ea88142f62b0cd51bdd2600b2cb9",
+  "headMessage": "修复超跌估值真实A股成分与历史补样",
+  "panelBaselineMatched": true,
+  "panelLineEndingOnlyDifference": false,
+  "remotePanelSha256": "ab43be4dd7d97b2a991d0b6cc41cca51c7cdaa1341a8b1bb95fef5ea005a3c5b",
+  "remotePanelBlob": "0097173049d24679f89ab7b10c97b42a88d8782b",
+  "backendBaselineMatched": true,
+  "remoteBackendSha256": "ba9042b457cfe35562c4eb15ff739277e4fa4c38fa6f12d08ef16cd23bcb9116",
+  "remoteBackendBlob": "10f6feaadc50da260e62961dd1f03d374bac7141",
+  "protectedFrontend": {
+    "src/App.tsx": {
+      "remoteSha256": "80d5c0aa85cd6bac1ea4792ab0f84e9173e6b80d0678f03fc8401d172b74908c",
+      "remoteBlob": "a34fb235e1e03786d40a17a6611532d779d9be8e",
+      "localSha256": "80d5c0aa85cd6bac1ea4792ab0f84e9173e6b80d0678f03fc8401d172b74908c",
+      "matched": true
+    },
+    "src/hooks/useFundData.ts": {
+      "remoteSha256": "ad3342bc401f015f1df2e51de38815c94f88cc6a1a3b8b9a58564e879e44cfa3",
+      "remoteBlob": "357da684a68fc841a9b991bd9ed160eec6aca587",
+      "localSha256": "ad3342bc401f015f1df2e51de38815c94f88cc6a1a3b8b9a58564e879e44cfa3",
+      "matched": true
+    }
+  },
+  "fundData": {
+    "public/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "onlineFundDataSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+  "onlineEqualsRemoteMain": true,
+  "targetTitles": [
+    "北向成交 (本周)",
+    "南下资金 (本周)"
+  ],
+  "manualDispatch": false,
+  "workflowModified": false,
+  "scheduleModified": false
+}
