@@ -1,0 +1,54 @@
+{
+  "task": "delete-table-1124",
+  "head": "fc8330fc73f896b64023ae4e3fd096e3cbb5da5d",
+  "headTree": "c0486e97da43c336ad09993701943d9bb7870269",
+  "headMessage": "删除外资栏个股双向流向对比卡片",
+  "panelBaselineMatched": true,
+  "panelLineEndingOnlyDifference": false,
+  "remotePanelSha256": "f98ccfc6f1c2368f03b7b9d2b626ed00e2402151347974f39187d1b3238b8aa4",
+  "remotePanelBlob": "d040c855d8a723ff735b0d6042ad0edb546f118f",
+  "backendBaselineMatched": true,
+  "remoteBackendSha256": "ba9042b457cfe35562c4eb15ff739277e4fa4c38fa6f12d08ef16cd23bcb9116",
+  "remoteBackendBlob": "10f6feaadc50da260e62961dd1f03d374bac7141",
+  "protectedFrontend": {
+    "src/App.tsx": {
+      "remoteSha256": "80d5c0aa85cd6bac1ea4792ab0f84e9173e6b80d0678f03fc8401d172b74908c",
+      "remoteBlob": "a34fb235e1e03786d40a17a6611532d779d9be8e",
+      "localSha256": "80d5c0aa85cd6bac1ea4792ab0f84e9173e6b80d0678f03fc8401d172b74908c",
+      "matched": true
+    },
+    "src/hooks/useFundData.ts": {
+      "remoteSha256": "ad3342bc401f015f1df2e51de38815c94f88cc6a1a3b8b9a58564e879e44cfa3",
+      "remoteBlob": "357da684a68fc841a9b991bd9ed160eec6aca587",
+      "localSha256": "ad3342bc401f015f1df2e51de38815c94f88cc6a1a3b8b9a58564e879e44cfa3",
+      "matched": true
+    }
+  },
+  "fundData": {
+    "public/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "onlineFundDataSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+  "onlineEqualsRemoteMain": true,
+  "targetMarkers": [
+    "内外资分歧最大十大标的",
+    "南向资金净买入 vs 国际中介净卖出 · 2025年6月",
+    "分歧TOP10详细表格",
+    "data.divergence_top10?.map"
+  ],
+  "manualDispatch": false,
+  "workflowModified": false,
+  "scheduleModified": false
+}

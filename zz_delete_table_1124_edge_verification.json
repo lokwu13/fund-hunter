@@ -1,0 +1,40 @@
+{
+  "task": "delete-table-1124",
+  "generatedAt": "2026-11-23T11:30:39+08:00",
+  "browser": "Microsoft Edge headless (CDP)",
+  "automationFramework": "websocket-client / Chrome DevTools Protocol; no Playwright/Selenium/Puppeteer",
+  "localUrl": "http://127.0.0.1:56947/fund-hunter/",
+  "selectedTabs": [
+    "外资"
+  ],
+  "bodyFlags": {
+    "targetTitle": false,
+    "targetSubtitle": false,
+    "previousChart": false,
+    "tips": true,
+    "southbound": true,
+    "foreignConcentration": true,
+    "northbound": true,
+    "ccass": 1,
+    "di": 1,
+    "disclosureLinks": 80
+  },
+  "checks": {
+    "realEdgeRendered": true,
+    "foreignTabClicked": true,
+    "targetTop10Absent": true,
+    "previousChartStillAbsent": true,
+    "independentTipsRetained": true,
+    "independentNorthSouthTablesRetained": true,
+    "foreignConcentrationRetained": true,
+    "ccassAnchorRetained": true,
+    "diAnchorRetained": true,
+    "screenshotCaptured": true
+  },
+  "allPassed": true,
+  "screenshot": "zz_delete_table_1124_edge_after_delete.png",
+  "browserConsoleVerified": false,
+  "limitation": "真实 Edge 渲染、外资页签切换和局部截图核验；未采集完整浏览器 Console，未做全站交互巡检。",
+  "temporaryStaticServerStopped": true,
+  "edgeProcessStopped": true
+}

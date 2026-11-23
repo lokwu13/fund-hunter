@@ -213,54 +213,6 @@ export default function ForeignCapitalPanel() {
         </Card>
       )}
 
-      {/* ====== 分歧TOP10详细表格 ====== */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-bold flex items-center gap-2">
-            <Activity className="w-5 h-5 text-amber-600" />
-            内外资分歧最大十大标的
-          </CardTitle>
-          <CardDescription>南向资金净买入 vs 国际中介净卖出 · 2025年6月</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-amber-50">
-                <TableHead className="text-xs">排名</TableHead>
-                <TableHead className="text-xs">个股</TableHead>
-                <TableHead className="text-xs text-right">南向流入</TableHead>
-                <TableHead className="text-xs text-right">外资流出</TableHead>
-                <TableHead className="text-xs text-right">分歧金额</TableHead>
-                <TableHead className="text-xs">概念</TableHead>
-                <TableHead className="text-xs">二级板块</TableHead>
-                <TableHead className="text-xs">分歧特征</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.divergence_top10?.map((item, idx) => (
-                <TableRow key={item.code} className="hover:bg-slate-50">
-                  <TableCell className="font-bold text-sm">{idx + 1}</TableCell>
-                  <TableCell>
-                    <p className="font-semibold text-sm">{item.name}</p>
-                    <p className="text-xs text-slate-400">{item.code}</p>
-                  </TableCell>
-                  <TableCell className="text-right text-emerald-600 font-medium">{item.southInflow}</TableCell>
-                  <TableCell className="text-right text-red-600 font-medium">{item.foreignOutflow}</TableCell>
-                  <TableCell className="text-right font-bold text-amber-700">{item.netDivergence}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{item.concept}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-xs bg-slate-100 px-2 py-0.5 rounded">{item.sector}</span>
-                  </TableCell>
-                  <TableCell className="text-xs text-slate-500">{item.note}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
       {/* ====== 南下资金 vs 外资 集中度对比 ====== */}
       <div className="grid grid-cols-2 gap-4">
         {/* 南下资金（国内资金）集中度TOP10 */}
