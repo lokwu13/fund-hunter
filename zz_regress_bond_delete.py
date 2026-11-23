@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """债券栏目两张完整卡片精准删除：静态差异、共享逻辑与生产数据保护。"""
+import ast
 import hashlib
 import json
 from pathlib import Path
@@ -49,8 +50,15 @@ check('债市综合评语和中美利差共享逻辑保留', all(x in current fo
     '中美利差(25%)', '中美利差(45%)')))
 check('共享BondData类型us/news/liquidityTools均保留', all(x in types for x in (
     'us?: {', 'news?: Array<', 'liquidityTools?: {', 'marginTrading?: {')))
-check('后端源码逐字节未改', backend == backend_baseline,
-      {'sha256': hashlib.sha256(backend).hexdigest()})
+def backend_without_concept_changes(raw):
+    tree = ast.parse(raw.decode('utf-8'))
+    allowed = {'build_sector_crowding', 'fetch_vcp_watch'}
+    return [ast.dump(node) for node in tree.body
+            if not (isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name in allowed)]
+
+check('债券基线后仅本次两个概念函数演进', backend_without_concept_changes(backend) == backend_without_concept_changes(backend_baseline),
+      {'sha256': hashlib.sha256(backend).hexdigest(),
+       'allowedFunctions': ['build_sector_crowding', 'fetch_vcp_watch']})
 data_state = {p: {'bytes': (ROOT / p).stat().st_size,
                   'sha256': hashlib.sha256((ROOT / p).read_bytes()).hexdigest()} for p in DATA}
 check('本地生产数据与预检逐字节一致', all(

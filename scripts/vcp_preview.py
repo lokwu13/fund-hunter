@@ -20,6 +20,7 @@ import math
 import os
 import sys
 import time
+import urllib.request
 from datetime import datetime, timedelta
 
 import tushare as ts
@@ -185,6 +186,135 @@ CONCEPT_ALIAS = {           # fund_data 概念名 → 同花顺指数名（无�
     '卫星互联网': '卫星概念',
     '光伏': '光伏概念',
 }
+
+# 拥挤度热榜的独立样本宇宙：与页面15个展示候选分开，避免小池全员自动上榜。
+# 名称来自真实 ths_index 缓存；取数时不猜测代码，匹配不到就不纳入。
+CONCEPT_HEAT_UNIVERSE_NAMES = [
+    '东数西算(算力)', '低空经济', '跨境电商', '创新药', '半导体设备',
+    '消费电子概念', '数据中心(AIDC)', '卫星导航', '充电桩概念股', '光伏太阳能',
+    '机器人概念', '储能', 'ChatGPT概念', '信创', 'CRO概念',
+    '医疗器械概念', '白酒概念', '稀土永磁', '央企国企改革', '锂电池概念',
+    'HJT电池', '钠离子电池', '动力电池回收', 'TOPCON电池', 'BC电池',
+    '汽车电子', '华为汽车', '小米汽车', '飞行汽车(eVTOL)', '汽车热管理',
+    '第三代半导体', '半导体概念', '算力租赁', '数据安全', '数据确权',
+    '数据要素', '时空大数据', '军工信息化', '养老概念', '云游戏',
+]
+# 仅用于拥挤度：旧865代码停更后，采用含义明确的同义/邻近公开指数，保留映射审计。
+# 商业航天、固态电池、智能驾驶没有足够接近的活跃替代，不强行换概念。
+CONCEPT_HEAT_DISPLAY_ALIAS = {
+    'AI算力': '东数西算(算力)',
+    '人形机器人': '机器人概念',
+    '光伏': '光伏太阳能',
+    '消费电子': '消费电子概念',
+    '数据中心': '数据中心(AIDC)',
+    '卫星互联网': '卫星导航',
+    '充电桩': '充电桩概念股',
+}
+CONCEPT_HEAT_SOURCE = '同花顺公开指数日线 d.10jqka.com.cn/v4/line'
+CONCEPT_HEAT_SCHEMA = ['date', 'close', 'volume', 'amount']
+
+
+def concept_heat_targets(c):
+    """返回独立热榜宇宙与15个展示候选的真实代码映射；未匹配不补造。"""
+    index_names = c.get('ths_index') or {}
+    universe = []
+    for source_name in CONCEPT_HEAT_UNIVERSE_NAMES:
+        code = index_names.get(source_name)
+        if code:
+            universe.append({'name': source_name, 'code': code, 'indexName': source_name})
+    displays = []
+    for concept in c.get('concepts') or []:
+        name = concept.get('name')
+        if not name:
+            continue
+        source_name = CONCEPT_HEAT_DISPLAY_ALIAS.get(name, name)
+        code = index_names.get(source_name)
+        displays.append({'name': name, 'code': code, 'indexName': source_name if code else None})
+    return universe, displays
+
+
+def _ths_public_year_rows(code, year):
+    """读取真实THS指数日线；第6/7列分别是成交量、成交额，二者绝不回退混用。"""
+    bare_code = str(code).split('.')[0]
+    url = f'https://d.10jqka.com.cn/v4/line/bk_{bare_code}/01/{year}.js'
+    req = urllib.request.Request(url, headers={
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36',
+        'Referer': 'https://q.10jqka.com.cn/',
+        'Accept': '*/*',
+    })
+    with urllib.request.urlopen(req, timeout=30) as response:
+        text = response.read().decode('utf-8')
+    left, right = text.find('('), text.rfind(')')
+    if left < 0 or right <= left:
+        raise ValueError(f'THS {code} {year} 非JSONP响应')
+    payload = json.loads(text[left + 1:right])
+    rows = []
+    for raw in str(payload.get('data') or '').split(';'):
+        fields = raw.split(',')
+        if len(fields) < 7 or len(fields[0]) != 8:
+            continue
+        try:
+            close = float(fields[4])
+            volume = float(fields[5]) if fields[5] else None
+            amount = float(fields[6]) if fields[6] else None
+        except (TypeError, ValueError):
+            continue
+        values = (close, volume, amount)
+        if any(v is not None and (not math.isfinite(v)) for v in values) or close <= 0:
+            continue
+        if volume is not None and volume < 0:
+            volume = None
+        if amount is not None and amount <= 0:
+            amount = None
+        rows.append([fields[0], close, volume, amount])
+    return rows
+
+
+def merge_concept_heat_rows(old_rows, new_rows, max_len=700):
+    """按日覆盖真实行情；新行缺成交字段时保留旧真实值，不用0或另一种单位补位。"""
+    merged = {r[0]: list(r) for r in old_rows if isinstance(r, (list, tuple)) and len(r) >= 4}
+    for row in new_rows:
+        old = merged.get(row[0])
+        if old and row[2] is None:
+            row[2] = old[2]
+        if old and row[3] is None:
+            row[3] = old[3]
+        merged[row[0]] = row
+    return [merged[d] for d in sorted(merged)][-max_len:]
+
+
+def ensure_concept_heat_daily(c, effective):
+    """为热榜回补/增量更新真实日线；失败保留旧缓存，由下游新鲜度门拒绝。"""
+    universe, displays = concept_heat_targets(c)
+    c['concept_heat_universe'] = universe
+    c['concept_heat_display_map'] = displays
+    c['concept_heat_source'] = {'provider': CONCEPT_HEAT_SOURCE, 'schema': CONCEPT_HEAT_SCHEMA,
+                                'amountUnit': '元', 'volumeUnit': '股'}
+    daily = c.setdefault('concept_heat_daily', {})
+    targets = {x['code']: x['name'] for x in universe + displays if x.get('code')}
+    year = int(effective[:4])
+    for i, (code, name) in enumerate(sorted(targets.items()), 1):
+        old = daily.get(code) or []
+        years = [year] if len(old) >= 280 else [year - 1, year]
+        rows = []
+        succeeded = set()
+        for y in years:
+            try:
+                rows.extend(_ths_public_year_rows(code, y))
+                succeeded.add(y)
+            except Exception as exc:
+                print(f'  conceptHeat {name} {code} {y} failed: {str(exc)[:80]}')
+        if year not in succeeded:
+            try:
+                rows.extend(_ths_public_year_rows(code, 'last'))
+            except Exception as exc:
+                print(f'  conceptHeat {name} {code} last failed: {str(exc)[:80]}')
+        rows = [r for r in rows if r[0] <= effective]
+        if rows:
+            daily[code] = merge_concept_heat_rows(old, rows)
+        if i % 10 == 0 or i == len(targets):
+            print(f'  conceptHeat public daily {i}/{len(targets)}')
+    return daily
 
 
 def ensure_concepts(pro, c):

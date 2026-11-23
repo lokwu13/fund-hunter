@@ -2621,22 +2621,36 @@ def build_sector_crowding(data):
                           'amountPct': amount_pct, 'hits10': hits10, 'streak': streak,
                           'heatReady': True, 'heatReason': None, 'level': level, 'reason': reason})
 
-        # 概念：ths_daily 缓存未可靠区分成交额与成交量，因此成交热度始终缺失，绝不当0。
+        # 概念：独立缓存[date,close,volume,amount]，只读真实close与amount。
+        # 旧index_daily第三列混写amount/vol，明确禁止作为拥挤度成交样本。
+        def _concept_rows(code):
+            by_date = {}
+            for row in (cache.get('concept_heat_daily') or {}).get(code) or []:
+                if (isinstance(row, (list, tuple)) and len(row) >= 4
+                        and len(str(row[0])) == 8 and str(row[0]) <= effective
+                        and _crowding_num(row[1]) and row[1] > 0):
+                    by_date[str(row[0])] = (float(row[1]), row[2], row[3])
+            return [(d,) + by_date[d] for d in sorted(by_date)]
+
+        universe = cache.get('concept_heat_universe') or []
+        display_map = cache.get('concept_heat_display_map') or [
+            {'name': x.get('name'), 'code': x.get('code'), 'indexName': x.get('name')}
+            for x in cache.get('concepts') or [] if x.get('name') and x.get('code')
+        ]
         concept_series = {}
         concept_returns = {}
-        index_daily = cache.get('index_daily') or {}
-        for concept in cache.get('concepts') or []:
-            name, code = concept.get('name'), concept.get('code')
+        short_history = []
+        stale_universe = []
+        for target in universe:
+            name, code = target.get('name'), target.get('code')
             if not name or not code:
                 continue
-            by_date = {}
-            for row in index_daily.get(code) or []:
-                if (isinstance(row, (list, tuple)) and len(row) >= 2
-                        and len(str(row[0])) == 8 and str(row[0]) <= effective and _crowding_num(row[1])):
-                    by_date[str(row[0])] = float(row[1])
-            dates = sorted(by_date)
-            rows = [(d, by_date[d]) for d in dates]
-            concept_series[name] = rows
+            rows = _concept_rows(code)
+            if len(rows) < 21:
+                short_history.append({'name': name, 'code': code, 'days': len(rows)})
+                continue
+            if not rows or rows[-1][0] != effective:
+                stale_universe.append(name)
             rets = {}
             for i in range(1, len(rows)):
                 prev_close, close = rows[i - 1][1], rows[i][1]
@@ -2659,36 +2673,58 @@ def build_sector_crowding(data):
                 concept_boards[d] = []
         last10 = last15[-ROTATION_STAT_WINDOW:]
         insufficient10 = [d for d in last10 if sample_counts.get(d, 0) < CONCEPT_HEAT_MIN_SAMPLES]
-        latest_samples = sample_counts.get(last15[-1], 0) if last15 else 0
-        heat_ready = bool(last10) and not insufficient10
-        if not last15 or latest_samples < CONCEPT_HEAT_MIN_SAMPLES:
+        latest_is_effective = bool(last15) and last15[-1] == effective
+        latest_samples = sample_counts.get(effective, 0) if latest_is_effective else 0
+        heat_ready = (latest_is_effective and len(last10) == ROTATION_STAT_WINDOW
+                      and not insufficient10)
+        if not latest_is_effective or latest_samples < CONCEPT_HEAT_MIN_SAMPLES:
             heat_reason = f'最新日可用概念{latest_samples}个，低于{CONCEPT_HEAT_MIN_SAMPLES}个有效样本门'
+        elif len(last10) < ROTATION_STAT_WINDOW:
+            heat_reason = f'连续热榜窗口仅{len(last10)}日，不足{ROTATION_STAT_WINDOW}日'
         elif insufficient10:
             heat_reason = f'近10日有{len(insufficient10)}个样本不足日，完整热榜窗口不可用'
         else:
             heat_reason = None
 
-        for name, rows in concept_series.items():
+        # 展示职责与样本职责分离：排行榜用sourceName，页面仍显示用户指定概念名。
+        source_names = {x.get('code'): x.get('name') for x in universe}
+        for target in display_map:
+            name, code = target.get('name'), target.get('code')
+            source_name = target.get('indexName') or source_names.get(code) or name
+            if not code:
+                stale_concepts.append(name)
+                continue
+            rows = _concept_rows(code)
+            concept_series[name] = rows
             if not rows or rows[-1][0] != effective:
                 stale_concepts.append(name)
                 continue
             ret20 = None
             if len(rows) >= 21 and rows[-21][1]:
                 ret20 = round((rows[-1][1] / rows[-21][1] - 1) * 100, 1)
+            amount_pct = None
+            amount_rows = rows[-250:]
+            latest_amount = amount_rows[-1][3] if amount_rows else None
+            if _crowding_num(latest_amount) and latest_amount > 0:
+                amounts = [r[3] for r in amount_rows if _crowding_num(r[3]) and r[3] > 0]
+                if len(amounts) >= 20:
+                    amount_pct = _pct_rank100(amounts, latest_amount)
             if heat_ready:
-                hits10 = sum(1 for d in last10 if name in concept_boards.get(d, []))
+                hits10 = sum(1 for d in last10 if source_name in concept_boards.get(d, []))
                 streak = 0
                 for d in reversed(last15):
-                    if name in concept_boards.get(d, []):
+                    if source_name in concept_boards.get(d, []):
                         streak += 1
                     else:
                         break
             else:
                 hits10 = None
                 streak = None
-            level, reason = _crowding_level(ret20, None, hits10, streak)
-            items.append({'name': name, 'type': '概念', 'ret20': ret20,
-                          'amountPct': None, 'hits10': hits10, 'streak': streak,
+            level, reason = _crowding_level(ret20, amount_pct, hits10, streak)
+            items.append({'name': name, 'type': '概念', 'code': code, 'indexName': source_name,
+                          'ret20': ret20, 'amountPct': amount_pct,
+                          'amountSource': '同花顺公开指数日线.amount（元）',
+                          'hits10': hits10, 'streak': streak,
                           'heatReady': heat_ready, 'heatReason': heat_reason,
                           'level': level, 'reason': reason})
 
@@ -2725,13 +2761,25 @@ def build_sector_crowding(data):
             f'20日复利涨幅≥{CROWDING_RET20_HOT:.0f}%且最新成交额在过去250交易日分位≥{CROWDING_AMOUNT_HOT:.0f}也判过热；'
             f'热榜3次，或20日涨幅≥{CROWDING_RET20_WARM:.0f}%且成交分位≥{CROWDING_AMOUNT_WARM:.0f}为偏高；'
             f'20日涨幅≤{CROWDING_RET20_COLD:.0f}%、成交分位≤{CROWDING_AMOUNT_COLD:.0f}且未上热榜为低，其余正常。'
-            '概念日线缓存未可靠区分成交额与成交量，成交热度显示—，不补0；热榜不可靠且成交缺失时采用纯价格保守分档：'
+            f'概念收益与成交额来自同花顺公开指数日线，热榜独立样本宇宙{len(universe)}个、展示候选{len(display_map)}个；'
+            f'成交额单位为元，不使用旧缓存amount/vol混写列。历史不足21日{len(short_history)}个、样本宇宙最新日陈旧{len(stale_universe)}个，均不补入有效样本。'
+            '成交缺失仍显示—，不补0；热榜不可靠且成交缺失时采用纯价格保守分档：'
             f'20日涨幅≥{CROWDING_RET20_HOT:.0f}%仅为偏高，其余正常，不仅凭负涨幅、样本不足或空热榜判过热或低。'
             '拥挤度仅为风险提示，不直接等同买卖结论。'
         )
         data['sectorCrowding'] = {
             'trade_date': _iso(effective), 'stale': latest_industry != effective,
             'items': items, 'note': note,
+            'conceptCoverage': {
+                'source': (cache.get('concept_heat_source') or {}).get('provider') or '同花顺公开指数日线',
+                'schema': (cache.get('concept_heat_source') or {}).get('schema') or ['date', 'close', 'volume', 'amount'],
+                'asOf': _iso(effective), 'minSamples': CONCEPT_HEAT_MIN_SAMPLES,
+                'universeCount': len(universe), 'displayCount': len(display_map),
+                'dailySamples': {d: sample_counts.get(d, 0) for d in last15},
+                'last10': last10, 'heatReady': heat_ready, 'heatReason': heat_reason,
+                'shortHistory': short_history, 'staleUniverse': stale_universe,
+                'displayMap': display_map,
+            },
         }
         print(f"  sectorCrowding: {len(items)}行（行业{sum(x['type'] == '行业' for x in items)}+"
               f"概念{sum(x['type'] == '概念' for x in items)}），剔除陈旧行业{len(stale_industries)}、概念{len(stale_concepts)}；"
@@ -5420,6 +5468,11 @@ def fetch_vcp_watch(pro, trade_date, data):
                     print(f'  vcpWatch leader backfill {code} failed: {str(e)[:60]}')
             if need:
                 print(f'  vcpWatch new leaders backfilled: {len(need)}')
+        # 拥挤度独立真实样本：不复用amount/vol混写的index_daily，也不改变VCP龙头口径。
+        try:
+            vcp.ensure_concept_heat_daily(c, c['trade_date'])
+        except Exception as e:
+            print(f'  conceptHeat public daily failed (keep old cache): {str(e)[:120]}')
         vcp.save_cache(c)
 
         res = vcp.compute_results(c, cup_detector=_index_cup_handle)

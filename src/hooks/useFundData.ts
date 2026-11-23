@@ -1181,6 +1181,9 @@ export interface FundData {
       type: '行业' | '概念';
       ret20: number | null;
       amountPct: number | null;
+      amountSource?: string;
+      code?: string;
+      indexName?: string;
       hits10: number | null;
       streak: number | null;
       heatReady: boolean;
@@ -1189,6 +1192,21 @@ export interface FundData {
       reason?: string;
     }>;
     note: string;
+    conceptCoverage?: {
+      source: string;
+      schema: string[];
+      asOf: string;
+      minSamples: number;
+      universeCount: number;
+      displayCount: number;
+      dailySamples: Record<string, number>;
+      last10: string[];
+      heatReady: boolean;
+      heatReason: string | null;
+      shortHistory: Array<{ name: string; code: string; days: number }>;
+      staleUniverse: string[];
+      displayMap: Array<{ name: string; code: string | null; indexName: string | null }>;
+    };
   };
   // CCASS 外资托管持股月末快照（2026-09-30 用户指令：港交所 SDW 机查，月底/月初双触发）
   ccassForeign?: {

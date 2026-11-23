@@ -1,0 +1,71 @@
+{
+  "task": "concept-sample",
+  "allPassed": true,
+  "checksPassed": 14,
+  "checksTotal": 14,
+  "checks": {
+    "专项13项全部通过": true,
+    "真实缓存连续10日每日至少20": true,
+    "真实展示概念成交与热榜非空": true,
+    "20样本门未降低": true,
+    "旧混写缓存不再参与拥挤度": true,
+    "独立四字段真实缓存与公开源": true,
+    "成交额不从成交量兜底": true,
+    "前端真实值和样本不足双门控": true,
+    "public/fund_data.json本地生产SHA未改": true,
+    "public/fund_data.json未误写远端生产数据": true,
+    "src/data/fund_data.json本地生产SHA未改": true,
+    "src/data/fund_data.json未误写远端生产数据": true,
+    "生产bundle存在": true,
+    "bundle包含成交来源和可空热榜逻辑": true
+  },
+  "headBaseline": "100d01df5a5f825f2300c709817d1c6a6902b2c6",
+  "production": {
+    "public/fund_data.json": {
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "bundle": "index-CxNz3aHx-v25.js",
+  "realDailySamples": {
+    "20261102": 32,
+    "20261103": 32,
+    "20261104": 32,
+    "20261105": 32,
+    "20261106": 32,
+    "20261109": 32,
+    "20261110": 32,
+    "20261111": 32,
+    "20261112": 32,
+    "20261113": 32,
+    "20261116": 32,
+    "20261117": 32,
+    "20261118": 32,
+    "20261119": 32,
+    "20261120": 32
+  },
+  "publishWhitelist": [
+    "scripts/update_data.py",
+    "scripts/vcp_preview.py",
+    "src/hooks/useFundData.ts",
+    "src/sections/SectorHeatmap.tsx"
+  ],
+  "forbiddenPublishPaths": [
+    "public/fund_data.json",
+    "src/data/fund_data.json",
+    "scripts/cache/vcp_cache.json",
+    "zz_concept_sample_real_cache.json",
+    "zz_concept_sample_remote_vcp_cache.json",
+    "zz_concept_sample_issue.png",
+    "dist",
+    ".github"
+  ],
+  "manualDispatch": false,
+  "workflowModified": false,
+  "scheduleModified": false,
+  "productionDataRegenerated": false
+}

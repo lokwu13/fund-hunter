@@ -1,0 +1,594 @@
+{
+  "sourceCacheSha256": "e78331b7c7a5ed6bb7dde0c04ac8625c74986e87c3d9b72a60f0a6374500187f",
+  "sourceProductionUntouched": true,
+  "effective": "20261120",
+  "source": {
+    "provider": "同花顺公开指数日线 d.10jqka.com.cn/v4/line",
+    "schema": [
+      "date",
+      "close",
+      "volume",
+      "amount"
+    ],
+    "amountUnit": "元",
+    "volumeUnit": "股"
+  },
+  "universeCount": 40,
+  "displayMap": [
+    {
+      "name": "AI算力",
+      "code": "885957.TI",
+      "indexName": "东数西算(算力)"
+    },
+    {
+      "name": "人形机器人",
+      "code": "875261.TI",
+      "indexName": "机器人概念"
+    },
+    {
+      "name": "低空经济",
+      "code": "886067.TI",
+      "indexName": "低空经济"
+    },
+    {
+      "name": "商业航天",
+      "code": "865195.TI",
+      "indexName": "商业航天"
+    },
+    {
+      "name": "创新药",
+      "code": "875155.TI",
+      "indexName": "创新药"
+    },
+    {
+      "name": "固态电池",
+      "code": "865182.TI",
+      "indexName": "固态电池"
+    },
+    {
+      "name": "智能驾驶",
+      "code": null,
+      "indexName": null
+    },
+    {
+      "name": "半导体设备",
+      "code": "884229.TI",
+      "indexName": "半导体设备"
+    },
+    {
+      "name": "光伏",
+      "code": "875053.TI",
+      "indexName": "光伏太阳能"
+    },
+    {
+      "name": "消费电子",
+      "code": "885800.TI",
+      "indexName": "消费电子概念"
+    },
+    {
+      "name": "数据中心",
+      "code": "885887.TI",
+      "indexName": "数据中心(AIDC)"
+    },
+    {
+      "name": "卫星互联网",
+      "code": "885574.TI",
+      "indexName": "卫星导航"
+    },
+    {
+      "name": "充电桩",
+      "code": "875229.TI",
+      "indexName": "充电桩概念股"
+    },
+    {
+      "name": "新能源车",
+      "code": "864028.TI",
+      "indexName": "新能源车"
+    },
+    {
+      "name": "跨境电商",
+      "code": "885642.TI",
+      "indexName": "跨境电商"
+    }
+  ],
+  "series": [
+    {
+      "code": "884229.TI",
+      "days": 140,
+      "first": "20260427",
+      "last": "20261120",
+      "amountPositiveDays": 140,
+      "latestAmount": 37586329000.0
+    },
+    {
+      "code": "885525.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 20558011000.0
+    },
+    {
+      "code": "885539.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 85431317000.0
+    },
+    {
+      "code": "885545.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 193718360000.0
+    },
+    {
+      "code": "885574.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 87098961000.0
+    },
+    {
+      "code": "885595.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 130123016000.0
+    },
+    {
+      "code": "885642.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 65009672000.0
+    },
+    {
+      "code": "885710.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 180771740000.0
+    },
+    {
+      "code": "885800.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 219167190000.0
+    },
+    {
+      "code": "885834.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 48393512000.0
+    },
+    {
+      "code": "885874.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 14007286000.0
+    },
+    {
+      "code": "885878.TI",
+      "days": 383,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 383,
+      "latestAmount": 19131999000.0
+    },
+    {
+      "code": "885887.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 324127620000.0
+    },
+    {
+      "code": "885908.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 96043416000.0
+    },
+    {
+      "code": "885921.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 237660760000.0
+    },
+    {
+      "code": "885927.TI",
+      "days": 213,
+      "first": "20260105",
+      "last": "20261120",
+      "amountPositiveDays": 213,
+      "latestAmount": 21769022000.0
+    },
+    {
+      "code": "885928.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 45537758000.0
+    },
+    {
+      "code": "885942.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 53423964000.0
+    },
+    {
+      "code": "885944.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 35044796000.0
+    },
+    {
+      "code": "885957.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 194289880000.0
+    },
+    {
+      "code": "886007.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 26975632000.0
+    },
+    {
+      "code": "886013.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 91058405000.0
+    },
+    {
+      "code": "886023.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 16973978000.0
+    },
+    {
+      "code": "886031.TI",
+      "days": 140,
+      "first": "20260427",
+      "last": "20261120",
+      "amountPositiveDays": 140,
+      "latestAmount": 49229144000.0
+    },
+    {
+      "code": "886036.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 18104211000.0
+    },
+    {
+      "code": "886041.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 100564979000.0
+    },
+    {
+      "code": "886050.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 77413312000.0
+    },
+    {
+      "code": "886053.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 17363601000.0
+    },
+    {
+      "code": "886064.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 40915265000.0
+    },
+    {
+      "code": "886066.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 28400293000.0
+    },
+    {
+      "code": "886067.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 133365190000.0
+    },
+    {
+      "code": "886076.TI",
+      "days": 456,
+      "first": "20250102",
+      "last": "20261120",
+      "amountPositiveDays": 456,
+      "latestAmount": 19352142000.0
+    }
+  ],
+  "coverage": {
+    "source": "同花顺公开指数日线 d.10jqka.com.cn/v4/line",
+    "schema": [
+      "date",
+      "close",
+      "volume",
+      "amount"
+    ],
+    "asOf": "2026-11-20",
+    "minSamples": 20,
+    "universeCount": 40,
+    "displayCount": 15,
+    "dailySamples": {
+      "20261102": 32,
+      "20261103": 32,
+      "20261104": 32,
+      "20261105": 32,
+      "20261106": 32,
+      "20261109": 32,
+      "20261110": 32,
+      "20261111": 32,
+      "20261112": 32,
+      "20261113": 32,
+      "20261116": 32,
+      "20261117": 32,
+      "20261118": 32,
+      "20261119": 32,
+      "20261120": 32
+    },
+    "last10": [
+      "20261109",
+      "20261110",
+      "20261111",
+      "20261112",
+      "20261113",
+      "20261116",
+      "20261117",
+      "20261118",
+      "20261119",
+      "20261120"
+    ],
+    "heatReady": true,
+    "heatReason": null,
+    "shortHistory": [
+      {
+        "name": "创新药",
+        "code": "875155.TI",
+        "days": 0
+      },
+      {
+        "name": "充电桩概念股",
+        "code": "875229.TI",
+        "days": 0
+      },
+      {
+        "name": "光伏太阳能",
+        "code": "875053.TI",
+        "days": 0
+      },
+      {
+        "name": "机器人概念",
+        "code": "875261.TI",
+        "days": 0
+      },
+      {
+        "name": "稀土永磁",
+        "code": "875098.TI",
+        "days": 0
+      },
+      {
+        "name": "汽车热管理",
+        "code": "875247.TI",
+        "days": 0
+      },
+      {
+        "name": "半导体概念",
+        "code": "875260.TI",
+        "days": 0
+      },
+      {
+        "name": "养老概念",
+        "code": "875027.TI",
+        "days": 0
+      }
+    ],
+    "staleUniverse": [],
+    "displayMap": [
+      {
+        "name": "AI算力",
+        "code": "885957.TI",
+        "indexName": "东数西算(算力)"
+      },
+      {
+        "name": "人形机器人",
+        "code": "875261.TI",
+        "indexName": "机器人概念"
+      },
+      {
+        "name": "低空经济",
+        "code": "886067.TI",
+        "indexName": "低空经济"
+      },
+      {
+        "name": "商业航天",
+        "code": "865195.TI",
+        "indexName": "商业航天"
+      },
+      {
+        "name": "创新药",
+        "code": "875155.TI",
+        "indexName": "创新药"
+      },
+      {
+        "name": "固态电池",
+        "code": "865182.TI",
+        "indexName": "固态电池"
+      },
+      {
+        "name": "智能驾驶",
+        "code": null,
+        "indexName": null
+      },
+      {
+        "name": "半导体设备",
+        "code": "884229.TI",
+        "indexName": "半导体设备"
+      },
+      {
+        "name": "光伏",
+        "code": "875053.TI",
+        "indexName": "光伏太阳能"
+      },
+      {
+        "name": "消费电子",
+        "code": "885800.TI",
+        "indexName": "消费电子概念"
+      },
+      {
+        "name": "数据中心",
+        "code": "885887.TI",
+        "indexName": "数据中心(AIDC)"
+      },
+      {
+        "name": "卫星互联网",
+        "code": "885574.TI",
+        "indexName": "卫星导航"
+      },
+      {
+        "name": "充电桩",
+        "code": "875229.TI",
+        "indexName": "充电桩概念股"
+      },
+      {
+        "name": "新能源车",
+        "code": "864028.TI",
+        "indexName": "新能源车"
+      },
+      {
+        "name": "跨境电商",
+        "code": "885642.TI",
+        "indexName": "跨境电商"
+      }
+    ]
+  },
+  "conceptItems": [
+    {
+      "name": "半导体设备",
+      "type": "概念",
+      "code": "884229.TI",
+      "indexName": "半导体设备",
+      "ret20": -14.2,
+      "amountPct": 31.4,
+      "amountSource": "同花顺公开指数日线.amount（元）",
+      "hits10": 5,
+      "streak": 0,
+      "heatReady": true,
+      "heatReason": null,
+      "level": "过热",
+      "reason": "轮动过热"
+    },
+    {
+      "name": "跨境电商",
+      "type": "概念",
+      "code": "885642.TI",
+      "indexName": "跨境电商",
+      "ret20": -13.7,
+      "amountPct": 4.4,
+      "amountSource": "同花顺公开指数日线.amount（元）",
+      "hits10": 4,
+      "streak": 1,
+      "heatReady": true,
+      "heatReason": null,
+      "level": "过热",
+      "reason": "轮动过热"
+    },
+    {
+      "name": "消费电子",
+      "type": "概念",
+      "code": "885800.TI",
+      "indexName": "消费电子概念",
+      "ret20": -18.5,
+      "amountPct": 12.4,
+      "amountSource": "同花顺公开指数日线.amount（元）",
+      "hits10": 4,
+      "streak": 0,
+      "heatReady": true,
+      "heatReason": null,
+      "level": "过热",
+      "reason": "轮动过热"
+    },
+    {
+      "name": "AI算力",
+      "type": "概念",
+      "code": "885957.TI",
+      "indexName": "东数西算(算力)",
+      "ret20": -17.1,
+      "amountPct": 8.0,
+      "amountSource": "同花顺公开指数日线.amount（元）",
+      "hits10": 4,
+      "streak": 0,
+      "heatReady": true,
+      "heatReason": null,
+      "level": "过热",
+      "reason": "轮动过热"
+    },
+    {
+      "name": "数据中心",
+      "type": "概念",
+      "code": "885887.TI",
+      "indexName": "数据中心(AIDC)",
+      "ret20": -17.9,
+      "amountPct": 1.6,
+      "amountSource": "同花顺公开指数日线.amount（元）",
+      "hits10": 2,
+      "streak": 0,
+      "heatReady": true,
+      "heatReason": null,
+      "level": "正常",
+      "reason": "未触发拥挤阈值"
+    }
+  ],
+  "note": "行业Top5＋概念Top5，行业在前、概念在后；剔除陈旧行业0个、概念8个（人形机器人、商业航天、创新药、固态电池、智能驾驶等）。概念每日仅有真实收益的概念数≥20才生成Top10热榜，否则该日无有效热榜；最新日可用概念32个；近10日样本不足日0个。近10日任一日样本不足则完整热榜窗口不可用，上榜次数与连续天数留空，不补0、不继承此前连续天数。可靠热榜近10日上榜≥4次或连续≥3天直接判过热；20日复利涨幅≥15%且最新成交额在过去250交易日分位≥80也判过热；热榜3次，或20日涨幅≥8%且成交分位≥60为偏高；20日涨幅≤0%、成交分位≤20且未上热榜为低，其余正常。概念收益与成交额来自同花顺公开指数日线，热榜独立样本宇宙40个、展示候选15个；成交额单位为元，不使用旧缓存amount/vol混写列。历史不足21日8个、样本宇宙最新日陈旧0个，均不补入有效样本。成交缺失仍显示—，不补0；热榜不可靠且成交缺失时采用纯价格保守分档：20日涨幅≥15%仅为偏高，其余正常，不仅凭负涨幅、样本不足或空热榜判过热或低。拥挤度仅为风险提示，不直接等同买卖结论。"
+}

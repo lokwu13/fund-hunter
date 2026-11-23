@@ -1,0 +1,168 @@
+{
+  "task": "concept-sample",
+  "head": "100d01df5a5f825f2300c709817d1c6a6902b2c6",
+  "headTree": "e5f4e2c6d4e98658f1247d3d8223446b6c37400d",
+  "headMessage": "债券栏目删除市场要闻与中美国债对比",
+  "remoteBackendSha256": "d5981a907de6b407f242241badc1a8e3278a72cae6aea6225eb824d12424dda5",
+  "remoteBackendBlob": "6ee0eea858529701e70483341b448e9cb5a0e014",
+  "backendBaselineMatched": true,
+  "onlineFundDataSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+  "onlineEqualsRemoteMain": true,
+  "onlineSectorCrowding": {
+    "trade_date": "2026-11-20",
+    "stale": false,
+    "items": [
+      {
+        "name": "港口",
+        "type": "行业",
+        "ret20": 1.2,
+        "amountPct": 40.8,
+        "hits10": 5,
+        "streak": 5,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "过热",
+        "reason": "轮动过热"
+      },
+      {
+        "name": "保险",
+        "type": "行业",
+        "ret20": 4.5,
+        "amountPct": 65.2,
+        "hits10": 5,
+        "streak": 3,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "过热",
+        "reason": "轮动过热"
+      },
+      {
+        "name": "银行",
+        "type": "行业",
+        "ret20": 7.5,
+        "amountPct": 96.4,
+        "hits10": 5,
+        "streak": 2,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "过热",
+        "reason": "轮动过热"
+      },
+      {
+        "name": "机场",
+        "type": "行业",
+        "ret20": 1.9,
+        "amountPct": 43.6,
+        "hits10": 4,
+        "streak": 2,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "过热",
+        "reason": "轮动过热"
+      },
+      {
+        "name": "路桥",
+        "type": "行业",
+        "ret20": 5.5,
+        "amountPct": 99.6,
+        "hits10": 4,
+        "streak": 1,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "过热",
+        "reason": "轮动过热"
+      },
+      {
+        "name": "创新药",
+        "type": "概念",
+        "ret20": -9.0,
+        "amountPct": null,
+        "hits10": null,
+        "streak": null,
+        "heatReady": false,
+        "heatReason": "最新日可用概念5个，低于20个有效样本门",
+        "level": "正常",
+        "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+      },
+      {
+        "name": "跨境电商",
+        "type": "概念",
+        "ret20": -17.7,
+        "amountPct": null,
+        "hits10": null,
+        "streak": null,
+        "heatReady": false,
+        "heatReason": "最新日可用概念5个，低于20个有效样本门",
+        "level": "正常",
+        "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+      },
+      {
+        "name": "低空经济",
+        "type": "概念",
+        "ret20": -20.3,
+        "amountPct": null,
+        "hits10": null,
+        "streak": null,
+        "heatReady": false,
+        "heatReason": "最新日可用概念5个，低于20个有效样本门",
+        "level": "正常",
+        "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+      },
+      {
+        "name": "AI算力",
+        "type": "概念",
+        "ret20": -21.6,
+        "amountPct": null,
+        "hits10": null,
+        "streak": null,
+        "heatReady": false,
+        "heatReason": "最新日可用概念5个，低于20个有效样本门",
+        "level": "正常",
+        "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+      },
+      {
+        "name": "半导体设备",
+        "type": "概念",
+        "ret20": -29.7,
+        "amountPct": null,
+        "hits10": null,
+        "streak": null,
+        "heatReady": false,
+        "heatReason": "最新日可用概念5个，低于20个有效样本门",
+        "level": "正常",
+        "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+      }
+    ],
+    "note": "行业Top5＋概念Top5，行业在前、概念在后；剔除陈旧行业0个、概念10个（人形机器人、商业航天、固态电池、智能驾驶、光伏等）。概念每日仅有真实收益的概念数≥20才生成Top10热榜，否则该日无有效热榜；最新日可用概念5个，低于20个有效样本门。近10日任一日样本不足则完整热榜窗口不可用，上榜次数与连续天数留空，不补0、不继承此前连续天数。可靠热榜近10日上榜≥4次或连续≥3天直接判过热；20日复利涨幅≥15%且最新成交额在过去250交易日分位≥80也判过热；热榜3次，或20日涨幅≥8%且成交分位≥60为偏高；20日涨幅≤0%、成交分位≤20且未上热榜为低，其余正常。概念日线缓存未可靠区分成交额与成交量，成交热度显示—，不补0；热榜不可靠且成交缺失时采用纯价格保守分档：20日涨幅≥15%仅为偏高，其余正常，不仅凭负涨幅、样本不足或空热榜判过热或低。拥挤度仅为风险提示，不直接等同买卖结论。"
+  },
+  "remoteCache": {
+    "bytes": 41513342,
+    "sha256": "e78331b7c7a5ed6bb7dde0c04ac8625c74986e87c3d9b72a60f0a6374500187f",
+    "tradeDate": "20261120",
+    "conceptCount": 15,
+    "thsIndexCount": 2186,
+    "indexDailyCount": 46,
+    "localBytes": 10703271,
+    "localSha256": "8db3b266153d3509a0e56bda1b988bd8771b0a23e3732914865c40f6050c799e",
+    "localTradeDate": "20260930"
+  },
+  "fundData": {
+    "public/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "manualDispatch": false,
+  "workflowModified": false,
+  "scheduleModified": false
+}

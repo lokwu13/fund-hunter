@@ -400,7 +400,7 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
                       <TableCell className={`text-xs text-right font-semibold ${item.ret20 == null ? 'text-slate-400' : item.ret20 >= 0 ? 'text-red-600' : 'text-green-600'}`}>
                         {item.ret20 == null ? '—' : `${item.ret20 >= 0 ? '+' : ''}${item.ret20.toFixed(1)}%`}
                       </TableCell>
-                      <TableCell className="text-xs text-right text-slate-600" title={item.amountPct == null ? '无可靠成交额，不补0' : '最新成交额在过去250交易日中的分位'}>
+                      <TableCell className="text-xs text-right text-slate-600" title={item.amountPct == null ? '无可靠成交额，不补0' : `${item.amountSource || '真实成交额'}：最新成交额在过去250交易日中的分位`}>
                         {item.amountPct == null ? '—' : `${item.amountPct.toFixed(1)}%`}
                       </TableCell>
                       <TableCell

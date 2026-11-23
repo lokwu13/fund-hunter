@@ -1,0 +1,719 @@
+{
+  "passed": 18,
+  "total": 18,
+  "results": [
+    {
+      "name": "样本门固定为每日Top10的两倍",
+      "pass": true,
+      "evidence": {
+        "minSamples": 20,
+        "groupTopN": 5
+      }
+    },
+    {
+      "name": "行业5行在前概念5行在后",
+      "pass": true,
+      "evidence": [
+        [
+          "行业",
+          "银行"
+        ],
+        [
+          "行业",
+          "行业七"
+        ],
+        [
+          "行业",
+          "行业六"
+        ],
+        [
+          "行业",
+          "出版业"
+        ],
+        [
+          "行业",
+          "机场"
+        ],
+        [
+          "概念",
+          "高涨幅概念"
+        ],
+        [
+          "概念",
+          "跨境电商"
+        ],
+        [
+          "概念",
+          "低空经济"
+        ],
+        [
+          "概念",
+          "AI算力"
+        ],
+        [
+          "概念",
+          "半导体设备"
+        ]
+      ]
+    },
+    {
+      "name": "仅5概念不再全员虚热且热榜字段全部留空",
+      "pass": true,
+      "evidence": [
+        {
+          "name": "高涨幅概念",
+          "type": "概念",
+          "code": "C04",
+          "indexName": "高涨幅概念",
+          "ret20": 22.0,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        {
+          "name": "跨境电商",
+          "type": "概念",
+          "code": "C00",
+          "indexName": "跨境电商",
+          "ret20": -7.7,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        },
+        {
+          "name": "低空经济",
+          "type": "概念",
+          "code": "C01",
+          "indexName": "低空经济",
+          "ret20": -11.3,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        },
+        {
+          "name": "AI算力",
+          "type": "概念",
+          "code": "C02",
+          "indexName": "AI算力",
+          "ret20": -13.1,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        },
+        {
+          "name": "半导体设备",
+          "type": "概念",
+          "code": "C03",
+          "indexName": "半导体设备",
+          "ret20": -33.2,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        }
+      ]
+    },
+    {
+      "name": "样本不足说明包含最新5低于20",
+      "pass": true,
+      "evidence": "行业Top5＋概念Top5，行业在前、概念在后；剔除陈旧行业0个、概念0个。概念每日仅有真实收益的概念数≥20才生成Top10热榜，否则该日无有效热榜；最新日可用概念5个，低于20个有效样本门。近10日任一日样本不足则完整热榜窗口不可用，上榜次数与连续天数留空，不补0、不继承此前连续天数。可靠热榜近10日上榜≥4次或连续≥3天直接判过热；20日复利涨幅≥15%且最新成交额在过去250交易日分位≥80也判过热；热榜3次，或20日涨幅≥8%且成交分位≥60为偏高；20日涨幅≤0%、成交分位≤20且未上热榜为低，其余正常。概念收益与成交额来自同花顺公开指数日线，热榜独立样本宇宙5个、展示候选5个；成交额单位为元，不使用旧缓存amount/vol混写列。历史不足21日0个、样本宇宙最新日陈旧0个，均不补入有效样本。成交缺失仍显示—，不补0；热榜不可靠且成交缺失时采用纯价格保守分档：20日涨幅≥15%仅为偏高，其余正常，不仅凭负涨幅、样本不足或空热榜判过热或低。拥挤度仅为风险提示，不直接等同买卖结论。"
+    },
+    {
+      "name": "负涨幅纯价格保守分档且20日原值可复算",
+      "pass": true,
+      "evidence": [
+        {
+          "name": "高涨幅概念",
+          "type": "概念",
+          "code": "C04",
+          "indexName": "高涨幅概念",
+          "ret20": 22.0,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        {
+          "name": "跨境电商",
+          "type": "概念",
+          "code": "C00",
+          "indexName": "跨境电商",
+          "ret20": -7.7,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        },
+        {
+          "name": "低空经济",
+          "type": "概念",
+          "code": "C01",
+          "indexName": "低空经济",
+          "ret20": -11.3,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        },
+        {
+          "name": "AI算力",
+          "type": "概念",
+          "code": "C02",
+          "indexName": "AI算力",
+          "ret20": -13.1,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        },
+        {
+          "name": "半导体设备",
+          "type": "概念",
+          "code": "C03",
+          "indexName": "半导体设备",
+          "ret20": -33.2,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        }
+      ]
+    },
+    {
+      "name": "无热榜且成交缺失时涨幅15仅偏高",
+      "pass": true,
+      "evidence": {
+        "hotPrice": {
+          "name": "高涨幅概念",
+          "type": "概念",
+          "code": "C04",
+          "indexName": "高涨幅概念",
+          "ret20": 22.0,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        "negative": [
+          "正常",
+          "热榜样本不足且成交缺失；纯价格保守分档"
+        ]
+      }
+    },
+    {
+      "name": "概念空热榜按纯价格及涨幅排序不伪造对象",
+      "pass": true,
+      "evidence": [
+        {
+          "name": "高涨幅概念",
+          "type": "概念",
+          "code": "C04",
+          "indexName": "高涨幅概念",
+          "ret20": 22.0,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        {
+          "name": "跨境电商",
+          "type": "概念",
+          "code": "C00",
+          "indexName": "跨境电商",
+          "ret20": -7.7,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        },
+        {
+          "name": "低空经济",
+          "type": "概念",
+          "code": "C01",
+          "indexName": "低空经济",
+          "ret20": -11.3,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        },
+        {
+          "name": "AI算力",
+          "type": "概念",
+          "code": "C02",
+          "indexName": "AI算力",
+          "ret20": -13.1,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        },
+        {
+          "name": "半导体设备",
+          "type": "概念",
+          "code": "C03",
+          "indexName": "半导体设备",
+          "ret20": -33.2,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "正常",
+          "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+        }
+      ]
+    },
+    {
+      "name": "行业热度与过热逻辑保持原样",
+      "pass": true,
+      "evidence": {
+        "name": "银行",
+        "type": "行业",
+        "ret20": 2.0,
+        "amountPct": 100.0,
+        "hits10": 4,
+        "streak": 1,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "过热",
+        "reason": "轮动过热"
+      }
+    },
+    {
+      "name": "历史充足最新降至5仍全部空热榜",
+      "pass": true,
+      "evidence": [
+        {
+          "name": "AI算力",
+          "type": "概念",
+          "code": "C00",
+          "indexName": "AI算力",
+          "ret20": 80.6,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        {
+          "name": "概念01",
+          "type": "概念",
+          "code": "C01",
+          "indexName": "概念01",
+          "ret20": 77.1,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        {
+          "name": "概念02",
+          "type": "概念",
+          "code": "C02",
+          "indexName": "概念02",
+          "ret20": 73.7,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        {
+          "name": "概念03",
+          "type": "概念",
+          "code": "C03",
+          "indexName": "概念03",
+          "ret20": 70.4,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        {
+          "name": "概念04",
+          "type": "概念",
+          "code": "C04",
+          "indexName": "概念04",
+          "ret20": 67.1,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "最新日可用概念5个，低于20个有效样本门",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        }
+      ]
+    },
+    {
+      "name": "最新样本不足不继承AI此前连续天数",
+      "pass": true,
+      "evidence": {
+        "name": "AI算力",
+        "type": "概念",
+        "code": "C00",
+        "indexName": "AI算力",
+        "ret20": 80.6,
+        "amountPct": null,
+        "amountSource": "同花顺公开指数日线.amount（元）",
+        "hits10": null,
+        "streak": null,
+        "heatReady": false,
+        "heatReason": "最新日可用概念5个，低于20个有效样本门",
+        "level": "偏高",
+        "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+      }
+    },
+    {
+      "name": "22概念全历史充足可正常计算热榜",
+      "pass": true,
+      "evidence": {
+        "name": "AI算力",
+        "type": "概念",
+        "code": "C00",
+        "indexName": "AI算力",
+        "ret20": 80.6,
+        "amountPct": null,
+        "amountSource": "同花顺公开指数日线.amount（元）",
+        "hits10": 10,
+        "streak": 15,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "过热",
+        "reason": "轮动过热"
+      }
+    },
+    {
+      "name": "充足样本说明不误导",
+      "pass": true,
+      "evidence": "行业Top5＋概念Top5，行业在前、概念在后；剔除陈旧行业0个、概念0个。概念每日仅有真实收益的概念数≥20才生成Top10热榜，否则该日无有效热榜；最新日可用概念22个；近10日样本不足日0个。近10日任一日样本不足则完整热榜窗口不可用，上榜次数与连续天数留空，不补0、不继承此前连续天数。可靠热榜近10日上榜≥4次或连续≥3天直接判过热；20日复利涨幅≥15%且最新成交额在过去250交易日分位≥80也判过热；热榜3次，或20日涨幅≥8%且成交分位≥60为偏高；20日涨幅≤0%、成交分位≤20且未上热榜为低，其余正常。概念收益与成交额来自同花顺公开指数日线，热榜独立样本宇宙22个、展示候选22个；成交额单位为元，不使用旧缓存amount/vol混写列。历史不足21日0个、样本宇宙最新日陈旧0个，均不补入有效样本。成交缺失仍显示—，不补0；热榜不可靠且成交缺失时采用纯价格保守分档：20日涨幅≥15%仅为偏高，其余正常，不仅凭负涨幅、样本不足或空热榜判过热或低。拥挤度仅为风险提示，不直接等同买卖结论。"
+    },
+    {
+      "name": "近10日一个样本不足日即清空完整热度",
+      "pass": true,
+      "evidence": [
+        {
+          "name": "AI算力",
+          "type": "概念",
+          "code": "C00",
+          "indexName": "AI算力",
+          "ret20": 80.6,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "近10日有1个样本不足日，完整热榜窗口不可用",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        {
+          "name": "概念01",
+          "type": "概念",
+          "code": "C01",
+          "indexName": "概念01",
+          "ret20": 77.1,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "近10日有1个样本不足日，完整热榜窗口不可用",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        {
+          "name": "概念02",
+          "type": "概念",
+          "code": "C02",
+          "indexName": "概念02",
+          "ret20": 73.7,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "近10日有1个样本不足日，完整热榜窗口不可用",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        {
+          "name": "概念03",
+          "type": "概念",
+          "code": "C03",
+          "indexName": "概念03",
+          "ret20": 70.4,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "近10日有1个样本不足日，完整热榜窗口不可用",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        },
+        {
+          "name": "概念04",
+          "type": "概念",
+          "code": "C04",
+          "indexName": "概念04",
+          "ret20": 67.1,
+          "amountPct": null,
+          "amountSource": "同花顺公开指数日线.amount（元）",
+          "hits10": null,
+          "streak": null,
+          "heatReady": false,
+          "heatReason": "近10日有1个样本不足日，完整热榜窗口不可用",
+          "level": "偏高",
+          "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+        }
+      ]
+    },
+    {
+      "name": "部分不足原因不误报最新日",
+      "pass": true,
+      "evidence": "行业Top5＋概念Top5，行业在前、概念在后；剔除陈旧行业0个、概念0个。概念每日仅有真实收益的概念数≥20才生成Top10热榜，否则该日无有效热榜；最新日可用概念22个；近10日样本不足日1个。近10日任一日样本不足则完整热榜窗口不可用，上榜次数与连续天数留空，不补0、不继承此前连续天数。可靠热榜近10日上榜≥4次或连续≥3天直接判过热；20日复利涨幅≥15%且最新成交额在过去250交易日分位≥80也判过热；热榜3次，或20日涨幅≥8%且成交分位≥60为偏高；20日涨幅≤0%、成交分位≤20且未上热榜为低，其余正常。概念收益与成交额来自同花顺公开指数日线，热榜独立样本宇宙22个、展示候选22个；成交额单位为元，不使用旧缓存amount/vol混写列。历史不足21日0个、样本宇宙最新日陈旧0个，均不补入有效样本。成交缺失仍显示—，不补0；热榜不可靠且成交缺失时采用纯价格保守分档：20日涨幅≥15%仅为偏高，其余正常，不仅凭负涨幅、样本不足或空热榜判过热或低。拥挤度仅为风险提示，不直接等同买卖结论。"
+    },
+    {
+      "name": "拥挤度前端仍严格六列",
+      "pass": true,
+      "evidence": 6
+    },
+    {
+      "name": "空热榜显示样本不足且title带后端原因",
+      "pass": true,
+      "evidence": "null-gated heat cell"
+    },
+    {
+      "name": "后续迭代后轮动和短期资金区域仍完整挂载",
+      "pass": true,
+      "evidence": "current structural guards; superseded byte baseline not used"
+    },
+    {
+      "name": "前端类型允许空热榜并要求就绪标志",
+      "pass": true,
+      "evidence": "FundData sectorCrowding contract"
+    }
+  ],
+  "smallSample": {
+    "items": [
+      {
+        "name": "银行",
+        "type": "行业",
+        "ret20": 2.0,
+        "amountPct": 100.0,
+        "hits10": 4,
+        "streak": 1,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "过热",
+        "reason": "轮动过热"
+      },
+      {
+        "name": "行业七",
+        "type": "行业",
+        "ret20": 3.2,
+        "amountPct": 100.0,
+        "hits10": 0,
+        "streak": 0,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "正常",
+        "reason": "未触发拥挤阈值"
+      },
+      {
+        "name": "行业六",
+        "type": "行业",
+        "ret20": 3.0,
+        "amountPct": 100.0,
+        "hits10": 0,
+        "streak": 0,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "正常",
+        "reason": "未触发拥挤阈值"
+      },
+      {
+        "name": "出版业",
+        "type": "行业",
+        "ret20": 2.8,
+        "amountPct": 100.0,
+        "hits10": 0,
+        "streak": 0,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "正常",
+        "reason": "未触发拥挤阈值"
+      },
+      {
+        "name": "机场",
+        "type": "行业",
+        "ret20": 2.6,
+        "amountPct": 100.0,
+        "hits10": 0,
+        "streak": 0,
+        "heatReady": true,
+        "heatReason": null,
+        "level": "正常",
+        "reason": "未触发拥挤阈值"
+      },
+      {
+        "name": "高涨幅概念",
+        "type": "概念",
+        "code": "C04",
+        "indexName": "高涨幅概念",
+        "ret20": 22.0,
+        "amountPct": null,
+        "amountSource": "同花顺公开指数日线.amount（元）",
+        "hits10": null,
+        "streak": null,
+        "heatReady": false,
+        "heatReason": "最新日可用概念5个，低于20个有效样本门",
+        "level": "偏高",
+        "reason": "热榜样本不足；20日涨幅≥15%，纯价格保守分档"
+      },
+      {
+        "name": "跨境电商",
+        "type": "概念",
+        "code": "C00",
+        "indexName": "跨境电商",
+        "ret20": -7.7,
+        "amountPct": null,
+        "amountSource": "同花顺公开指数日线.amount（元）",
+        "hits10": null,
+        "streak": null,
+        "heatReady": false,
+        "heatReason": "最新日可用概念5个，低于20个有效样本门",
+        "level": "正常",
+        "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+      },
+      {
+        "name": "低空经济",
+        "type": "概念",
+        "code": "C01",
+        "indexName": "低空经济",
+        "ret20": -11.3,
+        "amountPct": null,
+        "amountSource": "同花顺公开指数日线.amount（元）",
+        "hits10": null,
+        "streak": null,
+        "heatReady": false,
+        "heatReason": "最新日可用概念5个，低于20个有效样本门",
+        "level": "正常",
+        "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+      },
+      {
+        "name": "AI算力",
+        "type": "概念",
+        "code": "C02",
+        "indexName": "AI算力",
+        "ret20": -13.1,
+        "amountPct": null,
+        "amountSource": "同花顺公开指数日线.amount（元）",
+        "hits10": null,
+        "streak": null,
+        "heatReady": false,
+        "heatReason": "最新日可用概念5个，低于20个有效样本门",
+        "level": "正常",
+        "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+      },
+      {
+        "name": "半导体设备",
+        "type": "概念",
+        "code": "C03",
+        "indexName": "半导体设备",
+        "ret20": -33.2,
+        "amountPct": null,
+        "amountSource": "同花顺公开指数日线.amount（元）",
+        "hits10": null,
+        "streak": null,
+        "heatReady": false,
+        "heatReason": "最新日可用概念5个，低于20个有效样本门",
+        "level": "正常",
+        "reason": "热榜样本不足且成交缺失；纯价格保守分档"
+      }
+    ],
+    "note": "行业Top5＋概念Top5，行业在前、概念在后；剔除陈旧行业0个、概念0个。概念每日仅有真实收益的概念数≥20才生成Top10热榜，否则该日无有效热榜；最新日可用概念5个，低于20个有效样本门。近10日任一日样本不足则完整热榜窗口不可用，上榜次数与连续天数留空，不补0、不继承此前连续天数。可靠热榜近10日上榜≥4次或连续≥3天直接判过热；20日复利涨幅≥15%且最新成交额在过去250交易日分位≥80也判过热；热榜3次，或20日涨幅≥8%且成交分位≥60为偏高；20日涨幅≤0%、成交分位≤20且未上热榜为低，其余正常。概念收益与成交额来自同花顺公开指数日线，热榜独立样本宇宙5个、展示候选5个；成交额单位为元，不使用旧缓存amount/vol混写列。历史不足21日0个、样本宇宙最新日陈旧0个，均不补入有效样本。成交缺失仍显示—，不补0；热榜不可靠且成交缺失时采用纯价格保守分档：20日涨幅≥15%仅为偏高，其余正常，不仅凭负涨幅、样本不足或空热榜判过热或低。拥挤度仅为风险提示，不直接等同买卖结论。"
+  }
+}

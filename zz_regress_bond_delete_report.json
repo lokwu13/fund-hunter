@@ -1,6 +1,6 @@
 {
   "task": "bond-delete",
-  "generatedAt": "2026-11-23T09:27:28+08:00",
+  "generatedAt": "2026-11-23T09:54:07+08:00",
   "allPassed": true,
   "checksPassed": 19,
   "checksTotal": 19,
@@ -86,10 +86,14 @@
       "evidence": null
     },
     {
-      "name": "后端源码逐字节未改",
+      "name": "债券基线后仅本次两个概念函数演进",
       "passed": true,
       "evidence": {
-        "sha256": "d5981a907de6b407f242241badc1a8e3278a72cae6aea6225eb824d12424dda5"
+        "sha256": "1a4b0e1095bd32feeb1a714916770b418e4c59f8de1c9366bd08d4e250113dc7",
+        "allowedFunctions": [
+          "build_sector_crowding",
+          "fetch_vcp_watch"
+        ]
       }
     },
     {
