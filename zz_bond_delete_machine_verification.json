@@ -1,0 +1,53 @@
+{
+  "task": "bond-delete",
+  "generatedAt": "2026-11-23T09:28:55+08:00",
+  "checks": {
+    "targetedRegression19Passed": true,
+    "buildPassed": true,
+    "targetTitlesAbsentInActivePanel": true,
+    "sharedModulesRetained": true,
+    "backendUnchanged": true,
+    "localProductionDataUnchanged": true,
+    "noForbiddenActions": true
+  },
+  "allPassed": true,
+  "releaseReady": true,
+  "regression": {
+    "allPassed": true,
+    "checksPassed": 19,
+    "checksTotal": 19
+  },
+  "build": {
+    "success": true,
+    "returncode": 0,
+    "modulesTransformed": 2363,
+    "warning": "Some chunks are larger than 500 kB after minification",
+    "assets": [
+      {
+        "path": "dist/assets/index-4LLowWd7-v25.js",
+        "bytes": 1406872,
+        "sha256": "d7d7cb648df8449a48077e3b6d20ffb87818d22d2df84adaf9c731dcbbdbc31d"
+      },
+      {
+        "path": "dist/assets/index-36vfbOZh.css",
+        "bytes": 109901,
+        "sha256": "a0ab66f21aea9e1dad0120459e8a03bdb1cbcf5672c01302fdb51906752fa7a7"
+      }
+    ]
+  },
+  "sourceSha256": {
+    "src/sections/BondsPanel.tsx": "18af92332b0a11a75ceba08ed7b683377bfb3fef60e3f069677f003ebe11bbbc",
+    "zz_regress_bond_delete.py": "cbda908b4d422902aae8bc76d21854b3c4a8e4540399f2afaf3a6eabba0942ad",
+    "zz_build_bond_delete.py": "5a81b7eadf03bc19500a51d4264de308b0081238f0c0f6d4b9ab04f71cecb2aa"
+  },
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "workflowModified": false,
+  "scheduleModified": false,
+  "developmentServerStarted": false,
+  "testsReexecutedByThisVerification": false
+}

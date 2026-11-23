@@ -1,0 +1,68 @@
+{
+  "task": "bond-delete",
+  "command": "npm run build",
+  "startedAt": "2026-11-23T09:28:32+08:00",
+  "durationSeconds": 9.813,
+  "success": true,
+  "returncode": 0,
+  "modulesTransformed": 2363,
+  "warning": "Some chunks are larger than 500 kB after minification",
+  "log": "zz_build_bond_delete.log",
+  "assets": [
+    {
+      "path": "dist/assets/index-4LLowWd7-v25.js",
+      "bytes": 1406872,
+      "sha256": "d7d7cb648df8449a48077e3b6d20ffb87818d22d2df84adaf9c731dcbbdbc31d"
+    },
+    {
+      "path": "dist/assets/index-36vfbOZh.css",
+      "bytes": 109901,
+      "sha256": "a0ab66f21aea9e1dad0120459e8a03bdb1cbcf5672c01302fdb51906752fa7a7"
+    }
+  ],
+  "retainedBundleMarkers": {
+    "债市信号 → A+H股市一个月影响推演": true,
+    "央行短期流动性工具": true,
+    "滚动波动率（20日标准差）": true,
+    "今日债市要闻 · 东方财富": true,
+    "近期债市动态": true,
+    "bond-margin": true,
+    "中美利差(45%)": true
+  },
+  "removedBundleMarkersPresent": {
+    "债券市场要闻": false,
+    "中美国债收益率对比": false,
+    "美元资产吸引力更高": false,
+    "人民币资产吸引力更高": false
+  },
+  "viewportMetaPresent": true,
+  "localFundDataBefore": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "localFundDataAfter": {
+    "public/fund_data.json": {
+      "path": "public/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "path": "src/data/fund_data.json",
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "fundDataUnchanged": true,
+  "matchesRegressionDataSha": true,
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "developmentServerStarted": false
+}

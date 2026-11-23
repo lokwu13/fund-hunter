@@ -1,0 +1,36 @@
+{
+  "task": "bond-delete",
+  "head": "6ca1dc0a5146ea732dcdd869b29cc9ca5bb177b0",
+  "headTree": "c8d0516f3713c6d07a14eda24dde01f584651eee",
+  "headMessage": "任务116：六宽基独立高股息防御榜",
+  "remoteBondsPanelSha256": "c642e6a38483e41650791046aad5c4bd0ac8fe03cc2a1c4e5a051a29e03b7308",
+  "remoteBondsPanelBlob": "5614106229a86c0f5d446744e4e03a6af9010b0f",
+  "remoteBackendSha256": "d5981a907de6b407f242241badc1a8e3278a72cae6aea6225eb824d12424dda5",
+  "remoteBackendBlob": "6ee0eea858529701e70483341b448e9cb5a0e014",
+  "bondsPanelBaselineMatched": true,
+  "bondsPanelLineEndingOnlyDifference": true,
+  "backendBaselineMatched": true,
+  "fundData": {
+    "public/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "targetTitles": [
+    "债券市场要闻",
+    "中美国债收益率对比"
+  ],
+  "manualDispatch": false,
+  "workflowModified": false,
+  "scheduleModified": false
+}

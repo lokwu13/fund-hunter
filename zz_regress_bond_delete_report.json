@@ -1,0 +1,131 @@
+{
+  "task": "bond-delete",
+  "generatedAt": "2026-11-23T09:27:28+08:00",
+  "allPassed": true,
+  "checksPassed": 19,
+  "checksTotal": 19,
+  "failed": [],
+  "checks": [
+    {
+      "name": "仅目标连续区段发生变化，其他BondsPanel逐字保持",
+      "passed": true,
+      "evidence": {
+        "baselineChars": 45317,
+        "currentChars": 41782,
+        "removedChars": 3535
+      }
+    },
+    {
+      "name": "活动债券源码标题已删除：债券市场要闻",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "活动债券源码标题已删除：中美国债收益率对比",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "完整逐日新闻列表渲染已删除",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "中美横向双图条件渲染已删除",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "中美双图专属横向layout已删除",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "中美双图底部资产吸引力文案已删除",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "共享us数据仍传递股市影响组件",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "共享news仍保留两处既有小幅动态",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "短期流动性工具及资金面点评保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "20日滚动波动率保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "累计偏离与期限变动模块保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "融资融券与bond-margin锚点保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "债市综合评语和中美利差共享逻辑保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "共享BondData类型us/news/liquidityTools均保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "后端源码逐字节未改",
+      "passed": true,
+      "evidence": {
+        "sha256": "d5981a907de6b407f242241badc1a8e3278a72cae6aea6225eb824d12424dda5"
+      }
+    },
+    {
+      "name": "本地生产数据与预检逐字节一致",
+      "passed": true,
+      "evidence": {
+        "public/fund_data.json": {
+          "bytes": 594886,
+          "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+        },
+        "src/data/fund_data.json": {
+          "bytes": 594886,
+          "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+        }
+      }
+    },
+    {
+      "name": "预检实时main与后端基线有效",
+      "passed": true,
+      "evidence": {
+        "head": "6ca1dc0a5146ea732dcdd869b29cc9ca5bb177b0",
+        "headTree": "c8d0516f3713c6d07a14eda24dde01f584651eee"
+      }
+    },
+    {
+      "name": "截图目标仅两张完整卡片，未扩大删除总览或共享模块",
+      "passed": true,
+      "evidence": null
+    }
+  ],
+  "panelSha256": "18af92332b0a11a75ceba08ed7b683377bfb3fef60e3f069677f003ebe11bbbc",
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "developmentServerStarted": false
+}

@@ -588,72 +588,7 @@ export default function BondsPanel() {
         </Card>
       )}
 
-      {/* ====== 8. 中美国债对比 ====== */}
-      {us && us.latest && (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-bold">中美国债收益率对比</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <p className="text-sm font-bold text-red-600 mb-2">中国 {latest.date}</p>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={[{t:'2Y',v:latest.y2},{t:'5Y',v:latest.y5},{t:'10Y',v:latest.y10},{t:'30Y',v:latest.y30}]} layout="vertical" margin={{ top: 5, right: 30, left: 25, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis type="number" domain={[0, 3]} tick={{ fontSize: 10 }} tickFormatter={(v) => `${v}%`} />
-                    <YAxis type="category" dataKey="t" tick={{ fontSize: 12, fontWeight: 'bold' }} width={30} />
-                    <Tooltip formatter={(v: number) => [`${v}%`, '']} />
-                    <Bar dataKey="v" fill="#ef4444" barSize={18} radius={[0, 4, 4, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              <div>
-                <p className="text-sm font-bold text-blue-600 mb-2">美国 {us.latest.date}</p>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={[{t:'2Y',v:us.latest.y2},{t:'5Y',v:us.latest.y5},{t:'10Y',v:us.latest.y10},{t:'30Y',v:us.latest.y30}]} layout="vertical" margin={{ top: 5, right: 30, left: 25, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                    <XAxis type="number" domain={[0, 6]} tick={{ fontSize: 10 }} tickFormatter={(v) => `${v}%`} />
-                    <YAxis type="category" dataKey="t" tick={{ fontSize: 12, fontWeight: 'bold' }} width={30} />
-                    <Tooltip formatter={(v: number) => [`${v}%`, '']} />
-                    <Bar dataKey="v" fill="#3b82f6" barSize={18} radius={[0, 4, 4, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-            <div className="mt-3 p-3 bg-slate-50 rounded-lg text-xs text-slate-600">
-              <span className="font-semibold">中美利差(10Y):</span> {(us.latest.y10 - latest.y10).toFixed(2)}%
-              （美{us.latest.y10}% - 中{latest.y10}%）
-              {us.latest.y10 > latest.y10 ? ' → 美元资产吸引力更高' : ' → 人民币资产吸引力更高'}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* ====== 7. 债券新闻 ====== */}
-      {news.length > 0 && (
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <Newspaper className="w-5 h-5 text-slate-600" />
-              债券市场要闻
-              <Badge variant="outline" className="text-xs bg-slate-50 text-slate-600">东方财富</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {news.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-3 py-2 border-b border-slate-100 last:border-0">
-                  <span className="text-[10px] text-slate-400 flex-shrink-0 mt-0.5 w-16">{item.date}</span>
-                  <p className="text-xs text-slate-700 leading-relaxed">{item.title}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* ====== 8. 债券 → A+H股市影响分析 ====== */}
+      {/* 债券 → A+H股市影响分析；保留共享us数据与综合评语。 */}
       <BondToStockImpact latest={latest} us={us} chg1m={chg1m} daily={daily} />
     </div>
   );
