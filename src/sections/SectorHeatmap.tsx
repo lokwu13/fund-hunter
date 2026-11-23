@@ -249,6 +249,10 @@ export default function SectorHeatmap({ detailed = false }: SectorHeatmapProps) 
               ))}
             </div>
             <p className="mt-1 text-[9px] text-slate-400">{group.leaderSortMethod}；{group.leaderNote}；当前快照{block.snapshotDate || '缺失'}</p>
+            {group.type === 'concept' && <p className="mt-1 text-[9px] text-slate-400">
+              成分：{group.indexName || group.name}（{group.code}）· {group.membershipSource || '来源缺失'} · asOf {group.membershipAsOf || '缺失'}
+              {group.membershipRetrievedAt ? ` · 检索${group.membershipRetrievedAt}` : ''}
+            </p>}
           </div>
         );
         return (

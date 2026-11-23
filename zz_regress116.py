@@ -250,7 +250,10 @@ protected = ('_extreme_rebound_decision', '_broad_observation_decision', 'build_
              'build_oversold_value_directions', '_dividend_group_catalyst', 'build_dividend_watch',
              'build_rsi6_dividend_top20')
 changed = [name for name in protected if inspect.getsource(getattr(old, name)) != inspect.getsource(getattr(ud, name))]
-check('0步窗口其他超跌低估值和旧函数未误改', changed == [], changed)
+# 本任务明确修复build_oversold_value_directions的海外概念成分与历史补键；其余旧函数仍逐字保护。
+intentional_changed = {'build_oversold_value_directions'}
+check('0步窗口其他超跌低估值和旧函数未误改', set(changed) == intentional_changed,
+      {'intentionalChanged': sorted(intentional_changed), 'actualChanged': changed})
 
 ui = ''.join((ROOT / p).read_text(encoding='utf-8') for p in (
     'src/hooks/useFundData.ts', 'src/sections/WeeklySummary.tsx',

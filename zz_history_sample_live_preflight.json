@@ -1,0 +1,281 @@
+{
+  "task": "history-sample",
+  "head": "0c18040a15bc2ed7ee6726335dfeca301214ffbf",
+  "headTree": "7f3e3143c36c813e87b476b45ff5f6c41b4bc6a3",
+  "headMessage": "修复概念拥挤度真实样本与成交额数据链",
+  "baselines": {
+    "scripts/update_data.py": {
+      "sha256": "1a4b0e1095bd32feeb1a714916770b418e4c59f8de1c9366bd08d4e250113dc7",
+      "blob": "9599f8f507259ce3de791e4e8e9fb8960a5dd662",
+      "matched": true
+    },
+    "scripts/vcp_preview.py": {
+      "sha256": "e14411b75ea17f0e3f1b21d78d6810d89c5c05ad6b5e6527020ff8ae2543c377",
+      "blob": "945d118d40ef293515b4b0a675679fe760d22c70",
+      "matched": true
+    }
+  },
+  "onlineFundDataSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+  "onlineEqualsRemoteMain": true,
+  "onlineModuleSummary": {
+    "tradeDate": "20261120",
+    "snapshotDate": "20261120",
+    "valuationStatus": "ok",
+    "counts": {
+      "industryCount": 31,
+      "conceptCount": 15,
+      "directionCount": 46,
+      "leaderCount": 70,
+      "evaluatedGroupCount": 46,
+      "rsiInsufficientGroupCount": 0,
+      "insufficientCoverageGroupCount": 0,
+      "highValuationGroupCount": 0,
+      "rankedGroupCount": 35,
+      "insufficientHistoryGroupCount": 0
+    },
+    "reasons": [
+      "46个行业/大概念按自身历史估值分位低→高；可排35组，历史样本不足0组，覆盖不足0组"
+    ],
+    "historySampling": {
+      "frequency": "month_end",
+      "years": 10,
+      "minSamples": 24,
+      "cachedMonthEnds": 120,
+      "historyStart": "20161130",
+      "historyEnd": "20261030",
+      "membershipBasis": "current_constituents_non_pit",
+      "pit": false,
+      "survivorshipBias": true,
+      "fetchError": null,
+      "lastRequestedMonthEnds": 0,
+      "lastAddedMonthEnds": 0
+    }
+  },
+  "remoteCache": {
+    "bytes": 41513342,
+    "sha256": "e78331b7c7a5ed6bb7dde0c04ac8625c74986e87c3d9b72a60f0a6374500187f",
+    "tradeDate": "20261120",
+    "conceptCount": 15,
+    "thsIndexCount": 2186,
+    "thsMembersCount": 15,
+    "historyMonthEnds": 120,
+    "localBytes": 10703271,
+    "localSha256": "8db3b266153d3509a0e56bda1b988bd8771b0a23e3732914865c40f6050c799e"
+  },
+  "conceptCoverage": [
+    {
+      "name": "AI算力",
+      "code": "885957.TI",
+      "memberCountCache": 428,
+      "historyMemberCount": 428,
+      "snapshotCount": 421,
+      "peCount": 246,
+      "pbCount": 415,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 110,
+      "historyStatus": "ok",
+      "historyKeys": 120
+    },
+    {
+      "name": "人形机器人",
+      "code": "865166.TI",
+      "memberCountCache": 5,
+      "historyMemberCount": 5,
+      "snapshotCount": 0,
+      "peCount": 0,
+      "pbCount": 0,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 0,
+      "historyStatus": "snapshot_missing",
+      "historyKeys": 120
+    },
+    {
+      "name": "低空经济",
+      "code": "886067.TI",
+      "memberCountCache": 511,
+      "historyMemberCount": 511,
+      "snapshotCount": 511,
+      "peCount": 333,
+      "pbCount": 505,
+      "peHistorySamples": 74,
+      "pbHistorySamples": 98,
+      "historyStatus": "ok",
+      "historyKeys": 120
+    },
+    {
+      "name": "商业航天",
+      "code": "865195.TI",
+      "memberCountCache": 10,
+      "historyMemberCount": 10,
+      "snapshotCount": 0,
+      "peCount": 0,
+      "pbCount": 0,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 0,
+      "historyStatus": "snapshot_missing",
+      "historyKeys": 120
+    },
+    {
+      "name": "创新药",
+      "code": "875155.TI",
+      "memberCountCache": 28,
+      "historyMemberCount": 28,
+      "snapshotCount": 0,
+      "peCount": 0,
+      "pbCount": 0,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 0,
+      "historyStatus": "snapshot_missing",
+      "historyKeys": 120
+    },
+    {
+      "name": "固态电池",
+      "code": "865182.TI",
+      "memberCountCache": 5,
+      "historyMemberCount": 5,
+      "snapshotCount": 0,
+      "peCount": 0,
+      "pbCount": 0,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 0,
+      "historyStatus": "snapshot_missing",
+      "historyKeys": 120
+    },
+    {
+      "name": "智能驾驶",
+      "code": "865002.TI",
+      "memberCountCache": 10,
+      "historyMemberCount": 10,
+      "snapshotCount": 0,
+      "peCount": 0,
+      "pbCount": 0,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 0,
+      "historyStatus": "snapshot_missing",
+      "historyKeys": 120
+    },
+    {
+      "name": "半导体设备",
+      "code": "884229.TI",
+      "memberCountCache": 27,
+      "historyMemberCount": 27,
+      "snapshotCount": 27,
+      "peCount": 24,
+      "pbCount": 27,
+      "peHistorySamples": 44,
+      "pbHistorySamples": 44,
+      "historyStatus": "ok",
+      "historyKeys": 120
+    },
+    {
+      "name": "光伏",
+      "code": "865090.TI",
+      "memberCountCache": 26,
+      "historyMemberCount": 26,
+      "snapshotCount": 0,
+      "peCount": 0,
+      "pbCount": 0,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 0,
+      "historyStatus": "snapshot_missing",
+      "historyKeys": 120
+    },
+    {
+      "name": "消费电子",
+      "code": "865153.TI",
+      "memberCountCache": 12,
+      "historyMemberCount": 12,
+      "snapshotCount": 0,
+      "peCount": 0,
+      "pbCount": 0,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 0,
+      "historyStatus": "snapshot_missing",
+      "historyKeys": 120
+    },
+    {
+      "name": "数据中心",
+      "code": "865138.TI",
+      "memberCountCache": 9,
+      "historyMemberCount": 9,
+      "snapshotCount": 0,
+      "peCount": 0,
+      "pbCount": 0,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 0,
+      "historyStatus": "snapshot_missing",
+      "historyKeys": 120
+    },
+    {
+      "name": "卫星互联网",
+      "code": "864033.TI",
+      "memberCountCache": 3,
+      "historyMemberCount": 3,
+      "snapshotCount": 0,
+      "peCount": 0,
+      "pbCount": 0,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 0,
+      "historyStatus": "snapshot_missing",
+      "historyKeys": 120
+    },
+    {
+      "name": "充电桩",
+      "code": "865147.TI",
+      "memberCountCache": 7,
+      "historyMemberCount": 7,
+      "snapshotCount": 0,
+      "peCount": 0,
+      "pbCount": 0,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 0,
+      "historyStatus": "snapshot_missing",
+      "historyKeys": 120
+    },
+    {
+      "name": "新能源车",
+      "code": "864028.TI",
+      "memberCountCache": 17,
+      "historyMemberCount": 17,
+      "snapshotCount": 0,
+      "peCount": 0,
+      "pbCount": 0,
+      "peHistorySamples": 0,
+      "pbHistorySamples": 0,
+      "historyStatus": "snapshot_missing",
+      "historyKeys": 120
+    },
+    {
+      "name": "跨境电商",
+      "code": "885642.TI",
+      "memberCountCache": 350,
+      "historyMemberCount": 350,
+      "snapshotCount": 349,
+      "peCount": 231,
+      "pbCount": 346,
+      "peHistorySamples": 67,
+      "pbHistorySamples": 89,
+      "historyStatus": "ok",
+      "historyKeys": 120
+    }
+  ],
+  "fundData": {
+    "public/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "remoteBytes": 1821751,
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBlob": "764468485ff5dfc2184278dca699aed2c0c80266",
+      "localBytes": 594886,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "manualDispatch": false,
+  "workflowModified": false,
+  "scheduleModified": false
+}

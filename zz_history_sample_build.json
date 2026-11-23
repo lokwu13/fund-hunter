@@ -1,0 +1,55 @@
+{
+  "task": "history-sample",
+  "command": "npm run build",
+  "generatedAt": "2026-11-23T10:38:47+08:00",
+  "durationSeconds": 10.766,
+  "returncode": 0,
+  "modulesTransformed": 2363,
+  "success": true,
+  "warning": "Some chunks are larger than 500 kB after minification",
+  "assets": [
+    {
+      "path": "dist/assets/index-BAXc-qSi-v25.js",
+      "bytes": 1407247,
+      "sha256": "9efa7d69d1e2b08419124a6b7038f168a59126d2fb6e9c46aaff8e898098b478"
+    },
+    {
+      "path": "dist/assets/index-36vfbOZh.css",
+      "bytes": 109901,
+      "sha256": "a0ab66f21aea9e1dad0120459e8a03bdb1cbcf5672c01302fdb51906752fa7a7"
+    }
+  ],
+  "bundleMarkers": {
+    "RSI6≤20窗 · 行业 / 大概念自身历史估值低→高与双龙头": true,
+    "成分：": true,
+    "asOf": true,
+    "当前快照": true,
+    "当前PE_TTM中位数": true,
+    "总市值": true,
+    "历史样本": true
+  },
+  "fundDataBefore": {
+    "public/fund_data.json": {
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "fundDataAfter": {
+    "public/fund_data.json": {
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    "src/data/fund_data.json": {
+      "bytes": 594886,
+      "sha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  },
+  "fundDataUnchanged": true,
+  "developmentServerStarted": false,
+  "productionDataRegenerated": false,
+  "manualDispatch": false
+}

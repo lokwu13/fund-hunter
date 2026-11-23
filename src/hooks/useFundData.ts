@@ -209,6 +209,12 @@ export interface OversoldValueGroup {
   rankEligible: boolean;
   historyStatus: 'ok' | 'insufficient' | 'coverage_insufficient' | 'snapshot_missing';
   historyReason: string;
+  indexName?: string;
+  queryCode?: string;
+  membershipSource?: string | null;
+  membershipAsOf?: string | null;
+  membershipRetrievedAt?: string | null;
+  membershipError?: string | null;
   peCrossPct: null;
   pbCrossPct: null;
   leaders: OversoldValueLeader[];

@@ -11,5 +11,7 @@
   "pitOnly": true,
   "manualDispatch": false,
   "productionDataRegenerated": false,
-  "oldFunctionsChanged": []
+  "oldFunctionsChanged": [
+    "build_oversold_value_directions"
+  ]
 }

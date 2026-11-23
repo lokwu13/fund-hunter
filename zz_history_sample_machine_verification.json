@@ -1,0 +1,55 @@
+{
+  "task": "history-sample",
+  "generatedAt": "2026-11-23T10:39:32+08:00",
+  "checks": {
+    "newRegression19Passed": true,
+    "old108Regression40Passed": true,
+    "latest116Regression34Passed": true,
+    "conceptRegression13Passed": true,
+    "joint18Passed": true,
+    "jointLogsPresent": true,
+    "buildPassed": true,
+    "productionDataUntouched": true,
+    "sourceCacheUntouched": true,
+    "thresholdsPreserved": true,
+    "membershipAndHistoryFixPresent": true,
+    "realCoverageHonestlyIncomplete": true,
+    "oldZeroHistoryNotReused": true,
+    "noNightlyOrScheduleActions": true
+  },
+  "allPassed": true,
+  "codeReleaseReady": true,
+  "realDataRecoveryComplete": false,
+  "nextNormalNightlyRequired": true,
+  "realCoverageStatus": "pending_real_members_current_snapshot_and_history",
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "jointRegression": {
+    "passed": 18,
+    "total": 18
+  },
+  "build": {
+    "success": true,
+    "assets": [
+      {
+        "path": "dist/assets/index-BAXc-qSi-v25.js",
+        "bytes": 1407247,
+        "sha256": "9efa7d69d1e2b08419124a6b7038f168a59126d2fb6e9c46aaff8e898098b478"
+      },
+      {
+        "path": "dist/assets/index-36vfbOZh.css",
+        "bytes": 109901,
+        "sha256": "a0ab66f21aea9e1dad0120459e8a03bdb1cbcf5672c01302fdb51906752fa7a7"
+      }
+    ],
+    "warning": "Some chunks are larger than 500 kB after minification"
+  },
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "workflowModified": false,
+  "scheduleModified": false,
+  "developmentServerStarted": false,
+  "note": "allPassed仅表示代码发布门禁通过，不表示11组真实历史估值已经恢复；线上旧名单须下一次正常nightly重算。"
+}

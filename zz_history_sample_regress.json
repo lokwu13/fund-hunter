@@ -1,0 +1,494 @@
+{
+  "task": "history-sample",
+  "passed": 19,
+  "total": 19,
+  "failed": [],
+  "checks": {
+    "11组独立真实映射不复用拥挤度近似别名": {
+      "pass": true,
+      "evidence": {
+        "新能源车": {
+          "indexName": "新能源汽车",
+          "code": "885431.TI",
+          "queryCode": "300008"
+        },
+        "卫星互联网": {
+          "indexName": "卫星导航",
+          "code": "885574.TI",
+          "queryCode": "300722"
+        },
+        "智能驾驶": {
+          "indexName": "无人驾驶",
+          "code": "885736.TI",
+          "queryCode": "301286"
+        },
+        "光伏": {
+          "indexName": "光伏概念",
+          "code": "885531.TI",
+          "queryCode": "301079"
+        },
+        "数据中心": {
+          "indexName": "数据中心(AIDC)",
+          "code": "885887.TI",
+          "queryCode": "308642"
+        },
+        "充电桩": {
+          "indexName": "充电桩",
+          "code": "885461.TI",
+          "queryCode": "300786"
+        },
+        "消费电子": {
+          "indexName": "消费电子概念",
+          "code": "885800.TI",
+          "queryCode": "308384"
+        },
+        "人形机器人": {
+          "indexName": "人形机器人",
+          "code": "886069.TI",
+          "queryCode": "309119"
+        },
+        "商业航天": {
+          "indexName": "商业航天",
+          "code": "886078.TI",
+          "queryCode": "309130"
+        },
+        "固态电池": {
+          "indexName": "固态电池",
+          "code": "886032.TI",
+          "queryCode": "308294"
+        },
+        "创新药": {
+          "indexName": "创新药",
+          "code": "886015.TI",
+          "queryCode": "308014"
+        }
+      }
+    },
+    "海外代码ETF与B股均被拒绝": {
+      "pass": true,
+      "evidence": null
+    },
+    "公开分页解析h3身份代码与完整A股成员": {
+      "pass": true,
+      "evidence": {
+        "name": "卫星互联网",
+        "indexName": "卫星导航",
+        "code": "885574.TI",
+        "queryCode": "300722",
+        "members": [
+          "600100.SH",
+          "600101.SH",
+          "600102.SH",
+          "600200.SH",
+          "600201.SH",
+          "600202.SH",
+          "600203.SH"
+        ],
+        "memberCount": 7,
+        "source": "同花顺公开概念页全分页（真实A股）",
+        "asOf": "20261123",
+        "retrievedAt": "2026-11-23T10:28:30+08:00",
+        "pageCount": 2,
+        "rejectedNonA": [
+          "900901"
+        ],
+        "fallbackReason": null
+      }
+    },
+    "指数身份不符不静默改映射": {
+      "pass": true,
+      "evidence": null
+    },
+    "公开页跳登录拒绝使用不完整成分": {
+      "pass": true,
+      "evidence": null
+    },
+    "Tushare优先且海外成员剔除": {
+      "pass": true,
+      "evidence": {
+        "卫星互联网": {
+          "name": "卫星互联网",
+          "indexName": "卫星导航",
+          "code": "885574.TI",
+          "queryCode": "300722",
+          "members": [
+            "000001.SZ",
+            "300750.SZ",
+            "600000.SH",
+            "688001.SH",
+            "920001.BJ"
+          ],
+          "memberCount": 5,
+          "source": "Tushare ths_member（真实A股，公开页核验指数）",
+          "asOf": "20261120",
+          "retrievedAt": "2026-11-23T10:28:30+08:00",
+          "identityStatus": "verified",
+          "identityError": null
+        }
+      }
+    },
+    "Tushare empty使用真实公开兜底并保留其它缓存": {
+      "pass": true,
+      "evidence": {
+        "卫星互联网": {
+          "name": "卫星互联网",
+          "indexName": "卫星导航",
+          "code": "885574.TI",
+          "queryCode": "300722",
+          "members": [
+            "600000.SH",
+            "000001.SZ",
+            "300750.SZ",
+            "688001.SH",
+            "920001.BJ"
+          ],
+          "memberCount": 5,
+          "source": "同花顺公开概念页全分页（真实A股）",
+          "asOf": "20261120",
+          "fallbackReason": "ths_member为空"
+        }
+      }
+    },
+    "Tushare error使用真实公开兜底并保留其它缓存": {
+      "pass": true,
+      "evidence": {
+        "卫星互联网": {
+          "name": "卫星互联网",
+          "indexName": "卫星导航",
+          "code": "885574.TI",
+          "queryCode": "300722",
+          "members": [
+            "600000.SH",
+            "000001.SZ",
+            "300750.SZ",
+            "688001.SH",
+            "920001.BJ"
+          ],
+          "memberCount": 5,
+          "source": "同花顺公开概念页全分页（真实A股）",
+          "asOf": "20261120",
+          "fallbackReason": "受控成员失败"
+        }
+      }
+    },
+    "成员缓存asOf隔离当日可复用且陈旧不冒充": {
+      "pass": true,
+      "evidence": {
+        "卫星互联网": {
+          "name": "卫星互联网",
+          "indexName": "卫星导航",
+          "code": "885574.TI",
+          "queryCode": "300722",
+          "members": [
+            "000001.SZ",
+            "300750.SZ",
+            "600000.SH",
+            "688001.SH",
+            "920001.BJ"
+          ],
+          "memberCount": 5,
+          "source": "Tushare ths_member（真实A股，公开页核验指数）",
+          "asOf": "20261120",
+          "retrievedAt": "2026-11-23T10:28:31+08:00",
+          "identityStatus": "verified",
+          "identityError": null
+        }
+      }
+    },
+    "全局日期已有但新组键缺失仍逐月补抓": {
+      "pass": true,
+      "evidence": {
+        "rows": {
+          "20260130": {
+            "concept:865166.TI": {
+              "tradeDate": "20260130",
+              "memberCount": 5,
+              "snapshotCount": 0,
+              "peCount": 0,
+              "peCoverage": 0,
+              "peTtmMedian": 999
+            },
+            "industry:KEEP": {
+              "tradeDate": "20260130",
+              "keep": true
+            },
+            "concept:886069.TI": {
+              "memberCount": 6,
+              "snapshotCount": 6,
+              "missingSnapshotCount": 0,
+              "peCount": 6,
+              "pbCount": 6,
+              "commonCount": 6,
+              "peCoverage": 1.0,
+              "pbCoverage": 1.0,
+              "commonCoverage": 1.0,
+              "lossPeCount": 0,
+              "peTtmMedian": 12.5,
+              "pbMedian": 1.25,
+              "tradeDate": "20260130",
+              "membershipFingerprint": "bd06179e3b59164f087d02ed1dfe74ea83f3536e7a91ac86b830b795eb0bef6e"
+            }
+          },
+          "20260227": {
+            "concept:865166.TI": {
+              "tradeDate": "20260227",
+              "memberCount": 5,
+              "snapshotCount": 0,
+              "peCount": 0,
+              "peCoverage": 0,
+              "peTtmMedian": 999
+            },
+            "industry:KEEP": {
+              "tradeDate": "20260227",
+              "keep": true
+            },
+            "concept:886069.TI": {
+              "memberCount": 6,
+              "snapshotCount": 6,
+              "missingSnapshotCount": 0,
+              "peCount": 6,
+              "pbCount": 6,
+              "commonCount": 6,
+              "peCoverage": 1.0,
+              "pbCoverage": 1.0,
+              "commonCoverage": 1.0,
+              "lossPeCount": 0,
+              "peTtmMedian": 12.5,
+              "pbMedian": 1.25,
+              "tradeDate": "20260227",
+              "membershipFingerprint": "bd06179e3b59164f087d02ed1dfe74ea83f3536e7a91ac86b830b795eb0bef6e"
+            }
+          },
+          "20260331": {
+            "concept:865166.TI": {
+              "tradeDate": "20260331",
+              "memberCount": 5,
+              "snapshotCount": 0,
+              "peCount": 0,
+              "peCoverage": 0,
+              "peTtmMedian": 999
+            },
+            "industry:KEEP": {
+              "tradeDate": "20260331",
+              "keep": true
+            },
+            "concept:886069.TI": {
+              "memberCount": 6,
+              "snapshotCount": 6,
+              "missingSnapshotCount": 0,
+              "peCount": 6,
+              "pbCount": 6,
+              "commonCount": 6,
+              "peCoverage": 1.0,
+              "pbCoverage": 1.0,
+              "commonCoverage": 1.0,
+              "lossPeCount": 0,
+              "peTtmMedian": 12.5,
+              "pbMedian": 1.25,
+              "tradeDate": "20260331",
+              "membershipFingerprint": "bd06179e3b59164f087d02ed1dfe74ea83f3536e7a91ac86b830b795eb0bef6e"
+            }
+          }
+        },
+        "version": 2,
+        "frequency": "month_end",
+        "membershipBasis": "current_constituents_non_pit",
+        "survivorshipBias": true,
+        "minSamples": 24,
+        "fetchError": null,
+        "updated": "20260415",
+        "lastRequestedMonthEnds": 3,
+        "lastAddedMonthEnds": 3,
+        "lastAddedGroupKeys": 3
+      }
+    },
+    "新键用真实新成员计算不复制旧海外零记录且保留其它键": {
+      "pass": true,
+      "evidence": null
+    },
+    "同组键成分指纹一致不重复变化才重采": {
+      "pass": true,
+      "evidence": {
+        "unchangedCalls": [],
+        "changedCalls": [
+          "20260130",
+          "20260227",
+          "20260331"
+        ]
+      }
+    },
+    "60覆盖率边界不降低": {
+      "pass": true,
+      "evidence": null
+    },
+    "5只数量门与60覆盖任一不足均不可排": {
+      "pass": true,
+      "evidence": null
+    },
+    "5只边界及24样本含当前点": {
+      "pass": true,
+      "evidence": null
+    },
+    "非PIT生存者偏差持续明示": {
+      "pass": true,
+      "evidence": null
+    },
+    "当前陈旧未来及日期缺失严格隔离": {
+      "pass": true,
+      "evidence": {
+        "current": {
+          "status": "ok",
+          "rank": false,
+          "historyStatus": "insufficient",
+          "snapshotDate": "20261120"
+        },
+        "stale": {
+          "status": "stale",
+          "rank": false,
+          "historyStatus": "snapshot_missing",
+          "snapshotDate": "20261119"
+        },
+        "future": {
+          "status": "stale",
+          "rank": false,
+          "historyStatus": "snapshot_missing",
+          "snapshotDate": "20261121"
+        },
+        "missing": {
+          "status": "stale",
+          "rank": false,
+          "historyStatus": "snapshot_missing",
+          "snapshotDate": null
+        }
+      }
+    },
+    "双龙头按真实总市值前2且无市值不凑数": {
+      "pass": true,
+      "evidence": [
+        {
+          "code": "600000.SH",
+          "name": "股票0",
+          "close": 10.0,
+          "peTtm": 10.0,
+          "pb": 1.0,
+          "peStatus": "有效PE",
+          "pbStatus": "有效PB",
+          "totalMv": 100000.0,
+          "totalMvYi": 10.0,
+          "circMv": null,
+          "isST": false,
+          "tradeDate": "20261120",
+          "mineCovered": false,
+          "mineTypes": [],
+          "mineDetails": [],
+          "mineNote": "既有排雷未覆盖"
+        },
+        {
+          "code": "600001.SH",
+          "name": "股票1",
+          "close": 10.0,
+          "peTtm": 10.0,
+          "pb": 1.0,
+          "peStatus": "有效PE",
+          "pbStatus": "有效PB",
+          "totalMv": 90000.0,
+          "totalMvYi": 9.0,
+          "circMv": null,
+          "isST": false,
+          "tradeDate": "20261120",
+          "mineCovered": false,
+          "mineTypes": [],
+          "mineDetails": [],
+          "mineNote": "既有排雷未覆盖"
+        }
+      ]
+    },
+    "生产整合新A股代码历史分位双龙头与来源asOf": {
+      "pass": true,
+      "evidence": {
+        "type": "concept",
+        "code": "886069.TI",
+        "name": "人形机器人",
+        "indexName": "人形机器人",
+        "queryCode": "309119",
+        "membershipSource": "Tushare ths_member（真实A股，公开页核验指数）",
+        "membershipAsOf": "20261120",
+        "membershipRetrievedAt": null,
+        "membershipError": null,
+        "memberCount": 6,
+        "snapshotCount": 6,
+        "missingSnapshotCount": 0,
+        "peCount": 6,
+        "pbCount": 6,
+        "commonCount": 6,
+        "peCoverage": 1.0,
+        "pbCoverage": 1.0,
+        "commonCoverage": 1.0,
+        "lossPeCount": 0,
+        "peTtmMedian": 10.0,
+        "pbMedian": 1.0,
+        "tradeDate": "20261120",
+        "peHistoryPct": 100.0,
+        "pbHistoryPct": 100.0,
+        "compositeHistoryPct": 100.0,
+        "peHistorySamples": 24,
+        "pbHistorySamples": 24,
+        "valuationRankBasis": "dual",
+        "rankEligible": true,
+        "historyStatus": "ok",
+        "historyReason": "PE/PB自身历史分位均值",
+        "leaders": [
+          {
+            "code": "600000.SH",
+            "name": "股票0",
+            "close": 10.0,
+            "peTtm": 10.0,
+            "pb": 1.0,
+            "peStatus": "有效PE",
+            "pbStatus": "有效PB",
+            "totalMv": 100000.0,
+            "totalMvYi": 10.0,
+            "circMv": null,
+            "isST": false,
+            "tradeDate": "20261120",
+            "mineCovered": false,
+            "mineTypes": [],
+            "mineDetails": [],
+            "mineNote": "既有排雷未覆盖"
+          },
+          {
+            "code": "600001.SH",
+            "name": "股票1",
+            "close": 10.0,
+            "peTtm": 10.0,
+            "pb": 1.0,
+            "peStatus": "有效PE",
+            "pbStatus": "有效PB",
+            "totalMv": 90000.0,
+            "totalMvYi": 9.0,
+            "circMv": null,
+            "isST": false,
+            "tradeDate": "20261120",
+            "mineCovered": false,
+            "mineTypes": [],
+            "mineDetails": [],
+            "mineNote": "既有排雷未覆盖"
+          }
+        ],
+        "leaderSortMethod": "daily_basic.total_mv总市值降序，代码升序打破并列",
+        "leaderNote": "daily_basic.total_mv总市值降序，代码升序打破并列",
+        "valuationReferenceOnly": true,
+        "peCrossPct": null,
+        "pbCrossPct": null,
+        "reason": "PE/PB自身历史分位均值"
+      }
+    }
+  },
+  "productionDataUntouched": true,
+  "thresholds": {
+    "minMetricCount": 5,
+    "minMetricCoverage": 0.6,
+    "minHistorySamplesIncludingCurrent": 24
+  },
+  "note": "fixture验证不代表真实历史估值已覆盖；真实覆盖单独报告。"
+}

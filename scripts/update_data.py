@@ -28,6 +28,7 @@ from rsi6_oversold import weekly_rsi6_evidence, build_direction_groups
 from sector_valuation_history import (group_valuation_snapshot, history_valuation_position,
                                       month_end_sample_dates, MIN_HISTORY_SAMPLES,
                                       MIN_METRIC_COUNT, MIN_METRIC_COVERAGE)
+from oversold_concept_members import (OVERSOLD_CONCEPT_SOURCES, ensure_oversold_concept_members)
 
 # ── Configuration ──
 TUSHARE_TOKEN = os.environ.get('TUSHARE_TOKEN', '')
@@ -6265,7 +6266,7 @@ def _daily_valuation_records(frame):
         return records
     for _, row in frame.iterrows():
         code = str(row.get('ts_code') or '').upper()
-        if not code:
+        if not _is_real_a_share_code(code):
             continue
 
         def number(key):
@@ -6283,11 +6284,23 @@ def _daily_valuation_records(frame):
     return records
 
 
+def _spec_membership_fingerprint(spec):
+    members = sorted(spec.get('members') or [])
+    return hashlib.sha256('|'.join(members).encode('utf-8')).hexdigest()
+
+
+def _history_spec_needs_refresh(row, spec):
+    if not row:
+        return True
+    expected = spec.get('membershipFingerprint')
+    return bool(expected and row.get('membershipFingerprint') != expected)
+
+
 def _update_sector_valuation_history(pro, trade_date, specs):
-    """十年真实月末交易日采样；一次日历+每个缺失月一次daily_basic，成功即增量落盘。"""
+    """按日期×组键增量补样；已有日期缺新组键同样请求，绝不复制旧错代码记录。"""
     cache = _load_sector_valuation_history()
     rows = dict(cache.get('rows') or {})
-    cache.update({'version': 1, 'frequency': 'month_end',
+    cache.update({'version': 2, 'frequency': 'month_end',
                   'membershipBasis': 'current_constituents_non_pit',
                   'survivorshipBias': True, 'minSamples': SECTOR_VALUATION_MIN_SAMPLES,
                   'rows': rows, 'fetchError': None})
@@ -6302,8 +6315,11 @@ def _update_sector_valuation_history(pro, trade_date, specs):
         cache['fetchError'] = f'trade_cal失败：{str(exc)[:200]}'
         _save_sector_valuation_history(cache)
         return cache
-    missing = [date for date in dates if date not in rows]
+    missing = [date for date in dates
+               if any(_history_spec_needs_refresh((rows.get(date) or {}).get(_sector_valuation_key(spec)), spec)
+                      for spec in specs)]
     added = 0
+    added_keys = 0
     for date in missing:
         try:
             time.sleep(API_DELAY)
@@ -6313,17 +6329,29 @@ def _update_sector_valuation_history(pro, trade_date, specs):
             records = _daily_valuation_records(frame)
             if not records or {r['tradeDate'] for r in records.values()} != {date}:
                 raise RuntimeError('daily_basic日期不一致')
-            rows[date] = {_sector_valuation_key(spec): dict(group_valuation_snapshot(spec['members'], records),
-                                                            tradeDate=date)
-                          for spec in specs}
-            added += 1
-            cache['updated'] = trade_date
-            _save_sector_valuation_history(cache)
+            existing = dict(rows.get(date) or {})
+            changed = 0
+            for spec in specs:
+                key = _sector_valuation_key(spec)
+                if not _history_spec_needs_refresh(existing.get(key), spec):
+                    continue
+                snapshot = dict(group_valuation_snapshot(spec['members'], records), tradeDate=date)
+                if spec.get('membershipFingerprint'):
+                    snapshot['membershipFingerprint'] = spec['membershipFingerprint']
+                existing[key] = snapshot
+                changed += 1
+            if changed:
+                rows[date] = existing
+                added += 1
+                added_keys += changed
+                cache['updated'] = trade_date
+                _save_sector_valuation_history(cache)
         except Exception as exc:
             cache['fetchError'] = f'{date}采样失败，停止本轮历史请求并保留既有缓存：{str(exc)[:200]}'
             break
     cache['lastRequestedMonthEnds'] = len(missing)
     cache['lastAddedMonthEnds'] = added
+    cache['lastAddedGroupKeys'] = added_keys
     cache['updated'] = trade_date
     _save_sector_valuation_history(cache)
     return cache
@@ -6531,8 +6559,9 @@ def build_oversold_value_directions(pro, trade_date, data):
     base = {
         'visible': extreme_active, 'tradeDate': effective, 'snapshotDate': None,
         'valuationStatus': 'missing', 'valuationError': None,
-        'source': ('申万sw_list/sw_members与同花顺concepts/ths_members真实现行成分；'
-                   'Tushare daily_basic当前有效日及真实月末增量采样；vcp_cache.sectorValuationHistory独立嵌套缓存'),
+        'source': ('申万sw_list/sw_members与同花顺真实现行A股成分；估值专用oversoldConceptMembers独立缓存，'
+                   'Tushare ths_member优先、公开概念页h3身份核验及全分页兜底；'
+                   'Tushare daily_basic当前有效日及真实月末按日期×组键增量采样；不沿用旧海外指数成分'),
         'valuationMethod': OVERSOLD_VALUE_METHOD,
         'rankingMethod': ('PE/PB自身历史分位均有效取二者平均作为综合估值分位，从低到高；'
                           '仅一个有效按单一指标并标注；均无效置后标历史样本不足或覆盖不足；不按RSI6排序。'),
@@ -6562,12 +6591,49 @@ def build_oversold_value_directions(pro, trade_date, data):
 
     cache = _load_json_cache(DIVIDEND_GROUP_CACHE_PATH, {})
     ths_index = cache.get('ths_index') or {}
+    original_concepts = cache.get('concepts') or []
+    repaired_names = {x.get('name') for x in original_concepts if x.get('name') in OVERSOLD_CONCEPT_SOURCES}
+    member_records, member_errors = {}, {}
+    if repaired_names:
+        member_records, member_errors = ensure_oversold_concept_members(
+            pro, effective, cache,
+            save_cache=lambda updated: _save_json_cache(DIVIDEND_GROUP_CACHE_PATH, updated),
+            names=repaired_names)
+        cache = dict(cache, oversoldConceptMembers=member_records,
+                     oversoldConceptMemberErrors=member_errors)
+        base['reasons'].append(f'估值专用真实A股概念映射{len(member_records)}/{len(repaired_names)}组；'
+                               '不使用旧海外指数成分或旧零覆盖历史键')
+
+    def concept_spec(concept):
+        name = concept.get('name')
+        if name in repaired_names:
+            source = OVERSOLD_CONCEPT_SOURCES[name]
+            record = member_records.get(name) or {}
+            error = member_errors.get(name) or {}
+            members = {code for code in record.get('members') or [] if _is_real_a_share_code(code)}
+            spec = {'type': 'concept', 'code': source['code'], 'name': name,
+                    'indexName': source['indexName'], 'queryCode': source['queryCode'],
+                    'members': members, 'membershipSource': record.get('source'),
+                    'membershipAsOf': record.get('asOf'), 'membershipRetrievedAt': record.get('retrievedAt'),
+                    'membershipError': (error or {}).get('error')}
+            spec['membershipFingerprint'] = _spec_membership_fingerprint(spec)
+            return spec
+        code = concept.get('code') or ths_index.get(name)
+        members = {member for member in (cache.get('ths_members') or {}).get(code) or []
+                   if _is_real_a_share_code(member)}
+        spec = {'type': 'concept', 'code': code, 'name': name, 'indexName': name,
+                'members': members, 'membershipSource': 'Tushare ths_member既有A股缓存',
+                'membershipAsOf': cache.get('trade_date'), 'membershipError': None}
+        spec['membershipFingerprint'] = _spec_membership_fingerprint(spec)
+        return spec
+
     specs = ([{'type': 'industry', 'code': x['code'], 'name': x['name'],
-               'members': set((cache.get('sw_members') or {}).get(x['code']) or [])}
+               'members': {member for member in (cache.get('sw_members') or {}).get(x['code']) or []
+                           if _is_real_a_share_code(member)}}
               for x in cache.get('sw_list') or []]
-             + [{'type': 'concept', 'code': x.get('code') or ths_index.get(x['name']), 'name': x['name'],
-                 'members': set((cache.get('ths_members') or {}).get(x.get('code') or ths_index.get(x['name'])) or [])}
-                for x in cache.get('concepts') or [] if x.get('code') or ths_index.get(x['name'])])
+             + [concept_spec(x) for x in original_concepts if x.get('code') or ths_index.get(x.get('name'))])
+    base['membershipCoverage'] = {'repairedConceptCount': len(member_records),
+                                  'failedConceptCount': len(member_errors), 'errors': member_errors}
     base['coverage'] = {'groupTotal': len(specs), 'snapshotRows': 0, 'stale': False, 'insufficientGroups': []}
     snap = None
     try:
@@ -6606,6 +6672,7 @@ def build_oversold_value_directions(pro, trade_date, data):
         'historyEnd': dates[-1] if dates else None, 'fetchError': history_cache.get('fetchError'),
         'lastRequestedMonthEnds': history_cache.get('lastRequestedMonthEnds', 0),
         'lastAddedMonthEnds': history_cache.get('lastAddedMonthEnds', 0),
+        'lastAddedGroupKeys': history_cache.get('lastAddedGroupKeys', 0),
     })
     if history_cache.get('fetchError'):
         base['reasons'].append('历史估值缓存增量：' + history_cache['fetchError'])
@@ -6657,13 +6724,17 @@ def build_oversold_value_directions(pro, trade_date, data):
     for spec in specs:
         current = dict(group_valuation_snapshot(spec['members'], records), tradeDate=effective)
         history = [history_rows[date].get(_sector_valuation_key(spec)) for date in dates]
-        position = history_valuation_position(current, [x for x in history if x])
+        history = [row for row in history if not _history_spec_needs_refresh(row, spec)]
+        position = history_valuation_position(current, history)
         leaders, leader_sort = leaders_for(spec)
-        groups.append({**{k: v for k, v in spec.items() if k != 'members'}, **position,
+        reason = position['historyReason']
+        if spec.get('membershipError'):
+            reason += f'；真实A股成分恢复失败：{spec["membershipError"]}'
+        groups.append({**{k: v for k, v in spec.items() if k not in ('members', 'membershipFingerprint')}, **position,
                        'leaders': leaders, 'leaderSortMethod': leader_sort,
                        'leaderNote': leader_sort if len(leaders) == 2 else f'可用市值成员仅{len(leaders)}只，不凑数',
                        'valuationReferenceOnly': True, 'peCrossPct': None, 'pbCrossPct': None,
-                       'reason': position['historyReason']})
+                       'historyReason': reason, 'reason': reason})
     sort_key = lambda g: (g['compositeHistoryPct'] is None,
                           g['compositeHistoryPct'] if g['compositeHistoryPct'] is not None else 999,
                           g['type'], g['code'])
@@ -6676,16 +6747,21 @@ def build_oversold_value_directions(pro, trade_date, data):
         'directionCount': len(groups), 'leaderCount': sum(len(g['leaders']) for g in groups),
         'evaluatedGroupCount': len(specs), 'rsiInsufficientGroupCount': 0,
         'insufficientCoverageGroupCount': sum(g['historyStatus'] == 'coverage_insufficient' for g in groups),
+        'snapshotMissingGroupCount': sum(g['historyStatus'] == 'snapshot_missing' for g in groups),
         'highValuationGroupCount': 0,
         'rankedGroupCount': sum(g['rankEligible'] for g in groups),
         'insufficientHistoryGroupCount': sum(g['historyStatus'] == 'insufficient' for g in groups),
     }
     base['coverage']['insufficientGroups'] = [
         {'type': g['type'], 'code': g['code'], 'name': g['name'], 'memberCount': g['memberCount'],
-         'reason': g['historyReason']} for g in groups if not g['rankEligible']]
+         'membershipSource': g.get('membershipSource'), 'membershipAsOf': g.get('membershipAsOf'),
+         'membershipError': g.get('membershipError'), 'reason': g['historyReason']}
+        for g in groups if not g['rankEligible']]
     base['reasons'].append(
         f'{len(groups)}个行业/大概念按自身历史估值分位低→高；可排{base["counts"]["rankedGroupCount"]}组，'
-        f'历史样本不足{base["counts"]["insufficientHistoryGroupCount"]}组，覆盖不足{base["counts"]["insufficientCoverageGroupCount"]}组')
+        f'历史样本不足{base["counts"]["insufficientHistoryGroupCount"]}组，'
+        f'覆盖不足{base["counts"]["insufficientCoverageGroupCount"]}组，'
+        f'当前有效快照缺失{base["counts"]["snapshotMissingGroupCount"]}组')
     print(f'  oversoldValueDirections: 行业{len(industries)}组/概念{len(concepts)}组，'
           f'历史估值可排{base["counts"]["rankedGroupCount"]}组，缓存月末{len(dates)}个，估值{base["valuationStatus"]}（{effective}）')
 
