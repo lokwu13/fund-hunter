@@ -1,0 +1,95 @@
+{
+  "task": "daily-tables-1141",
+  "generatedAt": "2026-11-23T11:51:22+08:00",
+  "previousHead": "111e3fe98c5c66e885fa457e79f609b62808a6bd",
+  "head": "111e3fe98c5c66e885fa457e79f609b62808a6bd",
+  "headTree": "3a2bff87c3d0bab90a8e9f5b5930cc9310897257",
+  "headMessage": "删除外资栏内外资分歧十大标的表格",
+  "changedSincePrevious": false,
+  "protectedFiles": {
+    "src/sections/ForeignCapitalPanel.tsx": {
+      "remoteSha256": "62c90f8f01a09133b97d1747077a607a84b3ce2b4b8f938b86c6bf9e3d5ef4d1",
+      "localSha256": "62c90f8f01a09133b97d1747077a607a84b3ce2b4b8f938b86c6bf9e3d5ef4d1",
+      "matched": true,
+      "baseline": "zz_daily_tables_1141_ForeignCapitalPanel_baseline.tsx"
+    },
+    "scripts/update_data.py": {
+      "remoteSha256": "ba9042b457cfe35562c4eb15ff739277e4fa4c38fa6f12d08ef16cd23bcb9116",
+      "localSha256": "ba9042b457cfe35562c4eb15ff739277e4fa4c38fa6f12d08ef16cd23bcb9116",
+      "matched": true,
+      "baseline": "zz_daily_tables_1141_update_data_baseline.py"
+    },
+    ".github/workflows/daily-update.yml": {
+      "remoteSha256": "51fd1130b90749a4616e4effc949058131c4784b45ddccb56997d5a51298a1eb",
+      "localSha256": "51fd1130b90749a4616e4effc949058131c4784b45ddccb56997d5a51298a1eb",
+      "matched": true,
+      "baseline": "zz_daily_tables_1141_daily_update_baseline.yml"
+    }
+  },
+  "fundData": {
+    "public/fund_data.json": {
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBytes": 1821751,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+      "localBytes": 594886,
+      "matched": false
+    },
+    "src/data/fund_data.json": {
+      "remoteSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+      "remoteBytes": 1821751,
+      "localSha256": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+      "localBytes": 594886,
+      "matched": false
+    }
+  },
+  "manualDispatch": false,
+  "onlineFundDataSha256": "7a925a4f546b48b7be6be0e9301d1e221766bd801aecd586977d17dba2e36b72",
+  "onlineEqualsRemoteMain": true,
+  "ccassCache": {
+    "remoteSha256": "a899ba41151d1176b7c57187f7b8b13f983c74c42d546ff15dc480a278223459",
+    "monthlyDates": [
+      "2025-12-31",
+      "2026-01-30",
+      "2026-02-27",
+      "2026-03-31",
+      "2026-04-30",
+      "2026-05-29",
+      "2026-06-30",
+      "2026-07-31",
+      "2026-08-31",
+      "2026-09-30",
+      "2026-10-30"
+    ],
+    "dailyNamespaces": []
+  },
+  "remoteAsOf": {
+    "southbound_concentration_top10": {
+      "source": "Tushare hk_hold（港交所CCASS港股通持股）",
+      "freq": "日更",
+      "lastUpdate": "2026-11-19",
+      "note": "港股通持股占港股总股本比例，交易日盘后更新；名称为港交所登记繁体原名"
+    },
+    "foreign_concentration_top10": {
+      "source": "港交所CCASS",
+      "freq": "手工季更",
+      "lastUpdate": "2026-07-04",
+      "note": "国际中介持股占比，无免费批量接口，手工季更"
+    }
+  },
+  "onlineAsOf": {
+    "southbound_concentration_top10": {
+      "source": "Tushare hk_hold（港交所CCASS港股通持股）",
+      "freq": "日更",
+      "lastUpdate": "2026-11-19",
+      "note": "港股通持股占港股总股本比例，交易日盘后更新；名称为港交所登记繁体原名"
+    },
+    "foreign_concentration_top10": {
+      "source": "港交所CCASS",
+      "freq": "手工季更",
+      "lastUpdate": "2026-07-04",
+      "note": "国际中介持股占比，无免费批量接口，手工季更"
+    }
+  },
+  "workflowModified": false,
+  "scheduleModified": false
+}

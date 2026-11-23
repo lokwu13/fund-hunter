@@ -1,0 +1,51 @@
+{
+  "task": "daily-tables-1141",
+  "generatedAt": "2026-11-23T12:08:49+08:00",
+  "browser": "Microsoft Edge headless (CDP)",
+  "automationFramework": "websocket-client / Chrome DevTools Protocol; no Playwright/Selenium/Puppeteer",
+  "localUrl": "http://127.0.0.1:65215/fund-hunter/",
+  "selectedTabs": [
+    "外资"
+  ],
+  "bodyFlags": {
+    "southbound": true,
+    "foreignConcentration": true,
+    "southSource": true,
+    "southFrequency": true,
+    "southAsOf": true,
+    "foreignSource": true,
+    "foreignManualFrequency": true,
+    "foreignAsOf": true,
+    "newForeignSubtitle": true,
+    "tips": true,
+    "northbound": true,
+    "ccass": 1,
+    "di": 1,
+    "disclosureLinks": 80,
+    "viewportWidth": 1585,
+    "removedTop10": false,
+    "previousChart": false
+  },
+  "checks": {
+    "realEdgeRendered": true,
+    "foreignTabClicked": true,
+    "bothTablesRendered": true,
+    "southSourceFrequencyAsOfRendered": true,
+    "foreignCurrentManualFrequencyHonest": true,
+    "newForeignSubtitleRendered": true,
+    "independentTipsRetained": true,
+    "northboundRetained": true,
+    "ccassAnchorRetained": true,
+    "diAnchorRetained": true,
+    "disclosureLinksRetained": true,
+    "previousRemovalsNotRestored": true,
+    "desktopViewportApplied": true,
+    "screenshotCaptured": true
+  },
+  "allPassed": true,
+  "screenshot": "zz_daily_tables_1141_edge_tables.png",
+  "browserConsoleVerified": false,
+  "limitation": "真实 Edge 渲染、外资页签切换和两榜局部截图；使用本地旧生产JSON确认界面如实显示现有as-of/手工季更，未把新频率提前冒充到旧数据。未采集完整浏览器 Console，未做全站交互巡检。",
+  "temporaryStaticServerStopped": true,
+  "edgeProcessStopped": true
+}

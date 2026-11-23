@@ -4445,20 +4445,65 @@ def fetch_margin_summary(pro, trade_date, data):
         print(f"  Warning: fetch_margin_summary failed: {e}")
 
 
-def fetch_southbound_concentration(pro, trade_date, data):
-    """南向持股集中度 TOP10（Tushare hk_hold 批量，交易日盘后更新）。"""
+CONCENTRATION_FREQ = '交易日日更'
+SOUTHBOUND_CONCENTRATION_NOTE = ('每交易日 nightly 检查并刷新最新可得港股通快照；源数据按交易日披露，'
+                                 '可能有发布滞后，周末/假期沿用最近交易日；名称为港交所登记繁体原名')
+FOREIGN_CONCENTRATION_NOTE = ('现有20只港股蓝筹跟踪池，非全市场排名；每交易日 nightly 检查最新CCASS快照，'
+                              '比例=主流外资托管行合计持股/已发行股本；托管行持股≠最终外资实益持仓，'
+                              '源数据可能延迟，断源沿用最近可得日期')
+
+
+def _mark_concentration_last_good(data, key, base_note, reason):
+    """仅给已接入日更的数据标记断源；旧的静态/手工数据不冒充新观测。"""
+    ds = data.setdefault('dataSources', {}).get(key) or {}
+    if ds.get('freq') == CONCENTRATION_FREQ and ds.get('lastUpdate'):
+        ds['note'] = f"{base_note}；本次{reason}，沿用 {ds['lastUpdate']} 最近可得数据"
+
+
+def _recent_open_dates(pro, trade_date, lookback_days=45):
+    """项目交易日历优先，失败时至少排除周末；港交所额外假期由源空结果继续回退。"""
+    end = datetime.strptime(trade_date, '%Y%m%d')
+    start = end - timedelta(days=lookback_days)
     try:
-        d = trade_date
-        df = None
-        for _ in range(5):
-            time.sleep(API_DELAY)
-            df = pro.hk_hold(trade_date=d)
-            if df is not None and len(df):
-                break
-            d = (datetime.strptime(d, '%Y%m%d') - timedelta(days=1)).strftime('%Y%m%d')
-        if df is None or not len(df):
-            raise ValueError('hk_hold empty')
-        top = df.sort_values('ratio', ascending=False).head(10)
+        cal = pro.trade_cal(exchange='SSE', start_date=start.strftime('%Y%m%d'), end_date=trade_date)
+        days = sorted(cal.loc[cal['is_open'].astype(int) == 1, 'cal_date'].astype(str).tolist())
+        days = [d for d in days if d <= trade_date]
+        if days:
+            return days
+    except Exception as e:
+        print(f'  Warning: concentration trade calendar unavailable (weekday fallback): {e}')
+    days = []
+    for offset in range(lookback_days + 1):
+        day = end - timedelta(days=offset)
+        if day.weekday() < 5:
+            days.append(day.strftime('%Y%m%d'))
+    return sorted(days)
+
+
+def _fetch_hk_hold_latest(pro, trade_date, max_backtrack=15):
+    """取最近交易日 hk_hold；周末重复快照不得伪装成新交易日观测。"""
+    open_days = _recent_open_dates(pro, trade_date)
+    for d in list(reversed(open_days))[:max_backtrack]:
+        time.sleep(API_DELAY)
+        df = pro.hk_hold(trade_date=d)
+        if df is not None and len(df):
+            actual = d
+            if 'trade_date' in df.columns:
+                dates = df['trade_date'].dropna().astype(str).str.replace('-', '', regex=False)
+                dates = dates[dates.str.fullmatch(r'\d{8}') & dates.isin(open_days)]
+                if len(dates):
+                    actual = dates.max()
+            return actual, df
+    raise ValueError('hk_hold empty')
+
+
+def fetch_southbound_concentration(pro, trade_date, data):
+    """南向持股集中度 TOP10；成功返回真实 as-of，失败保留 last-good。"""
+    try:
+        d, df = _fetch_hk_hold_latest(pro, trade_date)
+        top = df.dropna(subset=['ratio']).sort_values('ratio', ascending=False).head(10)
+        if not len(top):
+            raise ValueError('hk_hold has no valid ratio')
         items = [{
             'name': r['name'], 'code': r['ts_code'],
             'ratio': f"{float(r['ratio']):.2f}%",
@@ -4466,12 +4511,16 @@ def fetch_southbound_concentration(pro, trade_date, data):
         } for _, r in top.iterrows()]
         data['southbound_concentration_top10'] = items
         ds = data.setdefault('dataSources', {}).setdefault('southbound_concentration_top10', {})
-        ds.update({'source': 'Tushare hk_hold（港交所CCASS港股通持股）', 'freq': '日更',
+        ds.update({'source': 'Tushare hk_hold（港交所CCASS港股通持股）', 'freq': CONCENTRATION_FREQ,
                    'lastUpdate': f'{d[:4]}-{d[4:6]}-{d[6:]}',
-                   'note': '港股通持股占港股总股本比例，交易日盘后更新；名称为港交所登记繁体原名'})
+                   'note': SOUTHBOUND_CONCENTRATION_NOTE})
         print(f"  southbound_concentration_top10: as of {d}, top {items[0]['name']} {items[0]['ratio']}")
+        return d
     except Exception as e:
+        _mark_concentration_last_good(data, 'southbound_concentration_top10',
+                                      SOUTHBOUND_CONCENTRATION_NOTE, '获取失败')
         print(f"  Warning: fetch_southbound_concentration failed: {e}")
+        return None
 
 
 # ── CCASS 外资托管持股快照（2026-09-30 用户正式指令：外资栏目加港交所月底月初公布的外资加减仓动向）──
@@ -4554,7 +4603,10 @@ def _ccass_query(code5, date_dash, form):
         return None   # 非交易日/日期超限/被限流
     foreign = sum(s for n, s in rows if any(k in n.upper() for k in CCASS_FOREIGN_KEYS))
     south = sum(s for n, s in rows if CCASS_SOUTHBOND_KEY in n.upper())
-    return {'foreign': foreign, 'south': south, 'nPart': len(rows)}
+    issued = re.search(r'<div class="summary-header">\s*Total number of Issued Shares/Warrants/Units[\s\S]*?'
+                       r'<div class="summary-value">([\d,]+)</div>', h)
+    return {'foreign': foreign, 'south': south, 'nPart': len(rows),
+            'totalIssued': int(issued.group(1).replace(',', '')) if issued else None}
 
 
 def _ccass_get_form():
@@ -4669,6 +4721,115 @@ def fetch_ccass_foreign(pro, trade_date, data, backfill_dates=None):
               + (f"，增持居首 {ranked[0]['name']}" if ranked else ''))
     except Exception as e:
         print(f"  Warning: ccassForeign display failed: {e}")
+
+
+def fetch_foreign_concentration(pro, trade_date, data, preferred_date=None):
+    """外资托管持股集中度 TOP10（现有20只蓝筹池，每日检查最新完整CCASS快照）。
+
+    与月末 ccassForeign 共用 SDW 链路及 ccass_history.json，但使用 concentrationSnapshots
+    独立命名空间，避免改变月末卡的快照选择和环比口径。只有20只全部有效才发布新榜单；
+    断源或部分快照不完整时保留 last-good 和其真实 as-of。
+    """
+    try:
+        cache = _load_json_cache(CCASS_CACHE_PATH, {})
+        daily = cache.setdefault('concentrationSnapshots', {})
+        start = preferred_date or trade_date
+        start_iso = f'{start[:4]}-{start[4:6]}-{start[6:]}'
+
+        def valid(code5, row):
+            return bool(row and row.get('totalIssued') and int(row['totalIssued']) > 0
+                        and row.get('foreign') is not None)
+
+        def complete(iso):
+            snap = daily.get(iso) or {}
+            return all(valid(code5, snap.get(code5)) for code5, _ in CCASS_STOCKS)
+
+        completed = None
+        form = None
+        for offset in range(10):
+            day = datetime.strptime(start, '%Y%m%d') - timedelta(days=offset)
+            d = day.strftime('%Y%m%d')
+            iso = f'{d[:4]}-{d[4:6]}-{d[6:]}'
+            if iso > start_iso:
+                continue
+            if complete(iso):
+                completed = iso
+                break
+            if form is None:
+                form = _ccass_get_form()
+                if not form:
+                    raise ValueError('SDW form unavailable')
+            snap = daily.setdefault(iso, {})
+            dd = iso.replace('-', '/')
+            fetched = 0
+            misses = 0
+            retried_form = False
+            for code5, name in CCASS_STOCKS:
+                if valid(code5, snap.get(code5)):
+                    continue
+                time.sleep(CCASS_REQ_GAP)
+                r = _ccass_query(code5, dd, form)
+                if r is None and not retried_form:
+                    retried_form = True
+                    form = _ccass_get_form() or form
+                    time.sleep(CCASS_REQ_GAP)
+                    r = _ccass_query(code5, dd, form)
+                if not valid(code5, r):
+                    misses += 1
+                    if misses >= 3:
+                        raise ValueError('SDW连续3只查询失败，本次停止并沿用last-good')
+                    continue
+                misses = 0
+                r['name'] = name
+                snap[code5] = r
+                fetched += 1
+                _save_json_cache(CCASS_CACHE_PATH, cache)
+            if complete(iso):
+                completed = iso
+                break
+            if snap:
+                print(f'  foreign_concentration_top10: {iso} 快照不完整 '
+                      f'({sum(valid(c, snap.get(c)) for c, _ in CCASS_STOCKS)}/{len(CCASS_STOCKS)})，保留 last-good')
+                break
+            daily.pop(iso, None)
+            print(f'  foreign_concentration_top10: {iso} 无可用快照，尝试前一日期')
+            if fetched == 0:
+                continue
+
+        if not completed:
+            candidates = [iso for iso in daily if iso <= start_iso and complete(iso)]
+            completed = max(candidates) if candidates else None
+        if not completed:
+            raise ValueError('no complete CCASS concentration snapshot')
+
+        previous = {item.get('code'): item for item in data.get('foreign_concentration_top10') or []}
+        ranked = []
+        for code5, name in CCASS_STOCKS:
+            cur = daily[completed][code5]
+            ratio = float(cur['foreign']) / int(cur['totalIssued']) * 100
+            old = previous.get(f'{code5}.HK') or {}
+            ranked.append((ratio, {
+                'name': cur.get('name') or name, 'code': f'{code5}.HK',
+                'ratio': f'{ratio:.2f}%', 'institution': '主流外资托管行合计',
+                'concept': old.get('concept') or '—', 'sector': old.get('sector') or '—',
+            }))
+        items = [item for _, item in sorted(ranked, key=lambda row: row[0], reverse=True)[:10]]
+        if len(items) != min(10, len(CCASS_STOCKS)):
+            raise ValueError('incomplete foreign concentration ranking')
+        data['foreign_concentration_top10'] = items
+        ds = data.setdefault('dataSources', {}).setdefault('foreign_concentration_top10', {})
+        ds.update({'source': 'HKEX CCASS/SDW + 项目外资托管行名单', 'freq': CONCENTRATION_FREQ,
+                   'lastUpdate': completed, 'note': FOREIGN_CONCENTRATION_NOTE})
+        cache['concentrationNote'] = ('concentrationSnapshots 为现有20只蓝筹池的交易日检查缓存；'
+                                      '与 snapshots 月末卡缓存分离；仅完整快照可发布。')
+        _save_json_cache(CCASS_CACHE_PATH, cache)
+        print(f"  foreign_concentration_top10: as of {completed}, top {items[0]['name']} {items[0]['ratio']}")
+        return completed
+    except Exception as e:
+        _mark_concentration_last_good(data, 'foreign_concentration_top10',
+                                      FOREIGN_CONCENTRATION_NOTE, '获取失败或快照不完整')
+        print(f"  Warning: fetch_foreign_concentration failed: {e}")
+        return None
 
 
 # ── DI 权益披露：外资大机构增减仓（2026-09-30 用户指令：雪球爬港交所公告→考证后改披露易直连）──
@@ -11070,9 +11231,10 @@ def main():
         data['southbound'] = south
         print(f"  Southbound: {south['today']}亿")
 
-    # ── 10b. 两融汇总 / 南向持股集中度（Tushare 日更）──
+    # ── 10b. 两融汇总 / 南北向持股集中度（每个既有交易日 nightly 检查最新可得快照）──
     fetch_margin_summary(pro, trade_date, data)
-    fetch_southbound_concentration(pro, trade_date, data)
+    southbound_concentration_date = fetch_southbound_concentration(pro, trade_date, data)
+    fetch_foreign_concentration(pro, trade_date, data, preferred_date=southbound_concentration_date)
     # fetch_leverage_concentration 已停用（2026-10-01 用户指令）：杠杆资金控盘集中度TOP10 卡下线，
     # 该函数只喂那张卡，停用省 3 次 Tushare 调用/日（margin_detail+daily_basic+stock_basic）。
     # 函数体保留未删；fund_data.json 存量 leverage_concentration_top10 静态残留无害（前端不再渲染）。

@@ -1,0 +1,88 @@
+{
+  "task": "daily-tables-1141-real-source",
+  "generatedAt": "2026-11-23T12:11:55+08:00",
+  "hkHold": {
+    "requestedDate": "20261123",
+    "actualAvailableDate": "20261120",
+    "rows": 1026,
+    "sourceTradeDates": [
+      "20261120"
+    ],
+    "top": {
+      "code": "03489.HK",
+      "name": "易方達AI",
+      "ratio": 75.56
+    },
+    "calendar": [
+      {
+        "exchange": "SSE",
+        "cal_date": "20261123",
+        "is_open": 1,
+        "pretrade_date": "20261120"
+      },
+      {
+        "exchange": "SSE",
+        "cal_date": "20261122",
+        "is_open": 0,
+        "pretrade_date": "20261120"
+      },
+      {
+        "exchange": "SSE",
+        "cal_date": "20261121",
+        "is_open": 0,
+        "pretrade_date": "20261120"
+      },
+      {
+        "exchange": "SSE",
+        "cal_date": "20261120",
+        "is_open": 1,
+        "pretrade_date": "20261119"
+      }
+    ],
+    "weekendDuplicate": {
+      "date": "20261121",
+      "rows": 1026,
+      "sameTencentRatio": true,
+      "normalizedAsOf": "20261120"
+    }
+  },
+  "ccass": {
+    "dryRunUniverse": [
+      "00700 腾讯控股"
+    ],
+    "actualAvailableDate": "2026-11-20",
+    "foreignShares": 5130452128,
+    "issuedShares": 9092644829,
+    "participants": 426,
+    "calculatedRatio": "56.42%",
+    "formula": "foreign / totalIssued * 100",
+    "institutionLabel": "主流外资托管行合计",
+    "source": "HKEX CCASS/SDW + 项目外资托管行名单",
+    "frequency": "交易日日更",
+    "monthlyNamespaceUsed": false,
+    "dailyNamespace": "concentrationSnapshots"
+  },
+  "failureFallback": {
+    "simulatedFailure": "SDW form unavailable",
+    "rowsUnchanged": true,
+    "asOfUnchanged": "2026-11-20",
+    "notice": "现有20只港股蓝筹跟踪池，非全市场排名；每交易日 nightly 检查最新CCASS快照，比例=主流外资托管行合计持股/已发行股本；托管行持股≠最终外资实益持仓，源数据可能延迟，断源沿用最近可得日期；本次获取失败或快照不完整，沿用 2026-11-20 最近可得数据"
+  },
+  "productionFundDataSha256Before": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "productionFundDataSha256After": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "productionDataUnchanged": true,
+  "productionDataRegenerated": false,
+  "isolatedCache": true,
+  "fullNightlyDispatched": false,
+  "allPassed": true,
+  "frequencyConclusion": {
+    "southbound": "每个交易日 nightly 检查 hk_hold 最新可用记录；源按交易日披露，可能延迟，不是保证每日当天值。",
+    "foreign": "每个交易日 nightly 检查20只蓝筹池的完整 CCASS/SDW 快照；非全市场，托管行口径，断源保留 last-good。"
+  }
+}

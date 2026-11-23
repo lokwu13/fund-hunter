@@ -1,0 +1,194 @@
+{
+  "task": "daily-tables-1141-backend-contract",
+  "checksPassed": 35,
+  "checksTotal": 35,
+  "failed": [],
+  "checks": [
+    {
+      "name": "southSourceAsOf",
+      "passed": true,
+      "detail": "20261120"
+    },
+    {
+      "name": "southSorted",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "southMetadata",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "southBacktrackBounded",
+      "passed": true,
+      "detail": [
+        "20261123",
+        "20261120"
+      ]
+    },
+    {
+      "name": "weekendDuplicateNotRebranded",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "southFailureReturnsNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "southLastGoodRows",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "southLastGoodDate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "southLastGoodNotice",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ccassForeignParsed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ccassIssuedSharesParsed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "foreignRealAsOf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "foreignRatioFormula",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "foreignSorted",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "foreignInstitutionHonest",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "foreignMetadata",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "foreignConceptPreserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "dailyCacheWritten",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "monthlyCacheUntouched",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "completeCacheReused",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "partialSnapshotRejected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "partialKeepsRows",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "partialKeepsAsOf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "partialLastGoodNotice",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "partialMonthlyStillUntouched",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "consecutiveFailureCircuitBreaker",
+      "passed": true,
+      "detail": {
+        "requests": 4,
+        "failedStocks": 3,
+        "firstStockFormRetry": 1
+      }
+    },
+    {
+      "name": "circuitBreakerKeepsLastGood",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "initialFailureReturnsNone",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "initialFailureDoesNotRebrandManualData",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "nightlySouthCalled",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "nightlyForeignCalled",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "workflowByteIdentical",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "noScheduleChange",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "productionUnchanged:public/fund_data.json",
+      "passed": true,
+      "detail": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    {
+      "name": "productionUnchanged:src/data/fund_data.json",
+      "passed": true,
+      "detail": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    }
+  ],
+  "networkUsed": false,
+  "productionDataRegenerated": false,
+  "manualDispatch": false,
+  "allPassed": true
+}

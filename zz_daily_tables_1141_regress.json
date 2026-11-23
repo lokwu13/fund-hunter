@@ -1,0 +1,240 @@
+{
+  "task": "daily-tables-1141",
+  "generatedAt": "2026-11-23T12:11:55+08:00",
+  "allPassed": true,
+  "checksPassed": 44,
+  "checksTotal": 44,
+  "failed": [],
+  "checks": [
+    {
+      "name": "后端契约35项全过",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "真实源干跑通过",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "真实hk_hold日期已归一到交易日",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "真实CCASS日期与hk_hold一致",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "真实CCASS比例公式及分母有效",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "真实断源last-good验证通过",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "生产数据未由测试重新生成",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "南向更新器复用hk_hold",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "交易日历排除周末",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "周末源标签不会直接作为as-of",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "南向成功返回真实日期",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "右榜已接入同一nightly调用链",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "右榜复用现有SDW链路",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "SDW解析真实已发行股本",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "右榜比例非静态硬编码",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "完整20只才允许发布",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "右榜明确20只池非全市场",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "右榜机构字段不再伪造具体股东",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "每日缓存与月末缓存分离",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "月末CCASS函数逐字未改",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "断源仅标记已日更数据不冒充手工旧值",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "频率文案区分检查与新观测",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "左榜展示真实source/freq",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "左榜展示真实as-of",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "右榜展示真实source/freq",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "右榜展示真实as-of",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "两榜展示真实note",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "两榜标题及表格保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "CCASS/DI锚点与模块保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "独立说明卡保留未扩大修改",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "前两轮删除内容未恢复",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "北向和机构买卖模块保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "共享两榜与dataSources类型契约保留",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "workflow逐字节未改",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "schedule未改且仍调用现有更新器",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "未新增Kimi调度或dispatch",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "实时main预检已记录",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "生产JSON未改:public/fund_data.json",
+      "passed": true,
+      "evidence": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    {
+      "name": "生产JSON未改:src/data/fund_data.json",
+      "passed": true,
+      "evidence": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+    },
+    {
+      "name": "静态页内锚点均有目标",
+      "passed": true,
+      "evidence": [
+        "eci-quadrant"
+      ]
+    },
+    {
+      "name": "CCASS/DI锚点全局唯一",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "桌面看板无新增超宽固定元素",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "既有宽表仍由横向滚动容器承接",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "入口viewport保留",
+      "passed": true,
+      "evidence": null
+    }
+  ],
+  "productionFundDataSha256": {
+    "public/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1",
+    "src/data/fund_data.json": "3e6be924bdc847d48bbffc8276776ab90ee319a0cb2863ab432531ff800637a1"
+  },
+  "manualDispatch": false,
+  "productionDataRegenerated": false,
+  "workflowModified": false,
+  "scheduleModified": false
+}

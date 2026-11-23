@@ -21,6 +21,8 @@ export default function ForeignCapitalPanel() {
 
   // ── 外资机构权益披露（2026-09-30 用户指令：披露易 DI 大股东申报）──
   const di = data.diForeign;
+  const southboundConcentrationMeta = data.dataSources?.southbound_concentration_top10;
+  const foreignConcentrationMeta = data.dataSources?.foreign_concentration_top10;
   const diDirCls = (d: string) =>
     d === '增持' || d === '新进' ? 'bg-red-50 text-red-600' :
     d === '减持' || d === '清仓退出' ? 'bg-emerald-50 text-emerald-700' :
@@ -225,8 +227,11 @@ export default function ForeignCapitalPanel() {
                   南下资金（国内资金）持股集中度TOP10
                 </h3>
                 <p className="text-xs text-slate-400">港股通持股占港股总股本比例</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">
+                  {southboundConcentrationMeta ? `${southboundConcentrationMeta.source} · ${southboundConcentrationMeta.freq}` : '数据源信息待更新'}
+                </p>
               </div>
-              <Badge variant="outline" className="text-xs">港股</Badge>
+              <Badge variant="outline" className="text-xs whitespace-nowrap">截至 {southboundConcentrationMeta?.lastUpdate ?? '—'}</Badge>
             </div>
             <Table>
               <TableHeader>
@@ -259,6 +264,7 @@ export default function ForeignCapitalPanel() {
                 ))}
               </TableBody>
             </Table>
+            {southboundConcentrationMeta?.note && <p className="text-[10px] text-slate-400 mt-2 leading-relaxed">{southboundConcentrationMeta.note}</p>}
           </CardContent>
         </Card>
 
@@ -271,9 +277,12 @@ export default function ForeignCapitalPanel() {
                   <Globe className="w-4 h-4 text-indigo-600" />
                   外资（非国内资金）持股集中度TOP10
                 </h3>
-                <p className="text-xs text-slate-400">国际机构持股占港股总股本比例</p>
+                <p className="text-xs text-slate-400">国际中介/外资托管行持股占港股总股本比例</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">
+                  {foreignConcentrationMeta ? `${foreignConcentrationMeta.source} · ${foreignConcentrationMeta.freq}` : '数据源信息待更新'}
+                </p>
               </div>
-              <Badge variant="outline" className="text-xs">港股</Badge>
+              <Badge variant="outline" className="text-xs whitespace-nowrap">截至 {foreignConcentrationMeta?.lastUpdate ?? '—'}</Badge>
             </div>
             <Table>
               <TableHeader>
@@ -307,6 +316,7 @@ export default function ForeignCapitalPanel() {
                 ))}
               </TableBody>
             </Table>
+            {foreignConcentrationMeta?.note && <p className="text-[10px] text-slate-400 mt-2 leading-relaxed">{foreignConcentrationMeta.note}</p>}
           </CardContent>
         </Card>
       </div>
