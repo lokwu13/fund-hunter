@@ -1,10 +1,91 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Globe, ChevronRight, Activity, TrendingUp, TrendingDown, FileText } from 'lucide-react';
-import { useFundData } from '@/hooks/useFundData';
+import { Globe, ChevronRight, Activity, TrendingDown, FileText, ExternalLink } from 'lucide-react';
+import { useFundData, type ShortSellingBoard } from '@/hooks/useFundData';
 
+const fmtCompact = (value?: number | null, currency = '') => {
+  if (value == null) return '—';
+  const abs = Math.abs(value);
+  const formatted = abs >= 1e8 ? `${(value / 1e8).toFixed(2)}亿` : abs >= 1e4 ? `${(value / 1e4).toFixed(0)}万` : value.toLocaleString('zh-CN');
+  return `${formatted}${currency}`;
+};
 
+function ShortSellingCard({ market, board, weekly }: { market: 'a' | 'h'; board?: ShortSellingBoard; weekly?: ShortSellingBoard | null }) {
+  const useWeekly = market === 'h' && !board?.items.length && !!weekly?.items.length;
+  const shown = useWeekly ? weekly : board;
+  const changeLabel = useWeekly ? '较上一周报' : '较上一有效日';
+  const title = market === 'a' ? '北向渠道卖空成交TOP10（A股）' : '港股主板卖空成交TOP10';
+  return (
+    <Card id={market === 'a' ? 'northbound-short-selling' : 'hk-short-selling'} className="min-w-0 border-slate-200 shadow-sm">
+      <CardHeader className="pb-2">
+        <div className="flex items-start justify-between flex-wrap gap-2">
+          <div>
+            <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-800">
+              <TrendingDown className={`w-4 h-4 ${market === 'a' ? 'text-orange-600' : 'text-rose-600'}`} />
+              {title}
+            </CardTitle>
+            <CardDescription className="text-[10px] mt-1">
+              {useWeekly ? '最新申报淡仓TOP10 · 周频补充（非当日成交）' : market === 'a' ? '沪深北向官方完整收盘文件 · 人民币成交额排名' : '港交所主板官方收盘日报 · 港元成交额排名'}
+            </CardDescription>
+          </div>
+          <Badge variant="outline" className={`text-xs ${useWeekly ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-slate-50 text-slate-600'}`}>
+            {useWeekly ? '周频' : '日更检查'} · {shown?.asOf ?? '待取得'}
+          </Badge>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-1">
+        {shown?.status === 'stale' && (
+          <p className="text-[10px] text-amber-700 bg-amber-50 rounded px-2 py-1 mb-2">本次未获新文件，沿用 {shown.asOf} 最近完整快照。</p>
+        )}
+        {shown?.items.length ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-[11px] min-w-[520px]">
+              <thead>
+                <tr className="text-slate-500 border-b border-slate-200">
+                  <th className="text-left py-1.5 font-medium">排名 / 标的</th>
+                  <th className="text-right font-medium">{useWeekly ? '申报淡仓股数' : '卖空股数'}</th>
+                  <th className="text-right font-medium">{useWeekly ? '申报淡仓市值' : '卖空金额'}</th>
+                  <th className="text-right font-medium">{changeLabel}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shown.items.map((item) => (
+                  <tr key={item.code} className="border-b border-slate-50 hover:bg-slate-50/60">
+                    <td className="py-1.5">
+                      <span className="font-bold text-slate-400 mr-2">{item.rank}</span>
+                      <span className="font-semibold text-slate-700">{item.name}</span>
+                      <span className="block text-[9px] text-slate-400 ml-5">{item.code}</span>
+                    </td>
+                    <td className="text-right text-slate-600">{fmtCompact(item.shares, '股')}</td>
+                    <td className="text-right font-semibold text-slate-800">{fmtCompact(item.value, shown.currency === 'RMB' ? '元' : '港元')}</td>
+                    <td className={`text-right font-medium ${(item.valueChg ?? 0) > 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                      {item.valueChg == null ? '—' : item.changeFromZero ? '由0新增' : `${item.valueChg > 0 ? '+' : ''}${fmtCompact(item.valueChg)}`}
+                      {item.valueChgPct != null && <span className="block text-[9px] text-slate-400">{item.valueChgPct > 0 ? '+' : ''}{item.valueChgPct.toFixed(2)}%</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : market === 'a' && board?.status !== 'unavailable' ? (
+          <div className="rounded-md bg-slate-50 border border-slate-100 px-3 py-4 text-center">
+            <p className="text-xs font-medium text-slate-700">官方完整名单无卖空成交，本期无 TOP10</p>
+            <p className="text-[10px] text-slate-500 mt-1">{board?.asOf} · 沪深合计 {board?.universeCount?.toLocaleString('zh-CN') ?? '—'} 只，非零记录 0 只</p>
+          </div>
+        ) : (
+          <p className="text-[11px] text-slate-500 rounded-md bg-slate-50 px-3 py-3">有效官方快照尚未取得，不展示空榜或替代排名；下一交易日夜间自动重试。</p>
+        )}
+        {useWeekly && board?.asOf && <p className="text-[10px] text-slate-400 mt-2">日成交最近快照 {board.asOf} 暂无可展示记录，上方仅为 SFC 周频补充。</p>}
+        <div className="mt-2 flex items-start justify-between gap-2">
+          <p className="text-[10px] text-slate-400 leading-relaxed">{shown?.note ?? board?.note}</p>
+          <a href={shown?.pageUrl ?? board?.pageUrl} target="_blank" rel="noreferrer" className="shrink-0 inline-flex items-center gap-1 text-[10px] text-sky-600 hover:text-sky-800 underline underline-offset-2">
+            官方源<ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function ForeignCapitalPanel() {
   const { data } = useFundData();
@@ -21,8 +102,6 @@ export default function ForeignCapitalPanel() {
 
   // ── 外资机构权益披露（2026-09-30 用户指令：披露易 DI 大股东申报）──
   const di = data.diForeign;
-  const southboundConcentrationMeta = data.dataSources?.southbound_concentration_top10;
-  const foreignConcentrationMeta = data.dataSources?.foreign_concentration_top10;
   const diDirCls = (d: string) =>
     d === '增持' || d === '新进' ? 'bg-red-50 text-red-600' :
     d === '减持' || d === '清仓退出' ? 'bg-emerald-50 text-emerald-700' :
@@ -215,317 +294,11 @@ export default function ForeignCapitalPanel() {
         </Card>
       )}
 
-      {/* ====== 南下资金 vs 外资 集中度对比 ====== */}
-      <div className="grid grid-cols-2 gap-4">
-        {/* 南下资金（国内资金）集中度TOP10 */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-teal-600" />
-                  南下资金（国内资金）持股集中度TOP10
-                </h3>
-                <p className="text-xs text-slate-400">港股通持股占港股总股本比例</p>
-                <p className="text-[10px] text-slate-400 mt-0.5">
-                  {southboundConcentrationMeta ? `${southboundConcentrationMeta.source} · ${southboundConcentrationMeta.freq}` : '数据源信息待更新'}
-                </p>
-              </div>
-              <Badge variant="outline" className="text-xs whitespace-nowrap">截至 {southboundConcentrationMeta?.lastUpdate ?? '—'}</Badge>
-            </div>
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-teal-50">
-                  <TableHead className="text-xs">排名</TableHead>
-                  <TableHead className="text-xs">个股</TableHead>
-                  <TableHead className="text-xs text-right">持股比例</TableHead>
-                  <TableHead className="text-xs">概念</TableHead>
-                  <TableHead className="text-xs">二级板块</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.southbound_concentration_top10?.map((item, idx) => (
-                  <TableRow key={item.code} className="hover:bg-slate-50">
-                    <TableCell className="font-bold text-sm">{idx + 1}</TableCell>
-                    <TableCell>
-                      <p className="text-sm font-semibold">{item.name}</p>
-                      <p className="text-xs text-slate-400">{item.code}</p>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <span className="text-sm font-bold text-teal-600">{item.ratio}</span>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{item.concept || '—'}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-xs bg-slate-100 px-2 py-0.5 rounded">{item.sector || '—'}</span>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            {southboundConcentrationMeta?.note && <p className="text-[10px] text-slate-400 mt-2 leading-relaxed">{southboundConcentrationMeta.note}</p>}
-          </CardContent>
-        </Card>
-
-        {/* 外资（非国内资金）集中度TOP10 */}
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                  <Globe className="w-4 h-4 text-indigo-600" />
-                  外资（非国内资金）持股集中度TOP10
-                </h3>
-                <p className="text-xs text-slate-400">国际中介/外资托管行持股占港股总股本比例</p>
-                <p className="text-[10px] text-slate-400 mt-0.5">
-                  {foreignConcentrationMeta ? `${foreignConcentrationMeta.source} · ${foreignConcentrationMeta.freq}` : '数据源信息待更新'}
-                </p>
-              </div>
-              <Badge variant="outline" className="text-xs whitespace-nowrap">截至 {foreignConcentrationMeta?.lastUpdate ?? '—'}</Badge>
-            </div>
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-indigo-50">
-                  <TableHead className="text-xs">排名</TableHead>
-                  <TableHead className="text-xs">个股</TableHead>
-                  <TableHead className="text-xs text-right">持股比例</TableHead>
-                  <TableHead className="text-xs">概念</TableHead>
-                  <TableHead className="text-xs">二级板块</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.foreign_concentration_top10?.map((item, idx) => (
-                  <TableRow key={item.code} className="hover:bg-slate-50">
-                    <TableCell className="font-bold text-sm">{idx + 1}</TableCell>
-                    <TableCell>
-                      <p className="text-sm font-semibold">{item.name}</p>
-                      <p className="text-xs text-slate-400">{item.code}</p>
-                      <p className="text-xs text-slate-400">{item.institution}</p>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <span className="text-sm font-bold text-indigo-600">{item.ratio}</span>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{item.concept || '—'}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-xs bg-slate-100 px-2 py-0.5 rounded">{item.sector || '—'}</span>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            {foreignConcentrationMeta?.note && <p className="text-[10px] text-slate-400 mt-2 leading-relaxed">{foreignConcentrationMeta.note}</p>}
-          </CardContent>
-        </Card>
+      {/* ====== A/H 卖空监测：官方口径分离，日更检查 + 真实 last-good ====== */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <ShortSellingCard market="a" board={data.shortSellingMonitor?.a} />
+        <ShortSellingCard market="h" board={data.shortSellingMonitor?.h} weekly={data.shortSellingMonitor?.hkWeekly} />
       </div>
-
-      {/* ====== 北向资金净流入TOP10 ====== */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-bold flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-violet-600" />
-            北向资金近三个月净流入最多TOP10
-          </CardTitle>
-          <CardDescription>沪深港通持股变动 · 2025Q2</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-violet-50">
-                <TableHead className="text-xs">排名</TableHead>
-                <TableHead className="text-xs">个股</TableHead>
-                <TableHead className="text-xs">净流入</TableHead>
-                <TableHead className="text-xs">概念</TableHead>
-                <TableHead className="text-xs">二级板块</TableHead>
-                <TableHead className="text-xs">备注</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.top10_foreign?.map((item, idx) => (
-                <TableRow key={item.code} className="hover:bg-slate-50">
-                  <TableCell className="font-bold text-sm">{idx + 1}</TableCell>
-                  <TableCell>
-                    <p className="font-semibold text-sm">{item.name}</p>
-                    <p className="text-xs text-slate-400">{item.code}</p>
-                  </TableCell>
-                  <TableCell className="text-violet-600 font-bold">{item.inflow}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{item.concept}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-xs bg-slate-100 px-2 py-0.5 rounded">{item.sector}</span>
-                  </TableCell>
-                  <TableCell className="text-xs text-slate-500">{item.note}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      {/* ====== 外资机构买入/卖出TOP10 左右对照 ====== */}
-      <div className="grid grid-cols-2 gap-4">
-        {/* 买入TOP10 */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-bold flex items-center gap-2 text-emerald-700">
-              <TrendingUp className="w-4 h-4" />
-              外资机构买入TOP10（A+H股）
-            </CardTitle>
-            <CardDescription className="text-xs">
-              北向资金(陆股通) 2026Q2 持仓(6/30末, 7/8公布)
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-emerald-50">
-                  <TableHead className="text-xs">排名</TableHead>
-                  <TableHead className="text-xs">个股</TableHead>
-                  <TableHead className="text-xs">市场</TableHead>
-                  <TableHead className="text-xs text-right">买入金额</TableHead>
-                  <TableHead className="text-xs">机构</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.foreignInstitution_top10?.buys?.map((stock) => (
-                  <TableRow key={stock.code} className="hover:bg-slate-50">
-                    <TableCell className="font-bold text-sm">{stock.rank}</TableCell>
-                    <TableCell>
-                      <p className="text-sm font-semibold">{stock.name}</p>
-                      <p className="text-xs text-slate-400">{stock.code}</p>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={`text-xs ${
-                        stock.market === '港股' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'
-                      }`}>
-                        {stock.market}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right text-emerald-600 font-bold text-sm">{stock.amount}</TableCell>
-                    <TableCell className="text-xs font-medium">{stock.institution}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-
-        {/* 卖出TOP10 */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-bold flex items-center gap-2 text-red-700">
-              <TrendingDown className="w-4 h-4" />
-              外资机构卖出TOP10（A+H股）
-            </CardTitle>
-            <CardDescription className="text-xs">
-              北向资金(陆股通) 2026Q2 持仓(6/30末, 7/8公布)
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-red-50">
-                  <TableHead className="text-xs">排名</TableHead>
-                  <TableHead className="text-xs">个股</TableHead>
-                  <TableHead className="text-xs">市场</TableHead>
-                  <TableHead className="text-xs text-right">卖出金额</TableHead>
-                  <TableHead className="text-xs">机构</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.foreignInstitution_top10?.sells?.map((stock) => (
-                  <TableRow key={stock.code} className="hover:bg-slate-50">
-                    <TableCell className="font-bold text-sm">{stock.rank}</TableCell>
-                    <TableCell>
-                      <p className="text-sm font-semibold">{stock.name}</p>
-                      <p className="text-xs text-slate-400">{stock.code}</p>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={`text-xs ${
-                        stock.market === '港股' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'
-                      }`}>
-                        {stock.market}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right text-red-600 font-bold text-sm">{stock.amount}</TableCell>
-                    <TableCell className="text-xs font-medium">{stock.institution}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* 详细表格 - 买入 */}
-      <Card>
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-base font-bold flex items-center gap-2">
-                <Globe className="w-5 h-5 text-indigo-600" />
-                外资机构买入TOP10详细（A+H股全市场）
-              </CardTitle>
-              <CardDescription>
-                北向资金(陆股通) 2026Q2 持仓(6/30末, 7/8公布)
-              </CardDescription>
-            </div>
-            <Badge className="bg-emerald-100 text-emerald-700 text-xs">每周更新</Badge>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-indigo-50">
-                <TableHead className="text-xs">排名</TableHead>
-                <TableHead className="text-xs">个股</TableHead>
-                <TableHead className="text-xs">市场</TableHead>
-                <TableHead className="text-xs">机构</TableHead>
-                <TableHead className="text-xs text-right">金额</TableHead>
-                <TableHead className="text-xs">日期</TableHead>
-                <TableHead className="text-xs">概念</TableHead>
-                <TableHead className="text-xs">板块</TableHead>
-                <TableHead className="text-xs">持股变动</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.foreignInstitution_top10?.buys?.map((stock) => (
-                <TableRow key={stock.code} className="hover:bg-slate-50">
-                  <TableCell className="font-bold text-sm">{stock.rank}</TableCell>
-                  <TableCell>
-                    <p className="font-semibold text-sm">{stock.name}</p>
-                    <p className="text-xs text-slate-400">{stock.code}</p>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className={`text-xs ${
-                      stock.market === '港股' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'
-                    }`}>
-                      {stock.market}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-xs font-medium">{stock.institution}</TableCell>
-                  <TableCell className="text-right text-emerald-600 font-bold">{stock.amount}</TableCell>
-                  <TableCell className="text-xs">{stock.date}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="text-xs bg-blue-50 text-blue-600">{stock.concept}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-xs bg-slate-100 px-2 py-0.5 rounded">{stock.sector}</span>
-                  </TableCell>
-                  <TableCell className="text-xs text-slate-500">{stock.holdingChange}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <p className="text-xs text-slate-400 mt-3">
-            注：数据来源港交所"披露权益"系统 + 沪深港通北向持仓统计。A股包含通过港股通买入的标的。
-            每周五收盘后更新，反映前一周机构最新买卖动作。
-          </p>
-        </CardContent>
-      </Card>
 
       {/* Tips */}
       <Card className="bg-violet-50 border-violet-200">

@@ -72,23 +72,33 @@ export interface Top5Item {
   holder?: string;
 }
 
-export interface ForeignInstitutionItem {
+export interface ShortSellingItem {
   rank: number;
-  name: string;
   code: string;
-  market: string;
-  institution: string;
-  amount: string;
-  date: string;
-  concept: string;
-  sector: string;
-  holdingChange: string;
-  note: string;
+  name: string;
+  shares: number;
+  value: number;
+  valueChg: number | null;
+  valueChgPct: number | null;
+  changeFromZero: boolean;
 }
 
-export interface ForeignInstitutionTop10 {
-  buys: ForeignInstitutionItem[];
-  sells: ForeignInstitutionItem[];
+export interface ShortSellingBoard {
+  asOf: string | null;
+  previousAsOf?: string | null;
+  status: 'ok' | 'stale' | 'unavailable';
+  currency?: 'RMB' | 'HKD';
+  items: ShortSellingItem[];
+  universeCount?: number;
+  nonZeroCount?: number;
+  nonHkdExcluded?: number;
+  totalValue?: number;
+  source: string;
+  sourceUrl: string;
+  pageUrl: string;
+  note: string;
+  error?: string | null;
+  checkedAt?: string;
 }
 
 export interface PrivateFundItem {
@@ -357,7 +367,6 @@ export interface FundData {
   top5_publicfund?: Top5Item[];
   top5_foreign?: Top5Item[];
   top5_sector?: Top5Item[];
-  foreignInstitution_top10?: ForeignInstitutionTop10;
   privateFund_inflow?: PrivateFundItem[];
   privateFund_outflow?: PrivateFundItem[];
   concentration_top10?: ConcentrationItem[];
@@ -384,11 +393,15 @@ export interface FundData {
       common_features: string;
     };
   };
-  southbound_concentration_top10?: Array<{name: string; code: string; ratio: string; concept: string; sector: string}>;
-  foreign_concentration_top10?: Array<{name: string; code: string; ratio: string; institution: string; concept: string; sector: string}>;
   top10_publicfund?: Array<{rank: number; name: string; code: string; amount: string; concept: string; sector: string; note: string}>;
   publicFund_outflow_top10?: Array<{rank: number; name: string; code: string; amount: string; concept: string; sector: string; note: string}>;
-  top10_foreign?: Array<{name: string; code: string; inflow: string; concept: string; sector: string; note: string}>;
+  shortSellingMonitor?: {
+    version: 1;
+    frequency: string;
+    a: ShortSellingBoard;
+    h: ShortSellingBoard;
+    hkWeekly?: ShortSellingBoard | null;
+  };
   conceptSectors?: Array<{
     name: string;
     mainFlow: number;

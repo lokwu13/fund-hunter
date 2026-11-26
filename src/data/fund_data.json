@@ -426,440 +426,6 @@
     "month": 230.34,
     "updateTime": "2026-11-24"
   },
-  "southbound_concentration_top10": [
-    {
-      "name": "綠色動力環保",
-      "code": "01330.HK",
-      "ratio": "72.14%",
-      "vol": 291746402,
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "大眾公用",
-      "code": "01635.HK",
-      "ratio": "71.87%",
-      "vol": 383610000,
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "易方達AI",
-      "code": "03489.HK",
-      "ratio": "71.22%",
-      "vol": 32978500,
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "龍蟠科技",
-      "code": "02465.HK",
-      "ratio": "70.62%",
-      "vol": 95352388,
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "凱盛新能",
-      "code": "01108.HK",
-      "ratio": "70.30%",
-      "vol": 175786000,
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "中國電信",
-      "code": "00728.HK",
-      "ratio": "70.20%",
-      "vol": 9743273861,
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "經緯天地",
-      "code": "02477.HK",
-      "ratio": "69.87%",
-      "vol": 3351364000,
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "中國神華",
-      "code": "01088.HK",
-      "ratio": "69.04%",
-      "vol": 2331857536,
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "天津創業環保股份",
-      "code": "01065.HK",
-      "ratio": "68.68%",
-      "vol": 233524100,
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "弘業期貨",
-      "code": "03678.HK",
-      "ratio": "68.46%",
-      "vol": 170962000,
-      "concept": "—",
-      "sector": "—"
-    }
-  ],
-  "foreign_concentration_top10": [
-    {
-      "name": "友邦保险",
-      "code": "01299.HK",
-      "ratio": "89.15%",
-      "institution": "主流外资托管行合计",
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "京东集团-SW",
-      "code": "09618.HK",
-      "ratio": "78.95%",
-      "institution": "主流外资托管行合计",
-      "concept": "电商/物流",
-      "sector": "互联网"
-    },
-    {
-      "name": "比亚迪股份",
-      "code": "01211.HK",
-      "ratio": "76.54%",
-      "institution": "主流外资托管行合计",
-      "concept": "新能源车",
-      "sector": "汽车"
-    },
-    {
-      "name": "百度集团-SW",
-      "code": "09888.HK",
-      "ratio": "70.17%",
-      "institution": "主流外资托管行合计",
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "中国平安",
-      "code": "02318.HK",
-      "ratio": "65.29%",
-      "institution": "主流外资托管行合计",
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "阿里巴巴-W",
-      "code": "09988.HK",
-      "ratio": "63.25%",
-      "institution": "主流外资托管行合计",
-      "concept": "电商/云计算",
-      "sector": "互联网"
-    },
-    {
-      "name": "香港交易所",
-      "code": "00388.HK",
-      "ratio": "62.84%",
-      "institution": "主流外资托管行合计",
-      "concept": "—",
-      "sector": "—"
-    },
-    {
-      "name": "腾讯控股",
-      "code": "00700.HK",
-      "ratio": "56.20%",
-      "institution": "主流外资托管行合计",
-      "concept": "互联网/游戏",
-      "sector": "互联网"
-    },
-    {
-      "name": "美团-W",
-      "code": "03690.HK",
-      "ratio": "54.65%",
-      "institution": "主流外资托管行合计",
-      "concept": "本地生活",
-      "sector": "互联网"
-    },
-    {
-      "name": "中国人寿",
-      "code": "02628.HK",
-      "ratio": "54.14%",
-      "institution": "主流外资托管行合计",
-      "concept": "—",
-      "sector": "—"
-    }
-  ],
-  "top10_foreign": [
-    {
-      "name": "新易盛",
-      "code": "300502.SZ",
-      "inflow": "+77.8亿",
-      "concept": "通信设备",
-      "sector": "通信设备",
-      "note": "北向资金净流入"
-    },
-    {
-      "name": "中际旭创",
-      "code": "300308.SZ",
-      "inflow": "+63.6亿",
-      "concept": "通信设备",
-      "sector": "通信设备",
-      "note": "北向资金净流入"
-    },
-    {
-      "name": "宁德时代",
-      "code": "300750.SZ",
-      "inflow": "+60.9亿",
-      "concept": "电气设备",
-      "sector": "电气设备",
-      "note": "北向资金净流入"
-    },
-    {
-      "name": "京东方A",
-      "code": "000725.SZ",
-      "inflow": "+60.0亿",
-      "concept": "元器件",
-      "sector": "元器件",
-      "note": "北向资金净流入"
-    },
-    {
-      "name": "中微公司",
-      "code": "688012.SH",
-      "inflow": "+38.1亿",
-      "concept": "半导体",
-      "sector": "半导体",
-      "note": "北向资金净流入"
-    },
-    {
-      "name": "立讯精密",
-      "code": "002475.SZ",
-      "inflow": "+37.3亿",
-      "concept": "元器件",
-      "sector": "元器件",
-      "note": "北向资金净流入"
-    },
-    {
-      "name": "寒武纪",
-      "code": "688256.SH",
-      "inflow": "+31.7亿",
-      "concept": "半导体",
-      "sector": "半导体",
-      "note": "北向资金净流入"
-    },
-    {
-      "name": "三环集团",
-      "code": "300408.SZ",
-      "inflow": "+29.6亿",
-      "concept": "元器件",
-      "sector": "元器件",
-      "note": "北向资金净流入"
-    },
-    {
-      "name": "北方华创",
-      "code": "002371.SZ",
-      "inflow": "+28.3亿",
-      "concept": "半导体",
-      "sector": "半导体",
-      "note": "北向资金净流入"
-    },
-    {
-      "name": "TCL科技",
-      "code": "000100.SZ",
-      "inflow": "+26.4亿",
-      "concept": "元器件",
-      "sector": "元器件",
-      "note": "北向资金净流入"
-    }
-  ],
-  "foreignInstitution_top10": {
-    "buys": [
-      {
-        "rank": 1,
-        "name": "宁德时代",
-        "code": "300750.SZ",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "+554亿",
-        "date": "2026-06-30",
-        "concept": "锂电池/新能源",
-        "sector": "电力设备",
-        "holdingChange": "持仓3514亿居首",
-        "note": "连续4个季度加仓超百亿"
-      },
-      {
-        "rank": 2,
-        "name": "中际旭创",
-        "code": "300308.SZ",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "市值翻倍至931.29亿",
-        "date": "2026-06-30",
-        "concept": "光模块/AI算力",
-        "sector": "通信设备",
-        "holdingChange": "排名由第5升至第2",
-        "note": "市值环比翻倍"
-      },
-      {
-        "rank": 3,
-        "name": "北方华创",
-        "code": "002371.SZ",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "市值环比+95%",
-        "date": "2026-06-30",
-        "concept": "半导体设备",
-        "sector": "电子",
-        "holdingChange": "持仓市值超800亿",
-        "note": "国产替代主线"
-      },
-      {
-        "rank": 4,
-        "name": "寒武纪",
-        "code": "688256.SH",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "+137亿",
-        "date": "2026-06-30",
-        "concept": "AI芯片",
-        "sector": "电子",
-        "holdingChange": "持股数+105%",
-        "note": "持仓市值351亿"
-      },
-      {
-        "rank": 5,
-        "name": "中微公司",
-        "code": "688012.SH",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "市值环比+200%",
-        "date": "2026-06-30",
-        "concept": "半导体设备",
-        "sector": "电子",
-        "holdingChange": "持仓市值590亿",
-        "note": "新进前十"
-      },
-      {
-        "rank": 6,
-        "name": "新易盛",
-        "code": "300502.SZ",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "新进前十",
-        "date": "2026-06-30",
-        "concept": "光模块/AI算力",
-        "sector": "通信设备",
-        "holdingChange": "新进前十",
-        "note": "光模块高景气"
-      },
-      {
-        "rank": 7,
-        "name": "澜起科技",
-        "code": "688008.SH",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "新进前十",
-        "date": "2026-06-30",
-        "concept": "内存接口芯片",
-        "sector": "电子",
-        "holdingChange": "新进前十",
-        "note": "DDR5渗透加速"
-      }
-    ],
-    "sells": [
-      {
-        "rank": 1,
-        "name": "贵州茅台",
-        "code": "600519.SH",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "市值环比-25%",
-        "date": "2026-06-30",
-        "concept": "白酒",
-        "sector": "食品饮料",
-        "holdingChange": "持仓市值环比下降超25%",
-        "note": "食品饮料板块市值减200亿+"
-      },
-      {
-        "rank": 2,
-        "name": "五粮液",
-        "code": "000858.SZ",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "板块市值减200亿+",
-        "date": "2026-06-30",
-        "concept": "白酒",
-        "sector": "食品饮料",
-        "holdingChange": "随食品饮料板块整体减持",
-        "note": "板块性减持"
-      },
-      {
-        "rank": 3,
-        "name": "银行板块",
-        "code": "-",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "板块整体减持",
-        "date": "2026-06-30",
-        "concept": "银行",
-        "sector": "银行",
-        "holdingChange": "持股比例环比-1.95bp",
-        "note": "板块市值减200亿+"
-      },
-      {
-        "rank": 4,
-        "name": "紫金矿业",
-        "code": "601899.SH",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "退出前十",
-        "date": "2026-06-30",
-        "concept": "铜金/资源",
-        "sector": "有色金属",
-        "holdingChange": "退出持仓前十",
-        "note": "有色板块市值减200亿+"
-      },
-      {
-        "rank": 5,
-        "name": "中国平安",
-        "code": "601318.SH",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "退出前十",
-        "date": "2026-06-30",
-        "concept": "保险",
-        "sector": "非银金融",
-        "holdingChange": "退出持仓前十",
-        "note": ""
-      },
-      {
-        "rank": 6,
-        "name": "汇川技术",
-        "code": "300124.SZ",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "退出前十",
-        "date": "2026-06-30",
-        "concept": "工控/自动化",
-        "sector": "电气设备",
-        "holdingChange": "退出持仓前十",
-        "note": ""
-      },
-      {
-        "rank": 7,
-        "name": "思源电气",
-        "code": "002028.SZ",
-        "market": "A股",
-        "institution": "北向资金(陆股通)",
-        "amount": "遭减持",
-        "date": "2026-06-30",
-        "concept": "电力设备",
-        "sector": "电气设备",
-        "holdingChange": "遭减持",
-        "note": ""
-      }
-    ]
-  },
   "divergence_top10": [
     {
       "name": "腾讯控股",
@@ -992,30 +558,6 @@
       "freq": "事件驱动",
       "lastUpdate": "2026-07-05",
       "note": "机构增减持/评级变化即更新"
-    },
-    "southbound_concentration_top10": {
-      "source": "Tushare hk_hold（港交所CCASS港股通持股）",
-      "freq": "交易日日更",
-      "lastUpdate": "2026-11-24",
-      "note": "每交易日 nightly 检查并刷新最新可得港股通快照；源数据按交易日披露，可能有发布滞后，周末/假期沿用最近交易日；名称为港交所登记繁体原名"
-    },
-    "foreign_concentration_top10": {
-      "source": "HKEX CCASS/SDW + 项目外资托管行名单",
-      "freq": "交易日日更",
-      "lastUpdate": "2026-11-24",
-      "note": "现有20只港股蓝筹跟踪池，非全市场排名；每交易日 nightly 检查最新CCASS快照，比例=主流外资托管行合计持股/已发行股本；托管行持股≠最终外资实益持仓，源数据可能延迟，断源沿用最近可得日期"
-    },
-    "top10_foreign": {
-      "source": "手工整理（原Tushare hsgt_top10）",
-      "freq": "季更",
-      "lastUpdate": "2026-07-08",
-      "note": "北向个股净买入官方2024-08起停披；本榜单为2026Q2北向持仓口径手工整理"
-    },
-    "foreignInstitution_top10": {
-      "source": "港交所权益披露",
-      "freq": "周更",
-      "lastUpdate": "2026-06-27",
-      "note": "机构增减持披露，每周汇总"
     },
     "divergence_top10": {
       "source": "港交所CCASS+南向数据",
@@ -67407,6 +66949,263 @@
       "repairedConceptCount": 11,
       "failedConceptCount": 0,
       "errors": {}
+    }
+  },
+  "shortSellingMonitor": {
+    "version": 1,
+    "frequency": "每个既有交易日夜间检查",
+    "a": {
+      "asOf": "2026-11-25",
+      "previousAsOf": "2026-11-24",
+      "status": "ok",
+      "currency": "RMB",
+      "items": [],
+      "universeCount": 2908,
+      "nonZeroCount": 0,
+      "nonHkdExcluded": null,
+      "totalValue": 0,
+      "source": "HKEX Stock Connect Northbound Short Selling",
+      "sourceUrl": "https://www.hkex.com.hk/eng/csm/shortsell/data_tab_short_selling_20261125e.js",
+      "pageUrl": "https://www.hkex.com.hk/Mutual-Market/Stock-Connect/Statistics/Short-Selling?sc_lang=en",
+      "note": "北向渠道卖空成交（RMB），非未平仓余额，也不等于全部外资；仅官方完整收盘文件入榜。",
+      "error": null,
+      "checkedAt": "2026-11-26T10:19:33+08:00"
+    },
+    "h": {
+      "asOf": "2026-11-24",
+      "previousAsOf": null,
+      "status": "ok",
+      "currency": "HKD",
+      "items": [
+        {
+          "code": "01810.HK",
+          "name": "XIAOMI-W",
+          "shares": 105835200,
+          "value": 2809928552,
+          "rank": 1,
+          "valueChg": null,
+          "valueChgPct": null,
+          "changeFromZero": false
+        },
+        {
+          "code": "09988.HK",
+          "name": "BABA-W",
+          "shares": 29949400,
+          "value": 2500791805,
+          "rank": 2,
+          "valueChg": null,
+          "valueChgPct": null,
+          "changeFromZero": false
+        },
+        {
+          "code": "00700.HK",
+          "name": "TENCENT",
+          "shares": 5652100,
+          "value": 1947075360,
+          "rank": 3,
+          "valueChg": null,
+          "valueChgPct": null,
+          "changeFromZero": false
+        },
+        {
+          "code": "00992.HK",
+          "name": "LENOVO GROUP",
+          "shares": 101078000,
+          "value": 1882326320,
+          "rank": 4,
+          "valueChg": null,
+          "valueChgPct": null,
+          "changeFromZero": false
+        },
+        {
+          "code": "01347.HK",
+          "name": "HUA HONG GRACE",
+          "shares": 24318000,
+          "value": 1844954750,
+          "rank": 5,
+          "valueChg": null,
+          "valueChgPct": null,
+          "changeFromZero": false
+        },
+        {
+          "code": "02800.HK",
+          "name": "TRACKER FUND",
+          "shares": 78846000,
+          "value": 1771294100,
+          "rank": 6,
+          "valueChg": null,
+          "valueChgPct": null,
+          "changeFromZero": false
+        },
+        {
+          "code": "00981.HK",
+          "name": "SMIC",
+          "shares": 20846000,
+          "value": 1039246755,
+          "rank": 7,
+          "valueChg": null,
+          "valueChgPct": null,
+          "changeFromZero": false
+        },
+        {
+          "code": "09999.HK",
+          "name": "NTES",
+          "shares": 5716400,
+          "value": 896697230,
+          "rank": 8,
+          "valueChg": null,
+          "valueChgPct": null,
+          "changeFromZero": false
+        },
+        {
+          "code": "00939.HK",
+          "name": "CCB",
+          "shares": 83868000,
+          "value": 864843180,
+          "rank": 9,
+          "valueChg": null,
+          "valueChgPct": null,
+          "changeFromZero": false
+        },
+        {
+          "code": "02828.HK",
+          "name": "HSCEI ETF",
+          "shares": 9254800,
+          "value": 711662984,
+          "rank": 10,
+          "valueChg": null,
+          "valueChgPct": null,
+          "changeFromZero": false
+        }
+      ],
+      "universeCount": 866,
+      "nonZeroCount": 827,
+      "nonHkdExcluded": 39,
+      "totalValue": 43565036208,
+      "source": "HKEX Main Board Short Selling Turnover",
+      "sourceUrl": "https://www.hkex.com.hk/eng/stat/smstat/ssturnover/ncms/ASHTMAIN.HTM",
+      "pageUrl": "https://www.hkex.com.hk/Market-Data/Statistics/Securities-Market/Short-Selling-Turnover-Today?sc_lang=en",
+      "note": "港股主板卖空成交（HKD），非未平仓余额、非纯外资；%标记非港元记录剔除。",
+      "error": null,
+      "checkedAt": "2026-11-26T10:19:33+08:00"
+    },
+    "hkWeekly": {
+      "asOf": "2026-11-13",
+      "previousAsOf": "2026-11-06",
+      "status": "ok",
+      "currency": "HKD",
+      "items": [
+        {
+          "code": "02318.HK",
+          "name": "PING AN",
+          "shares": 1075848835,
+          "value": 55513799886,
+          "rank": 1,
+          "valueChg": -1738508560,
+          "valueChgPct": -3.036573733336447,
+          "changeFromZero": false
+        },
+        {
+          "code": "01810.HK",
+          "name": "XIAOMI-W",
+          "shares": 1117922775,
+          "value": 32263251287,
+          "rank": 2,
+          "valueChg": -2315503105,
+          "valueChgPct": -6.696317278379771,
+          "changeFromZero": false
+        },
+        {
+          "code": "00700.HK",
+          "name": "TENCENT",
+          "shares": 56894634,
+          "value": 21995465504,
+          "rank": 3,
+          "valueChg": -1625471892,
+          "valueChgPct": -6.881487659652574,
+          "changeFromZero": false
+        },
+        {
+          "code": "09992.HK",
+          "name": "POP MART",
+          "shares": 142512441,
+          "value": 20251017866,
+          "rank": 4,
+          "valueChg": -722865107,
+          "valueChgPct": -3.4465010982017743,
+          "changeFromZero": false
+        },
+        {
+          "code": "02899.HK",
+          "name": "ZIJIN MINING",
+          "shares": 739009432,
+          "value": 19864573532,
+          "rank": 5,
+          "valueChg": -1789646385,
+          "valueChgPct": -8.264654149905484,
+          "changeFromZero": false
+        },
+        {
+          "code": "02359.HK",
+          "name": "WUXI APPTEC",
+          "shares": 92583764,
+          "value": 17739049182,
+          "rank": 6,
+          "valueChg": 621939062,
+          "valueChgPct": 3.6334349527453993,
+          "changeFromZero": false
+        },
+        {
+          "code": "03750.HK",
+          "name": "CATL",
+          "shares": 42839510,
+          "value": 15842050798,
+          "rank": 7,
+          "valueChg": -67452902,
+          "valueChgPct": -0.42397866880033475,
+          "changeFromZero": false
+        },
+        {
+          "code": "00992.HK",
+          "name": "LENOVO GROUP",
+          "shares": 815051151,
+          "value": 14361201281,
+          "rank": 8,
+          "valueChg": -663014866,
+          "valueChgPct": -4.412974756971859,
+          "changeFromZero": false
+        },
+        {
+          "code": "01211.HK",
+          "name": "BYD COMPANY",
+          "shares": 217173060,
+          "value": 14116248900,
+          "rank": 9,
+          "valueChg": -1311195075,
+          "valueChgPct": -8.499107675417761,
+          "changeFromZero": false
+        },
+        {
+          "code": "09988.HK",
+          "name": "BABA-W",
+          "shares": 147807101,
+          "value": 13383932996,
+          "rank": 10,
+          "valueChg": -3857443172,
+          "valueChgPct": -22.373174475245285,
+          "changeFromZero": false
+        }
+      ],
+      "universeCount": 1267,
+      "nonZeroCount": 759,
+      "nonHkdExcluded": null,
+      "totalValue": 950971514891,
+      "source": "SFC Aggregated Reportable Short Positions",
+      "sourceUrl": "https://www.sfc.hk/-/media/EN/pdf/spr/2026/11/13/Short_Position_Reporting_Aggregated_Data_20261113.csv",
+      "pageUrl": "https://www.sfc.hk/en/Regulatory-functions/Market/Short-position-reporting/Aggregated-reportable-short-positions-of-specified-shares",
+      "note": "SFC汇总申报淡仓（周频、HKD），仅达申报门槛股票；不是当日卖空成交，也不能识别为纯外资。",
+      "error": null,
+      "checkedAt": "2026-11-26T10:19:33+08:00"
     }
   }
 }

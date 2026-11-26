@@ -11231,10 +11231,18 @@ def main():
         data['southbound'] = south
         print(f"  Southbound: {south['today']}亿")
 
-    # ── 10b. 两融汇总 / 南北向持股集中度（每个既有交易日 nightly 检查最新可得快照）──
+    # ── 10b. 两融汇总 + A/H 卖空监测（同一既有 nightly；失败分市场保留 last-good）──
     fetch_margin_summary(pro, trade_date, data)
-    southbound_concentration_date = fetch_southbound_concentration(pro, trade_date, data)
-    fetch_foreign_concentration(pro, trade_date, data, preferred_date=southbound_concentration_date)
+    # 六张旧卡已下线：移除专属静态残留；月末 CCASS snapshots 与共享北/南数据不动。
+    for removed_key in ('southbound_concentration_top10', 'foreign_concentration_top10',
+                        'top10_foreign', 'foreignInstitution_top10'):
+        data.pop(removed_key, None)
+        data.setdefault('dataSources', {}).pop(removed_key, None)
+    try:
+        from short_selling import update_short_selling_monitor
+        update_short_selling_monitor(trade_date, data)
+    except Exception as e:
+        print(f"  Warning: shortSellingMonitor failed (keep old): {e}")
     # fetch_leverage_concentration 已停用（2026-10-01 用户指令）：杠杆资金控盘集中度TOP10 卡下线，
     # 该函数只喂那张卡，停用省 3 次 Tushare 调用/日（margin_detail+daily_basic+stock_basic）。
     # 函数体保留未删；fund_data.json 存量 leverage_concentration_top10 静态残留无害（前端不再渲染）。
