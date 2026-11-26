@@ -1,84 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Globe, ChevronRight, Activity, TrendingDown, FileText, ExternalLink } from 'lucide-react';
-import { useFundData, type ShortSellingBoard } from '@/hooks/useFundData';
-
-const fmtCompact = (value?: number | null, currency = '') => {
-  if (value == null) return '—';
-  const abs = Math.abs(value);
-  const formatted = abs >= 1e8 ? `${(value / 1e8).toFixed(2)}亿` : abs >= 1e4 ? `${(value / 1e4).toFixed(0)}万` : value.toLocaleString('zh-CN');
-  return `${formatted}${currency}`;
-};
-
-function ShortSellingCard({ board }: { board?: ShortSellingBoard }) {
-  return (
-    <Card id="northbound-short-selling" className="min-w-0 border-slate-200 shadow-sm">
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between flex-wrap gap-2">
-          <div>
-            <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-800">
-              <TrendingDown className="w-4 h-4 text-orange-600" />
-              北向渠道卖空成交TOP10（A股）
-            </CardTitle>
-            <CardDescription className="text-[10px] mt-1">沪深北向官方完整收盘文件 · 人民币成交额排名</CardDescription>
-          </div>
-          <Badge variant="outline" className="text-xs bg-slate-50 text-slate-600">
-            日更检查 · {board?.asOf ?? '待取得'}
-          </Badge>
-        </div>
-      </CardHeader>
-      <CardContent className="pt-1">
-        {board?.status === 'stale' && (
-          <p className="text-[10px] text-amber-700 bg-amber-50 rounded px-2 py-1 mb-2">本次未获新文件，沿用 {board.asOf} 最近完整快照。</p>
-        )}
-        {board?.items.length ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-[11px] min-w-[520px]">
-              <thead>
-                <tr className="text-slate-500 border-b border-slate-200">
-                  <th className="text-left py-1.5 font-medium">排名 / 标的</th>
-                  <th className="text-right font-medium">卖空股数</th>
-                  <th className="text-right font-medium">卖空金额</th>
-                  <th className="text-right font-medium">较上一有效日</th>
-                </tr>
-              </thead>
-              <tbody>
-                {board.items.map((item) => (
-                  <tr key={item.code} className="border-b border-slate-50 hover:bg-slate-50/60">
-                    <td className="py-1.5">
-                      <span className="font-bold text-slate-400 mr-2">{item.rank}</span>
-                      <span className="font-semibold text-slate-700">{item.name}</span>
-                      <span className="block text-[9px] text-slate-400 ml-5">{item.code}</span>
-                    </td>
-                    <td className="text-right text-slate-600">{fmtCompact(item.shares, '股')}</td>
-                    <td className="text-right font-semibold text-slate-800">{fmtCompact(item.value, '元')}</td>
-                    <td className={`text-right font-medium ${(item.valueChg ?? 0) > 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
-                      {item.valueChg == null ? '—' : item.changeFromZero ? '由0新增' : `${item.valueChg > 0 ? '+' : ''}${fmtCompact(item.valueChg)}`}
-                      {item.valueChgPct != null && <span className="block text-[9px] text-slate-400">{item.valueChgPct > 0 ? '+' : ''}{item.valueChgPct.toFixed(2)}%</span>}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : board?.status !== 'unavailable' ? (
-          <div className="rounded-md bg-slate-50 border border-slate-100 px-3 py-4 text-center">
-            <p className="text-xs font-medium text-slate-700">官方完整名单无卖空成交，本期无 TOP10</p>
-            <p className="text-[10px] text-slate-500 mt-1">{board?.asOf} · 沪深合计 {board?.universeCount?.toLocaleString('zh-CN') ?? '—'} 只，非零记录 0 只</p>
-          </div>
-        ) : (
-          <p className="text-[11px] text-slate-500 rounded-md bg-slate-50 px-3 py-3">有效官方快照尚未取得，不展示空榜或替代排名；下一交易日夜间自动重试。</p>
-        )}
-        <div className="mt-2 flex items-start justify-between gap-2">
-          <p className="text-[10px] text-slate-400 leading-relaxed">{board?.note}</p>
-          <a href={board?.pageUrl} target="_blank" rel="noreferrer" className="shrink-0 inline-flex items-center gap-1 text-[10px] text-sky-600 hover:text-sky-800 underline underline-offset-2">
-            官方源<ExternalLink className="w-3 h-3" />
-          </a>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+import { Globe, FileText } from 'lucide-react';
+import { useFundData } from '@/hooks/useFundData';
 
 export default function ForeignCapitalPanel() {
   const { data } = useFundData();
@@ -287,38 +210,6 @@ export default function ForeignCapitalPanel() {
         </Card>
       )}
 
-      {/* ====== A 股北向卖空监测：日更检查 + 真实 last-good ====== */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <ShortSellingCard board={data.shortSellingMonitor?.a} />
-      </div>
-
-      {/* Tips */}
-      <Card className="bg-violet-50 border-violet-200">
-        <CardContent className="p-4">
-          <h4 className="font-bold text-violet-800 mb-2 flex items-center gap-2">
-            <Activity className="w-4 h-4" />
-            如何理解内外资分歧
-          </h4>
-          <ul className="text-sm text-violet-700 space-y-1">
-            <li className="flex items-start gap-2">
-              <ChevronRight className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              分歧越大 = 内资越看好、外资越看空，定价权之争越激烈
-            </li>
-            <li className="flex items-start gap-2">
-              <ChevronRight className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              腾讯/小米/阿里：外资因美股映射/地缘政治减持，内资因估值洼地接盘
-            </li>
-            <li className="flex items-start gap-2">
-              <ChevronRight className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              美团/信达生物：内外资一致看好，分歧较小，属于共识品种
-            </li>
-            <li className="flex items-start gap-2">
-              <ChevronRight className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              数据来源：港交所权益披露系统 · 统计口径：月度累计
-            </li>
-          </ul>
-        </CardContent>
-      </Card>
     </div>
   );
 }

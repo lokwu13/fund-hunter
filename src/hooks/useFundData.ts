@@ -72,34 +72,6 @@ export interface Top5Item {
   holder?: string;
 }
 
-export interface ShortSellingItem {
-  rank: number;
-  code: string;
-  name: string;
-  shares: number;
-  value: number;
-  valueChg: number | null;
-  valueChgPct: number | null;
-  changeFromZero: boolean;
-}
-
-export interface ShortSellingBoard {
-  asOf: string | null;
-  previousAsOf?: string | null;
-  status: 'ok' | 'stale' | 'unavailable';
-  currency?: 'RMB';
-  items: ShortSellingItem[];
-  universeCount?: number;
-  nonZeroCount?: number;
-  totalValue?: number;
-  source: string;
-  sourceUrl: string;
-  pageUrl: string;
-  note: string;
-  error?: string | null;
-  checkedAt?: string;
-}
-
 export interface VcpIndexCup {
   type: string;
   days: number;
@@ -383,11 +355,6 @@ export interface FundData {
     checkedAt: string;
     error?: string | null;
     note: string;
-  };
-  shortSellingMonitor?: {
-    version: 1;
-    frequency: string;
-    a: ShortSellingBoard;
   };
   conceptSectors?: Array<{
     name: string;
