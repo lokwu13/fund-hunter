@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -9,22 +8,6 @@ import {
 } from 'lucide-react';
 import { useFundData } from '@/hooks/useFundData';
 import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-
-const fundOverview = {
-  totalHolding: '8.87%',
-  change: '+0.90',
-  historicalLow: '7.97%',
-  historicalAvg: '12.0%',
-  recoverySpace: '+3.13',
-};
-
-const subSectorChanges = [
-  { name: 'CXO', change: '+1.2%', trend: 'up' },
-  { name: '创新药', change: '+0.8%', trend: 'up' },
-  { name: '中药', change: '+0.3%', trend: 'up' },
-  { name: '医疗器械', change: '-0.5%', trend: 'down' },
-  { name: '医疗服务', change: '-0.3%', trend: 'down' },
-];
 
 // 公募数据从 fund_data.json 动态加载，覆盖全市场A+H股
 
@@ -35,63 +18,6 @@ export default function PublicFundPanel() {
   return (
     <div className="space-y-6">
       {/* 板块聪明钱超额榜已于 2026-09-29 移至板块栏目（ECIPanel #smart-money，用户指令），此处不再保留整表 */}
-
-      {/* Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-          <CardContent className="p-4">
-            <p className="text-xs text-blue-600 mb-1">当前医药持仓</p>
-            <p className="text-2xl font-bold text-blue-800">{fundOverview.totalHolding}</p>
-            <p className="text-xs text-blue-500">{fundOverview.change}pp</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">
-          <CardContent className="p-4">
-            <p className="text-xs text-slate-600 mb-1">历史最低</p>
-            <p className="text-2xl font-bold text-slate-700">{fundOverview.historicalLow}</p>
-            <p className="text-xs text-slate-500">2025年Q1</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
-          <CardContent className="p-4">
-            <p className="text-xs text-amber-600 mb-1">历史均值</p>
-            <p className="text-2xl font-bold text-amber-800">{fundOverview.historicalAvg}</p>
-            <p className="text-xs text-amber-500">2019-2024</p>
-          </CardContent>
-        </Card>
-        <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200">
-          <CardContent className="p-4">
-            <p className="text-xs text-emerald-600 mb-1">回补空间</p>
-            <p className="text-2xl font-bold text-emerald-800">{fundOverview.recoverySpace}pp</p>
-            <p className="text-xs text-emerald-500">距历史均值</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Sub Sector Changes */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-bold">医药子行业配置变动 (2025Q1→Q2)</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {subSectorChanges.map((sector) => (
-              <div key={sector.name} className="flex items-center justify-between">
-                <span className="text-sm font-medium w-24">{sector.name}</span>
-                <div className="flex-1 mx-4">
-                  <Progress
-                    value={Math.abs(parseFloat(sector.change)) * 20}
-                    className={`h-2 ${sector.trend === 'up' ? 'bg-emerald-100' : 'bg-red-100'}`}
-                  />
-                </div>
-                <span className={`text-sm font-bold ${sector.trend === 'up' ? 'text-emerald-600' : 'text-red-600'}`}>
-                  {sector.trend === 'up' ? '+' : ''}{sector.change}
-                </span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Tabs: Public Fund vs Private Fund */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
