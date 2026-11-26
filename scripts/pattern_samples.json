@@ -1,0 +1,74 @@
+{
+  "version": 97,
+  "description": "资金猎人用户形态样本库；只评估PIT形态识别，不是收益或市场胜率回测。",
+  "asOfRule": "每个样本只保留asOf当日及此前OHLCV；案例终点或用户指定买点为asOf，不使用未来数据。",
+  "labelModes": {
+    "strict": "必须得到expectedCategories中的严格标签；杯柄正例不能用平台/底部/VCP替代。",
+    "valid_form": "只要求有效窄幅/缩量形态，可得expectedCategories任一标签，不强制都叫VCP。",
+    "forbid_only": "只禁止forbiddenCategories，允许其它有效形态或null，不反推放宽规则。",
+    "strict_and_forbid": "必须得到expectedCategories，同时不得得到forbiddenCategories。"
+  },
+  "acceptedValidForms": ["VCP收缩型", "旗形整理", "底部整理", "平台整理", "长平台整理"],
+  "frameworkReferences": [
+    {
+      "name": "William J. O'Neil / IBD杯柄公开框架",
+      "url": "https://www.investors.com/how-to-invest/understanding-chart-patterns-cup-with-handle-double-bottom-flat-base/",
+      "note": "至少7周、常见15~30%深度、前置上升、柄及突破量框架；项目用户样本优先，不杜撰书页码。"
+    },
+    {
+      "name": "Mark Minervini VCP公开框架（用户任务96摘要）",
+      "note": "Stage 2、至少3次逐次收缩、末段量枯、紧密K线与清晰枢轴；Stage 1底部/平台不硬叫VCP。"
+    }
+  ],
+  "samples": [
+    {"id":"A01","code":"000100.SZ","name":"TCL科技","dateRange":"20260409~20260520","asOf":"20260520","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例","sourceCase":"VCP|000100.SZ|2026-05-20"},
+    {"id":"A02","code":"000625.SZ","name":"长安汽车","dateRange":"20230828~20230927","asOf":"20230927","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例","sourceCase":"VCP|000625.SZ|2023-09-27"},
+    {"id":"A03","code":"000708.SZ","name":"中信特钢","dateRange":"20250422~20250610","asOf":"20250610","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例","sourceCase":"VCP|000708.SZ|2025-06-10"},
+    {"id":"A04","code":"000725.SZ","name":"京东方A","dateRange":"20260324~20260417","asOf":"20260417","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例","sourceCase":"VCP|000725.SZ|2026-04-17"},
+    {"id":"A05","code":"000977.SZ","name":"浪潮信息","dateRange":"20240822~20240923","asOf":"20240923","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例","sourceCase":"VCP|000977.SZ|2024-09-23"},
+    {"id":"A06","code":"002028.SZ","name":"思源电气","dateRange":"20250220~20250711","asOf":"20250711","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例","sourceCase":"VCP|002028.SZ|2025-07-11"},
+    {"id":"A07","code":"688012.SH","name":"中微公司","dateRange":"20221107~20230301","asOf":"20230301","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例","sourceCase":"VCP|688012.SH|2023-03-01"},
+    {"id":"A08","code":"688041.SH","name":"海光信息","dateRange":"20240716~20240924","asOf":"20240924","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例；大幅波动收缩不算","sourceCase":"VCP|688041.SH|2024-09-24"},
+    {"id":"A09","code":"688047.SH","name":"龙芯中科","dateRange":"20240206~20240926","asOf":"20240926","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例；高位风险另由标签/平台判断","sourceCase":"VCP|688047.SH|2024-09-26"},
+    {"id":"A10","code":"601000.SH","name":"唐山港","dateRange":"20251202~20260119","asOf":"20260119","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例","sourceCase":"VCP|601000.SH|2026-01-19"},
+    {"id":"A11","code":"002155.SZ","name":"湖南黄金","dateRange":"20251113~20260109","asOf":"20260109","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例；大幅波动收缩不算","sourceCase":"VCP|002155.SZ|2026-01-09"},
+    {"id":"A12","code":"600583.SH","name":"海油工程","dateRange":"20220718~20220822","asOf":"20220822","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["VCP收缩型","旗形整理","底部整理","平台整理","长平台整理"],"userLabel":"窄幅/缩量有效形态例","sourceCase":"VCP|600583.SH|2022-08-22"},
+
+    {"id":"C01","code":"601808.SH","name":"中信出版","dateRange":"20190507~20190816","asOf":"20190816","sampleClass":"杯柄严格样本","labelMode":"strict","expectedCategories":["杯柄型"],"userLabel":"近似杯柄","sourceCase":"CUP|601808.SH|20190507|20190816|近似杯柄"},
+    {"id":"C02","code":"600583.SH","name":"海油工程","dateRange":"20250901~20260107","asOf":"20260107","sampleClass":"杯柄严格样本","labelMode":"strict","expectedCategories":["杯柄型"],"userLabel":"杯柄正例","sourceCase":"CUP|600583.SH|20250901|20260107|杯柄"},
+    {"id":"C03","code":"601857.SH","name":"中国石油","dateRange":"20250120~20250603","asOf":"20250603","sampleClass":"杯柄严格样本","labelMode":"strict","expectedCategories":["杯柄型"],"userLabel":"双底杯柄","sourceCase":"CUP|601857.SH|20250120|20250603|双底杯柄"},
+    {"id":"C04","code":"600028.SH","name":"中国石化","dateRange":"20220307~20220526","asOf":"20220526","sampleClass":"杯柄严格样本","labelMode":"strict","expectedCategories":["杯柄型"],"userLabel":"双底杯柄","sourceCase":"CUP|600028.SH|20220307|20220526|双底杯柄"},
+    {"id":"C05","code":"600309.SH","name":"万华化学","dateRange":"20250403~20250820","asOf":"20250820","sampleClass":"杯柄严格样本","labelMode":"strict","expectedCategories":["杯柄型"],"userLabel":"趋势反转型杯","sourceCase":"CUP|600309.SH|20250403|20250820|趋势反转型圣杯"},
+    {"id":"C06","code":"09987.HK","name":"百胜中国","dateRange":"20240715~20240808杯身；20240809~20240919标准杯柄","asOf":"20240919","sampleClass":"杯柄严格样本","labelMode":"strict","expectedCategories":["杯柄型"],"userLabel":"标准杯柄","sourceCase":"CUP|09987.HK|20240919"},
+    {"id":"C07","code":"688617.SH","name":"惠泰医疗","dateRange":"20260408~20261026杯柄+突破；20260916~20261012买点","asOf":"20261012","sampleClass":"杯柄严格样本","labelMode":"strict","expectedCategories":["杯柄型"],"userLabel":"杯柄正例；允许瑕疵模糊","sourceCase":"CUP|惠泰医疗|20261012"},
+    {"id":"C08","code":"600312.SH","name":"平高电气","dateRange":"20260602~20260804杯身；20260805~20260928柄；20260911~20260924缩量买点","asOf":"20260924","sampleClass":"杯柄严格样本","labelMode":"strict","expectedCategories":["杯柄型"],"userLabel":"杯柄正例；周MA150>MA200且周BOLL中轨未有效破","sourceCase":"CUP|平高电气|20260924"},
+    {"id":"C09","code":"003816.SZ","name":"中国广核","dateRange":"20260616~20260903双底杯身；20260904~20260930柄","asOf":"20261008","sampleClass":"杯柄严格样本","labelMode":"strict","expectedCategories":["杯柄型"],"userLabel":"20261008买点","source":"current_cache"},
+    {"id":"C10","code":"600795.SH","name":"国电电力","dateRange":"20260602~20260724或20260804杯身；20260804~20260819柄；杯沿约5.2","asOf":"20260902","sampleClass":"杯柄严格样本","labelMode":"strict","expectedCategories":["杯柄型"],"userLabel":"20260902历史首次突破；旧突破不得晚重置","source":"rows600795"},
+    {"id":"C11","code":"600795.SH","name":"国电电力","dateRange":"20260602~20260804杯身；20260804~20260819柄；杯沿约5.2","asOf":"20260819","sampleClass":"杯柄严格样本","labelMode":"strict","expectedCategories":["杯柄型"],"expectedHandleStart":"20260804","expectedHandleEnd":"20260819","userLabel":"历史0819锚点必须识别指定12日柄；不得单票豁免","source":"rows600795"},
+
+    {"id":"L01","code":"688041.SH","name":"海光信息","dateRange":"20240507~20240909","asOf":"20240909","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["长平台整理"],"userLabel":"保留既有23案例之长平台段①","sourceCase":"LP|海光段①|688041.SH|20240909"},
+    {"id":"L02","code":"688041.SH","name":"海光信息","dateRange":"20250610~20250812","asOf":"20250812","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["长平台整理"],"userLabel":"保留既有23案例之长平台段②","sourceCase":"LP|海光段②|688041.SH|20250812"},
+    {"id":"L03","code":"688012.SH","name":"中微公司","dateRange":"20250515~20250722","asOf":"20250722","sampleClass":"形态有效但可不同标签","labelMode":"valid_form","expectedCategories":["长平台整理"],"userLabel":"保留既有23案例之长平台段③","sourceCase":"LP|中微段③|688012.SH|20250722"},
+
+    {"id":"P01","code":"600938.SH","name":"中国海油","dateRange":"20250625~20251021","asOf":"20251021","sampleClass":"平台整理严格样本","labelMode":"strict","expectedCategories":["平台整理"],"userLabel":"平台整理正式正样本；79交易日","source":"current_cache","replayMode":"explicit_window_long_platform","metadata":{"windowBars":79,"ampPct":7.2,"driftPct":-0.08,"volRatio":0.9852,"intervalNetInflow":0.116,"intervalNetInflowUnit":"亿元","note":"正式样本79日指标：amp=7.2%、drift=-0.08%、volRatio=0.9852、intervalNetInflow=+0.116亿元。"},"note":"仅登记用户确认的正式平台样本；显式日期窗口回放，不改形态规则，不倒填PIT市值。"},
+
+    {"id":"N01","code":"688029.SH","name":"南微医学","dateRange":"20260908附近","asOf":"20260908","sampleClass":"明确反例","labelMode":"strict_and_forbid","expectedCategories":["底部整理"],"forbiddenCategories":["杯柄型","VCP收缩型"],"userLabel":"属于底部整理，不是杯柄也不是VCP","source":"current_cache"},
+    {"id":"N02","code":"000429.SZ","name":"粤高速A","dateRange":"20260930口径","asOf":"20260930","sampleClass":"明确反例","labelMode":"forbid_only","forbiddenCategories":["VCP收缩型"],"userLabel":"不是VCP","source":"current_cache"},
+    {"id":"N03","code":"688271.SH","name":"联影医疗","dateRange":"20260930口径","asOf":"20260930","sampleClass":"明确反例","labelMode":"forbid_only","forbiddenCategories":["VCP收缩型"],"userLabel":"不是VCP","source":"current_cache"},
+    {"id":"N04","code":"601998.SH","name":"中信银行","dateRange":"20260930口径","asOf":"20260930","sampleClass":"明确反例","labelMode":"forbid_only","forbiddenCategories":["杯柄型"],"userLabel":"接近新高不能再当杯柄","source":"current_cache"},
+    {"id":"N05","code":"000729.SZ","name":"燕京啤酒","dateRange":"20260930口径","asOf":"20260930","sampleClass":"明确反例","labelMode":"forbid_only","forbiddenCategories":["底部整理"],"userLabel":"不是底部整理","source":"current_cache"},
+    {"id":"N06","code":"600483.SH","name":"福能股份","dateRange":"20260930口径","asOf":"20260930","sampleClass":"明确反例","labelMode":"forbid_only","forbiddenCategories":["底部整理"],"userLabel":"不是底部整理","source":"current_cache"},
+    {"id":"N07","code":"600642.SH","name":"申能股份","dateRange":"20260930口径","asOf":"20260930","sampleClass":"明确反例","labelMode":"forbid_only","forbiddenCategories":["底部整理"],"userLabel":"不是底部整理","source":"current_cache"},
+    {"id":"N08","code":"601288.SH","name":"农业银行","dateRange":"20260930口径","asOf":"20260930","sampleClass":"明确反例","labelMode":"forbid_only","forbiddenCategories":["底部整理"],"userLabel":"不是底部整理","source":"current_cache"},
+    {"id":"N09","code":"002648.SZ","name":"卫星化学","dateRange":"截至20261029","asOf":"20261029","sampleClass":"明确反例","labelMode":"forbid_only","forbiddenCategories":["杯柄型"],"userLabel":"不是杯柄","source":"real95"},
+    {"id":"N10","code":"600985.SH","name":"淮北矿业","dateRange":"截至20261029","asOf":"20261029","sampleClass":"明确反例","labelMode":"forbid_only","forbiddenCategories":["杯柄型"],"userLabel":"不是杯柄","source":"real95"},
+    {"id":"N11","code":"000415.SZ","name":"渤海租赁","dateRange":"截至20261029","asOf":"20261029","sampleClass":"明确反例","labelMode":"forbid_only","forbiddenCategories":["杯柄型"],"userLabel":"不是杯柄","source":"real95"},
+    {"id":"N12","code":"600795.SH","name":"国电电力","dateRange":"截至20261027","asOf":"20261027","sampleClass":"明确反例","labelMode":"forbid_only","forbiddenCategories":["杯柄型"],"userLabel":"旧杯柄不得入围；首次信号新鲜度0~5日不变","source":"current_cache"}
+  ],
+  "observationOnly": [
+    {"name":"顾家家居","instruction":"只加观察池，不另外改变规则，不用于反推放宽。"},
+    {"name":"华海药业","instruction":"只加观察池，不另外改变规则，不用于反推放宽。"},
+    {"name":"中信特钢","instruction":"观察池指令不用于反推放宽；A03仅使用用户已明确给出的形态样本。"},
+    {"id":"P01R","code":"600938.SH","name":"中国海油","dateRange":"20250616~20251021","asOf":"20251021","sampleClass":"平台整理宽窗口参考","labelMode":"valid_form","expectedCategories":["平台整理"],"labelScope":"referenceWindowOnly","referenceOnly":true,"formalSampleId":"P01","referenceWindow":{"dateRange":"20250625~20251021","windowBars":79,"instruction":"只通过内部79日子区间参考P01，不对完整86日作正式平台硬判。"},"metadata":{"windowBars":86,"volRatio":1.3439,"intervalNetInflow":-8.3486,"intervalNetInflowUnit":"亿元","knownDefects":["量能瑕疵：完整86日volRatio=1.3439。","资金瑕疵：完整86日intervalNetInflow=-8.3486亿元。"]},"userLabel":"平台整理宽窗口参考；量能和资金存在瑕疵","note":"参考而非把完整86日硬判为正式平台；仅引用内部20250625~20251021的79日子区间。完整86日volRatio=1.3439、intervalNetInflow=-8.3486亿元，缺陷必须保留。","instruction":"只作宽窗口参考，不进入正式samples回放，不用于反推放宽规则。"}
+  ]
+}
