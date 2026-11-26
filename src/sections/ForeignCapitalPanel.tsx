@@ -10,46 +10,40 @@ const fmtCompact = (value?: number | null, currency = '') => {
   return `${formatted}${currency}`;
 };
 
-function ShortSellingCard({ market, board, weekly }: { market: 'a' | 'h'; board?: ShortSellingBoard; weekly?: ShortSellingBoard | null }) {
-  const useWeekly = market === 'h' && !board?.items.length && !!weekly?.items.length;
-  const shown = useWeekly ? weekly : board;
-  const changeLabel = useWeekly ? '较上一周报' : '较上一有效日';
-  const title = market === 'a' ? '北向渠道卖空成交TOP10（A股）' : '港股主板卖空成交TOP10';
+function ShortSellingCard({ board }: { board?: ShortSellingBoard }) {
   return (
-    <Card id={market === 'a' ? 'northbound-short-selling' : 'hk-short-selling'} className="min-w-0 border-slate-200 shadow-sm">
+    <Card id="northbound-short-selling" className="min-w-0 border-slate-200 shadow-sm">
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between flex-wrap gap-2">
           <div>
             <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-800">
-              <TrendingDown className={`w-4 h-4 ${market === 'a' ? 'text-orange-600' : 'text-rose-600'}`} />
-              {title}
+              <TrendingDown className="w-4 h-4 text-orange-600" />
+              北向渠道卖空成交TOP10（A股）
             </CardTitle>
-            <CardDescription className="text-[10px] mt-1">
-              {useWeekly ? '最新申报淡仓TOP10 · 周频补充（非当日成交）' : market === 'a' ? '沪深北向官方完整收盘文件 · 人民币成交额排名' : '港交所主板官方收盘日报 · 港元成交额排名'}
-            </CardDescription>
+            <CardDescription className="text-[10px] mt-1">沪深北向官方完整收盘文件 · 人民币成交额排名</CardDescription>
           </div>
-          <Badge variant="outline" className={`text-xs ${useWeekly ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-slate-50 text-slate-600'}`}>
-            {useWeekly ? '周频' : '日更检查'} · {shown?.asOf ?? '待取得'}
+          <Badge variant="outline" className="text-xs bg-slate-50 text-slate-600">
+            日更检查 · {board?.asOf ?? '待取得'}
           </Badge>
         </div>
       </CardHeader>
       <CardContent className="pt-1">
-        {shown?.status === 'stale' && (
-          <p className="text-[10px] text-amber-700 bg-amber-50 rounded px-2 py-1 mb-2">本次未获新文件，沿用 {shown.asOf} 最近完整快照。</p>
+        {board?.status === 'stale' && (
+          <p className="text-[10px] text-amber-700 bg-amber-50 rounded px-2 py-1 mb-2">本次未获新文件，沿用 {board.asOf} 最近完整快照。</p>
         )}
-        {shown?.items.length ? (
+        {board?.items.length ? (
           <div className="overflow-x-auto">
             <table className="w-full text-[11px] min-w-[520px]">
               <thead>
                 <tr className="text-slate-500 border-b border-slate-200">
                   <th className="text-left py-1.5 font-medium">排名 / 标的</th>
-                  <th className="text-right font-medium">{useWeekly ? '申报淡仓股数' : '卖空股数'}</th>
-                  <th className="text-right font-medium">{useWeekly ? '申报淡仓市值' : '卖空金额'}</th>
-                  <th className="text-right font-medium">{changeLabel}</th>
+                  <th className="text-right font-medium">卖空股数</th>
+                  <th className="text-right font-medium">卖空金额</th>
+                  <th className="text-right font-medium">较上一有效日</th>
                 </tr>
               </thead>
               <tbody>
-                {shown.items.map((item) => (
+                {board.items.map((item) => (
                   <tr key={item.code} className="border-b border-slate-50 hover:bg-slate-50/60">
                     <td className="py-1.5">
                       <span className="font-bold text-slate-400 mr-2">{item.rank}</span>
@@ -57,7 +51,7 @@ function ShortSellingCard({ market, board, weekly }: { market: 'a' | 'h'; board?
                       <span className="block text-[9px] text-slate-400 ml-5">{item.code}</span>
                     </td>
                     <td className="text-right text-slate-600">{fmtCompact(item.shares, '股')}</td>
-                    <td className="text-right font-semibold text-slate-800">{fmtCompact(item.value, shown.currency === 'RMB' ? '元' : '港元')}</td>
+                    <td className="text-right font-semibold text-slate-800">{fmtCompact(item.value, '元')}</td>
                     <td className={`text-right font-medium ${(item.valueChg ?? 0) > 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
                       {item.valueChg == null ? '—' : item.changeFromZero ? '由0新增' : `${item.valueChg > 0 ? '+' : ''}${fmtCompact(item.valueChg)}`}
                       {item.valueChgPct != null && <span className="block text-[9px] text-slate-400">{item.valueChgPct > 0 ? '+' : ''}{item.valueChgPct.toFixed(2)}%</span>}
@@ -67,7 +61,7 @@ function ShortSellingCard({ market, board, weekly }: { market: 'a' | 'h'; board?
               </tbody>
             </table>
           </div>
-        ) : market === 'a' && board?.status !== 'unavailable' ? (
+        ) : board?.status !== 'unavailable' ? (
           <div className="rounded-md bg-slate-50 border border-slate-100 px-3 py-4 text-center">
             <p className="text-xs font-medium text-slate-700">官方完整名单无卖空成交，本期无 TOP10</p>
             <p className="text-[10px] text-slate-500 mt-1">{board?.asOf} · 沪深合计 {board?.universeCount?.toLocaleString('zh-CN') ?? '—'} 只，非零记录 0 只</p>
@@ -75,10 +69,9 @@ function ShortSellingCard({ market, board, weekly }: { market: 'a' | 'h'; board?
         ) : (
           <p className="text-[11px] text-slate-500 rounded-md bg-slate-50 px-3 py-3">有效官方快照尚未取得，不展示空榜或替代排名；下一交易日夜间自动重试。</p>
         )}
-        {useWeekly && board?.asOf && <p className="text-[10px] text-slate-400 mt-2">日成交最近快照 {board.asOf} 暂无可展示记录，上方仅为 SFC 周频补充。</p>}
         <div className="mt-2 flex items-start justify-between gap-2">
-          <p className="text-[10px] text-slate-400 leading-relaxed">{shown?.note ?? board?.note}</p>
-          <a href={shown?.pageUrl ?? board?.pageUrl} target="_blank" rel="noreferrer" className="shrink-0 inline-flex items-center gap-1 text-[10px] text-sky-600 hover:text-sky-800 underline underline-offset-2">
+          <p className="text-[10px] text-slate-400 leading-relaxed">{board?.note}</p>
+          <a href={board?.pageUrl} target="_blank" rel="noreferrer" className="shrink-0 inline-flex items-center gap-1 text-[10px] text-sky-600 hover:text-sky-800 underline underline-offset-2">
             官方源<ExternalLink className="w-3 h-3" />
           </a>
         </div>
@@ -294,10 +287,9 @@ export default function ForeignCapitalPanel() {
         </Card>
       )}
 
-      {/* ====== A/H 卖空监测：官方口径分离，日更检查 + 真实 last-good ====== */}
+      {/* ====== A 股北向卖空监测：日更检查 + 真实 last-good ====== */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-        <ShortSellingCard market="a" board={data.shortSellingMonitor?.a} />
-        <ShortSellingCard market="h" board={data.shortSellingMonitor?.h} weekly={data.shortSellingMonitor?.hkWeekly} />
+        <ShortSellingCard board={data.shortSellingMonitor?.a} />
       </div>
 
       {/* Tips */}

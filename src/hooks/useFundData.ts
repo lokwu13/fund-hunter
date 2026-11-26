@@ -87,11 +87,10 @@ export interface ShortSellingBoard {
   asOf: string | null;
   previousAsOf?: string | null;
   status: 'ok' | 'stale' | 'unavailable';
-  currency?: 'RMB' | 'HKD';
+  currency?: 'RMB';
   items: ShortSellingItem[];
   universeCount?: number;
   nonZeroCount?: number;
-  nonHkdExcluded?: number;
   totalValue?: number;
   source: string;
   sourceUrl: string;
@@ -399,8 +398,6 @@ export interface FundData {
     version: 1;
     frequency: string;
     a: ShortSellingBoard;
-    h: ShortSellingBoard;
-    hkWeekly?: ShortSellingBoard | null;
   };
   conceptSectors?: Array<{
     name: string;

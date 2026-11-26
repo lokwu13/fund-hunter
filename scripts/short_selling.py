@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""HKEX/SFC short-selling snapshots for the foreign-capital panel.
+"""Northbound short-selling snapshots for the foreign-capital panel.
 
-A and H snapshots are deliberately isolated. Only complete official files enter the
-cache; failed or intraday responses retain the last complete observation and its date.
+Only complete official files enter the cache; failed or intraday responses retain the
+last complete observation and its date. Legacy H/SFC parsers and cache namespaces are
+retained, but their nightly requests are disabled with the removed Hong Kong card.
 """
 from __future__ import annotations
 
@@ -246,7 +247,7 @@ def _prune(cache):
 def update_short_selling_monitor(trade_date, data, cache_path=CACHE_PATH, *,
                                  northbound_texts=None, hkex_text=None, sfc_page_text=None,
                                  sfc_csv_texts=None):
-    """Nightly entry point. Injectable official texts support deterministic real-source runs."""
+    """Nightly Northbound update; legacy H/SFC arguments remain for API compatibility."""
     cache = _load(cache_path)
     for market in ('a', 'h', 'weekly'):
         cache.setdefault(market, {})
@@ -292,62 +293,10 @@ def update_short_selling_monitor(trade_date, data, cache_path=CACHE_PATH, *,
                           'HKEX Stock Connect Northbound Short Selling', NB_PAGE, str(exc)[:240])
                    if current else _empty_board('a', str(exc)[:240]))
 
-    # H: HKEX current day-close report; pre-close placeholders are not observations.
-    try:
-        current = parse_hkex_mainboard(hkex_text if hkex_text is not None else _get(HK_FILE).text,
-                                       max_date=max_date)
-        cached_latest = _latest_cached(cache, 'h', max_date)
-        if cached_latest and current['asOf'] < cached_latest['asOf']:
-            raise ValueError('HKEX report is older than cached last-good')
-        cache['h'][current['asOf']] = current
-        h_board = _board(current, _previous(cache, 'h', current['asOf']), 'ok',
-                         '港股主板卖空成交（HKD），非未平仓余额、非纯外资；%标记非港元记录剔除。',
-                         'HKEX Main Board Short Selling Turnover', HK_PAGE)
-    except Exception as exc:
-        current = _latest_cached(cache, 'h', max_date)
-        h_board = (_board(current, _previous(cache, 'h', current['asOf']), 'stale',
-                          '港股主板卖空成交（HKD），非未平仓余额、非纯外资；本次未获新收盘报，沿用最近完整快照。',
-                          'HKEX Main Board Short Selling Turnover', HK_PAGE, str(exc)[:240])
-                   if current else _empty_board('h', str(exc)[:240]))
-
-    # SFC weekly supplement: latest two actual report dates, never labelled daily.
-    try:
-        html = sfc_page_text if sfc_page_text is not None else _get(SFC_PAGE).text
-        links = parse_sfc_page(html)
-        snapshots = []
-        for date8, url in links[:2]:
-            if _iso(date8) in cache['weekly'] and sfc_csv_texts is None:
-                snapshots.append(cache['weekly'][_iso(date8)])
-                continue
-            text = (sfc_csv_texts or {}).get(date8)
-            if text is None:
-                text = _get(url).content.decode('utf-8-sig')
-            snapshots.append(parse_sfc_csv(text, date8))
-            snapshots[-1]['sourceUrl'] = url
-        current = snapshots[0]
-        if current['asOf'] > max_date:
-            raise ValueError('SFC report date is after requested date')
-        cached_latest = _latest_cached(cache, 'weekly', max_date)
-        if cached_latest and current['asOf'] < cached_latest['asOf']:
-            raise ValueError('SFC report is older than cached last-good')
-        for snapshot in snapshots:
-            if snapshot['asOf'] <= max_date:
-                cache['weekly'][snapshot['asOf']] = snapshot
-        previous = snapshots[1] if len(snapshots) > 1 else _previous(cache, 'weekly', current['asOf'])
-        weekly_board = _board(current, previous, 'ok',
-                              'SFC汇总申报淡仓（周频、HKD），仅达申报门槛股票；不是当日卖空成交，也不能识别为纯外资。',
-                              'SFC Aggregated Reportable Short Positions', SFC_PAGE)
-    except Exception as exc:
-        current = _latest_cached(cache, 'weekly', max_date)
-        weekly_board = (_board(current, _previous(cache, 'weekly', current['asOf']), 'stale',
-                               'SFC汇总申报淡仓（周频、HKD）；本次断源沿用最近完整周报，非当日成交、非纯外资。',
-                               'SFC Aggregated Reportable Short Positions', SFC_PAGE, str(exc)[:240])
-                        if current else None)
-
-    cache['note'] = ('A/H日成交与SFC周频申报分命名空间；仅完整官方文件入缓存；'
-                     '正成交记录用于排名，完整官方 universe 支持缺失代码按0计算变化。')
+    cache['note'] = ('仅北向日成交继续 nightly 更新；H/SFC 历史缓存保留但停止请求；'
+                     '仅完整官方文件入缓存，完整官方 universe 支持缺失代码按0计算变化。')
     _prune(cache)
     _save(cache_path, cache)
     data['shortSellingMonitor'] = {'version': 1, 'frequency': '每个既有交易日夜间检查',
-                                   'a': a_board, 'h': h_board, 'hkWeekly': weekly_board}
+                                   'a': a_board}
     return data['shortSellingMonitor']
