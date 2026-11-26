@@ -9,7 +9,7 @@
       "totalValue": 0,
       "records": [],
       "sourceUrl": "https://www.hkex.com.hk/eng/csm/shortsell/data_tab_short_selling_20261125e.js",
-      "retrievedAt": "2026-11-26T10:19:33+08:00"
+      "retrievedAt": "2026-11-26T20:36:45+00:00"
     },
     "2026-11-24": {
       "asOf": "2026-11-24",
@@ -21,6 +21,17 @@
       "records": [],
       "sourceUrl": "https://www.hkex.com.hk/eng/csm/shortsell/data_tab_short_selling_20261124e.js",
       "retrievedAt": "2026-11-26T10:19:33+08:00"
+    },
+    "2026-11-26": {
+      "asOf": "2026-11-26",
+      "session": "day_close",
+      "currency": "RMB",
+      "universeCount": 2908,
+      "nonZeroCount": 0,
+      "totalValue": 0,
+      "records": [],
+      "sourceUrl": "https://www.hkex.com.hk/eng/csm/shortsell/data_tab_short_selling_20261126e.js",
+      "retrievedAt": "2026-11-26T20:36:44+00:00"
     }
   },
   "h": {
@@ -14140,5 +14151,5 @@
       "retrievedAt": "2026-11-26T10:19:33+08:00"
     }
   },
-  "note": "A/H日成交与SFC周频申报分命名空间；仅完整官方文件入缓存；正成交记录用于排名，完整官方 universe 支持缺失代码按0计算变化。"
+  "note": "仅北向日成交继续 nightly 更新；H/SFC 历史缓存保留但停止请求；仅完整官方文件入缓存，完整官方 universe 支持缺失代码按0计算变化。"
 }
