@@ -10750,101 +10750,169 @@ def fetch_nt_upgrade(pro, trade_date, data):
 
 
 def _build_nt_comment(data):
-    """规则生成 4-6 句宽基市场短评（纯宽基口径：份额异动/位置层/形态/波动，无主体归因）。"""
-    sents = []
-    rot = data.get('etfRotation') or {}
-    radar = data.get('etfShareRadar') or {}
-    vol = data.get('indexVol') or {}
-    bt = (data.get('broadTrend') or {}).get('items') or []
-    bv = (data.get('broadVcp') or {}).get('items') or []
+    """生成两行宽基短评；最终窗口优先，资金只调整同级排序，不越过周线约束。
 
-    # 1) 全市场 ETF 份额净增减
-    if rot:
-        t = rot.get('totalToday', 0)
-        if abs(t) < 1:
-            sents.append("全市场ETF（不含货币）昨日份额基本持平（净额不足1亿元）。")
-        else:
-            direction = '净申购' if t >= 0 else '净赎回'
-            sents.append(f"全市场ETF（不含货币）昨日{direction}约{abs(t):.0f}亿元（份额变化×收盘价口径）。")
+    固定仓位映射：标准开窗=可操作/中性（30%–60%）；半窗或RSI6临时窗=
+    谨慎操作/低（10%–30%）；关窗=暂不适合操作/低（0%–20%）。关键数据不足=
+    暂不判断。仅作宽基仓位研究，不构成个股买卖建议。
+    """
+    lw = data.get('longWindow') or {}
+    window = lw.get('window')
+    temp = lw.get('temp') or ''
+    osc_items = (data.get('broadOsc') or {}).get('items') or []
+    trend_items = (data.get('broadTrend') or {}).get('items') or []
+    vcp_items = (data.get('broadVcp') or {}).get('items') or []
+    vol_items = (data.get('indexVol') or {}).get('items') or []
+    if window not in ('open', 'half', 'closed') or not temp or not osc_items or not (trend_items or vcp_items):
+        return ('结论：暂不判断｜参考仓位：暂不判断｜优先：暂不判断｜回避/暂不做：暂不判断\n'
+                '理由：第0步水温/宽基窗口或BOLL/RSI、形态数据不足，暂不推导操作结论。')
 
-    # 2) 宽基份额异动 / 共振
-    alerts = [i for i in radar.get('items', []) if i.get('alert')]
-    if alerts:
-        a = alerts[0]
-        act = '流入' if (a.get('chg1') or 0) > 0 else '流出'
-        sent = f"{a['name']}单日份额{a['chg1']:+.2f}亿份（约{a['amt1']:+.1f}亿元），大额资金{act}信号"
-        res = (data.get('ntRotation') or {}).get('resonance') or {}
-        if res.get('hit'):
-            sent += f"，且{res['count']}只核心宽基同日同向{res['direction']}、呈共振，大资金情绪信号明确"
-        else:
-            sent += "；未见跨公司共振，暂属个别产品资金行为"
-        sents.append(sent + "。")
-    elif radar:
-        sents.append("13只宽基ETF份额未见明显异动，资金面平稳。")
+    if window == 'closed':
+        action, position = '暂不适合操作', '低（0%–20%）'
+    elif window == 'half' or lw.get('windowType') == 'extreme_rebound' or lw.get('temporary'):
+        action, position = '谨慎操作', '低（10%–30%）'
+    elif '冷' in temp:
+        # 防御性降级：即使上游字段异常，也不把冷水温写成积极操作。
+        action, position = '谨慎操作', '低（10%–30%）'
+    else:
+        action, position = '可操作', '中性（30%–60%）'
 
-    # 3) 板块轮动主线
-    if rot.get('inflowTop3') or rot.get('outflowTop3'):
-        inflow = '、'.join(rot.get('inflowTop3') or []) or '无'
-        outflow = '、'.join(rot.get('outflowTop3') or []) or '无'
-        sents.append(f"近5日份额口径资金主要流入{inflow}类，流出{outflow}类。")
+    osc = {i.get('indexCode'): i for i in osc_items}
+    trend = {i.get('indexCode'): i for i in trend_items}
+    vcp = {i.get('indexCode'): i for i in vcp_items}
+    vol = {i.get('code'): i for i in vol_items}
+    names = {}
+    for item in trend_items + osc_items + vcp_items:
+        if item.get('indexCode') and item.get('indexName'):
+            names[item['indexCode']] = item['indexName']
+    for item in vol_items:
+        if item.get('code') and item.get('name'):
+            names.setdefault(item['code'], item['name'])
 
-    # 4) 宽基位置层 + VCP 形态
-    if bt:
-        low = [i['indexName'] for i in bt if i.get('status') == '✅趋势候选']
-        low_out = [i['indexName'] for i in bt if i.get('status') == '低位观察（份额流出）']
-        high = [i['indexName'] for i in bt if i.get('status') == '高位·仅展示']
-        if low:
-            sents.append(f"位置层处于低位且份额未流出：{'、'.join(low)}，列为趋势候选。")
-        elif low_out:
-            sents.append(f"{'、'.join(low_out)}处低位但份额仍在流出，暂只观察。")
-        if high:
-            sents.append(f"{'、'.join(high)}处高位（距60日高点3%内或近20日涨幅>10%），仅展示不作候选。")
-        if not low and not low_out and not high:
-            sents.append("主要宽基多处于半路位置，暂无低位趋势候选。")
-    if bv:
-        brk = [i for i in bv if i.get('state') == '已突破']
-        watch = [i for i in bv if i.get('state') in ('临近买点', '未突破·观察')]
-        if brk:
-            sents.append(f"{'、'.join(i['indexName'] for i in brk)}已收盘站上平台枢轴，形态突破确认。")
-        for i in watch[:2]:
-            sents.append(f"{i['indexName']}形成{i['pattern']}（{i['days']}日，振幅{i['amplitude']}%），"
-                         f"{i['state']}、距枢轴{i['distPct']}%，盯{i['etfCode'].split('.')[0]}突破确认。")
+    trigger_names = set(lw.get('triggerIndices') or
+                        ((lw.get('extremeRebound') or {}).get('triggerIndices') or []))
+    trigger_codes = {code for code, name in names.items()
+                     if name in trigger_names or (name == '创业板指' and '创业板50' in trigger_names)}
+    flow_series = {
+        '沪深300系列': '000300.SH', '上证50': '000016.SH', '中证500系列': '000905.SH',
+        '中证1000系列': '000852.SH', '科创50系列': '000688.SH', '创业板': '399006.SZ',
+    }
+    flows = {}
+    for group in (data.get('ntRotation') or {}).get('groups') or []:
+        for series in group.get('series') or []:
+            code = flow_series.get(series.get('name'))
+            total = series.get('total') or {}
+            if code and total.get('amt1') is not None:
+                flows[code] = {'series': series['name'], 'amt': total['amt1']}
+                names.setdefault(code, code)
 
-    # 5) 宽基系列份额净额映射
-    ntr = data.get('ntRotation') or {}
-    flow_sents = []
-    for g in ntr.get('groups', []):
-        for s in g.get('series', []):
-            t = s.get('total') or {}
-            amt = t.get('amt1')
-            target = SERIES_IMPACT.get(s['name'])
-            if not target or amt is None:
-                continue
-            if abs(amt) >= 5:
-                d_ = '净流入' if amt > 0 else '净流出'
-                impact = '利多' if amt > 0 else '利空'
-                flow_sents.append((abs(amt), f"{s['name']}ETF合计{d_}{abs(amt):.1f}亿 → 短期{impact}{target}"))
-    flow_sents.sort(reverse=True)
-    for _, txt in flow_sents[:2]:
-        sents.append(txt + "。")
+    records = []
+    for code, name in names.items():
+        o, t, v, hv = osc.get(code) or {}, trend.get(code) or {}, vcp.get(code) or {}, vol.get(code) or {}
+        flow = flows.get(code)
+        score = 0
+        if code in trigger_codes:
+            score += 4
+        if t.get('status') == '✅趋势候选':
+            score += 3
+        if o.get('state') == '完整抄底窗口':
+            score += 6
+        elif o.get('state') == '超跌反弹观察':
+            score += 4
+        if v.get('state') == '突破确认':
+            score += 5
+        elif v.get('state') == '临近枢轴':
+            score += 3
+        amt = (flow or {}).get('amt')
+        if amt is not None and amt >= 20:
+            score += 3
+        elif amt is not None and amt >= 5:
+            score += 2
+        elif amt is not None and amt > 0:
+            score += 1
+        if hv.get('status') == '平稳':
+            score += 1
+        if hv.get('low'):
+            score += 1
 
-    # 6) 波动率状态
-    vitems = vol.get('items') or []
-    if vitems:
-        hs = next((v for v in vitems if v['code'] == '000300.SH'), vitems[0])
-        txt = f"沪深300波动率HV20为{hs['hv20']}%"
-        if hs.get('hvPct1y') is not None:
-            txt += f"（近一年{hs['hvPct1y']:.0f}%分位）"
-        warming = [v['name'] for v in vitems if v['status'] == '升温']
-        lows = [v['name'] for v in vitems if v.get('low')]
-        if warming:
-            txt += f"，{'、'.join(warming)}波动升温"
-        elif lows:
-            txt += f"，{'、'.join(lows)}波动处低位"
-        else:
-            txt += "，主要宽基波动平稳"
-        sents.append(txt + "。")
-    return ''.join(sents)
+        blockers = []
+        if o.get('state') in ('强硬减仓', '顶部风险'):
+            blockers.append(o['state'])
+        if v.get('state') in ('高位发散', '破位') or t.get('status') == '高位·仅展示':
+            blockers.append('高位/破位')
+        if o.get('state') == '超卖观察(仅观察)':
+            blockers.append('周线BOLL未通过')
+        elif o.get('state') == '超卖观察' and o.get('weeklyGate') is False:
+            blockers.append('周线前提未通过')
+        if t.get('status') == '低位观察（份额流出）':
+            blockers.append('份额流出')
+        if hv.get('status') == '升温' and hv.get('hvPct1y') is not None and hv['hvPct1y'] >= 80:
+            blockers.append('高波动')
+        records.append({'code': code, 'name': name, 'score': score, 'blockers': blockers,
+                        'osc': o, 'trend': t, 'vcp': v, 'vol': hv, 'flow': flow,
+                        'triggered': code in trigger_codes})
+
+    ranked = sorted(records, key=lambda r: (-r['score'], r['name']))
+    eligible = [r for r in ranked if not r['blockers'] and r['score'] > 0]
+    blocked = [r for r in ranked if r['blockers']]
+    if window == 'closed':
+        priority_text, avoid_text = '暂不做', '全部宽基（关窗）'
+    else:
+        priority_text = '、'.join(r['name'] for r in eligible[:2]) or '暂不做'
+        avoid_text = '、'.join(r['name'] for r in blocked[:2]) or '无特别回避'
+    conclusion = f'结论：{action}｜参考仓位：{position}｜优先：{priority_text}｜回避/暂不做：{avoid_text}'
+
+    if window == 'closed':
+        window_reason = f'第0步关窗（水温{temp}），大级别约束优先于ETF资金信号'
+    elif window == 'half':
+        window_reason = f'第0步半窗且水温{temp}，仓位按固定规则降为低'
+    elif lw.get('windowType') == 'extreme_rebound' or lw.get('temporary'):
+        window_reason = f'第0步为RSI6极端修复临时窗且水温{temp}，不等同趋势反转'
+    else:
+        window_reason = f'第0步开窗且水温{temp}，允许按中性仓位观察宽基机会'
+
+    lead = eligible[0] if eligible else (blocked[0] if blocked else None)
+    pattern_evidence = ''
+    if lead:
+        name = lead['name']
+        if lead['vcp'].get('state') in ('突破确认', '临近枢轴'):
+            pattern_evidence = f"{name}形态{lead['vcp']['state']}"
+        elif lead['osc'].get('state') == '完整抄底窗口':
+            pattern_evidence = f'{name}完成日线抄底确认且周线通过'
+        elif lead['triggered']:
+            pattern_evidence = f'{name}当周动态RSI6≤20'
+        elif lead['trend'].get('status') == '✅趋势候选':
+            pattern_evidence = f'{name}处低位且份额未流出'
+        elif lead['osc'].get('state') == '超跌反弹观察':
+            pattern_evidence = f'{name}仅为超跌反弹观察'
+        if lead['vol'].get('status') == '平稳':
+            pattern_evidence += '、波动平稳'
+        elif lead['vol'].get('status') == '升温':
+            pattern_evidence += '、波动升温'
+        if lead['blockers']:
+            pattern_evidence += f"，但{lead['blockers'][0]}"
+
+    flow_candidates = [r for r in records if r['flow'] and abs(r['flow']['amt']) >= 5]
+    flow_candidates.sort(key=lambda r: (-abs(r['flow']['amt']), r['name']))
+    flow_evidence = ''
+    if flow_candidates:
+        r = flow_candidates[0]
+        amt = r['flow']['amt']
+        flow_evidence = f"{r['flow']['series']}ETF合计净{'流入' if amt >= 0 else '流出'}{abs(amt):.1f}亿元"
+        if window == 'closed':
+            flow_evidence += '，但不改变关窗结论'
+        elif r['blockers']:
+            flow_evidence += f"，但{r['name']}{r['blockers'][0]}，不提高优先级"
+
+    if pattern_evidence and flow_evidence:
+        evidence = pattern_evidence + '；' + flow_evidence
+    elif flow_evidence:
+        evidence = flow_evidence
+    elif pattern_evidence:
+        evidence = pattern_evidence
+    else:
+        evidence = 'ETF资金或宽基形态证据不足，仅按大级别窗口控制仓位'
+    return conclusion + '\n理由：' + window_reason + '。' + evidence + '。'
 
 
 # ══════════════════════════════════════════════════════════════

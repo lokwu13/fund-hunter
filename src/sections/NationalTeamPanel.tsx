@@ -12,6 +12,7 @@ export default function NationalTeamPanel() {
   const vcpItems = data.broadVcp?.items ?? [];
   const volItems = data.indexVol?.items ?? [];
   const oscItems = data.broadOsc?.items ?? [];
+  const commentLines = data.nationalTeamComment?.split('\n') ?? [];
 
   const oscBadge = (state?: string) => {
     const cls = state === '强硬减仓' ? 'bg-red-600 text-white animate-pulse'
@@ -52,14 +53,21 @@ export default function NationalTeamPanel() {
       <p className="text-[10px] text-slate-400 -mb-3">📌 本栏服务总览漏斗「第1步 · 宽基定风格」：指数趋势/形态/波动率决定做哪类宽基</p>
       {/* ====== 宽基市场短评 ====== */}
       {data.nationalTeamComment && (
-        <Card id="nt-comment" className="bg-gradient-to-r from-red-50 to-orange-50 border-red-200">
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
+        <Card id="nt-comment" className="min-w-0 bg-gradient-to-r from-red-50 to-orange-50 border-red-200">
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex items-start gap-2 sm:gap-3">
               <Quote className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-              <div>
+              <div className="min-w-0 flex-1">
                 <h3 className="font-bold text-red-800 mb-1">宽基市场短评</h3>
-                <p className="text-sm text-slate-700 leading-relaxed">{data.nationalTeamComment}</p>
-                <p className="text-[10px] text-slate-400 mt-1.5">规则自动生成 · 基于份额异动 / 位置层 / 形态 / 波动率</p>
+                <p data-testid="nt-comment-conclusion" className="text-sm sm:text-base font-semibold text-slate-900 leading-relaxed break-words">
+                  {commentLines[0]}
+                </p>
+                {commentLines.length > 1 && (
+                  <p data-testid="nt-comment-reason" className="text-xs sm:text-sm text-slate-700 leading-relaxed break-words mt-1">
+                    {commentLines.slice(1).join(' ')}
+                  </p>
+                )}
+                <p className="text-[10px] text-slate-500 mt-1.5">规则自动生成 · 第0步窗口优先 · 基于BOLL/RSI/周线/形态/ETF资金/波动 · 非个股买卖建议</p>
               </div>
             </div>
           </CardContent>
