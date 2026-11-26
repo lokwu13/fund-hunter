@@ -11208,6 +11208,15 @@ def main():
     # ── 7. Hot fund NAVs：已停用并删除字段（2026-10-01 死字段清理：hotFundNavs 前端无渲染消费，
     #        fetch_hot_fund_navs 函数体一并删除，省 fund_nav 逐只调用/日）──
 
+    # ── 7b. 全市场公开净值基金盈亏分布（单批次；断源沿用最近完整统计）──
+    try:
+        from fund_profit_breadth import update_fund_profit_breadth
+        breadth = update_fund_profit_breadth(trade_date, data)
+        print(f"  fundProfitBreadth: {breadth['counts']['profit']['count']} 盈利 / "
+              f"{breadth['counts']['loss']['count']} 亏损，主披露日 {breadth['primaryDate']}")
+    except Exception as e:
+        print(f"  Warning: fundProfitBreadth failed (keep old): {e}")
+
     # ── 8. National ETF watch (宽基ETF份额监控) ──
     print("\n[8/17] Fetching national ETF watch (fund_share)...")
     etf_watch = fetch_national_etf_watch(pro, trade_date, data.get('nationalETFWatch'))

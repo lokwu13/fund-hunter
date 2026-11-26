@@ -394,6 +394,26 @@ export interface FundData {
   };
   top10_publicfund?: Array<{rank: number; name: string; code: string; amount: string; concept: string; sector: string; note: string}>;
   publicFund_outflow_top10?: Array<{rank: number; name: string; code: string; amount: string; concept: string; sector: string; note: string}>;
+  fundProfitBreadth?: {
+    version: 1;
+    unit: string;
+    total: number;
+    validCount: number;
+    validPct: number;
+    counts: Record<'profit' | 'loss' | 'flat' | 'missing', { count: number; pct: number }>;
+    asOf: string;
+    primaryDate: string;
+    primaryDateValidCount: number;
+    primaryDateValidPct: number;
+    earliestDisclosureDate: string;
+    disclosureDateCount: number;
+    status: 'ok' | 'stale';
+    source: string;
+    sourceUrl: string;
+    checkedAt: string;
+    error?: string | null;
+    note: string;
+  };
   shortSellingMonitor?: {
     version: 1;
     frequency: string;
