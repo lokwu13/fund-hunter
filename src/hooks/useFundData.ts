@@ -100,29 +100,6 @@ export interface ShortSellingBoard {
   checkedAt?: string;
 }
 
-export interface PrivateFundItem {
-  rank: number;
-  name: string;
-  code: string;
-  market: string;
-  fund: string;
-  amount: string;
-  concept: string;
-  sector: string;
-  note: string;
-}
-
-export interface ConcentrationItem {
-  rank: number;
-  name: string;
-  code: string;
-  concentration: string;
-  concept: string;
-  sector: string;
-  fundCount: string;
-  note: string;
-}
-
 export interface VcpIndexCup {
   type: string;
   days: number;
@@ -366,11 +343,6 @@ export interface FundData {
   top5_publicfund?: Top5Item[];
   top5_foreign?: Top5Item[];
   top5_sector?: Top5Item[];
-  privateFund_inflow?: PrivateFundItem[];
-  privateFund_outflow?: PrivateFundItem[];
-  concentration_top10?: ConcentrationItem[];
-  mainforce_inflow_top10?: Array<{name: string; code: string; concept: string; sector: string}>;
-  mainforce_outflow_top10?: Array<{name: string; code: string; concept: string; sector: string}>;
   auction_rebound_weekly?: {
     week: string;
     updateDate: string;
@@ -392,8 +364,6 @@ export interface FundData {
       common_features: string;
     };
   };
-  top10_publicfund?: Array<{rank: number; name: string; code: string; amount: string; concept: string; sector: string; note: string}>;
-  publicFund_outflow_top10?: Array<{rank: number; name: string; code: string; amount: string; concept: string; sector: string; note: string}>;
   fundProfitBreadth?: {
     version: 1;
     unit: string;
