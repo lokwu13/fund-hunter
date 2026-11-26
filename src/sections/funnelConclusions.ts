@@ -194,7 +194,7 @@ export function buildFunnelStepViews(data: any): FunnelStepView[] {
       const dividendText = dw?.visible
         ? `高股息${dw.triggeredCount || 0}个指数独立触发，各榜前10（合计展示${dw.count || 0}项）`
         : '高股息未展示（无指数自身严格周RSI6<20）';
-      conclusion = `形态${rows.length}只｜共振${count('reson')}·精选${count('cherry')}·储备${count('reserve')}｜${dividendText}`;
+      conclusion = `形态合格${rows.length}只｜共振${count('reson')}·形态观察${count('cherry') + count('reserve')}（精选${count('cherry')}·储备${count('reserve')}）｜${dividendText}`;
     }
     return { ...step, conclusion, guide: GUIDES[step.key] || step.guide };
   });

@@ -3094,9 +3094,9 @@ def build_funnel(data):
                                for r in step2_rows if (r.get('rotation') or {}).get('overheat')))
     guide2 = '本步回答：主线板块是哪几个？' + concl2 + '。' + ('带着板块去第3步看个股形态（共振轨优先）' if step2_rows else '第3步共振轨为空，只能看⭐优中选优轨')
 
-    # ── 第3步 个股形态（任务87：三轨全量展示，不再把非共振/非精选剔除）──
-    # 🔗共振=第2步入选板块；⭐精选=原池内VCP/杯柄且聪明钱≥6天；其余=形态储备。
-    # 储备只说明板块/资金未确认，不冒充形态瑕疵；defects 单独逐字输出。
+    # ── 第3步 个股形态：共振组 / 形态观察组；原track仅保留为观察子层 ──
+    # 正常items及其排序不变；patternCandidates仅补回被每组10只展示上限截断的
+    # 非共振候选。排雷股不进入正常、模糊或观察展示，仍在第4步单列。
     sel_sectors = {r['sector'] for r in step2_rows}
     mf_cache = _load_json_cache(MINE_MF_CACHE_PATH, {})
     mf_days = sorted(mf_cache)[-10:]
@@ -3104,9 +3104,19 @@ def build_funnel(data):
     def _smart_money_days(code):
         return sum(1 for d in mf_days if (mf_cache[d].get(code) or 0) > 0)
 
+    vcp_block = data.get('vcpStocks') or {}
+    normal_items = list(vcp_block.get('items') or [])
+    normal_codes = {it['code'] for it in normal_items}
+    candidate_items = list(vcp_block.get('patternCandidates') or normal_items)
     step3_rows = []
     step3_excluded = 0
-    for it in (data.get('vcpStocks') or {}).get('items') or []:
+    dropped_by_mine = []
+    item_by_code = {}
+    seen_candidates = set()
+    for it in candidate_items:
+        if it['code'] in seen_candidates:
+            continue
+        seen_candidates.add(it['code'])
         bp = it.get('buyPoint') or {}
         reson = bool(it.get('sector') and it['sector'] in sel_sectors)
         sm_days = _smart_money_days(it['code'])
@@ -3114,14 +3124,29 @@ def build_funnel(data):
                   and it.get('pattern') in ('VCP收缩型', '杯柄型')
                   and sm_days >= 6)
         track = 'reson' if reson else ('cherry' if cherry else 'reserve')
+        # 截断池不得改变既有共振资格、数量或名单；重大排雷是全组硬排除。
+        if it['code'] in mine_codes:
+            dropped_by_mine.append({'code': it['code'], 'name': it['name'], 'track': track,
+                                    'reason': '命中第4步重大排雷，不进入正常、模糊或形态观察组'})
+            step3_excluded += 1
+            continue
+        if reson and it['code'] not in normal_codes:
+            step3_excluded += 1
+            continue
         reserve_reasons = []
-        if track == 'reserve':
+        if track != 'reson':
             if not reson:
                 reserve_reasons.append('板块未共振')
             if sm_days < 6:
                 reserve_reasons.append(f'资金未确认（{sm_days}/10天）')
             if not it.get('inPool'):
                 reserve_reasons.append('非原精选池')
+        display_group = 'resonance' if track == 'reson' else 'pattern_observation'
+        observation_origin = 'standard' if it['code'] in normal_codes else 'cap_overflow'
+        it.update({'track': track, 'displayGroup': display_group,
+                   'smartMoneyPosDays': sm_days, 'reserveReasons': list(reserve_reasons),
+                   'observationOrigin': observation_origin})
+        item_by_code[it['code']] = it
         step3_rows.append({'code': it['code'], 'name': it['name'], 'pattern': it.get('pattern'),
                            'stage': it.get('stage'), 'sector': it.get('sector'),
                            'sectorFit': it.get('sectorFit') or ('板块配合✅' if reson else '板块未共振'),
@@ -3139,7 +3164,8 @@ def build_funnel(data):
                            'breakoutDate': bp.get('breakoutDate'),
                            'breakoutRemainingDays': bp.get('breakoutRemainingDays'),
                            'breakoutExitDate': bp.get('breakoutExitDate'),
-                           'track': track, 'smartMoneyPosDays': sm_days,
+                           'track': track, 'displayGroup': display_group,
+                           'observationOrigin': observation_origin, 'smartMoneyPosDays': sm_days,
                            'inPool': bool(it.get('inPool')), 'reson': reson,
                            'entryTier': it.get('entryTier') or 'qualified',
                            'defects': list(it.get('defects') or []),
@@ -3166,13 +3192,22 @@ def build_funnel(data):
                            'historyMayBeTruncated': (it.get('cupHandle') or {}).get('historyMayBeTruncated'),
                            'historyScope': (it.get('cupHandle') or {}).get('historyScope'),
                            'historyExclusionReason': (it.get('cupHandle') or {}).get('historyExclusionReason'),
-                           'mine': it['code'] in mine_codes, 'star': bool(it.get('star'))})
+                           'mine': False, 'star': bool(it.get('star'))})
     track_rank = {'reson': 0, 'cherry': 1, 'reserve': 2}
     step3_rows.sort(key=lambda r: (track_rank[r['track']], 1 if r.get('defects') else 0,
                                    r['distPct'] if r['distPct'] is not None else 99))
     n_reson = sum(1 for r in step3_rows if r['track'] == 'reson')
     n_cherry = sum(1 for r in step3_rows if r['track'] == 'cherry')
     n_reserve = sum(1 for r in step3_rows if r['track'] == 'reserve')
+    vcp_block['resonanceItems'] = [item_by_code[r['code']] for r in step3_rows if r['track'] == 'reson']
+    vcp_block['observationItems'] = [item_by_code[r['code']] for r in step3_rows if r['track'] != 'reson']
+    vcp_block['droppedByMine'] = dropped_by_mine
+    vcp_block['displayPolicy'] = {
+        'resonance': '仅原items中第2步入选板块的形态股；资格、排序、高亮和数量保持原口径',
+        'observation': 'cherry+reserve；只补回原每组10只上限截断的非共振形态候选，排雷股硬排除',
+        'normalCountsUnchanged': True,
+        'mineExcludedFromAllAdmissionGroups': True,
+    }
     bottom_shape_rows = [{
         'code': r['code'], 'name': r['name'], 'sector': r.get('sector'),
         'star': bool(r.get('star')), 'inPool': bool(r.get('inPool')),
@@ -3185,16 +3220,17 @@ def build_funnel(data):
         for r in (data.get('vcpStocks') or {}).get('bottomShapeWatch') or []]
     lamp3 = ('🟢' if any(r['distPct'] is not None and r['distPct'] <= 3 for r in step3_rows)
              else '🟡' if step3_rows or bottom_shape_rows else '🔴')
-    concl3 = ((f"正式形态{len(step3_rows)}只：🔗共振{n_reson} + ⭐精选{n_cherry} + 储备{n_reserve}"
-               if step3_rows else '今日无正式形态入选股')
+    concl3 = ((f"形态合格{len(step3_rows)}只：🔗共振{n_reson} + 形态观察{n_cherry + n_reserve}"
+               f"（⭐精选{n_cherry}·储备{n_reserve}）"
+               if step3_rows else '今日无形态合格入选股')
               + f"；底部价格结构观察{len(bottom_shape_rows)}只（不计正式入选）")
-    guide3 = ('本步正式名单与底部价格结构观察分层：观察只证明通用周线结构，资格排除/待核验不等于形态不成立，也不等于正式入选；'
-              '正式底部仍须区间净流入>0且自身估值历史分位≤40%。共振/精选/储备仅表示板块与资金配合层级；'
-              'defects为具体形态或位置瑕疵，储备原因不与瑕疵混写；高股息防御独立分组，最后统一排雷。')
+    guide3 = ('共振组只含第2步入选板块的原正常名单；形态观察组包含原精选与储备，并补回被展示上限截断的非共振形态合格股。'
+              '观察只说明板块中性/未共振或3/10天等资金未确认，不放宽形态、资金证据、位置或信号硬门；track/reserveReasons/defects分别保留子层、观察原因与瑕疵；'
+              '重大排雷股不进入正常、模糊或观察组，仍在第4步单列。底部价格结构观察不计正式入选。')
 
-    # ── 第4步 排雷（范围=第2步龙头∪第3步入围∪持仓观察股）──
+    # ── 第4步 排雷（范围=第2步龙头∪第3步入围及被排除者∪持仓观察股）──
     scope = {l['code'] for r in step2_rows for l in r['leaders'] if l.get('code')} \
-        | {r['code'] for r in step3_rows} | set(STOCKS.keys())
+        | {r['code'] for r in step3_rows} | {r['code'] for r in dropped_by_mine} | set(STOCKS.keys())
     mw_items = [m for m in (data.get('mineWatch') or {}).get('items') or [] if m.get('code') in scope]
     lamp4 = '🔴' if mw_items else '🟢'
     concl4 = (f"⛔{len(mw_items)}只有雷：" + '、'.join(m['name'] for m in mw_items[:5])
@@ -3238,8 +3274,9 @@ def build_funnel(data):
                  '退潮=流出+一年分位≥70%）；第2步入选=积聚∪启动 且 板块自身形态达标'
                  '（VCP收缩/底部/指数放宽杯柄任一+10日/60日均额≤0.85，收盘口径近似，两条都要；'
                  '被卡掉的积聚/启动板块在 dropped 字段如实列出）。'
-                 '→3个股形态三轨全量展示（任务87）：🔗共振=第2步入选板块；⭐精选=原池内VCP/杯柄且近10缓存日主力净流入≥6天；'
-                 '其余全部进入形态储备，不再excluded。储备原因只写板块未共振/资金未确认，defects单列具体形态或位置瑕疵。'
+                 '→3个股形态分共振组与形态观察组：🔗共振=原items中第2步入选板块；⭐精选=原池内VCP/杯柄且近10缓存日主力净流入≥6天；'
+                 '精选与储备同属观察组，仅补回每组10只上限截断的非共振候选；track/reserveReasons/defects分别记录子层、观察原因与具体瑕疵。'
+                 '板块中性/未共振及3/10天资金未确认不隐藏形态合格股，重大排雷股从正常、模糊和观察展示统一排除。'
                  '高股息防御按六宽基自身新鲜当周动态Wilder RSI6严格<20逐指数开门；每榜只取本指数成分正TTM股息率原始值降序前10，20整不触发，不做全市场混排或行业概念分组，也不叠加形态、位置、估值分位、缩量、均线、市值或资金流门。'
                  '→4排雷（范围=第2步龙头∪第3步全部实际展示股∪持仓观察股，复用mineWatch缓存）。'
                  '状态灯🟢可看/🟡谨慎/🔴停；窗口🔴时下级全部降级为观察但绝不隐藏。'),
@@ -3448,7 +3485,8 @@ def build_mine_watch(pro, trade_date, data):
     uni = {}
     for tc, info in STOCKS.items():
         uni[tc] = {'name': info['name'], 'src': '自选'}
-    for it in (data.get('vcpStocks') or {}).get('items', []):
+    vcp_for_mine = (data.get('vcpStocks') or {})
+    for it in vcp_for_mine.get('patternCandidates') or vcp_for_mine.get('items', []):
         uni.setdefault(it['code'], {'name': it['name'], 'src': 'VCP'})
     for it in (data.get('dividendWatch') or {}).get('items', []):
         uni.setdefault(it['code'], {'name': it['name'], 'src': '高股息防御'})
@@ -9590,7 +9628,7 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
                 continue
             group_counts[g] = group_counts.get(g, 0) + 1
             grouped.append(it)
-        ph.attach_history(grouped, pattern_history, eff)
+        ph.attach_history(items, pattern_history, eff)
         c['patternEpisodeHistory'] = pattern_history
         vcp.save_cache(c)
         eff_d = f'{eff[:4]}-{eff[4:6]}-{eff[6:]}'
@@ -9600,7 +9638,9 @@ def fetch_vcp_stocks(pro, trade_date, data, today_map):
             'formed': len(items),
             'qualifiedCount': sum(not x.get('defects') for x in items),
             'fuzzyCount': sum(bool(x.get('defects')) for x in items),
+            # 正常items仍走原展示上限；额外候选只供build_funnel筛选非共振观察，不改变共振。
             'items': grouped,
+            'patternCandidates': items,
             'patternHistoryCoverage': pattern_history.get('coverage'),
             'bottomShapeWatch': bottom_shape_watch[:100],
             'bottomShapeWatchCount': len(bottom_shape_watch),

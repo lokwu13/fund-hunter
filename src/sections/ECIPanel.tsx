@@ -20,6 +20,17 @@ interface ECIPanelProps {
   onNavigate?: (tab: string, anchor?: string) => void;  // 跨栏目互跳（预留；聪明钱超额榜 2026-09-29 已迁入本栏目，改锚点直达）
 }
 
+type VcpDisplayItem = NonNullable<FundData['vcpStocks']>['items'][number] & {
+  track?: 'reson' | 'cherry' | 'reserve';
+  displayGroup?: 'resonance' | 'pattern_observation';
+  reserveReasons?: string[];
+};
+type VcpDisplayCollection = NonNullable<FundData['vcpStocks']> & {
+  resonanceItems?: VcpDisplayItem[];
+  observationItems?: VcpDisplayItem[];
+};
+type VcpTrackRow = Pick<VcpDisplayItem, 'code' | 'track' | 'reserveReasons'>;
+
 const TREND_ICONS: Record<string, typeof TrendingUp> = {
   '↑上升': TrendingUp,
   '↓下降': TrendingDown,
@@ -116,6 +127,27 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
   };
   const hlRow = (name?: string) =>
     name && highlightSector === name ? ' ring-2 ring-orange-400 bg-orange-50/70' : '';
+
+  // 与总览第3步共用track/reserveReasons/defects；旧快照用漏斗行回填，新快照直接使用双组字段。
+  const vcpForDisplay = data.vcpStocks as VcpDisplayCollection | undefined;
+  const patternStepRows = (((fnHook?.steps || []).find((s) => s.key === 'vcp')?.rows || []) as VcpTrackRow[]);
+  const patternTrackByCode = new Map<string, VcpTrackRow>(patternStepRows.map((r) => [r.code, r]));
+  const patternMineCodes = new Set<string>((data.mineWatch?.items || []).map((m) => m.code));
+  const decoratePattern = (it: VcpDisplayItem): VcpDisplayItem => {
+    const track = it.track || patternTrackByCode.get(it.code)?.track || 'reserve';
+    return { ...it, track, displayGroup: track === 'reson' ? 'resonance' : 'pattern_observation',
+      reserveReasons: it.reserveReasons || patternTrackByCode.get(it.code)?.reserveReasons || [] };
+  };
+  const admittedPatterns = (items: VcpDisplayItem[]) => items.filter(formalPatternDisplayable)
+    .filter((it) => !patternMineCodes.has(it.code));
+  const legacyPatternItems = admittedPatterns((vcpForDisplay?.items || []).map(decoratePattern));
+  const resonancePatternItems = (vcpForDisplay?.resonanceItems
+    ? admittedPatterns(vcpForDisplay.resonanceItems.map(decoratePattern))
+    : legacyPatternItems.filter((it) => it.track === 'reson'));
+  const observationPatternItems = (vcpForDisplay?.observationItems
+    ? admittedPatterns(vcpForDisplay.observationItems.map(decoratePattern))
+    : legacyPatternItems.filter((it) => it.track !== 'reson'));
+  const patternDisplayItems = [...resonancePatternItems, ...observationPatternItems];
 
   if (!eciData || !eciData.sectors || eciData.sectors.length === 0) {
     return (
@@ -936,7 +968,12 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
             <p className="text-[10px] text-slate-400 mt-1">{data.vcpStocks.note}</p>
           </CardHeader>
           <CardContent>
-            {data.vcpStocks.items && data.vcpStocks.items.length > 0 ? (
+            <div className="mb-2 flex items-center gap-2 flex-wrap text-[10px]" data-pattern-layer-summary>
+              <Badge className="bg-violet-600 text-white border-0">共振组 {resonancePatternItems.length}</Badge>
+              <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200">形态观察组 {observationPatternItems.length}</Badge>
+              <span className="text-slate-400">两组同步于总览第3步；观察仅分层，不放宽形态/资金证据硬门，排雷股全组排除。</span>
+            </div>
+            {patternDisplayItems.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-xs min-w-[760px]">
                   <thead>
@@ -955,13 +992,18 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.vcpStocks.items.filter(formalPatternDisplayable).map((it: any, idx: number) => {
-                      const grpOf = (x: any) => x.defects?.length
-                        ? `⚠ 模糊入围（有瑕疵） · ${x.pattern === '杯柄型' ? '杯柄' : x.pattern} · 独立沉底`
-                        : `${(x.mfDays ?? 0) >= 6 ? '✅ 资金确认 · ' : ''}${x.pattern === 'VCP收缩型' ? 'VCP 收缩' : x.pattern === '杯柄型' ? (x.cupHandle?.breakout ? '🚀 杯柄突破初期' : '杯柄') : x.pattern === '旗形整理' ? '旗形整理' : x.pattern === '底部整理' ? '底部整理 · 最少12周（12~104周）+资金估值双门' : x.pattern === '长平台整理' ? '平台整理（旧快照）' : '统一平台 · 15~120日 · 振幅≤15%'}`;
+                    {patternDisplayItems.map((it: any, idx: number) => {
+                      const grpOf = (x: any) => {
+                        const layer = x.displayGroup === 'resonance' ? '🔗 共振组' : `◇ 形态观察组 · track=${x.track}`;
+                        const pattern = x.defects?.length
+                          ? `⚠ 模糊入围（有瑕疵） · ${x.pattern === '杯柄型' ? '杯柄' : x.pattern} · 独立沉底`
+                          : `${(x.mfDays ?? 0) >= 6 ? '✅ 资金确认 · ' : ''}${x.pattern === 'VCP收缩型' ? 'VCP 收缩' : x.pattern === '杯柄型' ? (x.cupHandle?.breakout ? '🚀 杯柄突破初期' : '杯柄') : x.pattern === '旗形整理' ? '旗形整理' : x.pattern === '底部整理' ? '底部整理 · 最少12周（12~104周）+资金估值双门' : x.pattern === '长平台整理' ? '平台整理（旧快照）' : '统一平台 · 15~120日 · 振幅≤15%'}`;
+                        return `${layer} · ${pattern}`;
+                      };
                       const grp = grpOf(it);
-                      const prevGrp = idx > 0 ? grpOf(data.vcpStocks!.items.filter(formalPatternDisplayable)[idx - 1]) : null;
+                      const prevGrp = idx > 0 ? grpOf(patternDisplayItems[idx - 1]) : null;
                       const isDefect = !!it.defects?.length;
+                      const isResonance = it.displayGroup === 'resonance';
                       const isPlatform = !!it.patternEvidence;
                       const isContract = it.pattern === 'VCP收缩型';
                       const isFixedBase = isContract && !!it.fixedBase;
@@ -982,11 +1024,11 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                       return (
                         <Fragment key={it.code}>
                         {grp !== prevGrp && (
-                          <tr className={isDefect ? 'bg-amber-50/70' : 'bg-violet-50/70'}>
-                            <td colSpan={11} className={`py-1 px-1 text-[10px] font-bold tracking-wide ${isDefect ? 'text-amber-700' : 'text-violet-600'}`}>{grp}</td>
+                          <tr className={isDefect ? 'bg-amber-50/70' : isResonance ? 'bg-violet-50/70' : 'bg-slate-50/80'}>
+                            <td colSpan={11} className={`py-1 px-1 text-[10px] font-bold tracking-wide ${isDefect ? 'text-amber-700' : isResonance ? 'text-violet-600' : 'text-slate-600'}`}>{grp}</td>
                           </tr>
                         )}
-                        <tr className={`border-b border-slate-50 align-top ${isDefect ? 'bg-slate-50/70 opacity-75 hover:bg-amber-50/40' : 'hover:bg-violet-50/40'}`}>
+                        <tr className={`border-b border-slate-50 align-top ${isDefect ? 'bg-slate-50/70 opacity-75 hover:bg-amber-50/40' : isResonance ? 'hover:bg-violet-50/40' : 'hover:bg-slate-50/70'}`}>
                           <td className="py-1.5 font-medium text-slate-700">
                             {it.star && <Star className="w-3 h-3 text-pink-500 inline mr-0.5 -mt-0.5" />}
                             {it.name}
@@ -1028,7 +1070,12 @@ export default function ECIPanel({ data, highlightSector }: ECIPanelProps) {
                                     瑕疵：{it.defects.join('、')}
                                   </p>
                                 )}
-                                <p className={`text-[9px] mt-0.5 ${isDefect ? 'text-slate-400' : 'text-violet-400'}`}>
+                                {!isResonance && it.reserveReasons?.length > 0 && (
+                                  <p className="text-[9px] text-slate-500 bg-slate-100/80 rounded px-1 py-0.5 mt-1">
+                                    观察原因：{it.reserveReasons.join('、')}（不是形态瑕疵；track={it.track}）
+                                  </p>
+                                )}
+                                <p className={`text-[9px] mt-0.5 ${isDefect ? 'text-slate-400' : isResonance ? 'text-violet-400' : 'text-slate-400'}`}>
                                   {isLowVolTight
                                     ? `${it.vcpStructure.tradingDays}日·振幅${it.vcpStructure.amplitudePct}%·低于VOL20 ${it.vcpStructure.belowVol20RatioPct}%`
                                     : isFixedBase

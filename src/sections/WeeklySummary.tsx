@@ -457,10 +457,12 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
 
                       {/* 第3步：高股息仅由每个宽基自身周RSI6独立控制。 */}
                       {st.key === 'vcp' && (() => {
-                        const rows = (st.rows || []).filter(formalPatternDisplayable);
-                        const reson = rows.filter((r: any) => r.track === 'reson');
-                        const cherry = rows.filter((r: any) => r.track === 'cherry');
-                        const reserve = rows.filter((r: any) => r.track === 'reserve');
+                        const mineCodes = new Set((data.mineWatch?.items || []).map((m) => m.code));
+                        const rows = (st.rows || []).filter((r) => formalPatternDisplayable(r) && !mineCodes.has(r.code));
+                        const reson = rows.filter((r) => r.track === 'reson');
+                        const cherry = rows.filter((r) => r.track === 'cherry');
+                        const reserve = rows.filter((r) => r.track === 'reserve');
+                        const observation = rows.filter((r) => r.track !== 'reson');
                         const dw = data.dividendWatch;
                         const dividendBoards = (dw?.indexBoards || []).filter((board) => board.open);
                         const renderRow = (r: any) => (
@@ -508,21 +510,23 @@ export default function WeeklySummary({ onNavigate }: WeeklySummaryProps) {
                             {r.defects?.length > 0 && (
                               <p className="text-[10px] text-amber-700 mt-1">具体瑕疵：{r.defects.join('；')}</p>
                             )}
-                            {!r.defects?.length && r.reserveReasons?.length > 0 && (
-                              <p className="text-[10px] text-slate-400 mt-1">形态无瑕疵；储备原因：{r.reserveReasons.join('、')}（不是形态瑕疵）</p>
+                            {r.track !== 'reson' && r.reserveReasons?.length > 0 && (
+                              <p className="text-[10px] text-slate-500 mt-1">观察原因：{r.reserveReasons.join('、')}（不是形态瑕疵；track={r.track}）</p>
                             )}
                           </div>
                         );
                         return (
                           <div className="space-y-1.5" onClick={(e) => e.stopPropagation()}>
                             <div className={winClosed ? 'opacity-60 grayscale' : ''}>
-                              <p className="text-[10px] font-semibold text-violet-700 px-2">共振 {reson.length}</p>
+                              <p className="text-[10px] font-semibold text-violet-700 px-2">共振组 {reson.length}（原资格、排序与高亮不变）</p>
                               {reson.length > 0 ? reson.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}
-                              <p className="text-[10px] font-semibold text-amber-700 px-2 pt-1 border-t border-slate-100">精选 {cherry.length}</p>
-                              {cherry.length > 0 ? cherry.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}
-                              <details className="rounded-lg border border-slate-200 bg-slate-50/60 px-2 py-1.5">
-                                <summary className="cursor-pointer text-[10px] font-semibold text-slate-600">形态储备 {reserve.length}（默认折叠，展开为全量）</summary>
-                                <div className="mt-1 space-y-1">{reserve.map(renderRow)}</div>
+                              <details open className="rounded-lg border border-slate-200 bg-slate-50/60 px-2 py-1.5">
+                                <summary className="cursor-pointer text-[10px] font-semibold text-slate-600">形态观察组 {observation.length}（板块/资金未共振，形态硬门不放宽）</summary>
+                                <p className="mt-1 text-[9px] text-slate-500">精选与储备均为观察子层；重大排雷股不在本组。观察原因与defects分别展示。</p>
+                                <p className="text-[10px] font-semibold text-amber-700 px-2 pt-1 border-t border-slate-100">精选子层 {cherry.length}</p>
+                                {cherry.length > 0 ? cherry.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}
+                                <p className="text-[10px] font-semibold text-slate-600 px-2 pt-1 border-t border-slate-100">储备子层 {reserve.length}</p>
+                                <div className="mt-1 space-y-1">{reserve.length > 0 ? reserve.map(renderRow) : <p className="text-[11px] text-slate-400 px-2">无</p>}</div>
                               </details>
                             </div>
                             {(st.bottomShapeRows || []).length > 0 && (
