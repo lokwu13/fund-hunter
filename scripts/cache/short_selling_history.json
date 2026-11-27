@@ -31,7 +31,18 @@
       "totalValue": 0,
       "records": [],
       "sourceUrl": "https://www.hkex.com.hk/eng/csm/shortsell/data_tab_short_selling_20261126e.js",
-      "retrievedAt": "2026-11-27T00:53:34+00:00"
+      "retrievedAt": "2026-11-27T20:22:26+00:00"
+    },
+    "2026-11-27": {
+      "asOf": "2026-11-27",
+      "session": "day_close",
+      "currency": "RMB",
+      "universeCount": 2908,
+      "nonZeroCount": 0,
+      "totalValue": 0,
+      "records": [],
+      "sourceUrl": "https://www.hkex.com.hk/eng/csm/shortsell/data_tab_short_selling_20261127e.js",
+      "retrievedAt": "2026-11-27T20:22:25+00:00"
     }
   },
   "h": {
